@@ -10,6 +10,6 @@ public:
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "");
-	virtual void Deserialize(const std::string& InputFullPath, GraphicsPipeline* GraphicsPipelineInstance);
+	virtual void Deserialize(const std::string& InputFullPath, ID3D11Device* DeviceIn);
 };
 

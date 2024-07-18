@@ -15,6 +15,7 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				SceneTexture2D;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	SceneSRV;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		SceneRTV;
+	MakeComPtrGetter(SceneTexture2D);
 	MakeComPtrGetter(SceneSRV);
 	MakeComPtrGetter(SceneRTV);
 
@@ -22,5 +23,11 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				DepthStencilTexture2D;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		SceneDSV;
 	MakeComPtrGetter(SceneDSV);
+
+private:
+	const FLOAT ClearColor[4] = { 0.f, 0.f, 0.f, 1.f };
+
+public:
+	void CleanupLens();
 };
 

@@ -35,6 +35,7 @@ PSOObject::~PSOObject()
 {
 }
 
+#ifdef _DEBUG
 void PSOObject::ResetResourceFlag()
 {
 	memset(IsVSConstBufferSet, false, CONST_BUFFER_MAX_COUNT);
@@ -42,13 +43,17 @@ void PSOObject::ResetResourceFlag()
 	memset(IsPSConstBufferSet, false, CONST_BUFFER_MAX_COUNT);
 	memset(IsPSSRVSet, false, SRV_MAX_COUNT);
 }
+#endif // _DEBUG
 
-void PSOObject::SetPipelineObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVsIn, ID3D11DepthStencilView* DSVIn)
+
+void PSOObject::SetPipelineObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVsIn, D3D11_VIEWPORT* ViewportIn, ID3D11DepthStencilView* DSVIn)
 {
 	assert(RTVCountIn == NumRenderTargets);
 
+#ifdef _DEBUG
 	ResetResourceFlag();
-	
+#endif // _DEBUG
+
 	D3D11_RENDER_TARGET_VIEW_DESC RenderTargetViewDesc;
 	for (size_t RtvIndex = 0; RtvIndex < NumRenderTargets; ++RtvIndex)
 	{
@@ -68,9 +73,9 @@ void PSOObject::SetPipelineObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVs
 	DeviceContextCached->PSSetShader(PixelShader.Get(), NULL, NULL);
 
 	DeviceContextCached->RSSetState(RasterizerState.Get());
+	DeviceContextCached->RSSetViewports(1, ViewportIn);
 
 	DeviceContextCached->OMSetDepthStencilState(DepthStencilState.Get(), StencilRef);
-
 	const FLOAT BlendFactor[4] = { 1.f, 1.f, 1.f, 1.f };
 	DeviceContextCached->OMSetBlendState(BlendState.Get(), BlendFactor, 0xFFFFFFFF);
 	DeviceContextCached->OMSetRenderTargets(NumRenderTargets, RTVsIn, DSVIn);

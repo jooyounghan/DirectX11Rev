@@ -1,4 +1,5 @@
 #pragma once
+#include <Windows.h>
 
 class GraphicsPipeline;
 
@@ -13,5 +14,8 @@ public:
 
 public:
 	virtual void RenderWorld() = 0;
+
+public:
+	virtual LRESULT AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
 };
 

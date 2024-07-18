@@ -28,7 +28,11 @@ public:
 
 protected:
 	VertexBuffer<SkeletalVertex>	VerticesBuffer;
-	MakeGetter(VerticesBuffer);
+
+public:
+	virtual ID3D11Buffer* GetVertexBuffer() override { return VerticesBuffer.GetBuffer(); }
+	virtual UINT GetVertexTypeSize() override { return sizeof(SkeletalVertex); }
+	virtual UINT GetVertexCount() override { return static_cast<UINT>(Vertices.size()); }
 
 public:
 	virtual void Initialize(ID3D11Device* DeviceIn) override;

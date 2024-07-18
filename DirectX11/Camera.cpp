@@ -34,7 +34,7 @@ Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, 
 	DepthStencilTexture2DDesc.Height = HeightIn;
 	DepthStencilTexture2DDesc.MipLevels = 1;
 	DepthStencilTexture2DDesc.ArraySize = 1;
-	SceneTexture2DDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	DepthStencilTexture2DDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	DepthStencilTexture2DDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	DepthStencilTexture2DDesc.SampleDesc.Count = 1;
 	DepthStencilTexture2DDesc.SampleDesc.Quality = 0;
@@ -48,4 +48,10 @@ Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, 
 
 Camera::~Camera()
 {
+}
+
+void Camera::CleanupLens()
+{
+	DeviceContextCached->ClearRenderTargetView(SceneRTV.Get(), ClearColor);
+	DeviceContextCached->ClearDepthStencilView(SceneDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 }

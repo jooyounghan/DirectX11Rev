@@ -19,8 +19,8 @@ SkeletalMeshAsset::~SkeletalMeshAsset()
 
 void SkeletalMeshAsset::Initialize(ID3D11Device* DeviceIn)
 {
-	VerticesBuffer.InitializeForGPU(DeviceIn, Vertices.size(), Vertices.data());
-	IndicesBuffer.InitializeForGPU(DeviceIn, Indices.size(), Indices.data());
+	VerticesBuffer.InitializeForGPU(DeviceIn, GetVertexCount(), Vertices.data());
+	IndicesBuffer.InitializeForGPU(DeviceIn, GetIndexCount(), Indices.data());
 }
 
 void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)

@@ -82,8 +82,17 @@ void EditorWorld::RenderWorld()
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-
-LRESULT EditorWorld::EditorWorldProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT EditorWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    return ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+        return true;
+
+    switch (msg)
+    {
+    case WM_SIZE:
+        return 0;
+    case WM_EXITSIZEMOVE:
+        return 0;
+    }
+    return ::DefWindowProc(hWnd, msg, wParam, lParam);
 }

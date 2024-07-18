@@ -2,26 +2,10 @@
 #include <windows.h>
 #include <wrl/client.h>
 #include <d3d11.h>
+#include "PSOObjectHelper.h"
 
 #define CONST_BUFFER_MAX_COUNT	16
 #define SRV_MAX_COUNT			128
-
-#define CONSTANT_BUFFER_SETTER(Shader)																					\
-public:																													\
-		inline void Set##Shader##ConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ConstantBuffers)	\
-		{																												\
-			memset(&Is##Shader##ConstBufferSet[StartSlot], true, NumBuffers);											\
-			DeviceContextCached->##Shader##SetConstantBuffers(StartSlot, NumBuffers, ConstantBuffers);					\
-		}
-
-#define SRV_SETTER(Shader)																									\
-public:																														\
-		inline void Set##Shader##ShaderResourceViews(UINT StartSlot, UINT NumViews, ID3D11ShaderResourceView* const* SRVs)	\
-		{																													\
-			memset(&Is##Shader##SRVSet[StartSlot], true, NumViews);															\
-			DeviceContextCached->##Shader##SetShaderResources(StartSlot, NumViews, SRVs);									\
-		}
-
 
 class PSOObject
 {
@@ -53,15 +37,23 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader>		VertexShader;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout>		InputLayout;
 	UINT											NumVSConstBuffers;
-	bool											IsVSConstBufferSet[CONST_BUFFER_MAX_COUNT];
 	UINT											NumVSSRVs;
-	bool											IsVSSRVSet[SRV_MAX_COUNT];
 
 	Microsoft::WRL::ComPtr<ID3D11PixelShader>		PixelShader;
 	UINT											NumPSConstBuffers;
-	bool											IsPSConstBufferSet[CONST_BUFFER_MAX_COUNT];
 	UINT											NumPSSRVs;
+
+#ifdef _DEBUG
+private:
+	bool											IsVSConstBufferSet[CONST_BUFFER_MAX_COUNT];
+	bool											IsVSSRVSet[SRV_MAX_COUNT];
+	bool											IsPSConstBufferSet[CONST_BUFFER_MAX_COUNT];
 	bool											IsPSSRVSet[SRV_MAX_COUNT];
+
+private:
+	void ResetResourceFlag();
+#endif // _DEBUG
+
 
 	D3D11_PRIMITIVE_TOPOLOGY						PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;;
 	UINT											NumRenderTargets = 0;
@@ -75,18 +67,19 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11BlendState>		BlendState;	
 
-private:
-	void ResetResourceFlag();
 
 public:
 	void SetPipelineObject(
 		UINT						RTVCountIn,
 		ID3D11RenderTargetView**	RTVsIn,
+		D3D11_VIEWPORT*				ViewportIn,
 		ID3D11DepthStencilView*		DSVIn
 	);
 
 	CONSTANT_BUFFER_SETTER(VS);
+	CONSTANT_BUFFER_RESETTER(VS);
 	SRV_SETTER(VS);
+	SRV_RESETTER(VS);
 	CONSTANT_BUFFER_SETTER(PS);
 	SRV_SETTER(PS);
 

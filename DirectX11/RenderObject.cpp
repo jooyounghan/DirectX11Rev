@@ -21,15 +21,22 @@ void RenderObject::Render(PSOObject* PSOObjectIn)
 {
 	if (MeshAssetInstance)
 	{
-		// TODO : MeshAsset에서는 Vertex를 얻을 수 현재 없다 ID3D11Buffer* 반환하는 순수가상함수 ㄱㄱ
-		// TODO : 매번 바뀌는 버퍼의 경우 Set된 플래그를 풀어줄 필요가 있음!!!! PSOObject에 플래그 해제 함수 세팅
-		DeviceContextCached->IASetVertexBuffers(0, 1, MeshAssetInstance->)
-		CommandListIn->IASetVertexBuffers(0, 1, &(MeshAssetInstance->GetVertexBufferView()));
-		CommandListIn->IASetIndexBuffer(&(MeshAssetInstance->GetIndexBufferView()));
+		ID3D11Buffer* VertexBuffers[] = { MeshAssetInstance->GetVertexBuffer() };
+		UINT Strides[] = { MeshAssetInstance->GetVertexTypeSize() };
+		UINT Offsets[] = { 0 };
 
-		CommandListIn->SetGraphicsRootConstantBufferView(0, TransformationBuffer.GetBufferAddress());
-		CommandListIn->SetGraphicsRootConstantBufferView(1, CameraIn->ViewProjBuffer.GetBufferAddress());
+		DeviceContextCached->IASetVertexBuffers(0, 1, VertexBuffers, Strides, Offsets);
+		DeviceContextCached->IASetIndexBuffer(MeshAssetInstance->GetIndexBuffer(), MeshAssetInstance->GetIndexFormat(), 0);
 
-		CommandListIn->DrawIndexedInstanced(static_cast<UINT>(MeshAssetInstance->GetIndexCount()), 1, 0, 0, 0);
+		ID3D11Buffer* VSConstBuffers[] = { TransformationBuffer.GetBuffer() };
+		PSOObjectIn->SetVSConstantBuffers(1, 1, VSConstBuffers);
+
+#ifdef _DEBUG
+		PSOObjectIn->CheckPipelineValidation();
+#endif // DEBUG
+
+		DeviceContextCached->DrawIndexed(static_cast<UINT>(MeshAssetInstance->GetIndexCount()), 0, 0);
+
+		PSOObjectIn->ResetVSConstantBuffers(1, 0);
 	}
 }

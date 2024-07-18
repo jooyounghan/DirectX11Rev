@@ -57,6 +57,7 @@ template<typename T>
 inline void UploadBuffer<T>::Upload(ID3D11DeviceContext* DeviceContextIn, const T& CpuDataIn)
 {
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
+	AutoZeroMemory(MappedResource);
 	AssertIfFailed(DeviceContextIn->Map(StagingBuffer.Get(), 0, D3D11_MAP_WRITE, 0, &MappedResource));
 	memcpy(MappedResource.pData, &CpuDataIn, sizeof(T));
 	DeviceContextIn->Unmap(StagingBuffer.Get(), 0);

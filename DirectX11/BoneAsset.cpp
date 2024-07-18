@@ -1,5 +1,12 @@
 #include "BoneAsset.h"
 
+using namespace DirectX;
+
+Bone::Bone()
+	: BoneName(""), BoneIdx(NULL), OffsetMatrix(XMMatrixIdentity())
+{
+}
+
 Bone::Bone(
 	const std::string& NameIn, 
 	const size_t& BoneIdxIn, 
@@ -67,7 +74,7 @@ void BoneAsset::Serialize(const std::string& OutputAdditionalPath)
 {
 }
 
-void BoneAsset::Deserialize(const std::string& InputFullPath, GraphicsPipeline* GraphicsPipelineInstance)
+void BoneAsset::Deserialize(const std::string& InputFullPath, ID3D11Device* DeviceIn)
 {
 }
 

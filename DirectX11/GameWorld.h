@@ -47,5 +47,8 @@ public:
 protected:
 	Camera* CurrentCamera = nullptr;
 	MakeGetter(CurrentCamera);
+
+public:
+	virtual LRESULT AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 };
 

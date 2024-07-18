@@ -13,6 +13,7 @@ PSOManager::PSOManager(GraphicsPipeline* GraphicsPipelineIn)
     : GraphicsPipelineCached(GraphicsPipelineIn)
 {
     CreateStatic();
+    CreateSkeletal();
 }
 
 PSOManager::~PSOManager()
@@ -81,7 +82,24 @@ void PSOManager::CreateStatic()
 
     ComPtr<ID3D11BlendState> StaticBlendState;
     D3D11_BLEND_DESC BlendStateDesc;
+    AutoZeroMemory(BlendStateDesc);
+    BlendStateDesc.AlphaToCoverageEnable = FALSE;
+    BlendStateDesc.IndependentBlendEnable = FALSE;
+    D3D11_RENDER_TARGET_BLEND_DESC& RenderTargetBlendDesc = BlendStateDesc.RenderTarget[0];
+    AutoZeroMemory(RenderTargetBlendDesc);
+    RenderTargetBlendDesc.BlendEnable = FALSE;
+    RenderTargetBlendDesc.SrcBlend = D3D11_BLEND_ONE;
+    RenderTargetBlendDesc.DestBlend = D3D11_BLEND_ZERO;
+    RenderTargetBlendDesc.BlendOp = D3D11_BLEND_OP_ADD;
+    RenderTargetBlendDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
+    RenderTargetBlendDesc.DestBlendAlpha = D3D11_BLEND_ZERO;
+    RenderTargetBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    RenderTargetBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
     Device->CreateBlendState(&BlendStateDesc, StaticBlendState.GetAddressOf());
+
+    const UINT SRVFormatCount = 1;
+    DXGI_FORMAT SRVFormats[SRVFormatCount] = { DXGI_FORMAT_R8G8B8A8_UNORM };
 
     PSOObjects[R8G8B8A8_Static_Solid] = make_unique<PSOObject>(
         DeviceContext,
@@ -89,7 +107,7 @@ void PSOManager::CreateStatic()
         StaticMeshVS, 2, 0,
         StaticMeshPS, 0, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        1, DXGI_FORMAT_B8G8R8A8_UNORM,
+        SRVFormatCount, SRVFormats,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         StaticSolidRasterizerState,
@@ -104,13 +122,14 @@ void PSOManager::CreateStatic()
     ComPtr<ID3D11RasterizerState> StaticWireframeRasterizerState;
     Device->CreateRasterizerState(&RasterizerStateDesc, StaticWireframeRasterizerState.GetAddressOf());
 
+
     PSOObjects[R8G8B8A8_Static_Wireframe] = make_unique<PSOObject>(
         DeviceContext,
         StaticMeshInputLayout,
         StaticMeshVS, 2, 0,
         StaticMeshPS, 0, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        1, DXGI_FORMAT_B8G8R8A8_UNORM,
+        SRVFormatCount, SRVFormats,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         StaticWireframeRasterizerState,
@@ -183,7 +202,24 @@ void PSOManager::CreateSkeletal()
 
     ComPtr<ID3D11BlendState> SkeletalBlendState;
     D3D11_BLEND_DESC BlendStateDesc;
+        AutoZeroMemory(BlendStateDesc);
+    BlendStateDesc.AlphaToCoverageEnable = FALSE;
+    BlendStateDesc.IndependentBlendEnable = FALSE;
+    D3D11_RENDER_TARGET_BLEND_DESC& RenderTargetBlendDesc = BlendStateDesc.RenderTarget[0];
+    AutoZeroMemory(RenderTargetBlendDesc);
+    RenderTargetBlendDesc.BlendEnable = FALSE;
+    RenderTargetBlendDesc.SrcBlend = D3D11_BLEND_ONE;
+    RenderTargetBlendDesc.DestBlend = D3D11_BLEND_ZERO;
+    RenderTargetBlendDesc.BlendOp = D3D11_BLEND_OP_ADD;
+    RenderTargetBlendDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
+    RenderTargetBlendDesc.DestBlendAlpha = D3D11_BLEND_ZERO;
+    RenderTargetBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    RenderTargetBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
     Device->CreateBlendState(&BlendStateDesc, SkeletalBlendState.GetAddressOf());
+
+    const UINT SRVFormatCount = 1;
+    DXGI_FORMAT SRVFormats[SRVFormatCount] = { DXGI_FORMAT_R8G8B8A8_UNORM };
 
     PSOObjects[R8G8B8A8_Skeletal_Solid] = make_unique<PSOObject>(
         DeviceContext,
@@ -191,7 +227,7 @@ void PSOManager::CreateSkeletal()
         SkeletalMeshVS, 2, 0,
         SkeletalMeshPS, 0, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        1, DXGI_FORMAT_B8G8R8A8_UNORM,
+        SRVFormatCount, SRVFormats,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         SkeletalSolidRasterizerState,
@@ -212,7 +248,7 @@ void PSOManager::CreateSkeletal()
         SkeletalMeshVS, 2, 0,
         SkeletalMeshPS, 0, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        1, DXGI_FORMAT_B8G8R8A8_UNORM,
+        SRVFormatCount, SRVFormats,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         SkeletalWireframeRasterizerState,

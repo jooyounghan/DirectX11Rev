@@ -9,7 +9,7 @@ struct aiScene;
 struct aiNode;
 struct aiMesh;
 
-class ID3D11Device;
+struct ID3D11Device;
 
 class IAssetFile;
 class StaticMeshAsset;

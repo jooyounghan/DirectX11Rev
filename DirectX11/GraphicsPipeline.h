@@ -29,6 +29,9 @@ protected:
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> BackBufferTexture;
+	MakeComPtrGetter(BackBufferTexture);
+
+protected:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> BackBufferRTV;
 	MakeComPtrGetter(BackBufferRTV);
 

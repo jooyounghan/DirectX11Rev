@@ -44,8 +44,8 @@ void Object::UpdateObject()
 
 	TransformationMatrix TempTransformation;
 	TempTransformation.TransfomationMat = GetTransformation();
-	TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
 	TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
+	TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
 
 	TransformationBuffer.Upload(DeviceContextCached, TempTransformation);
 }

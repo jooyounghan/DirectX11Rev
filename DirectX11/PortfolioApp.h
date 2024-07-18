@@ -38,6 +38,7 @@ public:
 	void Quit();
 
 protected:
+	void Update();
 	void Render();
 
 private:

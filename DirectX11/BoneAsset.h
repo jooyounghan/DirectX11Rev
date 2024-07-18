@@ -9,7 +9,7 @@
 class Bone
 {
 public:
-	Bone() = default;
+	Bone();
 	Bone(const std::string& NameIn, const size_t& BoneIdxIn, const DirectX::XMMATRIX& OffsetMatrixIn);
 	~Bone();
 
@@ -67,6 +67,6 @@ public:
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath) override;
-	virtual void Deserialize(const std::string& InputFullPath, GraphicsPipeline* GraphicsPipelineInstance) override;
+	virtual void Deserialize(const std::string& InputFullPath, ID3D11Device* DeviceIn) override;
 };
 

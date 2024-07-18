@@ -11,7 +11,7 @@ public:
 public:
 	virtual void InitializeForGPU(
 		ID3D11Device* DeviceIn, 
-	const UINT& ArrayCountIn,
+		const UINT& ArrayCountIn,
 		uint32_t* CPUDataPtr
 	) override;
 

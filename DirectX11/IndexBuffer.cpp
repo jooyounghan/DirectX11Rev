@@ -16,8 +16,6 @@ void IndexBuffer::InitializeForGPU(
 {
 	IndicesCount = static_cast<UINT>(ArrayCountIn);
 
-	BUFFER_ALIGN_CHECK(ArrayCountIn * sizeof(uint32_t));
-
 	D3D11_BUFFER_DESC BufferDesc;
 	AutoZeroMemory(BufferDesc);
 

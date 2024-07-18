@@ -11,7 +11,11 @@ public:
 	~ConstantArrayBuffer();
 
 public:
-	virtual void InitializeForGPU(ID3D11Device* DeviceIn, const UINT& ArrayCountIn, T* CPUDataPtr);
+	virtual void InitializeForGPU(
+		ID3D11Device* DeviceIn, 
+		const UINT& ArrayCountIn, 
+		T* CPUDataPtr
+	);
 };
 
 template<typename T>

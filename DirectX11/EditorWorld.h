@@ -36,11 +36,6 @@ public:
 	virtual void RenderWorld() override;
 
 public:
-	LRESULT EditorWorldProc(
-		HWND hWnd,
-		UINT msg,
-		WPARAM wParam,
-		LPARAM lParam
-	);
+	virtual LRESULT AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 };
 

@@ -66,13 +66,17 @@ void PortfolioApp::LoadMonitorInfo()
 	AutoZeroMemory(MonitorInfo);
 	MonitorInfo.cbSize = sizeof(MONITORINFO);
 
-	assert(!GetMonitorInfoA(Monitor, &MonitorInfo));
+	bool MonitorResult = GetMonitorInfoA(Monitor, &MonitorInfo);
+	assert(MonitorResult);
 
 	App::GWidth = MonitorInfo.rcWork.right - MonitorInfo.rcWork.left;
 	App::GHeight = MonitorInfo.rcWork.bottom - MonitorInfo.rcWork.top;
-
 	SetWindowPos(MainWindow, NULL, 0, 0, App::GWidth, App::GHeight, SWP_SHOWWINDOW | SWP_NOMOVE);
 	UpdateWindow(MainWindow);
+}
+
+void PortfolioApp::ChangeMainFrameSize(const UINT& WidthIn, const UINT& HeightIn)
+{
 }
 
 void PortfolioApp::Run()
@@ -88,6 +92,7 @@ void PortfolioApp::Run()
 		}
 		else 
 		{
+			Update();
 			Render();
 		}
 	}
@@ -97,10 +102,16 @@ void PortfolioApp::Quit()
 {
 }
 
-void PortfolioApp::Render()
+void PortfolioApp::Update()
 {
 	const float& DeltaTime = GetDeltaTimeFromLastCall();
+	GameWorldInstance->UpdateGameWorld(DeltaTime);
+}
 
+void PortfolioApp::Render()
+{
+	GameWorldInstance->RenderWorld();
+	GraphicsPipelineInstance->GetSwapChain()->Present(0, 0);
 }
 
 float PortfolioApp::GetDeltaTimeFromLastCall()
@@ -117,12 +128,9 @@ float PortfolioApp::GetDeltaTimeFromLastCall()
 
 LRESULT __stdcall PortfolioApp::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	switch (msg) 
-	{
-	case WM_SIZE:
-		return 0;
-	case WM_EXITSIZEMOVE:
-		return 0;
-	}
-	return ::DefWindowProc(hWnd, msg, wParam, lParam);
+	if (GameWorldInstance)
+		return GameWorldInstance->AppProc(hWnd, msg, wParam, lParam);
+	else
+		return ::DefWindowProc(hWnd, msg, wParam, lParam);
+
 }

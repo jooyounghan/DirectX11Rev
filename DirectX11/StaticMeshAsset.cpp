@@ -19,8 +19,8 @@ StaticMeshAsset::~StaticMeshAsset()
 
 void StaticMeshAsset::Initialize(ID3D11Device* DeviceIn)
 {
-	VerticesBuffer.InitializeForGPU(DeviceIn, Vertices.size(), Vertices.data());
-	IndicesBuffer.InitializeForGPU(DeviceIn, Indices.size(), Indices.data());
+	VerticesBuffer.InitializeForGPU(DeviceIn, GetVertexCount(), Vertices.data());
+	IndicesBuffer.InitializeForGPU(DeviceIn, GetIndexCount(), Indices.data());
 }
 
 void StaticMeshAsset::Serialize(const string& OutputAdditionalPath)

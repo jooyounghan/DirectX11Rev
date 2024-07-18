@@ -30,9 +30,9 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHand
 GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance)
 	: IWorld(GraphicsPipelineInstance)
 {
-	PSOManagerInstance = make_unique<PSOManager>((GraphicsPipelineInstance->Device.Get()));
+	PSOManagerInstance = make_unique<PSOManager>((GraphicsPipelineInstance));
 
-	TestCamera = make_unique<Camera>(GraphicsPipelineInstance, Graphics::GWidth, Graphics::GHeight);
+	TestCamera = make_unique<Camera>(GraphicsPipelineInstance, App::GWidth, App::GHeight);
 	CurrentCamera = TestCamera.get();
 	CurrentCamera->SetPosition(0.f, 0.f, -300.f);
 
@@ -60,23 +60,43 @@ void GameWorld::UpdateGameWorld(const float& DeltaTimeIn)
 		if (CurrentCamera)
 		{
 			CurrentCamera->UpdateView();
-			CurrentMap->CaptureMapByCamera(CurrentCamera);
 		}
 	}
 }
 
 void GameWorld::RenderWorld()
 {
-#ifdef _DEBUG
-	EditorWorldInstance->RenderWorld();
-#else
-	if (CurrentCamera != nullptr)
+	if (CurrentMap)
 	{
-		ID3D12GraphicsCommandList* RenderCommandList = GraphicsPipelineCached->CommandLists[ECommandType::Rendering].Get();
-		RenderCommandList->CopyResource(
-			GraphicsPipelineCached->GetCurrentBackBuffer()->GetResource(),
-			CurrentCamera->Texture2D->GetResource()
-		);
-	}
+		if (CurrentCamera)
+		{
+			CurrentMap->RenderMap(CurrentCamera);
+			
+#ifdef _DEBUG
+			EditorWorldInstance->RenderWorld();
+#else
+			GraphicsPipelineCached->GetDeviceContext()->CopyResource(
+				GraphicsPipelineCached->GetBackBufferTexture(),
+				CurrentCamera->GetSceneTexture2D()
+			);
 #endif // _DEBUG
+		}
+	}
+
+}
+
+LRESULT GameWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+#ifdef _DEBUG
+	return EditorWorldInstance->AppProc(hWnd, msg, wParam, lParam);
+#else
+	switch (msg)
+	{
+	case WM_SIZE:
+		return 0;
+	case WM_EXITSIZEMOVE:
+		return 0;
+	}
+	return ::DefWindowProc(hWnd, msg, wParam, lParam);
+#endif
 }

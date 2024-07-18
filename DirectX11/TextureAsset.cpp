@@ -13,6 +13,6 @@ void TextureAsset::Serialize(const std::string& OutputAdditionalPath)
 {
 }
 
-void TextureAsset::Deserialize(const std::string& InputFullPath, GraphicsPipeline* GraphicsPipelineInstance)
+void TextureAsset::Deserialize(const std::string& InputFullPath, ID3D11Device* DeviceIn)
 {
 }

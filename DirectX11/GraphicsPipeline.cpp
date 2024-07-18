@@ -31,8 +31,8 @@ void GraphicsPipeline::CreateDeviceAndSwapChain(const UINT& WidthIn, const UINT&
 #if defined(DEBUG) || defined(_DEBUG)
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
-    const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_WARP;
-    const D3D_FEATURE_LEVEL featureLevels[3] = { D3D_FEATURE_LEVEL_11_1 , D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_9_3 };    
+    const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
+    const D3D_FEATURE_LEVEL featureLevels[3] = { D3D_FEATURE_LEVEL_11_1 , D3D_FEATURE_LEVEL_11_0 };    
     D3D_FEATURE_LEVEL selectedFeatureLevel;
 
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
@@ -47,7 +47,7 @@ void GraphicsPipeline::CreateDeviceAndSwapChain(const UINT& WidthIn, const UINT&
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDesc.BufferCount = BackBufferCount;
     swapChainDesc.OutputWindow = WndHandleIn;
-    swapChainDesc.Windowed = false;
+    swapChainDesc.Windowed = true;
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG::DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
@@ -66,9 +66,9 @@ void GraphicsPipeline::CreateDeviceAndSwapChain(const UINT& WidthIn, const UINT&
         DeviceContext.GetAddressOf()
     ));
 
-    assert(SwapChain == nullptr);
-    assert(Device == nullptr);
-    assert(DeviceContext == nullptr);
+    assert(SwapChain != nullptr);
+    assert(Device != nullptr);
+    assert(DeviceContext != nullptr);
 }
 
 void GraphicsPipeline::SetBackBuffer()

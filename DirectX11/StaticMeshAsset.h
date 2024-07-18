@@ -24,10 +24,14 @@ public:
 
 protected:
 	VertexBuffer<StaticVertex>	VerticesBuffer;
-	MakeGetter(VerticesBuffer);
 
 public:
 	virtual void Initialize(ID3D11Device* DeviceIn) override;
+
+public:
+	virtual ID3D11Buffer* GetVertexBuffer() override { return VerticesBuffer.GetBuffer(); }
+	virtual UINT GetVertexTypeSize() override { return sizeof(StaticVertex); }
+	virtual UINT GetVertexCount() override { return static_cast<UINT>(Vertices.size()); }
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
