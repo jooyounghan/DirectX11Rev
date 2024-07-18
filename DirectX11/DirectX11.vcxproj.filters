@@ -1,0 +1,346 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\App">
+      <UniqueIdentifier>{0a303f54-9710-4102-a712-00a0bbcb351d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\App">
+      <UniqueIdentifier>{640fcecf-3a5f-4e39-b9bb-f3fa145bc660}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Global">
+      <UniqueIdentifier>{3e10b1f6-9213-4225-a31e-fc088ce08350}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Global">
+      <UniqueIdentifier>{f2d969ef-6719-44ff-b8e7-53f55db78187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Utility">
+      <UniqueIdentifier>{a0563dea-a8cc-40f8-85f3-cb689dc67750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Utility">
+      <UniqueIdentifier>{84bdb384-a1f2-45c1-b278-96c6b9a41c5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset">
+      <UniqueIdentifier>{4382cf86-b373-4adf-b57a-7e7050959257}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset">
+      <UniqueIdentifier>{bb372f5b-d9a5-43f3-bb8f-deef94293dd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset\Bone">
+      <UniqueIdentifier>{7a72b11d-52c4-4410-be49-194c53137390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Bone">
+      <UniqueIdentifier>{5630758c-5cb4-4a90-95fe-fa19c8fd9f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset\Mesh">
+      <UniqueIdentifier>{6257d232-ae4a-4ec7-85c8-cf6d227285a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Mesh">
+      <UniqueIdentifier>{2f665f23-2d8f-4d45-baa2-dc264e4dcfb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Texture">
+      <UniqueIdentifier>{22be202d-5685-4574-9839-e7e7c75fa3cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset\Texture">
+      <UniqueIdentifier>{da15b506-b4af-4389-9581-55fd9147a399}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\World">
+      <UniqueIdentifier>{ab9dbb3d-2087-49e1-b666-f6e31866bc38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World">
+      <UniqueIdentifier>{2d05a47b-5cb0-4bf6-bf25-d3d1222fabc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\World\Editor">
+      <UniqueIdentifier>{c804c47d-f3de-4435-a576-363fb219fab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Editor">
+      <UniqueIdentifier>{71c9625a-f7d4-4e75-8b04-c3681430598b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Editor\Dialog">
+      <UniqueIdentifier>{5925a3b9-93a3-4dfb-a871-30e47bd73f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\World\Editor\Dialog">
+      <UniqueIdentifier>{45318328-d303-4f82-8e55-abda4216d6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Map">
+      <UniqueIdentifier>{4252095b-5211-49ea-b361-de1a938f27fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Map">
+      <UniqueIdentifier>{62905561-a35a-43c3-98f6-64cf6584d93b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Map\Object">
+      <UniqueIdentifier>{cf287dd9-4094-4d15-b7de-af4edb0ed927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Map\Object">
+      <UniqueIdentifier>{6d0b603d-c627-4fc4-8c97-3d3f5390bad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Buffer">
+      <UniqueIdentifier>{d8d1e9ae-dd79-4ec2-a629-1d827c9461e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Buffer">
+      <UniqueIdentifier>{c22d0005-056e-463b-af73-d76246236d9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Buffer\Constant">
+      <UniqueIdentifier>{73372138-896c-4143-9603-bcf802c09b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Buffer\Dynamic">
+      <UniqueIdentifier>{5b8d8433-2273-4089-98c7-90cf38077bf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Buffer\Constant">
+      <UniqueIdentifier>{a1989760-f75e-47d8-94ec-ce1c160c7bae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Buffer\Dynamic">
+      <UniqueIdentifier>{fbd735d6-0f1a-4ed7-af43-c1dfeabfc490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{a165de11-1e64-4997-8b05-848a47a39820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\StaticMesh">
+      <UniqueIdentifier>{c2c93896-f7e9-4c4d-8518-4c6dcd129e7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\SkeletalMesh">
+      <UniqueIdentifier>{9da0e291-0657-4a08-baba-cf1f98165149}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="PortfolioApp.cpp">
+      <Filter>소스 파일\App</Filter>
+    </ClCompile>
+    <ClCompile Include="PSOManager.cpp">
+      <Filter>소스 파일\App</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalVariable.cpp">
+      <Filter>소스 파일\App</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsPipeline.cpp">
+      <Filter>소스 파일\App</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>소스 파일\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="IAssetFile.cpp">
+      <Filter>소스 파일\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="BoneAsset.cpp">
+      <Filter>소스 파일\Asset\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="IMeshAsset.cpp">
+      <Filter>소스 파일\Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializable.cpp">
+      <Filter>소스 파일\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshAsset.cpp">
+      <Filter>소스 파일\Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshAsset.cpp">
+      <Filter>소스 파일\Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureAsset.cpp">
+      <Filter>소스 파일\Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="IWorld.cpp">
+      <Filter>소스 파일\World</Filter>
+    </ClCompile>
+    <ClCompile Include="GameWorld.cpp">
+      <Filter>소스 파일\World</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorWorld.cpp">
+      <Filter>소스 파일\World\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="IDialog.cpp">
+      <Filter>소스 파일\World\Editor\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="IGameWorldLinkedDialog.cpp">
+      <Filter>소스 파일\World\Editor\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MapOutlinerDialog.cpp">
+      <Filter>소스 파일\World\Editor\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskAnalyzerDialog.cpp">
+      <Filter>소스 파일\World\Editor\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewportDialog.cpp">
+      <Filter>소스 파일\World\Editor\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="DefineType.cpp">
+      <Filter>소스 파일\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="MathematicalHelper.cpp">
+      <Filter>소스 파일\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>소스 파일\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>소스 파일\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject.cpp">
+      <Filter>소스 파일\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewable.cpp">
+      <Filter>소스 파일\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>소스 파일\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>소스 파일\Buffer\Constant</Filter>
+    </ClCompile>
+    <ClCompile Include="PSOObject.cpp">
+      <Filter>소스 파일\App</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BoneAsset.h">
+      <Filter>헤더 파일\Asset\Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="IAssetFile.h">
+      <Filter>헤더 파일\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>헤더 파일\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="IMeshAsset.h">
+      <Filter>헤더 파일\Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializable.h">
+      <Filter>헤더 파일\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshAsset.h">
+      <Filter>헤더 파일\Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshAsset.h">
+      <Filter>헤더 파일\Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureAsset.h">
+      <Filter>헤더 파일\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="GameWorld.h">
+      <Filter>헤더 파일\World</Filter>
+    </ClInclude>
+    <ClInclude Include="IWorld.h">
+      <Filter>헤더 파일\World</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorWorld.h">
+      <Filter>헤더 파일\World\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="IDialog.h">
+      <Filter>소스 파일\World\Editor\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewportDialog.h">
+      <Filter>헤더 파일\World\Editor\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskAnalyzerDialog.h">
+      <Filter>헤더 파일\World\Editor\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="MapOutlinerDialog.h">
+      <Filter>헤더 파일\World\Editor\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameWorldLinkedDialog.h">
+      <Filter>헤더 파일\World\Editor\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineType.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineUtility.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderHelper.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MathematicalHelper.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>헤더 파일\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject.h">
+      <Filter>헤더 파일\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>헤더 파일\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewable.h">
+      <Filter>헤더 파일\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="PSOManager.h">
+      <Filter>헤더 파일\App</Filter>
+    </ClInclude>
+    <ClInclude Include="PortfolioApp.h">
+      <Filter>헤더 파일\App</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsPipeline.h">
+      <Filter>헤더 파일\App</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalVariable.h">
+      <Filter>헤더 파일\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>헤더 파일\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="IDownloadableBuffer.h">
+      <Filter>헤더 파일\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="IUploadableBuffer.h">
+      <Filter>헤더 파일\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>헤더 파일\Buffer\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantArrayBuffer.h">
+      <Filter>헤더 파일\Buffer\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="IBuffer.h">
+      <Filter>헤더 파일\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="UploadBuffer.h">
+      <Filter>헤더 파일\Buffer\Dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>헤더 파일\Buffer\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>헤더 파일\Buffer\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="PSOObject.h">
+      <Filter>헤더 파일\App</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\SkeletalPS.hlsl">
+      <Filter>Shader\SkeletalMesh</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkeletalVS.hlsl">
+      <Filter>Shader\SkeletalMesh</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticPS.hlsl">
+      <Filter>Shader\StaticMesh</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticVS.hlsl">
+      <Filter>Shader\StaticMesh</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\SkeletalHeader.hlsli">
+      <Filter>Shader\SkeletalMesh</Filter>
+    </None>
+    <None Include="Shaders\StaticHeader.hlsli">
+      <Filter>Shader\StaticMesh</Filter>
+    </None>
+  </ItemGroup>
+</Project>
