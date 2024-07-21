@@ -4,9 +4,12 @@
 
 #include "DefineUtility.h"
 
-#include "TaskAnalyzerDialog.h"
-#include "ViewportDialog.h" 
-#include "MapOutlinerDialog.h"
+#include "TaskAnalyzerWindow.h"
+#include "ViewportWindow.h" 
+#include "MapOutlinerWindow.h"
+#include "AssetManagerWindow.h"
+
+#include "AssetManager.h"
 
 #include "GameWorld.h"
 #include "GraphicsPipeline.h"
@@ -25,26 +28,35 @@ EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
     : IWorld(GameWorldIn->GraphicsPipelineCached), GameWorldCached(GameWorldIn)
 {
     IMGUI_CHECKVERSION();
+
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
 
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesKorean());
 
-    
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
     ImGui_ImplWin32_Init(WindowHandle);
     ImGui_ImplDX11_Init(
         GraphicsPipelineCached->GetDevice(),
         GraphicsPipelineCached->GetDeviceContext()
     );
 
-    Dialogs.push_back(make_unique<TaskAnalyzerDialog>());
-    Dialogs.push_back(make_unique<ViewportDialog>(GameWorldCached));
-    Dialogs.push_back(make_unique<MapOutlinerDialog>(GameWorldCached));
+    AssetManagerInstance = make_unique<AssetManager>(GraphicsPipelineCached->GetDevice());
+
+    Dialogs.push_back(make_unique<TaskAnalyzerWindow>());
+    Dialogs.push_back(make_unique<ViewportWindow>(GameWorldCached));
+    Dialogs.push_back(make_unique<MapOutlinerWindow>(GameWorldCached));
+    Dialogs.push_back(make_unique<AssetManagerWindow>(AssetManagerInstance.get()));
+
 
     EditorCamera = make_unique<Camera>(
         GraphicsPipelineCached, App::GWidth, App::GHeight
     );
+
 }
 
 EditorWorld::~EditorWorld()
@@ -64,14 +76,16 @@ void EditorWorld::RenderWorld()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
+    ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+
     for (auto& Dialog : Dialogs)
     {
-        Dialog->DoModal();
+        Dialog->RenderWindow();
     }
 
     ImGui::Render();
 
-    const FLOAT ClearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+    const FLOAT ClearColor[] = { 0.5f, 0.2f, 0.4f, 1.0f };
 
     ID3D11RenderTargetView* BackBufferRTV = GraphicsPipelineCached->GetBackBufferRTV();
     ID3D11DeviceContext* DeviceContext = GraphicsPipelineCached->GetDeviceContext();
@@ -82,17 +96,8 @@ void EditorWorld::RenderWorld()
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-LRESULT EditorWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+void EditorWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
-        return true;
-
-    switch (msg)
-    {
-    case WM_SIZE:
-        return 0;
-    case WM_EXITSIZEMOVE:
-        return 0;
-    }
-    return ::DefWindowProc(hWnd, msg, wParam, lParam);
+    ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
+    GameWorldCached->ManageMessage(hWnd, msg, wParam, lParam);
 }

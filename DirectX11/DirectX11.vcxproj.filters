@@ -67,12 +67,6 @@
     <Filter Include="소스 파일\World\Editor">
       <UniqueIdentifier>{71c9625a-f7d4-4e75-8b04-c3681430598b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\Editor\Dialog">
-      <UniqueIdentifier>{5925a3b9-93a3-4dfb-a871-30e47bd73f6f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\World\Editor\Dialog">
-      <UniqueIdentifier>{45318328-d303-4f82-8e55-abda4216d6b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Map">
       <UniqueIdentifier>{4252095b-5211-49ea-b361-de1a938f27fa}</UniqueIdentifier>
     </Filter>
@@ -115,6 +109,24 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{403cc663-d6d5-4213-9a13-d27170d7c6a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Editor\GUI">
+      <UniqueIdentifier>{5925a3b9-93a3-4dfb-a871-30e47bd73f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Editor\GUI\DIalog">
+      <UniqueIdentifier>{9eaec59b-d61a-4cba-b1a3-890773a4493b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Editor\GUI\Window">
+      <UniqueIdentifier>{81031fec-5b5d-49cd-a241-23d8ce4542a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\World\Editor\GUI">
+      <UniqueIdentifier>{45318328-d303-4f82-8e55-abda4216d6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\World\Editor\GUI\Dialog">
+      <UniqueIdentifier>{ef408b6c-6b4d-4b80-90f7-f6804cc2cca6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\World\Editor\GUI\Window">
+      <UniqueIdentifier>{03918427-51e3-4d99-9867-b9e7f601b267}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -132,7 +144,7 @@
     <ClCompile Include="GraphicsPipeline.cpp">
       <Filter>소스 파일\App</Filter>
     </ClCompile>
-    <ClCompile Include="FileManager.cpp">
+    <ClCompile Include="AssetManager.cpp">
       <Filter>소스 파일\Asset</Filter>
     </ClCompile>
     <ClCompile Include="IAssetFile.cpp">
@@ -164,21 +176,6 @@
     </ClCompile>
     <ClCompile Include="EditorWorld.cpp">
       <Filter>소스 파일\World\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="IDialog.cpp">
-      <Filter>소스 파일\World\Editor\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="IGameWorldLinkedDialog.cpp">
-      <Filter>소스 파일\World\Editor\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="MapOutlinerDialog.cpp">
-      <Filter>소스 파일\World\Editor\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="TaskAnalyzerDialog.cpp">
-      <Filter>소스 파일\World\Editor\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="ViewportDialog.cpp">
-      <Filter>소스 파일\World\Editor\Dialog</Filter>
     </ClCompile>
     <ClCompile Include="DefineType.cpp">
       <Filter>소스 파일\Utility</Filter>
@@ -228,6 +225,24 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="FileSelectDialog.cpp">
+      <Filter>소스 파일\World\Editor\GUI\DIalog</Filter>
+    </ClCompile>
+    <ClCompile Include="IGameWorldLinkedWindow.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="MapOutlinerWindow.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskAnalyzerWindow.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewportWindow.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagerWindow.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
@@ -236,7 +251,7 @@
     <ClInclude Include="IAssetFile.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="FileManager.h">
+    <ClInclude Include="AssetManager.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="IMeshAsset.h">
@@ -262,21 +277,6 @@
     </ClInclude>
     <ClInclude Include="EditorWorld.h">
       <Filter>헤더 파일\World\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="IDialog.h">
-      <Filter>소스 파일\World\Editor\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewportDialog.h">
-      <Filter>헤더 파일\World\Editor\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="TaskAnalyzerDialog.h">
-      <Filter>헤더 파일\World\Editor\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="MapOutlinerDialog.h">
-      <Filter>헤더 파일\World\Editor\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="IGameWorldLinkedDialog.h">
-      <Filter>헤더 파일\World\Editor\Dialog</Filter>
     </ClInclude>
     <ClInclude Include="DefineType.h">
       <Filter>헤더 파일\Utility</Filter>
@@ -370,6 +370,30 @@
     </ClInclude>
     <ClInclude Include="ImGui\imstb_truetype.h">
       <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="MapOutlinerWindow.h">
+      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskAnalyzerWindow.h">
+      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewportWindow.h">
+      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="IWindow.h">
+      <Filter>헤더 파일\World\Editor\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSelectDialog.h">
+      <Filter>헤더 파일\World\Editor\GUI\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameWorldLinkedWindow.h">
+      <Filter>헤더 파일\World\Editor\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IDialog.h">
+      <Filter>헤더 파일\World\Editor\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagerWindow.h">
+      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

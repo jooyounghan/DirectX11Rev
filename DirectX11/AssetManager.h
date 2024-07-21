@@ -16,11 +16,11 @@ class StaticMeshAsset;
 class SkeletalMeshAsset;
 class BoneAsset;
 
-class FileManager
+class AssetManager
 {
 public:
-	FileManager(ID3D11Device* DeviceIn);
-	~FileManager();
+	AssetManager(ID3D11Device* DeviceIn);
+	~AssetManager();
 
 protected:
 	ID3D11Device* DeviceCached = nullptr;

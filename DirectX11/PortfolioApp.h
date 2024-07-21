@@ -31,7 +31,9 @@ protected:
 
 private:
 	void LoadMonitorInfo();
-	void ChangeMainFrameSize(const UINT& WidthIn, const UINT& HeightIn);
+
+private:
+	void OnChangeWindow();
 
 public:
 	void Run();
@@ -46,5 +48,6 @@ private:
 
 public:
 	LRESULT WINAPI AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 };
 

@@ -24,8 +24,10 @@ protected:
 	MakeComPtrGetter(DeviceContext);
 	MakeComPtrGetter(SwapChain);
 
-protected:
+public:
 	static const UINT BackBufferCount = 3;
+	static const DXGI_FORMAT BackBufferFormat = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
+	static const UINT SwapChainFlag = DXGI_SWAP_CHAIN_FLAG::DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> BackBufferTexture;

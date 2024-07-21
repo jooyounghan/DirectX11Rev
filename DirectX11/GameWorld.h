@@ -49,6 +49,10 @@ protected:
 	MakeGetter(CurrentCamera);
 
 public:
-	virtual LRESULT AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+
+public:
+	void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 };
 

@@ -1,15 +1,15 @@
-#include "TaskAnalyzerDialog.h"
+#include "TaskAnalyzerWindow.h"
 
-TaskAnalyzerDialog::TaskAnalyzerDialog()
-    : IDialog()
+TaskAnalyzerWindow::TaskAnalyzerWindow()
+    : IWindow()
 {
 }
 
-TaskAnalyzerDialog::~TaskAnalyzerDialog()
+TaskAnalyzerWindow::~TaskAnalyzerWindow()
 {
 }
 
-void TaskAnalyzerDialog::DoModal()
+void TaskAnalyzerWindow::RenderWindow()
 {
     ImGuiIO& io = ImGui::GetIO();
 

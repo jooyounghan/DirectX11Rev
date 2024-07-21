@@ -85,18 +85,20 @@ void GameWorld::RenderWorld()
 
 }
 
-LRESULT GameWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+void GameWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 #ifdef _DEBUG
-	return EditorWorldInstance->AppProc(hWnd, msg, wParam, lParam);
+	EditorWorldInstance->AppProc(hWnd, msg, wParam, lParam);
 #else
+	ManageMessage(hWnd, msg, wParam, lParam);
+#endif
+}
+
+void GameWorld::ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
 	switch (msg)
 	{
-	case WM_SIZE:
-		return 0;
 	case WM_EXITSIZEMOVE:
-		return 0;
+		break;
 	}
-	return ::DefWindowProc(hWnd, msg, wParam, lParam);
-#endif
 }

@@ -133,17 +133,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetManagerWindow.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="BoneAsset.cpp" />
     <ClCompile Include="DefineType.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
-    <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="FileSelectDialog.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="GlobalVariable.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="IAssetFile.cpp" />
-    <ClCompile Include="IDialog.cpp" />
-    <ClCompile Include="IGameWorldLinkedDialog.cpp" />
+    <ClCompile Include="IGameWorldLinkedWindow.cpp" />
     <ClCompile Include="IMeshAsset.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
@@ -156,7 +157,7 @@
     <ClCompile Include="IWorld.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="MapOutlinerDialog.cpp" />
+    <ClCompile Include="MapOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PortfolioApp.cpp" />
@@ -166,17 +167,20 @@
     <ClCompile Include="Serializable.cpp" />
     <ClCompile Include="SkeletalMeshAsset.cpp" />
     <ClCompile Include="StaticMeshAsset.cpp" />
-    <ClCompile Include="TaskAnalyzerDialog.cpp" />
+    <ClCompile Include="TaskAnalyzerWindow.cpp" />
     <ClCompile Include="TextureAsset.cpp" />
     <ClCompile Include="Viewable.cpp" />
-    <ClCompile Include="ViewportDialog.cpp" />
+    <ClCompile Include="ViewportWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetManagerWindow.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="BoneAsset.h" />
     <ClInclude Include="ConstantArrayBuffer.h" />
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
+    <ClInclude Include="FileSelectDialog.h" />
+    <ClInclude Include="IDialog.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
@@ -189,23 +193,23 @@
     <ClInclude Include="PSOObjectHelper.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="EditorWorld.h" />
-    <ClInclude Include="FileManager.h" />
+    <ClInclude Include="AssetManager.h" />
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="GlobalVariable.h" />
     <ClInclude Include="GraphicsPipeline.h" />
     <ClInclude Include="HeaderHelper.h" />
     <ClInclude Include="IAssetFile.h" />
     <ClInclude Include="IBuffer.h" />
-    <ClInclude Include="IDialog.h" />
+    <ClInclude Include="IWindow.h" />
     <ClInclude Include="IDownloadableBuffer.h" />
-    <ClInclude Include="IGameWorldLinkedDialog.h" />
+    <ClInclude Include="IGameWorldLinkedWindow.h" />
     <ClInclude Include="IMeshAsset.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="IUploadableBuffer.h" />
     <ClInclude Include="IWorld.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="MapOutlinerDialog.h" />
+    <ClInclude Include="MapOutlinerWindow.h" />
     <ClInclude Include="MathematicalHelper.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PortfolioApp.h" />
@@ -214,11 +218,11 @@
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="SkeletalMeshAsset.h" />
     <ClInclude Include="StaticMeshAsset.h" />
-    <ClInclude Include="TaskAnalyzerDialog.h" />
+    <ClInclude Include="TaskAnalyzerWindow.h" />
     <ClInclude Include="TextureAsset.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Viewable.h" />
-    <ClInclude Include="ViewportDialog.h" />
+    <ClInclude Include="ViewportWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\StaticPS.hlsl">

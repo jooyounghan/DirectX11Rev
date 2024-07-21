@@ -9,8 +9,9 @@
 #include <memory>
 
 class GameWorld;
-class IDialog;
+class IWindow;
 class Camera;
+class AssetManager;
 
 class EditorWorld : public IWorld
 {
@@ -22,11 +23,14 @@ protected:
 	GameWorld* GameWorldCached = nullptr;
 
 protected:
+	std::unique_ptr<AssetManager> AssetManagerInstance;
+
+protected:
 	UINT FontSrvHandleID = 0;
 	MakeGetter(FontSrvHandleID);
 
 protected:
-	std::vector<std::unique_ptr<IDialog>> Dialogs;
+	std::vector<std::unique_ptr<IWindow>> Dialogs;
 
 protected:
 	std::unique_ptr<Camera> EditorCamera;
@@ -36,6 +40,6 @@ public:
 	virtual void RenderWorld() override;
 
 public:
-	virtual LRESULT AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 };
 

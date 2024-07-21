@@ -1,19 +1,19 @@
-#include "ViewportDialog.h"
+#include "ViewportWindow.h"
 
 #include "GameWorld.h"
 #include "GraphicsPipeline.h"
 #include "Camera.h"
 
-ViewportDialog::ViewportDialog(GameWorld* GameWorldLinkedIn)
-    : IGameWorldLinkedDialog(GameWorldLinkedIn)
+ViewportWindow::ViewportWindow(GameWorld* GameWorldLinkedIn)
+    : IGameWorldLinkedWindow(GameWorldLinkedIn)
 {
 }
 
-ViewportDialog::~ViewportDialog()
+ViewportWindow::~ViewportWindow()
 {
 }
 
-void ViewportDialog::DoModal()
+void ViewportWindow::RenderWindow()
 {
     Camera* GetCurrentGameWorldCamera = GameWorldLinked->GetCurrentCamera();
     

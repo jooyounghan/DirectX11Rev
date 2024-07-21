@@ -76,3 +76,18 @@ void GraphicsPipeline::SetBackBuffer()
     SwapChain->GetBuffer(0, IID_PPV_ARGS(BackBufferTexture.GetAddressOf()));
     AssertIfFailed(Device->CreateRenderTargetView(BackBufferTexture.Get(), nullptr, BackBufferRTV.GetAddressOf()));
 }
+
+void GraphicsPipeline::ResizeSwapChain(const UINT& WidthIn, const UINT& HeightIn)
+{
+    BackBufferTexture->Release();
+    BackBufferRTV->Release();
+
+    SwapChain->ResizeBuffers(
+        GraphicsPipeline::BackBufferCount,
+        WidthIn, HeightIn,
+        GraphicsPipeline::BackBufferFormat,
+        GraphicsPipeline::SwapChainFlag
+    );
+    
+    SetBackBuffer();
+}

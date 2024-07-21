@@ -1,4 +1,4 @@
-#include "FileManager.h"
+#include "AssetManager.h"
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include "assimp/scene.h"
@@ -19,16 +19,16 @@
 using namespace std;
 using namespace DirectX;
 
-FileManager::FileManager(ID3D11Device* DeviceIn)
+AssetManager::AssetManager(ID3D11Device* DeviceIn)
     : DeviceCached(DeviceIn)
 {
 }
 
-FileManager::~FileManager()
+AssetManager::~AssetManager()
 {
 }
 
-void FileManager::LoadModelFile(const string& FilePathIn)
+void AssetManager::LoadModelFile(const string& FilePathIn)
 {
     filesystem::path FilePath = FilePathIn;
     const string FileName = FilePath.stem().string();
@@ -63,7 +63,7 @@ void FileManager::LoadModelFile(const string& FilePathIn)
     }
 }
 
-void FileManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* const Scene)
+void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* const Scene)
 {
     shared_ptr<IMeshAsset> Mesh = nullptr;
     shared_ptr<IAssetFile> BoneA = nullptr;
@@ -93,16 +93,16 @@ void FileManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* c
     ManagingAssets.emplace(Mesh->GetAssetName(), Mesh);
 }
 
-void FileManager::LoadMaterial(const string AssetName, const aiScene* const Scene)
+void AssetManager::LoadMaterial(const string AssetName, const aiScene* const Scene)
 {
 
 }
 
-void FileManager::LoadAnimation(const string AssetName, const aiScene* const Scene)
+void AssetManager::LoadAnimation(const string AssetName, const aiScene* const Scene)
 {
 }
 
-bool FileManager::HasBone(const aiScene* const Scene)
+bool AssetManager::HasBone(const aiScene* const Scene)
 {
     for (UINT MeshIdx = 0; MeshIdx < Scene->mNumMeshes; ++MeshIdx)
     {
@@ -112,7 +112,7 @@ bool FileManager::HasBone(const aiScene* const Scene)
     return false;
 }
 
-IAssetFile* FileManager::GetAsset(const std::string AssetName)
+IAssetFile* AssetManager::GetAsset(const std::string AssetName)
 {
     if (ManagingAssets.find(AssetName) != ManagingAssets.end())
     {
@@ -124,7 +124,7 @@ IAssetFile* FileManager::GetAsset(const std::string AssetName)
     }
 }
 
-void FileManager::ProcessNodeForMesh(
+void AssetManager::ProcessNodeForMesh(
     bool IsGltf,
     const aiScene* const Scene,
     const aiNode* const Node,
@@ -147,7 +147,7 @@ void FileManager::ProcessNodeForMesh(
     }
 }
 
-void FileManager::ProcessNodeForMesh(
+void AssetManager::ProcessNodeForMesh(
     bool IsGltf,
     const aiScene* const Scene,
     const aiNode* const Node,
@@ -171,7 +171,7 @@ void FileManager::ProcessNodeForMesh(
     }
 }
 
-void FileManager::ProcessNodeForBone(
+void AssetManager::ProcessNodeForBone(
     const aiScene* const Scene, 
     const aiNode* const Node, 
     BoneAsset* BoneA
@@ -193,7 +193,7 @@ void FileManager::ProcessNodeForBone(
     if (IsNodeValid) BoneA->TraverseUpBone();
 }
 
-void FileManager::LoadMeshElement(
+void AssetManager::LoadMeshElement(
     bool IsGltf,
     const aiMesh* const Mesh,
     StaticMeshAsset* StaticMesh, 
@@ -222,7 +222,7 @@ void FileManager::LoadMeshElement(
     CalculateTB(Mesh, IndicesStartIdx, StaticMesh);
 }
 
-void FileManager::LoadMeshElement(
+void AssetManager::LoadMeshElement(
     bool IsGltf,
     const aiMesh* const Mesh,
     SkeletalMeshAsset* SkeletalMesh,
@@ -253,7 +253,7 @@ void FileManager::LoadMeshElement(
 
 
 template<typename T>
-void FileManager::LoadPosition(
+void AssetManager::LoadPosition(
     const aiMesh* const Mesh,
     size_t VertexStartIdx,
     T* MeshAsset,
@@ -273,7 +273,7 @@ void FileManager::LoadPosition(
     }
 }
 
-void FileManager::LoadBone(
+void AssetManager::LoadBone(
     const aiScene* const Scene,
     SkeletalMeshAsset* SkeletalMesh,
     BoneAsset* BoneAsset
@@ -312,7 +312,7 @@ void FileManager::LoadBone(
 }
 
 template<typename T>
-void FileManager::LoadTextureCoord(
+void AssetManager::LoadTextureCoord(
     const aiMesh* const Mesh, 
     size_t VertexStartIdx, 
     T* MeshAsset
@@ -329,7 +329,7 @@ void FileManager::LoadTextureCoord(
     }
 }
 
-void FileManager::LoadIndices(
+void AssetManager::LoadIndices(
     std::vector<uint32_t>& IndicesIn,
     const aiMesh* const Mesh
 )
@@ -348,7 +348,7 @@ void FileManager::LoadIndices(
 }
 
 template<typename T>
-void FileManager::LoadTBN(
+void AssetManager::LoadTBN(
     const aiMesh* const Mesh, 
     size_t VertexStartIdx, 
     T* MeshAsset
@@ -378,7 +378,7 @@ void FileManager::LoadTBN(
 }
 
 template<typename T>
-void FileManager::LoadTBNAsGltf(
+void AssetManager::LoadTBNAsGltf(
     const aiMesh* const Mesh,
     size_t VertexStartIdx, 
     T* MeshAsset
@@ -415,7 +415,7 @@ void FileManager::LoadTBNAsGltf(
 }
 
 template<typename T>
-void FileManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T* MeshAsset)
+void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T* MeshAsset)
 {
     if (Mesh->HasTangentsAndBitangents())
     {

@@ -5,20 +5,12 @@
 #include "RenderObject.h"
 #include "Camera.h"
 
-// TODO : FileManager 구조 변경시 삭제
-#include "GraphicsPipeline.h"
-
 using namespace std;
 
 Map::Map(GraphicsPipeline* GraphicsPipelineInstance, PSOManager* PSOManagerInstance)
-	: GraphicsPipelineCached(GraphicsPipelineInstance), PSOManagerCached(PSOManagerInstance), FileManagerInstance(GraphicsPipelineInstance->GetDevice())
+	: GraphicsPipelineCached(GraphicsPipelineInstance), PSOManagerCached(PSOManagerInstance)
 {
-	FileManagerInstance.LoadModelFile("./Zombie.fbx");
-	for (size_t idx = 0; idx < 1000; ++idx)
-	{
-		RenderObjects.emplace_back(make_unique<RenderObject>(GraphicsPipelineInstance, (IMeshAsset*)FileManagerInstance.GetAsset("Zombie_SkeletalMesh")));
-		RenderObjects[RenderObjects.size() - 1]->SetAngle(idx / 10.f, idx / 10.f, idx / 10.f);
-	}
+
 }
 
 Map::~Map()
