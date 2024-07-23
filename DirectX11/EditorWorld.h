@@ -41,5 +41,9 @@ public:
 
 public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+	virtual void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+
+private:
+	void OnDropFiles(HDROP hDropIn);
 };
 

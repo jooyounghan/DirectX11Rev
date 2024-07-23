@@ -89,16 +89,16 @@ void GameWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 #ifdef _DEBUG
 	EditorWorldInstance->AppProc(hWnd, msg, wParam, lParam);
-#else
-	ManageMessage(hWnd, msg, wParam, lParam);
 #endif
+
+	ManageMessage(hWnd, msg, wParam, lParam);
 }
 
 void GameWorld::ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
-	case WM_EXITSIZEMOVE:
+	default:
 		break;
 	}
 }

@@ -25,26 +25,11 @@ void SkeletalMeshAsset::Initialize(ID3D11Device* DeviceIn)
 
 void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 {
-	const string OutputPath = OutputAdditionalPath.empty() ?
-		AssetOutPath : AssetOutPath + OutputAdditionalPath;
-
-	const string OutputFullPath = OutputAdditionalPath.empty() ?
-		AssetOutPath + AssetName + AssetExtension : AssetOutPath + OutputAdditionalPath + AssetName + AssetExtension;
-
-	CreateDirectoryA(OutputPath.c_str(), NULL);
-
-	FILE* OutputAssetFile = nullptr;
-	errno_t result = fopen_s(&OutputAssetFile, OutputFullPath.c_str(), "wb");
+	FILE* OutputAssetFile = DefaultOpenFile(OutputAdditionalPath);
 
 	if (OutputAssetFile != nullptr)
 	{
-		// Asset Name
-		size_t AssetNameSize = AssetName.size();
-		fwrite(&AssetNameSize, sizeof(size_t), 1, OutputAssetFile);
-		fwrite(AssetName.c_str(), sizeof(char), AssetNameSize, OutputAssetFile);
-
-		// Asset Type
-		fwrite(&AssetType, sizeof(AssetType), 1, OutputAssetFile);
+		SerializeHeader(OutputAssetFile);
 
 		// Vertices / Indices
 		size_t VertexCount = Vertices.size();
@@ -59,36 +44,19 @@ void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 	}
 }
 
-void SkeletalMeshAsset::Deserialize(const std::string& InputFullPath, ID3D11Device* DeviceIn)
+void SkeletalMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
 {
-	FILE* InputAssetFile = nullptr;
-	fopen_s(&InputAssetFile, InputFullPath.c_str(), "rb");
+	// Vertices / Indices
+	size_t VertexCount;
+	fread(&VertexCount, sizeof(size_t), 1, FileIn);
+	Vertices.resize(VertexCount);
+	fread(Vertices.data(), sizeof(SkeletalVertex), VertexCount, FileIn);
 
-	if (InputAssetFile != nullptr)
-	{
-		// Asset Name
-		size_t AssetNameSize;
-		fread(&AssetNameSize, sizeof(size_t), 1, InputAssetFile);
-		AssetName.resize(AssetNameSize);
-		fread(AssetName.data(), sizeof(char), AssetNameSize, InputAssetFile);
+	size_t IndexCount;
+	fread(&IndexCount, sizeof(size_t), 1, FileIn);
+	Indices.resize(IndexCount);
+	fread(Indices.data(), sizeof(uint32_t), IndexCount, FileIn);
 
-		// Asset Type
-		fread(&AssetType, sizeof(AssetType), 1, InputAssetFile);
-
-		// Vertices / Indices
-		size_t VertexCount;
-		fread(&VertexCount, sizeof(size_t), 1, InputAssetFile);
-		Vertices.resize(VertexCount);
-		fread(Vertices.data(), sizeof(SkeletalVertex), VertexCount, InputAssetFile);
-
-		size_t IndexCount;
-		fread(&IndexCount, sizeof(size_t), 1, InputAssetFile);
-		Indices.resize(IndexCount);
-		fread(Indices.data(), sizeof(uint32_t), IndexCount, InputAssetFile);
-
-		fclose(InputAssetFile);
-
-		Initialize(DeviceIn);
-	}
+	Initialize(DeviceIn);
 }
 

@@ -155,5 +155,8 @@ void PortfolioApp::ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 	case WM_EXITSIZEMOVE:
 		OnChangeWindow();
 		break;
+	case WM_CREATE:
+		DragAcceptFiles(hWnd, TRUE);
+		break;
 	}
 }

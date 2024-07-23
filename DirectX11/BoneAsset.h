@@ -8,6 +8,9 @@
 
 class Bone
 {
+
+	friend class BoneAsset;
+
 public:
 	Bone();
 	Bone(const std::string& NameIn, const size_t& BoneIdxIn, const DirectX::XMMATRIX& OffsetMatrixIn);
@@ -21,16 +24,16 @@ private:
 	MakeSetterGetter(ParentBone);
 
 private:
-	std::vector<Bone*> ChildrenBones;
-	MakeGetter(ChildrenBones);
-
-private:
 	std::string BoneName;
 	MakeGetter(BoneName);
 
 private:
 	DirectX::XMMATRIX OffsetMatrix;
 	MakeGetter(OffsetMatrix);
+
+private:
+	std::vector<Bone*> ChildrenBones;
+	MakeGetter(ChildrenBones);
 
 public:
 	void AddChildBone(Bone* ChildBone)
@@ -67,6 +70,10 @@ public:
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath) override;
-	virtual void Deserialize(const std::string& InputFullPath, ID3D11Device* DeviceIn) override;
+	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn) override;
+
+private:
+	void OnSerializing(Bone* BoneIn, FILE* FileIn);
+	void OnDeserializing(FILE* FileIn);
 };
 

@@ -26,6 +26,7 @@ protected:
 	ID3D11Device* DeviceCached = nullptr;
 
 public:
+	void LoadAssetFile(const std::string& FilePathIn);
 	void LoadModelFile(const std::string& FilePathIn);
 
 private:
@@ -134,5 +135,9 @@ private:
 		size_t IndexStartIdx,
 		T* MeshAsset
 	);
+
+private:
+	void PreloadAssets();
+
 };
 

@@ -99,5 +99,37 @@ void EditorWorld::RenderWorld()
 void EditorWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
-    GameWorldCached->ManageMessage(hWnd, msg, wParam, lParam);
+    ManageMessage(hWnd, msg, wParam, lParam);
+}
+
+void EditorWorld::ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    switch (msg)
+    {
+    case WM_EXITSIZEMOVE:
+        break;
+    case WM_DROPFILES:
+    {
+        HDROP hDrop = (HDROP)wParam;
+        OnDropFiles(hDrop);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void EditorWorld::OnDropFiles(HDROP hDropIn)
+{
+    UINT fileCount = DragQueryFileA(hDropIn, 0xFFFFFFFF, NULL, 0);
+    for (UINT i = 0; i < fileCount; ++i)
+    {
+        char filePath[MAX_PATH];
+        if (DragQueryFileA(hDropIn, i, filePath, MAX_PATH))
+        {
+            string filePathStr = string(filePath);
+            AssetManagerInstance->LoadModelFile(filePathStr);
+        }
+    }
+    DragFinish(hDropIn);
 }

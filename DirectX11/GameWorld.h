@@ -50,9 +50,6 @@ protected:
 
 public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
-
-public:
-	void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
+	virtual void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 };
 

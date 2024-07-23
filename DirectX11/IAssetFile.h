@@ -20,7 +20,8 @@ enum class EAssetType
 	Animation
 };
 
-constexpr const char* AssetOutPath = "./Assets/";
+constexpr const char* AssetOutPath = ".\\Assets\\";
+constexpr const char* AssetMapOutPath = ".\\Assets\\Maps\\";
 constexpr const char* AssetExtension = ".Asset";
 
 struct ID3D11Device;
@@ -39,6 +40,10 @@ protected:
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") = 0;
-	virtual void Deserialize(const std::string& InputFullPath, ID3D11Device* DeviceIn) = 0;
+	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn) = 0;
+
+public:
+	FILE* DefaultOpenFile(const std::string& OutputAdditionalPath);
+	void SerializeHeader(FILE* FileIn);
 };
 

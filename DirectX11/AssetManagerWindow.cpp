@@ -12,7 +12,7 @@ AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
 	: AssetManagerCached(AssetManagerIn)
 {
     RootDirectory.Name = "Assets";
-    RootDirectory.Directory = "./Assets/";
+    RootDirectory.Directory = ".\\Assets\\";
     TravelAssetDirectories(RootDirectory);
 }
 

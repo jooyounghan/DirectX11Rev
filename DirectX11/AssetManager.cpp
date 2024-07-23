@@ -13,32 +13,81 @@
 #include "IndexBuffer.h"
 
 #include "MathematicalHelper.h"
+#include "StringHelper.h"
 
 #include <filesystem>
 
 using namespace std;
 using namespace DirectX;
+using namespace filesystem;
 
 AssetManager::AssetManager(ID3D11Device* DeviceIn)
     : DeviceCached(DeviceIn)
 {
+    PreloadAssets();
 }
 
 AssetManager::~AssetManager()
 {
 }
 
+void AssetManager::LoadAssetFile(const string& AssetPathIn)
+{
+    FILE* InputAssetFile = nullptr;
+    fopen_s(&InputAssetFile, AssetPathIn.c_str(), "rb");
+
+    // Asset Name
+    size_t AssetNameSize;
+    fread(&AssetNameSize, sizeof(size_t), 1, InputAssetFile);
+    string AssetName;
+    AssetName.resize(AssetNameSize);
+    fread(AssetName.data(), sizeof(char), AssetNameSize, InputAssetFile);
+
+    // Asset Type
+    EAssetType AssetType;
+    fread(&AssetType, sizeof(AssetType), 1, InputAssetFile);
+
+    shared_ptr<IAssetFile> AssetFile;
+
+    switch (AssetType)
+    {
+    case EAssetType::None:
+        break;
+    case EAssetType::StaticMesh:
+        AssetFile = make_shared<StaticMeshAsset>(AssetName);
+        break;
+    case EAssetType::SkeletalMesh:
+        AssetFile = make_shared<SkeletalMeshAsset>(AssetName);
+        break;
+    case EAssetType::Bone:
+        AssetFile = make_shared<BoneAsset>(AssetName);
+        break;
+    case EAssetType::Texture:
+        break;
+    case EAssetType::Animation:
+        break;
+    default:
+        break;
+    }
+
+    AssetFile->Deserialize(InputAssetFile, DeviceCached);
+    ManagingAssets.emplace(AssetName, AssetFile);
+
+    fclose(InputAssetFile);
+}
+
 void AssetManager::LoadModelFile(const string& FilePathIn)
 {
-    filesystem::path FilePath = FilePathIn;
+    path FilePath = FilePathIn;
     const string FileName = FilePath.stem().string();
     const string FileExtension = FilePath.extension().string();
     
     if (ManagingAssets.find(FileName) == ManagingAssets.end())
     {
+        auto test = FilePath.string();
         Assimp::Importer importer;
         const aiScene* pScene = importer.ReadFile(
-            FilePathIn,
+            StringHelper::ConvertACPToUTF8(FilePathIn),
             aiProcess_Triangulate | aiProcess_ConvertToLeftHanded
         );
 
@@ -81,7 +130,9 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
         ProcessNodeForMesh(IsGltf, Scene, RootNode, SkeletalMeshAPtr, BoneAPtr, RootTransform);
 
         LoadBone(Scene, SkeletalMeshAPtr, BoneAPtr);
-        bool test = true;
+
+        // Serialize Bone Asset
+        BoneA->Serialize();
     }
     else
     {
@@ -89,7 +140,10 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
         ProcessNodeForMesh(IsGltf, Scene, RootNode, (StaticMeshAsset*)Mesh.get(), RootTransform);
     }
 
+    // Serialize Mesh Asset
     Mesh->Initialize(DeviceCached);
+
+    Mesh->Serialize();
     ManagingAssets.emplace(Mesh->GetAssetName(), Mesh);
 }
 
@@ -347,6 +401,27 @@ void AssetManager::LoadIndices(
     }
 }
 
+void AssetManager::PreloadAssets()
+{
+    path AssetPath = path(AssetOutPath);
+    path MapPath = path(AssetMapOutPath);
+    
+    if (!exists(AssetPath) && create_directories(AssetPath)) {/* Do Nothing But Make Directory */ };
+    if (!exists(MapPath) && create_directories(MapPath)) {/* Do Nothing But Make Directory */ };
+
+    for (const auto& entry : directory_iterator(AssetPath))
+    {
+        if (entry.is_regular_file())
+        {
+            const path filePath = entry.path();
+            if (filePath.extension() == AssetExtension)
+            {
+                LoadAssetFile(filePath.string());
+            }
+        }
+    }
+}
+
 template<typename T>
 void AssetManager::LoadTBN(
     const aiMesh* const Mesh, 
@@ -450,48 +525,3 @@ void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T
 
     }
 }
-
-//BoneFile* pBoneFile = pMeshFile->GetBoneFile();
-//if (pMesh->HasBones() && pBoneFile != nullptr)
-//{
-//    mesh.vBlendWeight1.resize(mesh.vVertices.size());
-//    mesh.vBlendWeight2.resize(mesh.vVertices.size());
-//    mesh.vBlendIndices1.resize(mesh.vVertices.size());
-//    mesh.vBlendIndices2.resize(mesh.vVertices.size());
-//
-//    vector<vector<float>> tempWeights;
-//    vector<vector<size_t>> tempIndices;
-//
-//    tempWeights.resize(mesh.vVertices.size());
-//    tempIndices.resize(mesh.vVertices.size());
-//
-//    for (size_t boneIdx = 0; boneIdx < pMesh->mNumBones; ++boneIdx)
-//    {
-//        const aiBone* pBone = pMesh->mBones[boneIdx];
-//        size_t boneId = pBoneFile->GetBoneIdx(pBone->mName.C_Str());
-//
-//        for (size_t weightIdx = 0; weightIdx < pBone->mNumWeights; ++weightIdx)
-//        {
-//            const aiVertexWeight& pWeight = pBone->mWeights[weightIdx];
-//            tempWeights[pWeight.mVertexId].push_back(pWeight.mWeight);
-//            tempIndices[pWeight.mVertexId].push_back(boneId);
-//        }
-//    }
-//
-//    for (size_t vertexIdx = 0; vertexIdx < mesh.vVertices.size(); ++vertexIdx)
-//    {
-//        vector<float>& weights = tempWeights[vertexIdx];
-//        vector<size_t>& indices = tempIndices[vertexIdx];
-//
-//        const size_t weightNums = weights.size();
-//
-//        for (size_t weightIdx = 0; weightIdx < weightNums; ++weightIdx)
-//        {
-//            weightIdx < 4 ? *(&mesh.vBlendWeight1[vertexIdx].x + weightIdx) = weights[weightIdx] :
-//                *(&mesh.vBlendWeight2[vertexIdx].x + weightIdx - 4) = weights[weightIdx];
-//
-//            weightIdx < 4 ? *(&mesh.vBlendIndices1[vertexIdx].x + weightIdx) = indices[weightIdx] :
-//                *(&mesh.vBlendIndices2[vertexIdx].x + weightIdx - 4) = indices[weightIdx];
-//        }
-//    }
-//}

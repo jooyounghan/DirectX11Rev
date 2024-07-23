@@ -17,5 +17,6 @@ public:
 
 public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
+	virtual void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
 };
 

@@ -50,6 +50,6 @@ void Map::Serialize(const std::string& OutputAdditionalPath)
 {
 }
 
-void Map::Deserialize(const std::string& InputFullPath, ID3D11Device* DeviceIn)
+void Map::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
 {
 }

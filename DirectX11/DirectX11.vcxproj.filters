@@ -243,6 +243,9 @@
     <ClCompile Include="AssetManagerWindow.cpp">
       <Filter>소스 파일\World\Editor\GUI\Window</Filter>
     </ClCompile>
+    <ClCompile Include="StringHelper.cpp">
+      <Filter>소스 파일\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
@@ -394,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="AssetManagerWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="StringHelper.h">
+      <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -167,6 +167,7 @@
     <ClCompile Include="Serializable.cpp" />
     <ClCompile Include="SkeletalMeshAsset.cpp" />
     <ClCompile Include="StaticMeshAsset.cpp" />
+    <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TaskAnalyzerWindow.cpp" />
     <ClCompile Include="TextureAsset.cpp" />
     <ClCompile Include="Viewable.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="PSOObject.h" />
     <ClInclude Include="PSOObjectHelper.h" />
+    <ClInclude Include="StringHelper.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="EditorWorld.h" />
     <ClInclude Include="AssetManager.h" />
