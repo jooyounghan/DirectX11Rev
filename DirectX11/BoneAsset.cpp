@@ -22,8 +22,8 @@ Bone::~Bone()
 {
 }
 
-BoneAsset::BoneAsset(const std::string& AssetNameIn)
-	: IAssetFile(AssetNameIn + "_Bone", EAssetType::Bone)
+BoneAsset::BoneAsset(const std::string& AssetNameIn, bool LoadAsFile)
+	: IAssetFile(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::Bone)] : AssetNameIn, EAssetType::Bone)
 {
 }
 
@@ -125,7 +125,11 @@ void BoneAsset::OnDeserializing(FILE* FileIn)
 	NameToBones.emplace(BoneName, Bone());
 	Bone* DeserializingBone = &NameToBones[BoneName];
 	
+
 	TraverseDownBone(DeserializingBone);
+
+	// Bone Name
+	DeserializingBone->BoneName = BoneName;
 
 	// Bone Idx
 	fread(&DeserializingBone->BoneIdx, sizeof(size_t), 1, FileIn);

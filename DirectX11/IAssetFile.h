@@ -1,6 +1,7 @@
 #pragma once
 #include "Serializable.h"
 #include "HeaderHelper.h"
+#include <array>
 
 enum class EAssetType
 {
@@ -17,7 +18,28 @@ enum class EAssetType
 	Texture,
 
 	// Animation
-	Animation
+	Animation,
+	NumAssetType,
+};
+
+constexpr size_t GetAssetTypeAsIndex(EAssetType AssetType) { return static_cast<size_t>(AssetType); }
+
+constexpr const char* AssetSuffix[GetAssetTypeAsIndex(EAssetType::NumAssetType)] =
+{
+	"",
+
+	// Mesh
+	"_StaticMesh",
+	"_SkeletalMesh",
+
+	// Bone
+	"_Bone",
+
+	// Texture
+	"_Texture",
+
+	// Animation
+	"_Animation"
 };
 
 constexpr const char* AssetOutPath = ".\\Assets\\";

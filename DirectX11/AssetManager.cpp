@@ -54,13 +54,14 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
     case EAssetType::None:
         break;
     case EAssetType::StaticMesh:
-        AssetFile = make_shared<StaticMeshAsset>(AssetName);
+        AssetFile = make_shared<StaticMeshAsset>(AssetName, false);
         break;
     case EAssetType::SkeletalMesh:
-        AssetFile = make_shared<SkeletalMeshAsset>(AssetName);
+        AssetFile = make_shared<SkeletalMeshAsset>(AssetName, false);
+        WatingSkeletalMeshes.push_back((SkeletalMeshAsset*)AssetFile.get());
         break;
     case EAssetType::Bone:
-        AssetFile = make_shared<BoneAsset>(AssetName);
+        AssetFile = make_shared<BoneAsset>(AssetName, false);
         break;
     case EAssetType::Texture:
         break;
@@ -122,8 +123,8 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
 
     if (HasBone(Scene))
     {
-        Mesh = make_shared<SkeletalMeshAsset>(AssetName);
-        BoneA = make_shared<BoneAsset>(AssetName);
+        Mesh = make_shared<SkeletalMeshAsset>(AssetName, true);
+        BoneA = make_shared<BoneAsset>(AssetName, true);
 
         SkeletalMeshAsset* SkeletalMeshAPtr = (SkeletalMeshAsset*)Mesh.get();
         BoneAsset* BoneAPtr = (BoneAsset*)BoneA.get();
@@ -136,7 +137,7 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
     }
     else
     {
-        Mesh = make_shared<StaticMeshAsset>(AssetName);
+        Mesh = make_shared<StaticMeshAsset>(AssetName, true);
         ProcessNodeForMesh(IsGltf, Scene, RootNode, (StaticMeshAsset*)Mesh.get(), RootTransform);
     }
 
@@ -164,6 +165,22 @@ bool AssetManager::HasBone(const aiScene* const Scene)
         if (CurrentMesh->HasBones()) return true;
     }
     return false;
+}
+
+void AssetManager::ProcessLinkSkeletalMeshAsset()
+{
+    while (!WatingSkeletalMeshes.empty())
+    {
+        SkeletalMeshAsset* CurrentSkeletalMeshAsset = WatingSkeletalMeshes.back();
+
+        const string& BoneAssetName = CurrentSkeletalMeshAsset->GetBoneAssetName();
+
+        if (ManagingAssets.find(BoneAssetName) != ManagingAssets.end())
+        {
+            CurrentSkeletalMeshAsset->LinkBoneAsset((BoneAsset*)ManagingAssets[BoneAssetName].get());
+        }
+        WatingSkeletalMeshes.pop_back();
+    }
 }
 
 IAssetFile* AssetManager::GetAsset(const std::string AssetName)
@@ -363,6 +380,7 @@ void AssetManager::LoadBone(
             ProcessNodeForBone(Scene, Scene->mRootNode, BoneAsset);
         }
     }
+    SkeletalMesh->LinkBoneAsset(BoneAsset);
 }
 
 template<typename T>
@@ -420,6 +438,8 @@ void AssetManager::PreloadAssets()
             }
         }
     }
+
+    ProcessLinkSkeletalMeshAsset();
 }
 
 template<typename T>

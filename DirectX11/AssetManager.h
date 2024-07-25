@@ -4,6 +4,7 @@
 
 #include <unordered_map>
 #include <memory>
+#include <deque>
 
 struct aiScene;
 struct aiNode;
@@ -36,6 +37,12 @@ private:
 
 private:
 	bool HasBone(const aiScene* const Scene);
+
+private:
+	std::deque<SkeletalMeshAsset*> WatingSkeletalMeshes;
+
+public:
+	void ProcessLinkSkeletalMeshAsset();
 
 private:
 	std::unordered_map<std::string, std::shared_ptr<IAssetFile>> ManagingAssets;

@@ -8,8 +8,6 @@ namespace App
 	extern UINT GHeight;
 }
 
-struct ImVec4;
-
 namespace Direction
 {
 	extern DirectX::XMVECTOR GDefaultForward;
@@ -17,6 +15,7 @@ namespace Direction
 	extern DirectX::XMVECTOR GDefaultRight;
 }
 
+struct ImVec4;
 namespace Color
 {
 	extern ImVec4 GBlack;
@@ -26,4 +25,9 @@ namespace Color
 	extern ImVec4 GDarkBrown;
 	extern ImVec4 GMediumBrown;
 	extern ImVec4 GLightBrown;
+}
+
+namespace DragDrop
+{
+	extern const char* GAsset;
 }

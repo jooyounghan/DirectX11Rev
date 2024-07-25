@@ -15,12 +15,13 @@ struct SkeletalVertex
 	SVector4D		BlendIndex;
 };
 
+class BoneAsset;
 
 class SkeletalMeshAsset : public IMeshAsset
 {
 public:
 	SkeletalMeshAsset();
-	SkeletalMeshAsset(const std::string& AssetNameIn);
+	SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadAsFile);
 	virtual ~SkeletalMeshAsset();
 
 public:
@@ -28,6 +29,14 @@ public:
 
 protected:
 	VertexBuffer<SkeletalVertex>	VerticesBuffer;
+
+protected:
+	BoneAsset* LinkedBoneAsset = nullptr;
+	std::string BoneAssetName = "";
+
+public:
+	const std::string& GetBoneAssetName() { return BoneAssetName; }
+	void LinkBoneAsset(BoneAsset* BoneAssetIn);
 
 public:
 	virtual ID3D11Buffer* GetVertexBuffer() override { return VerticesBuffer.GetBuffer(); }

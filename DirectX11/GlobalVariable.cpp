@@ -18,3 +18,5 @@ ImVec4 Color::GLightGray = ImVec4(0.55f, 0.55f, 0.55f, 1.f);
 ImVec4 Color::GDarkBrown = ImVec4(0.4f, 0.26f, 0.13f, 1.f);
 ImVec4 Color::GMediumBrown = ImVec4(0.7f, 0.5f, 0.34f, 1.f);
 ImVec4 Color::GLightBrown = ImVec4(1.f, 0.843f, 0.404f, 1.f);
+
+const char* DragDrop::GAsset = "DND_ASSET";

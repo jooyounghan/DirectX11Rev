@@ -1,4 +1,5 @@
 #include "SkeletalMeshAsset.h"
+#include "BoneAsset.h"
 #include <stdio.h>
 
 using namespace std;
@@ -8,13 +9,19 @@ SkeletalMeshAsset::SkeletalMeshAsset()
 {
 }
 
-SkeletalMeshAsset::SkeletalMeshAsset(const std::string& AssetNameIn)
-	: IMeshAsset(AssetNameIn + "_SkeletalMesh", EAssetType::SkeletalMesh)
+SkeletalMeshAsset::SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadAsFile)
+	: IMeshAsset(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::SkeletalMesh)] : AssetNameIn, EAssetType::SkeletalMesh)
 {
 }
 
 SkeletalMeshAsset::~SkeletalMeshAsset()
 {
+}
+
+void SkeletalMeshAsset::LinkBoneAsset(BoneAsset* BoneAssetIn)
+{
+	LinkedBoneAsset = BoneAssetIn;
+	BoneAssetName = BoneAssetIn->GetAssetName();
 }
 
 void SkeletalMeshAsset::Initialize(ID3D11Device* DeviceIn)
@@ -31,6 +38,12 @@ void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 	{
 		SerializeHeader(OutputAssetFile);
 
+		// Linked Bone Name
+		size_t LinkedBoneAssetNameCount;
+		LinkedBoneAssetNameCount = BoneAssetName.size();
+		fwrite(&LinkedBoneAssetNameCount, sizeof(size_t), 1, OutputAssetFile);
+		fwrite(BoneAssetName.c_str(), sizeof(char), LinkedBoneAssetNameCount, OutputAssetFile);
+
 		// Vertices / Indices
 		size_t VertexCount = Vertices.size();
 		fwrite(&VertexCount, sizeof(size_t), 1, OutputAssetFile);
@@ -46,6 +59,12 @@ void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 
 void SkeletalMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
 {
+	// Linked Bone Name
+	size_t LinkedBoneAssetNameCount;
+	fread(&LinkedBoneAssetNameCount, sizeof(size_t), 1, FileIn);
+	BoneAssetName.resize(LinkedBoneAssetNameCount);
+	fread(BoneAssetName.data(), sizeof(char), LinkedBoneAssetNameCount, FileIn);
+
 	// Vertices / Indices
 	size_t VertexCount;
 	fread(&VertexCount, sizeof(size_t), 1, FileIn);

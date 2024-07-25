@@ -8,8 +8,8 @@ StaticMeshAsset::StaticMeshAsset()
 {
 }
 
-StaticMeshAsset::StaticMeshAsset(const string& AssetNameIn)
-	: IMeshAsset(AssetNameIn + "_StaticMesh", EAssetType::StaticMesh)
+StaticMeshAsset::StaticMeshAsset(const string& AssetNameIn, bool LoadAsFile)
+	: IMeshAsset(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::StaticMesh)] : AssetNameIn, EAssetType::StaticMesh)
 {
 }
 

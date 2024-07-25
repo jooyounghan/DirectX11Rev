@@ -46,7 +46,7 @@ public:
 class BoneAsset : public IAssetFile
 {
 public:
-	BoneAsset(const std::string& AssetNameIn);
+	BoneAsset(const std::string& AssetNameIn, bool LoadAsFile);
 	virtual ~BoneAsset();
 
 protected:

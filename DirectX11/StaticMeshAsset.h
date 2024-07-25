@@ -16,7 +16,7 @@ class StaticMeshAsset : public IMeshAsset
 {
 public:
 	StaticMeshAsset();
-	StaticMeshAsset(const std::string& AssetNameIn);
+	StaticMeshAsset(const std::string& AssetNameIn, bool LoadAsFile);
 	virtual ~StaticMeshAsset();
 
 public:

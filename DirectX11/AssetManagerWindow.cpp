@@ -133,17 +133,25 @@ void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& V
     ImGuiStyle& Style = ImGui::GetStyle();
     const path& EntryFileName = AssetPathIn.filename();
 
-    ImGui::BeginGroup();
 
     ImGui::PushID(EntryFileName.c_str());
-    ImGui::Button("", FileSize);
-    ImGui::PopID();
-
+    ImGui::BeginGroup();
+    ImGui::Image(nullptr, FileSize);
     ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + FileSize.x);
     ImGui::Text(EntryFileName.string().c_str());
     ImGui::PopTextWrapPos();
-
     ImGui::EndGroup();
+    ImGui::PopID();
+
+    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+    {
+        const string AssetName = EntryFileName.stem().string();
+        IAssetFile* AssetFile =  AssetManagerCached->GetAsset(AssetName);
+
+        ImGui::SetDragDropPayload(DragDrop::GAsset, &AssetFile, sizeof(IAssetFile*));
+        ImGui::Text("%s", AssetName.c_str());
+        ImGui::EndDragDropSource();
+    }
 
     float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
     float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
