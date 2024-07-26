@@ -32,10 +32,6 @@ protected:
 protected:
 	std::vector<std::unique_ptr<IWindow>> Dialogs;
 
-protected:
-	std::unique_ptr<Camera> EditorCamera;
-	MakeSmartPtrGetter(EditorCamera);
-
 public:
 	virtual void RenderWorld() override;
 

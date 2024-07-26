@@ -29,14 +29,23 @@ void Viewable::Resize(const UINT& WidthIn, const UINT& HeightIn)
 	Viewport.MaxDepth = 1.f;
 }
 
-XMMATRIX Viewable::GetPerspectiveViewMatrix()
+const XMMATRIX Viewable::GetViewMatrix()
 {
 	const XMVECTOR RotationQuat = GetRotationQuat();
 	XMVECTOR CurrentForward = XMVector3Rotate(Direction::GDefaultForward, RotationQuat);
 	XMVECTOR CurrentUp = XMVector3Rotate(Direction::GDefaultUp, RotationQuat);
 
-	return XMMatrixLookToLH(Position.Position, CurrentForward, CurrentUp) *
-		XMMatrixPerspectiveFovLH(XMConvertToRadians(FovAngle), static_cast<float>(Width) / Height, NearZ, FarZ);
+	return XMMatrixLookToLH(Position.Position, CurrentForward, CurrentUp);
+}
+
+const XMMATRIX Viewable::GetProjectionMatrix()
+{
+	return XMMatrixPerspectiveFovLH(XMConvertToRadians(FovAngle), static_cast<float>(Width) / Height, NearZ, FarZ);
+}
+
+const XMMATRIX Viewable::GetPerspectiveViewMatrix()
+{
+	return GetViewMatrix() * GetProjectionMatrix();
 }
 
 void Viewable::UpdateView()

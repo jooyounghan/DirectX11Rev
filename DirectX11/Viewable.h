@@ -1,6 +1,5 @@
 #pragma once
 #include "Object.h"
-#include "UploadBuffer.h"
  
 struct ViewProjBufferData
 {
@@ -27,8 +26,12 @@ public:
 	float NearZ		= 0.1f;
 	float FarZ		= 1000.f;
 
+public:
+	const DirectX::XMMATRIX GetViewMatrix();
+	const DirectX::XMMATRIX GetProjectionMatrix();
+
 protected:
-	DirectX::XMMATRIX GetPerspectiveViewMatrix();
+	const DirectX::XMMATRIX GetPerspectiveViewMatrix();
 
 public:
 	UploadBuffer<ViewProjBufferData> ViewProjBuffer;

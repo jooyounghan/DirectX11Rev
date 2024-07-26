@@ -1,14 +1,18 @@
 #pragma once
 #include "Serializable.h"
+#include "HeaderHelper.h"
 
-#include <vector>
+#include <list>
 #include <memory>
+#include <unordered_map>
 
 class GraphicsPipeline;
 class PSOManager;
+class PSOObject;
 
 class Camera;
 class RenderObject;
+class IMeshAsset;
 
 class Map : public ISerializable
 {
@@ -19,6 +23,7 @@ public:
 protected:
 	GraphicsPipeline* GraphicsPipelineCached = nullptr;
 	PSOManager* PSOManagerCached = nullptr;
+
 protected:
 	/* 
 	¸Ê¿¡¼­ °ü¸®ÇÏ´Â °´Ã¼
@@ -26,11 +31,22 @@ protected:
 	*/
 
 protected:
-	std::vector<std::unique_ptr<RenderObject>> RenderObjects;
+	std::unique_ptr<Camera> MapCamera;
+	MakeSmartPtrGetter(MapCamera);
+
+protected:
+	std::unordered_map<PSOObject*, std::vector<RenderObject*>> PSOObjectToRenderObjects;
+
+protected:
+	std::list<RenderObject> RenderObjects;
+
+public:
+	void AddRenderObject(IMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
+	void AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float ScreenYIn, float ScreenWidthIn, float ScreenHeightIn);
 
 public:
 	void UpdateMap(const float& DeltaTimeIn);
-	void RenderMap(Camera* CameraIn);
+	void RenderMap();
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath) override;

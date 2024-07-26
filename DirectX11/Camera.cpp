@@ -5,9 +5,6 @@
 Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, const UINT& HeightIn)
 	: Viewable(GraphicsPipelineInstance->GetDevice(), GraphicsPipelineInstance->GetDeviceContext(), WidthIn, HeightIn)
 {
-	// TODO : 테스트 후 삭제
-	Position.z = -5.f;
-
 	ID3D11Device* Device = GraphicsPipelineInstance->GetDevice();
 
 	D3D11_TEXTURE2D_DESC SceneTexture2DDesc;

@@ -20,8 +20,6 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHand
 	PSOManagerInstance = make_unique<PSOManager>((GraphicsPipelineInstance));
 
 	EditorWorldInstance = make_unique<EditorWorld>(this, WindowHandle);
-	CurrentCamera = EditorWorldInstance->GetEditorCamera();
-	CurrentCamera->SetPosition(0.f, 0.f, -300.f);
 
 	MapInstances.emplace(0, std::move(make_unique<Map>(GraphicsPipelineInstance, PSOManagerInstance.get())));
 	CurrentMap = MapInstances[0].get();
@@ -57,10 +55,6 @@ void GameWorld::UpdateGameWorld(const float& DeltaTimeIn)
 	if (CurrentMap)
 	{
 		CurrentMap->UpdateMap(DeltaTimeIn);
-		if (CurrentCamera)
-		{
-			CurrentCamera->UpdateView();
-		}
 	}
 }
 
@@ -68,19 +62,16 @@ void GameWorld::RenderWorld()
 {
 	if (CurrentMap)
 	{
-		if (CurrentCamera)
-		{
-			CurrentMap->RenderMap(CurrentCamera);
+		CurrentMap->RenderMap();
 			
 #ifdef _DEBUG
-			EditorWorldInstance->RenderWorld();
+		EditorWorldInstance->RenderWorld();
 #else
-			GraphicsPipelineCached->GetDeviceContext()->CopyResource(
-				GraphicsPipelineCached->GetBackBufferTexture(),
-				CurrentCamera->GetSceneTexture2D()
-			);
+		GraphicsPipelineCached->GetDeviceContext()->CopyResource(
+			GraphicsPipelineCached->GetBackBufferTexture(),
+			CurrentCamera->GetSceneTexture2D()
+		);
 #endif // _DEBUG
-		}
 	}
 
 }

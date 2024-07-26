@@ -52,8 +52,6 @@ void PSOObject::SetPipelineObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVs
 
 #ifdef _DEBUG
 	ResetResourceFlag();
-#endif // _DEBUG
-
 	D3D11_RENDER_TARGET_VIEW_DESC RenderTargetViewDesc;
 	for (size_t RtvIndex = 0; RtvIndex < NumRenderTargets; ++RtvIndex)
 	{
@@ -65,6 +63,7 @@ void PSOObject::SetPipelineObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVs
 	D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc;
 	DSVIn->GetDesc(&DepthStencilViewDesc);
 	assert(DepthStencilViewDesc.Format == DSVFormat);
+#endif // _DEBUG
 
 	DeviceContextCached->IASetInputLayout(InputLayout.Get());
 	DeviceContextCached->IASetPrimitiveTopology(PrimitiveTopology);

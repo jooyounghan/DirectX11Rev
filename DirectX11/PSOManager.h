@@ -4,7 +4,7 @@
 #include <d3d11.h>
 #include <memory>
 
-enum PSOType : size_t
+enum EPSOType : size_t
 {
 	R8G8B8A8_Static_Solid,
 	R8G8B8A8_Static_Wireframe,
@@ -29,7 +29,7 @@ protected:
 	std::unique_ptr<PSOObject> PSOObjects[PSOTypeCount];
 
 public:
-	inline PSOObject* GetPSOObject(PSOType PsoTypeIn) { return PSOObjects[PsoTypeIn].get(); }
+	inline PSOObject* GetPSOObject(EPSOType PsoTypeIn) { return PSOObjects[PsoTypeIn].get(); }
 
 private:
 	void CreateStatic();

@@ -14,8 +14,6 @@
 #include "GameWorld.h"
 #include "GraphicsPipeline.h"
 
-#include "Camera.h"
-
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -51,12 +49,6 @@ EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
     Dialogs.push_back(make_unique<ViewportWindow>(GameWorldCached));
     Dialogs.push_back(make_unique<MapOutlinerWindow>(GameWorldCached));
     Dialogs.push_back(make_unique<AssetManagerWindow>(AssetManagerInstance.get()));
-
-
-    EditorCamera = make_unique<Camera>(
-        GraphicsPipelineCached, App::GWidth, App::GHeight
-    );
-
 }
 
 EditorWorld::~EditorWorld()

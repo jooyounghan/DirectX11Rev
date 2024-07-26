@@ -40,13 +40,10 @@ protected:
 protected:
 	std::unordered_map<UINT, std::unique_ptr<Map>> MapInstances;
 	Map* CurrentMap = nullptr;
+	MakeGetter(CurrentMap);
 
 public:
 	virtual void RenderWorld() override;
-
-protected:
-	Camera* CurrentCamera = nullptr;
-	MakeGetter(CurrentCamera);
 
 public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
