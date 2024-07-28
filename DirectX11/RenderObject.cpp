@@ -2,12 +2,13 @@
 #include "GraphicsPipeline.h"
 #include "IMeshAsset.h"
 #include "PSOObject.h"
+#include "IIntersectable.h"
 
 RenderObject::RenderObject(
 	GraphicsPipeline* GraphicsPipelineInstances, 
 	IMeshAsset* MeshAssetInstanceIn
 )
-	: Object(GraphicsPipelineInstances->GetDevice(),
+	: PlacableObject(GraphicsPipelineInstances->GetDevice(),
 		GraphicsPipelineInstances->GetDeviceContext()),
 		MeshAssetInstance(MeshAssetInstanceIn)
 {

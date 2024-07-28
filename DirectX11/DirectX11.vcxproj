@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssetManagerWindow.cpp" />
+    <ClCompile Include="BoundingCapsule.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="BoneAsset.cpp" />
     <ClCompile Include="DefineType.cpp" />
@@ -154,15 +155,18 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="IObject.cpp" />
     <ClCompile Include="IWorld.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
-    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="PlacableObject.cpp" />
+    <ClCompile Include="OrientedBoundingBox.cpp" />
     <ClCompile Include="PortfolioApp.cpp" />
     <ClCompile Include="PSOManager.cpp" />
     <ClCompile Include="PSOObject.cpp" />
+    <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="Serializable.cpp" />
     <ClCompile Include="SkeletalMeshAsset.cpp" />
@@ -175,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManagerWindow.h" />
+    <ClInclude Include="BoundingCapsule.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="BoneAsset.h" />
     <ClInclude Include="ConstantArrayBuffer.h" />
@@ -182,6 +187,7 @@
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="FileSelectDialog.h" />
     <ClInclude Include="IDialog.h" />
+    <ClInclude Include="IIntersectable.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
@@ -190,8 +196,11 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="IObject.h" />
+    <ClInclude Include="OrientedBoundingBox.h" />
     <ClInclude Include="PSOObject.h" />
     <ClInclude Include="PSOObjectHelper.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="EditorWorld.h" />
@@ -213,7 +222,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapOutlinerWindow.h" />
     <ClInclude Include="MathematicalHelper.h" />
-    <ClInclude Include="Object.h" />
+    <ClInclude Include="PlacableObject.h" />
     <ClInclude Include="PortfolioApp.h" />
     <ClInclude Include="PSOManager.h" />
     <ClInclude Include="RenderObject.h" />

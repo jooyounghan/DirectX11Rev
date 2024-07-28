@@ -127,6 +127,33 @@
     <Filter Include="헤더 파일\World\Editor\GUI\Window">
       <UniqueIdentifier>{03918427-51e3-4d99-9867-b9e7f601b267}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Collision">
+      <UniqueIdentifier>{905256e4-f194-4f73-962b-4c7087e5de31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Collision">
+      <UniqueIdentifier>{bb1f6d40-ce30-43eb-b36e-9059eedd0375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Map\Object\Placable">
+      <UniqueIdentifier>{6f94c2d0-776d-43cb-a81c-93faac69859a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Map\Object\Placable">
+      <UniqueIdentifier>{d408cb24-18e1-4cdf-bc8f-6d37d60a7306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Map\Object\Attachable">
+      <UniqueIdentifier>{c4eaead6-b05b-4feb-b90f-34ae06bf3d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Map\Object\Attachable\Component">
+      <UniqueIdentifier>{3f06afff-370a-44a7-8cf0-18c7b7ebd399}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Map\Object\Attachable\Component\BoundingComponent">
+      <UniqueIdentifier>{b7f79190-37bb-437b-8da5-f9f2fc3bf0cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Map\Object\Component">
+      <UniqueIdentifier>{e7afef0c-675f-4a89-bee7-48b471c6787e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Map\Object\Component\BoundingComponent">
+      <UniqueIdentifier>{15c9ed6a-e671-410a-9fe9-cd8de82fa103}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -186,18 +213,6 @@
     <ClCompile Include="Map.cpp">
       <Filter>소스 파일\Map</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>소스 파일\Map\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderObject.cpp">
-      <Filter>소스 파일\Map\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Viewable.cpp">
-      <Filter>소스 파일\Map\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일\Map\Object</Filter>
-    </ClCompile>
     <ClCompile Include="IndexBuffer.cpp">
       <Filter>소스 파일\Buffer\Constant</Filter>
     </ClCompile>
@@ -245,6 +260,30 @@
     </ClCompile>
     <ClCompile Include="StringHelper.cpp">
       <Filter>소스 파일\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>소스 파일\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="OrientedBoundingBox.cpp">
+      <Filter>소스 파일\Map\Object\Component\BoundingComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingCapsule.cpp">
+      <Filter>소스 파일\Map\Object\Component\BoundingComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>소스 파일\Map\Object\Placable</Filter>
+    </ClCompile>
+    <ClCompile Include="PlacableObject.cpp">
+      <Filter>소스 파일\Map\Object\Placable</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject.cpp">
+      <Filter>소스 파일\Map\Object\Placable</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewable.cpp">
+      <Filter>소스 파일\Map\Object\Placable</Filter>
+    </ClCompile>
+    <ClCompile Include="IObject.cpp">
+      <Filter>소스 파일\Map\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -296,15 +335,6 @@
     <ClInclude Include="Map.h">
       <Filter>헤더 파일\Map</Filter>
     </ClInclude>
-    <ClInclude Include="RenderObject.h">
-      <Filter>헤더 파일\Map\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>헤더 파일\Map\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Viewable.h">
-      <Filter>헤더 파일\Map\Object</Filter>
-    </ClInclude>
     <ClInclude Include="PSOManager.h">
       <Filter>헤더 파일\App</Filter>
     </ClInclude>
@@ -316,9 +346,6 @@
     </ClInclude>
     <ClInclude Include="GlobalVariable.h">
       <Filter>헤더 파일\App</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>헤더 파일\Map\Object</Filter>
     </ClInclude>
     <ClInclude Include="IDownloadableBuffer.h">
       <Filter>헤더 파일\Buffer</Filter>
@@ -400,6 +427,33 @@
     </ClInclude>
     <ClInclude Include="StringHelper.h">
       <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>헤더 파일\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="IIntersectable.h">
+      <Filter>헤더 파일\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingCapsule.h">
+      <Filter>헤더 파일\Map\Object\Attachable\Component\BoundingComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="OrientedBoundingBox.h">
+      <Filter>헤더 파일\Map\Object\Attachable\Component\BoundingComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>헤더 파일\Map\Object\Placable</Filter>
+    </ClInclude>
+    <ClInclude Include="PlacableObject.h">
+      <Filter>헤더 파일\Map\Object\Placable</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject.h">
+      <Filter>헤더 파일\Map\Object\Placable</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewable.h">
+      <Filter>헤더 파일\Map\Object\Placable</Filter>
+    </ClInclude>
+    <ClInclude Include="IObject.h">
+      <Filter>헤더 파일\Map\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

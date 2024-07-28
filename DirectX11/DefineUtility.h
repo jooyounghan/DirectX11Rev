@@ -6,7 +6,7 @@
 #define D3D11_BUFFER_ALIGN 16
 #define BUFFER_ALIGN_CHECK(Size) assert(Size % D3D11_BUFFER_ALIGN == 0);
 
-#define AutoZeroMemory(Object) ZeroMemory(&Object, sizeof(decltype(Object)))
+#define AutoZeroMemory(PlacableObject) ZeroMemory(&PlacableObject, sizeof(decltype(PlacableObject)))
 #define AutoZeroArrayMemory(Array) ZeroMemory(Array, sizeof(decltype(Array)))
 
 #define AssertIfFailed(IsFailed) { bool Result = FAILED(IsFailed); assert(!Result); }

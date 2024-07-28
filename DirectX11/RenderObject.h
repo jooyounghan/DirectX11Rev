@@ -1,11 +1,15 @@
 #pragma once
-#include "Object.h"
+#include "PlacableObject.h"
+#include "HeaderHelper.h"
+
+#include <memory>
 
 class IMeshAsset;
 class GraphicsPipeline;
 class PSOObject;
+class IIntersectable;
 
-class RenderObject : public Object
+class RenderObject : public PlacableObject
 {
 public:
 	RenderObject(
@@ -16,6 +20,12 @@ public:
 
 protected:
 	IMeshAsset* MeshAssetInstance = nullptr;
+	MakeGetter(MeshAssetInstance);
+
+protected:
+	std::unique_ptr<IIntersectable> InterstectInstance = nullptr;
+	MakeSmartPtrGetter(InterstectInstance);
+
 
 public:
 	virtual void Render(PSOObject* PSOObjectIn);

@@ -21,7 +21,7 @@ Map::Map(GraphicsPipeline* GraphicsPipelineInstance, PSOManager* PSOManagerInsta
 	);
 
 	// TEST
-	MapCamera->SetPosition(0.f, 0.f, -300.f);
+	MapCamera->Position = SPosition4D{ 0.f, 0.f, -300.f, 1.f };
 }
 
 Map::~Map()
@@ -52,7 +52,11 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, f
 	{
 		RenderObjects.emplace_back(GraphicsPipelineCached, MeshAssetIn);
 		RenderObject* AddedObject = &RenderObjects.back();
-		AddedObject->SetPosition(PosXIn, PosYIn, PosZIn);
+
+		AddedObject->Position.x = PosXIn;
+		AddedObject->Position.y = PosYIn;
+		AddedObject->Position.z = PosZIn;
+
 		PSOObjectToRenderObjects[Pso].emplace_back(&RenderObjects.back());
 	}
 }
@@ -106,8 +110,9 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 		const XMVECTOR Direction = XMVector3Normalize(Displacement);
 		const XMVECTOR PlacePositon = NearPoint + Direction * (Displacement.m128_f32[2] / 2.f);
 
-
-		AddedObject->SetPosition(PlacePositon.m128_f32[0], PlacePositon.m128_f32[1], PlacePositon.m128_f32[2]);
+		AddedObject->Position.x = PlacePositon.m128_f32[0];
+		AddedObject->Position.y = PlacePositon.m128_f32[1];
+		AddedObject->Position.z = PlacePositon.m128_f32[2];
 		PSOObjectToRenderObjects[Pso].emplace_back(&RenderObjects.back());
 	}
 }
@@ -118,7 +123,7 @@ void Map::UpdateMap(const float& DeltaTimeIn)
 
 	for (auto& ro : RenderObjects)
 	{
-		ro.UpdateObject();
+		ro.UpdateObject(DeltaTimeIn);
 	}
 }
 
