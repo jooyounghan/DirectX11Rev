@@ -13,12 +13,24 @@ PlacableObject::~PlacableObject()
 {
 }
 
-void PlacableObject::UpdateObject(const float& DeltaTimeIn, IObject* ParnetObject)
+void PlacableObject::UpdateObject(const float& DeltaTimeIn, IObject* ParentObject)
 {
 	TransformationMatrix TempTransformation;
-	TempTransformation.TransfomationMat = GetTransformation();
+	TempTransformation.TransfomationMat = XMMatrixIdentity();
+
+	if (ParentObject)
+	{
+		TempTransformation.TransfomationMat = XMMatrixMultiply(TempTransformation.TransfomationMat, ParentObject->GetTransformation());
+	}
+	TempTransformation.TransfomationMat = XMMatrixMultiply(TempTransformation.TransfomationMat, GetTransformation());
+
 	TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
 	TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
 
 	TransformationBuffer.Upload(DeviceContextCached, TempTransformation);
+
+	for (auto& ChildObject : ChildrenObject)
+	{
+		ChildObject->UpdateObject(DeltaTimeIn, this);
+	}
 }

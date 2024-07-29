@@ -23,6 +23,12 @@ void StaticMeshAsset::Initialize(ID3D11Device* DeviceIn)
 	IndicesBuffer.InitializeForGPU(DeviceIn, GetIndexCount(), Indices.data());
 }
 
+void StaticMeshAsset::GetVertexInformation(ID3D11Buffer*& RefVertexBuffer, UINT& RefVertexTypeSize)
+{
+	RefVertexBuffer = GetVertexBuffer();
+	RefVertexTypeSize = GetVertexTypeSize();
+}
+
 void StaticMeshAsset::Serialize(const string& OutputAdditionalPath)
 {
 	FILE* OutputAssetFile = DefaultOpenFile(OutputAdditionalPath);

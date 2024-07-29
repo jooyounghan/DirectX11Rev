@@ -25,6 +25,7 @@ AssetManager::AssetManager(ID3D11Device* DeviceIn)
     : DeviceCached(DeviceIn)
 {
     PreloadAssets();
+    PreloadDebugObjects();
 }
 
 AssetManager::~AssetManager()
@@ -188,6 +189,18 @@ IAssetFile* AssetManager::GetAsset(const std::string AssetName)
     if (ManagingAssets.find(AssetName) != ManagingAssets.end())
     {
         return ManagingAssets[AssetName].get(); 
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
+Debugable* AssetManager::GetDebugObject(EDebugObjectType DebugObjectType)
+{
+    if (DebugObjects.find(DebugObjectType) != DebugObjects.end())
+    {
+        return DebugObjects[DebugObjectType].get();
     }
     else
     {
@@ -396,7 +409,7 @@ void AssetManager::LoadTextureCoord(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTextureCoord = Mesh->mTextureCoords[0][VertexIdx];
-            memcpy(&MeshAsset->Vertices[AccessIdx].TextureCoord, &CurrentTextureCoord, sizeof(aiVector2D));
+            memcpy(&MeshAsset->Vertices[AccessIdx].UVTexture, &CurrentTextureCoord, sizeof(aiVector2D));
         }
     }
 }
@@ -440,6 +453,11 @@ void AssetManager::PreloadAssets()
     }
 
     ProcessLinkSkeletalMeshAsset();
+}
+
+void AssetManager::PreloadDebugObjects()
+{
+    //
 }
 
 template<typename T>
@@ -528,9 +546,9 @@ void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T
                 v0.Position,
                 v1.Position,
                 v2.Position,
-                v0.TextureCoord,
-                v1.TextureCoord,
-                v2.TextureCoord,
+                v0.UVTexture,
+                v1.UVTexture,
+                v2.UVTexture,
                 v0.Normal,
                 v1.Normal,
                 v2.Normal,

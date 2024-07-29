@@ -44,6 +44,7 @@ typedef struct SPosition3D
 SPosition3D operator-(const SPosition3D& Pos1, const SPosition3D& Pos2);
 SPosition3D operator+(const SPosition3D& Pos1, const SPosition3D& Pos2);
 SPosition3D operator*(const SPosition3D& Vec, float Scalar);
+float InnerProduct(const SPosition3D& Pos1, const SPosition3D& Pos2);
 
 struct SCoordinate2D
 {

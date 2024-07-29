@@ -1,7 +1,9 @@
 #pragma once
-#include <string>
+#include "Debugable.h"
+
 #include "DirectXMath.h"
 
+#include <string>
 #include <unordered_map>
 #include <memory>
 #include <deque>
@@ -46,9 +48,11 @@ public:
 
 private:
 	std::unordered_map<std::string, std::shared_ptr<IAssetFile>> ManagingAssets;
+	std::unordered_map<EDebugObjectType, std::shared_ptr<Debugable>> DebugObjects;
 
 public:
 	IAssetFile* GetAsset(const std::string AssetName);
+	Debugable* GetDebugObject(EDebugObjectType DebugObjectType);
 
 private:
 	void ProcessNodeForMesh(
@@ -145,6 +149,7 @@ private:
 
 private:
 	void PreloadAssets();
+	void PreloadDebugObjects();
 
 };
 

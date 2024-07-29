@@ -19,6 +19,7 @@ enum class EAssetType
 
 	// Animation
 	Animation,
+
 	NumAssetType,
 };
 

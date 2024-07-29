@@ -22,8 +22,12 @@ void RenderObject::Render(PSOObject* PSOObjectIn)
 {
 	if (MeshAssetInstance)
 	{
-		ID3D11Buffer* VertexBuffers[] = { MeshAssetInstance->GetVertexBuffer() };
-		UINT Strides[] = { MeshAssetInstance->GetVertexTypeSize() };
+		ID3D11Buffer* VertexBuffer;
+		UINT Stride;
+		MeshAssetInstance->GetVertexInformation(VertexBuffer, Stride);
+
+		ID3D11Buffer* VertexBuffers[] = { VertexBuffer };
+		UINT Strides[] = { Stride };
 		UINT Offsets[] = { 0 };
 
 		DeviceContextCached->IASetVertexBuffers(0, 1, VertexBuffers, Strides, Offsets);

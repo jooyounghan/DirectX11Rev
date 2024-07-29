@@ -30,6 +30,12 @@ void SkeletalMeshAsset::Initialize(ID3D11Device* DeviceIn)
 	IndicesBuffer.InitializeForGPU(DeviceIn, GetIndexCount(), Indices.data());
 }
 
+void SkeletalMeshAsset::GetVertexInformation(ID3D11Buffer*& RefVertexBuffer, UINT& RefVertexTypeSize)
+{
+	RefVertexBuffer = GetVertexBuffer();
+	RefVertexTypeSize = GetVertexTypeSize();
+}
+
 void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 {
 	FILE* OutputAssetFile = DefaultOpenFile(OutputAdditionalPath);

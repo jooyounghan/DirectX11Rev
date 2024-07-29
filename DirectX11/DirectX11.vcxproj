@@ -134,9 +134,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssetManagerWindow.cpp" />
+    <ClCompile Include="AttachableObject.cpp" />
     <ClCompile Include="BoundingCapsule.cpp" />
+    <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="BoneAsset.cpp" />
+    <ClCompile Include="Debugable.cpp" />
     <ClCompile Include="DefineType.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
     <ClCompile Include="AssetManager.cpp" />
@@ -154,7 +157,6 @@
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="IObject.cpp" />
     <ClCompile Include="IWorld.cpp" />
     <ClCompile Include="main.cpp" />
@@ -166,9 +168,7 @@
     <ClCompile Include="PortfolioApp.cpp" />
     <ClCompile Include="PSOManager.cpp" />
     <ClCompile Include="PSOObject.cpp" />
-    <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RenderObject.cpp" />
-    <ClCompile Include="Serializable.cpp" />
     <ClCompile Include="SkeletalMeshAsset.cpp" />
     <ClCompile Include="StaticMeshAsset.cpp" />
     <ClCompile Include="StringHelper.cpp" />
@@ -179,14 +179,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManagerWindow.h" />
+    <ClInclude Include="AttachableObject.h" />
     <ClInclude Include="BoundingCapsule.h" />
+    <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="BoneAsset.h" />
     <ClInclude Include="ConstantArrayBuffer.h" />
+    <ClInclude Include="Debugable.h" />
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="FileSelectDialog.h" />
     <ClInclude Include="IDialog.h" />
+    <ClInclude Include="IIndexable.h" />
     <ClInclude Include="IIntersectable.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -197,10 +201,11 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="IObject.h" />
+    <ClInclude Include="IRenderable.h" />
+    <ClInclude Include="Vertexable.h" />
     <ClInclude Include="OrientedBoundingBox.h" />
     <ClInclude Include="PSOObject.h" />
     <ClInclude Include="PSOObjectHelper.h" />
-    <ClInclude Include="Ray.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="EditorWorld.h" />

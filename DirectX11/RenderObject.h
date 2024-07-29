@@ -1,15 +1,15 @@
 #pragma once
 #include "PlacableObject.h"
+#include "IRenderable.h"
 #include "HeaderHelper.h"
 
 #include <memory>
 
 class IMeshAsset;
 class GraphicsPipeline;
-class PSOObject;
 class IIntersectable;
 
-class RenderObject : public PlacableObject
+class RenderObject : public PlacableObject, public IRenderable
 {
 public:
 	RenderObject(
@@ -28,6 +28,6 @@ protected:
 
 
 public:
-	virtual void Render(PSOObject* PSOObjectIn);
+	virtual void Render(PSOObject* PSOObjectIn) override;
 };
 

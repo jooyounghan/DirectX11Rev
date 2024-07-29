@@ -33,6 +33,11 @@ SPosition3D operator*(const SPosition3D& Vec, float Scalar)
 	return SPosition3D{ Vec.x * Scalar, Vec.y * Scalar, Vec.z * Scalar };
 }
 
+float InnerProduct(const SPosition3D& Pos1, const SPosition3D& Pos2)
+{
+	return Pos1.x * Pos2.x + Pos1.y * Pos2.y + Pos1.z * Pos2.z;
+}
+
 SCoordinate2D operator-(const SCoordinate2D& Coord1, const SCoordinate2D& Coord2)
 {
 	return SCoordinate2D{ Coord1.x - Coord2.x, Coord1.y - Coord2.y };
