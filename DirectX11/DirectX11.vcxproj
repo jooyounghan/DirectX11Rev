@@ -163,7 +163,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
-    <ClCompile Include="PlacableObject.cpp" />
+    <ClCompile Include="PlaceableObject.cpp" />
     <ClCompile Include="OrientedBoundingBox.cpp" />
     <ClCompile Include="PortfolioApp.cpp" />
     <ClCompile Include="PSOManager.cpp" />
@@ -227,7 +227,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapOutlinerWindow.h" />
     <ClInclude Include="MathematicalHelper.h" />
-    <ClInclude Include="PlacableObject.h" />
+    <ClInclude Include="PlaceableObject.h" />
     <ClInclude Include="PortfolioApp.h" />
     <ClInclude Include="PSOManager.h" />
     <ClInclude Include="RenderObject.h" />

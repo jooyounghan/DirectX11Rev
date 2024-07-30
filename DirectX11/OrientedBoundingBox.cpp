@@ -1,5 +1,5 @@
 #include "OrientedBoundingBox.h"
-#include "PlacableObject.h"
+#include "PlaceableObject.h"
 
 using namespace DirectX;
 

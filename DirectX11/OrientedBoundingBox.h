@@ -2,7 +2,7 @@
 #include "IIntersectable.h"
 #include "AttachableObject.h"
 
-class PlacableObject;
+class PlaceableObject;
 //
 //class OrientedBoundingBox : public IIntersectable, public AttachableObject
 //{

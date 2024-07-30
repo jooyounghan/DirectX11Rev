@@ -10,6 +10,9 @@
 
 #include "Camera.h"
 
+
+#include "BoundingSphere.h"
+
 using namespace std;
 using namespace DirectX;
 
@@ -51,14 +54,12 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, f
 
 	if (Pso != nullptr)
 	{
-		RenderObjects.emplace_back(GraphicsPipelineCached, MeshAssetIn);
-		RenderObject* AddedObject = &RenderObjects.back();
-
+		RenderObject* AddedObject = RenderableAddHelper<RenderObject>(GraphicsPipelineCached, MeshAssetIn);
 		AddedObject->Position.x = PosXIn;
 		AddedObject->Position.y = PosYIn;
 		AddedObject->Position.z = PosZIn;
 
-		PSOObjectToRenderObjects[Pso].emplace_back(&RenderObjects.back());
+		PSOObjectToRenderables[Pso].emplace_back(AddedObject);
 	}
 }
 
@@ -84,8 +85,7 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 
 	if (Pso != nullptr)
 	{
-		RenderObjects.emplace_back(GraphicsPipelineCached, MeshAssetIn);
-		RenderObject* AddedObject = &RenderObjects.back();
+		RenderObject* AddedObject = RenderableAddHelper<RenderObject>(GraphicsPipelineCached, MeshAssetIn);
 
 		XMVECTOR NearPoint = XMVectorSet(
 			(2.0f * ScreenXIn / ScreenWidthIn) - 1.0f,
@@ -114,7 +114,13 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 		AddedObject->Position.x = PlacePositon.m128_f32[0];
 		AddedObject->Position.y = PlacePositon.m128_f32[1];
 		AddedObject->Position.z = PlacePositon.m128_f32[2];
-		PSOObjectToRenderObjects[Pso].emplace_back(&RenderObjects.back());
+		PSOObjectToRenderables[Pso].emplace_back(AddedObject);
+
+
+
+		BoundingSphere* BS = AddedObject->ChildObjectAddHelper<BoundingSphere>(GraphicsPipelineCached, 100.f, AssetManagerCached->GetDebugObject(EDebugObjectType::Sphere));
+		PSOObject* DebugPSO = PSOManagerCached->GetPSOObject(EPSOType::R8G8B8A8_Debug_Wireframe);
+		PSOObjectToRenderables[DebugPSO].emplace_back(BS);
 	}
 }
 
@@ -122,9 +128,9 @@ void Map::UpdateMap(const float& DeltaTimeIn)
 {
 	MapCamera->UpdateView();
 
-	for (auto& ro : RenderObjects)
+	for (auto& ro : Placeables)
 	{
-		ro.UpdateObject(DeltaTimeIn);
+		ro->UpdateObject(DeltaTimeIn);
 	}
 }
 
@@ -132,7 +138,7 @@ void Map::RenderMap()
 {
 	MapCamera->CleanupLens();
 
-	for (auto& PSOToRendersPair : PSOObjectToRenderObjects)
+	for (auto& PSOToRendersPair : PSOObjectToRenderables)
 	{
 		PSOObject* Pso = PSOToRendersPair.first;
 		ID3D11RenderTargetView* RTVs[] = { MapCamera->GetSceneRTV() };

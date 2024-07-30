@@ -1,5 +1,5 @@
 #pragma once
-#include "PlacableObject.h"
+#include "PlaceableObject.h"
  
 struct ViewProjBufferData
 {
@@ -7,7 +7,7 @@ struct ViewProjBufferData
 	DirectX::XMMATRIX InvViewProjMatrix;
 };
 
-class Viewable : public PlacableObject
+class Viewable : public PlaceableObject
 {
 public:
 	Viewable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn, const UINT& WidthIn, const UINT& HeightIn);

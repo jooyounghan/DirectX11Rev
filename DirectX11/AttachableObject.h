@@ -1,8 +1,8 @@
 #pragma once
-#include "PlacableObject.h"
+#include "PlaceableObject.h"
 
 
-class AttachableObject : public PlacableObject
+class AttachableObject : public PlaceableObject
 {
 public:
 	AttachableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
@@ -11,4 +11,3 @@ public:
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn, IObject* ParentObject = nullptr) override;
 };
-

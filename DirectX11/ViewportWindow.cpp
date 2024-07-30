@@ -22,7 +22,6 @@ ViewportWindow::~ViewportWindow()
 void ViewportWindow::RenderWindow()
 {
     ImGui::Begin("Viewport");
-
     Map* CurrentMap = GameWorldLinked->GetCurrentMap();
     if (CurrentMap != nullptr)
     {

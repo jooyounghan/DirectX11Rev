@@ -124,9 +124,6 @@
     <Filter Include="소스 파일\Asset\Map\Object">
       <UniqueIdentifier>{6d0b603d-c627-4fc4-8c97-3d3f5390bad6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object\Placable">
-      <UniqueIdentifier>{6f94c2d0-776d-43cb-a81c-93faac69859a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Asset\Map\Object\Attachable">
       <UniqueIdentifier>{da58645d-f9be-4dbd-a84e-c79ece6bc393}</UniqueIdentifier>
     </Filter>
@@ -142,9 +139,6 @@
     <Filter Include="헤더 파일\Asset\Map\Object">
       <UniqueIdentifier>{cf287dd9-4094-4d15-b7de-af4edb0ed927}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Placable">
-      <UniqueIdentifier>{d408cb24-18e1-4cdf-bc8f-6d37d60a7306}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Asset\Map\Object\Attachable">
       <UniqueIdentifier>{c4eaead6-b05b-4feb-b90f-34ae06bf3d50}</UniqueIdentifier>
     </Filter>
@@ -156,6 +150,12 @@
     </Filter>
     <Filter Include="Shader\Debug">
       <UniqueIdentifier>{fa3c8c60-12b7-4660-a671-a87b670a8b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Map\Object\Placeable">
+      <UniqueIdentifier>{d408cb24-18e1-4cdf-bc8f-6d37d60a7306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset\Map\Object\Placeable">
+      <UniqueIdentifier>{6f94c2d0-776d-43cb-a81c-93faac69859a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -265,16 +265,16 @@
       <Filter>소스 파일\Asset\Map\Object\Attachable\Component\BoundingComponent</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Placable</Filter>
+      <Filter>소스 파일\Asset\Map\Object\Placeable</Filter>
     </ClCompile>
-    <ClCompile Include="PlacableObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Placable</Filter>
+    <ClCompile Include="PlaceableObject.cpp">
+      <Filter>소스 파일\Asset\Map\Object\Placeable</Filter>
     </ClCompile>
     <ClCompile Include="RenderObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Placable</Filter>
+      <Filter>소스 파일\Asset\Map\Object\Placeable</Filter>
     </ClCompile>
     <ClCompile Include="Viewable.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Placable</Filter>
+      <Filter>소스 파일\Asset\Map\Object\Placeable</Filter>
     </ClCompile>
     <ClCompile Include="IObject.cpp">
       <Filter>소스 파일\Asset\Map\Object</Filter>
@@ -441,16 +441,16 @@
       <Filter>헤더 파일\Asset\Map\Object\Attachable\Component\BoundingComponent</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placable</Filter>
+      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
     </ClInclude>
-    <ClInclude Include="PlacableObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placable</Filter>
+    <ClInclude Include="PlaceableObject.h">
+      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
     </ClInclude>
     <ClInclude Include="RenderObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placable</Filter>
+      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
     </ClInclude>
     <ClInclude Include="Viewable.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placable</Filter>
+      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
     </ClInclude>
     <ClInclude Include="IObject.h">
       <Filter>헤더 파일\Asset\Map\Object</Filter>
@@ -468,7 +468,7 @@
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="IRenderable.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placable</Filter>
+      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
     </ClInclude>
     <ClInclude Include="Vertexable.h">
       <Filter>헤더 파일\Asset</Filter>

@@ -6,7 +6,7 @@ using namespace std;
 using namespace DirectX;
 
 Viewable::Viewable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn, const UINT& WidthIn, const UINT& HeightIn)
-	: PlacableObject(DeviceIn, DeviceContextIn), ViewProjBuffer(DeviceIn)
+	: PlaceableObject(DeviceIn, DeviceContextIn), ViewProjBuffer(DeviceIn)
 {
 	Resize(WidthIn, HeightIn);
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "PlacableObject.h"
+#include "PlaceableObject.h"
 #include "IRenderable.h"
 #include "HeaderHelper.h"
 
@@ -9,7 +9,7 @@ class IMeshAsset;
 class GraphicsPipeline;
 class IIntersectable;
 
-class RenderObject : public PlacableObject, public IRenderable
+class RenderObject : public PlaceableObject, public IRenderable
 {
 public:
 	RenderObject(

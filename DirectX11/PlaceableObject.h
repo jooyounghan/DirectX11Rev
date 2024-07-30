@@ -8,11 +8,11 @@ struct TransformationMatrix
 	DirectX::XMMATRIX InvTransfomationMat;
 };
 
-class PlacableObject : public IObject
+class PlaceableObject : public IObject
 {
 public:
-	PlacableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
-	virtual ~PlacableObject();
+	PlaceableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
+	virtual ~PlaceableObject();
 
 protected:
 	ID3D11DeviceContext* DeviceContextCached = nullptr;

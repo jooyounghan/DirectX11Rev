@@ -1,20 +1,26 @@
-#include "PlacableObject.h"
+#include "PlaceableObject.h"
 #include "DefineUtility.h"
 
 using namespace DirectX;
 
-PlacableObject::PlacableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
+PlaceableObject::PlaceableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
 	: IObject(), DeviceContextCached(DeviceContextIn), TransformationBuffer(DeviceIn)
 {
 
 }
 
-PlacableObject::~PlacableObject()
+PlaceableObject::~PlaceableObject()
 {
 }
 
-void PlacableObject::UpdateObject(const float& DeltaTimeIn, IObject* ParentObject)
+void PlaceableObject::UpdateObject(const float& DeltaTimeIn, IObject* ParentObject)
 {
+	Position.x += 100.f * DeltaTimeIn;
+	Angle.Pitch += 90.f * DeltaTimeIn;
+	Angle.Roll += 90.f * DeltaTimeIn;
+	Angle.Yaw += 90.f * DeltaTimeIn;
+
+
 	TransformationMatrix TempTransformation;
 	TempTransformation.TransfomationMat = XMMatrixIdentity();
 
