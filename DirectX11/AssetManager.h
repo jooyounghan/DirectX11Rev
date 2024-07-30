@@ -151,5 +151,8 @@ private:
 	void PreloadAssets();
 	void PreloadDebugObjects();
 
+private:
+	void CreateDefaultSphere(std::vector<DebugVertex>& VerticesOut, std::vector<uint16_t>& IndicesOut);
+
 };
 

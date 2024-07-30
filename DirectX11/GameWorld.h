@@ -7,8 +7,9 @@
 #include <unordered_map>
 
 class PSOManager;
-class EditorWorld;
+class AssetManager;
 
+class EditorWorld;
 class Map;
 class Camera;
 
@@ -30,6 +31,10 @@ public:
 protected:
 	std::unique_ptr<PSOManager> PSOManagerInstance;
 	MakeSmartPtrGetter(PSOManagerInstance);
+
+protected:
+	std::unique_ptr<AssetManager> AssetManagerInstance;
+	MakeSmartPtrGetter(AssetManagerInstance);
 
 #ifdef _DEBUG
 protected:

@@ -457,7 +457,54 @@ void AssetManager::PreloadAssets()
 
 void AssetManager::PreloadDebugObjects()
 {
-    //
+    DebugObjects[EDebugObjectType::Sphere] = make_shared<Debugable>();
+    Debugable* DebugObject = DebugObjects[EDebugObjectType::Sphere].get();
+    CreateDefaultSphere(DebugObject->Vertices, DebugObject->Indices);
+    DebugObject->Initialize(DeviceCached);
+}
+
+void AssetManager::CreateDefaultSphere(std::vector<DebugVertex>& VerticesIn, std::vector<uint16_t>& IndicesIn)
+{
+    uint16_t DefaultSphereLevel = 10;
+
+    for (uint16_t latitudeIdx = 0; latitudeIdx < DefaultSphereLevel; ++latitudeIdx)
+    {
+        const float& fLatitudeLow = DirectX::XM_PIDIV2 / DefaultSphereLevel * latitudeIdx;
+        const float& fLatitudeHigh = DirectX::XM_PIDIV2 / DefaultSphereLevel * (latitudeIdx + 1);
+        const float& fLatitudeLowTextureCord = (latitudeIdx / DefaultSphereLevel) / 2.f;
+        const float& fLatitudeHighTextureCord = ((latitudeIdx + 1) / DefaultSphereLevel) / 2.f;
+
+        const uint16_t& usLatitudeOffset = (uint16_t)VerticesIn.size();
+
+        for (uint16_t longitudeIdx = 0; longitudeIdx <= (uint16_t)DefaultSphereLevel * 2; ++longitudeIdx)
+        {
+            const float& fLongitudeLow = DirectX::XM_2PI / (DefaultSphereLevel * 2.f) * longitudeIdx;
+            const float& fLongitudeTextureCord = longitudeIdx / (DefaultSphereLevel * 2.f);
+
+            VerticesIn.emplace_back(SPosition3D{ cosf(fLongitudeLow) * cosf(fLatitudeLow), sinf(fLatitudeLow), cosf(fLatitudeLow) * sinf(fLongitudeLow) }, SCoordinate2D{ fLongitudeTextureCord, 0.5f - fLatitudeLowTextureCord });
+            VerticesIn.emplace_back(SPosition3D{cosf(fLongitudeLow) * cosf(fLatitudeHigh), sinf(fLatitudeHigh), cosf(fLatitudeHigh) * sinf(fLongitudeLow)}, SCoordinate2D{fLongitudeTextureCord, 0.5f - fLatitudeHighTextureCord });
+            VerticesIn.emplace_back(SPosition3D{cosf(fLongitudeLow) * cosf(-fLatitudeLow), sinf(-fLatitudeLow), cosf(-fLatitudeLow) * sinf(fLongitudeLow)}, SCoordinate2D{fLongitudeTextureCord, 0.5f + fLatitudeLowTextureCord });
+            VerticesIn.emplace_back(SPosition3D{ cosf(fLongitudeLow) * cosf(-fLatitudeHigh), sinf(-fLatitudeHigh), cosf(-fLatitudeHigh) * sinf(fLongitudeLow) }, SCoordinate2D{fLongitudeTextureCord, 0.5f + fLatitudeHighTextureCord });
+        }
+
+        for (uint16_t longitudeIdx = 0; longitudeIdx < (uint16_t)DefaultSphereLevel * 2; ++longitudeIdx)
+        {
+            const uint16_t& usLongitudeOffset = 4 * longitudeIdx + usLatitudeOffset;
+            IndicesIn.push_back(usLongitudeOffset + 0);
+            IndicesIn.push_back(usLongitudeOffset + 1);
+            IndicesIn.push_back(usLongitudeOffset + 4);
+            IndicesIn.push_back(usLongitudeOffset + 4);
+            IndicesIn.push_back(usLongitudeOffset + 1);
+            IndicesIn.push_back(usLongitudeOffset + 5);
+
+            IndicesIn.push_back(usLongitudeOffset + 3);
+            IndicesIn.push_back(usLongitudeOffset + 2);
+            IndicesIn.push_back(usLongitudeOffset + 7);
+            IndicesIn.push_back(usLongitudeOffset + 7);
+            IndicesIn.push_back(usLongitudeOffset + 2);
+            IndicesIn.push_back(usLongitudeOffset + 6);
+        }
+    }
 }
 
 template<typename T>

@@ -21,7 +21,7 @@ struct DebugVertex
 	SCoordinate2D UVTexture;
 };
 
-class Debugable : public IIndexable<uint8_t>, public Vertexable<DebugVertex>
+class Debugable : public IIndexable<uint16_t>, public Vertexable<DebugVertex>
 {
 public:
 	Debugable();

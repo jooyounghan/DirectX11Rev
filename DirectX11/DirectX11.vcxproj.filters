@@ -154,6 +154,9 @@
     <Filter Include="헤더 파일\Asset\Map\Object\Attachable\Component\BoundingComponent">
       <UniqueIdentifier>{b7f79190-37bb-437b-8da5-f9f2fc3bf0cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Debug">
+      <UniqueIdentifier>{fa3c8c60-12b7-4660-a671-a87b670a8b12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -484,6 +487,12 @@
     <FxCompile Include="Shaders\StaticVS.hlsl">
       <Filter>Shader\StaticMesh</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\DebugPS.hlsl">
+      <Filter>Shader\Debug</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DebugVS.hlsl">
+      <Filter>Shader\Debug</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\SkeletalHeader.hlsli">
@@ -491,6 +500,9 @@
     </None>
     <None Include="Shaders\StaticHeader.hlsli">
       <Filter>Shader\StaticMesh</Filter>
+    </None>
+    <None Include="Shaders\DebugHeader.hlsli">
+      <Filter>Shader\Debug</Filter>
     </None>
   </ItemGroup>
 </Project>

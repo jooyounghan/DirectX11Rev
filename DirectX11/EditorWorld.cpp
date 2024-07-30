@@ -43,12 +43,10 @@ EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
         GraphicsPipelineCached->GetDeviceContext()
     );
 
-    AssetManagerInstance = make_unique<AssetManager>(GraphicsPipelineCached->GetDevice());
-
     Dialogs.push_back(make_unique<TaskAnalyzerWindow>());
     Dialogs.push_back(make_unique<ViewportWindow>(GameWorldCached));
     Dialogs.push_back(make_unique<MapOutlinerWindow>(GameWorldCached));
-    Dialogs.push_back(make_unique<AssetManagerWindow>(AssetManagerInstance.get()));
+    Dialogs.push_back(make_unique<AssetManagerWindow>(GameWorldCached->GetAssetManagerInstance()));
 }
 
 EditorWorld::~EditorWorld()
@@ -120,7 +118,7 @@ void EditorWorld::OnDropFiles(HDROP hDropIn)
         if (DragQueryFileA(hDropIn, i, filePath, MAX_PATH))
         {
             string filePathStr = string(filePath);
-            AssetManagerInstance->LoadModelFile(filePathStr);
+            GameWorldCached->GetAssetManagerInstance()->LoadModelFile(filePathStr);
         }
     }
     DragFinish(hDropIn);

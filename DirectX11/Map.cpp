@@ -3,6 +3,7 @@
 
 #include "PSOManager.h"
 #include "PSOObject.h"
+#include "AssetManager.h"
 
 #include "RenderObject.h"
 #include "IMeshAsset.h"
@@ -12,8 +13,8 @@
 using namespace std;
 using namespace DirectX;
 
-Map::Map(GraphicsPipeline* GraphicsPipelineInstance, PSOManager* PSOManagerInstance)
-	: GraphicsPipelineCached(GraphicsPipelineInstance), PSOManagerCached(PSOManagerInstance)
+Map::Map(GraphicsPipeline* GraphicsPipelineInstance, PSOManager* PSOManagerInstance, AssetManager* AssetManagerInstance)
+	: GraphicsPipelineCached(GraphicsPipelineInstance), PSOManagerCached(PSOManagerInstance), AssetManagerCached(AssetManagerInstance)
 {
 
 	MapCamera = make_unique<Camera>(

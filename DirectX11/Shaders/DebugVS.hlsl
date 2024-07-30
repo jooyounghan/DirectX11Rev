@@ -1,4 +1,4 @@
-#include "SkeletalHeader.hlsli"
+#include "DebugHeader.hlsli"
 
 cbuffer CameraViewProj : register(b0)
 {
@@ -12,13 +12,9 @@ cbuffer ModelMatrix : register(b1)
     matrix ModelInvMatrix;
 };
 
-
-BasicVertexOutput main(BasicVertexInput Input)
+DebugVertexOutput main(DebugVertexInput Input)
 {
-    BasicVertexOutput Result;
-
-    //Result.f3ModelNormal = normalize(mul(float4(Input.f3WorldNormal, 0.f), ModelInvMatrix)).xyz;
-    Result.f3ModelNormal = Input.f3WorldNormal;
+    DebugVertexOutput Result;
 
     Result.f4ProjPos = mul(float4(Input.f3WorldPos, 1.f), ModelMatrix);
     Result.f4ProjPos = mul(Result.f4ProjPos, ViewProjMatrix);

@@ -8,9 +8,10 @@ RenderObject::RenderObject(
 	GraphicsPipeline* GraphicsPipelineInstances, 
 	IMeshAsset* MeshAssetInstanceIn
 )
-	: PlacableObject(GraphicsPipelineInstances->GetDevice(),
-		GraphicsPipelineInstances->GetDeviceContext()),
-		MeshAssetInstance(MeshAssetInstanceIn)
+	: PlacableObject(
+		GraphicsPipelineInstances->GetDevice(),
+		GraphicsPipelineInstances->GetDeviceContext()
+	), MeshAssetInstance(MeshAssetInstanceIn)
 {
 }
 

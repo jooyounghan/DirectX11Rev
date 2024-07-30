@@ -20,6 +20,7 @@ protected:
 public:
 	UploadBuffer<TransformationMatrix> TransformationBuffer;
 
+
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn, IObject* ParentObject = nullptr) override;
 };

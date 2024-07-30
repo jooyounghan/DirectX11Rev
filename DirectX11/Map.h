@@ -9,6 +9,7 @@
 class GraphicsPipeline;
 class PSOManager;
 class PSOObject;
+class AssetManager;
 
 class Camera;
 class RenderObject;
@@ -17,18 +18,13 @@ class IMeshAsset;
 class Map : public ISerializable
 {
 public:
-	Map(GraphicsPipeline* GraphicsPipelineInstance, PSOManager* PSOManagerInstance);
+	Map(GraphicsPipeline* GraphicsPipelineInstance, PSOManager* PSOManagerInstance, AssetManager* AssetManagerInstance);
 	~Map();
 
 protected:
 	GraphicsPipeline* GraphicsPipelineCached = nullptr;
 	PSOManager* PSOManagerCached = nullptr;
-
-protected:
-	/* 
-	맵에서 관리하는 객체
-	외부 배경 텍스쳐, 몬스터 인스턴스, 접속중인 플레이어 등을 관리	
-	*/
+	AssetManager* AssetManagerCached = nullptr;
 
 protected:
 	std::unique_ptr<Camera> MapCamera;

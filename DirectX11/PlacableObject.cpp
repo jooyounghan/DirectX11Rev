@@ -20,7 +20,7 @@ void PlacableObject::UpdateObject(const float& DeltaTimeIn, IObject* ParentObjec
 
 	if (ParentObject)
 	{
-		TempTransformation.TransfomationMat = XMMatrixMultiply(TempTransformation.TransfomationMat, ParentObject->GetTransformation());
+		TempTransformation.TransfomationMat = ParentObject->GetTransformation();
 	}
 	TempTransformation.TransfomationMat = XMMatrixMultiply(TempTransformation.TransfomationMat, GetTransformation());
 

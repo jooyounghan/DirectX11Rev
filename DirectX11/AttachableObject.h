@@ -1,10 +1,11 @@
 #pragma once
-#include "IObject.h"
+#include "PlacableObject.h"
 
-class AttachableObject : public IObject
+
+class AttachableObject : public PlacableObject
 {
 public:
-	AttachableObject();
+	AttachableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
 	virtual ~AttachableObject();
 
 public:

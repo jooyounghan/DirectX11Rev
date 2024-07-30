@@ -6,8 +6,12 @@
 
 enum EPSOType : size_t
 {
+	R8G8B8A8_Debug_Solid,
+	R8G8B8A8_Debug_Wireframe,
+
 	R8G8B8A8_Static_Solid,
 	R8G8B8A8_Static_Wireframe,
+
 	R8G8B8A8_Skeletal_Solid,
 	R8G8B8A8_Skeletal_Wireframe,
 	PSOTypeCount
@@ -32,6 +36,7 @@ public:
 	inline PSOObject* GetPSOObject(EPSOType PsoTypeIn) { return PSOObjects[PsoTypeIn].get(); }
 
 private:
+	void CreateDebug();
 	void CreateStatic();
 	void CreateSkeletal();
 };

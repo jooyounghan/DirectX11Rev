@@ -17,11 +17,18 @@ public:
 protected:
 	bool IsRelativeToParent = false;
 
-protected:
-	std::vector<std::unique_ptr<IObject>> ChildrenObject;
+public:
+	std::vector<IObject*> ChildrenObject;
 
 public:
 	DirectX::XMVECTOR GetRotationQuat() const;
+	
+public:
+	DirectX::XMMATRIX GetScaleMatrix() { return DirectX::XMMatrixScaling(Scale, Scale, Scale); }
+	DirectX::XMMATRIX GetRotartionMatrix() { return DirectX::XMMatrixRotationRollPitchYaw(Angle.Pitch, Angle.Yaw, Angle.Roll); }
+	DirectX::XMMATRIX GetTranslationMatrix() { return DirectX::XMMatrixTranslation(Position.x, Position.y, Position.z); }
+
+public:
 	DirectX::XMMATRIX GetTransformation() const;
 
 public:

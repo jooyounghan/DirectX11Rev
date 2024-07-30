@@ -11,7 +11,6 @@
 class GameWorld;
 class IWindow;
 class Camera;
-class AssetManager;
 
 class EditorWorld : public IWorld
 {
@@ -21,9 +20,6 @@ public:
 
 protected:
 	GameWorld* GameWorldCached = nullptr;
-
-protected:
-	std::unique_ptr<AssetManager> AssetManagerInstance;
 
 protected:
 	UINT FontSrvHandleID = 0;
