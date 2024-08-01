@@ -1,25 +1,29 @@
-#include "RenderObject.h"
+#include "MeshObject.h"
 #include "GraphicsPipeline.h"
 #include "IMeshAsset.h"
 #include "PSOObject.h"
-#include "IIntersectable.h"
 
-RenderObject::RenderObject(
+MeshObject::MeshObject(
 	GraphicsPipeline* GraphicsPipelineInstances, 
 	IMeshAsset* MeshAssetInstanceIn
 )
-	: PlaceableObject(
+	: RelativePlaceableObject(
 		GraphicsPipelineInstances->GetDevice(),
 		GraphicsPipelineInstances->GetDeviceContext()
 	), MeshAssetInstance(MeshAssetInstanceIn)
 {
 }
 
-RenderObject::~RenderObject()
+MeshObject::~MeshObject()
 {
 }
 
-void RenderObject::Render(PSOObject* PSOObjectIn)
+void MeshObject::UpdateObject(const float& DeltaTimeIn)
+{
+	RelativePlaceableObject::UpdateObject(DeltaTimeIn);
+}
+
+void MeshObject::Render(PSOObject* PSOObjectIn)
 {
 	if (MeshAssetInstance)
 	{

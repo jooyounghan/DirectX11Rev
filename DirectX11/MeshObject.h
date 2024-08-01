@@ -1,33 +1,27 @@
 #pragma once
-#include "PlaceableObject.h"
-#include "IRenderable.h"
+#include "RelativePlaceableObject.h"
 #include "HeaderHelper.h"
 
 #include <memory>
 
-class IMeshAsset;
 class GraphicsPipeline;
-class IIntersectable;
+class IMeshAsset;
 
-class RenderObject : public PlaceableObject, public IRenderable
+class MeshObject : public RelativePlaceableObject
 {
 public:
-	RenderObject(
+	MeshObject(
 		GraphicsPipeline* GraphicsPipelineInstances, 
 		IMeshAsset* MeshAssetInstanceIn
 	);
-	virtual ~RenderObject();
+	virtual ~MeshObject();
 
 protected:
 	IMeshAsset* MeshAssetInstance = nullptr;
 	MakeGetter(MeshAssetInstance);
 
-protected:
-	std::unique_ptr<IIntersectable> InterstectInstance = nullptr;
-	MakeSmartPtrGetter(InterstectInstance);
-
-
 public:
+	virtual void UpdateObject(const float& DeltaTimeIn) override;
 	virtual void Render(PSOObject* PSOObjectIn) override;
 };
 

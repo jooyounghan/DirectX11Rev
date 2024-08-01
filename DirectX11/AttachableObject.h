@@ -1,13 +1,14 @@
 #pragma once
-#include "PlaceableObject.h"
+#include "Attachable.h"
 
-
-class AttachableObject : public PlaceableObject
+class AttachableObject : public AAttachable
 {
 public:
-	AttachableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
-	virtual ~AttachableObject();
+	AttachableObject();
+	virtual~AttachableObject();
 
 public:
-	virtual void UpdateObject(const float& DeltaTimeIn, IObject* ParentObject = nullptr) override;
+	virtual void UpdateObject(const float& DeltaTimeIn) override;
+	virtual void Render(PSOObject* PSOObjectIn) override {};
 };
+

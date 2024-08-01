@@ -1,9 +1,10 @@
-#include "IObject.h"
+#include "APlaceable.h"
 #include "DefineUtility.h"
 
 using namespace DirectX;
 
-IObject::IObject()
+APlaceable::APlaceable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
+	: IObject(), DeviceContextCached(DeviceContextIn), TransformationBuffer(DeviceIn)
 {
 	AutoZeroMemory(Position);
 	AutoZeroMemory(Scale);
@@ -12,7 +13,11 @@ IObject::IObject()
 	Scale = 1.f;
 }
 
-DirectX::XMVECTOR IObject::GetRotationQuat() const
+APlaceable::~APlaceable()
+{
+}
+
+DirectX::XMVECTOR APlaceable::GetRotationQuat() const
 {
 	return XMQuaternionRotationRollPitchYaw(
 		XMConvertToRadians(Angle.Pitch),
@@ -21,7 +26,7 @@ DirectX::XMVECTOR IObject::GetRotationQuat() const
 	);
 }
 
-DirectX::XMMATRIX IObject::GetTransformation() const
+DirectX::XMMATRIX APlaceable::GetTransformation() const
 {
 	return XMMatrixAffineTransformation(
 		XMVectorSet(Scale, Scale, Scale, 0.0f),

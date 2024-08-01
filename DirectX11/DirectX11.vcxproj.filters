@@ -124,38 +124,38 @@
     <Filter Include="소스 파일\Asset\Map\Object">
       <UniqueIdentifier>{6d0b603d-c627-4fc4-8c97-3d3f5390bad6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object\Attachable">
-      <UniqueIdentifier>{da58645d-f9be-4dbd-a84e-c79ece6bc393}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object\Attachable\Component">
-      <UniqueIdentifier>{e7afef0c-675f-4a89-bee7-48b471c6787e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object\Attachable\Component\BoundingComponent">
-      <UniqueIdentifier>{15c9ed6a-e671-410a-9fe9-cd8de82fa103}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Asset\Map">
       <UniqueIdentifier>{62905561-a35a-43c3-98f6-64cf6584d93b}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Asset\Map\Object">
       <UniqueIdentifier>{cf287dd9-4094-4d15-b7de-af4edb0ed927}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Attachable">
-      <UniqueIdentifier>{c4eaead6-b05b-4feb-b90f-34ae06bf3d50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Attachable\Component">
-      <UniqueIdentifier>{3f06afff-370a-44a7-8cf0-18c7b7ebd399}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Attachable\Component\BoundingComponent">
-      <UniqueIdentifier>{b7f79190-37bb-437b-8da5-f9f2fc3bf0cf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader\Debug">
       <UniqueIdentifier>{fa3c8c60-12b7-4660-a671-a87b670a8b12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Placeable">
-      <UniqueIdentifier>{d408cb24-18e1-4cdf-bc8f-6d37d60a7306}</UniqueIdentifier>
+    <Filter Include="소스 파일\Asset\Map\Object\Attachable">
+      <UniqueIdentifier>{c5f51f0a-ffb2-419e-9dc2-7de742bed981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset\Map\Object\RelativePlaceable">
+      <UniqueIdentifier>{b5010a7b-be8c-4778-bab2-d4ea309078c7}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Asset\Map\Object\Placeable">
-      <UniqueIdentifier>{6f94c2d0-776d-43cb-a81c-93faac69859a}</UniqueIdentifier>
+      <UniqueIdentifier>{05fd7241-2d12-4c69-b419-1c4b56c60b77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent">
+      <UniqueIdentifier>{15c9ed6a-e671-410a-9fe9-cd8de82fa103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Map\Object\Attachable">
+      <UniqueIdentifier>{131a6598-d565-45d1-8ed8-6e028834a09b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Map\Object\Placeable">
+      <UniqueIdentifier>{4b88f40a-72f3-4fc9-ab87-0ade16acc919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Map\Object\RelativePlaceable">
+      <UniqueIdentifier>{2d543ef9-34d9-4a4c-bf68-86017a6710d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent">
+      <UniqueIdentifier>{b7f79190-37bb-437b-8da5-f9f2fc3bf0cf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -259,34 +259,37 @@
       <Filter>소스 파일\Utility</Filter>
     </ClCompile>
     <ClCompile Include="OrientedBoundingBox.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable\Component\BoundingComponent</Filter>
+      <Filter>소스 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent</Filter>
     </ClCompile>
     <ClCompile Include="BoundingCapsule.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable\Component\BoundingComponent</Filter>
+      <Filter>소스 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphere.cpp">
+      <Filter>소스 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Debugable.cpp">
+      <Filter>소스 파일\Asset\Map\Object</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Placeable</Filter>
+      <Filter>소스 파일\Asset\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="APlaceable.cpp">
+      <Filter>소스 파일\Asset\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshObject.cpp">
+      <Filter>소스 파일\Asset\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewable.cpp">
+      <Filter>소스 파일\Asset\Map\Object</Filter>
     </ClCompile>
     <ClCompile Include="PlaceableObject.cpp">
       <Filter>소스 파일\Asset\Map\Object\Placeable</Filter>
     </ClCompile>
-    <ClCompile Include="RenderObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Placeable</Filter>
-    </ClCompile>
-    <ClCompile Include="Viewable.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Placeable</Filter>
-    </ClCompile>
-    <ClCompile Include="IObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object</Filter>
-    </ClCompile>
     <ClCompile Include="AttachableObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable</Filter>
+      <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="BoundingSphere.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable\Component\BoundingComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="Debugable.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable</Filter>
+    <ClCompile Include="RelativePlaceableObject.cpp">
+      <Filter>소스 파일\Asset\Map\Object\RelativePlaceable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -435,43 +438,49 @@
       <Filter>헤더 파일\Collision</Filter>
     </ClInclude>
     <ClInclude Include="BoundingCapsule.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\Component\BoundingComponent</Filter>
+      <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent</Filter>
     </ClInclude>
     <ClInclude Include="OrientedBoundingBox.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\Component\BoundingComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
-    </ClInclude>
-    <ClInclude Include="PlaceableObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
-    </ClInclude>
-    <ClInclude Include="Viewable.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
+      <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent</Filter>
     </ClInclude>
     <ClInclude Include="IObject.h">
       <Filter>헤더 파일\Asset\Map\Object</Filter>
     </ClInclude>
-    <ClInclude Include="AttachableObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable</Filter>
-    </ClInclude>
     <ClInclude Include="BoundingSphere.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\Component\BoundingComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="Debugable.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable</Filter>
+      <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent</Filter>
     </ClInclude>
     <ClInclude Include="IIndexable.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="IRenderable.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
-    </ClInclude>
     <ClInclude Include="Vertexable.h">
       <Filter>헤더 파일\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Attachable.h">
+      <Filter>헤더 파일\Asset\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Debugable.h">
+      <Filter>헤더 파일\Asset\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshObject.h">
+      <Filter>헤더 파일\Asset\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewable.h">
+      <Filter>헤더 파일\Asset\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>헤더 파일\Asset\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="APlaceable.h">
+      <Filter>헤더 파일\Asset\Map\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaceableObject.h">
+      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachableObject.h">
+      <Filter>헤더 파일\Asset\Map\Object\Attachable</Filter>
+    </ClInclude>
+    <ClInclude Include="RelativePlaceableObject.h">
+      <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

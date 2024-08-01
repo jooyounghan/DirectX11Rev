@@ -1,13 +1,11 @@
 #pragma once
 #include "IIntersectable.h"
-#include "AttachableObject.h"
-#include "IRenderable.h"
-#include "Debugable.h"
-#include <memory>
+#include "RelativePlaceableObject.h"
 
 class GraphicsPipeline;
-
-class BoundingSphere : public IIntersectable, public AttachableObject, public IRenderable
+class Debugable;
+ 
+class BoundingSphere : public IIntersectable, public RelativePlaceableObject
 {
 public:
 	BoundingSphere(
@@ -17,16 +15,13 @@ public:
 	virtual ~BoundingSphere();
 
 protected:
-	SPosition3D ParentPosition;
-
-protected:
 	Debugable* DebugObject = nullptr;
 
 public:
 	virtual bool Intersect(const Ray& RayIn, float& DistanceOut) override;
-	virtual void UpdateObject(const float& DeltaTimeIn, IObject* ParentObject) override;
 
 public:
+	virtual void UpdateObject(const float& DeltaTimeIn) override;
 	virtual void Render(PSOObject* PSOObjectIn) override;
 };
 

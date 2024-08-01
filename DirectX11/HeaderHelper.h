@@ -1,4 +1,5 @@
 #pragma once
+#include <xutility>
 
 #define MakeGetter(Variable)																		\
 public:																								\

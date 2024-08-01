@@ -1,7 +1,6 @@
 #pragma once
 #include "Vertexable.h"
 #include "IIndexable.h"
-#include "IRenderable.h"
 #include "DefineType.h"
 
 enum class EDebugObjectType

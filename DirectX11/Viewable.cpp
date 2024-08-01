@@ -6,7 +6,7 @@ using namespace std;
 using namespace DirectX;
 
 Viewable::Viewable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn, const UINT& WidthIn, const UINT& HeightIn)
-	: PlaceableObject(DeviceIn, DeviceContextIn), ViewProjBuffer(DeviceIn)
+	: RelativePlaceableObject(DeviceIn, DeviceContextIn), ViewProjBuffer(DeviceIn)
 {
 	Resize(WidthIn, HeightIn);
 }
@@ -48,8 +48,10 @@ const XMMATRIX Viewable::GetPerspectiveViewMatrix()
 	return GetViewMatrix() * GetProjectionMatrix();
 }
 
-void Viewable::UpdateView()
+void Viewable::UpdateObject(const float& DeltaTimeIn)
 {
+	RelativePlaceableObject::UpdateObject(DeltaTimeIn);
+
 	ViewProjBufferData TempViewProj;
 	TempViewProj.ViewProjMatrix = GetPerspectiveViewMatrix();
 	TempViewProj.InvViewProjMatrix = XMMatrixInverse(nullptr, TempViewProj.ViewProjMatrix);

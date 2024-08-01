@@ -1,5 +1,5 @@
 #pragma once
-#include "PlaceableObject.h"
+#include "RelativePlaceableObject.h"
  
 struct ViewProjBufferData
 {
@@ -7,7 +7,7 @@ struct ViewProjBufferData
 	DirectX::XMMATRIX InvViewProjMatrix;
 };
 
-class Viewable : public PlaceableObject
+class Viewable : public RelativePlaceableObject
 {
 public:
 	Viewable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn, const UINT& WidthIn, const UINT& HeightIn);
@@ -37,7 +37,7 @@ public:
 	UploadBuffer<ViewProjBufferData> ViewProjBuffer;
 
 public:
-	void UpdateView();
+	virtual void UpdateObject(const float& DeltaTimeIn) override;
 	virtual void Resize(const UINT& WidthIn, const UINT& HeightIn);
 };
 

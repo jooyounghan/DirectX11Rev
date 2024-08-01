@@ -91,6 +91,8 @@ void GameWorld::ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
+	case NULL:
+		break;
 	default:
 		break;
 	}

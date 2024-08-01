@@ -12,9 +12,9 @@ class PSOObject;
 class AssetManager;
 
 class Camera;
-class IRenderable;
-class PlaceableObject;
-class RenderObject;
+class IObject;
+class APlaceable;
+class MeshObject;
 class IMeshAsset;
 
 class Map : public ISerializable
@@ -33,8 +33,8 @@ protected:
 	MakeSmartPtrGetter(MapCamera);
 
 protected:
-	std::unordered_map<PSOObject*, std::vector<IRenderable*>> PSOObjectToRenderables;
-	std::list<std::unique_ptr<PlaceableObject>> Placeables;
+	std::unordered_map<PSOObject*, std::vector<IObject*>> PSOToObjects;
+	std::list<std::unique_ptr<APlaceable>> Placeables;
 
 public:
 	void AddRenderObject(IMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
@@ -53,7 +53,7 @@ private:
 	T* RenderableAddHelper(Args... args)
 	{
 		Placeables.emplace_back(std::make_unique<T>(args...));
-		static_assert(std::is_base_of<PlaceableObject, T>::value, "템플릿 타입은 PlaceableObject의 파생 클래스여야 합니다.");
+		static_assert(std::is_base_of<APlaceable, T>::value, "템플릿 타입은 PlaceableObject의 파생 클래스여야 합니다.");
 		T* AddedObject = (T*)(Placeables.back().get());
 		return AddedObject;
 	}
