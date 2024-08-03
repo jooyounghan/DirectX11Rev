@@ -457,15 +457,20 @@ void AssetManager::PreloadAssets()
 
 void AssetManager::PreloadDebugObjects()
 {
-    DebugObjects[EDebugObjectType::Sphere] = make_shared<Debugable>();
-    Debugable* DebugObject = DebugObjects[EDebugObjectType::Sphere].get();
-    CreateDefaultSphere(DebugObject->Vertices, DebugObject->Indices);
-    DebugObject->Initialize(DeviceCached);
+    CreateDebugSphereObject();
+    CreateDebugBoxObject();
+    CreateDebugCapsuleObject();
 }
 
-void AssetManager::CreateDefaultSphere(std::vector<DebugVertex>& VerticesIn, std::vector<uint16_t>& IndicesIn)
+void AssetManager::CreateDebugSphereObject()
 {
-    uint16_t DefaultSphereLevel = 10;
+    DebugObjects[EDebugObjectType::Sphere] = make_shared<Debugable>();
+    Debugable* DebugObject = DebugObjects[EDebugObjectType::Sphere].get();
+
+    std::vector<DebugVertex>& VerticesIn = DebugObject->Vertices;
+    std::vector<uint16_t>& IndicesIn = DebugObject->Indices;
+
+    uint16_t DefaultSphereLevel = 5;
 
     for (uint16_t latitudeIdx = 0; latitudeIdx < DefaultSphereLevel; ++latitudeIdx)
     {
@@ -505,6 +510,54 @@ void AssetManager::CreateDefaultSphere(std::vector<DebugVertex>& VerticesIn, std
             IndicesIn.push_back(usLongitudeOffset + 6);
         }
     }
+
+    DebugObject->Initialize(DeviceCached);
+}
+
+void AssetManager::CreateDebugBoxObject()
+{
+    DebugObjects[EDebugObjectType::Box] = make_shared<Debugable>();
+    Debugable* DebugObject = DebugObjects[EDebugObjectType::Box].get();
+
+    std::vector<DebugVertex>& VerticesIn = DebugObject->Vertices;
+    std::vector<uint16_t>& IndicesIn = DebugObject->Indices;
+
+    VerticesIn.emplace_back(SPosition3D{ -1.0f, -1.0f, -1.0f }, SCoordinate2D{ 0.0f, 0.0f });
+    VerticesIn.emplace_back(SPosition3D{ 1.0f, -1.0f, -1.0f }, SCoordinate2D{ 1.0f, 0.0f });
+    VerticesIn.emplace_back(SPosition3D{ 1.0f,  1.0f, -1.0f }, SCoordinate2D{ 1.0f, 1.0f });
+    VerticesIn.emplace_back(SPosition3D{ -1.0f,  1.0f, -1.0f }, SCoordinate2D{ 0.0f, 1.0f });
+    VerticesIn.emplace_back(SPosition3D{ -1.0f, -1.0f,  1.0f }, SCoordinate2D{ 0.0f, 0.0f });
+    VerticesIn.emplace_back(SPosition3D{ 1.0f, -1.0f,  1.0f }, SCoordinate2D{ 1.0f, 0.0f });
+    VerticesIn.emplace_back(SPosition3D{ 1.0f,  1.0f,  1.0f }, SCoordinate2D{ 1.0f, 1.0f });
+    VerticesIn.emplace_back(SPosition3D{ -1.0f,  1.0f,  1.0f }, SCoordinate2D{ 0.0f, 1.0f });
+
+    IndicesIn = std::vector<uint16_t>{
+        // Front face
+        0, 2, 1, 0, 3, 2,
+        // Back face
+        4, 5, 6, 4, 6, 7,
+        // Bottom face
+        0, 1, 5, 0, 5, 4,
+        // Top face
+        3, 7, 6, 3, 6, 2,
+        // Left face
+        0, 4, 7, 0, 7, 3,
+        // Right face
+        1, 2, 6, 1, 6, 5
+    };
+
+    DebugObject->Initialize(DeviceCached);
+}
+
+void AssetManager::CreateDebugCapsuleObject()
+{
+    DebugObjects[EDebugObjectType::Capsule] = make_shared<Debugable>();
+    Debugable* DebugObject = DebugObjects[EDebugObjectType::Sphere].get();
+
+    std::vector<DebugVertex>& VerticesIn = DebugObject->Vertices;
+    std::vector<uint16_t>& IndicesIn = DebugObject->Indices;
+
+    DebugObject->Initialize(DeviceCached);
 }
 
 template<typename T>

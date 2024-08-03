@@ -10,8 +10,9 @@
 
 #include "Camera.h"
 
-
+// TEST
 #include "BoundingSphere.h"
+#include "OrientedBoundingBox.h"
 
 using namespace std;
 using namespace DirectX;
@@ -116,9 +117,17 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 		AddedObject->Position.z = PlacePositon.m128_f32[2];
 		PSOToObjects[Pso].emplace_back(AddedObject);
 
-		BoundingSphere* BS = AddedObject->AddChildObjectHelper<BoundingSphere>(GraphicsPipelineCached, 100.f, AssetManagerCached->GetDebugObject(EDebugObjectType::Sphere));
+		// TEST
 		PSOObject* DebugPSO = PSOManagerCached->GetPSOObject(EPSOType::R8G8B8A8_Debug_Wireframe);
+
+		OrientedBoundingBox* OBB = AddedObject->AddChildObjectHelper<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached,
+			10.f, 10.f, 10.f);
+		PSOToObjects[DebugPSO].emplace_back(OBB);
+		OBB->Position.x += 200.f;
+
+		BoundingSphere* BS = OBB->AddChildObjectHelper<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached, 10.f);
 		PSOToObjects[DebugPSO].emplace_back(BS);
+		BS->Position.x += 400.f;
 	}
 }
 

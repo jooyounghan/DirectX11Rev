@@ -285,11 +285,14 @@
     <ClCompile Include="PlaceableObject.cpp">
       <Filter>소스 파일\Asset\Map\Object\Placeable</Filter>
     </ClCompile>
-    <ClCompile Include="AttachableObject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="RelativePlaceableObject.cpp">
       <Filter>소스 파일\Asset\Map\Object\RelativePlaceable</Filter>
+    </ClCompile>
+    <ClCompile Include="ABoundingComponent.cpp">
+      <Filter>소스 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachableObject.cpp">
+      <Filter>소스 파일\Asset\Map\Object\Attachable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -481,6 +484,9 @@
     </ClInclude>
     <ClInclude Include="RelativePlaceableObject.h">
       <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable</Filter>
+    </ClInclude>
+    <ClInclude Include="ABoundingComponent.h">
+      <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

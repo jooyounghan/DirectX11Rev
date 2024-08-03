@@ -11,7 +11,7 @@ public:
 	virtual ~AAttachable() = default;
 
 protected:
-	APlaceable* ParentObject;
+	APlaceable* ParentObject = nullptr;
 	MakeSetterGetter(ParentObject);
 
 public:

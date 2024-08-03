@@ -102,7 +102,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ABoundingComponent.cpp" />
     <ClCompile Include="AssetManagerWindow.cpp" />
     <ClCompile Include="AttachableObject.cpp" />
     <ClCompile Include="BoundingCapsule.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="ViewportWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ABoundingComponent.h" />
     <ClInclude Include="AssetManagerWindow.h" />
     <ClInclude Include="Attachable.h" />
     <ClInclude Include="AttachableObject.h" />

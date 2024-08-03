@@ -8,6 +8,17 @@ public:
 	virtual ~RelativePlaceableObject();
 
 public:
+	virtual DirectX::XMVECTOR GetRotationQuat() const;
+
+public:
+	virtual DirectX::XMMATRIX GetScaleMatrix() const;
+	virtual DirectX::XMMATRIX GetRotationMatrix() const;
+	virtual DirectX::XMMATRIX GetTranslationMatrix() const;
+
+public:
+	virtual DirectX::XMMATRIX GetTransformation(const bool& IsIgnoreScale = false) const;
+
+public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
 	virtual void Render(PSOObject* PSOObjectIn) override {};
 };

@@ -1,27 +1,17 @@
 #pragma once
-#include "IIntersectable.h"
-#include "RelativePlaceableObject.h"
-
-class GraphicsPipeline;
-class Debugable;
+#include "ABoundingComponent.h"
  
-class BoundingSphere : public IIntersectable, public RelativePlaceableObject
+class BoundingSphere : public ABoundingComponent
 {
 public:
 	BoundingSphere(
 		GraphicsPipeline* GraphicsPipelineInstances,
-		const float& RadiusIn, Debugable* DebugObjectIn
+		AssetManager* AssetManagerInstance,
+		const float& RadiusIn
 	);
 	virtual ~BoundingSphere();
 
-protected:
-	Debugable* DebugObject = nullptr;
-
 public:
 	virtual bool Intersect(const Ray& RayIn, float& DistanceOut) override;
-
-public:
-	virtual void UpdateObject(const float& DeltaTimeIn) override;
-	virtual void Render(PSOObject* PSOObjectIn) override;
 };
 

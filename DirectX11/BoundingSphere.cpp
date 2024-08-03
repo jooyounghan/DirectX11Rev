@@ -1,37 +1,39 @@
 #include "BoundingSphere.h"
-#include "GraphicsPipeline.h"
+#include "AssetManager.h"
 #include "Debugable.h"
-#include "PSOObject.h"
 
+using namespace DirectX;
 
 BoundingSphere::BoundingSphere(
 	GraphicsPipeline* GraphicsPipelineInstances,
-    const float& RadiusIn, Debugable* DebugObjectIn
+	AssetManager* AssetManagerInstance,
+	const float& RadiusIn
 )
-    : RelativePlaceableObject(
-		GraphicsPipelineInstances->GetDevice(), 
-		GraphicsPipelineInstances->GetDeviceContext()
-	), DebugObject(DebugObjectIn)
+	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance)
 {
-    Scale = RadiusIn;
+	Scale.x = RadiusIn;
+	Scale.y = RadiusIn;
+	Scale.z = RadiusIn;
+	DebugObject = AssetManagerInstance->GetDebugObject(EDebugObjectType::Sphere);
 }
 
-BoundingSphere::~BoundingSphere() 
+BoundingSphere::~BoundingSphere()
 {
 
 }
 
 bool BoundingSphere::Intersect(const Ray& RayIn, float& DistanceOut)
 {
-    const float& Radius = Scale;
+    const float& Radius = Scale.x;
 
+	XMVECTOR Scaling;
+	XMVECTOR RotationQuat;
+	XMVECTOR Translation;
+	XMMatrixDecompose(&Scaling, &RotationQuat, &Translation, GetTranslationMatrix());
 
-	SPosition3D Center = SPosition3D{ Position.x, Position.y, Position.z };
-	if (ParentObject)
-	{
-		const SPosition4D ParentPosition = ParentObject->Position;
-		Center = Center - SPosition3D{ ParentPosition.x, ParentPosition.y, ParentPosition.z };
-	}
+	SPosition3D Center = SPosition3D{ 
+		Translation.m128_f32[0], Translation.m128_f32[1], Translation.m128_f32[2]
+	};
 
 	float b = InnerProduct(RayIn.Direction, RayIn.Origin - Center);
 	float c = InnerProduct(RayIn.Origin - Center, RayIn.Origin - Center) - Radius * Radius;
@@ -62,33 +64,4 @@ bool BoundingSphere::Intersect(const Ray& RayIn, float& DistanceOut)
 			return true;
 		}
 	}
-}
-
-void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
-{
-	RelativePlaceableObject::UpdateObject(DeltaTimeIn);
-}
-
-void BoundingSphere::Render(PSOObject* PSOObjectIn)
-{
-	if (DebugObject)
-	{
-		ID3D11Buffer* VertexBuffers[] = { DebugObject->GetVertexBuffer()};
-		UINT Strides[] = { DebugObject->GetVertexTypeSize() };
-		UINT Offsets[] = { 0 };
-
-		DeviceContextCached->IASetVertexBuffers(0, 1, VertexBuffers, Strides, Offsets);
-		DeviceContextCached->IASetIndexBuffer(DebugObject->GetIndexBuffer(), DebugObject->GetIndexFormat(), 0);
-
-		ID3D11Buffer* VSConstBuffers[] = { TransformationBuffer.GetBuffer() };
-		PSOObjectIn->SetVSConstantBuffers(1, 1, VSConstBuffers);
-
-#ifdef _DEBUG
-		PSOObjectIn->CheckPipelineValidation();
-#endif // DEBUG
-
-		DeviceContextCached->DrawIndexed(static_cast<UINT>(DebugObject->GetIndexCount()), 0, 0);
-
-		PSOObjectIn->ResetVSConstantBuffers(1, 0);
-	}
-}                                    
+}            

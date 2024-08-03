@@ -11,17 +11,83 @@ RelativePlaceableObject::~RelativePlaceableObject()
 {
 }
 
-void RelativePlaceableObject::UpdateObject(const float& DeltaTimeIn)
+DirectX::XMVECTOR RelativePlaceableObject::GetRotationQuat() const
 {
-	TransformationMatrix TempTransformation;
+	XMVECTOR ResultQuat = XMQuaternionRotationRollPitchYaw(
+		XMConvertToRadians(Angle.Pitch),
+		XMConvertToRadians(Angle.Yaw),
+		XMConvertToRadians(Angle.Roll)
+	);
+	if (ParentObject)
+	{
+		ResultQuat = XMQuaternionMultiply(ResultQuat, ParentObject->GetRotationQuat());
+	}
+	return ResultQuat;
+}
 
-	TempTransformation.TransfomationMat = GetTransformation();
+DirectX::XMMATRIX RelativePlaceableObject::GetScaleMatrix() const
+{
+	XMMATRIX ResultScale = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
+	if (ParentObject)
+	{
+		ResultScale = XMMatrixMultiply(ResultScale, ParentObject->GetScaleMatrix());
+	}
+	return ResultScale;
+}
+
+DirectX::XMMATRIX RelativePlaceableObject::GetRotationMatrix() const
+{
+	XMMATRIX ResultRotation = DirectX::XMMatrixRotationRollPitchYaw(
+		XMConvertToRadians(Angle.Pitch),
+		XMConvertToRadians(Angle.Yaw),
+		XMConvertToRadians(Angle.Roll)
+	);
+	if (ParentObject)
+	{
+		ResultRotation = XMMatrixMultiply(ResultRotation, ParentObject->GetRotationMatrix());
+	}
+	return ResultRotation;
+}
+
+DirectX::XMMATRIX RelativePlaceableObject::GetTranslationMatrix() const
+{
+	XMMATRIX ResultTranslation = DirectX::XMMatrixTranslation(Position.x, Position.y, Position.z);
+	if (ParentObject)
+	{
+		ResultTranslation = XMMatrixMultiply(ResultTranslation, ParentObject->GetTranslationMatrix());
+	}
+	return ResultTranslation;
+}
+
+DirectX::XMMATRIX RelativePlaceableObject::GetTransformation(const bool& IsIgnoreScale) const
+{
+	XMMATRIX ResultTransformation = XMMatrixAffineTransformation(
+		IsIgnoreScale ? XMVectorSet(1.f, 1.f, 1.f, 0.0f) : XMVectorSet(Scale.x, Scale.y, Scale.z, 0.0f),
+		XMQuaternionIdentity(),
+		XMQuaternionRotationRollPitchYaw(
+			XMConvertToRadians(Angle.Pitch),
+			XMConvertToRadians(Angle.Yaw),
+			XMConvertToRadians(Angle.Roll)
+		),
+		Position.Position
+	);
 
 	if (ParentObject)
 	{
-		TempTransformation.TransfomationMat = XMMatrixMultiply(TempTransformation.TransfomationMat, ParentObject->GetTransformation());
+		ResultTransformation = XMMatrixMultiply(
+			ResultTransformation, 
+			ParentObject->GetTransformation(true)
+		);
 	}
-	
+	return ResultTransformation;
+}
+
+void RelativePlaceableObject::UpdateObject(const float& DeltaTimeIn)
+{
+
+	TransformationMatrix TempTransformation;
+
+	TempTransformation.TransfomationMat = GetTransformation();
 	TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
 	TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
 

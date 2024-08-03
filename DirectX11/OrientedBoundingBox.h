@@ -1,33 +1,19 @@
 #pragma once
-#include "IIntersectable.h"
-#include "RelativePlaceableObject.h"
+#include "ABoundingComponent.h"
 
-class GraphicsPipeline;
-class Debugable;
-
-class OrientedBoundingBox : public IIntersectable, public RelativePlaceableObject
+class OrientedBoundingBox : public ABoundingComponent
 {
 public:
 	OrientedBoundingBox(
 		GraphicsPipeline* GraphicsPipelineInstances,
-		const float& RadiusIn, Debugable* DebugObjectIn
+		AssetManager* AssetManagerInstance,
+		const float& HalfXIn, 
+		const float& HalfYIn, 
+		const float& HalfZIn
 	);
-	virtual ~OrientedBoundingBox() {};
-
-protected:
-	Debugable* DebugObject = nullptr;
-
-protected:
-	SPosition3D			Center;
-	SVector3D			Extents;
-	DirectX::XMMATRIX	Orientation;
-
+	virtual ~OrientedBoundingBox();
 
 public:
 	virtual bool Intersect(const Ray& RayIn, float& DistanceOut) override;
-	virtual void UpdateObject(const float& DeltaTimeIn) override;
-
-public:
-	virtual void Render(PSOObject* PSOObjectIn) override;
 };
 

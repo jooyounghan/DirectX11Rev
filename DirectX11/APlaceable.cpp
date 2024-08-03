@@ -10,28 +10,11 @@ APlaceable::APlaceable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContex
 	AutoZeroMemory(Scale);
 	AutoZeroMemory(Angle);
 
-	Scale = 1.f;
+	Scale.x = 1.f;
+	Scale.y = 1.f;
+	Scale.z = 1.f;
 }
 
 APlaceable::~APlaceable()
 {
-}
-
-DirectX::XMVECTOR APlaceable::GetRotationQuat() const
-{
-	return XMQuaternionRotationRollPitchYaw(
-		XMConvertToRadians(Angle.Pitch),
-		XMConvertToRadians(Angle.Yaw),
-		XMConvertToRadians(Angle.Roll)
-	);
-}
-
-DirectX::XMMATRIX APlaceable::GetTransformation() const
-{
-	return XMMatrixAffineTransformation(
-		XMVectorSet(Scale, Scale, Scale, 0.0f),
-		XMQuaternionIdentity(),
-		GetRotationQuat(),
-		Position.Position
-	);
 }

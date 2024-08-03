@@ -22,7 +22,7 @@ public:
 public:
 	SPosition4D	Position;
 	SAngle		Angle;
-	float		Scale;
+	SVector3D	Scale;
 
 protected:
 	std::list<std::unique_ptr<AAttachable>> ChildrenObjects;
@@ -35,15 +35,15 @@ protected:
 	ID3D11DeviceContext* DeviceContextCached = nullptr;
 
 public:
-	DirectX::XMVECTOR GetRotationQuat() const;
+	virtual DirectX::XMVECTOR GetRotationQuat() const = 0;
 
 public:
-	DirectX::XMMATRIX GetScaleMatrix() { return DirectX::XMMatrixScaling(Scale, Scale, Scale); }
-	DirectX::XMMATRIX GetRotartionMatrix() { return DirectX::XMMatrixRotationRollPitchYaw(Angle.Pitch, Angle.Yaw, Angle.Roll); }
-	DirectX::XMMATRIX GetTranslationMatrix() { return DirectX::XMMatrixTranslation(Position.x, Position.y, Position.z); }
+	virtual DirectX::XMMATRIX GetScaleMatrix() const = 0;
+	virtual DirectX::XMMATRIX GetRotationMatrix() const = 0;
+	virtual DirectX::XMMATRIX GetTranslationMatrix() const = 0;
 
 public:
-	DirectX::XMMATRIX GetTransformation() const;
+	virtual DirectX::XMMATRIX GetTransformation(const bool& IsIgnoreScale = false) const = 0;
 
 
 public:

@@ -152,7 +152,8 @@ private:
 	void PreloadDebugObjects();
 
 private:
-	void CreateDefaultSphere(std::vector<DebugVertex>& VerticesOut, std::vector<uint16_t>& IndicesOut);
-
+	void CreateDebugSphereObject();
+	void CreateDebugBoxObject();
+	void CreateDebugCapsuleObject();
 };
 
