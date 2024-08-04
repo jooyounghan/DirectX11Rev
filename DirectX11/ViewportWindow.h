@@ -1,6 +1,8 @@
 #pragma once
 #include "IGameWorldLinkedWindow.h"
 
+class Map;
+
 class ViewportWindow : public IGameWorldLinkedWindow
 {
 public: 
@@ -10,5 +12,12 @@ public:
 
 public:
 	virtual void RenderWindow() override;
+
+private:
+	static std::string ViewportWindowName;
+
+private:
+	void ManageAssetDrop(Map* CurrentMap);
+	void ManageMouseLBClick(Map* CurrentMap);
 };
 

@@ -28,12 +28,8 @@ bool OrientedBoundingBox::Intersect(const Ray& RayIn, float& DistanceOut)
 {
 	XMVECTOR Scaling;
 	XMVECTOR RotationQuat;
-	XMVECTOR Translation;
-	XMMatrixDecompose(&Scaling, &RotationQuat, &Translation, GetTranslationMatrix());
-
-	SPosition3D Center = SPosition3D{
-		Translation.m128_f32[0], Translation.m128_f32[1], Translation.m128_f32[2]
-	};
+	XMVECTOR Center;
+	XMMatrixDecompose(&Scaling, &RotationQuat, &Center, GetTranslationMatrix());
 
 	XMVECTOR BoxRotationQuat = GetRotationQuat();
 
@@ -49,9 +45,9 @@ bool OrientedBoundingBox::Intersect(const Ray& RayIn, float& DistanceOut)
 		XMVector3Rotate(Direction::GDefaultUp, BoxRotationQuat)
 	};
 
-	SVector3D ToCenter = Center - RayIn.Origin;
+	const XMVECTOR ToCenter = Center - RayIn.Origin;
 
-	float tMin = std::numeric_limits<float>::min();
+	float tMin = std::numeric_limits<float>::lowest();
 	float tMax = std::numeric_limits<float>::max();
 
 	for (size_t AxisType = 0; AxisType < AxisNum; ++AxisType)
@@ -59,20 +55,13 @@ bool OrientedBoundingBox::Intersect(const Ray& RayIn, float& DistanceOut)
 		const XMVECTOR& Axis = OBBAxis[AxisType];
 		const float HalfExtend = OBBHalfExtents[AxisType];
 
-		const float AxisToCenterProj =
-			Axis.m128_f32[0] * ToCenter.x +
-			Axis.m128_f32[1] * ToCenter.y +
-			Axis.m128_f32[2] * ToCenter.z;
-
-		const float AxisToRayDirectionCos =
-			Axis.m128_f32[0] * RayIn.Direction.x +
-			Axis.m128_f32[1] * RayIn.Direction.y +
-			Axis.m128_f32[2] * RayIn.Direction.z;
+		const float AxisToCenterProj = InnerProduct(Axis, ToCenter);
+		const float AxisToRayDirectionCos = InnerProduct(Axis, RayIn.Direction);
 
 		if (abs(AxisToRayDirectionCos) > 1E-6)
 		{
 			float t1 = (AxisToCenterProj + HalfExtend) / AxisToRayDirectionCos;
-			float t2 = (AxisToCenterProj + HalfExtend) / AxisToRayDirectionCos;
+			float t2 = (AxisToCenterProj - HalfExtend) / AxisToRayDirectionCos;
 
 			if (t1 > t2) std::swap(t1, t2);
 

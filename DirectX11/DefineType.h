@@ -1,12 +1,14 @@
 #pragma once
 #include <DirectXMath.h>
 
+using namespace DirectX;
+
 typedef struct SPosition4D
 {
 	union
 	{
-		DirectX::XMVECTOR Position;
-		DirectX::XMVECTOR Scale;
+		XMVECTOR Position;
+		XMVECTOR Scale;
 		struct
 		{
 			float x, y, z, w;
@@ -23,37 +25,6 @@ typedef struct SPosition4D
 	template<typename T>
 	void InsertWithIndex(int IndexIn, const T& InputElement);
 } SVector4D;
-
-typedef struct SPosition3D
-{
-	union
-	{
-		struct
-		{
-			float x, y, z;
-		};
-		struct
-		{
-			float Pitch, Roll, Yaw;
-		};
-	};
-
-	void Normalize();
-} SVector3D, SAngle;
-
-SPosition3D operator-(const SPosition3D& Pos1, const SPosition3D& Pos2);
-SPosition3D operator+(const SPosition3D& Pos1, const SPosition3D& Pos2);
-SPosition3D operator*(const SPosition3D& Vec, float Scalar);
-float InnerProduct(const SPosition3D& Pos1, const SPosition3D& Pos2);
-
-struct SCoordinate2D
-{
-	float x, y;
-};
-
-SCoordinate2D operator-(const SCoordinate2D& Coord1, const SCoordinate2D& Coord2);
-SCoordinate2D operator+(const SCoordinate2D& Coord1, const SCoordinate2D& Coord2);
-SCoordinate2D operator*(const SCoordinate2D& Vec, float Scalar);
 
 template<typename T>
 inline int SPosition4D::InsertToEmpty(const T& InputElement)
@@ -86,3 +57,51 @@ inline void SPosition4D::InsertWithIndex(int IndexIn, const T& InputElement)
 		break;
 	}
 }
+
+typedef struct SPosition3D
+{
+	union
+	{
+		struct
+		{
+			float x, y, z;
+		};
+		struct
+		{
+			float Pitch, Roll, Yaw;
+		};
+	};
+
+	void Normalize();
+} SVector3D, SAngle;
+
+SPosition3D operator-(const SPosition3D& Pos1, const SPosition3D& Pos2);
+SPosition3D operator+(const SPosition3D& Pos1, const SPosition3D& Pos2);
+SPosition3D operator*(const SPosition3D& Vec, float Scalar);
+
+float InnerProduct(const SPosition3D& Pos1, const SPosition3D& Pos2);
+float InnerProduct(const XMVECTOR& Vec1, const XMVECTOR& Vec2);
+
+struct SCoordinate2D
+{
+	float x, y;
+};
+
+SCoordinate2D operator-(const SCoordinate2D& Coord1, const SCoordinate2D& Coord2);
+SCoordinate2D operator+(const SCoordinate2D& Coord1, const SCoordinate2D& Coord2);
+SCoordinate2D operator*(const SCoordinate2D& Vec, float Scalar);
+
+struct Ray
+{
+	XMVECTOR	Origin;
+	XMVECTOR	Direction;
+
+	static Ray CreateRay(
+		const float& ScreenXIn, 
+		const float& ScreenYIn, 
+		const float& ScreenWidthIn,
+		const float& ScreenHeightIn,
+		const XMMATRIX& ProjectionMatrix,
+		const XMMATRIX& ViewMatrix
+	);
+};

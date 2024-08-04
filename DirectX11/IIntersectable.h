@@ -1,11 +1,6 @@
 #pragma once
-#include "DefineType.h"
 
-struct Ray
-{
-	SPosition3D Origin;
-	SVector3D	Direction;
-};
+struct Ray;
 
 class IIntersectable
 {

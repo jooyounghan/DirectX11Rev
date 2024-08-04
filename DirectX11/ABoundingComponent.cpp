@@ -17,8 +17,7 @@ ABoundingComponent::~ABoundingComponent()
 
 void ABoundingComponent::UpdateObject(const float& DeltaTimeIn)
 {
-	Angle.Roll += DeltaTimeIn * 45.f;
-	Angle.Pitch += DeltaTimeIn * 60.f;
+	Angle.Roll += 10.f * DeltaTimeIn;
 	RelativePlaceableObject::UpdateObject(DeltaTimeIn);
 }
 

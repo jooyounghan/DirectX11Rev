@@ -17,6 +17,8 @@ class APlaceable;
 class MeshObject;
 class IMeshAsset;
 
+class IIntersectable;
+
 class Map : public ISerializable
 {
 public:
@@ -36,6 +38,11 @@ protected:
 	std::unordered_map<PSOObject*, std::vector<IObject*>> PSOToObjects;
 	std::list<std::unique_ptr<APlaceable>> Placeables;
 
+
+protected:
+	std::list<IIntersectable*> Tests;
+
+
 public:
 	void AddRenderObject(IMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
 	void AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float ScreenYIn, float ScreenWidthIn, float ScreenHeightIn);
@@ -47,6 +54,10 @@ public:
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath) override;
 	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn) override;
+
+public:
+	void Test(float ScreenXIn, float ScreenYIn, float ScreenWidthIn, float ScreenHeightIn);
+
 
 private:
 	template<typename T, typename ...Args>

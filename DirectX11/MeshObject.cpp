@@ -20,9 +20,8 @@ MeshObject::~MeshObject()
 
 void MeshObject::UpdateObject(const float& DeltaTimeIn)
 {
-	Position.x += DeltaTimeIn * 10.f;
-	Angle.Roll += DeltaTimeIn * 60.f;
-	Angle.Pitch += DeltaTimeIn * 45.f;
+	Angle.Pitch += 10.f * DeltaTimeIn;
+	Angle.Yaw += 10.f * DeltaTimeIn;
 	RelativePlaceableObject::UpdateObject(DeltaTimeIn);
 }
 

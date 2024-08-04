@@ -88,29 +88,9 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 	{
 		MeshObject* AddedObject = RenderableAddHelper<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
 
-		XMVECTOR NearPoint = XMVectorSet(
-			(2.0f * ScreenXIn / ScreenWidthIn) - 1.0f,
-			1.0f - (2.0f * ScreenYIn / ScreenHeightIn),
-			0.f, 1.f
-		);
+		Ray ClickedRay = Ray::CreateRay(ScreenXIn, ScreenYIn, ScreenWidthIn, ScreenHeightIn, MapCamera->GetProjectionMatrix(), MapCamera->GetViewMatrix());
 
-		XMVECTOR FarPoint = XMVectorSet(
-			(2.0f * ScreenXIn / ScreenWidthIn) - 1.0f,
-			1.0f - (2.0f * ScreenYIn / ScreenHeightIn),
-			1.f, 1.f
-		);
-
-		const XMMATRIX ProjInvMatrix = XMMatrixInverse(nullptr, MapCamera->GetProjectionMatrix());
-		NearPoint = XMVector3TransformCoord(NearPoint, ProjInvMatrix);
-		FarPoint = XMVector3TransformCoord(FarPoint, ProjInvMatrix);
-
-		const XMMATRIX ViewInvMatrix = XMMatrixInverse(nullptr, MapCamera->GetViewMatrix());
-		NearPoint = XMVector3TransformCoord(NearPoint, ViewInvMatrix);
-		FarPoint = XMVector3TransformCoord(FarPoint, ViewInvMatrix);
-
-		const XMVECTOR Displacement = FarPoint - NearPoint;
-		const XMVECTOR Direction = XMVector3Normalize(Displacement);
-		const XMVECTOR PlacePositon = NearPoint + Direction * (Displacement.m128_f32[2] / 2.f);
+		const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
 
 		AddedObject->Position.x = PlacePositon.m128_f32[0];
 		AddedObject->Position.y = PlacePositon.m128_f32[1];
@@ -121,13 +101,16 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 		PSOObject* DebugPSO = PSOManagerCached->GetPSOObject(EPSOType::R8G8B8A8_Debug_Wireframe);
 
 		OrientedBoundingBox* OBB = AddedObject->AddChildObjectHelper<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached,
-			10.f, 10.f, 10.f);
+			100.f, 100.f, 100.f);
 		PSOToObjects[DebugPSO].emplace_back(OBB);
 		OBB->Position.x += 200.f;
 
-		BoundingSphere* BS = OBB->AddChildObjectHelper<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached, 10.f);
+		BoundingSphere* BS = OBB->AddChildObjectHelper<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached, 100.f);
 		PSOToObjects[DebugPSO].emplace_back(BS);
 		BS->Position.x += 400.f;
+
+		Tests.push_back(OBB);
+		Tests.push_back(BS);
 	}
 }
 
@@ -169,4 +152,18 @@ void Map::Serialize(const std::string& OutputAdditionalPath)
 
 void Map::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
 {
+}
+
+void Map::Test(float ScreenXIn, float ScreenYIn, float ScreenWidthIn, float ScreenHeightIn)
+{
+	Ray ClickedRay = Ray::CreateRay(ScreenXIn, ScreenYIn, ScreenWidthIn, ScreenHeightIn, MapCamera->GetProjectionMatrix(), MapCamera->GetViewMatrix());
+
+	float Distance = 0;
+	for (auto test : Tests)
+	{
+		if (test->Intersect(ClickedRay, Distance))
+		{
+			bool test = true;
+		}
+	}
 }

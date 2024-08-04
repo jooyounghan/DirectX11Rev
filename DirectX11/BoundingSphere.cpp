@@ -28,15 +28,13 @@ bool BoundingSphere::Intersect(const Ray& RayIn, float& DistanceOut)
 
 	XMVECTOR Scaling;
 	XMVECTOR RotationQuat;
-	XMVECTOR Translation;
-	XMMatrixDecompose(&Scaling, &RotationQuat, &Translation, GetTranslationMatrix());
+	XMVECTOR Center;
+	XMMatrixDecompose(&Scaling, &RotationQuat, &Center, GetTranslationMatrix());
 
-	SPosition3D Center = SPosition3D{ 
-		Translation.m128_f32[0], Translation.m128_f32[1], Translation.m128_f32[2]
-	};
+	const XMVECTOR ToCenter = RayIn.Origin - Center;
 
-	float b = InnerProduct(RayIn.Direction, RayIn.Origin - Center);
-	float c = InnerProduct(RayIn.Origin - Center, RayIn.Origin - Center) - Radius * Radius;
+	float b = InnerProduct(RayIn.Direction, ToCenter);
+	float c = InnerProduct(ToCenter, ToCenter) - Radius * Radius;
 
 	float determinant = b * b - c;
 	if (determinant < 0) 
