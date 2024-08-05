@@ -95,8 +95,3 @@ Ray Ray::CreateRay(
 
 	return Ray{ NearPoint, Direction };
 }
-
-float Plane::GetSignedDistanceToPlane(const XMVECTOR& Position) const
-{
-	return InnerProduct(Position - Point, Normal);
-}

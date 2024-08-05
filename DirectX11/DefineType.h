@@ -110,6 +110,4 @@ struct Plane
 {
 	XMVECTOR Point;
 	XMVECTOR Normal;
-
-	float GetSignedDistanceToPlane(const XMVECTOR& Position) const;
 };

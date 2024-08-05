@@ -79,5 +79,12 @@ void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
 
 bool BoundingSphere::IsOnOrForwardPlane(const Plane& PlaneIn)
 {
-	return PlaneIn.GetSignedDistanceToPlane(Center) > -Radius;
+	XMVECTOR vectorFromPlaneToSphere = Center - PlaneIn.Point;
+
+	// 평면의 법선 벡터와 위에서 구한 벡터의 내적을 구합니다.
+	float distanceFromPlaneToSphereCenter = XMVectorGetX(XMVector3Dot(vectorFromPlaneToSphere, PlaneIn.Normal));
+
+
+	// 구의 중심이 평면 위에서 떨어진 거리가 구의 반지름보다 작거나 같으면 true를 반환합니다.
+	return distanceFromPlaneToSphereCenter > -Radius;
 }

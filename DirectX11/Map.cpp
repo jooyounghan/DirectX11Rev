@@ -105,7 +105,7 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 		OrientedBoundingBox* OBB = AddedObject->AddChildObjectHelper<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached,
 			100.f, 100.f, 100.f);
 		PSOToObjects[DebugPSO].emplace_back(OBB);
-		OBB->Position.x += 200.f;
+		OBB->Position.x += 400.f;
 
 		BoundingSphere* BS = OBB->AddChildObjectHelper<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached, 100.f);
 		PSOToObjects[DebugPSO].emplace_back(BS);

@@ -41,10 +41,12 @@ void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
 	{
         const D3D11_VIEWPORT& Viewport = ViewableCached->GetViewport();
         const float AspectRatio = Viewport.Width / Viewport.Height;
-        const float HalfVSide = ViewableCached->FarZ * tanf(ViewableCached->FovAngle * 0.5f);
+        const float HalfVSide = ViewableCached->FarZ * tanf(XMConvertToRadians(ViewableCached->FovAngle) * 0.5f);
         const float HalfHSide = HalfVSide * AspectRatio;
 
         const XMVECTOR RotationQuat = ViewableCached->GetRotationQuat();
+        const XMMATRIX Transformation = ViewableCached->GetTransformation(true);
+
         XMVECTOR CurrentForward = XMVector3Rotate(Direction::GDefaultForward, RotationQuat);
         XMVECTOR CurrentUp = XMVector3Rotate(Direction::GDefaultUp, RotationQuat);
         XMVECTOR CurrentRight = XMVector3Rotate(Direction::GDefaultRight, RotationQuat);
@@ -53,14 +55,14 @@ void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
         const XMVECTOR FarPosition = ViewableCached->FarZ * CurrentForward;
 
         const SPosition4D Postion = ViewableCached->Position;
-        const XMVECTOR XMVPosition = XMVectorSet(Position.x, Position.y, Position.z, Position.w);
+        XMVECTOR XMVPosition = XMVectorSet(Position.x, Position.y, Position.z, Position.w);
+        XMVPosition = XMVector3Transform(XMVPosition, Transformation);
 
-        NearFace = { XMVPosition + NearPosition, CurrentForward };
-        FarFace = { XMVPosition + FarPosition, -CurrentForward };
-        
-        RightFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentRight * HalfHSide, CurrentUp)) };
-        LeftFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(CurrentUp,FarPosition + CurrentRight * HalfHSide)) };
-        TopFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(CurrentRight, FarPosition - CurrentUp * HalfVSide)) };
-        BottomFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentUp * HalfVSide, CurrentRight)) };
+        NearFace = { XMVPosition + NearPosition, XMVector3Normalize(CurrentForward) };
+        FarFace = { XMVPosition + FarPosition, -XMVector3Normalize(CurrentForward) };
+        RightFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentRight * HalfHSide, CurrentUp)) };
+        LeftFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentRight * HalfHSide, -CurrentUp)) };
+        TopFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentUp * HalfVSide, -CurrentRight)) };
+        BottomFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentUp * HalfVSide, CurrentRight)) };
 	}
 }

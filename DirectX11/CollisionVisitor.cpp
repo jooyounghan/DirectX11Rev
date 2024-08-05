@@ -40,15 +40,12 @@ bool CollisionLogic::CheckCollision(BoundingSphere* t1, OrientedBoundingBox* t2)
 
 bool CollisionLogic::CheckCollision(BoundingSphere* t1, BoundingFrustum* t2)
 {
-	bool test1 = (t1->IsOnOrForwardPlane(t2->GetTopFace()));
-	bool test2 = (t1->IsOnOrForwardPlane(t2->GetBottomFace()));
-	bool test3 = (t1->IsOnOrForwardPlane(t2->GetLeftFace()));
-	bool test4 = (t1->IsOnOrForwardPlane(t2->GetRightFace()));
-	bool test5 = (t1->IsOnOrForwardPlane(t2->GetFarFace()));
-	bool test6 = (t1->IsOnOrForwardPlane(t2->GetNearFace()));
-
-
-	return 	test1 && test2 && test3 && test4 && test5 && test6;
+	return (t1->IsOnOrForwardPlane(t2->GetTopFace())) && 
+		(t1->IsOnOrForwardPlane(t2->GetBottomFace())) && 
+		(t1->IsOnOrForwardPlane(t2->GetLeftFace())) &&
+		(t1->IsOnOrForwardPlane(t2->GetRightFace())) &&
+		(t1->IsOnOrForwardPlane(t2->GetFarFace())) && 
+		(t1->IsOnOrForwardPlane(t2->GetNearFace()));
 }
 
 bool CollisionLogic::CheckCollision(OrientedBoundingBox* t1, BoundingSphere* t2)

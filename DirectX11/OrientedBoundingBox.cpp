@@ -78,6 +78,8 @@ bool OrientedBoundingBox::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 
 void OrientedBoundingBox::UpdateObject(const float& DeltaTimeIn)
 {
+	Angle.Yaw += 20.f * DeltaTimeIn;
+	Angle.Roll += 40.f * DeltaTimeIn;
 	ABoundingComponent::UpdateObject(DeltaTimeIn);
 
 	XMVECTOR Scaling;
