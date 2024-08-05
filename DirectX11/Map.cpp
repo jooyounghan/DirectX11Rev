@@ -13,6 +13,8 @@
 // TEST
 #include "BoundingSphere.h"
 #include "OrientedBoundingBox.h"
+#include "BoundingFrustum.h"
+#include "CollisionVisitor.h"
 
 using namespace std;
 using namespace DirectX;
@@ -111,11 +113,34 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 
 		Tests.push_back(OBB);
 		Tests.push_back(BS);
+
+		IIntersectable* Test1 = (IIntersectable*)OBB;
+		IIntersectable* Test2 = (IIntersectable*)BS;
+
+		CollisionVisitor Visitor(Test1);
+		Test2->AcceptCollision(&Visitor);
+
 	}
 }
 
 void Map::UpdateMap(const float& DeltaTimeIn)
 {
+	// Test
+	BoundingFrustum Frustum(GraphicsPipelineCached, AssetManagerCached, MapCamera.get());
+	Frustum.UpdateObject(DeltaTimeIn);
+	
+	for (auto& i : Tests)
+	{
+		CollisionVisitor Visitor(i);
+		if (Frustum.AcceptCollision(&Visitor))
+		{
+			printf("OK\n");
+		}
+	}
+	printf("Updated\n");
+
+
+
 	MapCamera->UpdateObject(DeltaTimeIn);
 
 	for (auto& ro : Placeables)
@@ -161,7 +186,7 @@ void Map::Test(float ScreenXIn, float ScreenYIn, float ScreenWidthIn, float Scre
 	float Distance = 0;
 	for (auto test : Tests)
 	{
-		if (test->Intersect(ClickedRay, Distance))
+		if (test->Intersect(&ClickedRay, Distance))
 		{
 			bool test = true;
 		}

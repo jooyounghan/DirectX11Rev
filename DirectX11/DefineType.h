@@ -105,3 +105,11 @@ struct Ray
 		const XMMATRIX& ViewMatrix
 	);
 };
+
+struct Plane
+{
+	XMVECTOR Point;
+	XMVECTOR Normal;
+
+	float GetSignedDistanceToPlane(const XMVECTOR& Position) const;
+};

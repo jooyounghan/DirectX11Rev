@@ -28,7 +28,6 @@ ViewportWindow::~ViewportWindow()
 void ViewportWindow::RenderWindow()
 {
     ImGui::Begin(ViewportWindowName.c_str());
-    ImGui::Button("ViewportIntersectTester");
     Map* CurrentMap = GameWorldLinked->GetCurrentMap();
     if (CurrentMap != nullptr)
     {

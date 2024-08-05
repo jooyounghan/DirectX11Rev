@@ -1,6 +1,8 @@
 #pragma once
 #include "ABoundingComponent.h"
 
+class BoundingSphere;
+
 class OrientedBoundingBox : public ABoundingComponent
 {
 public:
@@ -13,7 +15,16 @@ public:
 	);
 	virtual ~OrientedBoundingBox();
 
-public:
-	virtual bool Intersect(const Ray& RayIn, float& DistanceOut) override;
-};
+protected:
+	XMVECTOR CurrentAxis[3];
+	XMVECTOR Center;
 
+public:
+	virtual bool Intersect(Ray* RayIn, float& DistanceOut) override;
+
+public:
+	virtual bool AcceptCollision(ICollisionVisitor* CollisionVisitor) override;
+
+public:
+	virtual void UpdateObject(const float& DeltaTimeIn) override;
+};

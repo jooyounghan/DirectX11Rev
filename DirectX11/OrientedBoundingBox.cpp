@@ -1,7 +1,9 @@
 #include "OrientedBoundingBox.h"
 #include "GlobalVariable.h"
+#include "DefineUtility.h"
 #include "AssetManager.h"
 #include "Debugable.h"
+#include "CollisionVisitor.h"
 
 #include <limits>
 
@@ -16,6 +18,9 @@ OrientedBoundingBox::OrientedBoundingBox(
 )
 	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance)
 {
+	AutoZeroArrayMemory(CurrentAxis);
+	AutoZeroMemory(Center);
+
 	Scale.x = HalfXIn;
 	Scale.y = HalfYIn;
 	Scale.z = HalfZIn;
@@ -24,39 +29,27 @@ OrientedBoundingBox::OrientedBoundingBox(
 
 OrientedBoundingBox::~OrientedBoundingBox() {}
 
-bool OrientedBoundingBox::Intersect(const Ray& RayIn, float& DistanceOut)
+bool OrientedBoundingBox::Intersect(Ray* RayIn, float& DistanceOut)
 {
-	XMVECTOR Scaling;
-	XMVECTOR RotationQuat;
-	XMVECTOR Center;
-	XMMatrixDecompose(&Scaling, &RotationQuat, &Center, GetTranslationMatrix());
-
-	XMVECTOR BoxRotationQuat = GetRotationQuat();
-
-	const size_t AxisNum = 3;
+	const size_t AxisNum = Direction::EDirection::NumDirection;
 	const float OBBHalfExtents[AxisNum] = {
 		Scale.x,
 		Scale.y,
 		Scale.z,
 	};
-	const XMVECTOR OBBAxis[AxisNum] = {
-		XMVector3Rotate(Direction::GDefaultForward, BoxRotationQuat),
-		XMVector3Rotate(Direction::GDefaultRight, BoxRotationQuat),
-		XMVector3Rotate(Direction::GDefaultUp, BoxRotationQuat)
-	};
 
-	const XMVECTOR ToCenter = Center - RayIn.Origin;
+	const XMVECTOR ToCenter = Center - RayIn->Origin;
 
 	float tMin = std::numeric_limits<float>::lowest();
 	float tMax = std::numeric_limits<float>::max();
 
 	for (size_t AxisType = 0; AxisType < AxisNum; ++AxisType)
 	{
-		const XMVECTOR& Axis = OBBAxis[AxisType];
+		const XMVECTOR& Axis = CurrentAxis[AxisType];
 		const float HalfExtend = OBBHalfExtents[AxisType];
 
 		const float AxisToCenterProj = InnerProduct(Axis, ToCenter);
-		const float AxisToRayDirectionCos = InnerProduct(Axis, RayIn.Direction);
+		const float AxisToRayDirectionCos = InnerProduct(Axis, RayIn->Direction);
 
 		if (abs(AxisToRayDirectionCos) > 1E-6)
 		{
@@ -76,4 +69,22 @@ bool OrientedBoundingBox::Intersect(const Ray& RayIn, float& DistanceOut)
 
 	DistanceOut = tMin > 0 ? tMin : tMax;
 	return true;
+}
+
+bool OrientedBoundingBox::AcceptCollision(ICollisionVisitor* CollisionVisitor)
+{
+	return CollisionVisitor->Visit(this);
+}
+
+void OrientedBoundingBox::UpdateObject(const float& DeltaTimeIn)
+{
+	ABoundingComponent::UpdateObject(DeltaTimeIn);
+
+	XMVECTOR Scaling;
+	XMVECTOR RotationQuat;
+	XMMatrixDecompose(&Scaling, &RotationQuat, &Center, GetTransformation());
+
+	CurrentAxis[Direction::EDirection::Right] = XMVector3Rotate(Direction::GDefaultRight, RotationQuat);
+	CurrentAxis[Direction::EDirection::Up] = XMVector3Rotate(Direction::GDefaultUp, RotationQuat);
+	CurrentAxis[Direction::EDirection::Forward] = XMVector3Rotate(Direction::GDefaultForward, RotationQuat);
 }

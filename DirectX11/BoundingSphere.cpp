@@ -1,6 +1,7 @@
 #include "BoundingSphere.h"
 #include "AssetManager.h"
 #include "Debugable.h"
+#include "CollisionVisitor.h"
 
 using namespace DirectX;
 
@@ -9,11 +10,13 @@ BoundingSphere::BoundingSphere(
 	AssetManager* AssetManagerInstance,
 	const float& RadiusIn
 )
-	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance)
+	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance), Radius(RadiusIn)
 {
+	AutoZeroMemory(Center);
 	Scale.x = RadiusIn;
 	Scale.y = RadiusIn;
 	Scale.z = RadiusIn;
+
 	DebugObject = AssetManagerInstance->GetDebugObject(EDebugObjectType::Sphere);
 }
 
@@ -22,18 +25,11 @@ BoundingSphere::~BoundingSphere()
 
 }
 
-bool BoundingSphere::Intersect(const Ray& RayIn, float& DistanceOut)
+bool BoundingSphere::Intersect(Ray* RayIn, float& DistanceOut)
 {
-    const float& Radius = Scale.x;
+	const XMVECTOR ToCenter = RayIn->Origin - Center;
 
-	XMVECTOR Scaling;
-	XMVECTOR RotationQuat;
-	XMVECTOR Center;
-	XMMatrixDecompose(&Scaling, &RotationQuat, &Center, GetTranslationMatrix());
-
-	const XMVECTOR ToCenter = RayIn.Origin - Center;
-
-	float b = InnerProduct(RayIn.Direction, ToCenter);
+	float b = InnerProduct(RayIn->Direction, ToCenter);
 	float c = InnerProduct(ToCenter, ToCenter) - Radius * Radius;
 
 	float determinant = b * b - c;
@@ -62,4 +58,26 @@ bool BoundingSphere::Intersect(const Ray& RayIn, float& DistanceOut)
 			return true;
 		}
 	}
-}            
+}
+
+bool BoundingSphere::AcceptCollision(ICollisionVisitor* CollisionVisitor)
+{
+	return CollisionVisitor->Visit(this);
+}
+
+
+void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
+{
+	ABoundingComponent::UpdateObject(DeltaTimeIn);
+
+	XMVECTOR Scaling;
+	XMVECTOR RotationQuat;
+	XMMatrixDecompose(&Scaling, &RotationQuat, &Center, GetTransformation());
+
+	Radius = Scale.x;
+}
+
+bool BoundingSphere::IsOnOrForwardPlane(const Plane& PlaneIn)
+{
+	return PlaneIn.GetSignedDistanceToPlane(Center) > -Radius;
+}

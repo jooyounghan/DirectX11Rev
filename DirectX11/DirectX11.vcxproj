@@ -137,9 +137,11 @@
     <ClCompile Include="AssetManagerWindow.cpp" />
     <ClCompile Include="AttachableObject.cpp" />
     <ClCompile Include="BoundingCapsule.cpp" />
+    <ClCompile Include="BoundingFrustum.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="BoneAsset.cpp" />
+    <ClCompile Include="CollisionVisitor.cpp" />
     <ClCompile Include="Debugable.cpp" />
     <ClCompile Include="DefineType.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
@@ -185,9 +187,11 @@
     <ClInclude Include="Attachable.h" />
     <ClInclude Include="AttachableObject.h" />
     <ClInclude Include="BoundingCapsule.h" />
+    <ClInclude Include="BoundingFrustum.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="BoneAsset.h" />
+    <ClInclude Include="CollisionVisitor.h" />
     <ClInclude Include="ConstantArrayBuffer.h" />
     <ClInclude Include="Debugable.h" />
     <ClInclude Include="DefineType.h" />

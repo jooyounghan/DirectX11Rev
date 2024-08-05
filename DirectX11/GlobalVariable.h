@@ -10,6 +10,14 @@ namespace App
 
 namespace Direction
 {
+	enum EDirection : size_t
+	{
+		Right,			// x
+		Up,				// y
+		Forward,		// z
+		NumDirection
+	};
+
 	extern DirectX::XMVECTOR GDefaultForward;
 	extern DirectX::XMVECTOR GDefaultUp;
 	extern DirectX::XMVECTOR GDefaultRight;
