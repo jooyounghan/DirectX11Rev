@@ -9,5 +9,5 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> Buffer;
 
 public:
-	ID3D11Buffer* GetBuffer() { return Buffer.Get(); }
+	ID3D11Buffer* GetBuffer() const { return Buffer.Get(); }
 };
