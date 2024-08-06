@@ -34,7 +34,7 @@ public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
 
 public:
-	bool IsInsidePlane(const Plane& PlaneIn);
+	bool IsInsideOrOnPlane(const Plane& PlaneIn);
 
 public:
 	bool IsOverlappedWithOBB(OrientedBoundingBox* OBBIn);

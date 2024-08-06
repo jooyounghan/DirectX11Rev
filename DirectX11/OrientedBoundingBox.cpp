@@ -95,7 +95,7 @@ void OrientedBoundingBox::UpdateObject(const float& DeltaTimeIn)
 	HalfExtends[Direction::PlaneForward] = Scale.z;
 }
 
-bool OrientedBoundingBox::IsInsidePlane(const Plane& PlaneIn)
+bool OrientedBoundingBox::IsInsideOrOnPlane(const Plane& PlaneIn)
 {
 	XMVECTOR FromPlaneToSphere = Center - PlaneIn.Point;
 	const float DistanceFromPlaneToSphereCenter = XMVectorGetX(XMVector3Dot(FromPlaneToSphere, PlaneIn.Normal));

@@ -84,7 +84,7 @@ void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
 	Radius = Scale.x;
 }
 
-bool BoundingSphere::IsInsidePlane(const Plane& PlaneIn)
+bool BoundingSphere::IsInsideOrOnPlane(const Plane& PlaneIn)
 {
 	XMVECTOR FromPlaneToSphere = Center - PlaneIn.Point;
 	float DistanceFromPlaneToSphereCenter = XMVectorGetX(XMVector3Dot(FromPlaneToSphere, PlaneIn.Normal));

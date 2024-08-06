@@ -64,7 +64,7 @@ bool CollisionLogic::CheckCollision(BoundingSphere* t1, BoundingFrustum* t2)
 	bool result = true;
 	for (size_t FrustumPlaneIdx = 0; FrustumPlaneIdx < Direction::EFrstumDirection::NumFrustumDirection; ++FrustumPlaneIdx)
 	{
-		result = result && (t1->IsInsidePlane(t2->GetFrustumPlane((Direction::EFrstumDirection)FrustumPlaneIdx)));
+		result = result && (t1->IsInsideOrOnPlane(t2->GetFrustumPlane((Direction::EFrstumDirection)FrustumPlaneIdx)));
 	}
 	return result;
 }
@@ -84,7 +84,7 @@ bool CollisionLogic::CheckCollision(OrientedBoundingBox* t1, BoundingFrustum* t2
 	bool result = true;
 	for (size_t FrustumPlaneIdx = 0; FrustumPlaneIdx < Direction::EFrstumDirection::NumFrustumDirection; ++FrustumPlaneIdx)
 	{
-		result = result && (t1->IsInsidePlane(t2->GetFrustumPlane((Direction::EFrstumDirection)FrustumPlaneIdx)));
+		result = result && (t1->IsInsideOrOnPlane(t2->GetFrustumPlane((Direction::EFrstumDirection)FrustumPlaneIdx)));
 	}
 	return result;
 }
