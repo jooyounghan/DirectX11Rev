@@ -1,5 +1,8 @@
 #pragma once
 #include "IGameWorldLinkedWindow.h"
+#include "HeaderHelper.h"
+
+class AObject;
 
 class MapOutlinerWindow : public IGameWorldLinkedWindow
 {
@@ -9,5 +12,13 @@ public:
 
 public:
 	virtual void RenderWindow() override;
+
+private:
+	AObject* SelectedObject = nullptr;
+	MakeSetterGetter(SelectedObject);
+
+private:
+	void RenderPlaceablesOutline();
+	void RenderSelectedObjectInformation();
 };
 

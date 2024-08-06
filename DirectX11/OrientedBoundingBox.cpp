@@ -7,6 +7,7 @@
 
 #include <limits>
 
+using namespace std;
 using namespace DirectX;
 
 OrientedBoundingBox::OrientedBoundingBox(
@@ -18,6 +19,10 @@ OrientedBoundingBox::OrientedBoundingBox(
 )
 	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance)
 {
+	static size_t BoundingOBBCount = 0;
+	BoundingOBBCount++;
+	ObjectName = "Bounding OBB " + to_string(BoundingOBBCount);
+
 	AutoZeroArrayMemory(CurrentAxises);
 	AutoZeroArrayMemory(HalfExtends);
 	AutoZeroMemory(Center);
@@ -34,8 +39,8 @@ bool OrientedBoundingBox::Intersect(Ray* RayIn, float& DistanceOut)
 {
 	const XMVECTOR ToCenter = Center - RayIn->Origin;
 
-	float tMin = std::numeric_limits<float>::lowest();
-	float tMax = std::numeric_limits<float>::max();
+	float tMin = numeric_limits<float>::lowest();
+	float tMax = numeric_limits<float>::max();
 
 	for (size_t AxisType = 0; AxisType < Direction::NumPlaneDirection; ++AxisType)
 	{
@@ -50,7 +55,7 @@ bool OrientedBoundingBox::Intersect(Ray* RayIn, float& DistanceOut)
 			float t1 = (AxisToCenterProj + HalfExtend) / AxisToRayDirectionCos;
 			float t2 = (AxisToCenterProj - HalfExtend) / AxisToRayDirectionCos;
 
-			if (t1 > t2) std::swap(t1, t2);
+			if (t1 > t2) swap(t1, t2);
 
 			if (t1 > tMin) tMin = t1;
 			if (t2 < tMax) tMax = t2;
@@ -100,9 +105,9 @@ bool OrientedBoundingBox::IsInsideOrOnPlane(const Plane& PlaneIn)
 	XMVECTOR FromPlaneToSphere = Center - PlaneIn.Point;
 	const float DistanceFromPlaneToSphereCenter = XMVectorGetX(XMVector3Dot(FromPlaneToSphere, PlaneIn.Normal));
 	const float Radius =
-		HalfExtends[Direction::EPlaneDirection::PlaneRight] * std::abs(PlaneIn.Normal.m128_f32[0]) +
-		HalfExtends[Direction::EPlaneDirection::PlaneUp] * std::abs(PlaneIn.Normal.m128_f32[1]) +
-		HalfExtends[Direction::EPlaneDirection::PlaneForward] * std::abs(PlaneIn.Normal.m128_f32[2]);
+		HalfExtends[Direction::EPlaneDirection::PlaneRight] * abs(PlaneIn.Normal.m128_f32[0]) +
+		HalfExtends[Direction::EPlaneDirection::PlaneUp] * abs(PlaneIn.Normal.m128_f32[1]) +
+		HalfExtends[Direction::EPlaneDirection::PlaneForward] * abs(PlaneIn.Normal.m128_f32[2]);
 
 	return DistanceFromPlaneToSphereCenter >= -Radius;
 }

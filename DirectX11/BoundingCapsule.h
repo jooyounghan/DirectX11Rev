@@ -10,6 +10,6 @@
 //
 //public:
 //	virtual bool Intersect(const Ray& RayIn, float& DistanceOut);
-//	virtual void UpdateObject(const float& DeltaTimeIn, IObject* ParentObject = nullptr) override;
+//	virtual void UpdateObject(const float& DeltaTimeIn, AObject* ParentObject = nullptr) override;
 //};
 //

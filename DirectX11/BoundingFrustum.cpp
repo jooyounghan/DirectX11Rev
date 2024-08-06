@@ -4,6 +4,8 @@
 #include "DefineUtility.h"
 #include "CollisionVisitor.h"
 
+using namespace std;
+
 BoundingFrustum::BoundingFrustum(
 	GraphicsPipeline* GraphicsPipelineInstances,
 	AssetManager* AssetManagerInstance,
@@ -11,6 +13,10 @@ BoundingFrustum::BoundingFrustum(
 )
 	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance), ViewableCached(ViewableInstance)
 {
+    static size_t BoundingFrustumCount = 0;
+    BoundingFrustumCount++;
+    ObjectName = "Bounding Frustum " + to_string(BoundingFrustumCount);
+
     AutoZeroArrayMemory(FrustumPlanes);
     AutoZeroArrayMemory(FrustumEdgeAxises);
 }

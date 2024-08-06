@@ -112,9 +112,6 @@
     <Filter Include="헤더 파일\World\Editor\GUI\Window">
       <UniqueIdentifier>{03918427-51e3-4d99-9867-b9e7f601b267}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Collision">
-      <UniqueIdentifier>{905256e4-f194-4f73-962b-4c7087e5de31}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Collision">
       <UniqueIdentifier>{bb1f6d40-ce30-43eb-b36e-9059eedd0375}</UniqueIdentifier>
     </Filter>
@@ -156,6 +153,27 @@
     </Filter>
     <Filter Include="헤더 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent">
       <UniqueIdentifier>{b7f79190-37bb-437b-8da5-f9f2fc3bf0cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Collision">
+      <UniqueIdentifier>{905256e4-f194-4f73-962b-4c7087e5de31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Editor\GUI\Visitor">
+      <UniqueIdentifier>{532f1608-c72d-44a5-9eda-facd94786f7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\World\Editor\GUI\Visitor">
+      <UniqueIdentifier>{cb6c6704-962e-4d59-9cc7-addab80df882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Map\Object\RelativePlaceable\Mesh">
+      <UniqueIdentifier>{0374edc9-88a0-48a3-8acb-8feeb624c928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Map\Object\RelativePlaceable\View">
+      <UniqueIdentifier>{bc10aa97-649d-445a-bf64-bed7c2e71440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset\Map\Object\Mesh">
+      <UniqueIdentifier>{96c6f463-defb-4fdd-9569-1e0939fee0f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset\Map\Object\View">
+      <UniqueIdentifier>{2ab6c005-d21d-4874-9e2e-899e368baae8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -261,16 +279,7 @@
     <ClCompile Include="Debugable.cpp">
       <Filter>소스 파일\Asset\Map\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일\Asset\Map\Object</Filter>
-    </ClCompile>
     <ClCompile Include="APlaceable.cpp">
-      <Filter>소스 파일\Asset\Map\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Viewable.cpp">
       <Filter>소스 파일\Asset\Map\Object</Filter>
     </ClCompile>
     <ClCompile Include="PlaceableObject.cpp">
@@ -299,6 +308,24 @@
     </ClCompile>
     <ClCompile Include="CollisionVisitor.cpp">
       <Filter>소스 파일\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="OutlinerVisitor.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshObject.cpp">
+      <Filter>소스 파일\Asset\Map\Object\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewable.cpp">
+      <Filter>소스 파일\Asset\Map\Object\View</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>소스 파일\Asset\Map\Object\View</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectInformationVisitor.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="AObject.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -416,9 +443,6 @@
     <ClInclude Include="ImGui\imstb_truetype.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="MapOutlinerWindow.h">
-      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
-    </ClInclude>
     <ClInclude Include="TaskAnalyzerWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
     </ClInclude>
@@ -452,7 +476,7 @@
     <ClInclude Include="OrientedBoundingBox.h">
       <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable\BoundingComponent</Filter>
     </ClInclude>
-    <ClInclude Include="IObject.h">
+    <ClInclude Include="AObject.h">
       <Filter>헤더 파일\Asset\Map\Object</Filter>
     </ClInclude>
     <ClInclude Include="BoundingSphere.h">
@@ -468,15 +492,6 @@
       <Filter>헤더 파일\Asset\Map\Object</Filter>
     </ClInclude>
     <ClInclude Include="Debugable.h">
-      <Filter>헤더 파일\Asset\Map\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshObject.h">
-      <Filter>헤더 파일\Asset\Map\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Viewable.h">
-      <Filter>헤더 파일\Asset\Map\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
       <Filter>헤더 파일\Asset\Map\Object</Filter>
     </ClInclude>
     <ClInclude Include="APlaceable.h">
@@ -499,6 +514,30 @@
     </ClInclude>
     <ClInclude Include="CollisionVisitor.h">
       <Filter>헤더 파일\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="OutlinerVisitor.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="MapOutlinerWindow.h">
+      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="IGuiVisitor.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="ICollisionVisitor.h">
+      <Filter>헤더 파일\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshObject.h">
+      <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewable.h">
+      <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable\View</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectInformationVisitor.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

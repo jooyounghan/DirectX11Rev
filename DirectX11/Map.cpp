@@ -102,7 +102,7 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 		// TEST
 		PSOObject* DebugPSO = PSOManagerCached->GetPSOObject(EPSOType::R8G8B8A8_Debug_Wireframe);
 
-		OrientedBoundingBox* OBB = AddedObject->AddChildObjectHelper<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached,
+		OrientedBoundingBox* OBB = AddedObject->AddAttachedObjectHelper<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached,
 			100.f, 100.f, 100.f);
 		PSOToObjects[DebugPSO].emplace_back(OBB);
 		OBB->Position.x += 400.f;
@@ -123,10 +123,8 @@ void Map::UpdateMap(const float& DeltaTimeIn)
 		CollisionVisitor Visitor(&Frustum);
 		if (i->AcceptCollision(&Visitor))
 		{
-			printf("OK\n");
 		}
 	}
-	printf("Updated\n");
 	//===================================================
 
 	MapCamera->UpdateObject(DeltaTimeIn);

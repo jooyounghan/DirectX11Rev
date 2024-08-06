@@ -1,6 +1,5 @@
 #pragma once
 #include "RelativePlaceableObject.h"
-#include "HeaderHelper.h"
 
 #include <memory>
 

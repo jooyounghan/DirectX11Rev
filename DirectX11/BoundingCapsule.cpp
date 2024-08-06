@@ -5,6 +5,6 @@
 //	return false;
 //}
 //
-//void BoundingCapsule::UpdateObject(const float& DeltaTimeIn, IObject* ParentObject)
+//void BoundingCapsule::UpdateObject(const float& DeltaTimeIn, AObject* ParentObject)
 //{
 //}

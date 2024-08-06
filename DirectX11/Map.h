@@ -12,7 +12,7 @@ class PSOObject;
 class AssetManager;
 
 class Camera;
-class IObject;
+class AObject;
 class APlaceable;
 class MeshObject;
 class IMeshAsset;
@@ -35,9 +35,9 @@ protected:
 	MakeSmartPtrGetter(MapCamera);
 
 protected:
-	std::unordered_map<PSOObject*, std::vector<IObject*>> PSOToObjects;
+	std::unordered_map<PSOObject*, std::vector<AObject*>> PSOToObjects;
 	std::list<std::unique_ptr<APlaceable>> Placeables;
-
+	MakeGetter(Placeables);
 
 protected:
 	std::list<IIntersectable*> Tests;

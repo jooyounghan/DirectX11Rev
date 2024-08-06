@@ -3,6 +3,8 @@
 #include "IMeshAsset.h"
 #include "PSOObject.h"
 
+using namespace std;
+
 MeshObject::MeshObject(
 	GraphicsPipeline* GraphicsPipelineInstances, 
 	IMeshAsset* MeshAssetInstanceIn
@@ -12,6 +14,10 @@ MeshObject::MeshObject(
 		GraphicsPipelineInstances->GetDeviceContext()
 	), MeshAssetInstance(MeshAssetInstanceIn)
 {
+	static size_t MeshObjectCount = 0;
+	MeshObjectCount++;
+	ObjectName = "Mesh Object " + to_string(MeshObjectCount);
+
 }
 
 MeshObject::~MeshObject()

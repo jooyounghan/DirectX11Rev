@@ -1,6 +1,5 @@
 #pragma once
 #include "ABoundingComponent.h"
-#include "HeaderHelper.h"
 #include "DefineType.h"
 #include "GlobalVariable.h"
 

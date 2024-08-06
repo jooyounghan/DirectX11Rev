@@ -1,5 +1,5 @@
 #pragma once
-#include "IObject.h"
+#include "AObject.h"
 #include "DefineType.h"
 #include "UploadBuffer.h"
 #include "Attachable.h"
@@ -13,7 +13,7 @@ struct TransformationMatrix
 	DirectX::XMMATRIX InvTransfomationMat;
 };
 
-class APlaceable : virtual public IObject
+class APlaceable : virtual public AObject
 {
 public:
 	APlaceable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
@@ -25,11 +25,12 @@ public:
 	SVector3D	Scale;
 
 protected:
-	std::list<std::unique_ptr<AAttachable>> ChildrenObjects;
+	std::list<std::unique_ptr<AAttachable>> AttachedObjects;
+	MakeGetter(AttachedObjects);
 
 public:
 	template<typename T, typename ...Args>
-	T* AddChildObjectHelper(Args... args);
+	T* AddAttachedObjectHelper(Args... args);
 
 protected:
 	ID3D11DeviceContext* DeviceContextCached = nullptr;
@@ -52,19 +53,17 @@ public:
 public:
 	virtual void Render(PSOObject* PSOObjectIn) = 0;
 	virtual void UpdateObject(const float& DeltaTimeIn) = 0;
+
+public:
+	virtual void AcceptGui(IGuiVisitor* GuiVisitor) = 0;
 };
 
-
-
-
-
-
 template<typename T, typename ...Args>
-inline T* APlaceable::AddChildObjectHelper(Args ...args)
+inline T* APlaceable::AddAttachedObjectHelper(Args ...args)
 {
-	ChildrenObjects.emplace_back(std::make_unique<T>(args...));
-	static_assert(std::is_base_of<AAttachable, T>::value, "템플릿 타입은 AAttachable의 파생 클래스여야 합니다.");
-	AAttachable* AddedObject = (AAttachable*)(ChildrenObjects.back().get());
+	AttachedObjects.emplace_back(std::make_unique<T>(args...));
+	static_assert(std::is_base_of<AAttachable, T>::value, "Template Type Has to be Derived From AAttachable");
+	AAttachable* AddedObject = (AAttachable*)(AttachedObjects.back().get());
 	AddedObject->SetParentObject(this);
 
 	return (T*)AddedObject;

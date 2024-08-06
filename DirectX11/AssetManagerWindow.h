@@ -21,7 +21,6 @@ public:
 
 private:
 	AssetManager* AssetManagerCached = nullptr;
-	const ImGuiTreeNodeFlags BaseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
 
 public:
 	virtual void RenderWindow() override;

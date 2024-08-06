@@ -60,8 +60,13 @@ void PlaceableObject::UpdateObject(const float& DeltaTimeIn)
 	
 	TransformationBuffer.Upload(DeviceContextCached, TempTransformation);
 	
-	for (auto& ChildObject : ChildrenObjects)
+	for (auto& ChildObject : AttachedObjects)
 	{
 		ChildObject->UpdateObject(DeltaTimeIn);
 	}
+}
+
+void PlaceableObject::AcceptGui(IGuiVisitor* GuiVisitor)
+{
+	return GuiVisitor->Visit(this);
 }

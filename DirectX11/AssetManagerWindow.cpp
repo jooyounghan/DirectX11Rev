@@ -24,23 +24,9 @@ void AssetManagerWindow::RenderWindow()
 {
 
 	Begin("Asset Manager");
-
-    PushStyleColor(ImGuiCol_Header, UIColor::GDarkBrown);
-    PushStyleColor(ImGuiCol_HeaderHovered, UIColor::GMediumBrown);
-    PushStyleColor(ImGuiCol_HeaderActive, UIColor::GMediumBrown);
-    PushStyleColor(ImGuiCol_Text, UIColor::GBlack);
-
-    PushStyleColor(ImGuiCol_FrameBg, UIColor::GLightBrown);
     RenderAssetDirectoryStructure();
-    PopStyleColor();
-
     SameLine();
-
-    PopStyleColor();
     RenderCurrentDirectoryAsset();
-
-    PopStyleColor(3);
-
     End();
 }
 
@@ -75,7 +61,16 @@ void AssetManagerWindow::TravelAssetDirectories(DirectorySet& DirectorySetIn)
 
 void AssetManagerWindow::RenderAssetDirectories(DirectorySet& DirectorySetIn)
 {
-    ImGuiTreeNodeFlags NodeFlags = BaseFlags;
+    ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
+    if (DirectorySetIn.ChildrenDirectories.size() == 0)
+    {
+        NodeFlags |= ImGuiTreeNodeFlags_Leaf;
+    }
+    else
+    {
+        NodeFlags |= (ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow);
+    }
+
     if (SelectedDirectory == &DirectorySetIn)
     {
         NodeFlags |= ImGuiTreeNodeFlags_Selected;

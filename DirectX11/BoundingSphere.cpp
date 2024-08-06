@@ -3,6 +3,7 @@
 #include "Debugable.h"
 #include "CollisionVisitor.h"
 
+using namespace std;
 using namespace DirectX;
 
 BoundingSphere::BoundingSphere(
@@ -12,6 +13,10 @@ BoundingSphere::BoundingSphere(
 )
 	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance), Radius(RadiusIn)
 {
+	static size_t BoundingSphereCount = 0;
+	BoundingSphereCount++;
+	ObjectName = "Bounding Sphere " + to_string(BoundingSphereCount);
+
 	AutoZeroMemory(Center);
 	Scale.x = RadiusIn;
 	Scale.y = RadiusIn;

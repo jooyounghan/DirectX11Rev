@@ -1,10 +1,9 @@
 #pragma once
-#include "IObject.h"
-#include "HeaderHelper.h"
+#include "AObject.h"
 
 class APlaceable;
 
-class AAttachable : virtual public IObject
+class AAttachable : virtual public AObject
 {
 public:
 	AAttachable() = default;
@@ -17,4 +16,7 @@ protected:
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) = 0;
 	virtual void Render(PSOObject* PSOObjectIn) = 0;
+
+public:
+	virtual void AcceptGui(IGuiVisitor* GuiVisitor) = 0;
 };

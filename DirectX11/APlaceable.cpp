@@ -4,7 +4,7 @@
 using namespace DirectX;
 
 APlaceable::APlaceable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
-	: IObject(), DeviceContextCached(DeviceContextIn), TransformationBuffer(DeviceIn)
+	: AObject(), DeviceContextCached(DeviceContextIn), TransformationBuffer(DeviceIn)
 {
 	AutoZeroMemory(Position);
 	AutoZeroMemory(Scale);
