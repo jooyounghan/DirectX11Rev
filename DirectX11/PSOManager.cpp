@@ -46,9 +46,10 @@ void PSOManager::CreateDebug()
     AssertIfFailed(D3DCompileFromFile(L"./Shaders/DebugVS.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", CompileFlags, 0, VertexShaderByteCode.GetAddressOf(), ErrorByteCode.GetAddressOf()));
     AssertIfFailed(D3DCompileFromFile(L"./Shaders/DebugPS.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", CompileFlags, 0, PixelShaderByteCode.GetAddressOf(), ErrorByteCode.GetAddressOf()));
 
-    D3D11_INPUT_ELEMENT_DESC InputElementDescs[1] =
+    D3D11_INPUT_ELEMENT_DESC InputElementDescs[2] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
     Device->CreateVertexShader(VertexShaderByteCode->GetBufferPointer(), VertexShaderByteCode->GetBufferSize(), NULL, DebugObjectVS.GetAddressOf());
     Device->CreatePixelShader(PixelShaderByteCode->GetBufferPointer(), PixelShaderByteCode->GetBufferSize(), NULL, DebugObjectPS.GetAddressOf());
@@ -103,7 +104,7 @@ void PSOManager::CreateDebug()
         DeviceContext,
         DebugObjectInputLayout,
         DebugObjectVS, 2, 0,
-        DebugObjectPS, 1, 0,
+        DebugObjectPS, 0, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SRVFormatCount, SRVFormats,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
@@ -124,7 +125,7 @@ void PSOManager::CreateDebug()
         DeviceContext,
         DebugObjectInputLayout,
         DebugObjectVS, 2, 0,
-        DebugObjectPS, 1, 0,
+        DebugObjectPS, 0, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SRVFormatCount, SRVFormats,
         DXGI_FORMAT_D24_UNORM_S8_UINT,

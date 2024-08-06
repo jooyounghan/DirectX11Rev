@@ -4,12 +4,10 @@
 #include "OrientedBoundingBox.h"
 #include "BoundingFrustum.h"
 
-#include "GlobalVariable.h"
 
 CollisionVisitor::CollisionVisitor(IIntersectable* CheckObjectIn)
 	: CheckObjectCahced(CheckObjectIn)
 {
-
 }
 
 bool CollisionVisitor::Visit(BoundingSphere* BSInstance)
@@ -32,41 +30,22 @@ bool CollisionVisitor::Visit(BoundingFrustum* FrustumInstance)
 
 bool CollisionLogic::CheckCollision(BoundingSphere* t1, BoundingSphere* t2)
 {
-	return t1->IsOverlappedWithSphere(t2);
+	return false;
 }
 
 bool CollisionLogic::CheckCollision(BoundingSphere* t1, OrientedBoundingBox* t2)
 {
-	const XMVECTOR* CurrentAxises = t2->GetCurrentAxises();
-	const float* HalfExtends = t2->GetHalfExtends();
-	const XMVECTOR& OBBCenter = t2->GetCenter();
-	const XMVECTOR& SphereCenter = t1->GetCenter();
-	const float SphereRadius = t1->GetRadius();
-
-	const XMVECTOR FromOBBToSphereCenter = SphereCenter - OBBCenter;
-
-	for (size_t AxisType = 0; AxisType < Direction::NumPlaneDirection; ++AxisType)
-	{
-		const XMVECTOR& OrientedAxis = CurrentAxises[AxisType];
-		const float& OrientedHalfExtend = HalfExtends[AxisType];
-		const float DistanceToOrietnedAxis = abs(XMVectorGetX(XMVector3Dot(FromOBBToSphereCenter, OrientedAxis)));
-		
-		if (DistanceToOrietnedAxis > (SphereRadius + OrientedHalfExtend))
-		{
-			return false;
-		}
-	}
-	return true;
+	return false;
 }
 
 bool CollisionLogic::CheckCollision(BoundingSphere* t1, BoundingFrustum* t2)
 {
-	bool result = true;
-	for (size_t FrustumPlaneIdx = 0; FrustumPlaneIdx < Direction::EFrstumDirection::NumFrustumDirection; ++FrustumPlaneIdx)
-	{
-		result = result && (t1->IsInsidePlane(t2->GetFrustumPlane((Direction::EFrstumDirection)FrustumPlaneIdx)));
-	}
-	return result;
+	return (t1->IsOnOrForwardPlane(t2->GetTopFace())) && 
+		(t1->IsOnOrForwardPlane(t2->GetBottomFace())) && 
+		(t1->IsOnOrForwardPlane(t2->GetLeftFace())) &&
+		(t1->IsOnOrForwardPlane(t2->GetRightFace())) &&
+		(t1->IsOnOrForwardPlane(t2->GetFarFace())) && 
+		(t1->IsOnOrForwardPlane(t2->GetNearFace()));
 }
 
 bool CollisionLogic::CheckCollision(OrientedBoundingBox* t1, BoundingSphere* t2)
@@ -76,17 +55,12 @@ bool CollisionLogic::CheckCollision(OrientedBoundingBox* t1, BoundingSphere* t2)
 
 bool CollisionLogic::CheckCollision(OrientedBoundingBox* t1, OrientedBoundingBox* t2)
 {
-	return t1->IsOverlappedWithOBB(t2);
+	return false;
 }
 
 bool CollisionLogic::CheckCollision(OrientedBoundingBox* t1, BoundingFrustum* t2)
 {
-	bool result = true;
-	for (size_t FrustumPlaneIdx = 0; FrustumPlaneIdx < Direction::EFrstumDirection::NumFrustumDirection; ++FrustumPlaneIdx)
-	{
-		result = result && (t1->IsInsidePlane(t2->GetFrustumPlane((Direction::EFrstumDirection)FrustumPlaneIdx)));
-	}
-	return result;
+	return false;
 }
 
 bool CollisionLogic::CheckCollision(BoundingFrustum* t1, BoundingSphere* t2)

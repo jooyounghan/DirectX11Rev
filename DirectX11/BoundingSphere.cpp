@@ -18,7 +18,6 @@ BoundingSphere::BoundingSphere(
 	Scale.z = RadiusIn;
 
 	DebugObject = AssetManagerInstance->GetDebugObject(EDebugObjectType::Sphere);
-	DebugObject->UpdateColor(XMVectorSet(1.f, 0.f, 0.f, 1.f), DeviceContextCached);
 }
 
 BoundingSphere::~BoundingSphere()
@@ -63,18 +62,12 @@ bool BoundingSphere::Intersect(Ray* RayIn, float& DistanceOut)
 
 bool BoundingSphere::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 {
-	IsCollided = CollisionVisitor->Visit(this);
-	return IsCollided;
+	return CollisionVisitor->Visit(this);
 }
 
 
 void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
 {
-	static float Test = 0;
-	Test += DeltaTimeIn;
-	Position.x = 400 * sin(0.5f * 3.141592f * Test);
-	Position.y = 400 * sin(0.5f * 3.141592f * Test);
-
 	ABoundingComponent::UpdateObject(DeltaTimeIn);
 
 	XMVECTOR Scaling;
@@ -84,15 +77,14 @@ void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
 	Radius = Scale.x;
 }
 
-bool BoundingSphere::IsInsidePlane(const Plane& PlaneIn)
+bool BoundingSphere::IsOnOrForwardPlane(const Plane& PlaneIn)
 {
-	XMVECTOR FromPlaneToSphere = Center - PlaneIn.Point;
-	float DistanceFromPlaneToSphereCenter = XMVectorGetX(XMVector3Dot(FromPlaneToSphere, PlaneIn.Normal));
-	return DistanceFromPlaneToSphereCenter >= -Radius;
-}
+	XMVECTOR vectorFromPlaneToSphere = Center - PlaneIn.Point;
 
-bool BoundingSphere::IsOverlappedWithSphere(BoundingSphere* SphereIn)
-{
-	float Distance = XMVectorGetX(XMVector3Length(Center - SphereIn->Center));
-	return Distance <= (Radius + SphereIn->Radius);
+	// 평면의 법선 벡터와 위에서 구한 벡터의 내적을 구합니다.
+	float distanceFromPlaneToSphereCenter = XMVectorGetX(XMVector3Dot(vectorFromPlaneToSphere, PlaneIn.Normal));
+
+
+	// 구의 중심이 평면 위에서 떨어진 거리가 구의 반지름보다 작거나 같으면 true를 반환합니다.
+	return distanceFromPlaneToSphereCenter > -Radius;
 }

@@ -2,7 +2,6 @@
 #include "ABoundingComponent.h"
 #include "HeaderHelper.h"
 #include "DefineType.h"
-#include "GlobalVariable.h"
 
 class Viewable;
 class BoundingSphere;
@@ -22,12 +21,20 @@ protected:
 	Viewable* ViewableCached = nullptr;
 
 protected:
-	Plane FrustumPlanes[Direction::NumFrustumDirection];
-	XMVECTOR FrustumEdgeAxises[Direction::NumFrustumEdgeAxis];
+	Plane TopFace;
+	Plane BottomFace;
+	Plane RightFace;
+	Plane LeftFace;
+	Plane FarFace;
+	Plane NearFace;
 
 public:
-	const Plane& GetFrustumPlane(Direction::EFrstumDirection DirectionIn);
-	const XMVECTOR& GetFrustumEdgeAxis(Direction::EFrustumEdgeAxis EdgeAxisIn);
+	MakeGetter(TopFace);
+	MakeGetter(BottomFace);
+	MakeGetter(RightFace);
+	MakeGetter(LeftFace);
+	MakeGetter(FarFace);
+	MakeGetter(NearFace);
 
 public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) override;

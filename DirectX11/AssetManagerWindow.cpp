@@ -25,12 +25,12 @@ void AssetManagerWindow::RenderWindow()
 
 	Begin("Asset Manager");
 
-    PushStyleColor(ImGuiCol_Header, UIColor::GDarkBrown);
-    PushStyleColor(ImGuiCol_HeaderHovered, UIColor::GMediumBrown);
-    PushStyleColor(ImGuiCol_HeaderActive, UIColor::GMediumBrown);
-    PushStyleColor(ImGuiCol_Text, UIColor::GBlack);
+    PushStyleColor(ImGuiCol_Header, Color::GDarkBrown);
+    PushStyleColor(ImGuiCol_HeaderHovered, Color::GMediumBrown);
+    PushStyleColor(ImGuiCol_HeaderActive, Color::GMediumBrown);
+    PushStyleColor(ImGuiCol_Text, Color::GBlack);
 
-    PushStyleColor(ImGuiCol_FrameBg, UIColor::GLightBrown);
+    PushStyleColor(ImGuiCol_FrameBg, Color::GLightBrown);
     RenderAssetDirectoryStructure();
     PopStyleColor();
 

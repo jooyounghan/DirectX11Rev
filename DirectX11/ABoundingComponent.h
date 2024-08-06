@@ -17,14 +17,12 @@ public:
 
 protected:
 	Debugable* DebugObject = nullptr;
-	bool IsCollided = false;
 
 public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) = 0; 
 
 public:
 	virtual bool AcceptCollision(ICollisionVisitor* CollisionVisitor) = 0;
-	void SetCollisionColor();
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;

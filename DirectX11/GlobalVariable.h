@@ -10,32 +10,12 @@ namespace App
 
 namespace Direction
 {
-	enum EPlaneDirection : size_t
+	enum EDirection : size_t
 	{
-		PlaneRight,			// x
-		PlaneUp,				// y
-		PlaneForward,		// z
-		NumPlaneDirection
-	};
-
-	enum EFrstumDirection : size_t
-	{
-		FrustumTop,
-		FrustumBottom,
-		FrustumRight,
-		FrustumLeft,
-		FrustumFar,
-		FrustumNear,
-		NumFrustumDirection
-	};
-
-	enum EFrustumEdgeAxis : size_t
-	{
-		LeftTop,
-		LeftBottom,
-		RightTop,
-		RightBottm,
-		NumFrustumEdgeAxis
+		Right,			// x
+		Up,				// y
+		Forward,		// z
+		NumDirection
 	};
 
 	extern DirectX::XMVECTOR GDefaultForward;
@@ -44,7 +24,7 @@ namespace Direction
 }
 
 struct ImVec4;
-namespace UIColor
+namespace Color
 {
 	extern ImVec4 GBlack;
 	extern ImVec4 GWhite;

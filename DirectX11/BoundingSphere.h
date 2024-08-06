@@ -16,9 +16,6 @@ public:
 protected:
 	XMVECTOR Center;
 	float Radius;
-	MakeGetter(Center);
-	MakeGetter(Radius);
-
 
 public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) override;
@@ -30,7 +27,6 @@ public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
 
 public:
-	bool IsInsidePlane(const Plane& PlaneIn);
-	bool IsOverlappedWithSphere(BoundingSphere* SphereIn);
+	bool IsOnOrForwardPlane(const Plane& PlaneIn);
 };
 
