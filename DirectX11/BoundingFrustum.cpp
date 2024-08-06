@@ -11,16 +11,22 @@ BoundingFrustum::BoundingFrustum(
 )
 	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance), ViewableCached(ViewableInstance)
 {
-    AutoZeroMemory(TopFace);
-    AutoZeroMemory(BottomFace);
-    AutoZeroMemory(RightFace);
-    AutoZeroMemory(LeftFace);
-    AutoZeroMemory(FarFace);
-    AutoZeroMemory(NearFace);
+    AutoZeroArrayMemory(FrustumPlanes);
+    AutoZeroArrayMemory(FrustumEdgeAxises);
 }
 
 BoundingFrustum::~BoundingFrustum()
 {
+}
+
+const Plane& BoundingFrustum::GetFrustumPlane(Direction::EFrstumDirection DirectionIn)
+{
+    return FrustumPlanes[DirectionIn];
+}
+
+const XMVECTOR& BoundingFrustum::GetFrustumEdgeAxis(Direction::EFrustumEdgeAxis EdgeAxisIn)
+{
+    return FrustumEdgeAxises[EdgeAxisIn];
 }
 
 bool BoundingFrustum::Intersect(Ray* RayIn, float& DistanceOut)
@@ -58,11 +64,16 @@ void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
         XMVECTOR XMVPosition = XMVectorSet(Position.x, Position.y, Position.z, Position.w);
         XMVPosition = XMVector3Transform(XMVPosition, Transformation);
 
-        NearFace = { XMVPosition + NearPosition, XMVector3Normalize(CurrentForward) };
-        FarFace = { XMVPosition + FarPosition, -XMVector3Normalize(CurrentForward) };
-        RightFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentRight * HalfHSide, CurrentUp)) };
-        LeftFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentRight * HalfHSide, -CurrentUp)) };
-        TopFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentUp * HalfVSide, -CurrentRight)) };
-        BottomFace = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentUp * HalfVSide, CurrentRight)) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumNear] = { XMVPosition + NearPosition, XMVector3Normalize(CurrentForward) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumFar] = { XMVPosition + FarPosition, -XMVector3Normalize(CurrentForward) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumRight] = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentRight * HalfHSide, CurrentUp)) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumLeft] = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentRight * HalfHSide, -CurrentUp)) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumTop] = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentUp * HalfVSide, -CurrentRight)) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumBottom] = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentUp * HalfVSide, CurrentRight)) };
+     
+        FrustumEdgeAxises[Direction::LeftTop] = FarPosition - CurrentRight * HalfHSide + CurrentUp * HalfVSide;
+        FrustumEdgeAxises[Direction::LeftBottom] = FarPosition - CurrentRight * HalfHSide - CurrentUp * HalfVSide;
+        FrustumEdgeAxises[Direction::RightTop] = FarPosition + CurrentRight * HalfHSide + CurrentUp * HalfVSide;
+        FrustumEdgeAxises[Direction::RightBottm] = FarPosition + CurrentRight * HalfHSide - CurrentUp * HalfVSide;
 	}
 }

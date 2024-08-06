@@ -107,39 +107,27 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 		PSOToObjects[DebugPSO].emplace_back(OBB);
 		OBB->Position.x += 400.f;
 
-		BoundingSphere* BS = OBB->AddChildObjectHelper<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached, 100.f);
-		PSOToObjects[DebugPSO].emplace_back(BS);
-		BS->Position.x += 400.f;
 
 		Tests.push_back(OBB);
-		Tests.push_back(BS);
-
-		IIntersectable* Test1 = (IIntersectable*)OBB;
-		IIntersectable* Test2 = (IIntersectable*)BS;
-
-		CollisionVisitor Visitor(Test1);
-		Test2->AcceptCollision(&Visitor);
-
 	}
 }
 
 void Map::UpdateMap(const float& DeltaTimeIn)
 {
-	// Test
+	// Test ====================================================================
 	BoundingFrustum Frustum(GraphicsPipelineCached, AssetManagerCached, MapCamera.get());
 	Frustum.UpdateObject(DeltaTimeIn);
 	
 	for (auto& i : Tests)
 	{
-		CollisionVisitor Visitor(i);
-		if (Frustum.AcceptCollision(&Visitor))
+		CollisionVisitor Visitor(&Frustum);
+		if (i->AcceptCollision(&Visitor))
 		{
 			printf("OK\n");
 		}
 	}
 	printf("Updated\n");
-
-
+	//===================================================
 
 	MapCamera->UpdateObject(DeltaTimeIn);
 

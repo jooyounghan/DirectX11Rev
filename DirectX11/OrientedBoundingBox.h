@@ -1,5 +1,6 @@
 #pragma once
 #include "ABoundingComponent.h"
+#include "GlobalVariable.h"
 
 class BoundingSphere;
 
@@ -16,8 +17,12 @@ public:
 	virtual ~OrientedBoundingBox();
 
 protected:
-	XMVECTOR CurrentAxis[3];
+	XMVECTOR CurrentAxises[Direction::NumPlaneDirection];
+	float HalfExtends[Direction::NumPlaneDirection];
 	XMVECTOR Center;
+	MakeGetter(CurrentAxises);
+	MakeGetter(HalfExtends);
+	MakeGetter(Center);
 
 public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) override;
@@ -27,4 +32,17 @@ public:
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
+
+public:
+	bool IsInsidePlane(const Plane& PlaneIn);
+
+public:
+	bool IsOverlappedWithOBB(OrientedBoundingBox* OBBIn);
+
+private:
+	bool IsOverlappedWithOBBByParellelEach(OrientedBoundingBox* OBBIn);
+	bool IsOverlappedWithOBBNormalBoth(OrientedBoundingBox* OBBIn);
+
+private:
+	float GetHalfExtendsLengthToAxis(const XMVECTOR& AxisIn);
 };

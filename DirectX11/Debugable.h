@@ -1,6 +1,7 @@
 #pragma once
 #include "Vertexable.h"
 #include "IIndexable.h"
+#include "UploadBuffer.h"
 #include "DefineType.h"
 
 enum class EDebugObjectType
@@ -17,17 +18,23 @@ constexpr EDebugObjectType GetIndexAsDebugObjectType(size_t DebugIndex) { return
 struct DebugVertex
 {
 	SPosition3D Position;
-	SCoordinate2D UVTexture;
 };
 
 class Debugable : public IIndexable<uint16_t>, public Vertexable<DebugVertex>
 {
 public:
-	Debugable();
+	Debugable(ID3D11Device* DeviceIn);
 	virtual ~Debugable();
 
 public:
 	virtual DXGI_FORMAT GetIndexFormat() override;
 	virtual void Initialize(ID3D11Device* DeviceIn) override;
+
+protected:
+	UploadBuffer<XMVECTOR> DebuggingColorBuffer;
+	MakeGetter(DebuggingColorBuffer);
+
+public:
+	void UpdateColor(const XMVECTOR& ColorIn, ID3D11DeviceContext* DeviceContextIn);
 };
 

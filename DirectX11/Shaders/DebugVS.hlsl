@@ -18,7 +18,6 @@ DebugVertexOutput main(DebugVertexInput Input)
 
     Result.f4ProjPos = mul(float4(Input.f3WorldPos, 1.f), ModelMatrix);
     Result.f4ProjPos = mul(Result.f4ProjPos, ViewProjMatrix);
-    Result.f2TexCoord = Input.f2TexCoord;
     
     return Result;
 }
