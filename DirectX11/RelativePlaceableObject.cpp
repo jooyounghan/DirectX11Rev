@@ -1,4 +1,5 @@
 #include "RelativePlaceableObject.h"
+#include "IGuiTopLevelVisitor.h"
 
 using namespace DirectX;
 
@@ -99,7 +100,8 @@ void RelativePlaceableObject::UpdateObject(const float& DeltaTimeIn)
 	}
 }
 
-void RelativePlaceableObject::AcceptGui(IGuiVisitor* GuiVisitor)
+
+void RelativePlaceableObject::AcceptGui(IGuiTopLevelVisitor* GuiVisitor)
 {
-	return GuiVisitor->Visit(this);
+	GuiVisitor->Visit(this);
 }

@@ -9,5 +9,8 @@ public:
 
 public:
 	virtual void RenderWindow() override;
+
+private:
+	void DrawFPSLinePlotting();
 };
 

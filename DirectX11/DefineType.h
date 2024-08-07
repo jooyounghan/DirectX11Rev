@@ -26,6 +26,10 @@ typedef struct SPosition4D
 	void InsertWithIndex(int IndexIn, const T& InputElement);
 } SVector4D;
 
+SPosition4D operator-(const SPosition4D& Pos1, const SPosition4D& Pos2);
+SPosition4D operator+(const SPosition4D& Pos1, const SPosition4D& Pos2);
+SPosition4D operator*(const SPosition4D& Vec, float Scalar);
+
 template<typename T>
 inline int SPosition4D::InsertToEmpty(const T& InputElement)
 {

@@ -167,9 +167,9 @@
     <ClCompile Include="MapOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
     <ClCompile Include="APlaceable.cpp" />
-    <ClCompile Include="ObjectInformationVisitor.cpp" />
+    <ClCompile Include="ModelInformationOutlinerVisitor.cpp" />
     <ClCompile Include="OrientedBoundingBox.cpp" />
-    <ClCompile Include="OutlinerVisitor.cpp" />
+    <ClCompile Include="ModelListOutlinerVisitor.cpp" />
     <ClCompile Include="PlaceableObject.cpp" />
     <ClCompile Include="PortfolioApp.cpp" />
     <ClCompile Include="PSOManager.cpp" />
@@ -202,7 +202,7 @@
     <ClInclude Include="FileSelectDialog.h" />
     <ClInclude Include="ICollisionVisitor.h" />
     <ClInclude Include="IDialog.h" />
-    <ClInclude Include="IGuiVisitor.h" />
+    <ClInclude Include="IGuiLowLevelVisitor.h" />
     <ClInclude Include="IIndexable.h" />
     <ClInclude Include="IIntersectable.h" />
     <ClInclude Include="ImGui\imconfig.h" />
@@ -214,8 +214,9 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="AObject.h" />
-    <ClInclude Include="ObjectInformationVisitor.h" />
-    <ClInclude Include="OutlinerVisitor.h" />
+    <ClInclude Include="IGuiTopLevelVisitor.h" />
+    <ClInclude Include="ModelInformationOutlinerVisitor.h" />
+    <ClInclude Include="ModelListOutlinerVisitor.h" />
     <ClInclude Include="PlaceableObject.h" />
     <ClInclude Include="RelativePlaceableObject.h" />
     <ClInclude Include="Vertexable.h" />

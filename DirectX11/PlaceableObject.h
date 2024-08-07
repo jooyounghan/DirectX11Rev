@@ -23,6 +23,6 @@ public:
 	virtual void Render(PSOObject* PSOObjectIn) override {};
 
 public:
-	virtual void AcceptGui(IGuiVisitor* GuiVisitor);
+	virtual void AcceptGui(IGuiTopLevelVisitor* GuiVisitor);
 };
 

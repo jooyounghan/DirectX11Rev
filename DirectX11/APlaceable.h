@@ -55,7 +55,7 @@ public:
 	virtual void UpdateObject(const float& DeltaTimeIn) = 0;
 
 public:
-	virtual void AcceptGui(IGuiVisitor* GuiVisitor) = 0;
+	virtual void AcceptGui(IGuiTopLevelVisitor* GuiVisitor) = 0;
 };
 
 template<typename T, typename ...Args>

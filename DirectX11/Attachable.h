@@ -18,5 +18,5 @@ public:
 	virtual void Render(PSOObject* PSOObjectIn) = 0;
 
 public:
-	virtual void AcceptGui(IGuiVisitor* GuiVisitor) = 0;
+	virtual void AcceptGui(IGuiTopLevelVisitor* GuiVisitor) = 0;
 };

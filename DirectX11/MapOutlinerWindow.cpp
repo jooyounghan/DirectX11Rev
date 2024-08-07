@@ -1,5 +1,7 @@
 #include "MapOutlinerWindow.h"
-#include "OutlinerVisitor.h"
+
+#include "ModelListOutlinerVisitor.h"
+#include "ModelInformationOutlinerVisitor.h"
 
 #include "GameWorld.h"
 #include "Map.h"
@@ -37,10 +39,10 @@ void MapOutlinerWindow::RenderPlaceablesOutline()
     {
         const list<unique_ptr<APlaceable>>& Placeables = CurrentMap->GetPlaceables();
         
-        OutlinerVisitor Outliner(this);
+        ModelListOutlinerVisitor ModelListliner(this);
         for (auto& Placeable : Placeables)
         {
-            Placeable->AcceptGui(&Outliner);
+            Placeable->AcceptGui(&ModelListliner);
         }
     }
     EndChild();
@@ -50,6 +52,11 @@ void MapOutlinerWindow::RenderSelectedObjectInformation()
 {
     ImVec2 RegionAvail = GetContentRegionAvail();
     BeginChild("SelectedObjectInformation", ImVec2(RegionAvail.x, RegionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
+    if (SelectedObject != nullptr)
+    {
+        ModelInformationOutlinerVisitor InformationVisitor(this);
+        SelectedObject->AcceptGui(&InformationVisitor);
 
+    }
     EndChild();
 }

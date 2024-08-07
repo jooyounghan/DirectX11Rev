@@ -18,6 +18,21 @@ void SPosition3D::Normalize()
 	z /= Length;
 }
 
+SPosition4D operator-(const SPosition4D& Pos1, const SPosition4D& Pos2)
+{
+	return SPosition4D{ Pos1.x - Pos2.x, Pos1.y - Pos2.y, Pos1.z - Pos2.z, Pos1.w - Pos2.w };
+}
+
+SPosition4D operator+(const SPosition4D& Pos1, const SPosition4D& Pos2)
+{
+	return SPosition4D{ Pos1.x + Pos2.x, Pos1.y + Pos2.y, Pos1.z + Pos2.z, Pos1.w + Pos2.w };
+}
+
+SPosition4D operator*(const SPosition4D& Vec, float Scalar)
+{
+	return SPosition4D{ Vec.x + Scalar, Vec.y + Scalar, Vec.z + Scalar, Vec.w + Scalar };
+}
+
 SPosition3D operator-(const SPosition3D& Pos1, const SPosition3D& Pos2)
 {
 	return SPosition3D{ Pos1.x - Pos2.x, Pos1.y - Pos2.y, Pos1.z - Pos2.z };

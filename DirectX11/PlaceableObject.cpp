@@ -1,5 +1,6 @@
 #include "PlaceableObject.h"
 #include "Attachable.h"
+#include "IGuiTopLevelVisitor.h"
 
 using namespace DirectX;
 
@@ -66,7 +67,7 @@ void PlaceableObject::UpdateObject(const float& DeltaTimeIn)
 	}
 }
 
-void PlaceableObject::AcceptGui(IGuiVisitor* GuiVisitor)
+void PlaceableObject::AcceptGui(IGuiTopLevelVisitor* GuiVisitor)
 {
-	return GuiVisitor->Visit(this);
+	GuiVisitor->Visit(this);
 }

@@ -1,5 +1,7 @@
 #include "TaskAnalyzerWindow.h"
 
+using namespace ImGui;
+
 TaskAnalyzerWindow::TaskAnalyzerWindow()
     : IWindow()
 {
@@ -11,9 +13,32 @@ TaskAnalyzerWindow::~TaskAnalyzerWindow()
 
 void TaskAnalyzerWindow::RenderWindow()
 {
-    ImGuiIO& io = ImGui::GetIO();
+    Begin("Task Analyzer");
+    DrawFPSLinePlotting();
 
-    ImGui::Begin("Task Analyzer");
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-    ImGui::End();
+
+
+    End();
+}
+
+void TaskAnalyzerWindow::DrawFPSLinePlotting()
+{
+    ImGuiIO& io = GetIO();
+    Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+
+    static float FrameRates[60] = {};
+    static int values_offset = 0;
+    static double refresh_time = 0.0;
+
+    FrameRates[values_offset] = io.Framerate;
+    values_offset = (values_offset + 1) % IM_ARRAYSIZE(FrameRates);
+
+    float average = 0.0f;
+    for (int n = 0; n < IM_ARRAYSIZE(FrameRates); n++)
+        average += FrameRates[n];
+    average /= (float)IM_ARRAYSIZE(FrameRates);
+
+    char OverlayText[32];
+    sprintf_s(OverlayText, "Average FPS : %f", average);
+    PlotLines("Lines", FrameRates, IM_ARRAYSIZE(FrameRates), values_offset, OverlayText, 0.0f, average * 2.f, GetContentRegionAvail());
 }

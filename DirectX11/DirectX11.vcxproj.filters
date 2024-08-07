@@ -175,6 +175,12 @@
     <Filter Include="소스 파일\Asset\Map\Object\View">
       <UniqueIdentifier>{2ab6c005-d21d-4874-9e2e-899e368baae8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner">
+      <UniqueIdentifier>{b3341d71-9b14-4076-a6f3-5f5a8da5d2fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner">
+      <UniqueIdentifier>{4a805e1c-82a8-46c9-bcd6-7a086a8f06fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -309,9 +315,6 @@
     <ClCompile Include="CollisionVisitor.cpp">
       <Filter>소스 파일\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="OutlinerVisitor.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor</Filter>
-    </ClCompile>
     <ClCompile Include="MeshObject.cpp">
       <Filter>소스 파일\Asset\Map\Object\Mesh</Filter>
     </ClCompile>
@@ -321,11 +324,14 @@
     <ClCompile Include="Camera.cpp">
       <Filter>소스 파일\Asset\Map\Object\View</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectInformationVisitor.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor</Filter>
-    </ClCompile>
     <ClCompile Include="AObject.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelInformationOutlinerVisitor.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelListOutlinerVisitor.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -515,14 +521,8 @@
     <ClInclude Include="CollisionVisitor.h">
       <Filter>헤더 파일\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="OutlinerVisitor.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
-    </ClInclude>
     <ClInclude Include="MapOutlinerWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="IGuiVisitor.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
     </ClInclude>
     <ClInclude Include="ICollisionVisitor.h">
       <Filter>헤더 파일\Collision</Filter>
@@ -536,7 +536,16 @@
     <ClInclude Include="Camera.h">
       <Filter>헤더 파일\Asset\Map\Object\RelativePlaceable\View</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectInformationVisitor.h">
+    <ClInclude Include="IGuiTopLevelVisitor.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelInformationOutlinerVisitor.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelListOutlinerVisitor.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner</Filter>
+    </ClInclude>
+    <ClInclude Include="IGuiLowLevelVisitor.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
     </ClInclude>
   </ItemGroup>

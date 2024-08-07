@@ -1,10 +1,11 @@
 #pragma once
-#include "IGuiVisitor.h"
+
 #include "HeaderHelper.h"
 
 #include <string>
 
 class PSOObject;
+class IGuiTopLevelVisitor;
 
 class AObject
 {
@@ -17,6 +18,6 @@ public:
 	virtual void UpdateObject(const float& DeltaTimeIn) = 0;
 
 public:
-	virtual void AcceptGui(IGuiVisitor* GuiVisitor) = 0;
+	virtual void AcceptGui(IGuiTopLevelVisitor* GuiVisitor) = 0;
 };
 

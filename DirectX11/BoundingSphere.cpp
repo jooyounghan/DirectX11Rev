@@ -75,11 +75,6 @@ bool BoundingSphere::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 
 void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
 {
-	static float Test = 0;
-	Test += DeltaTimeIn;
-	Position.x = 400 * sin(0.5f * 3.141592f * Test);
-	Position.y = 400 * sin(0.5f * 3.141592f * Test);
-
 	ABoundingComponent::UpdateObject(DeltaTimeIn);
 
 	XMVECTOR Scaling;
