@@ -2,6 +2,7 @@
 #include "AssetManager.h"
 #include "Debugable.h"
 #include "CollisionVisitor.h"
+#include "IGuiLowLevelVisitor.h"
 
 using namespace std;
 using namespace DirectX;
@@ -11,16 +12,14 @@ BoundingSphere::BoundingSphere(
 	AssetManager* AssetManagerInstance,
 	const float& RadiusIn
 )
-	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance), Radius(RadiusIn)
+	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance),
+	Radius(RadiusIn), ScaledRadius(RadiusIn * Scale.x)
 {
 	static size_t BoundingSphereCount = 0;
 	BoundingSphereCount++;
 	ObjectName = "Bounding Sphere " + to_string(BoundingSphereCount);
 
 	AutoZeroMemory(Center);
-	Scale.x = RadiusIn;
-	Scale.y = RadiusIn;
-	Scale.z = RadiusIn;
 
 	DebugObject = AssetManagerInstance->GetDebugObject(EDebugObjectType::Sphere);
 	DebugObject->UpdateColor(XMVectorSet(1.f, 0.f, 0.f, 1.f), DeviceContextCached);
@@ -36,7 +35,7 @@ bool BoundingSphere::Intersect(Ray* RayIn, float& DistanceOut)
 	const XMVECTOR ToCenter = RayIn->Origin - Center;
 
 	float b = InnerProduct(RayIn->Direction, ToCenter);
-	float c = InnerProduct(ToCenter, ToCenter) - Radius * Radius;
+	float c = InnerProduct(ToCenter, ToCenter) - ScaledRadius * ScaledRadius;
 
 	float determinant = b * b - c;
 	if (determinant < 0) 
@@ -75,24 +74,34 @@ bool BoundingSphere::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 
 void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
 {
+	ScaledRadius = Radius * Scale.x;
+
+	Scale.x *= Radius;
+	Scale.z = Scale.y = Scale.x;
 	ABoundingComponent::UpdateObject(DeltaTimeIn);
+	Scale.x /= Radius;
+	Scale.z = Scale.y = Scale.x;
 
 	XMVECTOR Scaling;
 	XMVECTOR RotationQuat;
 	XMMatrixDecompose(&Scaling, &RotationQuat, &Center, GetTransformation());
 
-	Radius = Scale.x;
 }
 
 bool BoundingSphere::IsInsideOrOnPlane(const Plane& PlaneIn)
 {
 	XMVECTOR FromPlaneToSphere = Center - PlaneIn.Point;
 	float DistanceFromPlaneToSphereCenter = XMVectorGetX(XMVector3Dot(FromPlaneToSphere, PlaneIn.Normal));
-	return DistanceFromPlaneToSphereCenter >= -Radius;
+	return DistanceFromPlaneToSphereCenter >= -ScaledRadius;
 }
 
 bool BoundingSphere::IsOverlappedWithSphere(BoundingSphere* SphereIn)
 {
 	float Distance = XMVectorGetX(XMVector3Length(Center - SphereIn->Center));
-	return Distance <= (Radius + SphereIn->Radius);
+	return Distance <= (ScaledRadius + SphereIn->ScaledRadius);
+}
+
+void BoundingSphere::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)
+{
+	GuiVisitor->Visit(this);
 }

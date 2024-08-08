@@ -26,9 +26,8 @@ void TaskAnalyzerWindow::DrawFPSLinePlotting()
     ImGuiIO& io = GetIO();
     Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 
-    static float FrameRates[60] = {};
+    static float FrameRates[1000] = {};
     static int values_offset = 0;
-    static double refresh_time = 0.0;
 
     FrameRates[values_offset] = io.Framerate;
     values_offset = (values_offset + 1) % IM_ARRAYSIZE(FrameRates);

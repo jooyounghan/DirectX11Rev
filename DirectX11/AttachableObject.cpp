@@ -18,3 +18,4 @@ void AttachableObject::AcceptGui(IGuiTopLevelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
 }
+

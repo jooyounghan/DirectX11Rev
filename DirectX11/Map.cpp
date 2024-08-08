@@ -107,8 +107,16 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 		PSOToObjects[DebugPSO].emplace_back(OBB);
 		OBB->Position.x += 400.f;
 
+		BoundingSphere* BB = OBB->AddAttachedObjectHelper<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached,
+			100.f);
+
+		PSOToObjects[DebugPSO].emplace_back(OBB);
+		PSOToObjects[DebugPSO].emplace_back(BB);
+
+		OBB->Position.x += 400.f;
 
 		Tests.push_back(OBB);
+		Tests.push_back(BB);
 	}
 }
 
@@ -120,9 +128,18 @@ void Map::UpdateMap(const float& DeltaTimeIn)
 	
 	for (auto& i : Tests)
 	{
-		CollisionVisitor Visitor(&Frustum);
-		if (i->AcceptCollision(&Visitor))
+		CollisionVisitor FrustumVisitor(&Frustum);
+		CollisionVisitor CollisionObjectVisitor(i);
+		//if (i->AcceptCollision(&FrustumVisitor))
+		//{
+		//}
+		for (auto& j : Tests)
 		{
+			if (i != j)
+			{
+				bool test = j->AcceptCollision(&CollisionObjectVisitor);
+				bool stop = false;
+			}
 		}
 	}
 	//===================================================

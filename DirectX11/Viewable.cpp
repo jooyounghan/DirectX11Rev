@@ -1,6 +1,7 @@
 #include "Viewable.h"
 #include "DefineUtility.h"
 #include "GlobalVariable.h"
+#include "IGuiLowLevelVisitor.h"
 
 using namespace std;
 using namespace DirectX;
@@ -59,3 +60,9 @@ void Viewable::UpdateObject(const float& DeltaTimeIn)
 
 	ViewProjBuffer.Upload(DeviceContextCached, TempViewProj);
 }
+
+void Viewable::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)
+{
+	GuiVisitor->Visit(this);
+}
+

@@ -39,5 +39,8 @@ public:
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
 	virtual void Resize(const UINT& WidthIn, const UINT& HeightIn);
+
+public:
+	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) override;
 };
 

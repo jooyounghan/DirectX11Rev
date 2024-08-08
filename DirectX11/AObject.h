@@ -6,6 +6,7 @@
 
 class PSOObject;
 class IGuiTopLevelVisitor;
+class IGuiLowLevelVisitor;
 
 class AObject
 {
@@ -19,5 +20,6 @@ public:
 
 public:
 	virtual void AcceptGui(IGuiTopLevelVisitor* GuiVisitor) = 0;
+	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) = 0;
 };
 

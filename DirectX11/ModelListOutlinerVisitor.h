@@ -1,12 +1,11 @@
 #pragma once
 #include "IGuiTopLevelVisitor.h"
-#include "IGuiLowLevelVisitor.h"
 
 class MapOutlinerWindow;
 class AAttachable;
 class APlaceable;
 
-class ModelListOutlinerVisitor : public IGuiTopLevelVisitor, public IGuiLowLevelVisitor
+class ModelListOutlinerVisitor : public IGuiTopLevelVisitor
 {
 public:
 	ModelListOutlinerVisitor(MapOutlinerWindow* MapOutlinerInstance);

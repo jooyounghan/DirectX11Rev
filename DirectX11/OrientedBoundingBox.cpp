@@ -4,7 +4,7 @@
 #include "AssetManager.h"
 #include "Debugable.h"
 #include "CollisionVisitor.h"
-
+#include "IGuiLowLevelVisitor.h"
 #include <limits>
 
 using namespace std;
@@ -27,9 +27,10 @@ OrientedBoundingBox::OrientedBoundingBox(
 	AutoZeroArrayMemory(HalfExtends);
 	AutoZeroMemory(Center);
 
-	Scale.x = HalfXIn;
-	Scale.y = HalfYIn;
-	Scale.z = HalfZIn;
+	HalfExtends[Direction::PlaneRight] = HalfXIn;
+	HalfExtends[Direction::PlaneUp] = HalfYIn;
+	HalfExtends[Direction::PlaneForward] = HalfZIn;
+
 	DebugObject = AssetManagerInstance->GetDebugObject(EDebugObjectType::Box);
 }
 
@@ -78,7 +79,15 @@ bool OrientedBoundingBox::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 
 void OrientedBoundingBox::UpdateObject(const float& DeltaTimeIn)
 {
+	Scale.x *= HalfExtends[Direction::PlaneRight];
+	Scale.y *= HalfExtends[Direction::PlaneUp];
+	Scale.z *= HalfExtends[Direction::PlaneForward];
+
 	ABoundingComponent::UpdateObject(DeltaTimeIn);
+
+	Scale.x /= HalfExtends[Direction::PlaneRight];
+	Scale.y /= HalfExtends[Direction::PlaneUp];
+	Scale.z /= HalfExtends[Direction::PlaneForward];
 
 	XMVECTOR Scaling;
 	XMVECTOR RotationQuat;
@@ -87,10 +96,6 @@ void OrientedBoundingBox::UpdateObject(const float& DeltaTimeIn)
 	CurrentAxises[Direction::PlaneRight] = XMVector3Rotate(Direction::GDefaultRight, RotationQuat);
 	CurrentAxises[Direction::PlaneUp] = XMVector3Rotate(Direction::GDefaultUp, RotationQuat);
 	CurrentAxises[Direction::PlaneForward] = XMVector3Rotate(Direction::GDefaultForward, RotationQuat);
-
-	HalfExtends[Direction::PlaneRight] = Scale.x;
-	HalfExtends[Direction::PlaneUp] = Scale.y;
-	HalfExtends[Direction::PlaneForward] = Scale.z;
 }
 
 bool OrientedBoundingBox::IsInsideOrOnPlane(const Plane& PlaneIn)
@@ -179,4 +184,10 @@ bool OrientedBoundingBox::IsOverlappedWithOBBNormalBoth(OrientedBoundingBox* OBB
 		}
 	}
 	return true;
+}
+
+
+void OrientedBoundingBox::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)
+{
+	GuiVisitor->Visit(this);
 }

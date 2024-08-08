@@ -1,6 +1,11 @@
 #pragma once
-#include "IGuiTopLevelVisitor.h"
+#include "IGuiLowLevelVisitor.h"
+
 #include <DirectXMath.h>
+
+class AttachableObject;
+class PlaceableObject;
+class RelativePlaceableObject;
 
 class MapOutlinerWindow;
 
@@ -11,7 +16,7 @@ enum ETransfomationSelect : size_t
 	NumTransformationSelect
 };
 
-class ModelInformationOutlinerVisitor : public IGuiTopLevelVisitor
+class ModelInformationOutlinerVisitor : public IGuiLowLevelVisitor
 {
 public:
 	ModelInformationOutlinerVisitor(MapOutlinerWindow* MapOutlinerInstance);
@@ -20,9 +25,15 @@ protected:
 	MapOutlinerWindow* MapOutlinerCached;
 
 public:
-	virtual void Visit(AttachableObject* AttachableInstance) override;
-	virtual void Visit(PlaceableObject* PlaceableInstance) override;
-	virtual void Visit(RelativePlaceableObject* RelativePlaceableObject) override;
+	virtual void Visit(MeshObject* AttachableInstance) override;
+
+public:
+	virtual void Visit(BoundingSphere* BoundingSphereInstance) override;
+	virtual void Visit(OrientedBoundingBox* OBBInstance) override;
+	virtual void Visit(BoundingFrustum* BoundingFrustumInstance) override;
+
+public:
+	virtual void Visit(Viewable* BoundingFrustumInstance) override;
 
 private:
 	void DrawAttachableInformation(AttachableObject* Attachable);
@@ -45,7 +56,8 @@ private:
 	void DrawTransformationEntity(
 		const ETransfomationSelect& SelectedIndex, 
 		T& Entity, 
-		const T& ParentEntity
+		const T& ParentEntity,
+		const bool& Disabled
 	);
 };
 

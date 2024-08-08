@@ -24,5 +24,6 @@ public:
 
 public:
 	virtual void AcceptGui(IGuiTopLevelVisitor* GuiVisitor);
+	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) = 0;
 };
 

@@ -41,7 +41,7 @@ bool CollisionLogic::CheckCollision(BoundingSphere* t1, OrientedBoundingBox* t2)
 	const float* HalfExtends = t2->GetHalfExtends();
 	const XMVECTOR& OBBCenter = t2->GetCenter();
 	const XMVECTOR& SphereCenter = t1->GetCenter();
-	const float SphereRadius = t1->GetRadius();
+	const float SphereRadius = t1->GetScaledRadius();
 
 	const XMVECTOR FromOBBToSphereCenter = SphereCenter - OBBCenter;
 

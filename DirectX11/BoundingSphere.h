@@ -18,7 +18,11 @@ protected:
 	float Radius;
 	MakeGetter(Center);
 	MakeGetter(Radius);
+	MakePointerGetter(Radius);
 
+protected:
+	float ScaledRadius;
+	MakeGetter(ScaledRadius);
 
 public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) override;
@@ -32,5 +36,8 @@ public:
 public:
 	bool IsInsideOrOnPlane(const Plane& PlaneIn);
 	bool IsOverlappedWithSphere(BoundingSphere* SphereIn);
+
+public:
+	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) override;
 };
 

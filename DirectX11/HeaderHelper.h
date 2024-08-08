@@ -5,11 +5,15 @@
 public:																								\
 	inline const decltype(Variable)& Get##Variable() { return Variable; };							
 
-#define MakeSmartPtrGetter(Variable)																		\
+#define MakePointerGetter(Variable)																	\
+public:																								\
+	inline decltype(Variable)* GetPointer##Variable() { return &Variable; };							
+
+#define MakeSmartPtrGetter(Variable)																\
 public:																								\
 	inline const auto Get##Variable() { return Variable.get(); };				
 
-#define MakeComPtrGetter(Variable)																		\
+#define MakeComPtrGetter(Variable)																	\
 public:																								\
 	inline const auto Get##Variable() { return Variable.Get(); };				
 

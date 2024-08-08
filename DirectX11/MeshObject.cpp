@@ -2,6 +2,7 @@
 #include "GraphicsPipeline.h"
 #include "IMeshAsset.h"
 #include "PSOObject.h"
+#include "IGuiLowLevelVisitor.h"
 
 using namespace std;
 
@@ -55,4 +56,9 @@ void MeshObject::Render(PSOObject* PSOObjectIn)
 
 		PSOObjectIn->ResetVSConstantBuffers(1, 0);
 	}
+}
+
+void MeshObject::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)
+{
+	GuiVisitor->Visit(this);
 }

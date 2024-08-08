@@ -3,6 +3,7 @@
 #include "GlobalVariable.h"
 #include "DefineUtility.h"
 #include "CollisionVisitor.h"
+#include "IGuiLowLevelVisitor.h"
 
 using namespace std;
 
@@ -82,4 +83,9 @@ void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
         FrustumEdgeAxises[Direction::RightTop] = FarPosition + CurrentRight * HalfHSide + CurrentUp * HalfVSide;
         FrustumEdgeAxises[Direction::RightBottm] = FarPosition + CurrentRight * HalfHSide - CurrentUp * HalfVSide;
 	}
+}
+
+void BoundingFrustum::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)
+{
+    GuiVisitor->Visit(this);
 }

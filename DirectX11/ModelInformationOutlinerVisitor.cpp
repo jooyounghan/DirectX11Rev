@@ -1,11 +1,21 @@
 #include "ModelInformationOutlinerVisitor.h"
 #include "MapOutlinerWindow.h"
 
-#include "AttachableObject.h"
-#include "PlaceableObject.h"
-#include "RelativePlaceableObject.h"
+#include "MeshObject.h"
+
+#include "BoundingSphere.h"
+#include "OrientedBoundingBox.h"
+#include "BoundingFrustum.h"
+
+#include "Viewable.h"
 
 #include <format>
+
+
+
+// 특정 개체 참조 후 삭제 예정
+#include "AttachableObject.h"
+#include "PlaceableObject.h"
 
 using namespace std;
 using namespace ImGui;
@@ -18,20 +28,58 @@ ModelInformationOutlinerVisitor::ModelInformationOutlinerVisitor(MapOutlinerWind
 {
 }
 
-void ModelInformationOutlinerVisitor::Visit(AttachableObject* AttachableInstance)
+void ModelInformationOutlinerVisitor::Visit(MeshObject* AttachableInstance)
 {
-	return DrawAttachableInformation(AttachableInstance);
+    DrawRelativePlaceableInformation(AttachableInstance);
 }
 
-void ModelInformationOutlinerVisitor::Visit(PlaceableObject* PlaceableInstance)
+void ModelInformationOutlinerVisitor::Visit(BoundingSphere* BoundingSphereInstance)
 {
-	return DrawPlaceableInformation(PlaceableInstance);
+    const string ComboId{ std::format("{}", (uint64_t)BoundingSphereInstance) };
+    PushID(ComboId.c_str());
+
+    DrawRelativePlaceableInformation(BoundingSphereInstance);
+
+    ImGui::SeparatorText("Boundging Sphere");
+    DragFloat("Radius", BoundingSphereInstance->GetPointerRadius(), 1.f, static_cast<float>(1E-3), numeric_limits<float>::max());
+
+    PopID();
 }
 
-void ModelInformationOutlinerVisitor::Visit(RelativePlaceableObject* RelativePlaceableObject)
+void ModelInformationOutlinerVisitor::Visit(OrientedBoundingBox* OBBInstance)
 {
-	return DrawRelativePlaceableInformation(RelativePlaceableObject);
+    const string ComboId{ std::format("{}", (uint64_t)OBBInstance) };
+    PushID(ComboId.c_str());
+
+    DrawRelativePlaceableInformation(OBBInstance);
+    
+    ImGui::SeparatorText("Oriented Bounding Box");
+    DragFloat3("Half Extends", OBBInstance->GetPointerHalfExtends(), 1.f, static_cast<float>(1E-3), numeric_limits<float>::max());
+
+    PopID();
 }
+
+void ModelInformationOutlinerVisitor::Visit(BoundingFrustum* BoundingFrustumInstance)
+{
+    const string ComboId{ std::format("{}", (uint64_t)BoundingFrustumInstance) };
+    PushID(ComboId.c_str());
+
+    DrawRelativePlaceableInformation(BoundingFrustumInstance);
+
+    PopID();
+}
+
+void ModelInformationOutlinerVisitor::Visit(Viewable* ViewableInstance)
+{
+    const string ComboId{ std::format("{}", (uint64_t)ViewableInstance) };
+    PushID(ComboId.c_str());
+
+    DrawRelativePlaceableInformation(ViewableInstance);
+   
+    PopID();
+}
+
+
 
 void ModelInformationOutlinerVisitor::DrawAttachableInformation(AttachableObject* Attachable)
 {
@@ -50,10 +98,50 @@ void ModelInformationOutlinerVisitor::DrawRelativePlaceableInformation(RelativeP
 
 void ModelInformationOutlinerVisitor::DrawTransformationForAttachable(AttachableObject* Attachable)
 {
+    static ETransfomationSelect SelectedTranslationIndex = Absolute;
+    static ETransfomationSelect SelectedRotationIndex = Absolute;
+    static ETransfomationSelect SelectedScaleIndex = Absolute;
+
+    APlaceable* ParentObject = Attachable->GetParentObject();
+
+    static SPosition4D DummyPosition;
+    static SAngle DummyAngle;
+    static SVector3D DummyScale;
+
+    ImGui::SeparatorText("Transformation");
+
+    DrawTransformationEntitySelection(true, "Translation", SelectedTranslationIndex);
+    SameLine();
+    DrawTransformationEntity<SPosition4D>(SelectedTranslationIndex, DummyPosition, ParentObject != nullptr ? ParentObject->Position : SPosition4D(), true);
+
+    DrawTransformationEntitySelection(true, "Rotation", SelectedRotationIndex);
+    SameLine();
+    DrawTransformationEntity<SAngle>(SelectedRotationIndex, DummyAngle, ParentObject != nullptr ? ParentObject->Angle : SAngle(), true);
+
+    DrawTransformationEntitySelection(true, "Scale", SelectedScaleIndex);
+    SameLine();
+    DrawTransformationEntity<SVector3D>(SelectedScaleIndex, DummyScale, SVector3D(), true);
 }
 
 void ModelInformationOutlinerVisitor::DrawTransformationForPlaceables(PlaceableObject* Placeable)
 {
+    static ETransfomationSelect SelectedTranslationIndex = Absolute;
+    static ETransfomationSelect SelectedRotationIndex = Absolute;
+    static ETransfomationSelect SelectedScaleIndex = Absolute;
+
+    ImGui::SeparatorText("Transformation");
+
+    DrawTransformationEntitySelection(true, "Translation", SelectedTranslationIndex);
+    SameLine();
+    DrawTransformationEntity<SPosition4D>(SelectedTranslationIndex, Placeable->Position, SPosition4D(), false);
+
+    DrawTransformationEntitySelection(true, "Rotation", SelectedRotationIndex);
+    SameLine();
+    DrawTransformationEntity<SAngle>(SelectedRotationIndex, Placeable->Angle, SAngle(), false);
+
+    DrawTransformationEntitySelection(true, "Scale", SelectedScaleIndex);
+    SameLine();
+    DrawTransformationEntity<SVector3D>(SelectedScaleIndex, Placeable->Scale, SVector3D(), false);
 }
 
 void ModelInformationOutlinerVisitor::DrawTransformationForRelativePlaceable(RelativePlaceableObject* RelativePlaceableObject)
@@ -66,30 +154,25 @@ void ModelInformationOutlinerVisitor::DrawTransformationForRelativePlaceable(Rel
 
     ImGui::SeparatorText("Transformation");
 
-    const string ComboId{ std::format("{}", (uint64_t)RelativePlaceableObject) };
-    PushID(ComboId.c_str());
-
     DrawTransformationEntitySelection(false, "Translation", SelectedTranslationIndex);
     SameLine();
-    DrawTransformationEntity<SPosition4D>(SelectedTranslationIndex, RelativePlaceableObject->Position, ParentObject != nullptr ? ParentObject->Position : SPosition4D());
+    DrawTransformationEntity<SPosition4D>(SelectedTranslationIndex, RelativePlaceableObject->Position, ParentObject != nullptr ? ParentObject->Position : SPosition4D(), false);
 
     DrawTransformationEntitySelection(false, "Rotation", SelectedRotationIndex);
     SameLine();
-    DrawTransformationEntity<SAngle>(SelectedRotationIndex, RelativePlaceableObject->Angle, ParentObject != nullptr ? ParentObject->Angle : SAngle());
+    DrawTransformationEntity<SAngle>(SelectedRotationIndex, RelativePlaceableObject->Angle, ParentObject != nullptr ? ParentObject->Angle : SAngle(), false);
 
-    DrawTransformationEntitySelection(false, "Scale", SelectedScaleIndex);
+    DrawTransformationEntitySelection(true, "Scale", SelectedScaleIndex);
     SameLine();
-    DrawTransformationEntity<SVector3D>(SelectedScaleIndex, RelativePlaceableObject->Scale, ParentObject != nullptr ? ParentObject->Scale : SVector3D());
-
-    PopID();
+    DrawTransformationEntity<SVector3D>(SelectedScaleIndex, RelativePlaceableObject->Scale, SVector3D(), false);
 }
 
-void ModelInformationOutlinerVisitor::DrawTransformationEntitySelection(const bool& IsOnlyAttached, const char* EntityName, ETransfomationSelect& SelectedIndexOut)
+void ModelInformationOutlinerVisitor::DrawTransformationEntitySelection(const bool& IsOnlyAbsolute, const char* EntityName, ETransfomationSelect& SelectedIndexOut)
 {
     const char* PreviewText = TransformationSelect[SelectedIndexOut];
     if (ImGui::BeginCombo(EntityName, PreviewText, ImGuiComboFlags_WidthFitPreview))
     {
-        for (size_t idx = 0; idx < (IsOnlyAttached ? (size_t)Relative : (size_t)NumTransformationSelect); ++idx)
+        for (size_t idx = 0; idx < (IsOnlyAbsolute ? (size_t)Relative : (size_t)NumTransformationSelect); ++idx)
         {
             const ETransfomationSelect CurrentSelectIdx = static_cast<ETransfomationSelect>(idx);
             const bool IsSelected = (SelectedIndexOut == CurrentSelectIdx);
@@ -107,7 +190,8 @@ template<typename T>
 void ModelInformationOutlinerVisitor::DrawTransformationEntity(
     const ETransfomationSelect& SelectedIndex, 
     T& Entity, 
-    const T& ParentEntity
+    const T& ParentEntity,
+    const bool& Disabled
 )
 {
     const string EntityId{ std::format("{}", (uint64_t)&Entity) };
@@ -117,13 +201,31 @@ void ModelInformationOutlinerVisitor::DrawTransformationEntity(
     case ETransfomationSelect::Absolute:
     {
         T TempEntity = Entity + ParentEntity;
-        DragFloat3("", (float*)&TempEntity);
+        if (Disabled)
+        {
+            BeginDisabled();
+            DragFloat3("", (float*)&TempEntity);
+            EndDisabled();
+        }
+        else
+        {
+            DragFloat3("", (float*)&TempEntity);
+        }
         Entity = TempEntity - ParentEntity;
         break;
     }
     case ETransfomationSelect::Relative:
     {
-        DragFloat3("", (float*)&Entity);
+        if (Disabled)
+        {
+            BeginDisabled();
+            DragFloat3("", (float*)&Entity);
+            EndDisabled();
+        }
+        else
+        {
+            DragFloat3("", (float*)&Entity);
+        }
         break;
     }
     }

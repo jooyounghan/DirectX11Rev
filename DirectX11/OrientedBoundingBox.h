@@ -25,6 +25,10 @@ protected:
 	MakeGetter(Center);
 
 public:
+	float* GetPointerHalfExtends() { return &HalfExtends[0]; }
+
+
+public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) override;
 
 public:
@@ -45,4 +49,7 @@ private:
 
 private:
 	float GetHalfExtendsLengthToAxis(const XMVECTOR& AxisIn);
+
+public:
+	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) override;
 };
