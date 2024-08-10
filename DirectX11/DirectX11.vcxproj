@@ -119,7 +119,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -139,7 +139,9 @@
     <ClCompile Include="AttachableObject.cpp" />
     <ClCompile Include="BoundingCapsule.cpp" />
     <ClCompile Include="BoundingFrustum.cpp" />
+    <ClCompile Include="BoundingOBBInformationDrawer.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
+    <ClCompile Include="BoundingSphereInformationDrawer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="BoneAsset.cpp" />
     <ClCompile Include="CollisionVisitor.cpp" />
@@ -167,6 +169,7 @@
     <ClCompile Include="MapOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
     <ClCompile Include="APlaceable.cpp" />
+    <ClCompile Include="MeshObjectInformationDrawer.cpp" />
     <ClCompile Include="ModelInformationOutlinerVisitor.cpp" />
     <ClCompile Include="OrientedBoundingBox.cpp" />
     <ClCompile Include="ModelListOutlinerVisitor.cpp" />
@@ -181,7 +184,9 @@
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TaskAnalyzerWindow.cpp" />
     <ClCompile Include="TextureAsset.cpp" />
+    <ClCompile Include="TransformationInformationDrawer.cpp" />
     <ClCompile Include="Viewable.cpp" />
+    <ClCompile Include="ViewableInformationDrawer.cpp" />
     <ClCompile Include="ViewportWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +196,9 @@
     <ClInclude Include="AttachableObject.h" />
     <ClInclude Include="BoundingCapsule.h" />
     <ClInclude Include="BoundingFrustum.h" />
+    <ClInclude Include="BoundingOBBInformationDrawer.h" />
     <ClInclude Include="BoundingSphere.h" />
+    <ClInclude Include="BoundingSphereInformationDrawer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="BoneAsset.h" />
     <ClInclude Include="CollisionVisitor.h" />
@@ -204,6 +211,7 @@
     <ClInclude Include="IDialog.h" />
     <ClInclude Include="IGuiLowLevelVisitor.h" />
     <ClInclude Include="IIndexable.h" />
+    <ClInclude Include="IInformationDrawer.h" />
     <ClInclude Include="IIntersectable.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -215,10 +223,12 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="AObject.h" />
     <ClInclude Include="IGuiTopLevelVisitor.h" />
+    <ClInclude Include="MeshObjectInformationDrawer.h" />
     <ClInclude Include="ModelInformationOutlinerVisitor.h" />
     <ClInclude Include="ModelListOutlinerVisitor.h" />
     <ClInclude Include="PlaceableObject.h" />
     <ClInclude Include="RelativePlaceableObject.h" />
+    <ClInclude Include="TransformationInformationDrawer.h" />
     <ClInclude Include="Vertexable.h" />
     <ClInclude Include="OrientedBoundingBox.h" />
     <ClInclude Include="PSOObject.h" />
@@ -255,6 +265,7 @@
     <ClInclude Include="TextureAsset.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Viewable.h" />
+    <ClInclude Include="ViewableInformationDrawer.h" />
     <ClInclude Include="ViewportWindow.h" />
   </ItemGroup>
   <ItemGroup>

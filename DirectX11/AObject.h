@@ -10,9 +10,16 @@ class IGuiLowLevelVisitor;
 
 class AObject
 {
+public:
+	AObject();
+
 protected:
 	std::string ObjectName;
 	MakeGetter(ObjectName);
+
+protected:
+	std::string ObjectID;
+	MakeGetter(ObjectID);
 
 public:
 	virtual void Render(PSOObject* PSOObjectIn) = 0;

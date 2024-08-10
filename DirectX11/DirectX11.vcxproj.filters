@@ -181,6 +181,12 @@
     <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner">
       <UniqueIdentifier>{4a805e1c-82a8-46c9-bcd6-7a086a8f06fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner\Helper">
+      <UniqueIdentifier>{b95adb38-a0b8-4434-977c-cba4cca2e532}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper">
+      <UniqueIdentifier>{de4e2cbe-893c-4b54-bbee-68ed03b89a68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -332,6 +338,21 @@
     </ClCompile>
     <ClCompile Include="ModelListOutlinerVisitor.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformationInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingOBBInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphereInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshObjectInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewableInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -547,6 +568,24 @@
     </ClInclude>
     <ClInclude Include="IGuiLowLevelVisitor.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformationInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingOBBInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphereInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshObjectInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewableInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="IInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

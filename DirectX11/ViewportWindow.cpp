@@ -31,7 +31,7 @@ void ViewportWindow::RenderWindow()
     Map* CurrentMap = GameWorldLinked->GetCurrentMap();
     if (CurrentMap != nullptr)
     {
-        Camera* CurrentCamera = CurrentMap->GetMapCamera();
+        Camera* CurrentCamera = CurrentMap->GetMapEditorCamera().get();
         if (CurrentCamera != nullptr)
         {
             ImGui::Image(CurrentCamera->GetSceneSRV(), ImGui::GetContentRegionAvail());

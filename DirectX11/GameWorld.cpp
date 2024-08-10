@@ -33,10 +33,9 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance)
 	AssetManagerInstance = make_unique<AssetManager>(GraphicsPipelineCached->GetDevice());
 
 	TestCamera = make_unique<Camera>(GraphicsPipelineInstance, App::GWidth, App::GHeight);
-	CurrentCamera = TestCamera.get();
-	CurrentCamera->SetPosition(0.f, 0.f, -300.f);
+	TestCamera->Position.z = -300.f;
 
-	MapInstances.emplace(0, std::move(make_unique<Map>(GraphicsPipelineInstance, PSOManagerInstance.get())));
+	MapInstances.emplace(0, std::move(make_unique<Map>(GraphicsPipelineInstance, PSOManagerInstance.get(), AssetManagerInstance.get())));
 	CurrentMap = MapInstances[0].get();
 }
 #endif // _DEBUG
@@ -71,7 +70,7 @@ void GameWorld::RenderWorld()
 #else
 		GraphicsPipelineCached->GetDeviceContext()->CopyResource(
 			GraphicsPipelineCached->GetBackBufferTexture(),
-			CurrentCamera->GetSceneTexture2D()
+			TestCamera->GetSceneTexture2D()
 		);
 #endif // _DEBUG
 	}

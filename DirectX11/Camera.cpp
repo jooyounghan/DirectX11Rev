@@ -2,9 +2,15 @@
 #include "DefineUtility.h"
 #include "GraphicsPipeline.h"
 
+using namespace std;
+
 Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, const UINT& HeightIn)
 	: Viewable(GraphicsPipelineInstance->GetDevice(), GraphicsPipelineInstance->GetDeviceContext(), WidthIn, HeightIn)
 {
+	static size_t CameraCount = 0;
+	CameraCount++;
+	ObjectName = "Camera " + to_string(CameraCount);
+
 	ID3D11Device* Device = GraphicsPipelineInstance->GetDevice();
 
 	D3D11_TEXTURE2D_DESC SceneTexture2DDesc;

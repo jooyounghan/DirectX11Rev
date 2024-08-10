@@ -25,6 +25,9 @@ public:
 	float FovAngle	= 90.f;
 	float NearZ		= 0.1f;
 	float FarZ		= 1000.f;
+	MakePointerGetter(FovAngle);
+	MakePointerGetter(NearZ);
+	MakePointerGetter(FarZ);
 
 public:
 	const DirectX::XMMATRIX GetViewMatrix();

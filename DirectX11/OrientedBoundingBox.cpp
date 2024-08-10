@@ -51,7 +51,7 @@ bool OrientedBoundingBox::Intersect(Ray* RayIn, float& DistanceOut)
 		const float AxisToCenterProj = InnerProduct(Axis, ToCenter);
 		const float AxisToRayDirectionCos = InnerProduct(Axis, RayIn->Direction);
 
-		if (abs(AxisToRayDirectionCos) > 1E-6)
+		if (abs(AxisToRayDirectionCos) > 1E-6f)
 		{
 			float t1 = (AxisToCenterProj + HalfExtend) / AxisToRayDirectionCos;
 			float t2 = (AxisToCenterProj - HalfExtend) / AxisToRayDirectionCos;

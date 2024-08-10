@@ -22,13 +22,11 @@ using namespace DirectX;
 Map::Map(GraphicsPipeline* GraphicsPipelineInstance, PSOManager* PSOManagerInstance, AssetManager* AssetManagerInstance)
 	: GraphicsPipelineCached(GraphicsPipelineInstance), PSOManagerCached(PSOManagerInstance), AssetManagerCached(AssetManagerInstance)
 {
-
-	MapCamera = make_unique<Camera>(
+	MapEditorCamera = make_unique<Camera>(
 		GraphicsPipelineCached, App::GWidth, App::GHeight
 	);
-
 	// TEST
-	MapCamera->Position = SPosition4D{ 0.f, 0.f, -300.f, 1.f };
+	MapEditorCamera->Position = SPosition4D{ 0.f, 0.f, -300.f, 1.f };
 }
 
 Map::~Map()
@@ -90,7 +88,7 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 	{
 		MeshObject* AddedObject = RenderableAddHelper<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
 
-		Ray ClickedRay = Ray::CreateRay(ScreenXIn, ScreenYIn, ScreenWidthIn, ScreenHeightIn, MapCamera->GetProjectionMatrix(), MapCamera->GetViewMatrix());
+		Ray ClickedRay = Ray::CreateRay(ScreenXIn, ScreenYIn, ScreenWidthIn, ScreenHeightIn, MapEditorCamera->GetProjectionMatrix(), MapEditorCamera->GetViewMatrix());
 
 		const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
 
@@ -123,16 +121,13 @@ void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float Screen
 void Map::UpdateMap(const float& DeltaTimeIn)
 {
 	// Test ====================================================================
-	BoundingFrustum Frustum(GraphicsPipelineCached, AssetManagerCached, MapCamera.get());
+	BoundingFrustum Frustum(GraphicsPipelineCached, AssetManagerCached, MapEditorCamera.get());
 	Frustum.UpdateObject(DeltaTimeIn);
 	
 	for (auto& i : Tests)
 	{
 		CollisionVisitor FrustumVisitor(&Frustum);
 		CollisionVisitor CollisionObjectVisitor(i);
-		//if (i->AcceptCollision(&FrustumVisitor))
-		//{
-		//}
 		for (auto& j : Tests)
 		{
 			if (i != j)
@@ -144,7 +139,7 @@ void Map::UpdateMap(const float& DeltaTimeIn)
 	}
 	//===================================================
 
-	MapCamera->UpdateObject(DeltaTimeIn);
+	MapEditorCamera->UpdateObject(DeltaTimeIn);
 
 	for (auto& ro : Placeables)
 	{
@@ -154,17 +149,17 @@ void Map::UpdateMap(const float& DeltaTimeIn)
 
 void Map::RenderMap()
 {
-	MapCamera->CleanupLens();
+	MapEditorCamera->CleanupLens();
 
 	for (auto& PSOToRendersPair : PSOToObjects)
 	{
 		PSOObject* Pso = PSOToRendersPair.first;
-		ID3D11RenderTargetView* RTVs[] = { MapCamera->GetSceneRTV() };
-		D3D11_VIEWPORT Viewports[] = { MapCamera->GetViewport() };
-		ID3D11DepthStencilView* DSV = MapCamera->GetSceneDSV();
+		ID3D11RenderTargetView* RTVs[] = { MapEditorCamera->GetSceneRTV() };
+		D3D11_VIEWPORT Viewports[] = { MapEditorCamera->GetViewport() };
+		ID3D11DepthStencilView* DSV = MapEditorCamera->GetSceneDSV();
 		Pso->SetPipelineObject(1, RTVs, Viewports, DSV);
 	
-		ID3D11Buffer* ViewProjBuffer[] = { MapCamera->ViewProjBuffer.GetBuffer() };
+		ID3D11Buffer* ViewProjBuffer[] = { MapEditorCamera->ViewProjBuffer.GetBuffer() };
 		Pso->SetVSConstantBuffers(0, 1, ViewProjBuffer);
 		for (const auto& ro : PSOToRendersPair.second)
 		{
@@ -184,7 +179,7 @@ void Map::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
 
 void Map::Test(float ScreenXIn, float ScreenYIn, float ScreenWidthIn, float ScreenHeightIn)
 {
-	Ray ClickedRay = Ray::CreateRay(ScreenXIn, ScreenYIn, ScreenWidthIn, ScreenHeightIn, MapCamera->GetProjectionMatrix(), MapCamera->GetViewMatrix());
+	Ray ClickedRay = Ray::CreateRay(ScreenXIn, ScreenYIn, ScreenWidthIn, ScreenHeightIn, MapEditorCamera->GetProjectionMatrix(), MapEditorCamera->GetViewMatrix());
 
 	float Distance = 0;
 	for (auto test : Tests)

@@ -31,8 +31,8 @@ protected:
 	AssetManager* AssetManagerCached = nullptr;
 
 protected:
-	std::unique_ptr<Camera> MapCamera;
-	MakeSmartPtrGetter(MapCamera);
+	std::unique_ptr<Camera> MapEditorCamera;
+	MakeGetter(MapEditorCamera);
 
 protected:
 	std::unordered_map<PSOObject*, std::vector<AObject*>> PSOToObjects;
