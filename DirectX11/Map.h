@@ -31,8 +31,8 @@ protected:
 	AssetManager* AssetManagerCached = nullptr;
 
 protected:
-	std::unique_ptr<Camera> MapEditorCamera;
-	MakeGetter(MapEditorCamera);
+	Camera* CameraCached = nullptr;
+	MakeSetter(CameraCached);
 
 protected:
 	std::unordered_map<PSOObject*, std::vector<AObject*>> PSOToObjects;
@@ -54,10 +54,6 @@ public:
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath) override;
 	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn) override;
-
-public:
-	void Test(float ScreenXIn, float ScreenYIn, float ScreenWidthIn, float ScreenHeightIn);
-
 
 private:
 	template<typename T, typename ...Args>

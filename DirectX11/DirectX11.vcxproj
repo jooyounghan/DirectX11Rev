@@ -136,6 +136,7 @@
     <ClCompile Include="ABoundingComponent.cpp" />
     <ClCompile Include="AObject.cpp" />
     <ClCompile Include="AssetManagerWindow.cpp" />
+    <ClCompile Include="Attachable.cpp" />
     <ClCompile Include="AttachableObject.cpp" />
     <ClCompile Include="BoundingCapsule.cpp" />
     <ClCompile Include="BoundingFrustum.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="CollisionVisitor.cpp" />
     <ClCompile Include="Debugable.cpp" />
     <ClCompile Include="DefineType.cpp" />
+    <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="FileSelectDialog.cpp" />
@@ -154,6 +156,7 @@
     <ClCompile Include="GlobalVariable.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="IAssetFile.cpp" />
+    <ClCompile Include="IDColorProxy.cpp" />
     <ClCompile Include="IGameWorldLinkedWindow.cpp" />
     <ClCompile Include="IMeshAsset.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
@@ -206,8 +209,10 @@
     <ClInclude Include="Debugable.h" />
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
+    <ClInclude Include="EditorCamera.h" />
     <ClInclude Include="FileSelectDialog.h" />
     <ClInclude Include="ICollisionVisitor.h" />
+    <ClInclude Include="IDColorProxy.h" />
     <ClInclude Include="IDialog.h" />
     <ClInclude Include="IGuiLowLevelVisitor.h" />
     <ClInclude Include="IIndexable.h" />

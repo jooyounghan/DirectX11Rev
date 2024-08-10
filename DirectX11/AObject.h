@@ -1,6 +1,8 @@
 #pragma once
 
 #include "HeaderHelper.h"
+#include "IDColorProxy.h"
+#include "ConstantBuffer.h"
 
 #include <string>
 

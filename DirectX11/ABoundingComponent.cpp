@@ -48,16 +48,17 @@ void ABoundingComponent::Render(PSOObject* PSOObjectIn)
 		DeviceContextCached->IASetIndexBuffer(DebugObject->GetIndexBuffer(), DebugObject->GetIndexFormat(), 0);
 
 		ID3D11Buffer* VSConstBuffers[] = { TransformationBuffer.GetBuffer() };
-		ID3D11Buffer* PSConstBuffers[] = { DebugObject->GetDebuggingColorBuffer().GetBuffer()};
+		ID3D11Buffer* PSConstBuffers[] = { GetPickingIDBuffer().GetBuffer(), DebugObject->GetDebuggingColorBuffer().GetBuffer()};
 
 		PSOObjectIn->SetVSConstantBuffers(1, 1, VSConstBuffers);
-		PSOObjectIn->SetPSConstantBuffers(0, 1, PSConstBuffers);
+		PSOObjectIn->SetPSConstantBuffers(0, 2, PSConstBuffers);
 #ifdef _DEBUG
 		PSOObjectIn->CheckPipelineValidation();
 #endif // DEBUG
 
 		DeviceContextCached->DrawIndexed(static_cast<UINT>(DebugObject->GetIndexCount()), 0, 0);
 
-		PSOObjectIn->ResetVSConstantBuffers(1, 0);
+		PSOObjectIn->ResetVSConstantBuffers(1, 1);
+		PSOObjectIn->ResetPSConstantBuffers(0, 2);
 	}
 }

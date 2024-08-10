@@ -24,10 +24,21 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		SceneDSV;
 	MakeComPtrGetter(SceneDSV);
 
-private:
-	const FLOAT ClearColor[4] = { 0.f, 0.f, 0.f, 1.f };
+protected:
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				ResolvedSceneTexture2D;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	ResolvedSceneSRV;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		ResolvedSceneRTV;
+	MakeComPtrGetter(ResolvedSceneTexture2D);
+	MakeComPtrGetter(ResolvedSceneSRV);
+	MakeComPtrGetter(ResolvedSceneRTV);
+
+protected:
+	bool IsMultiSampling = false;
+
+protected:
+	const FLOAT ClearColor[4] = { 0.2f, 0.2f, 0.2f, 1.f };
 
 public:
-	void CleanupLens();
+	virtual void CleanupLens();
 };
 

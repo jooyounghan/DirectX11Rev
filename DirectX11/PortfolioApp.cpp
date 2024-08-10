@@ -117,7 +117,7 @@ void PortfolioApp::Quit()
 void PortfolioApp::Update()
 {
 	const float& DeltaTime = GetDeltaTimeFromLastCall();
-	GameWorldInstance->UpdateGameWorld(DeltaTime);
+	GameWorldInstance->UpdateWorld(DeltaTime);
 }
 
 void PortfolioApp::Render()

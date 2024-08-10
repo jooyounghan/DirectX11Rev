@@ -1,7 +1,7 @@
 #pragma once
 #include "APlaceable.h"
 
-class RelativePlaceableObject : public AAttachable, public APlaceable
+class RelativePlaceableObject : public AAttachable, public APlaceable, virtual AObject
 {
 public:
 	RelativePlaceableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);

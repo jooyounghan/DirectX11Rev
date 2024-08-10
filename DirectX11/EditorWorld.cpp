@@ -1,8 +1,9 @@
 #include "EditorWorld.h"
 
 #include "GlobalVariable.h"
-
 #include "DefineUtility.h"
+
+#include "EditorCamera.h"
 
 #include "TaskAnalyzerWindow.h"
 #include "ViewportWindow.h" 
@@ -25,6 +26,11 @@ using namespace std;
 EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
     : IWorld(GameWorldIn->GraphicsPipelineCached), GameWorldCached(GameWorldIn)
 {
+    EditorCameraInstance = make_unique<EditorCamera>(
+        GameWorldIn->GraphicsPipelineCached, App::GWidth, App::GHeight
+    );
+    EditorCameraInstance->Position = SPosition4D{ 0.f, 0.f, -300.f, 1.f };
+
     IMGUI_CHECKVERSION();
 
     ImGui::CreateContext();
@@ -44,7 +50,7 @@ EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
     );
 
     Dialogs.push_back(make_unique<TaskAnalyzerWindow>());
-    Dialogs.push_back(make_unique<ViewportWindow>(GameWorldCached));
+    Dialogs.push_back(make_unique<ViewportWindow>(GameWorldCached, EditorCameraInstance.get()));
     Dialogs.push_back(make_unique<MapOutlinerWindow>(GameWorldCached));
     Dialogs.push_back(make_unique<AssetManagerWindow>(GameWorldCached->GetAssetManagerInstance()));
 }
@@ -59,6 +65,12 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
     WPARAM wParam,
     LPARAM lParam
 );
+
+void EditorWorld::UpdateWorld(const float& DeltaTimeIn)
+{
+    EditorCameraInstance->CleanupLens();
+    EditorCameraInstance->UpdateObject(DeltaTimeIn);
+}
 
 void EditorWorld::RenderWorld()
 {

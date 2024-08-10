@@ -2,8 +2,8 @@
 #include "AObject.h"
 #include "DefineType.h"
 #include "UploadBuffer.h"
+#include "ConstantBuffer.h"
 #include "Attachable.h"
-
 #include <list>
 #include <memory>
 
@@ -28,12 +28,20 @@ protected:
 	std::list<std::unique_ptr<AAttachable>> AttachedObjects;
 	MakeGetter(AttachedObjects);
 
-public:
-	template<typename T, typename ...Args>
-	T* AddAttachedObjectHelper(Args... args);
+protected:
+	IDColorProxy PickingID;
+	ConstantBuffer<SColor> PickingIDBuffer;
+	MakeGetter(PickingIDBuffer);
+
+protected:
+	static uint32_t PickingIDIssued;
 
 protected:
 	ID3D11DeviceContext* DeviceContextCached = nullptr;
+
+public:
+	template<typename T, typename ...Args>
+	T* AddAttachedObjectHelper(Args... args);
 
 public:
 	virtual DirectX::XMVECTOR GetRotationQuat() const = 0;

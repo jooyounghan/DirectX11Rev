@@ -46,6 +46,9 @@ void MeshObject::Render(PSOObject* PSOObjectIn)
 		DeviceContextCached->IASetIndexBuffer(MeshAssetInstance->GetIndexBuffer(), MeshAssetInstance->GetIndexFormat(), 0);
 
 		ID3D11Buffer* VSConstBuffers[] = { TransformationBuffer.GetBuffer() };
+		ID3D11Buffer* PSConstBuffers[] = { GetPickingIDBuffer().GetBuffer() };
+
+		PSOObjectIn->SetPSConstantBuffers(0, 1, PSConstBuffers);
 		PSOObjectIn->SetVSConstantBuffers(1, 1, VSConstBuffers);
 
 #ifdef _DEBUG
@@ -54,7 +57,8 @@ void MeshObject::Render(PSOObject* PSOObjectIn)
 
 		DeviceContextCached->DrawIndexed(static_cast<UINT>(MeshAssetInstance->GetIndexCount()), 0, 0);
 
-		PSOObjectIn->ResetVSConstantBuffers(1, 0);
+		PSOObjectIn->ResetVSConstantBuffers(1, 1);
+		PSOObjectIn->ResetPSConstantBuffers(0, 1);
 	}
 }
 

@@ -1,6 +1,11 @@
 #include "DebugHeader.hlsli"
 
-cbuffer DebuggingColor : register(b0)
+cbuffer PickingIDColor : register(b0)
+{
+    float4 PickingColor;
+};
+
+cbuffer DebuggingColor : register(b1)
 {
     float4 Color;
 };

@@ -1,7 +1,7 @@
 #include "ViewportWindow.h"
 
 #include "GameWorld.h"
-#include "Camera.h"
+#include "EditorCamera.h"
 
 #include "AssetManager.h"
 #include "IAssetFile.h"
@@ -16,8 +16,8 @@ using namespace std;
 string ViewportWindow::ViewportWindowName = "Viewport";
 
 
-ViewportWindow::ViewportWindow(GameWorld* GameWorldLinkedIn)
-    : IGameWorldLinkedWindow(GameWorldLinkedIn)
+ViewportWindow::ViewportWindow(GameWorld* GameWorldLinkedIn, EditorCamera* EditorCameraIn)
+    : IGameWorldLinkedWindow(GameWorldLinkedIn), EditorCameraCached(EditorCameraIn)
 {
 }
 
@@ -31,10 +31,9 @@ void ViewportWindow::RenderWindow()
     Map* CurrentMap = GameWorldLinked->GetCurrentMap();
     if (CurrentMap != nullptr)
     {
-        Camera* CurrentCamera = CurrentMap->GetMapEditorCamera().get();
-        if (CurrentCamera != nullptr)
+        if (EditorCameraCached != nullptr)
         {
-            ImGui::Image(CurrentCamera->GetSceneSRV(), ImGui::GetContentRegionAvail());
+            ImGui::Image(EditorCameraCached->GetResolvedSceneSRV(), ImGui::GetContentRegionAvail());
             ManageAssetDrop(CurrentMap);
             ManageMouseLBClick(CurrentMap);
         }
@@ -64,12 +63,23 @@ void ViewportWindow::ManageAssetDrop(Map* CurrentMap)
                     {
                     case EAssetType::StaticMesh:
                     case EAssetType::SkeletalMesh:
+                    {
+                        Ray ClickedRay = Ray::CreateRay(
+                            RelativeMousePos.x, RelativeMousePos.y, 
+                            ThisWindow->Size.x, ThisWindow->Size.y, 
+                            EditorCameraCached->GetProjectionMatrix(), 
+                            EditorCameraCached->GetViewMatrix()
+                        );
+                        const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
+
                         CurrentMap->AddRenderObject(
                             (IMeshAsset*)AssetFile,
-                            RelativeMousePos.x, RelativeMousePos.y,
-                            ThisWindow->Size.x, ThisWindow->Size.y
-                        );
+                            PlacePositon.m128_f32[0],
+                            PlacePositon.m128_f32[1],
+                            PlacePositon.m128_f32[2]
+                        );                            
                         break;
+                    }
                     default:
                         break;
                     }
@@ -89,10 +99,10 @@ void ViewportWindow::ManageMouseLBClick(Map* CurrentMap)
         ImGuiWindow* ThisWindow = ImGui::FindWindowByName("Viewport");
         if (ThisWindow != nullptr)
         {
-            ImVec2 AbsMousePos = io.MousePos;
-            ImVec2 WinPosition = ThisWindow->Pos;
-            ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - WinPosition.x, AbsMousePos.y - WinPosition.y);
-            CurrentMap->Test(RelativeMousePos.x, RelativeMousePos.y, ThisWindow->Size.x, ThisWindow->Size.y);
+            //ImVec2 AbsMousePos = io.MousePos;
+            //ImVec2 WinPosition = ThisWindow->Pos;
+            //ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - WinPosition.x, AbsMousePos.y - WinPosition.y);
+            //CurrentMap->Test(RelativeMousePos.x, RelativeMousePos.y, ThisWindow->Size.x, ThisWindow->Size.y);
         }
     }
 }

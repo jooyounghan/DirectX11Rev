@@ -7,6 +7,7 @@
 
 #ifdef _DEBUG
 #include "EditorWorld.h"
+#include "EditorCamera.h"
 #endif 
 
 #include "Camera.h"
@@ -24,6 +25,8 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHand
 
 	MapInstances.emplace(0, std::move(make_unique<Map>(GraphicsPipelineInstance, PSOManagerInstance.get(), AssetManagerInstance.get())));
 	CurrentMap = MapInstances[0].get();
+
+	CurrentMap->SetCameraCached(EditorWorldInstance->GetEditorCameraInstance().get());
 }
 #else
 GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance)
@@ -51,8 +54,12 @@ void GameWorld::LoadGameWorld()
 	// Load Current State Of GameWorld From Binary Files
 }
 
-void GameWorld::UpdateGameWorld(const float& DeltaTimeIn)
+void GameWorld::UpdateWorld(const float& DeltaTimeIn)
 {
+#ifdef _DEBUG
+	EditorWorldInstance->UpdateWorld(DeltaTimeIn);
+#endif // _DEBUG
+
 	if (CurrentMap)
 	{
 		CurrentMap->UpdateMap(DeltaTimeIn);

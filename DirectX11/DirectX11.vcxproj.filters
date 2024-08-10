@@ -330,9 +330,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>소스 파일\Asset\Map\Object\View</Filter>
     </ClCompile>
-    <ClCompile Include="AObject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="ModelInformationOutlinerVisitor.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner</Filter>
     </ClCompile>
@@ -353,6 +350,18 @@
     </ClCompile>
     <ClCompile Include="ViewableInformationDrawer.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorCamera.cpp">
+      <Filter>소스 파일\World\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="IDColorProxy.cpp">
+      <Filter>소스 파일\Asset\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="AObject.cpp">
+      <Filter>소스 파일\Asset\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Attachable.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -586,6 +595,12 @@
     </ClInclude>
     <ClInclude Include="IInformationDrawer.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCamera.h">
+      <Filter>헤더 파일\World\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="IDColorProxy.h">
+      <Filter>헤더 파일\Asset\Map\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

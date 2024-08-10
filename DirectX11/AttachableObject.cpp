@@ -2,6 +2,7 @@
 #include "IGuiTopLevelVisitor.h"
 
 AttachableObject::AttachableObject()
+	: AAttachable()
 {
 }
 

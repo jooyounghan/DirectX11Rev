@@ -13,6 +13,7 @@ public:
 	GraphicsPipeline* GraphicsPipelineCached = nullptr;
 
 public:
+	virtual void UpdateWorld(const float& DeltaTimeIn) = 0;
 	virtual void RenderWorld() = 0;
 
 public:

@@ -10,7 +10,7 @@
 
 class GameWorld;
 class IWindow;
-class Camera;
+class EditorCamera;
 
 class EditorWorld : public IWorld
 {
@@ -26,9 +26,14 @@ protected:
 	MakeGetter(FontSrvHandleID);
 
 protected:
+	std::unique_ptr<EditorCamera> EditorCameraInstance;
+	MakeGetter(EditorCameraInstance);
+
+protected:
 	std::vector<std::unique_ptr<IWindow>> Dialogs;
 
 public:
+	virtual void UpdateWorld(const float& DeltaTimeIn) override;
 	virtual void RenderWorld() override;
 
 public:

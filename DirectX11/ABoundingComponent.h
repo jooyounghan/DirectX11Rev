@@ -9,10 +9,7 @@ class Debugable;
 class ABoundingComponent : public IIntersectable, public RelativePlaceableObject
 {
 public:
-	ABoundingComponent(
-		GraphicsPipeline* GraphicsPipelineInstances,
-		AssetManager* AssetManagerInstance
-	);
+	ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances, AssetManager* AssetManagerInstance);
 	virtual ~ABoundingComponent();
 
 protected:
