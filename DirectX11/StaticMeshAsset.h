@@ -1,18 +1,7 @@
 #pragma once
-#include "IMeshAsset.h"
-#include "Vertexable.h"
-#include "DefineType.h"
+#include "AMeshAsset.h"
 
-struct StaticVertex
-{
-	SPosition3D		Position;
-	SCoordinate2D	UVTexture;
-	SVector3D		Normal;
-	SVector3D		Tangent;
-	SVector3D		Bitangent;
-};
-
-class StaticMeshAsset : public IMeshAsset, public Vertexable<StaticVertex>
+class StaticMeshAsset : public AMeshAsset
 {
 public:
 	StaticMeshAsset();
@@ -20,10 +9,12 @@ public:
 	virtual ~StaticMeshAsset();
 
 public:
-	virtual void Initialize(ID3D11Device* DeviceIn) override;
+	virtual std::vector<ID3D11Buffer*> GetVertexBuffers() override;
+	virtual std::vector<UINT> GetStrides() override;
+	virtual std::vector<UINT> GetOffsets() override;
 
 public:
-	virtual void GetVertexInformation(ID3D11Buffer*& RefVertexBuffer, UINT& RefVertexTypeSize) override;
+	virtual void Initialize(ID3D11Device* DeviceIn) override;
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;

@@ -34,8 +34,6 @@ inline void VertexBuffer<T>::InitializeForGPU(
 	T* CPUDataPtr
 )
 {
-	BUFFER_ALIGN_CHECK(ArrayCountIn * sizeof(T));
-
 	D3D11_BUFFER_DESC BufferDesc;
 	AutoZeroMemory(BufferDesc);
 

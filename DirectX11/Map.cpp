@@ -6,7 +6,7 @@
 #include "AssetManager.h"
 
 #include "MeshObject.h"
-#include "IMeshAsset.h"
+#include "AMeshAsset.h"
 
 #include "Camera.h"
 
@@ -30,7 +30,7 @@ Map::~Map()
 {
 }
 
-void Map::AddRenderObject(IMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
+void Map::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
 	PSOObject* Pso = nullptr;
 

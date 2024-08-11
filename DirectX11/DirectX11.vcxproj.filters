@@ -213,7 +213,7 @@
     <ClCompile Include="BoneAsset.cpp">
       <Filter>소스 파일\Asset\Bone</Filter>
     </ClCompile>
-    <ClCompile Include="IMeshAsset.cpp">
+    <ClCompile Include="AMeshAsset.cpp">
       <Filter>소스 파일\Asset\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="SkeletalMeshAsset.cpp">
@@ -374,7 +374,7 @@
     <ClInclude Include="AssetManager.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="IMeshAsset.h">
+    <ClInclude Include="AMeshAsset.h">
       <Filter>헤더 파일\Asset\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Serializable.h">

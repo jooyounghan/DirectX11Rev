@@ -4,19 +4,19 @@
 #include <memory>
 
 class GraphicsPipeline;
-class IMeshAsset;
+class AMeshAsset;
 
 class MeshObject : public RelativePlaceableObject
 {
 public:
 	MeshObject(
 		GraphicsPipeline* GraphicsPipelineInstances, 
-		IMeshAsset* MeshAssetInstanceIn
+		AMeshAsset* MeshAssetInstanceIn
 	);
 	virtual ~MeshObject();
 
 protected:
-	IMeshAsset* MeshAssetInstance = nullptr;
+	AMeshAsset* MeshAssetInstance = nullptr;
 	MakeGetter(MeshAssetInstance);
 
 public:

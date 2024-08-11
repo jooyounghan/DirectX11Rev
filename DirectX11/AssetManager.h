@@ -15,6 +15,7 @@ struct aiMesh;
 struct ID3D11Device;
 
 class IAssetFile;
+class AMeshAsset;
 class StaticMeshAsset;
 class SkeletalMeshAsset;
 class BoneAsset;
@@ -77,6 +78,9 @@ private:
 		const aiNode* const Node,
 		BoneAsset* Bone
 	);
+
+private:
+	void RestructBaseVertices(const unsigned int& NumVertices, AMeshAsset* MeshAssetIn);
 
 private:
 	void LoadMeshElement(

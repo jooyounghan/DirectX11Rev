@@ -5,11 +5,10 @@
 template <typename T>
 class Vertexable
 {
-
 public:
 	std::vector<T>		Vertices;
 
-protected:
+public:
 	VertexBuffer<T>		VerticesBuffer;
 
 public:

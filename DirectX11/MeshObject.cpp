@@ -1,6 +1,6 @@
 #include "MeshObject.h"
 #include "GraphicsPipeline.h"
-#include "IMeshAsset.h"
+#include "AMeshAsset.h"
 #include "PSOObject.h"
 #include "IGuiLowLevelVisitor.h"
 
@@ -8,7 +8,7 @@ using namespace std;
 
 MeshObject::MeshObject(
 	GraphicsPipeline* GraphicsPipelineInstances, 
-	IMeshAsset* MeshAssetInstanceIn
+	AMeshAsset* MeshAssetInstanceIn
 )
 	: RelativePlaceableObject(
 		GraphicsPipelineInstances->GetDevice(),
@@ -34,21 +34,19 @@ void MeshObject::Render(PSOObject* PSOObjectIn)
 {
 	if (MeshAssetInstance)
 	{
-		ID3D11Buffer* VertexBuffer;
-		UINT Stride;
-		MeshAssetInstance->GetVertexInformation(VertexBuffer, Stride);
+		const vector<ID3D11Buffer*> VertexBuffers = MeshAssetInstance->GetVertexBuffers();
+		const vector<UINT> Strides = MeshAssetInstance->GetStrides();
+		const vector<UINT> Offsets = MeshAssetInstance->GetOffsets();
 
-		ID3D11Buffer* VertexBuffers[] = { VertexBuffer };
-		UINT Strides[] = { Stride };
-		UINT Offsets[] = { 0 };
-
-		DeviceContextCached->IASetVertexBuffers(0, 1, VertexBuffers, Strides, Offsets);
+		DeviceContextCached->IASetVertexBuffers(0, VertexBuffers.size(),
+			VertexBuffers.data(),
+			Strides.data(),
+			Offsets.data()
+		);
 		DeviceContextCached->IASetIndexBuffer(MeshAssetInstance->GetIndexBuffer(), MeshAssetInstance->GetIndexFormat(), 0);
 
 		ID3D11Buffer* VSConstBuffers[] = { TransformationBuffer.GetBuffer() };
-		ID3D11Buffer* PSConstBuffers[] = { GetPickingIDBuffer().GetBuffer() };
 
-		PSOObjectIn->SetPSConstantBuffers(0, 1, PSConstBuffers);
 		PSOObjectIn->SetVSConstantBuffers(1, 1, VSConstBuffers);
 
 #ifdef _DEBUG
@@ -58,7 +56,6 @@ void MeshObject::Render(PSOObject* PSOObjectIn)
 		DeviceContextCached->DrawIndexed(static_cast<UINT>(MeshAssetInstance->GetIndexCount()), 0, 0);
 
 		PSOObjectIn->ResetVSConstantBuffers(1, 1);
-		PSOObjectIn->ResetPSConstantBuffers(0, 1);
 	}
 }
 

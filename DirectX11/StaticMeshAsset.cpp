@@ -4,12 +4,12 @@
 using namespace std;
 
 StaticMeshAsset::StaticMeshAsset()
-	: IMeshAsset("", EAssetType::None)
+	: AMeshAsset("", EAssetType::None)
 {
 }
 
 StaticMeshAsset::StaticMeshAsset(const string& AssetNameIn, bool LoadAsFile)
-	: IMeshAsset(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::StaticMesh)] : AssetNameIn, EAssetType::StaticMesh)
+	: AMeshAsset(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::StaticMesh)] : AssetNameIn, EAssetType::StaticMesh)
 {
 }
 
@@ -17,17 +17,43 @@ StaticMeshAsset::~StaticMeshAsset()
 {
 }
 
-void StaticMeshAsset::Initialize(ID3D11Device* DeviceIn)
+std::vector<ID3D11Buffer*> StaticMeshAsset::GetVertexBuffers()
 {
-	VerticesBuffer.InitializeForGPU(DeviceIn, GetVertexCount(), Vertices.data());
-	IndicesBuffer.InitializeForGPU(DeviceIn, GetIndexCount(), Indices.data());
+	return std::vector<ID3D11Buffer*>
+	 {
+		 Positions.GetVertexBuffer(),
+		 UVTextures.GetVertexBuffer(),
+		 Normals.GetVertexBuffer(),
+		 Tangents.GetVertexBuffer(),
+		 Bitangents.GetVertexBuffer()
+	 };
 }
 
-void StaticMeshAsset::GetVertexInformation(ID3D11Buffer*& RefVertexBuffer, UINT& RefVertexTypeSize)
+std::vector<UINT> StaticMeshAsset::GetStrides()
 {
-	RefVertexBuffer = GetVertexBuffer();
-	RefVertexTypeSize = GetVertexTypeSize();
+	return std::vector<UINT>
+	{
+		sizeof(SPosition3D),
+		sizeof(SCoordinate2D),
+		sizeof(SVector3D),
+		sizeof(SVector3D),
+		sizeof(SVector3D)
+	};
 }
+
+std::vector<UINT> StaticMeshAsset::GetOffsets()
+{
+	return std::vector<UINT>
+	{
+		0, 0, 0, 0, 0
+	};
+}
+
+void StaticMeshAsset::Initialize(ID3D11Device* DeviceIn)
+{
+	AMeshAsset::Initialize(DeviceIn);
+}
+
 
 void StaticMeshAsset::Serialize(const string& OutputAdditionalPath)
 {
@@ -36,15 +62,7 @@ void StaticMeshAsset::Serialize(const string& OutputAdditionalPath)
 	if (OutputAssetFile != nullptr)
 	{
 		SerializeHeader(OutputAssetFile);
-
-		// Vertices / Indices
-		size_t VertexCount = Vertices.size();
-		fwrite(&VertexCount, sizeof(size_t), 1, OutputAssetFile);
-		fwrite(Vertices.data(), sizeof(StaticVertex), VertexCount, OutputAssetFile);
-
-		size_t IndexCount = Indices.size();
-		fwrite(&IndexCount, sizeof(size_t), 1, OutputAssetFile);
-		fwrite(Indices.data(), sizeof(uint32_t), IndexCount, OutputAssetFile);
+		SerializeBaseMeshData(OutputAssetFile);
 		
 		fclose(OutputAssetFile);
 	}
@@ -52,16 +70,6 @@ void StaticMeshAsset::Serialize(const string& OutputAdditionalPath)
 
 void StaticMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
 {
-	// Vertices / Indices
-	size_t VertexCount;
-	fread(&VertexCount, sizeof(size_t), 1, FileIn);
-	Vertices.resize(VertexCount);
-	fread(Vertices.data(), sizeof(StaticVertex), VertexCount, FileIn);
-
-	size_t IndexCount;
-	fread(&IndexCount, sizeof(size_t), 1, FileIn);
-	Indices.resize(IndexCount);
-	fread(Indices.data(), sizeof(uint32_t), IndexCount, FileIn);
-
+	DeserializeBaseMeshData(FileIn);
 	Initialize(DeviceIn);
 }

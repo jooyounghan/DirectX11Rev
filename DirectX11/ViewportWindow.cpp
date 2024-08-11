@@ -73,7 +73,7 @@ void ViewportWindow::ManageAssetDrop(Map* CurrentMap)
                         const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
 
                         CurrentMap->AddRenderObject(
-                            (IMeshAsset*)AssetFile,
+                            (AMeshAsset*)AssetFile,
                             PlacePositon.m128_f32[0],
                             PlacePositon.m128_f32[1],
                             PlacePositon.m128_f32[2]

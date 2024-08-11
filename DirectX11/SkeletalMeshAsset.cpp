@@ -5,12 +5,12 @@
 using namespace std;
 
 SkeletalMeshAsset::SkeletalMeshAsset()
-	: IMeshAsset("", EAssetType::SkeletalMesh)
+	: AMeshAsset("", EAssetType::SkeletalMesh)
 {
 }
 
 SkeletalMeshAsset::SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadAsFile)
-	: IMeshAsset(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::SkeletalMesh)] : AssetNameIn, EAssetType::SkeletalMesh)
+	: AMeshAsset(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::SkeletalMesh)] : AssetNameIn, EAssetType::SkeletalMesh)
 {
 }
 
@@ -24,16 +24,47 @@ void SkeletalMeshAsset::LinkBoneAsset(BoneAsset* BoneAssetIn)
 	BoneAssetName = BoneAssetIn->GetAssetName();
 }
 
-void SkeletalMeshAsset::Initialize(ID3D11Device* DeviceIn)
+std::vector<ID3D11Buffer*> SkeletalMeshAsset::GetVertexBuffers()
 {
-	VerticesBuffer.InitializeForGPU(DeviceIn, GetVertexCount(), Vertices.data());
-	IndicesBuffer.InitializeForGPU(DeviceIn, GetIndexCount(), Indices.data());
+	return std::vector<ID3D11Buffer*>
+	{
+		Positions.GetVertexBuffer(),
+		UVTextures.GetVertexBuffer(),
+		Normals.GetVertexBuffer(),
+		Tangents.GetVertexBuffer(),
+		Bitangents.GetVertexBuffer(),
+		BlendWeight.GetVertexBuffer(),
+		BlendIndex.GetVertexBuffer()
+	};
 }
 
-void SkeletalMeshAsset::GetVertexInformation(ID3D11Buffer*& RefVertexBuffer, UINT& RefVertexTypeSize)
+std::vector<UINT> SkeletalMeshAsset::GetStrides()
 {
-	RefVertexBuffer = GetVertexBuffer();
-	RefVertexTypeSize = GetVertexTypeSize();
+	return std::vector<UINT>
+	{
+		sizeof(SPosition3D),
+		sizeof(SCoordinate2D),
+		sizeof(SVector3D),
+		sizeof(SVector3D),
+		sizeof(SVector3D),
+		sizeof(SVector4D),
+		sizeof(SVector4D)
+	};
+}
+
+std::vector<UINT> SkeletalMeshAsset::GetOffsets()
+{
+	return std::vector<UINT>
+	{
+		0, 0, 0, 0, 0, 0, 0
+	};
+}
+
+void SkeletalMeshAsset::Initialize(ID3D11Device* DeviceIn)
+{
+	AMeshAsset::Initialize(DeviceIn);
+	BlendWeight.VerticesBuffer.InitializeForGPU(DeviceIn, BlendWeight.GetVertexCount(), BlendWeight.Vertices.data());
+	BlendIndex.VerticesBuffer.InitializeForGPU(DeviceIn, BlendIndex.GetVertexCount(), BlendIndex.Vertices.data());
 }
 
 void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
@@ -50,14 +81,17 @@ void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 		fwrite(&LinkedBoneAssetNameCount, sizeof(size_t), 1, OutputAssetFile);
 		fwrite(BoneAssetName.c_str(), sizeof(char), LinkedBoneAssetNameCount, OutputAssetFile);
 
-		// Vertices / Indices
-		size_t VertexCount = Vertices.size();
-		fwrite(&VertexCount, sizeof(size_t), 1, OutputAssetFile);
-		fwrite(Vertices.data(), sizeof(SkeletalVertex), VertexCount, OutputAssetFile);
+		SerializeBaseMeshData(OutputAssetFile);
 
-		size_t IndexCount = Indices.size();
-		fwrite(&IndexCount, sizeof(size_t), 1, OutputAssetFile);
-		fwrite(Indices.data(), sizeof(uint32_t), IndexCount, OutputAssetFile);
+		// BlendWeight
+		size_t BlendWeightCount = BlendWeight.Vertices.size();
+		fwrite(&BlendWeightCount, sizeof(size_t), 1, OutputAssetFile);
+		fwrite(BlendWeight.Vertices.data(), sizeof(SVector4D), BlendWeightCount, OutputAssetFile);
+
+		// BlendIndex
+		size_t BlendIndexCount = BlendIndex.Vertices.size();
+		fwrite(&BlendIndexCount, sizeof(size_t), 1, OutputAssetFile);
+		fwrite(BlendIndex.Vertices.data(), sizeof(SVector4D), BlendIndexCount, OutputAssetFile);
 
 		fclose(OutputAssetFile);
 	}
@@ -71,16 +105,19 @@ void SkeletalMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
 	BoneAssetName.resize(LinkedBoneAssetNameCount);
 	fread(BoneAssetName.data(), sizeof(char), LinkedBoneAssetNameCount, FileIn);
 
-	// Vertices / Indices
-	size_t VertexCount;
-	fread(&VertexCount, sizeof(size_t), 1, FileIn);
-	Vertices.resize(VertexCount);
-	fread(Vertices.data(), sizeof(SkeletalVertex), VertexCount, FileIn);
+	DeserializeBaseMeshData(FileIn);
 
-	size_t IndexCount;
-	fread(&IndexCount, sizeof(size_t), 1, FileIn);
-	Indices.resize(IndexCount);
-	fread(Indices.data(), sizeof(uint32_t), IndexCount, FileIn);
+	// BlendWeight
+	size_t BlendWeightCount;
+	fread(&BlendWeightCount, sizeof(size_t), 1, FileIn);
+	BlendWeight.Vertices.resize(BlendWeightCount);
+	fread(BlendWeight.Vertices.data(), sizeof(SVector4D), BlendWeightCount, FileIn);
+
+	// BlendIndex
+	size_t BlendIndexCount;
+	fread(&BlendIndexCount, sizeof(size_t), 1, FileIn);
+	BlendIndex.Vertices.resize(BlendIndexCount);
+	fread(BlendIndex.Vertices.data(), sizeof(SVector4D), BlendIndexCount, FileIn);
 
 	Initialize(DeviceIn);
 }

@@ -158,7 +158,7 @@
     <ClCompile Include="IAssetFile.cpp" />
     <ClCompile Include="IDColorProxy.cpp" />
     <ClCompile Include="IGameWorldLinkedWindow.cpp" />
-    <ClCompile Include="IMeshAsset.cpp" />
+    <ClCompile Include="AMeshAsset.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -251,7 +251,7 @@
     <ClInclude Include="IWindow.h" />
     <ClInclude Include="IDownloadableBuffer.h" />
     <ClInclude Include="IGameWorldLinkedWindow.h" />
-    <ClInclude Include="IMeshAsset.h" />
+    <ClInclude Include="AMeshAsset.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="IUploadableBuffer.h" />

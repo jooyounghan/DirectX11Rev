@@ -15,7 +15,7 @@ class Camera;
 class AObject;
 class APlaceable;
 class MeshObject;
-class IMeshAsset;
+class AMeshAsset;
 
 class IIntersectable;
 
@@ -44,8 +44,8 @@ protected:
 
 
 public:
-	void AddRenderObject(IMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
-	void AddRenderObject(IMeshAsset* MeshAssetIn, float ScreenXIn, float ScreenYIn, float ScreenWidthIn, float ScreenHeightIn);
+	void AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
+	void AddRenderObject(AMeshAsset* MeshAssetIn, float ScreenXIn, float ScreenYIn, float ScreenWidthIn, float ScreenHeightIn);
 
 public:
 	void UpdateMap(const float& DeltaTimeIn);

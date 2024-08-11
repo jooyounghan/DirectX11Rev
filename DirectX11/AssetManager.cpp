@@ -116,7 +116,7 @@ void AssetManager::LoadModelFile(const string& FilePathIn)
 
 void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* const Scene)
 {
-    shared_ptr<IMeshAsset> Mesh = nullptr;
+    shared_ptr<AMeshAsset> Mesh = nullptr;
     shared_ptr<IAssetFile> BoneA = nullptr;
 
     XMMATRIX RootTransform = DirectX::XMMatrixIdentity();
@@ -277,6 +277,27 @@ void AssetManager::ProcessNodeForBone(
     if (IsNodeValid) BoneA->TraverseUpBone();
 }
 
+void AssetManager::RestructBaseVertices(const unsigned int& NumVertices, AMeshAsset* MeshAssetIn)
+{
+    vector<SPosition3D> TempPositions;
+    vector<SCoordinate2D> TempUVTextures;
+    vector<SVector3D> TempNormals;
+    vector<SVector3D> TempTangents;
+    vector<SVector3D> TempBitangents;
+
+    TempPositions.resize(NumVertices);
+    TempUVTextures.resize(NumVertices);
+    TempNormals.resize(NumVertices);
+    TempTangents.resize(NumVertices);
+    TempBitangents.resize(NumVertices);
+
+    MeshAssetIn->Positions.Vertices.insert(MeshAssetIn->Positions.Vertices.end(), TempPositions.begin(), TempPositions.end());
+    MeshAssetIn->UVTextures.Vertices.insert(MeshAssetIn->UVTextures.Vertices.end(), TempUVTextures.begin(), TempUVTextures.end());
+    MeshAssetIn->Normals.Vertices.insert(MeshAssetIn->Normals.Vertices.end(), TempNormals.begin(), TempNormals.end());
+    MeshAssetIn->Tangents.Vertices.insert(MeshAssetIn->Tangents.Vertices.end(), TempTangents.begin(), TempTangents.end());
+    MeshAssetIn->Bitangents.Vertices.insert(MeshAssetIn->Bitangents.Vertices.end(), TempBitangents.begin(), TempBitangents.end());
+}
+
 void AssetManager::LoadMeshElement(
     bool IsGltf,
     const aiMesh* const Mesh,
@@ -284,12 +305,10 @@ void AssetManager::LoadMeshElement(
     const DirectX::XMMATRIX& ParentMatrix
 )
 {
-    size_t VertexStartIdx = StaticMesh->Vertices.size();
+    size_t VertexStartIdx = StaticMesh->Positions.Vertices.size();
     size_t IndicesStartIdx = StaticMesh->Indices.size();
 
-    vector<StaticVertex> TempVertices;
-    TempVertices.resize(Mesh->mNumVertices);
-    StaticMesh->Vertices.insert(StaticMesh->Vertices.end(), TempVertices.begin(), TempVertices.end());
+    RestructBaseVertices(Mesh->mNumVertices, StaticMesh);
 
     // Load Position
     LoadPosition(Mesh, VertexStartIdx, StaticMesh, ParentMatrix);
@@ -314,11 +333,20 @@ void AssetManager::LoadMeshElement(
     const DirectX::XMMATRIX& ParentMatrix
 )
 {
-    size_t VertexStartIdx = SkeletalMesh->Vertices.size();
+    size_t VertexStartIdx = SkeletalMesh->Positions.Vertices.size();
     size_t IndicesStartIdx = SkeletalMesh->Indices.size();
 
-    vector<SkeletalVertex> TempVertices(Mesh->mNumVertices, SkeletalVertex());
-    SkeletalMesh->Vertices.insert(SkeletalMesh->Vertices.end(), TempVertices.begin(), TempVertices.end());
+    RestructBaseVertices(Mesh->mNumVertices, SkeletalMesh);
+
+    vector<SVector4D> TempBlendWeight;
+    vector<SVector4D> TempBlendIndex;
+
+    TempBlendWeight.resize(Mesh->mNumVertices);
+    TempBlendIndex.resize(Mesh->mNumVertices);
+
+    SkeletalMesh->BlendWeight.Vertices.insert(SkeletalMesh->BlendWeight.Vertices.end(), TempBlendWeight.begin(), TempBlendWeight.end());
+    SkeletalMesh->BlendIndex.Vertices.insert(SkeletalMesh->BlendIndex.Vertices.end(), TempBlendIndex.begin(), TempBlendIndex.end());
+
 
     // Load Position
     LoadPosition(Mesh, VertexStartIdx, SkeletalMesh, ParentMatrix);
@@ -352,7 +380,7 @@ void AssetManager::LoadPosition(
             aiVector3D CurrentVertex = Mesh->mVertices[VertexIdx];
             DirectX::XMVECTOR TransformedVertex = DirectX::XMVectorSet(CurrentVertex.x, CurrentVertex.y, CurrentVertex.z, 0.f);
             TransformedVertex = DirectX::XMVector3TransformCoord(TransformedVertex, ParentMatrix);
-            memcpy(&MeshAsset->Vertices[AccessIdx].Position, &TransformedVertex, sizeof(aiVector3D));
+            memcpy(&MeshAsset->Positions.Vertices[AccessIdx], &TransformedVertex, sizeof(aiVector3D));
         }
     }
 }
@@ -379,12 +407,14 @@ void AssetManager::LoadBone(
                 for (UINT WeightIdx = 0; WeightIdx < CurrentBone->mNumWeights; ++WeightIdx)
                 {
                     aiVertexWeight& VertexWeight = CurrentBone->mWeights[WeightIdx];
-                    SkeletalVertex& CurrentSkeltalVertex = SkeletalMesh->Vertices[VertexWeight.mVertexId];
-                    int InsertedIndex = CurrentSkeltalVertex.BlendWeight.InsertToEmpty(VertexWeight.mWeight);
+
+                    SVector4D& CurrentBlendWeight = SkeletalMesh->BlendWeight.Vertices[VertexWeight.mVertexId];
+                    SVector4D& CurrentBlendIndex = SkeletalMesh->BlendIndex.Vertices[VertexWeight.mVertexId];
+
+                    int InsertedIndex = CurrentBlendWeight.InsertToEmpty(VertexWeight.mWeight);
                     if (InsertedIndex >= 0)
                     {
-                        CurrentSkeltalVertex.BlendIndex.InsertWithIndex(InsertedIndex, BoneIdx);
-                        bool test = true;
+                        CurrentBlendIndex.InsertWithIndex(InsertedIndex, BoneIdx);
                     }
                 }
             }
@@ -409,7 +439,7 @@ void AssetManager::LoadTextureCoord(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTextureCoord = Mesh->mTextureCoords[0][VertexIdx];
-            memcpy(&MeshAsset->Vertices[AccessIdx].UVTexture, &CurrentTextureCoord, sizeof(aiVector2D));
+            memcpy(&MeshAsset->UVTextures.Vertices[AccessIdx], &CurrentTextureCoord, sizeof(aiVector2D));
         }
     }
 }
@@ -573,7 +603,7 @@ void AssetManager::LoadTBN(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentNormal = Mesh->mNormals[VertexIdx];
-            memcpy(&MeshAsset->Vertices[AccessIdx].Normal, &CurrentNormal, sizeof(aiVector3D));
+            memcpy(&MeshAsset->Normals.Vertices[AccessIdx], &CurrentNormal, sizeof(aiVector3D));
         }
     }
 
@@ -584,8 +614,8 @@ void AssetManager::LoadTBN(
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTangent = Mesh->mTangents[VertexIdx];
             aiVector3D& CurrentBiTangent = Mesh->mBitangents[VertexIdx];
-            memcpy(&MeshAsset->Vertices[AccessIdx].Tangent, &CurrentTangent, sizeof(aiVector3D));
-            memcpy(&MeshAsset->Vertices[AccessIdx].Bitangent, &CurrentBiTangent, sizeof(aiVector3D));
+            memcpy(&MeshAsset->Tangents.Vertices[AccessIdx], &CurrentTangent, sizeof(aiVector3D));
+            memcpy(&MeshAsset->Bitangents.Vertices[AccessIdx], &CurrentBiTangent, sizeof(aiVector3D));
         }
     }
 }
@@ -603,9 +633,9 @@ void AssetManager::LoadTBNAsGltf(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentNormal = Mesh->mNormals[VertexIdx];
-            MeshAsset->Vertices[AccessIdx].Normal.x = CurrentNormal.x;
-            MeshAsset->Vertices[AccessIdx].Normal.y = -CurrentNormal.z;
-            MeshAsset->Vertices[AccessIdx].Normal.z = CurrentNormal.x;
+            MeshAsset->Normals.Vertices[AccessIdx].x = CurrentNormal.x;
+            MeshAsset->Normals.Vertices[AccessIdx].y = -CurrentNormal.z;
+            MeshAsset->Normals.Vertices[AccessIdx].z = CurrentNormal.x;
         }
     }
 
@@ -617,12 +647,12 @@ void AssetManager::LoadTBNAsGltf(
             aiVector3D& CurrentTangent = Mesh->mTangents[VertexIdx];
             aiVector3D& CurrentBiTangent = Mesh->mBitangents[VertexIdx];
 
-            MeshAsset->Vertices[AccessIdx].Tangent.x = CurrentTangent.x;
-            MeshAsset->Vertices[AccessIdx].Tangent.y = -CurrentTangent.z;
-            MeshAsset->Vertices[AccessIdx].Tangent.z = CurrentTangent.x;
-            MeshAsset->Vertices[AccessIdx].Bitangent.x = CurrentBiTangent.x;
-            MeshAsset->Vertices[AccessIdx].Bitangent.y = -CurrentBiTangent.z;
-            MeshAsset->Vertices[AccessIdx].Bitangent.z = CurrentBiTangent.x;
+            MeshAsset->Tangents.Vertices[AccessIdx].x = CurrentTangent.x;
+            MeshAsset->Tangents.Vertices[AccessIdx].y = -CurrentTangent.z;
+            MeshAsset->Tangents.Vertices[AccessIdx].z = CurrentTangent.x;
+            MeshAsset->Bitangents.Vertices[AccessIdx].x = CurrentBiTangent.x;
+            MeshAsset->Bitangents.Vertices[AccessIdx].y = -CurrentBiTangent.z;
+            MeshAsset->Bitangents.Vertices[AccessIdx].z = CurrentBiTangent.x;
         }
     }
 }
@@ -638,26 +668,42 @@ void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T
     {
         for (size_t IndexIdx = IndexStartIdx; IndexIdx < MeshAsset->Indices.size(); IndexIdx += 3)
         {
-            auto& v0 = MeshAsset->Vertices[MeshAsset->Indices[IndexIdx]];
-            auto& v1 = MeshAsset->Vertices[MeshAsset->Indices[IndexIdx + 1]];
-            auto& v2 = MeshAsset->Vertices[MeshAsset->Indices[IndexIdx + 2]];
+            auto& p0 = MeshAsset->Positions.Vertices[MeshAsset->Indices[IndexIdx]];
+            auto& p1 = MeshAsset->Positions.Vertices[MeshAsset->Indices[IndexIdx + 1]];
+            auto& p2 = MeshAsset->Positions.Vertices[MeshAsset->Indices[IndexIdx + 2]];
+
+            auto& uv0 = MeshAsset->UVTextures.Vertices[MeshAsset->Indices[IndexIdx]];
+            auto& uv1 = MeshAsset->UVTextures.Vertices[MeshAsset->Indices[IndexIdx + 1]];
+            auto& uv2 = MeshAsset->UVTextures.Vertices[MeshAsset->Indices[IndexIdx + 2]];
+
+            auto& n0 = MeshAsset->Normals.Vertices[MeshAsset->Indices[IndexIdx]];
+            auto& n1 = MeshAsset->Normals.Vertices[MeshAsset->Indices[IndexIdx + 1]];
+            auto& n2 = MeshAsset->Normals.Vertices[MeshAsset->Indices[IndexIdx + 2]];
+
+            auto& t0 = MeshAsset->Tangents.Vertices[MeshAsset->Indices[IndexIdx]];
+            auto& t1 = MeshAsset->Tangents.Vertices[MeshAsset->Indices[IndexIdx + 1]];
+            auto& t2 = MeshAsset->Tangents.Vertices[MeshAsset->Indices[IndexIdx + 2]];
+
+            auto& bt0 = MeshAsset->Bitangents.Vertices[MeshAsset->Indices[IndexIdx]];
+            auto& bt1 = MeshAsset->Bitangents.Vertices[MeshAsset->Indices[IndexIdx + 1]];
+            auto& bt2 = MeshAsset->Bitangents.Vertices[MeshAsset->Indices[IndexIdx + 2]];
 
             MathematicalHelper::GetTangentBitangent(
-                v0.Position,
-                v1.Position,
-                v2.Position,
-                v0.UVTexture,
-                v1.UVTexture,
-                v2.UVTexture,
-                v0.Normal,
-                v1.Normal,
-                v2.Normal,
-                v0.Tangent,
-                v1.Tangent,
-                v2.Tangent,
-                v0.Bitangent,
-                v1.Bitangent,
-                v2.Bitangent
+                p0,
+                p1,
+                p2,
+                uv0,
+                uv1,
+                uv2,
+                n0,
+                n1,
+                n2,
+                t0,
+                t1,
+                t2,
+                bt0,
+                bt1,
+                bt2
             );
         }
 
