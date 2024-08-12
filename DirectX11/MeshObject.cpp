@@ -3,6 +3,7 @@
 #include "AMeshAsset.h"
 #include "PSOObject.h"
 #include "IGuiLowLevelVisitor.h"
+#include "ARenderer.h"
 
 using namespace std;
 
@@ -30,33 +31,9 @@ void MeshObject::UpdateObject(const float& DeltaTimeIn)
 	RelativePlaceableObject::UpdateObject(DeltaTimeIn);
 }
 
-void MeshObject::Render(PSOObject* PSOObjectIn)
+void MeshObject::AcceptRenderer(ARenderer* Renderer)
 {
-	if (MeshAssetInstance)
-	{
-		const vector<ID3D11Buffer*> VertexBuffers = MeshAssetInstance->GetVertexBuffers();
-		const vector<UINT> Strides = MeshAssetInstance->GetStrides();
-		const vector<UINT> Offsets = MeshAssetInstance->GetOffsets();
-
-		DeviceContextCached->IASetVertexBuffers(0, VertexBuffers.size(),
-			VertexBuffers.data(),
-			Strides.data(),
-			Offsets.data()
-		);
-		DeviceContextCached->IASetIndexBuffer(MeshAssetInstance->GetIndexBuffer(), MeshAssetInstance->GetIndexFormat(), 0);
-
-		ID3D11Buffer* VSConstBuffers[] = { TransformationBuffer.GetBuffer() };
-
-		PSOObjectIn->SetVSConstantBuffers(1, 1, VSConstBuffers);
-
-#ifdef _DEBUG
-		PSOObjectIn->CheckPipelineValidation();
-#endif // DEBUG
-
-		DeviceContextCached->DrawIndexed(static_cast<UINT>(MeshAssetInstance->GetIndexCount()), 0, 0);
-
-		PSOObjectIn->ResetVSConstantBuffers(1, 1);
-	}
+	Renderer->Render(this);
 }
 
 void MeshObject::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)

@@ -91,9 +91,6 @@
     <Filter Include="Shader\SkeletalMesh">
       <UniqueIdentifier>{9da0e291-0657-4a08-baba-cf1f98165149}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{403cc663-d6d5-4213-9a13-d27170d7c6a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\World\Editor\GUI">
       <UniqueIdentifier>{5925a3b9-93a3-4dfb-a871-30e47bd73f6f}</UniqueIdentifier>
     </Filter>
@@ -126,9 +123,6 @@
     </Filter>
     <Filter Include="헤더 파일\Asset\Map\Object">
       <UniqueIdentifier>{cf287dd9-4094-4d15-b7de-af4edb0ed927}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader\Debug">
-      <UniqueIdentifier>{fa3c8c60-12b7-4660-a671-a87b670a8b12}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Asset\Map\Object\Attachable">
       <UniqueIdentifier>{c5f51f0a-ffb2-419e-9dc2-7de742bed981}</UniqueIdentifier>
@@ -187,6 +181,24 @@
     <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper">
       <UniqueIdentifier>{de4e2cbe-893c-4b54-bbee-68ed03b89a68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\PositionOnly">
+      <UniqueIdentifier>{fa3c8c60-12b7-4660-a671-a87b670a8b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{403cc663-d6d5-4213-9a13-d27170d7c6a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PSO">
+      <UniqueIdentifier>{ac23e4ea-c4f6-4e8b-be39-4a11458338e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\PSO">
+      <UniqueIdentifier>{d99c8647-eebb-41b7-bf4c-d84e12e08d5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Rendering">
+      <UniqueIdentifier>{398e826f-a612-435c-9b43-b9ed52258cc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Rendering">
+      <UniqueIdentifier>{17f45aa0-efee-4e64-a162-fc969d7b6caa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -195,17 +207,8 @@
     <ClCompile Include="PortfolioApp.cpp">
       <Filter>소스 파일\App</Filter>
     </ClCompile>
-    <ClCompile Include="PSOManager.cpp">
-      <Filter>소스 파일\App</Filter>
-    </ClCompile>
-    <ClCompile Include="GlobalVariable.cpp">
-      <Filter>소스 파일\App</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicsPipeline.cpp">
       <Filter>소스 파일\App</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetManager.cpp">
-      <Filter>소스 파일\Asset</Filter>
     </ClCompile>
     <ClCompile Include="IAssetFile.cpp">
       <Filter>소스 파일\Asset</Filter>
@@ -242,9 +245,6 @@
     </ClCompile>
     <ClCompile Include="Map.cpp">
       <Filter>소스 파일\Asset\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="PSOObject.cpp">
-      <Filter>소스 파일\App</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>ImGui</Filter>
@@ -360,8 +360,29 @@
     <ClCompile Include="AObject.cpp">
       <Filter>소스 파일\Asset\Map\Object</Filter>
     </ClCompile>
+    <ClCompile Include="PSOManager.cpp">
+      <Filter>소스 파일\PSO</Filter>
+    </ClCompile>
+    <ClCompile Include="PSOObject.cpp">
+      <Filter>소스 파일\PSO</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.cpp">
+      <Filter>소스 파일\Asset</Filter>
+    </ClCompile>
     <ClCompile Include="Attachable.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Asset\Map\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalVariable.cpp">
+      <Filter>소스 파일\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshObjectRenderer.cpp">
+      <Filter>소스 파일\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingComponentRenderer.cpp">
+      <Filter>소스 파일\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="PickingIDMapRenderer.cpp">
+      <Filter>소스 파일\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -413,16 +434,10 @@
     <ClInclude Include="Map.h">
       <Filter>헤더 파일\Asset\Map</Filter>
     </ClInclude>
-    <ClInclude Include="PSOManager.h">
-      <Filter>헤더 파일\App</Filter>
-    </ClInclude>
     <ClInclude Include="PortfolioApp.h">
       <Filter>헤더 파일\App</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsPipeline.h">
-      <Filter>헤더 파일\App</Filter>
-    </ClInclude>
-    <ClInclude Include="GlobalVariable.h">
       <Filter>헤더 파일\App</Filter>
     </ClInclude>
     <ClInclude Include="IDownloadableBuffer.h">
@@ -448,12 +463,6 @@
     </ClInclude>
     <ClInclude Include="IndexBuffer.h">
       <Filter>헤더 파일\Buffer\Constant</Filter>
-    </ClInclude>
-    <ClInclude Include="PSOObject.h">
-      <Filter>헤더 파일\App</Filter>
-    </ClInclude>
-    <ClInclude Include="PSOObjectHelper.h">
-      <Filter>헤더 파일\App</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ImGui</Filter>
@@ -602,6 +611,30 @@
     <ClInclude Include="IDColorProxy.h">
       <Filter>헤더 파일\Asset\Map\Object</Filter>
     </ClInclude>
+    <ClInclude Include="PSOManager.h">
+      <Filter>헤더 파일\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="PSOObject.h">
+      <Filter>헤더 파일\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="PSOObjectHelper.h">
+      <Filter>헤더 파일\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalVariable.h">
+      <Filter>헤더 파일\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="ARenderer.h">
+      <Filter>헤더 파일\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshObjectRenderer.h">
+      <Filter>헤더 파일\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingComponentRenderer.h">
+      <Filter>헤더 파일\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="PickingIDMapRenderer.h">
+      <Filter>헤더 파일\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\SkeletalPS.hlsl">
@@ -616,11 +649,14 @@
     <FxCompile Include="Shaders\StaticVS.hlsl">
       <Filter>Shader\StaticMesh</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\DebugPS.hlsl">
-      <Filter>Shader\Debug</Filter>
+    <FxCompile Include="Shaders\DebugObjectPS.hlsl">
+      <Filter>Shader\PositionOnly</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\DebugVS.hlsl">
-      <Filter>Shader\Debug</Filter>
+    <FxCompile Include="Shaders\PositionOnlyPathVS.hlsl">
+      <Filter>Shader\PositionOnly</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PickingIDPS.hlsl">
+      <Filter>Shader\PositionOnly</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -630,8 +666,8 @@
     <None Include="Shaders\StaticHeader.hlsli">
       <Filter>Shader\StaticMesh</Filter>
     </None>
-    <None Include="Shaders\DebugHeader.hlsli">
-      <Filter>Shader\Debug</Filter>
+    <None Include="Shaders\PositionOnlyPathHeader.hlsli">
+      <Filter>Shader\PositionOnly</Filter>
     </None>
   </ItemGroup>
 </Project>

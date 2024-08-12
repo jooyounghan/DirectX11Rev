@@ -147,6 +147,7 @@
     <ClCompile Include="BoneAsset.cpp" />
     <ClCompile Include="CollisionVisitor.cpp" />
     <ClCompile Include="Debugable.cpp" />
+    <ClCompile Include="BoundingComponentRenderer.cpp" />
     <ClCompile Include="DefineType.cpp" />
     <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="ModelInformationOutlinerVisitor.cpp" />
     <ClCompile Include="OrientedBoundingBox.cpp" />
     <ClCompile Include="ModelListOutlinerVisitor.cpp" />
+    <ClCompile Include="PickingIDMapRenderer.cpp" />
     <ClCompile Include="PlaceableObject.cpp" />
     <ClCompile Include="PortfolioApp.cpp" />
     <ClCompile Include="PSOManager.cpp" />
@@ -184,6 +186,7 @@
     <ClCompile Include="MeshObject.cpp" />
     <ClCompile Include="SkeletalMeshAsset.cpp" />
     <ClCompile Include="StaticMeshAsset.cpp" />
+    <ClCompile Include="MeshObjectRenderer.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TaskAnalyzerWindow.cpp" />
     <ClCompile Include="TextureAsset.cpp" />
@@ -207,6 +210,7 @@
     <ClInclude Include="CollisionVisitor.h" />
     <ClInclude Include="ConstantArrayBuffer.h" />
     <ClInclude Include="Debugable.h" />
+    <ClInclude Include="BoundingComponentRenderer.h" />
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="EditorCamera.h" />
@@ -231,8 +235,11 @@
     <ClInclude Include="MeshObjectInformationDrawer.h" />
     <ClInclude Include="ModelInformationOutlinerVisitor.h" />
     <ClInclude Include="ModelListOutlinerVisitor.h" />
+    <ClInclude Include="PickingIDMapRenderer.h" />
     <ClInclude Include="PlaceableObject.h" />
     <ClInclude Include="RelativePlaceableObject.h" />
+    <ClInclude Include="ARenderer.h" />
+    <ClInclude Include="MeshObjectRenderer.h" />
     <ClInclude Include="TransformationInformationDrawer.h" />
     <ClInclude Include="Vertexable.h" />
     <ClInclude Include="OrientedBoundingBox.h" />
@@ -274,13 +281,19 @@
     <ClInclude Include="ViewportWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\DebugPS.hlsl">
+    <FxCompile Include="Shaders\DebugObjectPS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shaders\DebugVS.hlsl">
+    <FxCompile Include="Shaders\PickingIDPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\PositionOnlyPathVS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -312,7 +325,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\DebugHeader.hlsli" />
+    <None Include="Shaders\PositionOnlyPathHeader.hlsli" />
     <None Include="Shaders\StaticHeader.hlsli" />
     <None Include="Shaders\SkeletalHeader.hlsli" />
   </ItemGroup>

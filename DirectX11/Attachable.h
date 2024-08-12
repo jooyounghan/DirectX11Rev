@@ -15,7 +15,9 @@ protected:
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) = 0;
-	virtual void Render(PSOObject* PSOObjectIn) = 0;
+
+public:
+	virtual void AcceptRenderer(ARenderer* Renderer) = 0;
 
 public:
 	virtual void AcceptGui(IGuiTopLevelVisitor* GuiVisitor) = 0;

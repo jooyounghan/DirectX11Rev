@@ -11,8 +11,10 @@
 #include "AssetManagerWindow.h"
 
 #include "AssetManager.h"
+#include "PSOManager.h"
 
 #include "GameWorld.h"
+#include "Map.h"
 #include "GraphicsPipeline.h"
 
 #include "imgui.h"
@@ -29,7 +31,10 @@ EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
     EditorCameraInstance = make_unique<EditorCamera>(
         GameWorldIn->GraphicsPipelineCached, App::GWidth, App::GHeight
     );
+
+    // Test =============================================================
     EditorCameraInstance->Position = SPosition4D{ 0.f, 0.f, -300.f, 1.f };
+    // =============================================================
 
     IMGUI_CHECKVERSION();
 
@@ -74,6 +79,21 @@ void EditorWorld::UpdateWorld(const float& DeltaTimeIn)
 
 void EditorWorld::RenderWorld()
 {
+    //Map* CurrentMap = GameWorldCached->GetCurrentMap();
+    //PSOManager* PSOManagerInstance = GameWorldCached->GetPSOManagerInstance();
+    //if (CurrentMap != nullptr)
+    //{
+    //    PSOObject* PickingPSO = PSOManagerInstance->GetPSOObject(EPSOType::R32_Picking_ID);
+    //    const list<unique_ptr<APlaceable>>& Placeables = CurrentMap->GetPlaceables();
+    //}
+
+
+
+
+
+
+
+
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();

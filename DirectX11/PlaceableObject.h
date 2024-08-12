@@ -20,7 +20,9 @@ public:
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
-	virtual void Render(PSOObject* PSOObjectIn) override {};
+
+public:
+	virtual void AcceptRenderer(ARenderer* Renderer) override {};
 
 public:
 	virtual void AcceptGui(IGuiTopLevelVisitor* GuiVisitor);

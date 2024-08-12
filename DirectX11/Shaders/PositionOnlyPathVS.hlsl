@@ -1,4 +1,4 @@
-#include "DebugHeader.hlsli"
+#include "PositionOnlyPathHeader.hlsli"
 
 cbuffer CameraViewProj : register(b0)
 {
@@ -12,9 +12,9 @@ cbuffer ModelMatrix : register(b1)
     matrix ModelInvMatrix;
 };
 
-DebugVertexOutput main(DebugVertexInput Input)
+PositionOnlyVertexOutPut main(PositionOnlyVertexInput Input)
 {
-    DebugVertexOutput Result;
+    PositionOnlyVertexOutPut Result;
 
     Result.f4ProjPos = mul(float4(Input.f3WorldPos, 1.f), ModelMatrix);
     Result.f4ProjPos = mul(Result.f4ProjPos, ViewProjMatrix);

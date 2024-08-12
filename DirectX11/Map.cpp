@@ -32,25 +32,25 @@ Map::~Map()
 
 void Map::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-	PSOObject* Pso = nullptr;
+	ARenderer* Renderer = nullptr;
 
 	switch (MeshAssetIn->GetAssetType())
 	{
 	case(EAssetType::StaticMesh):
 	{
-		Pso = PSOManagerCached->GetPSOObject(EPSOType::R8G8B8A8_Static_Solid);
+		Renderer = PSOManagerCached->GetRenderers(EPSOType::R8G8B8A8_Static_Solid);
 		break;
 	}
 	case(EAssetType::SkeletalMesh):
 	{
-		Pso = PSOManagerCached->GetPSOObject(EPSOType::R8G8B8A8_Skeletal_Solid);		
+		Renderer = PSOManagerCached->GetRenderers(EPSOType::R8G8B8A8_Skeletal_Solid);
 		break;
 	}
 	default:
 		break;
 	}
 
-	if (Pso != nullptr)
+	if (Renderer != nullptr)
 	{
 		MeshObject* AddedObject = RenderableAddHelper<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
 
@@ -58,21 +58,21 @@ void Map::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, f
 		AddedObject->Position.y = PosYIn;
 		AddedObject->Position.z = PosZIn;
 
-		PSOToObjects[Pso].emplace_back(AddedObject);
+		RendererToObjects[Renderer].emplace_back(AddedObject);
 
 		// TEST ========================================================================================================
-		PSOObject* DebugPSO = PSOManagerCached->GetPSOObject(EPSOType::R8G8B8A8_Debug_Wireframe);
+		ARenderer* BoundingComponentPSO = PSOManagerCached->GetRenderers(EPSOType::R8G8B8A8_BoundingComponent_Wireframe);
 
 		OrientedBoundingBox* OBB = AddedObject->AddAttachedObjectHelper<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached,
 			100.f, 100.f, 100.f);
-		PSOToObjects[DebugPSO].emplace_back(OBB);
+		RendererToObjects[BoundingComponentPSO].emplace_back(OBB);
 		OBB->Position.x += 400.f;
 
 		BoundingSphere* BB = OBB->AddAttachedObjectHelper<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached,
 			100.f);
 
-		PSOToObjects[DebugPSO].emplace_back(OBB);
-		PSOToObjects[DebugPSO].emplace_back(BB);
+		RendererToObjects[BoundingComponentPSO].emplace_back(OBB);
+		RendererToObjects[BoundingComponentPSO].emplace_back(BB);
 
 		OBB->Position.x += 400.f;
 
@@ -93,22 +93,18 @@ void Map::UpdateMap(const float& DeltaTimeIn)
 
 void Map::RenderMap()
 {
-	for (auto& PSOToRendersPair : PSOToObjects)
+	for (auto& RendererToObjectsPair : RendererToObjects)
 	{
-		PSOObject* Pso = PSOToRendersPair.first;
-		ID3D11RenderTargetView* RTVs[] = { CameraCached->GetSceneRTV() };
-		D3D11_VIEWPORT Viewports[] = { CameraCached->GetViewport() };
-		ID3D11DepthStencilView* DSV = CameraCached->GetSceneDSV();
-		Pso->SetPipelineObject(1, RTVs, Viewports, DSV);
-	
-		ID3D11Buffer* ViewProjBuffer[] = { CameraCached->ViewProjBuffer.GetBuffer() };
-		Pso->SetVSConstantBuffers(0, 1, ViewProjBuffer);
-	
-		for (const auto& ro : PSOToRendersPair.second)
+		ARenderer* Renderer = RendererToObjectsPair.first;
+
+		Renderer->PresetRendering(CameraCached, this);
+
+		for (const auto& ro : RendererToObjectsPair.second)
 		{
-			ro->Render(Pso);
+			ro->AcceptRenderer(Renderer);
 		}
-		Pso->ResetVSConstantBuffers(0, 1);
+
+		Renderer->ResetRendering();
 	}
 }
 

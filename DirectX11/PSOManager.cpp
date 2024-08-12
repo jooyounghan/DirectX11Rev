@@ -4,6 +4,11 @@
 #include "GraphicsPipeline.h"
 #include "PSOObject.h"
 
+#include "ARenderer.h"
+
+#include "BoundingComponentRenderer.h"
+#include "MeshObjectRenderer.h"
+
 #include <d3dcompiler.h>
 
 using namespace std;
@@ -12,22 +17,25 @@ using namespace Microsoft::WRL;
 PSOManager::PSOManager(GraphicsPipeline* GraphicsPipelineIn)
     : GraphicsPipelineCached(GraphicsPipelineIn)
 {
-    CreateDebug();
+    CreatePositionOnlyPSO();
     CreateStatic();
     CreateSkeletal();
+    CreateRenderers();
+
 }
 
 PSOManager::~PSOManager()
 {
 }
 
-void PSOManager::CreateDebug()
+void PSOManager::CreatePositionOnlyPSO()
 {
     ID3D11Device* Device = GraphicsPipelineCached->GetDevice();
     ID3D11DeviceContext* DeviceContext = GraphicsPipelineCached->GetDeviceContext();
 
     ComPtr<ID3DBlob> VertexShaderByteCode;
-    ComPtr<ID3DBlob> PixelShaderByteCode;
+    ComPtr<ID3DBlob> DebugObjectPSByteCode;
+    ComPtr<ID3DBlob> PickingIDPSByteCode;
     ComPtr<ID3DBlob> ErrorByteCode;
 
 
@@ -37,48 +45,59 @@ void PSOManager::CreateDebug()
 #endif
 
     // =======================================================
-    //              R8G8B8A8_Debug_Solid PSO
+    //              R8G8B8A8_BoundingComponent_Solid PSO
     // =======================================================
-    ComPtr<ID3D11VertexShader>  DebugObjectVS;
-    ComPtr<ID3D11PixelShader>   DebugObjectPS;
-    ComPtr<ID3D11InputLayout>   DebugObjectInputLayout;
+    ComPtr<ID3D11VertexShader>  PositionOnlyPathVS;
+    ComPtr<ID3D11PixelShader>   BoundingComponentPS;
+    ComPtr<ID3D11PixelShader>   PickingIDPS;
+    ComPtr<ID3D11InputLayout>   PostionOnlyInputLayout;
 
-    AssertIfFailed(D3DCompileFromFile(L"./Shaders/DebugVS.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", CompileFlags, 0, VertexShaderByteCode.GetAddressOf(), ErrorByteCode.GetAddressOf()));
-    AssertIfFailed(D3DCompileFromFile(L"./Shaders/DebugPS.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", CompileFlags, 0, PixelShaderByteCode.GetAddressOf(), ErrorByteCode.GetAddressOf()));
+    AssertIfFailed(D3DCompileFromFile(L"./Shaders/PositionOnlyPathVS.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", CompileFlags, 0, VertexShaderByteCode.GetAddressOf(), ErrorByteCode.GetAddressOf()));
+    AssertIfFailed(D3DCompileFromFile(L"./Shaders/DebugObjectPS.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", CompileFlags, 0, DebugObjectPSByteCode.GetAddressOf(), ErrorByteCode.GetAddressOf()));
+    AssertIfFailed(D3DCompileFromFile(L"./Shaders/PickingIDPS.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", CompileFlags, 0, PickingIDPSByteCode.GetAddressOf(), ErrorByteCode.GetAddressOf()));
 
     D3D11_INPUT_ELEMENT_DESC InputElementDescs[1] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
-    Device->CreateVertexShader(VertexShaderByteCode->GetBufferPointer(), VertexShaderByteCode->GetBufferSize(), NULL, DebugObjectVS.GetAddressOf());
-    Device->CreatePixelShader(PixelShaderByteCode->GetBufferPointer(), PixelShaderByteCode->GetBufferSize(), NULL, DebugObjectPS.GetAddressOf());
-    Device->CreateInputLayout(InputElementDescs, GetArraySize(InputElementDescs), VertexShaderByteCode->GetBufferPointer(), VertexShaderByteCode->GetBufferSize(), DebugObjectInputLayout.GetAddressOf());
+    Device->CreateVertexShader(VertexShaderByteCode->GetBufferPointer(), VertexShaderByteCode->GetBufferSize(), NULL, PositionOnlyPathVS.GetAddressOf());
+    Device->CreatePixelShader(DebugObjectPSByteCode->GetBufferPointer(), DebugObjectPSByteCode->GetBufferSize(), NULL, BoundingComponentPS.GetAddressOf());
+    Device->CreatePixelShader(PickingIDPSByteCode->GetBufferPointer(), PickingIDPSByteCode->GetBufferSize(), NULL, PickingIDPS.GetAddressOf());
+    Device->CreateInputLayout(InputElementDescs, GetArraySize(InputElementDescs), VertexShaderByteCode->GetBufferPointer(), VertexShaderByteCode->GetBufferSize(), PostionOnlyInputLayout.GetAddressOf());
 
     DXGI_SAMPLE_DESC SampleDesc;
-    SampleDesc.Count = 1;
-    SampleDesc.Quality = 0;
+    if (FAILED(Device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &SampleDesc.Quality)))
+    {
+        SampleDesc.Count = 1;
+        SampleDesc.Quality = 0;
+    }
+    else
+    {
+        SampleDesc.Count = 4;
+        SampleDesc.Quality = SampleDesc.Quality - 1;
+    }
 
-    ComPtr<ID3D11RasterizerState> DebugSolidRasterizerState;
+    ComPtr<ID3D11RasterizerState> PositionOnlyRasterizerState;
     D3D11_RASTERIZER_DESC RasterizerStateDesc;
     AutoZeroMemory(RasterizerStateDesc);
     RasterizerStateDesc.FillMode = D3D11_FILL_SOLID;
     RasterizerStateDesc.CullMode = D3D11_CULL_BACK;
     RasterizerStateDesc.FrontCounterClockwise = FALSE;
     RasterizerStateDesc.DepthClipEnable = TRUE;
-    RasterizerStateDesc.MultisampleEnable = FALSE;
+    RasterizerStateDesc.MultisampleEnable = SampleDesc.Count > 1 ? TRUE : FALSE;
     RasterizerStateDesc.AntialiasedLineEnable = FALSE;
-    Device->CreateRasterizerState(&RasterizerStateDesc, DebugSolidRasterizerState.GetAddressOf());
+    Device->CreateRasterizerState(&RasterizerStateDesc, PositionOnlyRasterizerState.GetAddressOf());
 
-    ComPtr<ID3D11DepthStencilState> DebugDepthStencilState;
+    ComPtr<ID3D11DepthStencilState> PositionOnlyDepthStencilState;
     D3D11_DEPTH_STENCIL_DESC DepthStencilStateDesc;
     AutoZeroMemory(DepthStencilStateDesc);
     DepthStencilStateDesc.DepthEnable = TRUE;
     DepthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
     DepthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
     DepthStencilStateDesc.StencilEnable = FALSE;
-    Device->CreateDepthStencilState(&DepthStencilStateDesc, DebugDepthStencilState.GetAddressOf());
+    Device->CreateDepthStencilState(&DepthStencilStateDesc, PositionOnlyDepthStencilState.GetAddressOf());
 
-    ComPtr<ID3D11BlendState> DebugBlendState;
+    ComPtr<ID3D11BlendState> PositionOnlyBlendState;
     D3D11_BLEND_DESC BlendStateDesc;
     AutoZeroMemory(BlendStateDesc);
     BlendStateDesc.AlphaToCoverageEnable = FALSE;
@@ -94,45 +113,73 @@ void PSOManager::CreateDebug()
     RenderTargetBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
     RenderTargetBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-    Device->CreateBlendState(&BlendStateDesc, DebugBlendState.GetAddressOf());
+    Device->CreateBlendState(&BlendStateDesc, PositionOnlyBlendState.GetAddressOf());
 
     const UINT SRVFormatCount = 1;
     DXGI_FORMAT SRVFormats[SRVFormatCount] = { DXGI_FORMAT_R8G8B8A8_UNORM };
 
-    PSOObjects[R8G8B8A8_Debug_Solid] = make_unique<PSOObject>(
+    PSOObjects[R8G8B8A8_BoundingComponent_Solid] = make_unique<PSOObject>(
         DeviceContext,
-        DebugObjectInputLayout,
-        DebugObjectVS, 2, 0,
-        DebugObjectPS, 1, 0,
+        PostionOnlyInputLayout,
+        PositionOnlyPathVS, 2, 0,
+        BoundingComponentPS, 1, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SRVFormatCount, SRVFormats,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
-        DebugSolidRasterizerState,
-        DebugDepthStencilState, NULL,
-        DebugBlendState.Get()
+        PositionOnlyRasterizerState,
+        PositionOnlyDepthStencilState, NULL,
+        PositionOnlyBlendState.Get()
     );
-
     // =======================================================
-    //            R8G8B8A8_Debug_Wireframe PSO
+    //            R8G8B8A8_BoundingComponent_Wireframe PSO
     // =======================================================
     RasterizerStateDesc.FillMode = D3D11_FILL_WIREFRAME;
-    ComPtr<ID3D11RasterizerState> DebugWireframeRasterizerState;
-    Device->CreateRasterizerState(&RasterizerStateDesc, DebugWireframeRasterizerState.GetAddressOf());
+    ComPtr<ID3D11RasterizerState> DebugObjectWireframeRasterizerState;
+    Device->CreateRasterizerState(&RasterizerStateDesc, DebugObjectWireframeRasterizerState.GetAddressOf());
 
-    PSOObjects[R8G8B8A8_Debug_Wireframe] = make_unique<PSOObject>(
+    PSOObjects[R8G8B8A8_BoundingComponent_Wireframe] = make_unique<PSOObject>(
         DeviceContext,
-        DebugObjectInputLayout,
-        DebugObjectVS, 2, 0,
-        DebugObjectPS, 1, 0,
+        PostionOnlyInputLayout,
+        PositionOnlyPathVS, 2, 0,
+        BoundingComponentPS, 1, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SRVFormatCount, SRVFormats,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
-        DebugWireframeRasterizerState,
-        DebugDepthStencilState, NULL,
-        DebugBlendState.Get()
+        DebugObjectWireframeRasterizerState,
+        PositionOnlyDepthStencilState, NULL,
+        PositionOnlyBlendState.Get()
     );
+
+    // =======================================================
+    //            R8G8B8A8_PickingID PSO
+    // =======================================================
+
+    SampleDesc.Count = 1;
+    SampleDesc.Quality = 0;
+    RasterizerStateDesc.FillMode = D3D11_FILL_SOLID;
+    RasterizerStateDesc.MultisampleEnable = FALSE;
+
+    ComPtr<ID3D11RasterizerState> PickingIDRasterizerState;
+    Device->CreateRasterizerState(&RasterizerStateDesc, PickingIDRasterizerState.GetAddressOf());
+
+    DXGI_FORMAT PickingIDFormats[SRVFormatCount] = { DXGI_FORMAT_R32_UINT };
+
+    PSOObjects[R32_Picking_ID] = make_unique<PSOObject>(
+        DeviceContext,
+        PostionOnlyInputLayout,
+        PositionOnlyPathVS, 2, 0,
+        PickingIDPS, 1, 0,
+        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+        SRVFormatCount, PickingIDFormats,
+        DXGI_FORMAT_D24_UNORM_S8_UINT,
+        SampleDesc,
+        PickingIDRasterizerState,
+        PositionOnlyDepthStencilState, NULL,
+        PositionOnlyBlendState.Get()
+    );
+
 }
 
 void PSOManager::CreateStatic()
@@ -172,8 +219,16 @@ void PSOManager::CreateStatic()
     Device->CreateInputLayout(InputElementDescs, GetArraySize(InputElementDescs), VertexShaderByteCode->GetBufferPointer(), VertexShaderByteCode->GetBufferSize(), StaticMeshInputLayout.GetAddressOf());
 
     DXGI_SAMPLE_DESC SampleDesc;
-    SampleDesc.Count = 1;
-    SampleDesc.Quality = 0;
+    if (FAILED(Device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &SampleDesc.Quality)))
+    {
+        SampleDesc.Count = 1;
+        SampleDesc.Quality = 0;
+    }
+    else
+    {
+        SampleDesc.Count = 4;
+        SampleDesc.Quality = SampleDesc.Quality - 1;
+    }
 
     ComPtr<ID3D11RasterizerState> StaticSolidRasterizerState;
     D3D11_RASTERIZER_DESC RasterizerStateDesc;
@@ -182,7 +237,7 @@ void PSOManager::CreateStatic()
     RasterizerStateDesc.CullMode = D3D11_CULL_BACK;
     RasterizerStateDesc.FrontCounterClockwise = FALSE;
     RasterizerStateDesc.DepthClipEnable = TRUE;
-    RasterizerStateDesc.MultisampleEnable = FALSE;
+    RasterizerStateDesc.MultisampleEnable = SampleDesc.Count > 1 ? TRUE : FALSE;
     RasterizerStateDesc.AntialiasedLineEnable = FALSE;
     Device->CreateRasterizerState(&RasterizerStateDesc, StaticSolidRasterizerState.GetAddressOf());
 
@@ -230,6 +285,7 @@ void PSOManager::CreateStatic()
         StaticBlendState.Get()
     );
 
+   
     // =======================================================
     //            R8G8B8A8_Static_Wireframe PSO
     // =======================================================
@@ -251,6 +307,7 @@ void PSOManager::CreateStatic()
         StaticDepthStencilState, NULL,
         StaticBlendState.Get()
     );
+
 }
 
 void PSOManager::CreateSkeletal()
@@ -292,9 +349,18 @@ void PSOManager::CreateSkeletal()
     Device->CreatePixelShader(PixelShaderByteCode->GetBufferPointer(), PixelShaderByteCode->GetBufferSize(), NULL, SkeletalMeshPS.GetAddressOf());
     Device->CreateInputLayout(InputElementDescs, GetArraySize(InputElementDescs), VertexShaderByteCode->GetBufferPointer(), VertexShaderByteCode->GetBufferSize(), SkeletalMeshInputLayout.GetAddressOf());
 
+
     DXGI_SAMPLE_DESC SampleDesc;
-    SampleDesc.Count = 1;
-    SampleDesc.Quality = 0;
+    if (FAILED(Device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &SampleDesc.Quality)))
+    {
+        SampleDesc.Count = 1;
+        SampleDesc.Quality = 0;
+    }
+    else
+    {
+        SampleDesc.Count = 4;
+        SampleDesc.Quality = SampleDesc.Quality - 1;
+    }
 
     ComPtr<ID3D11RasterizerState> SkeletalSolidRasterizerState;
     D3D11_RASTERIZER_DESC RasterizerStateDesc;
@@ -303,7 +369,7 @@ void PSOManager::CreateSkeletal()
     RasterizerStateDesc.CullMode = D3D11_CULL_BACK;
     RasterizerStateDesc.FrontCounterClockwise = FALSE;
     RasterizerStateDesc.DepthClipEnable = TRUE;
-    RasterizerStateDesc.MultisampleEnable = FALSE;
+    RasterizerStateDesc.MultisampleEnable = SampleDesc.Count > 1 ? TRUE : FALSE;
     RasterizerStateDesc.AntialiasedLineEnable = FALSE;
     Device->CreateRasterizerState(&RasterizerStateDesc, SkeletalSolidRasterizerState.GetAddressOf());
 
@@ -371,4 +437,14 @@ void PSOManager::CreateSkeletal()
         SkeletalDepthStencilState, NULL,
         SkeletalBlendState.Get()
     );
+}
+
+void PSOManager::CreateRenderers()
+{
+    Renderers[R8G8B8A8_BoundingComponent_Solid] = make_unique<BoundingComponentRenderer>(GetPSOObject(R8G8B8A8_BoundingComponent_Solid));
+    Renderers[R8G8B8A8_BoundingComponent_Wireframe] = make_unique<BoundingComponentRenderer>(GetPSOObject(R8G8B8A8_BoundingComponent_Wireframe));
+    Renderers[R8G8B8A8_Static_Solid] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Static_Solid));
+    Renderers[R8G8B8A8_Static_Wireframe] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Static_Wireframe));
+    Renderers[R8G8B8A8_Skeletal_Solid] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Skeletal_Solid));
+    Renderers[R8G8B8A8_Skeletal_Wireframe] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Skeletal_Wireframe));
 }

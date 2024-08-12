@@ -58,7 +58,19 @@ void PSOObject::SetPipelineObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVs
 		const DXGI_FORMAT& SeletectedRTVFormat = RTVFormats[RtvIndex];
 		RTVsIn[RtvIndex]->GetDesc(&RenderTargetViewDesc);
 		assert(RenderTargetViewDesc.Format == SeletectedRTVFormat);
+
+		if (SampleDesk.Count > 1)
+		{
+			assert(RenderTargetViewDesc.ViewDimension == D3D11_RTV_DIMENSION_TEXTURE2DMS);
+		}
+		else
+		{
+			assert(RenderTargetViewDesc.ViewDimension == D3D11_RTV_DIMENSION_TEXTURE2D);
+		}
 	}
+
+
+
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc;
 	DSVIn->GetDesc(&DepthStencilViewDesc);

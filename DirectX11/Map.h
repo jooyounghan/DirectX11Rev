@@ -2,13 +2,19 @@
 #include "Serializable.h"
 #include "HeaderHelper.h"
 
+#include "MeshObjectRenderer.h"
+#include "BoundingComponentRenderer.h"
+
 #include <list>
 #include <memory>
 #include <unordered_map>
 
 class GraphicsPipeline;
+
 class PSOManager;
 class PSOObject;
+class ARenderer;
+
 class AssetManager;
 
 class Camera;
@@ -35,17 +41,17 @@ protected:
 	MakeSetter(CameraCached);
 
 protected:
-	std::unordered_map<PSOObject*, std::vector<AObject*>> PSOToObjects;
+	std::unordered_map<ARenderer*, std::vector<AObject*>> RendererToObjects;
+
+protected:
 	std::list<std::unique_ptr<APlaceable>> Placeables;
 	MakeGetter(Placeables);
 
 protected:
 	std::list<IIntersectable*> Tests;
 
-
 public:
 	void AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
-	void AddRenderObject(AMeshAsset* MeshAssetIn, float ScreenXIn, float ScreenYIn, float ScreenWidthIn, float ScreenHeightIn);
 
 public:
 	void UpdateMap(const float& DeltaTimeIn);

@@ -8,6 +8,8 @@ class Debugable;
 
 class ABoundingComponent : public IIntersectable, public RelativePlaceableObject
 {
+	friend class BoundingComponentRenderer;
+	
 public:
 	ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances, AssetManager* AssetManagerInstance);
 	virtual ~ABoundingComponent();
@@ -25,7 +27,9 @@ public:
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
-	virtual void Render(PSOObject* PSOObjectIn) override final;
+
+public:
+	virtual void AcceptRenderer(ARenderer* Renderer) override;
 
 public:
 	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) = 0;
