@@ -9,7 +9,7 @@ enum EPSOType : size_t
 	// Position Only
 	R8G8B8A8_BoundingComponent_Solid,
 	R8G8B8A8_BoundingComponent_Wireframe,
-	R32_Picking_ID,
+	R8G8B8A8_Picking_ID,
 
 	// Static
 	R8G8B8A8_Static_Solid,
@@ -20,6 +20,7 @@ enum EPSOType : size_t
 	R8G8B8A8_Skeletal_Wireframe,
 	PSOTypeCount
 };
+
 
 class GraphicsPipeline;
 class PSOObject;

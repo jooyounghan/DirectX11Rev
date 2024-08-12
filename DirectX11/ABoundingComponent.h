@@ -7,15 +7,16 @@ class AssetManager;
 class Debugable;
 
 class ABoundingComponent : public IIntersectable, public RelativePlaceableObject
-{
-	friend class BoundingComponentRenderer;
-	
+{	
 public:
 	ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances, AssetManager* AssetManagerInstance);
 	virtual ~ABoundingComponent();
 
 protected:
 	Debugable* DebugObject = nullptr;
+	MakeGetter(DebugObject);
+
+protected:
 	bool IsCollided = false;
 
 public:

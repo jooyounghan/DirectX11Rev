@@ -6,6 +6,7 @@
 
 #include "ARenderer.h"
 
+#include "PickingIDMapRenderer.h"
 #include "BoundingComponentRenderer.h"
 #include "MeshObjectRenderer.h"
 
@@ -21,7 +22,6 @@ PSOManager::PSOManager(GraphicsPipeline* GraphicsPipelineIn)
     CreateStatic();
     CreateSkeletal();
     CreateRenderers();
-
 }
 
 PSOManager::~PSOManager()
@@ -131,6 +131,25 @@ void PSOManager::CreatePositionOnlyPSO()
         PositionOnlyDepthStencilState, NULL,
         PositionOnlyBlendState.Get()
     );
+
+    // =======================================================
+//            R8G8B8A8_PickingID PSO
+// =======================================================
+
+    PSOObjects[R8G8B8A8_Picking_ID] = make_unique<PSOObject>(
+        DeviceContext,
+        PostionOnlyInputLayout,
+        PositionOnlyPathVS, 2, 0,
+        PickingIDPS, 1, 0,
+        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+        SRVFormatCount, SRVFormats,
+        DXGI_FORMAT_D24_UNORM_S8_UINT,
+        SampleDesc,
+        PositionOnlyRasterizerState,
+        PositionOnlyDepthStencilState, NULL,
+        PositionOnlyBlendState.Get()
+    );
+
     // =======================================================
     //            R8G8B8A8_BoundingComponent_Wireframe PSO
     // =======================================================
@@ -151,35 +170,6 @@ void PSOManager::CreatePositionOnlyPSO()
         PositionOnlyDepthStencilState, NULL,
         PositionOnlyBlendState.Get()
     );
-
-    // =======================================================
-    //            R8G8B8A8_PickingID PSO
-    // =======================================================
-
-    SampleDesc.Count = 1;
-    SampleDesc.Quality = 0;
-    RasterizerStateDesc.FillMode = D3D11_FILL_SOLID;
-    RasterizerStateDesc.MultisampleEnable = FALSE;
-
-    ComPtr<ID3D11RasterizerState> PickingIDRasterizerState;
-    Device->CreateRasterizerState(&RasterizerStateDesc, PickingIDRasterizerState.GetAddressOf());
-
-    DXGI_FORMAT PickingIDFormats[SRVFormatCount] = { DXGI_FORMAT_R32_UINT };
-
-    PSOObjects[R32_Picking_ID] = make_unique<PSOObject>(
-        DeviceContext,
-        PostionOnlyInputLayout,
-        PositionOnlyPathVS, 2, 0,
-        PickingIDPS, 1, 0,
-        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        SRVFormatCount, PickingIDFormats,
-        DXGI_FORMAT_D24_UNORM_S8_UINT,
-        SampleDesc,
-        PickingIDRasterizerState,
-        PositionOnlyDepthStencilState, NULL,
-        PositionOnlyBlendState.Get()
-    );
-
 }
 
 void PSOManager::CreateStatic()
@@ -443,6 +433,7 @@ void PSOManager::CreateRenderers()
 {
     Renderers[R8G8B8A8_BoundingComponent_Solid] = make_unique<BoundingComponentRenderer>(GetPSOObject(R8G8B8A8_BoundingComponent_Solid));
     Renderers[R8G8B8A8_BoundingComponent_Wireframe] = make_unique<BoundingComponentRenderer>(GetPSOObject(R8G8B8A8_BoundingComponent_Wireframe));
+    Renderers[R8G8B8A8_Picking_ID] = make_unique<PickingIDRenderer>(GetPSOObject(R8G8B8A8_Picking_ID));
     Renderers[R8G8B8A8_Static_Solid] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Static_Solid));
     Renderers[R8G8B8A8_Static_Wireframe] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Static_Wireframe));
     Renderers[R8G8B8A8_Skeletal_Solid] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Skeletal_Solid));

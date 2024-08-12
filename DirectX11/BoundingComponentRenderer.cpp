@@ -13,13 +13,9 @@ BoundingComponentRenderer::BoundingComponentRenderer(PSOObject* PSOObjectIn)
 {
 }
 
-void BoundingComponentRenderer::PresetRendering(Camera* CameraIn, Map* MapIn)
+void BoundingComponentRenderer::PresetRendering(const unsigned int& RTVCountIn, ID3D11RenderTargetView** RTVsIn, D3D11_VIEWPORT* ViewportIn, ID3D11DepthStencilView* DSVIn, Camera* CameraIn, Map* MapIn)
 {
-	ID3D11RenderTargetView* RTVs[] = { CameraIn->GetSceneRTV() };
-	D3D11_VIEWPORT Viewports[] = { CameraIn->GetViewport() };
-	ID3D11DepthStencilView* DSV = CameraIn->GetSceneDSV();
-
-	PSOObjectCached->SetPipelineObject(1, RTVs, Viewports, DSV);
+	PSOObjectCached->SetPipelineObject(RTVCountIn, RTVsIn, ViewportIn, DSVIn);
 
 	ID3D11Buffer* ViewProjBuffer[] = { CameraIn->ViewProjBuffer.GetBuffer() };
 	PSOObjectCached->SetVSConstantBuffers(0, 1, ViewProjBuffer);
@@ -30,14 +26,13 @@ void BoundingComponentRenderer::ResetRendering()
 	PSOObjectCached->ResetVSConstantBuffers(0, 1);
 }
 
-void BoundingComponentRenderer::Render(MeshObject* MeshObjectIn)
+void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn)
 {
 }
 
-void BoundingComponentRenderer::Render(ABoundingComponent* MeshObjectIn)
+void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingComponent* MeshObjectIn)
 {
-	Debugable* DebugObject = MeshObjectIn->DebugObject;
-	ID3D11DeviceContext* DeviceContextCached = MeshObjectIn->DeviceContextCached;
+	Debugable* DebugObject = MeshObjectIn->GetDebugObject();
 
 	if (DebugObject)
 	{
@@ -45,8 +40,8 @@ void BoundingComponentRenderer::Render(ABoundingComponent* MeshObjectIn)
 		UINT Strides[] = { DebugObject->GetVertexTypeSize() };
 		UINT Offsets[] = { 0 };
 
-		DeviceContextCached->IASetVertexBuffers(0, 1, VertexBuffers, Strides, Offsets);
-		DeviceContextCached->IASetIndexBuffer(DebugObject->GetIndexBuffer(), DebugObject->GetIndexFormat(), 0);
+		DeviceContextIn->IASetVertexBuffers(0, 1, VertexBuffers, Strides, Offsets);
+		DeviceContextIn->IASetIndexBuffer(DebugObject->GetIndexBuffer(), DebugObject->GetIndexFormat(), 0);
 
 		ID3D11Buffer* VSConstBuffers[] = { MeshObjectIn->TransformationBuffer.GetBuffer() };
 		ID3D11Buffer* PSConstBuffers[] = { DebugObject->GetDebuggingColorBuffer().GetBuffer() };
@@ -57,7 +52,7 @@ void BoundingComponentRenderer::Render(ABoundingComponent* MeshObjectIn)
 		PSOObjectCached->CheckPipelineValidation();
 #endif // DEBUG
 
-		DeviceContextCached->DrawIndexed(static_cast<UINT>(DebugObject->GetIndexCount()), 0, 0);
+		DeviceContextIn->DrawIndexed(static_cast<UINT>(DebugObject->GetIndexCount()), 0, 0);
 
 		PSOObjectCached->ResetVSConstantBuffers(1, 1);
 		PSOObjectCached->ResetPSConstantBuffers(0, 1);

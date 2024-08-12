@@ -39,5 +39,10 @@ void ABoundingComponent::UpdateObject(const float& DeltaTimeIn)
 
 void ABoundingComponent::AcceptRenderer(ARenderer* Renderer)
 {
-	Renderer->Render(this);
+	Renderer->Render(DeviceContextCached, this);
+
+	for (auto& AttachedObject : AttachedObjects)
+	{
+		AttachedObject->AcceptRenderer(Renderer);
+	}
 }

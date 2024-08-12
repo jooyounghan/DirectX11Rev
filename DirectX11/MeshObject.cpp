@@ -33,7 +33,12 @@ void MeshObject::UpdateObject(const float& DeltaTimeIn)
 
 void MeshObject::AcceptRenderer(ARenderer* Renderer)
 {
-	Renderer->Render(this);
+	Renderer->Render(DeviceContextCached, this);
+
+	for (auto& AttachedObject : AttachedObjects)
+	{
+		AttachedObject->AcceptRenderer(Renderer);
+	}
 }
 
 void MeshObject::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)

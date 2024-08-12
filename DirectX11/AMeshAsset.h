@@ -21,6 +21,11 @@ public:
 	virtual DXGI_FORMAT GetIndexFormat() override { return DXGI_FORMAT_R32_UINT; }
 
 public:
+	inline std::vector<ID3D11Buffer*> GetPositionBuffer() { return { Positions.GetVertexBuffer() }; }
+	inline std::vector<UINT> GetPositionStride() { return { sizeof(SPosition3D)}; }
+	inline std::vector<UINT> GetPositionOffset() { return { 0 }; }
+
+public:
 	virtual std::vector<ID3D11Buffer*> GetVertexBuffers() = 0;
 	virtual std::vector<UINT> GetStrides() = 0;
 	virtual std::vector<UINT> GetOffsets() = 0;

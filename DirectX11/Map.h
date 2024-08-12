@@ -41,9 +41,6 @@ protected:
 	MakeSetter(CameraCached);
 
 protected:
-	std::unordered_map<ARenderer*, std::vector<AObject*>> RendererToObjects;
-
-protected:
 	std::list<std::unique_ptr<APlaceable>> Placeables;
 	MakeGetter(Placeables);
 
@@ -63,7 +60,7 @@ public:
 
 private:
 	template<typename T, typename ...Args>
-	T* RenderableAddHelper(Args... args)
+	T* PlaceableAddHelper(Args... args)
 	{
 		Placeables.emplace_back(std::make_unique<T>(args...));
 		static_assert(std::is_base_of<APlaceable, T>::value, "템플릿 타입은 PlaceableObject의 파생 클래스여야 합니다.");

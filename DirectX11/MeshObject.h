@@ -8,8 +8,6 @@ class AMeshAsset;
 
 class MeshObject : public RelativePlaceableObject
 {
-	friend class MeshObjectRenderer;
-
 public:
 	MeshObject(
 		GraphicsPipeline* GraphicsPipelineInstances, 

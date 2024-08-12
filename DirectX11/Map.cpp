@@ -1,4 +1,7 @@
 #include "Map.h"
+
+#include "GraphicsPipeline.h"
+
 #include "GlobalVariable.h"
 
 #include "PSOManager.h"
@@ -32,54 +35,24 @@ Map::~Map()
 
 void Map::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-	ARenderer* Renderer = nullptr;
-
-	switch (MeshAssetIn->GetAssetType())
-	{
-	case(EAssetType::StaticMesh):
-	{
-		Renderer = PSOManagerCached->GetRenderers(EPSOType::R8G8B8A8_Static_Solid);
-		break;
-	}
-	case(EAssetType::SkeletalMesh):
-	{
-		Renderer = PSOManagerCached->GetRenderers(EPSOType::R8G8B8A8_Skeletal_Solid);
-		break;
-	}
-	default:
-		break;
-	}
-
-	if (Renderer != nullptr)
-	{
-		MeshObject* AddedObject = RenderableAddHelper<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
+		MeshObject* AddedObject = PlaceableAddHelper<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
 
 		AddedObject->Position.x = PosXIn;
 		AddedObject->Position.y = PosYIn;
 		AddedObject->Position.z = PosZIn;
 
-		RendererToObjects[Renderer].emplace_back(AddedObject);
-
 		// TEST ========================================================================================================
-		ARenderer* BoundingComponentPSO = PSOManagerCached->GetRenderers(EPSOType::R8G8B8A8_BoundingComponent_Wireframe);
-
 		OrientedBoundingBox* OBB = AddedObject->AddAttachedObjectHelper<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached,
 			100.f, 100.f, 100.f);
-		RendererToObjects[BoundingComponentPSO].emplace_back(OBB);
 		OBB->Position.x += 400.f;
 
 		BoundingSphere* BB = OBB->AddAttachedObjectHelper<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached,
 			100.f);
-
-		RendererToObjects[BoundingComponentPSO].emplace_back(OBB);
-		RendererToObjects[BoundingComponentPSO].emplace_back(BB);
-
 		OBB->Position.x += 400.f;
 
 		Tests.push_back(OBB);
 		Tests.push_back(BB);
 		// TEST ========================================================================================================
-	}
 }
 
 
@@ -93,13 +66,20 @@ void Map::UpdateMap(const float& DeltaTimeIn)
 
 void Map::RenderMap()
 {
-	for (auto& RendererToObjectsPair : RendererToObjects)
+	vector<ARenderer*> Renderers = {
+		PSOManagerCached->GetRenderers(EPSOType::R8G8B8A8_Skeletal_Solid),
+		PSOManagerCached->GetRenderers(EPSOType::R8G8B8A8_BoundingComponent_Wireframe)
+	};
+
+	ID3D11RenderTargetView* RTVs[] = { CameraCached->GetSceneRTV() };
+	D3D11_VIEWPORT Viewports[] = { CameraCached->GetViewport() };
+	ID3D11DepthStencilView* DSV = CameraCached->GetSceneDSV();
+
+	for (auto& Renderer : Renderers)
 	{
-		ARenderer* Renderer = RendererToObjectsPair.first;
+		Renderer->PresetRendering(1, RTVs, Viewports, DSV, CameraCached, this);
 
-		Renderer->PresetRendering(CameraCached, this);
-
-		for (const auto& ro : RendererToObjectsPair.second)
+		for (const auto& ro : Placeables)
 		{
 			ro->AcceptRenderer(Renderer);
 		}

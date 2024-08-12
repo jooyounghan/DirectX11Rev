@@ -79,20 +79,27 @@ void EditorWorld::UpdateWorld(const float& DeltaTimeIn)
 
 void EditorWorld::RenderWorld()
 {
-    //Map* CurrentMap = GameWorldCached->GetCurrentMap();
-    //PSOManager* PSOManagerInstance = GameWorldCached->GetPSOManagerInstance();
-    //if (CurrentMap != nullptr)
-    //{
-    //    PSOObject* PickingPSO = PSOManagerInstance->GetPSOObject(EPSOType::R32_Picking_ID);
-    //    const list<unique_ptr<APlaceable>>& Placeables = CurrentMap->GetPlaceables();
-    //}
+    
+
+    Map* CurrentMap = GameWorldCached->GetCurrentMap();
+    PSOManager* PSOManagerInstance = GameWorldCached->GetPSOManagerInstance();
+    if (CurrentMap != nullptr)
+    {
+        ARenderer* PickingIDRenderer = PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID);
+        const list<unique_ptr<APlaceable>>& Placeables = CurrentMap->GetPlaceables();
+
+        ID3D11RenderTargetView* RTVs[] = { EditorCameraInstance->GetIdSelectRTV() };
+        D3D11_VIEWPORT Viewports[] = { EditorCameraInstance->GetViewport() };
+        ID3D11DepthStencilView* DSV = EditorCameraInstance->GetIdSelectDSV();
 
 
-
-
-
-
-
+        PickingIDRenderer->PresetRendering(1, RTVs, Viewports, DSV, EditorCameraInstance.get(), CurrentMap);
+        for (auto& Placeable : Placeables)
+        {
+            Placeable->AcceptRenderer(PickingIDRenderer);
+        }
+        PickingIDRenderer->ResetRendering();
+    }
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();

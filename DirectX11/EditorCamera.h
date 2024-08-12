@@ -15,6 +15,11 @@ protected:
 	MakeComPtrGetter(IdSelectSRV);
 	MakeComPtrGetter(IdSelectRTV);
 
+protected:
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				IdSelectDepthStencilTexture2D;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		IdSelectDSV;
+	MakeComPtrGetter(IdSelectDSV);
+
 public:
 	virtual void CleanupLens();
 };

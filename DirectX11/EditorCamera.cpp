@@ -9,22 +9,18 @@ EditorCamera::EditorCamera(GraphicsPipeline* GraphicsPipelineInstance, const UIN
 
 	D3D11_TEXTURE2D_DESC IdTexture2DDesc;
 	AutoZeroMemory(IdTexture2DDesc);
-	IdTexture2DDesc.Width = WidthIn;
-	IdTexture2DDesc.Height = HeightIn;
-	IdTexture2DDesc.MipLevels = 1;
-	IdTexture2DDesc.ArraySize = 1;
-	IdTexture2DDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-	IdTexture2DDesc.Format = DXGI_FORMAT_R32_UINT;
-	IdTexture2DDesc.SampleDesc.Count = 1;
-	IdTexture2DDesc.SampleDesc.Quality = 0;
-	IdTexture2DDesc.Usage = D3D11_USAGE_DEFAULT;
-	IdTexture2DDesc.CPUAccessFlags = NULL;
-	IdTexture2DDesc.MiscFlags = NULL;
+	SceneTexture2D->GetDesc(&IdTexture2DDesc);
 
 	Device->CreateTexture2D(&IdTexture2DDesc, NULL, IdSelectTexture2D.GetAddressOf());
 	Device->CreateShaderResourceView(IdSelectTexture2D.Get(), NULL, IdSelectSRV.GetAddressOf());
 	Device->CreateRenderTargetView(IdSelectTexture2D.Get(), NULL, IdSelectRTV.GetAddressOf());
 
+	D3D11_TEXTURE2D_DESC DepthStencilTexture2DDesc;
+	AutoZeroMemory(DepthStencilTexture2DDesc);
+	DepthStencilTexture2D->GetDesc(&DepthStencilTexture2DDesc);
+
+	Device->CreateTexture2D(&DepthStencilTexture2DDesc, NULL, IdSelectDepthStencilTexture2D.GetAddressOf());
+	Device->CreateDepthStencilView(IdSelectDepthStencilTexture2D.Get(), NULL, IdSelectDSV.GetAddressOf());
 }
 
 EditorCamera::~EditorCamera()
@@ -35,4 +31,5 @@ void EditorCamera::CleanupLens()
 {
 	Camera::CleanupLens();
 	DeviceContextCached->ClearRenderTargetView(IdSelectRTV.Get(), ClearColor);
+	DeviceContextCached->ClearDepthStencilView(IdSelectDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 }
