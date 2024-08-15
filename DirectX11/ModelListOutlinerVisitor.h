@@ -2,6 +2,7 @@
 #include "IGuiTopLevelVisitor.h"
 
 class MapOutlinerWindow;
+class EditorWorld;
 class AAttachable;
 class APlaceable;
 
@@ -12,6 +13,7 @@ public:
 
 protected:
 	MapOutlinerWindow* MapOutlinerCached;
+	EditorWorld* EditorWorldCached;
 
 public:
 	virtual void Visit(AttachableObject* AttachableInstance) override;

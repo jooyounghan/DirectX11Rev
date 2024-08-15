@@ -8,6 +8,7 @@
 #include <vector>
 #include <memory>
 
+class AObject;
 class GameWorld;
 class IWindow;
 class EditorCamera;
@@ -20,6 +21,7 @@ public:
 
 protected:
 	GameWorld* GameWorldCached = nullptr;
+	MakeGetter(GameWorldCached);
 
 protected:
 	UINT FontSrvHandleID = 0;
@@ -31,6 +33,13 @@ protected:
 
 protected:
 	std::vector<std::unique_ptr<IWindow>> Dialogs;
+
+protected:
+	AObject* SelectedObject = nullptr;
+	MakeSetterGetter(SelectedObject);
+
+public:
+	void SetSelecteObjectByID(const UINT& Id);
 
 public:
 	virtual void UpdateWorld(const float& DeltaTimeIn) override;

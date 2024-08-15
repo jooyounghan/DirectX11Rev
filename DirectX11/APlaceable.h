@@ -1,9 +1,13 @@
 #pragma once
 #include "AObject.h"
 #include "DefineType.h"
+#include "StaticAssertHelper.h"
+
 #include "UploadBuffer.h"
 #include "ConstantBuffer.h"
 #include "Attachable.h"
+
+
 #include <list>
 #include <memory>
 
@@ -29,8 +33,9 @@ protected:
 	MakeGetter(AttachedObjects);
 
 protected:
-	IDColorProxy PickingID;
+	IDColor PickingID;
 	ConstantBuffer<SColor> PickingIDBuffer;
+	MakeGetter(PickingID);
 	MakeGetter(PickingIDBuffer);
 
 protected:
@@ -73,7 +78,7 @@ template<typename T, typename ...Args>
 inline T* APlaceable::AddAttachedObjectHelper(Args ...args)
 {
 	AttachedObjects.emplace_back(std::make_unique<T>(args...));
-	static_assert(std::is_base_of<AAttachable, T>::value, "Template Type Has to be Derived From AAttachable");
+	static_assert(std::is_base_of<AAttachable, T>::value, DerivedCondition(AAttachable));
 	AAttachable* AddedObject = (AAttachable*)(AttachedObjects.back().get());
 	AddedObject->SetParentObject(this);
 

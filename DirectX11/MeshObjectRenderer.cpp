@@ -36,7 +36,7 @@ void MeshObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject
 		const vector<UINT> Strides = MeshAssetInstance->GetStrides();
 		const vector<UINT> Offsets = MeshAssetInstance->GetOffsets();
 
-		DeviceContextIn->IASetVertexBuffers(0, VertexBuffers.size(),
+		DeviceContextIn->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
 			VertexBuffers.data(),
 			Strides.data(),
 			Offsets.data()

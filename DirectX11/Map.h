@@ -1,13 +1,18 @@
 #pragma once
 #include "Serializable.h"
 #include "HeaderHelper.h"
+#include "StaticAssertHelper.h"
 
 #include "MeshObjectRenderer.h"
 #include "BoundingComponentRenderer.h"
 
+#include "APlaceable.h"
+#include "Attachable.h"
+
 #include <list>
 #include <memory>
 #include <unordered_map>
+#include <type_traits>
 
 class GraphicsPipeline;
 
@@ -19,7 +24,6 @@ class AssetManager;
 
 class Camera;
 class AObject;
-class APlaceable;
 class MeshObject;
 class AMeshAsset;
 
@@ -41,8 +45,12 @@ protected:
 	MakeSetter(CameraCached);
 
 protected:
-	std::list<std::unique_ptr<APlaceable>> Placeables;
-	MakeGetter(Placeables);
+	std::list<std::unique_ptr<APlaceable>> RootPlaceables;
+	MakeGetter(RootPlaceables);
+
+protected:
+	std::unordered_map<unsigned int, APlaceable*> IdToPlaceables;
+	MakeGetter(IdToPlaceables);
 
 protected:
 	std::list<IIntersectable*> Tests;
@@ -58,14 +66,37 @@ public:
 	virtual void Serialize(const std::string& OutputAdditionalPath) override;
 	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn) override;
 
-private:
+public:
 	template<typename T, typename ...Args>
 	T* PlaceableAddHelper(Args... args)
 	{
-		Placeables.emplace_back(std::make_unique<T>(args...));
-		static_assert(std::is_base_of<APlaceable, T>::value, "템플릿 타입은 PlaceableObject의 파생 클래스여야 합니다.");
-		T* AddedObject = (T*)(Placeables.back().get());
+		static_assert(std::is_base_of<APlaceable, T>::value, DerivedCondition(PlaceableObject));
+
+		RootPlaceables.emplace_back(std::make_unique<T>(args...));
+		APlaceable* RootPlaceable = RootPlaceables.back().get();
+
+		IdToPlaceables[RootPlaceable->GetPickingID().GetID()] = RootPlaceable;
+
+		T* AddedObject = (T*)(RootPlaceable);
 		return AddedObject;
 	}
+
+private:
+	template<typename Attachment, typename ...Args>
+	Attachment* AttachedAddHelper(APlaceable* AttachToObject, Args... args)
+	{
+		static_assert(std::is_base_of<AAttachable, Attachment>::value, DerivedCondition(AAttachable));
+
+		Attachment* Attached = AttachToObject->AddAttachedObjectHelper<Attachment>(args...);
+
+		if (std::is_base_of_v<APlaceable, Attachment>)
+		{
+			APlaceable* Placeable = (APlaceable*)Attached;
+			IdToPlaceables[Placeable->GetPickingID().GetID()] = Placeable;
+		}
+
+		return Attached;
+	}
+
 };
 

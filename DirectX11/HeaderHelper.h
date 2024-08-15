@@ -3,7 +3,7 @@
 
 #define MakeGetter(Variable)																		\
 public:																								\
-	inline const decltype(Variable)& Get##Variable() { return Variable; };							
+	inline const decltype(Variable)& Get##Variable() const { return Variable; };							
 
 #define MakePointerGetter(Variable)																	\
 public:																								\

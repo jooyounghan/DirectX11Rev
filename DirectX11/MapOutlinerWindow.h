@@ -1,21 +1,16 @@
 #pragma once
-#include "IGameWorldLinkedWindow.h"
-#include "HeaderHelper.h"
+#include "IEditorLinkedWindow.h"
 
 class AObject;
 
-class MapOutlinerWindow : public IGameWorldLinkedWindow
+class MapOutlinerWindow : public IEditorLinkedWindow
 {
 public:
-	MapOutlinerWindow(GameWorld* GameWorldLinkedIn);
+	MapOutlinerWindow(EditorWorld* EditorWorldIn);
 	virtual ~MapOutlinerWindow();
 
 public:
 	virtual void RenderWindow() override;
-
-private:
-	AObject* SelectedObject = nullptr;
-	MakeSetterGetter(SelectedObject);
 
 private:
 	void RenderPlaceablesOutline();

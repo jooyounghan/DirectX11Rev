@@ -55,8 +55,8 @@ EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
     );
 
     Dialogs.push_back(make_unique<TaskAnalyzerWindow>());
-    Dialogs.push_back(make_unique<ViewportWindow>(GameWorldCached, EditorCameraInstance.get()));
-    Dialogs.push_back(make_unique<MapOutlinerWindow>(GameWorldCached));
+    Dialogs.push_back(make_unique<ViewportWindow>(this));
+    Dialogs.push_back(make_unique<MapOutlinerWindow>(this));
     Dialogs.push_back(make_unique<AssetManagerWindow>(GameWorldCached->GetAssetManagerInstance()));
 }
 
@@ -71,34 +71,52 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
     LPARAM lParam
 );
 
+void EditorWorld::SetSelecteObjectByID(const UINT& Id)
+{
+    Map* CurrentMap = GameWorldCached->GetCurrentMap();
+    if (CurrentMap != nullptr)
+    {
+        const unordered_map<UINT, APlaceable*>& IdToPlaceables = CurrentMap->GetIdToPlaceables();
+        if (IdToPlaceables.find(Id) != IdToPlaceables.end())
+        {
+            SelectedObject = (AObject*)IdToPlaceables.at(Id);
+        }
+    }
+}
+
 void EditorWorld::UpdateWorld(const float& DeltaTimeIn)
 {
-    EditorCameraInstance->CleanupLens();
     EditorCameraInstance->UpdateObject(DeltaTimeIn);
 }
 
 void EditorWorld::RenderWorld()
 {
-    
-
+    EditorCameraInstance->CleanupLens();
     Map* CurrentMap = GameWorldCached->GetCurrentMap();
     PSOManager* PSOManagerInstance = GameWorldCached->GetPSOManagerInstance();
     if (CurrentMap != nullptr)
     {
-        ARenderer* PickingIDRenderer = PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID);
-        const list<unique_ptr<APlaceable>>& Placeables = CurrentMap->GetPlaceables();
+        ARenderer* PickingIDRenderers[] =
+        {
+            PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Solid),
+            PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Wireframe)
+        };
+
+        const list<unique_ptr<APlaceable>>& RootPlaceables = CurrentMap->GetRootPlaceables();
 
         ID3D11RenderTargetView* RTVs[] = { EditorCameraInstance->GetIdSelectRTV() };
         D3D11_VIEWPORT Viewports[] = { EditorCameraInstance->GetViewport() };
         ID3D11DepthStencilView* DSV = EditorCameraInstance->GetIdSelectDSV();
 
-
-        PickingIDRenderer->PresetRendering(1, RTVs, Viewports, DSV, EditorCameraInstance.get(), CurrentMap);
-        for (auto& Placeable : Placeables)
+        for (ARenderer* PickingIDRenderer : PickingIDRenderers)
         {
-            Placeable->AcceptRenderer(PickingIDRenderer);
+            PickingIDRenderer->PresetRendering(1, RTVs, Viewports, DSV, EditorCameraInstance.get(), CurrentMap);
+            for (auto& Placeable : RootPlaceables)
+            {
+                Placeable->AcceptRenderer(PickingIDRenderer);
+            }
+            PickingIDRenderer->ResetRendering();
         }
-        PickingIDRenderer->ResetRendering();
     }
 
     ImGui_ImplDX11_NewFrame();

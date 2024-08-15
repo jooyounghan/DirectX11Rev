@@ -39,6 +39,8 @@ PortfolioApp::PortfolioApp()
 
 	ShowWindow(MainWindow, SW_SHOW);
 
+	ResetCursorHotSpot(0.f, 0.f);
+
 	GraphicsPipelineInstance = make_unique<GraphicsPipeline>();
 	GraphicsPipelineInstance->LoadPipeline(App::GWidth, App::GHeight, hWindow);
 
@@ -124,6 +126,34 @@ void PortfolioApp::Render()
 {
 	GameWorldInstance->RenderWorld();
 	GraphicsPipelineInstance->GetSwapChain()->Present(0, 0);
+}
+
+void PortfolioApp::ResetCursorHotSpot(const DWORD& HotspotX, const DWORD& HotspotY)
+{
+	HCURSOR CurrentCursor = GetCursor();
+	if (!CurrentCursor)  { return; }
+
+	ICONINFO IconInfo;
+	if (!GetIconInfo(CurrentCursor, &IconInfo)) { return; }
+
+	IconInfo.xHotspot = HotspotX;
+	IconInfo.yHotspot = HotspotY;
+
+	HCURSOR NewCursor = CreateIconIndirect(&IconInfo);
+
+	if (IconInfo.hbmMask) 
+	{
+		DeleteObject(IconInfo.hbmMask);
+	}
+	if (IconInfo.hbmColor)
+	{
+		DeleteObject(IconInfo.hbmColor);
+	}
+
+	if (NewCursor) 
+	{
+		SetCursor(NewCursor);
+	}
 }
 
 float PortfolioApp::GetDeltaTimeFromLastCall()

@@ -42,11 +42,11 @@ void Map::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, f
 		AddedObject->Position.z = PosZIn;
 
 		// TEST ========================================================================================================
-		OrientedBoundingBox* OBB = AddedObject->AddAttachedObjectHelper<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached,
-			100.f, 100.f, 100.f);
+		OrientedBoundingBox* OBB = AttachedAddHelper<OrientedBoundingBox>(AddedObject, GraphicsPipelineCached, AssetManagerCached,
+			100.f, 100.f, 100.f);						
 		OBB->Position.x += 400.f;
 
-		BoundingSphere* BB = OBB->AddAttachedObjectHelper<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached,
+		BoundingSphere* BB = AttachedAddHelper<BoundingSphere>(OBB, GraphicsPipelineCached, AssetManagerCached,
 			100.f);
 		OBB->Position.x += 400.f;
 
@@ -58,7 +58,7 @@ void Map::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, f
 
 void Map::UpdateMap(const float& DeltaTimeIn)
 {
-	for (auto& ro : Placeables)
+	for (auto& ro : RootPlaceables)
 	{
 		ro->UpdateObject(DeltaTimeIn);
 	}
@@ -79,7 +79,7 @@ void Map::RenderMap()
 	{
 		Renderer->PresetRendering(1, RTVs, Viewports, DSV, CameraCached, this);
 
-		for (const auto& ro : Placeables)
+		for (const auto& ro : RootPlaceables)
 		{
 			ro->AcceptRenderer(Renderer);
 		}

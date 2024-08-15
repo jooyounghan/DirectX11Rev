@@ -136,7 +136,6 @@
     <ClCompile Include="ABoundingComponent.cpp" />
     <ClCompile Include="AObject.cpp" />
     <ClCompile Include="AssetManagerWindow.cpp" />
-    <ClCompile Include="Attachable.cpp" />
     <ClCompile Include="AttachableObject.cpp" />
     <ClCompile Include="BoundingCapsule.cpp" />
     <ClCompile Include="BoundingFrustum.cpp" />
@@ -157,8 +156,8 @@
     <ClCompile Include="GlobalVariable.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="IAssetFile.cpp" />
-    <ClCompile Include="IDColorProxy.cpp" />
-    <ClCompile Include="IGameWorldLinkedWindow.cpp" />
+    <ClCompile Include="IDColor.cpp" />
+    <ClCompile Include="IEditorLinkedWindow.cpp" />
     <ClCompile Include="AMeshAsset.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
@@ -177,7 +176,9 @@
     <ClCompile Include="ModelInformationOutlinerVisitor.cpp" />
     <ClCompile Include="OrientedBoundingBox.cpp" />
     <ClCompile Include="ModelListOutlinerVisitor.cpp" />
-    <ClCompile Include="PickingIDMapRenderer.cpp" />
+    <ClCompile Include="APickingIDRenderer.cpp" />
+    <ClCompile Include="PickingIDSolidRenderer.cpp" />
+    <ClCompile Include="PickingIDWireframeRenderer.cpp" />
     <ClCompile Include="PlaceableObject.cpp" />
     <ClCompile Include="PortfolioApp.cpp" />
     <ClCompile Include="PSOManager.cpp" />
@@ -216,7 +217,7 @@
     <ClInclude Include="EditorCamera.h" />
     <ClInclude Include="FileSelectDialog.h" />
     <ClInclude Include="ICollisionVisitor.h" />
-    <ClInclude Include="IDColorProxy.h" />
+    <ClInclude Include="IDColor.h" />
     <ClInclude Include="IDialog.h" />
     <ClInclude Include="IGuiLowLevelVisitor.h" />
     <ClInclude Include="IIndexable.h" />
@@ -235,11 +236,14 @@
     <ClInclude Include="MeshObjectInformationDrawer.h" />
     <ClInclude Include="ModelInformationOutlinerVisitor.h" />
     <ClInclude Include="ModelListOutlinerVisitor.h" />
-    <ClInclude Include="PickingIDMapRenderer.h" />
+    <ClInclude Include="APickingIDRenderer.h" />
+    <ClInclude Include="PickingIDSolidRenderer.h" />
+    <ClInclude Include="PickingIDWireframeRenderer.h" />
     <ClInclude Include="PlaceableObject.h" />
     <ClInclude Include="RelativePlaceableObject.h" />
     <ClInclude Include="ARenderer.h" />
     <ClInclude Include="MeshObjectRenderer.h" />
+    <ClInclude Include="StaticAssertHelper.h" />
     <ClInclude Include="TransformationInformationDrawer.h" />
     <ClInclude Include="Vertexable.h" />
     <ClInclude Include="OrientedBoundingBox.h" />
@@ -257,7 +261,7 @@
     <ClInclude Include="IBuffer.h" />
     <ClInclude Include="IWindow.h" />
     <ClInclude Include="IDownloadableBuffer.h" />
-    <ClInclude Include="IGameWorldLinkedWindow.h" />
+    <ClInclude Include="IEditorLinkedWindow.h" />
     <ClInclude Include="AMeshAsset.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="IndexBuffer.h" />

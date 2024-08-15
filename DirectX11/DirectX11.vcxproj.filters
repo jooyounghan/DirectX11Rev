@@ -270,7 +270,7 @@
     <ClCompile Include="FileSelectDialog.cpp">
       <Filter>소스 파일\World\Editor\GUI\DIalog</Filter>
     </ClCompile>
-    <ClCompile Include="IGameWorldLinkedWindow.cpp">
+    <ClCompile Include="IEditorLinkedWindow.cpp">
       <Filter>소스 파일\World\Editor\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="MapOutlinerWindow.cpp">
@@ -354,7 +354,7 @@
     <ClCompile Include="EditorCamera.cpp">
       <Filter>소스 파일\World\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="IDColorProxy.cpp">
+    <ClCompile Include="IDColor.cpp">
       <Filter>소스 파일\Asset\Map\Object</Filter>
     </ClCompile>
     <ClCompile Include="AObject.cpp">
@@ -369,9 +369,6 @@
     <ClCompile Include="AssetManager.cpp">
       <Filter>소스 파일\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Attachable.cpp">
-      <Filter>소스 파일\Asset\Map\Object</Filter>
-    </ClCompile>
     <ClCompile Include="GlobalVariable.cpp">
       <Filter>소스 파일\Global</Filter>
     </ClCompile>
@@ -381,7 +378,13 @@
     <ClCompile Include="BoundingComponentRenderer.cpp">
       <Filter>소스 파일\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="PickingIDMapRenderer.cpp">
+    <ClCompile Include="APickingIDRenderer.cpp">
+      <Filter>소스 파일\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="PickingIDSolidRenderer.cpp">
+      <Filter>소스 파일\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="PickingIDWireframeRenderer.cpp">
       <Filter>소스 파일\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
@@ -500,7 +503,7 @@
     <ClInclude Include="FileSelectDialog.h">
       <Filter>헤더 파일\World\Editor\GUI\Dialog</Filter>
     </ClInclude>
-    <ClInclude Include="IGameWorldLinkedWindow.h">
+    <ClInclude Include="IEditorLinkedWindow.h">
       <Filter>헤더 파일\World\Editor\GUI</Filter>
     </ClInclude>
     <ClInclude Include="IDialog.h">
@@ -608,7 +611,7 @@
     <ClInclude Include="EditorCamera.h">
       <Filter>헤더 파일\World\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="IDColorProxy.h">
+    <ClInclude Include="IDColor.h">
       <Filter>헤더 파일\Asset\Map\Object</Filter>
     </ClInclude>
     <ClInclude Include="PSOManager.h">
@@ -632,7 +635,16 @@
     <ClInclude Include="BoundingComponentRenderer.h">
       <Filter>헤더 파일\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="PickingIDMapRenderer.h">
+    <ClInclude Include="APickingIDRenderer.h">
+      <Filter>헤더 파일\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticAssertHelper.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="PickingIDSolidRenderer.h">
+      <Filter>헤더 파일\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="PickingIDWireframeRenderer.h">
       <Filter>헤더 파일\Rendering</Filter>
     </ClInclude>
   </ItemGroup>

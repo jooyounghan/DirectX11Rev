@@ -1,4 +1,5 @@
 #pragma once
+#include "HeaderHelper.h"
 
 struct SColor
 {
@@ -8,14 +9,14 @@ struct SColor
 	float A;
 };
 
-class IDColorProxy
+class IDColor
 {
 public:
-	IDColorProxy(const unsigned int& IDIn);
-	IDColorProxy(const SColor& ColorIn);
+	IDColor(const unsigned int& IDIn);
 
 protected:
 	unsigned int ID;
+	MakeGetter(ID);
 
 public:
 	SColor GetColor();

@@ -9,7 +9,8 @@ enum EPSOType : size_t
 	// Position Only
 	R8G8B8A8_BoundingComponent_Solid,
 	R8G8B8A8_BoundingComponent_Wireframe,
-	R8G8B8A8_Picking_ID,
+	R8G8B8A8_Picking_ID_Solid,
+	R8G8B8A8_Picking_ID_Wireframe,
 
 	// Static
 	R8G8B8A8_Static_Solid,

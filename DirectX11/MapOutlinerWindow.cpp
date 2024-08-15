@@ -3,6 +3,7 @@
 #include "ModelListOutlinerVisitor.h"
 #include "ModelInformationOutlinerVisitor.h"
 
+#include "EditorWorld.h"
 #include "GameWorld.h"
 #include "Map.h"
 #include "APlaceable.h"
@@ -13,8 +14,8 @@
 using namespace std;
 using namespace ImGui;
 
-MapOutlinerWindow::MapOutlinerWindow(GameWorld* GameWorldLinkedIn)
-	: IGameWorldLinkedWindow(GameWorldLinkedIn)
+MapOutlinerWindow::MapOutlinerWindow(EditorWorld* EditorWorldIn)
+	: IEditorLinkedWindow(EditorWorldIn)
 {
 }
 
@@ -34,13 +35,13 @@ void MapOutlinerWindow::RenderPlaceablesOutline()
 {
     ImVec2 RegionAvail = GetContentRegionAvail();
     BeginChild("PlaceablesOutliner", ImVec2(RegionAvail.x, RegionAvail.y * 0.5f), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
-    Map* CurrentMap = GameWorldLinked->GetCurrentMap();
+    Map* CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap)
     {
-        const list<unique_ptr<APlaceable>>& Placeables = CurrentMap->GetPlaceables();
+        const list<unique_ptr<APlaceable>>& RootPlaceables = CurrentMap->GetRootPlaceables();
         
         ModelListOutlinerVisitor ModelListliner(this);
-        for (auto& Placeable : Placeables)
+        for (auto& Placeable : RootPlaceables)
         {
             Placeable->AcceptGui(&ModelListliner);
         }
@@ -52,6 +53,8 @@ void MapOutlinerWindow::RenderSelectedObjectInformation()
 {
     ImVec2 RegionAvail = GetContentRegionAvail();
     BeginChild("SelectedObjectInformation", ImVec2(RegionAvail.x, RegionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
+
+    AObject* SelectedObject = EditorWorldCached->GetSelectedObject();
     if (SelectedObject != nullptr)
     {
         ModelInformationOutlinerVisitor InformationVisitor(this);

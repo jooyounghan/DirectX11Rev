@@ -1,6 +1,7 @@
 #include "ModelListOutlinerVisitor.h"
 #include "MapOutlinerWindow.h"
 
+#include "EditorWorld.h"
 #include "AttachableObject.h"
 #include "PlaceableObject.h"
 #include "RelativePlaceableObject.h"
@@ -15,6 +16,8 @@ using namespace ImGui;
 ModelListOutlinerVisitor::ModelListOutlinerVisitor(MapOutlinerWindow* MapOutlinerInstance)
     : MapOutlinerCached(MapOutlinerInstance)
 {
+    EditorWorldCached = MapOutlinerCached->GetEditorWorldCached();
+    assert(EditorWorldCached != nullptr);
 }
 
 void ModelListOutlinerVisitor::Visit(AttachableObject* AttachableInstance)
@@ -36,7 +39,8 @@ void ModelListOutlinerVisitor::DrawAttachableInOutliner(AAttachable* Attachable)
 {
     AObject* ObjectedInstance = (AObject*)Attachable;
     ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_SpanAvailWidth;
-    if (MapOutlinerCached->GetSelectedObject() == ObjectedInstance)
+
+    if (EditorWorldCached->GetSelectedObject() == ObjectedInstance)
     {
         NodeFlags |= ImGuiTreeNodeFlags_Selected;
     }
@@ -47,7 +51,7 @@ void ModelListOutlinerVisitor::DrawAttachableInOutliner(AAttachable* Attachable)
     PopID();
     if (ImGui::IsItemClicked() or ImGui::IsItemToggledOpen())
     {
-        MapOutlinerCached->SetSelectedObject(ObjectedInstance);
+        EditorWorldCached->SetSelectedObject(ObjectedInstance);
     }
 }
 
@@ -66,7 +70,7 @@ void ModelListOutlinerVisitor::DrawPlaceableInOutliner(APlaceable* Placeable)
         NodeFlags |= (ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow);
     }
 
-    if (MapOutlinerCached->GetSelectedObject() == ObjectedInstance)
+    if (EditorWorldCached->GetSelectedObject() == ObjectedInstance)
     {
         NodeFlags |= ImGuiTreeNodeFlags_Selected;
     }
@@ -76,7 +80,7 @@ void ModelListOutlinerVisitor::DrawPlaceableInOutliner(APlaceable* Placeable)
     PopID();
     if (ImGui::IsItemClicked() or ImGui::IsItemToggledOpen())
     {
-        MapOutlinerCached->SetSelectedObject(ObjectedInstance);
+        EditorWorldCached->SetSelectedObject(ObjectedInstance);
     }
 
     if (IsOpen)

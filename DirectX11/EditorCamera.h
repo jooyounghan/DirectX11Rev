@@ -1,5 +1,6 @@
 #pragma once
 #include "Camera.h"
+#include "IDColor.h"
 
 class EditorCamera : public Camera
 {
@@ -16,9 +17,18 @@ protected:
 	MakeComPtrGetter(IdSelectRTV);
 
 protected:
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				IdStagingTexture2D;
+
+protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				IdSelectDepthStencilTexture2D;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		IdSelectDSV;
 	MakeComPtrGetter(IdSelectDSV);
+
+public:
+	UINT GetID(
+		const float& RelativeMousePosX, const float& RelativeMousePosY,
+		const float& WindowSizeX, const float& WindowSizeY
+	);
 
 public:
 	virtual void CleanupLens();

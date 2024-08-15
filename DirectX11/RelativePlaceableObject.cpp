@@ -4,7 +4,7 @@
 using namespace DirectX;
 
 RelativePlaceableObject::RelativePlaceableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
-	: APlaceable(DeviceIn, DeviceContextIn), AAttachable()
+	: APlaceable(DeviceIn, DeviceContextIn), AAttachable(), AObject()
 {
 }
 

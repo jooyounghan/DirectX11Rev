@@ -44,6 +44,9 @@ protected:
 	void Render();
 
 private:
+	void ResetCursorHotSpot(const DWORD& HotspotX, const DWORD& HotspotY);
+
+private:
 	float GetDeltaTimeFromLastCall();
 
 public:

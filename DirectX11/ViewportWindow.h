@@ -1,23 +1,24 @@
 #pragma once
-#include "IGameWorldLinkedWindow.h"
+#include "IEditorLinkedWindow.h"
 
 class Map;
 class EditorCamera; 
 
-class ViewportWindow : public IGameWorldLinkedWindow
+class ViewportWindow : public IEditorLinkedWindow
 {
 public: 
-	ViewportWindow(GameWorld* GameWorldLinkedIn, EditorCamera* EditorCameraIn);
+	ViewportWindow(EditorWorld* EditorWorldIn);
 	virtual ~ViewportWindow();
-
-protected:
-	EditorCamera* EditorCameraCached = nullptr;
 
 public:
 	virtual void RenderWindow() override;
 
 private:
-	static std::string ViewportWindowName;
+	EditorCamera* EditorCameraCached = nullptr;
+
+private:
+	ImVec2 ImagePosition = ImVec2();
+	ImVec2 ImageSize = ImVec2();
 
 private:
 	void ManageAssetDrop(Map* CurrentMap);
