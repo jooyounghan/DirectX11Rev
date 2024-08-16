@@ -14,8 +14,8 @@ TaskAnalyzerWindow::~TaskAnalyzerWindow()
 void TaskAnalyzerWindow::RenderWindow()
 {
     Begin("Task Analyzer");
-    DrawFPSLinePlotting();
 
+    DrawFPSLinePlotting();
 
 
     End();

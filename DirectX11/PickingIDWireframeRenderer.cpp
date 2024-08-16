@@ -14,9 +14,9 @@ void PickingIDWireframeRenderer::Render(ID3D11DeviceContext* DeviceContextIn, Me
 {
 }
 
-void PickingIDWireframeRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingComponent* MeshObjectIn)
+void PickingIDWireframeRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingComponent* BoundingObjectIn)
 {
-	Debugable* DebugObject = MeshObjectIn->GetDebugObject();
+	Debugable* DebugObject = BoundingObjectIn->GetDebugObject();
 
 	if (DebugObject)
 	{
@@ -27,8 +27,8 @@ void PickingIDWireframeRenderer::Render(ID3D11DeviceContext* DeviceContextIn, AB
 		DeviceContextIn->IASetVertexBuffers(0, 1, VertexBuffers, Strides, Offsets);
 		DeviceContextIn->IASetIndexBuffer(DebugObject->GetIndexBuffer(), DebugObject->GetIndexFormat(), 0);
 
-		ID3D11Buffer* VSConstBuffers[] = { MeshObjectIn->TransformationBuffer.GetBuffer() };
-		ID3D11Buffer* PSConstBuffers[] = { MeshObjectIn->GetPickingIDBuffer().GetBuffer() };
+		ID3D11Buffer* VSConstBuffers[] = { BoundingObjectIn->TransformationBuffer.GetBuffer() };
+		ID3D11Buffer* PSConstBuffers[] = { BoundingObjectIn->GetPickingIDBufferCached() };
 
 		PSOObjectCached->SetVSConstantBuffers(1, 1, VSConstBuffers);
 		PSOObjectCached->SetPSConstantBuffers(0, 1, PSConstBuffers);

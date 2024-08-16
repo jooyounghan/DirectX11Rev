@@ -6,8 +6,8 @@
 #include "MeshObjectRenderer.h"
 #include "BoundingComponentRenderer.h"
 
-#include "APlaceable.h"
-#include "Attachable.h"
+#include "PlaceableObject.h"
+#include "AttachableObject.h"
 
 #include <list>
 #include <memory>
@@ -21,6 +21,9 @@ class PSOObject;
 class ARenderer;
 
 class AssetManager;
+
+class PlaceableObject;
+class AttachableObject;
 
 class Camera;
 class AObject;
@@ -45,11 +48,11 @@ protected:
 	MakeSetter(CameraCached);
 
 protected:
-	std::list<std::unique_ptr<APlaceable>> RootPlaceables;
+	std::list<std::unique_ptr<PlaceableObject>> RootPlaceables;
 	MakeGetter(RootPlaceables);
 
 protected:
-	std::unordered_map<unsigned int, APlaceable*> IdToPlaceables;
+	std::unordered_map<unsigned int, PlaceableObject*> IdToPlaceables;
 	MakeGetter(IdToPlaceables);
 
 protected:
@@ -70,33 +73,15 @@ public:
 	template<typename T, typename ...Args>
 	T* PlaceableAddHelper(Args... args)
 	{
-		static_assert(std::is_base_of<APlaceable, T>::value, DerivedCondition(PlaceableObject));
+		static_assert(std::is_base_of<PlaceableObject, T>::value, DerivedCondition(PlaceableObject));
 
 		RootPlaceables.emplace_back(std::make_unique<T>(args...));
-		APlaceable* RootPlaceable = RootPlaceables.back().get();
+		PlaceableObject* RootPlaceable = RootPlaceables.back().get();
 
 		IdToPlaceables[RootPlaceable->GetPickingID().GetID()] = RootPlaceable;
 
 		T* AddedObject = (T*)(RootPlaceable);
 		return AddedObject;
 	}
-
-private:
-	template<typename Attachment, typename ...Args>
-	Attachment* AttachedAddHelper(APlaceable* AttachToObject, Args... args)
-	{
-		static_assert(std::is_base_of<AAttachable, Attachment>::value, DerivedCondition(AAttachable));
-
-		Attachment* Attached = AttachToObject->AddAttachedObjectHelper<Attachment>(args...);
-
-		if (std::is_base_of_v<APlaceable, Attachment>)
-		{
-			APlaceable* Placeable = (APlaceable*)Attached;
-			IdToPlaceables[Placeable->GetPickingID().GetID()] = Placeable;
-		}
-
-		return Attached;
-	}
-
 };
 

@@ -14,7 +14,6 @@ PickingIDSolidRenderer::PickingIDSolidRenderer(PSOObject* PSOObjectIn)
 
 void PickingIDSolidRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn)
 {
-
 	AMeshAsset* MeshAssetInstance = MeshObjectIn->GetMeshAssetInstance();
 
 	if (MeshAssetInstance)
@@ -31,7 +30,7 @@ void PickingIDSolidRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshOb
 		DeviceContextIn->IASetIndexBuffer(MeshAssetInstance->GetIndexBuffer(), MeshAssetInstance->GetIndexFormat(), 0);
 
 		ID3D11Buffer* VSConstBuffers[] = { MeshObjectIn->TransformationBuffer.GetBuffer() };
-		ID3D11Buffer* PSConstBuffers[] = { MeshObjectIn->GetPickingIDBuffer().GetBuffer() };
+		ID3D11Buffer* PSConstBuffers[] = { MeshObjectIn->GetPickingIDBufferCached() };
 
 		PSOObjectCached->SetVSConstantBuffers(1, 1, VSConstBuffers);
 		PSOObjectCached->SetPSConstantBuffers(0, 1, PSConstBuffers);

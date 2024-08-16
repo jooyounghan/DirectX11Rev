@@ -5,7 +5,7 @@
 #include "ARenderer.h"
 
 ABoundingComponent::ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances, AssetManager* AssetManagerInstance)
-	: RelativePlaceableObject(
+	: AttachableObject(
 		GraphicsPipelineInstances->GetDevice(),
 		GraphicsPipelineInstances->GetDeviceContext()
 	)
@@ -33,16 +33,12 @@ void ABoundingComponent::SetCollisionColor()
 
 void ABoundingComponent::UpdateObject(const float& DeltaTimeIn)
 {
-	RelativePlaceableObject::UpdateObject(DeltaTimeIn);
+	AttachableObject::UpdateObject(DeltaTimeIn);
 	SetCollisionColor();
 }
 
 void ABoundingComponent::AcceptRenderer(ARenderer* Renderer)
 {
+	AttachableObject::AcceptRenderer(Renderer);
 	Renderer->Render(DeviceContextCached, this);
-
-	for (auto& AttachedObject : AttachedObjects)
-	{
-		AttachedObject->AcceptRenderer(Renderer);
-	}
 }

@@ -7,6 +7,7 @@
 
 #ifdef _DEBUG
 #include "EditorWorld.h"
+#include "EditorActor.h"
 #include "EditorCamera.h"
 #endif 
 
@@ -26,7 +27,11 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHand
 	MapInstances.emplace(0, std::move(make_unique<Map>(GraphicsPipelineInstance, PSOManagerInstance.get(), AssetManagerInstance.get())));
 	CurrentMap = MapInstances[0].get();
 
-	CurrentMap->SetCameraCached(EditorWorldInstance->GetEditorCameraInstance().get());
+	EditorActor* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
+	if (EditorActorInstnace != nullptr)
+	{
+		CurrentMap->SetCameraCached(EditorActorInstnace->GetEditorCameraCached());
+	}
 }
 #else
 GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance)

@@ -2,7 +2,7 @@
 #include "AssetManager.h"
 #include "Debugable.h"
 #include "CollisionVisitor.h"
-#include "IGuiLowLevelVisitor.h"
+#include "IGuiModelVisitor.h"
 
 using namespace std;
 using namespace DirectX;
@@ -101,7 +101,7 @@ bool BoundingSphere::IsOverlappedWithSphere(BoundingSphere* SphereIn)
 	return Distance <= (ScaledRadius + SphereIn->ScaledRadius);
 }
 
-void BoundingSphere::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)
+void BoundingSphere::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
 }

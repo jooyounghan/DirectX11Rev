@@ -1,21 +1,17 @@
 #pragma once
-#include "IGuiLowLevelVisitor.h"
+#include "IGuiModelVisitor.h"
 #include <DirectXMath.h>
 
-class AttachableObject;
-class PlaceableObject;
-class RelativePlaceableObject;
-
-class MapOutlinerWindow;
+class ModelDetailWindow;
 
 
-class ModelInformationOutlinerVisitor : public IGuiLowLevelVisitor
+class ModelDetailedInformationVisitor : public IGuiModelVisitor
 {
 public:
-	ModelInformationOutlinerVisitor(MapOutlinerWindow* MapOutlinerInstance);
+	ModelDetailedInformationVisitor(ModelDetailWindow* ModelDetailWindowIn);
 
 protected:
-	MapOutlinerWindow* MapOutlinerCached;
+	ModelDetailWindow* ModelDetailWindowCached;
 
 public:
 	virtual void Visit(MeshObject* AttachableInstance) override;

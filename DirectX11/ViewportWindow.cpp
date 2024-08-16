@@ -2,6 +2,8 @@
 
 #include "EditorWorld.h"
 #include "GameWorld.h"
+
+#include "EditorActor.h"
 #include "EditorCamera.h"
 
 #include "AssetManager.h"
@@ -18,7 +20,10 @@ using namespace std;
 ViewportWindow::ViewportWindow(EditorWorld* EditorWorldIn)
     : IEditorLinkedWindow(EditorWorldIn)
 {
-    EditorCameraCached = EditorWorldCached->GetEditorCameraInstance().get();
+    EditorActor* EditorActorInstance= EditorWorldCached->GetEditorActorInstance();
+    assert(EditorActorInstance != nullptr);
+
+    EditorCameraCached = EditorActorInstance->GetEditorCameraCached();
     assert(EditorCameraCached != nullptr);
 }
 

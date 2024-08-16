@@ -4,7 +4,7 @@
 #include "AssetManager.h"
 #include "Debugable.h"
 #include "CollisionVisitor.h"
-#include "IGuiLowLevelVisitor.h"
+#include "IGuiModelVisitor.h"
 #include <limits>
 
 using namespace std;
@@ -187,7 +187,7 @@ bool OrientedBoundingBox::IsOverlappedWithOBBNormalBoth(OrientedBoundingBox* OBB
 }
 
 
-void OrientedBoundingBox::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)
+void OrientedBoundingBox::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
 }

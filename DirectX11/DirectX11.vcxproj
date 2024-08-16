@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EditorActor.cpp" />
     <ClCompile Include="ABoundingComponent.cpp" />
     <ClCompile Include="AObject.cpp" />
     <ClCompile Include="AssetManagerWindow.cpp" />
@@ -169,13 +170,12 @@
     <ClCompile Include="IWorld.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="MapOutlinerWindow.cpp" />
+    <ClCompile Include="ModelOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
-    <ClCompile Include="APlaceable.cpp" />
     <ClCompile Include="MeshObjectInformationDrawer.cpp" />
-    <ClCompile Include="ModelInformationOutlinerVisitor.cpp" />
+    <ClCompile Include="ModelDetailWindow.cpp" />
+    <ClCompile Include="ModelDetailedInformationVisitor.cpp" />
     <ClCompile Include="OrientedBoundingBox.cpp" />
-    <ClCompile Include="ModelListOutlinerVisitor.cpp" />
     <ClCompile Include="APickingIDRenderer.cpp" />
     <ClCompile Include="PickingIDSolidRenderer.cpp" />
     <ClCompile Include="PickingIDWireframeRenderer.cpp" />
@@ -183,13 +183,13 @@
     <ClCompile Include="PortfolioApp.cpp" />
     <ClCompile Include="PSOManager.cpp" />
     <ClCompile Include="PSOObject.cpp" />
-    <ClCompile Include="RelativePlaceableObject.cpp" />
     <ClCompile Include="MeshObject.cpp" />
     <ClCompile Include="SkeletalMeshAsset.cpp" />
     <ClCompile Include="StaticMeshAsset.cpp" />
     <ClCompile Include="MeshObjectRenderer.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TaskAnalyzerWindow.cpp" />
+    <ClCompile Include="TestActor.cpp" />
     <ClCompile Include="TextureAsset.cpp" />
     <ClCompile Include="TransformationInformationDrawer.cpp" />
     <ClCompile Include="Viewable.cpp" />
@@ -197,9 +197,9 @@
     <ClCompile Include="ViewportWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EditorActor.h" />
     <ClInclude Include="ABoundingComponent.h" />
     <ClInclude Include="AssetManagerWindow.h" />
-    <ClInclude Include="Attachable.h" />
     <ClInclude Include="AttachableObject.h" />
     <ClInclude Include="BoundingCapsule.h" />
     <ClInclude Include="BoundingFrustum.h" />
@@ -219,7 +219,7 @@
     <ClInclude Include="ICollisionVisitor.h" />
     <ClInclude Include="IDColor.h" />
     <ClInclude Include="IDialog.h" />
-    <ClInclude Include="IGuiLowLevelVisitor.h" />
+    <ClInclude Include="IGuiModelVisitor.h" />
     <ClInclude Include="IIndexable.h" />
     <ClInclude Include="IInformationDrawer.h" />
     <ClInclude Include="IIntersectable.h" />
@@ -232,18 +232,17 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="AObject.h" />
-    <ClInclude Include="IGuiTopLevelVisitor.h" />
     <ClInclude Include="MeshObjectInformationDrawer.h" />
-    <ClInclude Include="ModelInformationOutlinerVisitor.h" />
-    <ClInclude Include="ModelListOutlinerVisitor.h" />
+    <ClInclude Include="ModelDetailWindow.h" />
+    <ClInclude Include="ModelDetailedInformationVisitor.h" />
     <ClInclude Include="APickingIDRenderer.h" />
     <ClInclude Include="PickingIDSolidRenderer.h" />
     <ClInclude Include="PickingIDWireframeRenderer.h" />
     <ClInclude Include="PlaceableObject.h" />
-    <ClInclude Include="RelativePlaceableObject.h" />
     <ClInclude Include="ARenderer.h" />
     <ClInclude Include="MeshObjectRenderer.h" />
     <ClInclude Include="StaticAssertHelper.h" />
+    <ClInclude Include="TestActor.h" />
     <ClInclude Include="TransformationInformationDrawer.h" />
     <ClInclude Include="Vertexable.h" />
     <ClInclude Include="OrientedBoundingBox.h" />
@@ -268,9 +267,8 @@
     <ClInclude Include="IUploadableBuffer.h" />
     <ClInclude Include="IWorld.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="MapOutlinerWindow.h" />
+    <ClInclude Include="ModelOutlinerWindow.h" />
     <ClInclude Include="MathematicalHelper.h" />
-    <ClInclude Include="APlaceable.h" />
     <ClInclude Include="PortfolioApp.h" />
     <ClInclude Include="PSOManager.h" />
     <ClInclude Include="MeshObject.h" />

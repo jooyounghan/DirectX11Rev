@@ -3,11 +3,13 @@
 #include "GlobalVariable.h"
 #include "DefineUtility.h"
 
+#include "EditorActor.h"
 #include "EditorCamera.h"
 
 #include "TaskAnalyzerWindow.h"
 #include "ViewportWindow.h" 
-#include "MapOutlinerWindow.h"
+#include "ModelOutlinerWindow.h"
+#include "ModelDetailWindow.h"
 #include "AssetManagerWindow.h"
 
 #include "AssetManager.h"
@@ -28,13 +30,7 @@ using namespace std;
 EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
     : IWorld(GameWorldIn->GraphicsPipelineCached), GameWorldCached(GameWorldIn)
 {
-    EditorCameraInstance = make_unique<EditorCamera>(
-        GameWorldIn->GraphicsPipelineCached, App::GWidth, App::GHeight
-    );
-
-    // Test =============================================================
-    EditorCameraInstance->Position = SPosition4D{ 0.f, 0.f, -300.f, 1.f };
-    // =============================================================
+    EditorActorInstance = make_unique<EditorActor>(GraphicsPipelineCached);
 
     IMGUI_CHECKVERSION();
 
@@ -56,7 +52,8 @@ EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
 
     Dialogs.push_back(make_unique<TaskAnalyzerWindow>());
     Dialogs.push_back(make_unique<ViewportWindow>(this));
-    Dialogs.push_back(make_unique<MapOutlinerWindow>(this));
+    Dialogs.push_back(make_unique<ModelOutlinerWindow>(this));
+    Dialogs.push_back(make_unique<ModelDetailWindow>(this));
     Dialogs.push_back(make_unique<AssetManagerWindow>(GameWorldCached->GetAssetManagerInstance()));
 }
 
@@ -76,46 +73,50 @@ void EditorWorld::SetSelecteObjectByID(const UINT& Id)
     Map* CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap != nullptr)
     {
-        const unordered_map<UINT, APlaceable*>& IdToPlaceables = CurrentMap->GetIdToPlaceables();
+        const unordered_map<UINT, PlaceableObject*>& IdToPlaceables = CurrentMap->GetIdToPlaceables();
         if (IdToPlaceables.find(Id) != IdToPlaceables.end())
         {
-            SelectedObject = (AObject*)IdToPlaceables.at(Id);
+            SelectedPlaceable = IdToPlaceables.at(Id);
         }
     }
 }
 
 void EditorWorld::UpdateWorld(const float& DeltaTimeIn)
 {
-    EditorCameraInstance->UpdateObject(DeltaTimeIn);
+    EditorActorInstance->UpdateObject(DeltaTimeIn);
 }
 
 void EditorWorld::RenderWorld()
 {
-    EditorCameraInstance->CleanupLens();
-    Map* CurrentMap = GameWorldCached->GetCurrentMap();
-    PSOManager* PSOManagerInstance = GameWorldCached->GetPSOManagerInstance();
-    if (CurrentMap != nullptr)
+    EditorCamera* EditorCameraCached = EditorActorInstance->GetEditorCameraCached();
+    if (EditorCameraCached != nullptr)
     {
-        ARenderer* PickingIDRenderers[] =
+        EditorCameraCached->CleanupLens();
+        Map* CurrentMap = GameWorldCached->GetCurrentMap();
+        PSOManager* PSOManagerInstance = GameWorldCached->GetPSOManagerInstance();
+        if (CurrentMap != nullptr)
         {
-            PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Solid),
-            PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Wireframe)
-        };
-
-        const list<unique_ptr<APlaceable>>& RootPlaceables = CurrentMap->GetRootPlaceables();
-
-        ID3D11RenderTargetView* RTVs[] = { EditorCameraInstance->GetIdSelectRTV() };
-        D3D11_VIEWPORT Viewports[] = { EditorCameraInstance->GetViewport() };
-        ID3D11DepthStencilView* DSV = EditorCameraInstance->GetIdSelectDSV();
-
-        for (ARenderer* PickingIDRenderer : PickingIDRenderers)
-        {
-            PickingIDRenderer->PresetRendering(1, RTVs, Viewports, DSV, EditorCameraInstance.get(), CurrentMap);
-            for (auto& Placeable : RootPlaceables)
+            ARenderer* PickingIDRenderers[] =
             {
-                Placeable->AcceptRenderer(PickingIDRenderer);
+                PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Solid),
+                PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Wireframe)
+            };
+
+            const list<unique_ptr<PlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
+
+            ID3D11RenderTargetView* RTVs[] = { EditorCameraCached->GetIdSelectRTV() };
+            D3D11_VIEWPORT Viewports[] = { EditorCameraCached->GetViewport() };
+            ID3D11DepthStencilView* DSV = EditorCameraCached->GetIdSelectDSV();
+
+            for (ARenderer* PickingIDRenderer : PickingIDRenderers)
+            {
+                PickingIDRenderer->PresetRendering(1, RTVs, Viewports, DSV, EditorCameraCached, CurrentMap);
+                for (auto& Placeable : RootPlaceables)
+                {
+                    Placeable->AcceptRenderer(PickingIDRenderer);
+                }
+                PickingIDRenderer->ResetRendering();
             }
-            PickingIDRenderer->ResetRendering();
         }
     }
 

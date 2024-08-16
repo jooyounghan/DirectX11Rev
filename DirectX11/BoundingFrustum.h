@@ -38,6 +38,6 @@ public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
 
 public:
-	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) override;
+	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 };
 

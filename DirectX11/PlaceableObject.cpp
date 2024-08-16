@@ -1,12 +1,15 @@
 #include "PlaceableObject.h"
-#include "Attachable.h"
-#include "IGuiTopLevelVisitor.h"
+#include "AttachableObject.h"
 
 using namespace DirectX;
 
+UINT PlaceableObject::PickingIDIssued = 0xABCDEF12;
+
 PlaceableObject::PlaceableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
-	: APlaceable(DeviceIn, DeviceContextIn)
+	: AObject(DeviceIn, DeviceContextIn), PickingID(PickingIDIssued)
 {
+	PickingIDIssued++;
+	PickingIDBuffer.InitializeForGPU(DeviceIn, PickingID.GetColor());
 }
 
 PlaceableObject::~PlaceableObject()
@@ -61,13 +64,17 @@ void PlaceableObject::UpdateObject(const float& DeltaTimeIn)
 	
 	TransformationBuffer.Upload(DeviceContextCached, TempTransformation);
 	
-	for (auto& ChildObject : AttachedObjects)
+	for (auto& ChildObject : AttachedChildrenObjects)
 	{
 		ChildObject->UpdateObject(DeltaTimeIn);
 	}
 }
 
-void PlaceableObject::AcceptGui(IGuiTopLevelVisitor* GuiVisitor)
+void PlaceableObject::AcceptRenderer(ARenderer* Renderer)
 {
-	GuiVisitor->Visit(this);
+	for (auto& AtttachedChild : AttachedChildrenObjects)
+	{
+		AtttachedChild->AcceptRenderer(Renderer);
+	}
+
 }

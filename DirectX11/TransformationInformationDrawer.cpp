@@ -1,5 +1,5 @@
 #include "TransformationInformationDrawer.h"
-#include "APlaceable.h"
+#include "AObject.h"
 
 #include "DefineType.h"
 
@@ -15,7 +15,7 @@ const char* TransformationInformationDrawer::TransformationSelect[NumTransformat
 };
 
 TransformationInformationDrawer::TransformationInformationDrawer(
-    APlaceable* CurrentPlaceable, APlaceable* ParentPlaceable,
+    AObject* CurrentPlaceable, AObject* ParentPlaceable,
     const bool& IsTranslationOnlyAbsoluteIn, const bool& IsTranslationDisabledIn,
     const bool& IsRotationOnlyAbsoluteIn, const bool& IsRotationDisabledIn,
     const bool& IsScalingOnlyAbsoluteIn, const bool& IsScalingDisabledIn

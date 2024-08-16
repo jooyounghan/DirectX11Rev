@@ -12,7 +12,7 @@ class BoundingFrustum;
 
 class Viewable;
 
-class IGuiLowLevelVisitor
+class IGuiModelVisitor
 {
 public:
 	virtual void Visit(MeshObject* MeshObjectInstance) = 0;

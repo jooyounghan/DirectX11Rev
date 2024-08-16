@@ -1,7 +1,7 @@
 #pragma once
 #include "IInformationDrawer.h"
 
-class APlaceable;
+class AObject;
 
 enum ETransfomationSelect : size_t
 {
@@ -10,18 +10,18 @@ enum ETransfomationSelect : size_t
     NumTransformationSelect
 };
 
-class TransformationInformationDrawer : AInformationDrawer<APlaceable>
+class TransformationInformationDrawer : AInformationDrawer<AObject>
 {
 public:
     TransformationInformationDrawer(
-        APlaceable* CurrentPlaceable, APlaceable* ParentPlaceable,
+        AObject* CurrentPlaceable, AObject* ParentPlaceable,
         const bool& IsTranslationOnlyAbsoluteIn, const bool& IsTranslationDisabledIn,
         const bool& IsRotationOnlyAbsoluteIn, const bool& IsRotationDisabledIn,
         const bool& IsScalingOnlyAbsoluteIn, const bool& IsScalingDisabledIn
     );
 
 protected:
-    APlaceable* ParentObjectCached = nullptr;
+    AObject* ParentObjectCached = nullptr;
 
 protected:
     bool IsTranslationOnlyAbsolute = false; 

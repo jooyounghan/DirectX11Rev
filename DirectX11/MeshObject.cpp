@@ -2,7 +2,7 @@
 #include "GraphicsPipeline.h"
 #include "AMeshAsset.h"
 #include "PSOObject.h"
-#include "IGuiLowLevelVisitor.h"
+#include "IGuiModelVisitor.h"
 #include "ARenderer.h"
 
 using namespace std;
@@ -11,7 +11,7 @@ MeshObject::MeshObject(
 	GraphicsPipeline* GraphicsPipelineInstances, 
 	AMeshAsset* MeshAssetInstanceIn
 )
-	: RelativePlaceableObject(
+	: AttachableObject(
 		GraphicsPipelineInstances->GetDevice(),
 		GraphicsPipelineInstances->GetDeviceContext()
 	), MeshAssetInstance(MeshAssetInstanceIn)
@@ -19,7 +19,6 @@ MeshObject::MeshObject(
 	static size_t MeshObjectCount = 0;
 	MeshObjectCount++;
 	ObjectName = "Mesh Object " + to_string(MeshObjectCount);
-
 }
 
 MeshObject::~MeshObject()
@@ -28,20 +27,16 @@ MeshObject::~MeshObject()
 
 void MeshObject::UpdateObject(const float& DeltaTimeIn)
 {
-	RelativePlaceableObject::UpdateObject(DeltaTimeIn);
+	AttachableObject::UpdateObject(DeltaTimeIn);
 }
 
 void MeshObject::AcceptRenderer(ARenderer* Renderer)
 {
+	AttachableObject::AcceptRenderer(Renderer);
 	Renderer->Render(DeviceContextCached, this);
-
-	for (auto& AttachedObject : AttachedObjects)
-	{
-		AttachedObject->AcceptRenderer(Renderer);
-	}
 }
 
-void MeshObject::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)
+void MeshObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
 }

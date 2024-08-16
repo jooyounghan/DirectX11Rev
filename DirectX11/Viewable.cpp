@@ -1,13 +1,13 @@
 #include "Viewable.h"
 #include "DefineUtility.h"
 #include "GlobalVariable.h"
-#include "IGuiLowLevelVisitor.h"
+#include "IGuiModelVisitor.h"
 
 using namespace std;
 using namespace DirectX;
 
 Viewable::Viewable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn, const UINT& WidthIn, const UINT& HeightIn)
-	: RelativePlaceableObject(DeviceIn, DeviceContextIn), ViewProjBuffer(DeviceIn)
+	: AttachableObject(DeviceIn, DeviceContextIn), ViewProjBuffer(DeviceIn)
 {
 	Resize(WidthIn, HeightIn);
 }
@@ -51,7 +51,7 @@ const XMMATRIX Viewable::GetPerspectiveViewMatrix()
 
 void Viewable::UpdateObject(const float& DeltaTimeIn)
 {
-	RelativePlaceableObject::UpdateObject(DeltaTimeIn);
+	AttachableObject::UpdateObject(DeltaTimeIn);
 
 	ViewProjBufferData TempViewProj;
 	TempViewProj.ViewProjMatrix = GetPerspectiveViewMatrix();
@@ -61,7 +61,7 @@ void Viewable::UpdateObject(const float& DeltaTimeIn)
 	ViewProjBuffer.Upload(DeviceContextCached, TempViewProj);
 }
 
-void Viewable::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)
+void Viewable::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
 }

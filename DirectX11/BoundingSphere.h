@@ -38,6 +38,6 @@ public:
 	bool IsOverlappedWithSphere(BoundingSphere* SphereIn);
 
 public:
-	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) override;
+	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 };
 

@@ -1,8 +1,8 @@
 #include "AttachableObject.h"
-#include "IGuiTopLevelVisitor.h"
+#include "PlaceableObject.h"
 
-AttachableObject::AttachableObject()
-	: AAttachable()
+AttachableObject::AttachableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
+	: AObject(DeviceIn, DeviceContextIn)
 {
 }
 
@@ -10,13 +10,97 @@ AttachableObject::~AttachableObject()
 {
 }
 
+DirectX::XMVECTOR AttachableObject::GetRotationQuat() const
+{
+	XMVECTOR ResultQuat = XMQuaternionRotationRollPitchYaw(
+		XMConvertToRadians(Angle.Pitch),
+		XMConvertToRadians(Angle.Yaw),
+		XMConvertToRadians(Angle.Roll)
+	);
+	if (ParentObject)
+	{
+		ResultQuat = XMQuaternionMultiply(ResultQuat, ParentObject->GetRotationQuat());
+	}
+	return ResultQuat;
+}
+
+DirectX::XMMATRIX AttachableObject::GetScaleMatrix() const
+{
+	XMMATRIX ResultScale = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
+	if (ParentObject)
+	{
+		ResultScale = XMMatrixMultiply(ResultScale, ParentObject->GetScaleMatrix());
+	}
+	return ResultScale;
+}
+
+DirectX::XMMATRIX AttachableObject::GetRotationMatrix() const
+{
+	XMMATRIX ResultRotation = DirectX::XMMatrixRotationRollPitchYaw(
+		XMConvertToRadians(Angle.Pitch),
+		XMConvertToRadians(Angle.Yaw),
+		XMConvertToRadians(Angle.Roll)
+	);
+	if (ParentObject)
+	{
+		ResultRotation = XMMatrixMultiply(ResultRotation, ParentObject->GetRotationMatrix());
+	}
+	return ResultRotation;
+}
+
+DirectX::XMMATRIX AttachableObject::GetTranslationMatrix() const
+{
+	XMMATRIX ResultTranslation = DirectX::XMMatrixTranslation(Position.x, Position.y, Position.z);
+	if (ParentObject)
+	{
+		ResultTranslation = XMMatrixMultiply(ResultTranslation, ParentObject->GetTranslationMatrix());
+	}
+	return ResultTranslation;
+}
+
+DirectX::XMMATRIX AttachableObject::GetTransformation(const bool& IsIgnoreScale) const
+{
+	XMMATRIX ResultTransformation = XMMatrixAffineTransformation(
+		IsIgnoreScale ? XMVectorSet(1.f, 1.f, 1.f, 0.0f) : XMVectorSet(Scale.x, Scale.y, Scale.z, 0.0f),
+		XMQuaternionIdentity(),
+		XMQuaternionRotationRollPitchYaw(
+			XMConvertToRadians(Angle.Pitch),
+			XMConvertToRadians(Angle.Yaw),
+			XMConvertToRadians(Angle.Roll)
+		),
+		Position.Position
+	);
+
+	if (ParentObject)
+	{
+		ResultTransformation = XMMatrixMultiply(
+			ResultTransformation,
+			ParentObject->GetTransformation(true)
+		);
+	}
+	return ResultTransformation;
+}
+
 void AttachableObject::UpdateObject(const float& DeltaTimeIn)
 {
-	// Update Something From the Parent
+	TransformationMatrix TempTransformation;
+
+	TempTransformation.TransfomationMat = GetTransformation();
+	TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
+	TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
+
+	TransformationBuffer.Upload(DeviceContextCached, TempTransformation);
+
+	for (auto& ChildObject : AttachedChildrenObjects)
+	{
+		ChildObject->UpdateObject(DeltaTimeIn);
+	}
 }
 
-void AttachableObject::AcceptGui(IGuiTopLevelVisitor* GuiVisitor)
+void AttachableObject::AcceptRenderer(ARenderer* Renderer) 
 {
-	GuiVisitor->Visit(this);
+	for (auto& ChildObject : AttachedChildrenObjects)
+	{
+		ChildObject->AcceptRenderer(Renderer);
+	}
 }
-

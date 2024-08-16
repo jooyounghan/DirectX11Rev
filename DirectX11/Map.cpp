@@ -14,6 +14,7 @@
 #include "Camera.h"
 
 // TEST
+#include "TestActor.h"
 #include "EditorCamera.h"
 #include "BoundingSphere.h"
 #include "OrientedBoundingBox.h"
@@ -35,24 +36,23 @@ Map::~Map()
 
 void Map::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-		MeshObject* AddedObject = PlaceableAddHelper<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
+	TestActor* ta = PlaceableAddHelper<TestActor>(GraphicsPipelineCached->GetDevice(), GraphicsPipelineCached->GetDeviceContext());
+	MeshObject* AddedObject = ta->AddChildObject<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
 
-		AddedObject->Position.x = PosXIn;
-		AddedObject->Position.y = PosYIn;
-		AddedObject->Position.z = PosZIn;
+	AddedObject->Position.x = PosXIn;
+	AddedObject->Position.y = PosYIn;
+	AddedObject->Position.z = PosZIn;
 
-		// TEST ========================================================================================================
-		OrientedBoundingBox* OBB = AttachedAddHelper<OrientedBoundingBox>(AddedObject, GraphicsPipelineCached, AssetManagerCached,
-			100.f, 100.f, 100.f);						
-		OBB->Position.x += 400.f;
+	// TEST ========================================================================================================
+	OrientedBoundingBox* OBB = AddedObject->AddChildObject<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached, 100.f, 100.f, 100.f);						
+	OBB->Position.x += 400.f;
 
-		BoundingSphere* BB = AttachedAddHelper<BoundingSphere>(OBB, GraphicsPipelineCached, AssetManagerCached,
-			100.f);
-		OBB->Position.x += 400.f;
+	BoundingSphere* BB = OBB->AddChildObject<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached, 100.f);
+	OBB->Position.x += 400.f;
 
-		Tests.push_back(OBB);
-		Tests.push_back(BB);
-		// TEST ========================================================================================================
+	Tests.push_back(OBB);
+	Tests.push_back(BB);
+	// TEST ========================================================================================================
 }
 
 

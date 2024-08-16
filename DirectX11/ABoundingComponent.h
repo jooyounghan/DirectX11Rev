@@ -1,12 +1,12 @@
 #pragma once
 #include "IIntersectable.h"
-#include "RelativePlaceableObject.h"
+#include "AttachableObject.h"
 
 class GraphicsPipeline;
 class AssetManager;
 class Debugable;
 
-class ABoundingComponent : public IIntersectable, public RelativePlaceableObject
+class ABoundingComponent : public IIntersectable, public AttachableObject
 {	
 public:
 	ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances, AssetManager* AssetManagerInstance);
@@ -33,6 +33,6 @@ public:
 	virtual void AcceptRenderer(ARenderer* Renderer) override;
 
 public:
-	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) = 0;
+	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
 };
 

@@ -9,9 +9,10 @@
 #include <memory>
 
 class AObject;
+class PlaceableObject;
 class GameWorld;
 class IWindow;
-class EditorCamera;
+class EditorActor;
 
 class EditorWorld : public IWorld
 {
@@ -28,15 +29,19 @@ protected:
 	MakeGetter(FontSrvHandleID);
 
 protected:
-	std::unique_ptr<EditorCamera> EditorCameraInstance;
-	MakeGetter(EditorCameraInstance);
+	std::unique_ptr<EditorActor> EditorActorInstance;
+	MakeSmartPtrGetter(EditorActorInstance);
 
 protected:
 	std::vector<std::unique_ptr<IWindow>> Dialogs;
 
 protected:
-	AObject* SelectedObject = nullptr;
-	MakeSetterGetter(SelectedObject);
+	PlaceableObject* SelectedPlaceable = nullptr;
+	MakeSetterGetter(SelectedPlaceable);
+
+protected:
+	AObject* SelectedDetailed = nullptr;
+	MakeSetterGetter(SelectedDetailed);
 
 public:
 	void SetSelecteObjectByID(const UINT& Id);

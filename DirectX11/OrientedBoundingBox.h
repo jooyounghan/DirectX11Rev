@@ -51,5 +51,5 @@ private:
 	float GetHalfExtendsLengthToAxis(const XMVECTOR& AxisIn);
 
 public:
-	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) override;
+	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 };

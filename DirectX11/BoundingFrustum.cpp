@@ -3,7 +3,7 @@
 #include "GlobalVariable.h"
 #include "DefineUtility.h"
 #include "CollisionVisitor.h"
-#include "IGuiLowLevelVisitor.h"
+#include "IGuiModelVisitor.h"
 
 using namespace std;
 
@@ -67,7 +67,7 @@ void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
         const XMVECTOR NearPosition = ViewableCached->NearZ * CurrentForward;
         const XMVECTOR FarPosition = ViewableCached->FarZ * CurrentForward;
 
-        const SPosition4D Postion = ViewableCached->Position;
+        const SPosition4D& Postion = ViewableCached->Position;
         XMVECTOR XMVPosition = XMVectorSet(Position.x, Position.y, Position.z, Position.w);
         XMVPosition = XMVector3Transform(XMVPosition, Transformation);
 
@@ -85,7 +85,7 @@ void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
 	}
 }
 
-void BoundingFrustum::AcceptGui(IGuiLowLevelVisitor* GuiVisitor)
+void BoundingFrustum::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
     GuiVisitor->Visit(this);
 }

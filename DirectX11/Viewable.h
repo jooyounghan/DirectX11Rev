@@ -1,5 +1,5 @@
 #pragma once
-#include "RelativePlaceableObject.h"
+#include "AttachableObject.h"
  
 struct ViewProjBufferData
 {
@@ -7,7 +7,7 @@ struct ViewProjBufferData
 	DirectX::XMMATRIX InvViewProjMatrix;
 };
 
-class Viewable : public RelativePlaceableObject
+class Viewable : public AttachableObject
 {
 public:
 	Viewable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn, const UINT& WidthIn, const UINT& HeightIn);
@@ -44,6 +44,6 @@ public:
 	virtual void Resize(const UINT& WidthIn, const UINT& HeightIn);
 
 public:
-	virtual void AcceptGui(IGuiLowLevelVisitor* GuiVisitor) override;
+	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 };
 

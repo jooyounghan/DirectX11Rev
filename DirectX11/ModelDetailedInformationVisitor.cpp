@@ -1,6 +1,5 @@
-#include "ModelInformationOutlinerVisitor.h"
-#include "MapOutlinerWindow.h"
-
+#include "ModelDetailedInformationVisitor.h"
+#include "ModelDetailWindow.h"
 #include "MeshObject.h"
 
 #include "BoundingSphere.h"
@@ -24,12 +23,12 @@ using namespace ImGui;
 using namespace DirectX;
 
 
-ModelInformationOutlinerVisitor::ModelInformationOutlinerVisitor(MapOutlinerWindow* MapOutlinerInstance)
-	: MapOutlinerCached(MapOutlinerInstance)
+ModelDetailedInformationVisitor::ModelDetailedInformationVisitor(ModelDetailWindow* ModelDetailWindowIn)
+	: ModelDetailWindowCached(ModelDetailWindowIn)
 {
 }
 
-void ModelInformationOutlinerVisitor::Visit(MeshObject* MeshObjectInsatnce)
+void ModelDetailedInformationVisitor::Visit(MeshObject* MeshObjectInsatnce)
 {
     PushID(MeshObjectInsatnce->GetObjectID().c_str());
 
@@ -47,9 +46,9 @@ void ModelInformationOutlinerVisitor::Visit(MeshObject* MeshObjectInsatnce)
     PopID();
 }
 
-void ModelInformationOutlinerVisitor::Visit(BoundingSphere* BoundingSphereInstance)
+void ModelDetailedInformationVisitor::Visit(BoundingSphere* BoundingSphereInstance)
 {
-    APlaceable* ParentObject = BoundingSphereInstance->GetParentObject();
+    AObject* ParentObject = BoundingSphereInstance->GetParentObject();
 
     PushID(BoundingSphereInstance->GetObjectID().c_str());
 
@@ -67,7 +66,7 @@ void ModelInformationOutlinerVisitor::Visit(BoundingSphere* BoundingSphereInstan
     PopID();
 }
 
-void ModelInformationOutlinerVisitor::Visit(OrientedBoundingBox* OBBInstance)
+void ModelDetailedInformationVisitor::Visit(OrientedBoundingBox* OBBInstance)
 {
     PushID(OBBInstance->GetObjectID().c_str());
 
@@ -85,7 +84,7 @@ void ModelInformationOutlinerVisitor::Visit(OrientedBoundingBox* OBBInstance)
     PopID();
 }
 
-void ModelInformationOutlinerVisitor::Visit(BoundingFrustum* BoundingFrustumInstance)
+void ModelDetailedInformationVisitor::Visit(BoundingFrustum* BoundingFrustumInstance)
 {
     PushID(BoundingFrustumInstance->GetObjectID().c_str());
 
@@ -100,7 +99,7 @@ void ModelInformationOutlinerVisitor::Visit(BoundingFrustum* BoundingFrustumInst
     PopID();
 }
 
-void ModelInformationOutlinerVisitor::Visit(Viewable* ViewableInstance)
+void ModelDetailedInformationVisitor::Visit(Viewable* ViewableInstance)
 {
     PushID(ViewableInstance->GetObjectID().c_str());
 
@@ -117,29 +116,3 @@ void ModelInformationOutlinerVisitor::Visit(Viewable* ViewableInstance)
 
     PopID();
 }
-
-
-//void ModelInformationOutlinerVisitor::DrawTransformationForAttachable(AttachableObject* Attachable)
-//{
-//    APlaceable* ParentObject = Attachable->GetParentObject();
-//
-//    static SPosition4D DummyPosition;
-//    static SAngle DummyAngle;
-//    static SVector3D DummyScale;
-//
-//    DrawTransformation(
-//        true, true, DummyPosition, ParentObject != nullptr ? ParentObject->Position : SPosition4D(),
-//        true, true, DummyAngle, ParentObject != nullptr ? ParentObject->Angle : SAngle(),
-//        true, true, DummyScale, SVector3D()
-//    );
-//}
-//
-//void ModelInformationOutlinerVisitor::DrawTransformationForPlaceables(PlaceableObject* Placeable)
-//{
-//    DrawTransformation(
-//        true, false, Placeable->Position, SPosition4D(),
-//        true, false, Placeable->Angle, SAngle(),
-//        true, false, Placeable->Scale, SVector3D()
-//    );
-//}
-
