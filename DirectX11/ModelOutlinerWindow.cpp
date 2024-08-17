@@ -10,6 +10,11 @@
 using namespace std;
 using namespace ImGui;
 
+const char* ModelOutlinerWindow::AddPlaceableButtonID = "Add Placeable +";
+const char* ModelOutlinerWindow::AddAttachableButtonID = "Add Attacheable +";
+const char* ModelOutlinerWindow::AddPlaceableModalID = "Add Placeable Object";
+const char* ModelOutlinerWindow::AddAttachableModalID = "Add Attachable Object";
+
 ModelOutlinerWindow::ModelOutlinerWindow(EditorWorld* EditorWorldIn)
 	: IEditorLinkedWindow(EditorWorldIn)
 {
@@ -30,34 +35,86 @@ void ModelOutlinerWindow::RenderWindow()
 void ModelOutlinerWindow::RenderPlaceablesOutline()
 {
     RegionAvail = GetContentRegionAvail();
-    BeginChild("Placeables Outliner", ImVec2(RegionAvail.x, RegionAvail.y * 0.5f), ImGuiChildFlags_FrameStyle);
+    BeginChild("Placeables Outliner", ImVec2(RegionAvail.x, RegionAvail.y * 0.5f));
+
     Map* CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap)
     {
         ImGui::Text("Placed Object List:");
-        if (ImGui::BeginListBox("PlacedListBox", ImVec2(-FLT_MIN, RegionAvail.y * 0.5f)))
+        SameLine();
+
+        float ButtonWidth = CalcTextSize(AddPlaceableButtonID).x;
+        SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
+        if (SmallButton(AddPlaceableButtonID))
         {
-            const list<unique_ptr<PlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
-            for (auto& Placeable : RootPlaceables)
-            {
-                PlaceableObject* PlaceableObj = Placeable.get();
-                const bool is_selected = (EditorWorldCached->GetSelectedPlaceable() == PlaceableObj);
-                if (Selectable(Placeable->GetObjectName().c_str(), is_selected))
-                {
-                    EditorWorldCached->SetSelectedPlaceable(PlaceableObj);
-                }
-                if (is_selected)
-                {
-                    SetItemDefaultFocus();
-                }
-            }
-            EndListBox();
+            ImGui::OpenPopup(AddPlaceableModalID);
         }
+        DoModalAddPlaceableObject();
+        RenderPlacedListBox(CurrentMap);
+        IfDeletePlaceableObject();
     }
     EndChild();
 }
 
 void ModelOutlinerWindow::RenderSelectedPlaceableOutline()
+{
+    Text("Attached Object List:\t");
+    SameLine();
+
+    float ButtonWidth = CalcTextSize(AddAttachableButtonID).x;
+    SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
+    if (SmallButton(AddAttachableButtonID))
+    {
+        ImGui::OpenPopup(AddAttachableModalID);
+    }
+    DoModalAddAttachableObject();
+    RenderAttachedTree();
+    IfDeleteAttachedObject();
+}
+
+void ModelOutlinerWindow::IfDeletePlaceableObject()
+{
+    if (IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsItemFocused())
+    {
+        // Delete Selected Placeable Object
+    }
+}
+void ModelOutlinerWindow::IfDeleteAttachedObject()
+{
+    if (IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsItemFocused())
+    {
+        // Delete Selected Attached Object
+    }
+}
+void ModelOutlinerWindow::RenderPlacedListBox(Map* CurrentMap)
+{
+    const list<unique_ptr<PlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
+    for (auto& Placeable : RootPlaceables)
+    {
+        PlaceableObject* PlaceableObj = Placeable.get();
+
+        ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_SpanAvailWidth;
+
+        if (EditorWorldCached->GetSelectedPlaceable() == PlaceableObj)
+        {
+            NodeFlags |= ImGuiTreeNodeFlags_Selected;
+        }
+
+        bool IsOpen = TreeNodeEx(PlaceableObj->GetObjectName().c_str(), NodeFlags);
+        if (ImGui::IsItemClicked() or ImGui::IsItemToggledOpen())
+        {
+            EditorWorldCached->SetSelectedPlaceable(PlaceableObj);
+        }
+
+        if (IsOpen)
+        {
+            TreePop();
+        }
+    }
+
+}
+
+void ModelOutlinerWindow::RenderAttachedTree()
 {
     PlaceableObject* SelectedPlaceable = EditorWorldCached->GetSelectedPlaceable();
     if (SelectedPlaceable != nullptr)
@@ -132,6 +189,32 @@ void ModelOutlinerWindow::RenderAttachedOutline(AttachableObject* Attachment)
         }
         Unindent();
         TreePop();
+    }
+}
+
+void ModelOutlinerWindow::DoModalAddPlaceableObject()
+{
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+    if (ImGui::BeginPopupModal(AddPlaceableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Text("Test1");
+        ImGui::Separator();
+        ImGui::EndPopup();
+    }
+}
+
+void ModelOutlinerWindow::DoModalAddAttachableObject()
+{
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+    if (ImGui::BeginPopupModal(AddAttachableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Text("Test2");
+        ImGui::Separator();
+        ImGui::EndPopup();
     }
 }
 

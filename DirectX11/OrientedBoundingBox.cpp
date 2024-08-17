@@ -79,15 +79,7 @@ bool OrientedBoundingBox::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 
 void OrientedBoundingBox::UpdateObject(const float& DeltaTimeIn)
 {
-	Scale.x *= HalfExtends[Direction::PlaneRight];
-	Scale.y *= HalfExtends[Direction::PlaneUp];
-	Scale.z *= HalfExtends[Direction::PlaneForward];
-
 	ABoundingComponent::UpdateObject(DeltaTimeIn);
-
-	Scale.x /= HalfExtends[Direction::PlaneRight];
-	Scale.y /= HalfExtends[Direction::PlaneUp];
-	Scale.z /= HalfExtends[Direction::PlaneForward];
 
 	XMVECTOR Scaling;
 	XMVECTOR RotationQuat;
@@ -96,6 +88,20 @@ void OrientedBoundingBox::UpdateObject(const float& DeltaTimeIn)
 	CurrentAxises[Direction::PlaneRight] = XMVector3Rotate(Direction::GDefaultRight, RotationQuat);
 	CurrentAxises[Direction::PlaneUp] = XMVector3Rotate(Direction::GDefaultUp, RotationQuat);
 	CurrentAxises[Direction::PlaneForward] = XMVector3Rotate(Direction::GDefaultForward, RotationQuat);
+}
+
+void OrientedBoundingBox::SetPropertyLength()
+{
+	Scale.x *= HalfExtends[Direction::PlaneRight];
+	Scale.y *= HalfExtends[Direction::PlaneUp];
+	Scale.z *= HalfExtends[Direction::PlaneForward];
+}
+
+void OrientedBoundingBox::ResetPropertyLength()
+{
+	Scale.x /= HalfExtends[Direction::PlaneRight];
+	Scale.y /= HalfExtends[Direction::PlaneUp];
+	Scale.z /= HalfExtends[Direction::PlaneForward];
 }
 
 bool OrientedBoundingBox::IsInsideOrOnPlane(const Plane& PlaneIn)

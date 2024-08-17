@@ -14,3 +14,14 @@ AObject::AObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
 	Scale.y = 1.f;
 	Scale.z = 1.f;
 }
+
+void AObject::UpdateObject(const float& DeltaTimeIn)
+{
+	TransformationMatrix TempTransformation;
+
+	TempTransformation.TransfomationMat = GetTransformation();
+	TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
+	TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
+
+	TransformationBuffer.Upload(DeviceContextCached, TempTransformation);
+}

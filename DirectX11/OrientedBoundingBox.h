@@ -38,6 +38,10 @@ public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
 
 public:
+	virtual void SetPropertyLength() override;
+	virtual void ResetPropertyLength() override;
+
+public:
 	bool IsInsideOrOnPlane(const Plane& PlaneIn);
 
 public:

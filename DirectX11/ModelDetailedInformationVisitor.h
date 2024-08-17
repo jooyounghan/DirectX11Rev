@@ -14,6 +14,9 @@ protected:
 	ModelDetailWindow* ModelDetailWindowCached;
 
 public:
+	virtual void Visit(PlaceableObject* PlaceableInstance) override;
+
+public:
 	virtual void Visit(MeshObject* AttachableInstance) override;
 
 public:

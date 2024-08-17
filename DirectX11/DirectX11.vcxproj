@@ -170,9 +170,9 @@
     <ClCompile Include="IWorld.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MeshObjectInformationDrawer.cpp" />
     <ClCompile Include="ModelOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
-    <ClCompile Include="MeshObjectInformationDrawer.cpp" />
     <ClCompile Include="ModelDetailWindow.cpp" />
     <ClCompile Include="ModelDetailedInformationVisitor.cpp" />
     <ClCompile Include="OrientedBoundingBox.cpp" />

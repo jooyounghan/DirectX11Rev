@@ -5,6 +5,7 @@
 
 #include <string>
 #include <format>
+#include <functional>
 
 using namespace std;
 using namespace ImGui;
@@ -14,19 +15,8 @@ const char* TransformationInformationDrawer::TransformationSelect[NumTransformat
     "Absolute", "Relative" 
 };
 
-TransformationInformationDrawer::TransformationInformationDrawer(
-    AObject* CurrentPlaceable, AObject* ParentPlaceable,
-    const bool& IsTranslationOnlyAbsoluteIn, const bool& IsTranslationDisabledIn,
-    const bool& IsRotationOnlyAbsoluteIn, const bool& IsRotationDisabledIn,
-    const bool& IsScalingOnlyAbsoluteIn, const bool& IsScalingDisabledIn
-)
-    : AInformationDrawer(CurrentPlaceable), ParentObjectCached(ParentPlaceable),
-    IsTranslationOnlyAbsolute(IsTranslationOnlyAbsoluteIn),
-    IsTranslationDisabled(IsTranslationDisabledIn),
-    IsRotationOnlyAbsolute(IsRotationOnlyAbsoluteIn),
-    IsRotationDisabled(IsRotationDisabledIn),
-    IsScalingOnlyAbsolute(IsScalingOnlyAbsoluteIn),
-    IsScalingDisabled(IsScalingDisabledIn)
+TransformationInformationDrawer::TransformationInformationDrawer(AObject* CurrentPlaceable, AObject* ParentPlaceable, const bool& IsPlaceable)
+    : AInformationDrawer(CurrentPlaceable), ParentObjectCached(ParentPlaceable)
 {
 }
 
@@ -39,39 +29,42 @@ void TransformationInformationDrawer::DrawInformation()
     SPosition4D DummyPosition;
     SAngle DummyAngle;
     SVector3D DummyScale;
+    AutoZeroMemory(DummyPosition);
+    AutoZeroMemory(DummyAngle);
+    AutoZeroMemory(DummyScale);
 
     ImGui::SeparatorText("Transformation");
 
-    DrawTransformationEntitySelection(IsTranslationOnlyAbsolute, "Translation", SelectedTranslationIndex);
+    DrawEntitySelection("Translation", SelectedTranslationIndex);
     SameLine();
-    DrawTransformationEntity<SPosition4D>(
+    DrawEntity<SPosition4D, plus<SPosition4D>, minus<SPosition4D>>(
         SelectedTranslationIndex, 
         ObjectCached ? ObjectCached->Position : DummyPosition,
         ParentObjectCached ? ParentObjectCached->Position : SPosition4D(),
-        IsTranslationDisabled
+        0.1f
     );
 
-    DrawTransformationEntitySelection(IsRotationOnlyAbsolute, "Rotation", SelectedRotationIndex);
+    DrawEntitySelection("Rotation", SelectedRotationIndex);
     SameLine();
-    DrawTransformationEntity<SAngle>(
+    DrawEntity<SAngle, plus<SAngle>, minus<SAngle>>(
         SelectedRotationIndex, 
         ObjectCached ? ObjectCached->Angle : DummyAngle,
         ParentObjectCached ? ParentObjectCached->Angle : SAngle(),
-        IsRotationDisabled);
+        0.1f
+);
 
-    DrawTransformationEntitySelection(IsScalingOnlyAbsolute, "Scale", SelectedScaleIndex);
+    DrawEntitySelection("Scale", SelectedScaleIndex);
     SameLine();
-    DrawTransformationEntity<SVector3D>(
+    DrawEntity<SVector3D, multiplies<SVector3D>, divides<SVector3D>>(
         SelectedScaleIndex, 
         ObjectCached ? ObjectCached->Scale : DummyScale,
         ParentObjectCached ? ParentObjectCached->Scale : SVector3D(),
-        IsScalingDisabled
+        0.01f
     );
 }
 
 
-void TransformationInformationDrawer::DrawTransformationEntitySelection(
-    const bool& IsOnlyAbsoluteIn, 
+void TransformationInformationDrawer::DrawEntitySelection(
     const char* EntityName, 
     ETransfomationSelect& SelectedIndexOut
 )
@@ -79,7 +72,7 @@ void TransformationInformationDrawer::DrawTransformationEntitySelection(
     const char* PreviewText = TransformationSelect[SelectedIndexOut];
     if (ImGui::BeginCombo(EntityName, PreviewText, ImGuiComboFlags_WidthFitPreview))
     {
-        for (size_t idx = 0; idx < (IsOnlyAbsoluteIn ? (size_t)Relative : (size_t)NumTransformationSelect); ++idx)
+        for (size_t idx = 0; idx < (size_t)NumTransformationSelect; ++idx)
         {
             const ETransfomationSelect CurrentSelectIdx = static_cast<ETransfomationSelect>(idx);
             const bool IsSelected = (SelectedIndexOut == CurrentSelectIdx);
@@ -94,46 +87,31 @@ void TransformationInformationDrawer::DrawTransformationEntitySelection(
 }
 
 
-template<typename T>
-inline void TransformationInformationDrawer::DrawTransformationEntity(
+template<typename T, typename Operator, typename ROperator>
+inline void TransformationInformationDrawer::DrawEntity(
     const ETransfomationSelect& SelectedIndex,
     T& Entity,
     const T& ParentEntity,
-    const bool& DisabledIn
+    const float& SpeedIn
 )
 {
+    Operator Oper;
+    ROperator ROper;
+
     const std::string EntityId{ std::format("{}", (uint64_t)&Entity) };
     ImGui::PushID(EntityId.c_str());
     switch (SelectedIndex)
     {
     case ETransfomationSelect::Absolute:
     {
-        T TempEntity = Entity + ParentEntity;
-        if (DisabledIn)
-        {
-            ImGui::BeginDisabled();
-            ImGui::DragFloat3("", (float*)&TempEntity);
-            ImGui::EndDisabled();
-        }
-        else
-        {
-            ImGui::DragFloat3("", (float*)&TempEntity);
-        }
-        Entity = TempEntity - ParentEntity;
+        T TempEntity = Oper(Entity, ParentEntity);
+        ImGui::DragFloat3("", (float*)&TempEntity, SpeedIn);
+        Entity = ROper(TempEntity, ParentEntity);
         break;
     }
     case ETransfomationSelect::Relative:
     {
-        if (DisabledIn)
-        {
-            ImGui::BeginDisabled();
-            ImGui::DragFloat3("", (float*)&Entity);
-            ImGui::EndDisabled();
-        }
-        else
-        {
-            ImGui::DragFloat3("", (float*)&Entity);
-        }
+        ImGui::DragFloat3("", (float*)&Entity, SpeedIn);
         break;
     }
     }

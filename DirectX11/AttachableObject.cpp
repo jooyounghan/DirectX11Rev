@@ -58,10 +58,10 @@ DirectX::XMMATRIX AttachableObject::GetTranslationMatrix() const
 	return ResultTranslation;
 }
 
-DirectX::XMMATRIX AttachableObject::GetTransformation(const bool& IsIgnoreScale) const
+DirectX::XMMATRIX AttachableObject::GetTransformation() const
 {
 	XMMATRIX ResultTransformation = XMMatrixAffineTransformation(
-		IsIgnoreScale ? XMVectorSet(1.f, 1.f, 1.f, 0.0f) : XMVectorSet(Scale.x, Scale.y, Scale.z, 0.0f),
+		XMVectorSet(Scale.x, Scale.y, Scale.z, 0.0f),
 		XMQuaternionIdentity(),
 		XMQuaternionRotationRollPitchYaw(
 			XMConvertToRadians(Angle.Pitch),
@@ -75,7 +75,7 @@ DirectX::XMMATRIX AttachableObject::GetTransformation(const bool& IsIgnoreScale)
 	{
 		ResultTransformation = XMMatrixMultiply(
 			ResultTransformation,
-			ParentObject->GetTransformation(true)
+			ParentObject->GetTransformation()
 		);
 	}
 	return ResultTransformation;
@@ -83,14 +83,7 @@ DirectX::XMMATRIX AttachableObject::GetTransformation(const bool& IsIgnoreScale)
 
 void AttachableObject::UpdateObject(const float& DeltaTimeIn)
 {
-	TransformationMatrix TempTransformation;
-
-	TempTransformation.TransfomationMat = GetTransformation();
-	TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
-	TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
-
-	TransformationBuffer.Upload(DeviceContextCached, TempTransformation);
-
+	AObject::UpdateObject(DeltaTimeIn);
 	for (auto& ChildObject : AttachedChildrenObjects)
 	{
 		ChildObject->UpdateObject(DeltaTimeIn);

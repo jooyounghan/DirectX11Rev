@@ -35,7 +35,7 @@ public:
 	virtual DirectX::XMMATRIX GetTranslationMatrix() const;
 
 public:
-	virtual DirectX::XMMATRIX GetTransformation(const bool& IsIgnoreScale = false) const;
+	virtual DirectX::XMMATRIX GetTransformation() const;
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;

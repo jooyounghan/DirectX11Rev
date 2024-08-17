@@ -336,9 +336,6 @@
     <ClCompile Include="BoundingSphereInformationDrawer.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="MeshObjectInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
-    </ClCompile>
     <ClCompile Include="ViewableInformationDrawer.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
     </ClCompile>
@@ -386,6 +383,9 @@
     </ClCompile>
     <ClCompile Include="ModelDetailWindow.cpp">
       <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshObjectInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -590,9 +590,6 @@
     <ClInclude Include="ViewableInformationDrawer.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="IInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="EditorCamera.h">
       <Filter>헤더 파일\World\Editor</Filter>
     </ClInclude>
@@ -640,6 +637,9 @@
     </ClInclude>
     <ClInclude Include="ModelDetailWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="IInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

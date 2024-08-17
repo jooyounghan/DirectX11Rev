@@ -38,6 +38,10 @@ public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
 
 public:
+	virtual void SetPropertyLength() override;
+	virtual void ResetPropertyLength() override;
+
+public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 };
 

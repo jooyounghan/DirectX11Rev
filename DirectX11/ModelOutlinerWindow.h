@@ -3,6 +3,7 @@
 
 class AObject;
 class AttachableObject;
+class Map;
 
 class ModelOutlinerWindow : public IEditorLinkedWindow
 {
@@ -21,6 +22,27 @@ private:
 	void RenderSelectedPlaceableOutline();
 
 private:
+	void IfDeletePlaceableObject();
+	void IfDeleteAttachedObject();
+
+private:
+	void RenderPlacedListBox(Map* CurrentMap);
+	void RenderAttachedTree();
+
+private:
 	void RenderAttachedOutline(AttachableObject* Attachment);
+
+private:
+	static const char* AddPlaceableButtonID;
+	static const char* AddAttachableButtonID;
+	static const char* AddPlaceableModalID;
+	static const char* AddAttachableModalID;
+
+private:
+	void DoModalAddPlaceableObject();
+	void DoModalAddAttachableObject();
+
+
+
 };
 

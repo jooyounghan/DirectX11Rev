@@ -53,11 +53,11 @@ public:
 	virtual DirectX::XMMATRIX GetTranslationMatrix() const = 0;
 
 public:
-	virtual DirectX::XMMATRIX GetTransformation(const bool& IsIgnoreScale = false) const = 0;
+	virtual DirectX::XMMATRIX GetTransformation() const = 0;
 
 
 public:
-	virtual void UpdateObject(const float& DeltaTimeIn) = 0;
+	virtual void UpdateObject(const float& DeltaTimeIn);
 
 public:
 	virtual void AcceptRenderer(ARenderer* Renderer) = 0;

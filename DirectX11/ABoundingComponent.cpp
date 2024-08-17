@@ -33,7 +33,15 @@ void ABoundingComponent::SetCollisionColor()
 
 void ABoundingComponent::UpdateObject(const float& DeltaTimeIn)
 {
-	AttachableObject::UpdateObject(DeltaTimeIn);
+	SetPropertyLength();
+	AObject::UpdateObject(DeltaTimeIn);
+	ResetPropertyLength();
+
+	for (auto& ChildObject : AttachedChildrenObjects)
+	{
+		ChildObject->UpdateObject(DeltaTimeIn);
+	}
+
 	SetCollisionColor();
 }
 

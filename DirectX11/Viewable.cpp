@@ -1,6 +1,8 @@
 #include "Viewable.h"
 #include "DefineUtility.h"
 #include "GlobalVariable.h"
+
+#include "ARenderer.h"
 #include "IGuiModelVisitor.h"
 
 using namespace std;
@@ -60,6 +62,7 @@ void Viewable::UpdateObject(const float& DeltaTimeIn)
 
 	ViewProjBuffer.Upload(DeviceContextCached, TempViewProj);
 }
+
 
 void Viewable::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {

@@ -30,6 +30,10 @@ public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
 
 public:
+	virtual void SetPropertyLength() = 0;
+	virtual void ResetPropertyLength() = 0;
+
+public:
 	virtual void AcceptRenderer(ARenderer* Renderer) override;
 
 public:

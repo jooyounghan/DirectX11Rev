@@ -13,41 +13,27 @@ enum ETransfomationSelect : size_t
 class TransformationInformationDrawer : AInformationDrawer<AObject>
 {
 public:
-    TransformationInformationDrawer(
-        AObject* CurrentPlaceable, AObject* ParentPlaceable,
-        const bool& IsTranslationOnlyAbsoluteIn, const bool& IsTranslationDisabledIn,
-        const bool& IsRotationOnlyAbsoluteIn, const bool& IsRotationDisabledIn,
-        const bool& IsScalingOnlyAbsoluteIn, const bool& IsScalingDisabledIn
-    );
+    TransformationInformationDrawer(AObject* CurrentPlaceable, AObject* ParentPlaceable, const bool& IsPlaceable);
 
 protected:
     AObject* ParentObjectCached = nullptr;
-
-protected:
-    bool IsTranslationOnlyAbsolute = false; 
-    bool IsTranslationDisabled = false;
-    bool IsRotationOnlyAbsolute = false; 
-    bool IsRotationDisabled = false;
-    bool IsScalingOnlyAbsolute = false; 
-    bool IsScalingDisabled = false;
 
 public:
     virtual void DrawInformation() override;
 
 
 private:
-    static void DrawTransformationEntitySelection(
-        const bool& IsOnlyAbsoluteIn, 
+    static void DrawEntitySelection(
         const char* EntityName, 
         ETransfomationSelect& SelectedIndexOut
     );
 
-    template<typename T>
-    static void DrawTransformationEntity(
+    template<typename T, typename Operator, typename ROperator>
+    static void DrawEntity(
         const ETransfomationSelect& SelectedIndex,
         T& Entity,
         const T& ParentEntity,
-        const bool& DisabledIn
+        const float& SpeedIn
     );
 
 private:

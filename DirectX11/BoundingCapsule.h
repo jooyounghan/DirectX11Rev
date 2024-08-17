@@ -1,6 +1,5 @@
 #pragma once
 #include "IIntersectable.h"
-#include "Attachable.h"
 
 //class BoundingCapsule : public IIntersectable, public AttachableObject
 //{

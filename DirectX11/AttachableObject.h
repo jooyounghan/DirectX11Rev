@@ -32,13 +32,13 @@ public:
 	virtual DirectX::XMMATRIX GetTranslationMatrix() const override;
 
 public:
-	virtual DirectX::XMMATRIX GetTransformation(const bool& IsIgnoreScale = false) const override;
+	virtual DirectX::XMMATRIX GetTransformation() const override;
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
 
 public:
-	virtual void AcceptRenderer(ARenderer* Renderer) override;;
+	virtual void AcceptRenderer(ARenderer* Renderer) override;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;

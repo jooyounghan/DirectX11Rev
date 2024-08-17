@@ -4,6 +4,8 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 
+class PlaceableObject;
+
 class MeshObject;
 
 class BoundingSphere;
@@ -14,6 +16,9 @@ class Viewable;
 
 class IGuiModelVisitor
 {
+public:
+	virtual void Visit(PlaceableObject* PlaceableInstance) = 0;
+
 public:
 	virtual void Visit(MeshObject* MeshObjectInstance) = 0;
 

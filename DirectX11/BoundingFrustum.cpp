@@ -58,7 +58,7 @@ void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
         const float HalfHSide = HalfVSide * AspectRatio;
 
         const XMVECTOR RotationQuat = ViewableCached->GetRotationQuat();
-        const XMMATRIX Transformation = ViewableCached->GetTransformation(true);
+        const XMMATRIX Transformation = ViewableCached->GetTransformation();
 
         XMVECTOR CurrentForward = XMVector3Rotate(Direction::GDefaultForward, RotationQuat);
         XMVECTOR CurrentUp = XMVector3Rotate(Direction::GDefaultUp, RotationQuat);
@@ -83,6 +83,14 @@ void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
         FrustumEdgeAxises[Direction::RightTop] = FarPosition + CurrentRight * HalfHSide + CurrentUp * HalfVSide;
         FrustumEdgeAxises[Direction::RightBottm] = FarPosition + CurrentRight * HalfHSide - CurrentUp * HalfVSide;
 	}
+}
+
+void BoundingFrustum::SetPropertyLength()
+{
+}
+
+void BoundingFrustum::ResetPropertyLength()
+{
 }
 
 void BoundingFrustum::AcceptGui(IGuiModelVisitor* GuiVisitor)

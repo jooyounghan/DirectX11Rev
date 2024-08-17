@@ -83,6 +83,11 @@ SPosition3D operator-(const SPosition3D& Pos1, const SPosition3D& Pos2);
 SPosition3D operator+(const SPosition3D& Pos1, const SPosition3D& Pos2);
 SPosition3D operator*(const SPosition3D& Vec, float Scalar);
 
+SPosition3D operator*(const SPosition3D& Pos1, const SPosition3D& Pos2);
+SPosition3D operator/(const SPosition3D& Pos1, const SPosition3D& Pos2);
+
+
+
 float InnerProduct(const SPosition3D& Pos1, const SPosition3D& Pos2);
 float InnerProduct(const XMVECTOR& Vec1, const XMVECTOR& Vec2);
 
