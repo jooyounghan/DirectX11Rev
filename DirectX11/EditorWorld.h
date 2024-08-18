@@ -8,8 +8,8 @@
 #include <vector>
 #include <memory>
 
-class AObject;
 class PlaceableObject;
+class AttachableObject;
 class GameWorld;
 class IWindow;
 class EditorActor;
@@ -40,8 +40,8 @@ protected:
 	MakeSetterGetter(SelectedPlaceable);
 
 protected:
-	AObject* SelectedDetailed = nullptr;
-	MakeSetterGetter(SelectedDetailed);
+	AttachableObject* SelectedAttached = nullptr;
+	MakeSetterGetter(SelectedAttached);
 
 public:
 	void SetSelecteObjectByID(const UINT& Id);

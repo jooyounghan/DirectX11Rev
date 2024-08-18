@@ -37,17 +37,17 @@ Map::~Map()
 void Map::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
 	TestActor* ta = PlaceableAddHelper<TestActor>(GraphicsPipelineCached->GetDevice(), GraphicsPipelineCached->GetDeviceContext());
-	MeshObject* AddedObject = ta->AddChildObject<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
+	MeshObject* AddedObject = ta->AddAttachedObject<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
 
 	AddedObject->Position.x = PosXIn;
 	AddedObject->Position.y = PosYIn;
 	AddedObject->Position.z = PosZIn;
 
 	// TEST ========================================================================================================
-	OrientedBoundingBox* OBB = AddedObject->AddChildObject<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached, 100.f, 100.f, 100.f);						
+	OrientedBoundingBox* OBB = AddedObject->AddAttachedObject<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached, 100.f, 100.f, 100.f);						
 	OBB->Position.x += 400.f;
 
-	BoundingSphere* BB = OBB->AddChildObject<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached, 100.f);
+	BoundingSphere* BB = OBB->AddAttachedObject<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached, 100.f);
 	OBB->Position.x += 400.f;
 
 	Tests.push_back(OBB);
@@ -94,4 +94,25 @@ void Map::Serialize(const std::string& OutputAdditionalPath)
 
 void Map::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
 {
+}
+
+void Map::PlaceableDeleteHelper(PlaceableObject* PlaceableObjectIn)
+{
+	const unsigned int& PlaceableId = PlaceableObjectIn->GetPickingID().GetID();
+	if (IdToPlaceables.find(PlaceableId) != IdToPlaceables.end())
+	{
+		IdToPlaceables.erase(PlaceableId);
+	}
+
+	auto it = std::find_if(RootPlaceables.begin(), RootPlaceables.end(),
+		[PlaceableObjectIn](const std::unique_ptr<PlaceableObject>& ptr)
+		{
+			return ptr.get() == PlaceableObjectIn;
+		}
+	);
+
+	if (it != RootPlaceables.end())
+	{
+		RootPlaceables.erase(it);
+	}
 }

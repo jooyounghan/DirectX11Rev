@@ -8,7 +8,7 @@
 EditorActor::EditorActor(GraphicsPipeline* GraphicsPipelineInstance)
 	: PlaceableObject(GraphicsPipelineInstance->GetDevice(), GraphicsPipelineInstance->GetDeviceContext())
 {
-	EditorCameraCached = AddChildObject<EditorCamera>(GraphicsPipelineInstance, App::GWidth, App::GHeight);
+	EditorCameraCached = AddAttachedObject<EditorCamera>(GraphicsPipelineInstance, App::GWidth, App::GHeight);
 
     // Test =============================================================
     EditorCameraCached->Position = SPosition4D{ 0.f, 0.f, -300.f, 1.f };

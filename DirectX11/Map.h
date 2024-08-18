@@ -83,5 +83,8 @@ public:
 		T* AddedObject = (T*)(RootPlaceable);
 		return AddedObject;
 	}
+
+public:
+	void PlaceableDeleteHelper(PlaceableObject* PlaceableObjectIn);
 };
 

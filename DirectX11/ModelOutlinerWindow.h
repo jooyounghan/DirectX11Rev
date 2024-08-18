@@ -2,6 +2,7 @@
 #include "IEditorLinkedWindow.h"
 
 class AObject;
+class PlaceableObject;
 class AttachableObject;
 class Map;
 
@@ -22,8 +23,12 @@ private:
 	void RenderSelectedPlaceableOutline();
 
 private:
-	void IfDeletePlaceableObject();
-	void IfDeleteAttachedObject();
+	void DoModalDeletePlaceableObject();
+	void DoModalDeleteAttachableObject();
+
+private:
+	void DeletePlaceableObject(PlaceableObject* SelectedPlaceable);
+	void DeleteAttachableObject(AttachableObject* SelectedAttachable);
 
 private:
 	void RenderPlacedListBox(Map* CurrentMap);
@@ -33,8 +38,21 @@ private:
 	void RenderAttachedOutline(AttachableObject* Attachment);
 
 private:
+	void SetWindowPosToCenter();
+	void ResetWindowPosToPrevious();
+
+private:
+	ImVec2 PreviousWindowPos = ImVec2();
+
+private:
 	static const char* AddPlaceableButtonID;
 	static const char* AddAttachableButtonID;
+
+private:
+	static const char* DeletePlaceableModalID;
+	static const char* DeleteAttachableModalID;
+
+private:
 	static const char* AddPlaceableModalID;
 	static const char* AddAttachableModalID;
 

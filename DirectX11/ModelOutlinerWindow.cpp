@@ -12,6 +12,10 @@ using namespace ImGui;
 
 const char* ModelOutlinerWindow::AddPlaceableButtonID = "Add Placeable +";
 const char* ModelOutlinerWindow::AddAttachableButtonID = "Add Attacheable +";
+
+const char* ModelOutlinerWindow::DeletePlaceableModalID = "Delete Placeable Object";
+const char* ModelOutlinerWindow::DeleteAttachableModalID = "Delete Attachable Object";
+
 const char* ModelOutlinerWindow::AddPlaceableModalID = "Add Placeable Object";
 const char* ModelOutlinerWindow::AddAttachableModalID = "Add Attachable Object";
 
@@ -42,16 +46,10 @@ void ModelOutlinerWindow::RenderPlaceablesOutline()
     {
         ImGui::Text("Placed Object List:");
         SameLine();
-
-        float ButtonWidth = CalcTextSize(AddPlaceableButtonID).x;
-        SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
-        if (SmallButton(AddPlaceableButtonID))
-        {
-            ImGui::OpenPopup(AddPlaceableModalID);
-        }
         DoModalAddPlaceableObject();
+
         RenderPlacedListBox(CurrentMap);
-        IfDeletePlaceableObject();
+        DoModalDeletePlaceableObject();
     }
     EndChild();
 }
@@ -60,32 +58,98 @@ void ModelOutlinerWindow::RenderSelectedPlaceableOutline()
 {
     Text("Attached Object List:\t");
     SameLine();
-
-    float ButtonWidth = CalcTextSize(AddAttachableButtonID).x;
-    SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
-    if (SmallButton(AddAttachableButtonID))
-    {
-        ImGui::OpenPopup(AddAttachableModalID);
-    }
     DoModalAddAttachableObject();
+    
     RenderAttachedTree();
-    IfDeleteAttachedObject();
+    DoModalDeleteAttachableObject();
 }
 
-void ModelOutlinerWindow::IfDeletePlaceableObject()
+void ModelOutlinerWindow::DoModalDeletePlaceableObject()
 {
-    if (IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsItemFocused())
+    if (IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsWindowFocused())
     {
-        // Delete Selected Placeable Object
+        ImGui::OpenPopup(DeletePlaceableModalID);
+    }
+
+    SetWindowPosToCenter();
+    PlaceableObject* SelectedPlaceable = EditorWorldCached->GetSelectedPlaceable();
+    if (SelectedPlaceable != nullptr)
+    {
+        if (ImGui::BeginPopupModal(DeletePlaceableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("Are you sure for deleting %s ?", SelectedPlaceable->GetObjectName().c_str());
+            ImGui::Separator();
+
+            if (ImGui::Button("OK", ImVec2(120, 0))) 
+            { 
+                DeletePlaceableObject(SelectedPlaceable);
+                ImGui::CloseCurrentPopup(); 
+            }
+            ImGui::SetItemDefaultFocus();
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel", ImVec2(120, 0))) 
+            { 
+                ImGui::CloseCurrentPopup(); 
+            }
+            ImGui::EndPopup();
+        }
+    }
+    ResetWindowPosToPrevious();
+}
+
+void ModelOutlinerWindow::DoModalDeleteAttachableObject()
+{
+    if (IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsWindowFocused())
+    {
+        ImGui::OpenPopup(DeleteAttachableModalID);
+    }
+
+    SetWindowPosToCenter();
+    AttachableObject* SelectedAttached = EditorWorldCached->GetSelectedAttached();
+    if (SelectedAttached != nullptr)
+    {
+        if (ImGui::BeginPopupModal(DeleteAttachableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("Are you sure for deleting %s ?", SelectedAttached->GetObjectName().c_str());
+            ImGui::Separator();
+
+            if (ImGui::Button("OK", ImVec2(120, 0))) 
+            { 
+                DeleteAttachableObject(SelectedAttached);
+                ImGui::CloseCurrentPopup(); 
+            }
+            ImGui::SetItemDefaultFocus();
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel", ImVec2(120, 0))) 
+            { 
+                ImGui::CloseCurrentPopup(); 
+            }
+            ImGui::EndPopup();
+        }
+    }
+    ResetWindowPosToPrevious();
+}
+
+void ModelOutlinerWindow::DeletePlaceableObject(PlaceableObject* SelectedPlaceable)
+{
+    Map* CurrentMap = GameWorldCached->GetCurrentMap();
+    if (CurrentMap != nullptr)
+    {
+        CurrentMap->PlaceableDeleteHelper(SelectedPlaceable);
+        EditorWorldCached->SetSelectedPlaceable(nullptr);
     }
 }
-void ModelOutlinerWindow::IfDeleteAttachedObject()
+
+void ModelOutlinerWindow::DeleteAttachableObject(AttachableObject* SelectedAttachable)
 {
-    if (IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsItemFocused())
+    PlaceableObject* SelectedPlaceableObject = EditorWorldCached->GetSelectedPlaceable();
+    if (SelectedPlaceableObject != nullptr)
     {
-        // Delete Selected Attached Object
+        SelectedPlaceableObject->RemoveAttachedObject(SelectedAttachable);
+        EditorWorldCached->SetSelectedAttached(nullptr);
     }
 }
+
 void ModelOutlinerWindow::RenderPlacedListBox(Map* CurrentMap)
 {
     const list<unique_ptr<PlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
@@ -104,6 +168,7 @@ void ModelOutlinerWindow::RenderPlacedListBox(Map* CurrentMap)
         if (ImGui::IsItemClicked() or ImGui::IsItemToggledOpen())
         {
             EditorWorldCached->SetSelectedPlaceable(PlaceableObj);
+            EditorWorldCached->SetSelectedAttached(nullptr);
         }
 
         if (IsOpen)
@@ -131,17 +196,7 @@ void ModelOutlinerWindow::RenderAttachedTree()
             NodeFlags |= (ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow);
         }
 
-        if (SelectedPlaceable == EditorWorldCached->GetSelectedDetailed())
-        {
-            NodeFlags |= ImGuiTreeNodeFlags_Selected;
-        }
-
         bool IsOpen = TreeNodeEx(SelectedPlaceable->GetObjectName().c_str(), NodeFlags);
-        if (ImGui::IsItemClicked() or ImGui::IsItemToggledOpen())
-        {
-            EditorWorldCached->SetSelectedDetailed(SelectedPlaceable);
-        }
-
         if (IsOpen)
         {
             Indent();
@@ -169,7 +224,7 @@ void ModelOutlinerWindow::RenderAttachedOutline(AttachableObject* Attachment)
         NodeFlags |= (ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow);
     }
 
-    if (EditorWorldCached->GetSelectedDetailed() == Attachment)
+    if (EditorWorldCached->GetSelectedAttached() == Attachment)
     {
         NodeFlags |= ImGuiTreeNodeFlags_Selected;
     }
@@ -177,7 +232,7 @@ void ModelOutlinerWindow::RenderAttachedOutline(AttachableObject* Attachment)
     bool IsOpen = TreeNodeEx(Attachment->GetObjectName().c_str(), NodeFlags);
     if (ImGui::IsItemClicked() or ImGui::IsItemToggledOpen())
     {
-        EditorWorldCached->SetSelectedDetailed(Attachment);
+        EditorWorldCached->SetSelectedAttached(Attachment);
     }
 
     if (IsOpen)
@@ -192,30 +247,65 @@ void ModelOutlinerWindow::RenderAttachedOutline(AttachableObject* Attachment)
     }
 }
 
+void ModelOutlinerWindow::SetWindowPosToCenter()
+{
+    PreviousWindowPos = GetWindowPos();
+    ImVec2 Center = GetMainViewport()->GetCenter();
+    SetWindowPos(Center, ImGuiCond_Appearing);
+}
+
+void ModelOutlinerWindow::ResetWindowPosToPrevious()
+{
+    SetWindowPos(PreviousWindowPos, ImGuiCond_Appearing);
+}
+
 void ModelOutlinerWindow::DoModalAddPlaceableObject()
 {
-    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    float ButtonWidth = CalcTextSize(AddPlaceableButtonID).x;
+    SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
+    if (SmallButton(AddPlaceableButtonID))
+    {
+        ImGui::OpenPopup(AddPlaceableModalID);
+    }
 
+    SetWindowPosToCenter();
     if (ImGui::BeginPopupModal(AddPlaceableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
     {
         ImGui::Text("Test1");
         ImGui::Separator();
+
+        if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+        ImGui::SetItemDefaultFocus();
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+
         ImGui::EndPopup();
     }
+    ResetWindowPosToPrevious();
 }
 
 void ModelOutlinerWindow::DoModalAddAttachableObject()
 {
-    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    float ButtonWidth = CalcTextSize(AddAttachableButtonID).x;
+    SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
+    if (SmallButton(AddAttachableButtonID))
+    {
+        ImGui::OpenPopup(AddAttachableModalID);
+    }
 
+    SetWindowPosToCenter();
     if (ImGui::BeginPopupModal(AddAttachableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
     {
         ImGui::Text("Test2");
         ImGui::Separator();
+
+        if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+        ImGui::SetItemDefaultFocus();
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
         ImGui::EndPopup();
     }
+    ResetWindowPosToPrevious();
 }
 
 

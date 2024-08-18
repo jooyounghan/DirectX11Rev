@@ -45,11 +45,14 @@ public:
 
 public:
 	template<typename Attachment, typename ...Args>
-	Attachment* AddChildObject(Args... args);
+	Attachment* AddAttachedObject(Args... args);
+
+public:
+	void RemoveAttachedObject(AttachableObject* AttachedObjectIn);
 };
 
 template<typename Attachment, typename ...Args>
-inline Attachment* AttachableObject::AddChildObject(Args ...args)
+inline Attachment* AttachableObject::AddAttachedObject(Args ...args)
 {
 	static_assert(std::is_base_of<AttachableObject, Attachment>::value, DerivedCondition(AttachableObject));
 

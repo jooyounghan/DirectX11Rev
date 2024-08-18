@@ -97,3 +97,25 @@ void AttachableObject::AcceptRenderer(ARenderer* Renderer)
 		ChildObject->AcceptRenderer(Renderer);
 	}
 }
+
+void AttachableObject::RemoveAttachedObject(AttachableObject* AttachedObjectIn)
+{
+	auto it = std::find_if(AttachedChildrenObjects.begin(), AttachedChildrenObjects.end(),
+		[AttachedObjectIn](const std::unique_ptr<AttachableObject>& ptr)
+		{
+			return ptr.get() == AttachedObjectIn;
+		}
+	);
+
+	if (it != AttachedChildrenObjects.end())
+	{
+		AttachedChildrenObjects.erase(it);
+	}
+	else
+	{
+		for (auto& AtttachedChild : AttachedChildrenObjects)
+		{
+			AtttachedChild->RemoveAttachedObject(AttachedObjectIn);
+		}
+	}
+}
