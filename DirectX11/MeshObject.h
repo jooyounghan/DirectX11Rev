@@ -9,15 +9,22 @@ class AMeshAsset;
 class MeshObject : public AttachableObject
 {
 public:
+	MeshObject(GraphicsPipeline* GraphicsPipelineInstances);
 	MeshObject(
 		GraphicsPipeline* GraphicsPipelineInstances, 
 		AMeshAsset* MeshAssetInstanceIn
 	);
 	virtual ~MeshObject();
 
+private:
+	void InitMeshObject();
+
+protected:
+	static size_t MeshObjectCount;
+
 protected:
 	AMeshAsset* MeshAssetInstance = nullptr;
-	MakeGetter(MeshAssetInstance);
+	MakeSetterGetter(MeshAssetInstance);
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;

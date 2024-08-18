@@ -27,10 +27,6 @@ private:
 	void DoModalDeleteAttachableObject();
 
 private:
-	void DeletePlaceableObject(PlaceableObject* SelectedPlaceable);
-	void DeleteAttachableObject(AttachableObject* SelectedAttachable);
-
-private:
 	void RenderPlacedListBox(Map* CurrentMap);
 	void RenderAttachedTree();
 

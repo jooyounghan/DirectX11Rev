@@ -8,13 +8,24 @@ class OrientedBoundingBox : public ABoundingComponent
 {
 public:
 	OrientedBoundingBox(
+		GraphicsPipeline* GraphicsPipelineInstances
+	);
+
+public:
+	OrientedBoundingBox(
 		GraphicsPipeline* GraphicsPipelineInstances,
-		AssetManager* AssetManagerInstance,
 		const float& HalfXIn, 
 		const float& HalfYIn, 
 		const float& HalfZIn
 	);
 	virtual ~OrientedBoundingBox();
+
+private:
+	void InitOBB(ID3D11Device* DeviceIn);
+
+protected:
+	static size_t BoundingOBBCount;
+	static std::shared_ptr<Debugable> CreateDebugBoxObject(ID3D11Device* DeviceIn);
 
 protected:
 	XMVECTOR CurrentAxises[Direction::NumPlaneDirection];

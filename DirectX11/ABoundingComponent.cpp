@@ -4,7 +4,7 @@
 #include "PSOObject.h"
 #include "ARenderer.h"
 
-ABoundingComponent::ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances, AssetManager* AssetManagerInstance)
+ABoundingComponent::ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances)
 	: AttachableObject(
 		GraphicsPipelineInstances->GetDevice(),
 		GraphicsPipelineInstances->GetDeviceContext()

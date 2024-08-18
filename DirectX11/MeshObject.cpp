@@ -7,6 +7,17 @@
 
 using namespace std;
 
+size_t MeshObject::MeshObjectCount = 0;
+
+MeshObject::MeshObject(GraphicsPipeline* GraphicsPipelineInstances) 
+	: AttachableObject(
+	GraphicsPipelineInstances->GetDevice(),
+	GraphicsPipelineInstances->GetDeviceContext()
+	)
+{
+	InitMeshObject();
+}
+
 MeshObject::MeshObject(
 	GraphicsPipeline* GraphicsPipelineInstances, 
 	AMeshAsset* MeshAssetInstanceIn
@@ -16,13 +27,17 @@ MeshObject::MeshObject(
 		GraphicsPipelineInstances->GetDeviceContext()
 	), MeshAssetInstance(MeshAssetInstanceIn)
 {
-	static size_t MeshObjectCount = 0;
-	MeshObjectCount++;
-	ObjectName = "Mesh Object " + to_string(MeshObjectCount);
+	InitMeshObject();
 }
 
 MeshObject::~MeshObject()
 {
+}
+
+void MeshObject::InitMeshObject()
+{
+	MeshObjectCount++;
+	ObjectName = "Mesh Object " + to_string(MeshObjectCount);
 }
 
 void MeshObject::UpdateObject(const float& DeltaTimeIn)

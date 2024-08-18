@@ -1,7 +1,9 @@
 #include "OrientedBoundingBox.h"
+
+#include "GraphicsPipeline.h"
 #include "GlobalVariable.h"
 #include "DefineUtility.h"
-#include "AssetManager.h"
+
 #include "Debugable.h"
 #include "CollisionVisitor.h"
 #include "IGuiModelVisitor.h"
@@ -10,16 +12,37 @@
 using namespace std;
 using namespace DirectX;
 
+size_t OrientedBoundingBox::BoundingOBBCount = 0;
+
+OrientedBoundingBox::OrientedBoundingBox(GraphicsPipeline* GraphicsPipelineInstances)
+	: ABoundingComponent(GraphicsPipelineInstances)
+{
+	InitOBB(GraphicsPipelineInstances->GetDevice());
+	HalfExtends[Direction::PlaneRight] = 100.f;
+	HalfExtends[Direction::PlaneUp] = 100.f;
+	HalfExtends[Direction::PlaneForward] = 100.f;
+}
+
 OrientedBoundingBox::OrientedBoundingBox(
 	GraphicsPipeline* GraphicsPipelineInstances,
-	AssetManager* AssetManagerInstance,
 	const float& HalfXIn, 
 	const float& HalfYIn,
 	const float& HalfZIn
 )
-	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance)
+	: ABoundingComponent(GraphicsPipelineInstances)
 {
-	static size_t BoundingOBBCount = 0;
+	InitOBB(GraphicsPipelineInstances->GetDevice());
+	HalfExtends[Direction::PlaneRight] = HalfXIn;
+	HalfExtends[Direction::PlaneUp] = HalfYIn;
+	HalfExtends[Direction::PlaneForward] = HalfZIn;
+}
+
+OrientedBoundingBox::~OrientedBoundingBox() {}
+
+void OrientedBoundingBox::InitOBB(ID3D11Device* DeviceIn)
+{
+	static shared_ptr<Debugable> OBBDebugObject = CreateDebugBoxObject(DeviceIn);
+
 	BoundingOBBCount++;
 	ObjectName = "Bounding OBB " + to_string(BoundingOBBCount);
 
@@ -27,14 +50,43 @@ OrientedBoundingBox::OrientedBoundingBox(
 	AutoZeroArrayMemory(HalfExtends);
 	AutoZeroMemory(Center);
 
-	HalfExtends[Direction::PlaneRight] = HalfXIn;
-	HalfExtends[Direction::PlaneUp] = HalfYIn;
-	HalfExtends[Direction::PlaneForward] = HalfZIn;
-
-	DebugObject = AssetManagerInstance->GetDebugObject(EDebugObjectType::Box);
+	DebugObject = OBBDebugObject.get();
 }
 
-OrientedBoundingBox::~OrientedBoundingBox() {}
+shared_ptr<Debugable> OrientedBoundingBox::CreateDebugBoxObject(ID3D11Device* DeviceIn)
+{
+	shared_ptr<Debugable> Result = make_shared<Debugable>(DeviceIn);
+
+	std::vector<DebugVertex>& VerticesIn = Result->Vertices;
+	std::vector<uint16_t>& IndicesIn = Result->Indices;
+
+	VerticesIn.emplace_back(SPosition3D{ -1.0f, -1.0f, -1.0f });
+	VerticesIn.emplace_back(SPosition3D{ 1.0f, -1.0f, -1.0f });
+	VerticesIn.emplace_back(SPosition3D{ 1.0f,  1.0f, -1.0f });
+	VerticesIn.emplace_back(SPosition3D{ -1.0f,  1.0f, -1.0f });
+	VerticesIn.emplace_back(SPosition3D{ -1.0f, -1.0f,  1.0f });
+	VerticesIn.emplace_back(SPosition3D{ 1.0f, -1.0f,  1.0f });
+	VerticesIn.emplace_back(SPosition3D{ 1.0f,  1.0f,  1.0f });
+	VerticesIn.emplace_back(SPosition3D{ -1.0f,  1.0f,  1.0f });
+
+	IndicesIn = std::vector<uint16_t>{
+		// Front face
+		0, 2, 1, 0, 3, 2,
+		// Back face
+		4, 5, 6, 4, 6, 7,
+		// Bottom face
+		0, 1, 5, 0, 5, 4,
+		// Top face
+		3, 7, 6, 3, 6, 2,
+		// Left face
+		0, 4, 7, 0, 7, 3,
+		// Right face
+		1, 2, 6, 1, 6, 5
+	};
+
+	Result->Initialize(DeviceIn);
+	return Result;
+}
 
 bool OrientedBoundingBox::Intersect(Ray* RayIn, float& DistanceOut)
 {

@@ -44,10 +44,10 @@ void Map::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, f
 	AddedObject->Position.z = PosZIn;
 
 	// TEST ========================================================================================================
-	OrientedBoundingBox* OBB = AddedObject->AddAttachedObject<OrientedBoundingBox>(GraphicsPipelineCached, AssetManagerCached, 100.f, 100.f, 100.f);						
+	OrientedBoundingBox* OBB = AddedObject->AddAttachedObject<OrientedBoundingBox>(GraphicsPipelineCached, 100.f, 100.f, 100.f);						
 	OBB->Position.x += 400.f;
 
-	BoundingSphere* BB = OBB->AddAttachedObject<BoundingSphere>(GraphicsPipelineCached, AssetManagerCached, 100.f);
+	BoundingSphere* BB = OBB->AddAttachedObject<BoundingSphere>(GraphicsPipelineCached, 100.f);
 	OBB->Position.x += 400.f;
 
 	Tests.push_back(OBB);

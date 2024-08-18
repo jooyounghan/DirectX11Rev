@@ -7,11 +7,22 @@ class BoundingSphere : public ABoundingComponent
 {
 public:
 	BoundingSphere(
+		GraphicsPipeline* GraphicsPipelineInstances
+	);
+
+public:
+	BoundingSphere(
 		GraphicsPipeline* GraphicsPipelineInstances,
-		AssetManager* AssetManagerInstance,
 		const float& RadiusIn
 	);
 	virtual ~BoundingSphere();
+
+private:
+	void InitBoundingSphere(ID3D11Device* DeviceIn);
+
+private:
+	static size_t BoundingSphereCount;
+	static std::shared_ptr<Debugable> CreateDebugSphereObject(ID3D11Device* DeviceIn);
 
 protected:
 	XMVECTOR Center;

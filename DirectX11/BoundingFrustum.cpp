@@ -9,10 +9,9 @@ using namespace std;
 
 BoundingFrustum::BoundingFrustum(
 	GraphicsPipeline* GraphicsPipelineInstances,
-	AssetManager* AssetManagerInstance,
 	Viewable* ViewableInstance
 )
-	: ABoundingComponent(GraphicsPipelineInstances, AssetManagerInstance), ViewableCached(ViewableInstance)
+	: ABoundingComponent(GraphicsPipelineInstances), ViewableCached(ViewableInstance)
 {
     static size_t BoundingFrustumCount = 0;
     BoundingFrustumCount++;

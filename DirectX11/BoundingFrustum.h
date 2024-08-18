@@ -12,7 +12,6 @@ class BoundingFrustum : public ABoundingComponent
 public:
 	BoundingFrustum(
 		GraphicsPipeline* GraphicsPipelineInstances,
-		AssetManager* AssetManagerInstance,
 		Viewable* ViewableInstance
 	);
 	virtual ~BoundingFrustum();

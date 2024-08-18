@@ -3,13 +3,12 @@
 #include "AttachableObject.h"
 
 class GraphicsPipeline;
-class AssetManager;
 class Debugable;
 
 class ABoundingComponent : public IIntersectable, public AttachableObject
 {	
 public:
-	ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances, AssetManager* AssetManagerInstance);
+	ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances);
 	virtual ~ABoundingComponent();
 
 protected:

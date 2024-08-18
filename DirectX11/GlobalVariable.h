@@ -13,7 +13,7 @@ namespace Direction
 	enum EPlaneDirection : size_t
 	{
 		PlaneRight,			// x
-		PlaneUp,				// y
+		PlaneUp,			// y
 		PlaneForward,		// z
 		NumPlaneDirection
 	};

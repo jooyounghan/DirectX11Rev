@@ -25,7 +25,6 @@ AssetManager::AssetManager(ID3D11Device* DeviceIn)
     : DeviceCached(DeviceIn)
 {
     PreloadAssets();
-    PreloadDebugObjects();
 }
 
 AssetManager::~AssetManager()
@@ -189,18 +188,6 @@ IAssetFile* AssetManager::GetAsset(const std::string AssetName)
     if (ManagingAssets.find(AssetName) != ManagingAssets.end())
     {
         return ManagingAssets[AssetName].get(); 
-    }
-    else
-    {
-        return nullptr;
-    }
-}
-
-Debugable* AssetManager::GetDebugObject(EDebugObjectType DebugObjectType)
-{
-    if (DebugObjects.find(DebugObjectType) != DebugObjects.end())
-    {
-        return DebugObjects[DebugObjectType].get();
     }
     else
     {
@@ -483,111 +470,6 @@ void AssetManager::PreloadAssets()
     }
 
     ProcessLinkSkeletalMeshAsset();
-}
-
-void AssetManager::PreloadDebugObjects()
-{
-    CreateDebugSphereObject();
-    CreateDebugBoxObject();
-    CreateDebugCapsuleObject();
-}
-
-void AssetManager::CreateDebugSphereObject()
-{
-    DebugObjects[EDebugObjectType::Sphere] = make_shared<Debugable>(DeviceCached);
-    Debugable* DebugObject = DebugObjects[EDebugObjectType::Sphere].get();
-
-    std::vector<DebugVertex>& VerticesIn = DebugObject->Vertices;
-    std::vector<uint16_t>& IndicesIn = DebugObject->Indices;
-
-    uint16_t DefaultSphereLevel = 5;
-
-    for (uint16_t latitudeIdx = 0; latitudeIdx < DefaultSphereLevel; ++latitudeIdx)
-    {
-        const float& fLatitudeLow = DirectX::XM_PIDIV2 / DefaultSphereLevel * latitudeIdx;
-        const float& fLatitudeHigh = DirectX::XM_PIDIV2 / DefaultSphereLevel * (latitudeIdx + 1);
-        const float& fLatitudeLowTextureCord = (latitudeIdx / DefaultSphereLevel) / 2.f;
-        const float& fLatitudeHighTextureCord = ((latitudeIdx + 1) / DefaultSphereLevel) / 2.f;
-
-        const uint16_t& usLatitudeOffset = (uint16_t)VerticesIn.size();
-
-        for (uint16_t longitudeIdx = 0; longitudeIdx <= (uint16_t)DefaultSphereLevel * 2; ++longitudeIdx)
-        {
-            const float& fLongitudeLow = DirectX::XM_2PI / (DefaultSphereLevel * 2.f) * longitudeIdx;
-            const float& fLongitudeTextureCord = longitudeIdx / (DefaultSphereLevel * 2.f);
-
-            VerticesIn.emplace_back(SPosition3D{ cosf(fLongitudeLow) * cosf(fLatitudeLow), sinf(fLatitudeLow), cosf(fLatitudeLow) * sinf(fLongitudeLow) });
-            VerticesIn.emplace_back(SPosition3D{cosf(fLongitudeLow) * cosf(fLatitudeHigh), sinf(fLatitudeHigh), cosf(fLatitudeHigh) * sinf(fLongitudeLow)});
-            VerticesIn.emplace_back(SPosition3D{cosf(fLongitudeLow) * cosf(-fLatitudeLow), sinf(-fLatitudeLow), cosf(-fLatitudeLow) * sinf(fLongitudeLow)});
-            VerticesIn.emplace_back(SPosition3D{ cosf(fLongitudeLow) * cosf(-fLatitudeHigh), sinf(-fLatitudeHigh), cosf(-fLatitudeHigh) * sinf(fLongitudeLow) });
-        }
-
-        for (uint16_t longitudeIdx = 0; longitudeIdx < (uint16_t)DefaultSphereLevel * 2; ++longitudeIdx)
-        {
-            const uint16_t& usLongitudeOffset = 4 * longitudeIdx + usLatitudeOffset;
-            IndicesIn.push_back(usLongitudeOffset + 0);
-            IndicesIn.push_back(usLongitudeOffset + 1);
-            IndicesIn.push_back(usLongitudeOffset + 4);
-            IndicesIn.push_back(usLongitudeOffset + 4);
-            IndicesIn.push_back(usLongitudeOffset + 1);
-            IndicesIn.push_back(usLongitudeOffset + 5);
-
-            IndicesIn.push_back(usLongitudeOffset + 3);
-            IndicesIn.push_back(usLongitudeOffset + 2);
-            IndicesIn.push_back(usLongitudeOffset + 7);
-            IndicesIn.push_back(usLongitudeOffset + 7);
-            IndicesIn.push_back(usLongitudeOffset + 2);
-            IndicesIn.push_back(usLongitudeOffset + 6);
-        }
-    }
-
-    DebugObject->Initialize(DeviceCached);
-}
-
-void AssetManager::CreateDebugBoxObject()
-{
-    DebugObjects[EDebugObjectType::Box] = make_shared<Debugable>(DeviceCached);
-    Debugable* DebugObject = DebugObjects[EDebugObjectType::Box].get();
-
-    std::vector<DebugVertex>& VerticesIn = DebugObject->Vertices;
-    std::vector<uint16_t>& IndicesIn = DebugObject->Indices;
-
-    VerticesIn.emplace_back(SPosition3D{ -1.0f, -1.0f, -1.0f });
-    VerticesIn.emplace_back(SPosition3D{ 1.0f, -1.0f, -1.0f });
-    VerticesIn.emplace_back(SPosition3D{ 1.0f,  1.0f, -1.0f });
-    VerticesIn.emplace_back(SPosition3D{ -1.0f,  1.0f, -1.0f });
-    VerticesIn.emplace_back(SPosition3D{ -1.0f, -1.0f,  1.0f });
-    VerticesIn.emplace_back(SPosition3D{ 1.0f, -1.0f,  1.0f });
-    VerticesIn.emplace_back(SPosition3D{ 1.0f,  1.0f,  1.0f });
-    VerticesIn.emplace_back(SPosition3D{ -1.0f,  1.0f,  1.0f });
-
-    IndicesIn = std::vector<uint16_t>{
-        // Front face
-        0, 2, 1, 0, 3, 2,
-        // Back face
-        4, 5, 6, 4, 6, 7,
-        // Bottom face
-        0, 1, 5, 0, 5, 4,
-        // Top face
-        3, 7, 6, 3, 6, 2,
-        // Left face
-        0, 4, 7, 0, 7, 3,
-        // Right face
-        1, 2, 6, 1, 6, 5
-    };
-
-    DebugObject->Initialize(DeviceCached);
-}
-
-void AssetManager::CreateDebugCapsuleObject()
-{
-    DebugObjects[EDebugObjectType::Capsule] = make_shared<Debugable>(DeviceCached);
-    Debugable* DebugObject = DebugObjects[EDebugObjectType::Sphere].get();
-
-    std::vector<DebugVertex>& VerticesIn = DebugObject->Vertices;
-    std::vector<uint16_t>& IndicesIn = DebugObject->Indices;
-
-    DebugObject->Initialize(DeviceCached);
 }
 
 template<typename T>
