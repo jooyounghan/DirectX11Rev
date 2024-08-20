@@ -8,7 +8,7 @@
 using namespace std;
 using namespace DirectX;
 
-size_t BoundingSphere::BoundingSphereCount = 0;
+const char* BoundingSphere::BoundingSphereIdentifier = "Bounding Sphere";
 
 BoundingSphere::BoundingSphere(GraphicsPipeline* GraphicsPipelineInstances)
 	: ABoundingComponent(GraphicsPipelineInstances), Radius(100.f), ScaledRadius(100.f * Scale.x)
@@ -35,8 +35,9 @@ void BoundingSphere::InitBoundingSphere(ID3D11Device* DeviceIn)
 {
 	static shared_ptr<Debugable> SphereDebugObject = CreateDebugSphereObject(DeviceIn);
 
+	static size_t BoundingSphereCount = 0;
 	BoundingSphereCount++;
-	ObjectName = "Bounding Sphere " + to_string(BoundingSphereCount);
+	ObjectName = BoundingSphereIdentifier + to_string(BoundingSphereCount);
 
 	AutoZeroMemory(Center);
 

@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AAddObjectHelper.cpp" />
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
     <ClCompile Include="EditorActor.cpp" />
@@ -158,7 +159,6 @@
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="GlobalVariable.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
-    <ClCompile Include="IAddObjectHelper.cpp" />
     <ClCompile Include="IAssetFile.cpp" />
     <ClCompile Include="IDColor.cpp" />
     <ClCompile Include="IEditorLinkedWindow.cpp" />
@@ -221,7 +221,7 @@
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="EditorCamera.h" />
     <ClInclude Include="FileSelectDialog.h" />
-    <ClInclude Include="IAddObjectHelper.h" />
+    <ClInclude Include="AAddObjectHelper.h" />
     <ClInclude Include="ICollisionVisitor.h" />
     <ClInclude Include="IDColor.h" />
     <ClInclude Include="IDialog.h" />

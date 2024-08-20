@@ -405,7 +405,7 @@
     <ClCompile Include="AddAttachableObjectHelper.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClCompile>
-    <ClCompile Include="IAddObjectHelper.cpp">
+    <ClCompile Include="AAddObjectHelper.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClCompile>
   </ItemGroup>
@@ -668,7 +668,7 @@
     <ClInclude Include="AddAttachableObjectHelper.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClInclude>
-    <ClInclude Include="IAddObjectHelper.h">
+    <ClInclude Include="AAddObjectHelper.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClInclude>
   </ItemGroup>

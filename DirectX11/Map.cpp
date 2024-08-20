@@ -15,11 +15,6 @@
 
 // TEST
 #include "TestActor.h"
-#include "EditorCamera.h"
-#include "BoundingSphere.h"
-#include "OrientedBoundingBox.h"
-#include "BoundingFrustum.h"
-#include "CollisionVisitor.h"
 
 using namespace std;
 using namespace DirectX;
@@ -42,17 +37,6 @@ void Map::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, f
 	AddedObject->Position.x = PosXIn;
 	AddedObject->Position.y = PosYIn;
 	AddedObject->Position.z = PosZIn;
-
-	// TEST ========================================================================================================
-	OrientedBoundingBox* OBB = AddedObject->AddAttachedObject<OrientedBoundingBox>(GraphicsPipelineCached, 100.f, 100.f, 100.f);						
-	OBB->Position.x += 400.f;
-
-	BoundingSphere* BB = OBB->AddAttachedObject<BoundingSphere>(GraphicsPipelineCached, 100.f);
-	OBB->Position.x += 400.f;
-
-	Tests.push_back(OBB);
-	Tests.push_back(BB);
-	// TEST ========================================================================================================
 }
 
 
@@ -90,6 +74,7 @@ void Map::RenderMap()
 
 void Map::Serialize(const std::string& OutputAdditionalPath)
 {
+
 }
 
 void Map::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)

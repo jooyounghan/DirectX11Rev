@@ -12,7 +12,7 @@
 using namespace std;
 using namespace DirectX;
 
-size_t OrientedBoundingBox::BoundingOBBCount = 0;
+const char* OrientedBoundingBox::BoundingOBBIdentifier = "Bounding OBB";
 
 OrientedBoundingBox::OrientedBoundingBox(GraphicsPipeline* GraphicsPipelineInstances)
 	: ABoundingComponent(GraphicsPipelineInstances)
@@ -43,8 +43,10 @@ void OrientedBoundingBox::InitOBB(ID3D11Device* DeviceIn)
 {
 	static shared_ptr<Debugable> OBBDebugObject = CreateDebugBoxObject(DeviceIn);
 
+	static size_t BoundingOBBCount = 0;
 	BoundingOBBCount++;
-	ObjectName = "Bounding OBB " + to_string(BoundingOBBCount);
+
+	ObjectName = BoundingOBBIdentifier + to_string(BoundingOBBCount);
 
 	AutoZeroArrayMemory(CurrentAxises);
 	AutoZeroArrayMemory(HalfExtends);

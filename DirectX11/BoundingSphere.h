@@ -20,6 +20,9 @@ public:
 private:
 	void InitBoundingSphere(ID3D11Device* DeviceIn);
 
+public:
+	static const char* BoundingSphereIdentifier;
+
 private:
 	static size_t BoundingSphereCount;
 	static std::shared_ptr<Debugable> CreateDebugSphereObject(ID3D11Device* DeviceIn);

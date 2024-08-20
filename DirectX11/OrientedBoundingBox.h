@@ -23,8 +23,10 @@ public:
 private:
 	void InitOBB(ID3D11Device* DeviceIn);
 
+public:
+	static const char* BoundingOBBIdentifier;
+
 protected:
-	static size_t BoundingOBBCount;
 	static std::shared_ptr<Debugable> CreateDebugBoxObject(ID3D11Device* DeviceIn);
 
 protected:

@@ -19,6 +19,9 @@ public:
 protected:
 	Viewable* ViewableCached = nullptr;
 
+public:
+	static const char* BoundingFrustumIdentifier;
+
 protected:
 	Plane FrustumPlanes[Direction::NumFrustumDirection];
 	XMVECTOR FrustumEdgeAxises[Direction::NumFrustumEdgeAxis];

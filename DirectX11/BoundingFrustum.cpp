@@ -7,6 +7,8 @@
 
 using namespace std;
 
+const char* BoundingFrustum::BoundingFrustumIdentifier = "Bounding Frustum";
+
 BoundingFrustum::BoundingFrustum(
 	GraphicsPipeline* GraphicsPipelineInstances,
 	Viewable* ViewableInstance
@@ -15,7 +17,7 @@ BoundingFrustum::BoundingFrustum(
 {
     static size_t BoundingFrustumCount = 0;
     BoundingFrustumCount++;
-    ObjectName = "Bounding Frustum " + to_string(BoundingFrustumCount);
+    ObjectName = BoundingFrustumIdentifier + to_string(BoundingFrustumCount);
 
     AutoZeroArrayMemory(FrustumPlanes);
     AutoZeroArrayMemory(FrustumEdgeAxises);

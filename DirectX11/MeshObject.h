@@ -19,6 +19,9 @@ public:
 private:
 	void InitMeshObject();
 
+public:
+	static const char* MeshObjectIdentifier;
+
 protected:
 	static size_t MeshObjectCount;
 

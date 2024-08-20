@@ -7,6 +7,7 @@
 
 using namespace std;
 
+const char* MeshObject::MeshObjectIdentifier = "Mesh Object";
 size_t MeshObject::MeshObjectCount = 0;
 
 MeshObject::MeshObject(GraphicsPipeline* GraphicsPipelineInstances) 
@@ -37,7 +38,7 @@ MeshObject::~MeshObject()
 void MeshObject::InitMeshObject()
 {
 	MeshObjectCount++;
-	ObjectName = "Mesh Object " + to_string(MeshObjectCount);
+	ObjectName = MeshObjectIdentifier + to_string(MeshObjectCount);
 }
 
 void MeshObject::UpdateObject(const float& DeltaTimeIn)

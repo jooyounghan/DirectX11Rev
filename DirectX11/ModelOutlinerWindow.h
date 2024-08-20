@@ -16,6 +16,9 @@ public:
 	virtual void RenderWindow() override;
 
 private:
+	Map* CurrentMap = nullptr;
+
+private:
 	ImVec2 RegionAvail = ImVec2();
 
 private:
@@ -27,7 +30,7 @@ private:
 	void DoModalDeleteAttachableObject();
 
 private:
-	void RenderPlacedListBox(Map* CurrentMap);
+	void RenderPlacedListBox();
 	void RenderAttachedTree();
 
 private:

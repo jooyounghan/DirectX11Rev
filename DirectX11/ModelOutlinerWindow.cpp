@@ -1,5 +1,8 @@
 #include "ModelOutlinerWindow.h"
 
+#include "AddPlaceableObjectHelper.h"
+#include "AddAttachableObjectHelper.h"
+
 #include "EditorWorld.h"
 #include "GameWorld.h"
 #include "Map.h"
@@ -31,6 +34,9 @@ ModelOutlinerWindow::~ModelOutlinerWindow()
 void ModelOutlinerWindow::RenderWindow()
 {
     Begin("Map Outliner");
+
+    CurrentMap = GameWorldCached->GetCurrentMap();
+
     RenderPlaceablesOutline();
     RenderSelectedPlaceableOutline();
     End();
@@ -41,14 +47,13 @@ void ModelOutlinerWindow::RenderPlaceablesOutline()
     RegionAvail = GetContentRegionAvail();
     BeginChild("Placeables Outliner", ImVec2(RegionAvail.x, RegionAvail.y * 0.5f));
 
-    Map* CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap)
     {
         Text("Placed Object List:");
         SameLine();
         DoModalAddPlaceableObject();
 
-        RenderPlacedListBox(CurrentMap);
+        RenderPlacedListBox();
         DoModalDeletePlaceableObject();
     }
     EndChild();
@@ -82,7 +87,6 @@ void ModelOutlinerWindow::DoModalDeletePlaceableObject()
 
             if (Button("OK", ImVec2(120, 0))) 
             { 
-                Map* CurrentMap = GameWorldCached->GetCurrentMap();
                 if (CurrentMap != nullptr)
                 {
                     CurrentMap->PlaceableDeleteHelper(SelectedPlaceable);
@@ -140,7 +144,7 @@ void ModelOutlinerWindow::DoModalDeleteAttachableObject()
     ResetWindowPosToPrevious();
 }
 
-void ModelOutlinerWindow::RenderPlacedListBox(Map* CurrentMap)
+void ModelOutlinerWindow::RenderPlacedListBox()
 {
     const list<unique_ptr<PlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
     for (auto& Placeable : RootPlaceables)
@@ -187,6 +191,11 @@ void ModelOutlinerWindow::RenderAttachedTree()
         }
 
         bool IsOpen = TreeNodeEx(SelectedPlaceable->GetObjectName().c_str(), NodeFlags);
+        if (IsItemClicked() or IsItemToggledOpen())
+        {
+            EditorWorldCached->SetSelectedAttached(nullptr);
+        }
+
         if (IsOpen)
         {
             Indent();
@@ -261,14 +270,8 @@ void ModelOutlinerWindow::DoModalAddPlaceableObject()
     SetWindowPosToCenter();
     if (BeginPopupModal(AddPlaceableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
     {
-        Text("Test1");
-        Separator();
-
-        if (Button("OK", ImVec2(120, 0))) { CloseCurrentPopup(); }
-        SetItemDefaultFocus();
-        SameLine();
-        if (Button("Cancel", ImVec2(120, 0))) { CloseCurrentPopup(); }
-
+        AddPlaceableObjectDrawer PlaceableAddPopupDrawer(EditorWorldCached, CurrentMap);
+        PlaceableAddPopupDrawer.DrawAddObjectPopup();
         EndPopup();
     }
     ResetWindowPosToPrevious();
@@ -286,17 +289,8 @@ void ModelOutlinerWindow::DoModalAddAttachableObject()
     SetWindowPosToCenter();
     if (BeginPopupModal(AddAttachableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
     {
-        
-        const char* items[] = { "Mesh Object", "Bounding Sphere", "Bounding OBB", "Bounding Frustum" };
-        static int item_current = 0;
-        ImGui::Combo("combo", &item_current, items, IM_ARRAYSIZE(items));
-
-        Separator();
-
-        if (Button("OK", ImVec2(120, 0))) { CloseCurrentPopup(); }
-        SetItemDefaultFocus();
-        SameLine();
-        if (Button("Cancel", ImVec2(120, 0))) { CloseCurrentPopup(); }
+        AddAttachableObjectDrawer AttachableAddPopupDrawer(EditorWorldCached, CurrentMap);
+        AttachableAddPopupDrawer.DrawAddObjectPopup();
         EndPopup();
     }
     ResetWindowPosToPrevious();
