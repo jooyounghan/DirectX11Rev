@@ -98,3 +98,11 @@ void BoundingFrustum::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
     GuiVisitor->Visit(this);
 }
+
+void BoundingFrustum::OnSerialize(FILE* FileIn)
+{
+}
+
+void BoundingFrustum::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+}

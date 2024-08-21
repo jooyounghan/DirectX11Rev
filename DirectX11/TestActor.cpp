@@ -1,15 +1,28 @@
 #include "TestActor.h"
+#include "GraphicsPipeline.h"
 
 using namespace std;
 
-TestActor::TestActor(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
-	: PlaceableObject(DeviceIn, DeviceContextIn)
+TestActor::TestActor(GraphicsPipeline* GraphicsPipelineIn)
+	: PlaceableObject(GraphicsPipelineIn->GetDevice(), GraphicsPipelineIn->GetDeviceContext())
 {
 	static size_t TestActorCount = 0;
 	TestActorCount++;
 	ObjectName = "Test Actor" + to_string(TestActorCount);
+
+	PlaceableKind = EPlaceableObjectKind::ActorKind;
 }
 
 TestActor::~TestActor()
 {
+}
+
+void TestActor::OnSerialize(FILE* FileIn)
+{
+	AObject::OnSerialize(FileIn);
+}
+
+void TestActor::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
 }

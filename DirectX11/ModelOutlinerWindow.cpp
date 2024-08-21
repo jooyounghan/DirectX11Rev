@@ -5,7 +5,7 @@
 
 #include "EditorWorld.h"
 #include "GameWorld.h"
-#include "Map.h"
+#include "MapAsset.h"
 
 #include <list> 
 #include <memory>

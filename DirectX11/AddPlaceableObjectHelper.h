@@ -6,7 +6,7 @@ class AddPlaceableObjectDrawer : public AAddObjectHelper
 public:
 	AddPlaceableObjectDrawer( 
 		EditorWorld* EditorWorldIn,
-		Map* CurrentMap
+		MapAsset* CurrentMap
 	);
 
 public:

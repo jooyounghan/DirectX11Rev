@@ -4,18 +4,18 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 
-class Map;
+class MapAsset;
 class EditorWorld;
 class GraphicsPipeline;
 
 class AAddObjectHelper
 {
 public:
-	AAddObjectHelper(EditorWorld* EditorWorldIn, Map* CurrentMap);
+	AAddObjectHelper(EditorWorld* EditorWorldIn, MapAsset* CurrentMap);
 
 protected:
 	EditorWorld* EditorWorldCached = nullptr;
-	Map* CurrentMapCached = nullptr;
+	MapAsset* CurrentMapCached = nullptr;
 
 public:
 	virtual void DrawAddObjectPopup() = 0;

@@ -16,7 +16,7 @@ using namespace ImGui;
 
 AddAttachableObjectDrawer::AddAttachableObjectDrawer(
     EditorWorld* EditorWorldIn, 
-    Map* CurrentMap
+    MapAsset* CurrentMap
 )
     : AAddObjectHelper(EditorWorldIn, CurrentMap)
 {
@@ -43,7 +43,7 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
         GraphicsPipeline* GraphicPipelineCached = EditorWorldCached->GraphicsPipelineCached;
 
 
-        EAttachableObjectKind ObjectKind = (EAttachableObjectKind)ItemCurrentSelectedIdx;
+        EAttachableObjectKind ObjectKind = (EAttachableObjectKind)(ItemCurrentSelectedIdx + 1);
         if (Button("OK", ImVec2(120, 0))) 
         { 
             switch (ObjectKind)

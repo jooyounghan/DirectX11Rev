@@ -68,7 +68,7 @@ void StaticMeshAsset::Serialize(const string& OutputAdditionalPath)
 	}
 }
 
-void StaticMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
+void StaticMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn)
 {
 	DeserializeBaseMeshData(FileIn);
 	Initialize(DeviceIn);

@@ -1,5 +1,7 @@
 #include "SkeletalMeshAsset.h"
 #include "BoneAsset.h"
+#include "AssetManager.h"
+
 #include <stdio.h>
 
 using namespace std;
@@ -16,12 +18,6 @@ SkeletalMeshAsset::SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadAs
 
 SkeletalMeshAsset::~SkeletalMeshAsset()
 {
-}
-
-void SkeletalMeshAsset::LinkBoneAsset(BoneAsset* BoneAssetIn)
-{
-	LinkedBoneAsset = BoneAssetIn;
-	BoneAssetName = BoneAssetIn->GetAssetName();
 }
 
 std::vector<ID3D11Buffer*> SkeletalMeshAsset::GetVertexBuffers()
@@ -76,8 +72,12 @@ void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 		SerializeHeader(OutputAssetFile);
 
 		// Linked Bone Name
-		size_t LinkedBoneAssetNameCount;
-		LinkedBoneAssetNameCount = BoneAssetName.size();
+		const string& BoneAssetName = LinkedBoneAsset->GetAssetName();
+		size_t LinkedBoneAssetNameCount = 0;
+		if (LinkedBoneAsset != nullptr)
+		{
+			LinkedBoneAssetNameCount = BoneAssetName.size();
+		}
 		fwrite(&LinkedBoneAssetNameCount, sizeof(size_t), 1, OutputAssetFile);
 		fwrite(BoneAssetName.c_str(), sizeof(char), LinkedBoneAssetNameCount, OutputAssetFile);
 
@@ -97,13 +97,20 @@ void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 	}
 }
 
-void SkeletalMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
+void SkeletalMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn)
 {
 	// Linked Bone Name
+	string BoneAssetName;
 	size_t LinkedBoneAssetNameCount;
 	fread(&LinkedBoneAssetNameCount, sizeof(size_t), 1, FileIn);
 	BoneAssetName.resize(LinkedBoneAssetNameCount);
 	fread(BoneAssetName.data(), sizeof(char), LinkedBoneAssetNameCount, FileIn);
+
+	AAssetFile* AssetFile = AssetManagerIn->GetAsset(BoneAssetName);
+	if (AssetFile != nullptr)
+	{
+		LinkedBoneAsset = (BoneAsset*)AssetFile;
+	}
 
 	DeserializeBaseMeshData(FileIn);
 

@@ -7,6 +7,8 @@
 #include "UploadBuffer.h"
 #include "ConstantBuffer.h"
 
+#include "ISerializable.h"
+
 #include <string>
 
 class PSOObject;
@@ -20,7 +22,7 @@ struct TransformationMatrix
 	DirectX::XMMATRIX InvTransfomationMat;
 };
 
-class AObject
+class AObject : public IOnSerializable
 {
 public:
 	AObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
@@ -64,5 +66,9 @@ public:
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
+
+public:
+	virtual void OnSerialize(FILE* FileIn) override;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

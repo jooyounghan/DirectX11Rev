@@ -12,25 +12,29 @@ struct aiScene;
 struct aiNode;
 struct aiMesh;
 
-struct ID3D11Device;
+class GraphicsPipeline;
 
-class IAssetFile;
+class AAssetFile;
 class AMeshAsset;
 class StaticMeshAsset;
 class SkeletalMeshAsset;
 class BoneAsset;
+class MapAsset;
 
 class AssetManager
 {
 public:
-	AssetManager(ID3D11Device* DeviceIn);
+	AssetManager(GraphicsPipeline* GraphicsPipelineInstance);
 	~AssetManager();
 
 protected:
-	ID3D11Device* DeviceCached = nullptr;
+	GraphicsPipeline* GraphicsPipelineCached = nullptr;
+	MakeGetter(GraphicsPipelineCached);
 
 public:
-	void LoadAssetFile(const std::string& FilePathIn);
+	void LoadAssetFile(const std::string& AssetPathIn);
+
+public:
 	void LoadModelFile(const std::string& FilePathIn);
 
 private:
@@ -42,16 +46,12 @@ private:
 	bool HasBone(const aiScene* const Scene);
 
 private:
-	std::deque<SkeletalMeshAsset*> WatingSkeletalMeshes;
+	std::unordered_map<std::string, std::shared_ptr<AAssetFile>> ManagingAssets;
+	std::unordered_map<std::string, std::shared_ptr<MapAsset>> ManagingMaps;
+	MakeGetter(ManagingMaps);
 
 public:
-	void ProcessLinkSkeletalMeshAsset();
-
-private:
-	std::unordered_map<std::string, std::shared_ptr<IAssetFile>> ManagingAssets;
-
-public:
-	IAssetFile* GetAsset(const std::string AssetName);
+	AAssetFile* GetAsset(const std::string AssetName);
 
 private:
 	void ProcessNodeForMesh(

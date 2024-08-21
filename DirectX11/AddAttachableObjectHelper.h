@@ -3,16 +3,8 @@
 
 class AddAttachableObjectDrawer : public AAddObjectHelper
 {
-private:
-	enum EAttachableObjectKind : int
-	{
-		MeshObjectKind,
-		BoundingSphereKind,
-		OrientedBoundingBoxKind,
-	};
-
 public:
-	AddAttachableObjectDrawer(EditorWorld* EditorWorldIn, Map* CurrentMap);
+	AddAttachableObjectDrawer(EditorWorld* EditorWorldIn, MapAsset* CurrentMap);
 
 public:
 	virtual void DrawAddObjectPopup() override;

@@ -69,3 +69,11 @@ void Viewable::AcceptGui(IGuiModelVisitor* GuiVisitor)
 	GuiVisitor->Visit(this);
 }
 
+void Viewable::OnSerialize(FILE* FileIn)
+{
+}
+
+void Viewable::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+}
+

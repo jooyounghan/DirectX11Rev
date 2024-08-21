@@ -7,11 +7,23 @@
 #include <list>
 #include <memory>
 
+enum EPlaceableObjectKind : int
+{
+	PlaceableNone,
+	ActorKind,
+	PawnKind,
+	CharacterKind,
+};
+
 class PlaceableObject : public AObject
 {
 public:
 	PlaceableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
 	virtual ~PlaceableObject();
+
+protected:
+	EPlaceableObjectKind PlaceableKind = EPlaceableObjectKind::PlaceableNone;
+	MakeSetterGetter(PlaceableKind);
 
 protected:
 	static uint32_t PickingIDIssued;
@@ -52,6 +64,10 @@ public:
 
 public:
 	void RemoveAttachedObject(AttachableObject* AttachedObjectIn);
+
+public:
+	virtual void OnSerialize(FILE* FileIn) = 0;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };
 
 template<typename Attachment, typename ...Args>

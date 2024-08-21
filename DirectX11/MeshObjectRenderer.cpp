@@ -5,7 +5,7 @@
 #include "PSOObject.h"
 
 #include "Camera.h"
-#include "Map.h"
+#include "MapAsset.h"
 
 using namespace std;
 
@@ -14,7 +14,7 @@ MeshObjectRenderer::MeshObjectRenderer(PSOObject* PSOObjectIn)
 {
 }
 
-void MeshObjectRenderer::PresetRendering(const unsigned int& RTVCountIn, ID3D11RenderTargetView** RTVsIn, D3D11_VIEWPORT* ViewportIn, ID3D11DepthStencilView* DSVIn, Camera* CameraIn, Map* MapIn)
+void MeshObjectRenderer::PresetRendering(const unsigned int& RTVCountIn, ID3D11RenderTargetView** RTVsIn, D3D11_VIEWPORT* ViewportIn, ID3D11DepthStencilView* DSVIn, Camera* CameraIn, MapAsset* MapIn)
 {
 	PSOObjectCached->SetPipelineObject(RTVCountIn, RTVsIn, ViewportIn, DSVIn);
 

@@ -2,13 +2,19 @@
 #include "PlaceableObject.h"
 #include "HeaderHelper.h"
 
+class GraphicsPipeline;
+
 class TestActor : public PlaceableObject
 {
 public:
-	TestActor(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
+	TestActor(GraphicsPipeline* GraphicsPipelineInstances);
 	virtual ~TestActor();
 
 public:
-	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) {};
+	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override {};
+
+public:
+	virtual void OnSerialize(FILE* FileIn) override;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

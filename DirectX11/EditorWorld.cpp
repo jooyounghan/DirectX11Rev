@@ -16,7 +16,7 @@
 #include "PSOManager.h"
 
 #include "GameWorld.h"
-#include "Map.h"
+#include "MapAsset.h"
 #include "GraphicsPipeline.h"
 
 #include "imgui.h"
@@ -70,7 +70,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 
 void EditorWorld::SetSelecteObjectByID(const UINT& Id)
 {
-    Map* CurrentMap = GameWorldCached->GetCurrentMap();
+    MapAsset* CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap != nullptr)
     {
         const unordered_map<UINT, PlaceableObject*>& IdToPlaceables = CurrentMap->GetIdToPlaceables();
@@ -92,7 +92,7 @@ void EditorWorld::RenderWorld()
     if (EditorCameraCached != nullptr)
     {
         EditorCameraCached->CleanupLens();
-        Map* CurrentMap = GameWorldCached->GetCurrentMap();
+        MapAsset* CurrentMap = GameWorldCached->GetCurrentMap();
         PSOManager* PSOManagerInstance = GameWorldCached->GetPSOManagerInstance();
         if (CurrentMap != nullptr)
         {

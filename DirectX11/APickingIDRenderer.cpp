@@ -3,7 +3,7 @@
 #include "PSOObject.h"
 
 #include "Camera.h"
-#include "Map.h"
+#include "MapAsset.h"
 
 using namespace std;
 
@@ -18,7 +18,7 @@ void APickingIDRenderer::PresetRendering(
 	D3D11_VIEWPORT* ViewportIn, 
 	ID3D11DepthStencilView* DSVIn, 
 	Camera* CameraIn, 
-	Map* MapIn
+	MapAsset* MapIn
 )
 {
 	PSOObjectCached->SetPipelineObject(RTVCountIn, RTVsIn, ViewportIn, DSVIn);

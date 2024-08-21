@@ -2,14 +2,15 @@
 
 #include "EditorWorld.h"
 #include "GameWorld.h"
+#include "MapAsset.h"
 
 #include "EditorActor.h"
 #include "EditorCamera.h"
 
 #include "AssetManager.h"
-#include "IAssetFile.h"
+#include "AAssetFile.h"
 
-#include "Map.h"
+#include "MapAsset.h"
 #include "GlobalVariable.h"
 
 #include "IIntersectable.h"
@@ -34,11 +35,12 @@ ViewportWindow::~ViewportWindow()
 void ViewportWindow::RenderWindow()
 {
     ImGui::Begin("Viewport");
-    Map* CurrentMap = GameWorldCached->GetCurrentMap();
+    MapAsset* CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap != nullptr)
     {
         if (EditorCameraCached != nullptr)
         {
+            ImGui::Text(CurrentMap->GetAssetName().c_str());
             ImagePosition = ImGui::GetCursorScreenPos();
             ImageSize = ImGui::GetContentRegionAvail();
             ImGui::Image(EditorCameraCached->GetResolvedSceneSRV(), ImageSize);
@@ -49,14 +51,14 @@ void ViewportWindow::RenderWindow()
     ImGui::End();
 }
 
-void ViewportWindow::ManageAssetDrop(Map* CurrentMap)
+void ViewportWindow::ManageAssetDrop(MapAsset* CurrentMap)
 {
     if (ImGui::BeginDragDropTarget())
     {
         if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DragDrop::GAsset))
         {
-            IM_ASSERT(payload->DataSize == sizeof(IAssetFile*));
-            IAssetFile* AssetFile = *(IAssetFile**)(payload->Data);
+            IM_ASSERT(payload->DataSize == sizeof(AAssetFile*));
+            AAssetFile* AssetFile = *(AAssetFile**)(payload->Data);
 
             if (CurrentMap != nullptr)
             {
@@ -93,7 +95,7 @@ void ViewportWindow::ManageAssetDrop(Map* CurrentMap)
     }
 }
 
-void ViewportWindow::ManageMouseLBClick(Map* CurrentMap)
+void ViewportWindow::ManageMouseLBClick(MapAsset* CurrentMap)
 {
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
     {

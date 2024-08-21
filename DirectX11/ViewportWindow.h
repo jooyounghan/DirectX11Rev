@@ -1,7 +1,7 @@
 #pragma once
 #include "IEditorLinkedWindow.h"
 
-class Map;
+class MapAsset;
 class EditorCamera; 
 
 class ViewportWindow : public IEditorLinkedWindow
@@ -21,7 +21,7 @@ private:
 	ImVec2 ImageSize = ImVec2();
 
 private:
-	void ManageAssetDrop(Map* CurrentMap);
-	void ManageMouseLBClick(Map* CurrentMap);
+	void ManageAssetDrop(MapAsset* CurrentMap);
+	void ManageMouseLBClick(MapAsset* CurrentMap);
 };
 

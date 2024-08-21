@@ -4,7 +4,7 @@
 class AObject;
 class PlaceableObject;
 class AttachableObject;
-class Map;
+class MapAsset;
 
 class ModelOutlinerWindow : public IEditorLinkedWindow
 {
@@ -16,7 +16,7 @@ public:
 	virtual void RenderWindow() override;
 
 private:
-	Map* CurrentMap = nullptr;
+	MapAsset* CurrentMap = nullptr;
 
 private:
 	ImVec2 RegionAvail = ImVec2();

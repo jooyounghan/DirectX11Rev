@@ -15,7 +15,7 @@ public:
 		D3D11_VIEWPORT* ViewportIn,
 		ID3D11DepthStencilView* DSVIn,
 		Camera* CameraIn,
-		Map* MapIn
+		MapAsset* MapIn
 	) override final;
 	virtual void ResetRendering() override final;
 

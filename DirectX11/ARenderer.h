@@ -6,7 +6,7 @@ class PSOObject;
 
 class MeshObject;
 class ABoundingComponent;
-class Map;
+class MapAsset;
 class Camera;
 
 struct ID3D11RenderTargetView;
@@ -29,7 +29,7 @@ public:
 		D3D11_VIEWPORT* ViewportIn, 
 		ID3D11DepthStencilView* DSVIn,
 		Camera* CameraIn, 
-		Map* MapIn
+		MapAsset* MapIn
 	) = 0;
 	virtual void ResetRendering() = 0;
 

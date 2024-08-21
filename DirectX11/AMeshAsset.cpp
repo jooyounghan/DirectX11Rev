@@ -1,7 +1,7 @@
 #include "AMeshAsset.h"
 
 AMeshAsset::AMeshAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn)
-	: IAssetFile(AssetNameIn, AssetTypeIn)
+	: AAssetFile(AssetNameIn, AssetTypeIn)
 {
 }
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "Serializable.h"
+#include "ISerializable.h"
 #include "HeaderHelper.h"
 #include <array>
 
@@ -13,6 +13,9 @@ enum class EAssetType
 
 	// Bone
 	Bone,
+
+	// Map
+	MapAsset,
 
 	// Texture
 	Texture,
@@ -36,6 +39,9 @@ constexpr const char* AssetSuffix[GetAssetTypeAsIndex(EAssetType::NumAssetType)]
 	// Bone
 	"_Bone",
 
+	// Map
+	"_Map",
+
 	// Texture
 	"_Texture",
 
@@ -44,16 +50,16 @@ constexpr const char* AssetSuffix[GetAssetTypeAsIndex(EAssetType::NumAssetType)]
 };
 
 constexpr const char* AssetOutPath = ".\\Assets\\";
-constexpr const char* AssetMapOutPath = ".\\Assets\\Maps\\";
+constexpr const char* MapAssetOutPath = ".\\Assets\\Maps\\";
 constexpr const char* AssetExtension = ".Asset";
 
 struct ID3D11Device;
 
-class IAssetFile : public ISerializable
+class AAssetFile : public ISerializable
 {
 public:
-	IAssetFile(const std::string& AssetNameIn, EAssetType AssetTypeIn);
-	virtual ~IAssetFile();
+	AAssetFile(const std::string& AssetNameIn, EAssetType AssetTypeIn);
+	virtual ~AAssetFile();
 
 protected:
 	std::string AssetName;
@@ -63,10 +69,10 @@ protected:
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") = 0;
-	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn) = 0;
+	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn) = 0;
 
 public:
-	FILE* DefaultOpenFile(const std::string& OutputAdditionalPath);
+	virtual FILE* DefaultOpenFile(const std::string& OutputAdditionalPath);
 	void SerializeHeader(FILE* FileIn);
 };
 

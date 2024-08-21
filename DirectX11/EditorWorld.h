@@ -18,7 +18,7 @@ class EditorWorld : public IWorld
 {
 public:
 	EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle);
-	~EditorWorld();
+	virtual ~EditorWorld();
 
 protected:
 	GameWorld* GameWorldCached = nullptr;

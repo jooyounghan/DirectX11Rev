@@ -69,4 +69,8 @@ private:
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
+
+public:
+	virtual void OnSerialize(FILE* FileIn) override;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };

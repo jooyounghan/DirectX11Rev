@@ -8,6 +8,7 @@
 #include "StaticMeshAsset.h"
 #include "SkeletalMeshAsset.h"
 #include "BoneAsset.h"
+#include "MapAsset.h"
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -21,8 +22,8 @@ using namespace std;
 using namespace DirectX;
 using namespace filesystem;
 
-AssetManager::AssetManager(ID3D11Device* DeviceIn)
-    : DeviceCached(DeviceIn)
+AssetManager::AssetManager(GraphicsPipeline* GraphicsPipelineInstance)
+    : GraphicsPipelineCached(GraphicsPipelineInstance)
 {
     PreloadAssets();
 }
@@ -47,7 +48,9 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
     EAssetType AssetType;
     fread(&AssetType, sizeof(AssetType), 1, InputAssetFile);
 
-    shared_ptr<IAssetFile> AssetFile;
+    bool IsMapAsset = false;
+    shared_ptr<AAssetFile> AssetFile;
+    shared_ptr<MapAsset> MapAssetFile;
 
     switch (AssetType)
     {
@@ -58,10 +61,14 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
         break;
     case EAssetType::SkeletalMesh:
         AssetFile = make_shared<SkeletalMeshAsset>(AssetName, false);
-        WatingSkeletalMeshes.push_back((SkeletalMeshAsset*)AssetFile.get());
         break;
     case EAssetType::Bone:
         AssetFile = make_shared<BoneAsset>(AssetName, false);
+        break;
+    case EAssetType::MapAsset:
+        IsMapAsset = true;
+        MapAssetFile = make_shared<MapAsset>(AssetName, this, false);
+        AssetFile = MapAssetFile;
         break;
     case EAssetType::Texture:
         break;
@@ -70,9 +77,17 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
     default:
         break;
     }
-
-    AssetFile->Deserialize(InputAssetFile, DeviceCached);
-    ManagingAssets.emplace(AssetName, AssetFile);
+    
+    AssetFile->Deserialize(InputAssetFile, GraphicsPipelineCached->GetDevice(), this);
+    
+    if (IsMapAsset)
+    {
+        ManagingMaps.emplace(AssetName, MapAssetFile);
+    }
+    else
+    {
+        ManagingAssets.emplace(AssetName, AssetFile);
+    }
 
     fclose(InputAssetFile);
 }
@@ -116,24 +131,30 @@ void AssetManager::LoadModelFile(const string& FilePathIn)
 void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* const Scene)
 {
     shared_ptr<AMeshAsset> Mesh = nullptr;
-    shared_ptr<IAssetFile> BoneA = nullptr;
+    shared_ptr<AAssetFile> BoneA = nullptr;
 
     XMMATRIX RootTransform = DirectX::XMMatrixIdentity();
     aiNode* RootNode = Scene->mRootNode;
 
     if (HasBone(Scene))
     {
-        Mesh = make_shared<SkeletalMeshAsset>(AssetName, true);
-        BoneA = make_shared<BoneAsset>(AssetName, true);
+        shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetLoaded = make_shared<SkeletalMeshAsset>(AssetName, true);
+        shared_ptr<BoneAsset> BoneAssetLoaded = make_shared<BoneAsset>(AssetName, true);
 
-        SkeletalMeshAsset* SkeletalMeshAPtr = (SkeletalMeshAsset*)Mesh.get();
-        BoneAsset* BoneAPtr = (BoneAsset*)BoneA.get();
+        SkeletalMeshAssetLoaded->SetLinkedBoneAsset(BoneAssetLoaded.get());
+
+        Mesh = SkeletalMeshAssetLoaded;
+        BoneA = BoneAssetLoaded;
+
+        SkeletalMeshAsset* SkeletalMeshAPtr = SkeletalMeshAssetLoaded.get();
+        BoneAsset* BoneAPtr = BoneAssetLoaded.get();
         ProcessNodeForMesh(IsGltf, Scene, RootNode, SkeletalMeshAPtr, BoneAPtr, RootTransform);
 
         LoadBone(Scene, SkeletalMeshAPtr, BoneAPtr);
 
         // Serialize Bone Asset
         BoneA->Serialize();
+        ManagingAssets.emplace(BoneA->GetAssetName(), BoneA);
     }
     else
     {
@@ -142,7 +163,7 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
     }
 
     // Serialize Mesh Asset
-    Mesh->Initialize(DeviceCached);
+    Mesh->Initialize(GraphicsPipelineCached->GetDevice());
 
     Mesh->Serialize();
     ManagingAssets.emplace(Mesh->GetAssetName(), Mesh);
@@ -167,23 +188,7 @@ bool AssetManager::HasBone(const aiScene* const Scene)
     return false;
 }
 
-void AssetManager::ProcessLinkSkeletalMeshAsset()
-{
-    while (!WatingSkeletalMeshes.empty())
-    {
-        SkeletalMeshAsset* CurrentSkeletalMeshAsset = WatingSkeletalMeshes.back();
-
-        const string& BoneAssetName = CurrentSkeletalMeshAsset->GetBoneAssetName();
-
-        if (ManagingAssets.find(BoneAssetName) != ManagingAssets.end())
-        {
-            CurrentSkeletalMeshAsset->LinkBoneAsset((BoneAsset*)ManagingAssets[BoneAssetName].get());
-        }
-        WatingSkeletalMeshes.pop_back();
-    }
-}
-
-IAssetFile* AssetManager::GetAsset(const std::string AssetName)
+AAssetFile* AssetManager::GetAsset(const std::string AssetName)
 {
     if (ManagingAssets.find(AssetName) != ManagingAssets.end())
     {
@@ -410,7 +415,6 @@ void AssetManager::LoadBone(
             ProcessNodeForBone(Scene, Scene->mRootNode, BoneAsset);
         }
     }
-    SkeletalMesh->LinkBoneAsset(BoneAsset);
 }
 
 template<typename T>
@@ -452,11 +456,12 @@ void AssetManager::LoadIndices(
 void AssetManager::PreloadAssets()
 {
     path AssetPath = path(AssetOutPath);
-    path MapPath = path(AssetMapOutPath);
+    path MapPath = path(MapAssetOutPath);
     
     if (!exists(AssetPath) && create_directories(AssetPath)) {/* Do Nothing But Make Directory */ };
     if (!exists(MapPath) && create_directories(MapPath)) {/* Do Nothing But Make Directory */ };
 
+    // TODO : Asset의 로딩 순서 결정하기
     for (const auto& entry : directory_iterator(AssetPath))
     {
         if (entry.is_regular_file())
@@ -469,7 +474,19 @@ void AssetManager::PreloadAssets()
         }
     }
 
-    ProcessLinkSkeletalMeshAsset();
+    for (const auto& entry : directory_iterator(MapPath))
+    {
+        if (entry.is_regular_file())
+        {
+            const path filePath = entry.path();
+            if (filePath.extension() == AssetExtension)
+            {
+                LoadAssetFile(filePath.string());
+            }
+        }
+    }
+
+    
 }
 
 template<typename T>

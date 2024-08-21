@@ -22,8 +22,43 @@ Bone::~Bone()
 {
 }
 
+void Bone::AddChildBone(Bone* ChildBone)
+{
+	ChildBone->SetParentBone(this);
+	ChildrenBones.push_back(ChildBone);
+}
+
+void Bone::OnSerialize(FILE* FileIn)
+{
+	// Bone Name
+	size_t BoneNameCount = BoneName.size();
+	fwrite(&BoneNameCount, sizeof(size_t), 1, FileIn);
+	fwrite(BoneName.c_str(), sizeof(char), BoneNameCount, FileIn);
+
+	// Bone Idx
+	fwrite(&(BoneIdx), sizeof(size_t), 1, FileIn);
+
+	// Offset Matrix
+	fwrite(&(OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
+}
+
+void Bone::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+	// Bone Name
+	size_t BoneNameCount;
+	fread(&BoneNameCount, sizeof(size_t), 1, FileIn);
+	BoneName.resize(BoneNameCount);
+	fread(BoneName.data(), sizeof(char), BoneNameCount, FileIn);
+
+	// Bone Idx
+	fread(&BoneIdx, sizeof(size_t), 1, FileIn);
+
+	// Offset Matrix
+	fread(&(OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
+}
+
 BoneAsset::BoneAsset(const std::string& AssetNameIn, bool LoadAsFile)
-	: IAssetFile(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::Bone)] : AssetNameIn, EAssetType::Bone)
+	: AAssetFile(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::Bone)] : AssetNameIn, EAssetType::Bone)
 {
 }
 
@@ -79,73 +114,83 @@ void BoneAsset::Serialize(const std::string& OutputAdditionalPath)
 	if (OutputAssetFile != nullptr)
 	{
 		SerializeHeader(OutputAssetFile);
-		OnSerializing(RootBone, OutputAssetFile);
+
+		// Total Bone Count
+		size_t BoneCount = NameToBones.size();
+		fwrite(&BoneCount, sizeof(size_t), 1, OutputAssetFile);
+
+		for (auto& NameToBone : NameToBones)
+		{
+			size_t BoneNameCount = NameToBone.first.size();
+			fwrite(&BoneNameCount, sizeof(size_t), 1, OutputAssetFile);
+			fwrite(NameToBone.first.c_str(), sizeof(char), BoneNameCount, OutputAssetFile);
+			NameToBone.second.OnSerialize(OutputAssetFile);
+		}
+
+		// Child - Parent Relation
+		for (auto& NameToBone : NameToBones)
+		{
+			size_t ChildBoneCount = NameToBone.second.ChildrenBones.size();
+			fwrite(&ChildBoneCount, sizeof(size_t), 1, OutputAssetFile);
+
+			for (auto& ChildBone : NameToBone.second.ChildrenBones)
+			{
+				size_t ChildBoneNameCount = ChildBone->BoneName.size();
+				fwrite(&ChildBoneNameCount, sizeof(size_t), 1, OutputAssetFile);
+				fwrite(ChildBone->BoneName.c_str(), sizeof(char), ChildBoneNameCount, OutputAssetFile);
+			}
+		}
+
+		// Root Bone Name
+		size_t RootBoneNameCount = RootBone->BoneName.size();
+		fwrite(&RootBoneNameCount, sizeof(size_t), 1, OutputAssetFile);
+		fwrite(RootBone->BoneName.c_str(), sizeof(char), RootBoneNameCount, OutputAssetFile);
+
 		fclose(OutputAssetFile);
 	}
 }
 
-void BoneAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn)
+void BoneAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn)
 {
-	OnDeserializing(FileIn);
-}
+	// Total Bone Count
+	size_t BoneCount;
+	fread(&BoneCount, sizeof(size_t), 1, FileIn);
 
-void BoneAsset::OnSerializing(Bone* BoneIn, FILE* FileIn)
-{
-	// Bone Name
-	const string& BoneName = BoneIn->BoneName;
-	size_t BoneNameCount = BoneName.size();
-	fwrite(&BoneNameCount, sizeof(size_t), 1, FileIn);
-	fwrite(BoneName.c_str(), sizeof(char), BoneNameCount, FileIn);
-
-	// Bone Idx
-	fwrite(&(BoneIn->BoneIdx), sizeof(size_t), 1, FileIn);
-	
-	// Offset Matrix
-	fwrite(&(BoneIn->OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
-
-	// Bone Children
-	size_t ChildrenCount = BoneIn->ChildrenBones.size();
-	fwrite(&ChildrenCount, sizeof(size_t), 1, FileIn);
-	
-	for (size_t idx = 0; idx < ChildrenCount; ++idx)
+	for (size_t idx = 0; idx < BoneCount; ++idx)
 	{
-		OnSerializing(BoneIn->ChildrenBones[idx], FileIn);
-	}
-}
+		// Bone Name
+		string BoneName;
+		size_t BoneNameCount;
+		fread(&BoneNameCount, sizeof(size_t), 1, FileIn);
+		BoneName.resize(BoneNameCount);
+		fread(BoneName.data(), sizeof(char), BoneNameCount, FileIn);
+		NameToBones.emplace(BoneName, Bone());
 
-void BoneAsset::OnDeserializing(FILE* FileIn)
-{
-	// Bone Name
-	string BoneName;
-	size_t BoneNameCount;
-	fread(&BoneNameCount, sizeof(size_t), 1, FileIn);
-	BoneName.resize(BoneNameCount);
-	fread(BoneName.data(), sizeof(char), BoneNameCount, FileIn);
-
-	NameToBones.emplace(BoneName, Bone());
-	Bone* DeserializingBone = &NameToBones[BoneName];
-	
-
-	TraverseDownBone(DeserializingBone);
-
-	// Bone Name
-	DeserializingBone->BoneName = BoneName;
-
-	// Bone Idx
-	fread(&DeserializingBone->BoneIdx, sizeof(size_t), 1, FileIn);
-	
-	// Offset Matrix
-	fread(&(DeserializingBone->OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
-
-	// Bone Children
-	size_t ChildrenCount;
-	fread(&ChildrenCount, sizeof(size_t), 1, FileIn);
-
-	for (size_t idx = 0; idx < ChildrenCount; ++idx)
-	{
-		OnDeserializing(FileIn);
+		NameToBones[BoneName].OnDeserialize(FileIn, AssetManagerIn);
 	}
 
-	TraverseUpBone();
-}
+	for (auto& NameToBone : NameToBones)
+	{
+		size_t ChildBoneCount;
+		fread(&ChildBoneCount, sizeof(size_t), 1, FileIn);
 
+		for (size_t idx = 0; idx < ChildBoneCount; ++idx)
+		{
+			string ChildBoneName;
+			size_t ChildBoneNameCount;
+			fread(&ChildBoneNameCount, sizeof(size_t), 1, FileIn);
+			ChildBoneName.resize(ChildBoneNameCount);
+			fread(ChildBoneName.data(), sizeof(char), ChildBoneNameCount, FileIn);
+
+			NameToBone.second.AddChildBone(&NameToBones[ChildBoneName]);
+		}
+	}
+
+	string RootBoneName;
+	size_t RootBoneNameCount;
+	fread(&RootBoneNameCount, sizeof(size_t), 1, FileIn);
+	RootBoneName.resize(RootBoneNameCount);
+	fread(RootBoneName.data(), sizeof(char), RootBoneNameCount, FileIn);
+
+	RootBone = &NameToBones[RootBoneName];
+}

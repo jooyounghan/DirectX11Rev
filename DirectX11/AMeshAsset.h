@@ -1,10 +1,10 @@
 #pragma once
-#include "IAssetFile.h"
+#include "AAssetFile.h"
 #include "Vertexable.h"
 #include "IIndexable.h"
 #include "DefineType.h"
 
-class AMeshAsset : public IAssetFile, public IIndexable<uint32_t>
+class AMeshAsset : public AAssetFile, public IIndexable<uint32_t>
 {
 public:
 	AMeshAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn);
@@ -35,7 +35,7 @@ public:
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") = 0;
-	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn) = 0;
+	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn) = 0;
 
 protected:
 	void SerializeBaseMeshData(FILE* FileIn);

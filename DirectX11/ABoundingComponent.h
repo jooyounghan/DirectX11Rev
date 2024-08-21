@@ -37,5 +37,9 @@ public:
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
+
+public:
+	virtual void OnSerialize(FILE* FileIn) = 0;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };
 

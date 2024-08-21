@@ -19,3 +19,11 @@ EditorActor::~EditorActor()
 {
 
 }
+
+void EditorActor::OnSerialize(FILE* FileIn)
+{
+}
+
+void EditorActor::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+}

@@ -11,7 +11,7 @@ using namespace DirectX;
 const char* BoundingSphere::BoundingSphereIdentifier = "Bounding Sphere";
 
 BoundingSphere::BoundingSphere(GraphicsPipeline* GraphicsPipelineInstances)
-	: ABoundingComponent(GraphicsPipelineInstances), Radius(100.f), ScaledRadius(100.f * Scale.x)
+	: ABoundingComponent(GraphicsPipelineInstances), Radius(100.f)
 {
 	InitBoundingSphere(GraphicsPipelineInstances->GetDevice());
 }
@@ -21,7 +21,7 @@ BoundingSphere::BoundingSphere(
 	const float& RadiusIn
 )
 	: ABoundingComponent(GraphicsPipelineInstances),
-	Radius(RadiusIn), ScaledRadius(RadiusIn * Scale.x)
+	Radius(RadiusIn)
 {
 	InitBoundingSphere(GraphicsPipelineInstances->GetDevice());
 }
@@ -38,6 +38,7 @@ void BoundingSphere::InitBoundingSphere(ID3D11Device* DeviceIn)
 	static size_t BoundingSphereCount = 0;
 	BoundingSphereCount++;
 	ObjectName = BoundingSphereIdentifier + to_string(BoundingSphereCount);
+	AttachableKind = EAttachableObjectKind::BoundingSphereKind;
 
 	AutoZeroMemory(Center);
 
@@ -99,6 +100,8 @@ shared_ptr<Debugable> BoundingSphere::CreateDebugSphereObject(ID3D11Device* Devi
 
 bool BoundingSphere::Intersect(Ray* RayIn, float& DistanceOut)
 {
+	ScaledRadius = Radius * Scale.x; 
+
 	const XMVECTOR ToCenter = RayIn->Origin - Center;
 
 	float b = InnerProduct(RayIn->Direction, ToCenter);
@@ -179,4 +182,16 @@ bool BoundingSphere::IsOverlappedWithSphere(BoundingSphere* SphereIn)
 void BoundingSphere::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
+}
+
+void BoundingSphere::OnSerialize(FILE* FileIn)
+{
+	AObject::OnSerialize(FileIn);
+	fwrite(&Radius, sizeof(float), 1, FileIn);
+}
+
+void BoundingSphere::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	fread(&Radius, sizeof(float), 1, FileIn);
 }

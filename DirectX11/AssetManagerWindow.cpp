@@ -141,9 +141,9 @@ void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& V
     if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
     {
         const string AssetName = EntryFileName.stem().string();
-        IAssetFile* AssetFile =  AssetManagerCached->GetAsset(AssetName);
+        AAssetFile* AssetFile =  AssetManagerCached->GetAsset(AssetName);
 
-        ImGui::SetDragDropPayload(DragDrop::GAsset, &AssetFile, sizeof(IAssetFile*));
+        ImGui::SetDragDropPayload(DragDrop::GAsset, &AssetFile, sizeof(AAssetFile*));
         ImGui::Text("%s", AssetName.c_str());
         ImGui::EndDragDropSource();
     }

@@ -4,7 +4,7 @@ using namespace ImGui;
 
 AddPlaceableObjectDrawer::AddPlaceableObjectDrawer(
     EditorWorld* EditorWorldIn, 
-    Map* CurrentMap
+    MapAsset* CurrentMap
 )
     : AAddObjectHelper(EditorWorldIn, CurrentMap)
 {

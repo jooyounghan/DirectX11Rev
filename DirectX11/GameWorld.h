@@ -10,7 +10,7 @@ class PSOManager;
 class AssetManager;
 
 class EditorWorld;
-class Map;
+class MapAsset;
 class Camera;
 
 class GameWorld : public IWorld
@@ -22,7 +22,7 @@ public:
 	GameWorld(GraphicsPipeline* GraphicsPipelineInstance);
 	std::unique_ptr<Camera> TestCamera;
 #endif // _DEBUG
-	~GameWorld();
+	virtual ~GameWorld();
 
 public:
 	void LoadGameWorld();
@@ -43,8 +43,8 @@ protected:
 #endif // _DEBUG
 
 protected:
-	std::unordered_map<UINT, std::unique_ptr<Map>> MapInstances;
-	Map* CurrentMap = nullptr;
+	std::unordered_map<UINT, std::shared_ptr<MapAsset>> MapInstances;
+	MapAsset* CurrentMap = nullptr;
 	MakeGetter(CurrentMap);
 
 public:

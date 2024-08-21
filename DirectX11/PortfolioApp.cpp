@@ -106,8 +106,11 @@ void PortfolioApp::Run()
 		}
 		else 
 		{
-			Update();
-			Render();
+			if (GameWorldInstance != nullptr && GraphicsPipelineInstance != nullptr)
+			{
+				Update();
+				Render();
+			}
 		}
 	}
 }
@@ -187,6 +190,10 @@ void PortfolioApp::ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		break;
 	case WM_CREATE:
 		DragAcceptFiles(hWnd, TRUE);
+		break;
+	case WM_DESTROY:
+		GraphicsPipelineInstance.reset();
+		GameWorldInstance.reset();
 		break;
 	}
 }

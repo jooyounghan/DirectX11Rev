@@ -5,11 +5,24 @@
 #include <list>
 #include <memory>
 
+enum EAttachableObjectKind : int
+{
+	AttachableNone,
+	MeshObjectKind,
+	BoundingSphereKind,
+	OrientedBoundingBoxKind,
+};
+
 class AttachableObject : public AObject
 {
+
 public:
 	AttachableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
 	virtual~AttachableObject();
+
+protected:
+	EAttachableObjectKind AttachableKind = EAttachableObjectKind::AttachableNone;
+	MakeSetterGetter(AttachableKind);
 
 protected:
 	AObject* ParentObject = nullptr;
@@ -49,6 +62,10 @@ public:
 
 public:
 	void RemoveAttachedObject(AttachableObject* AttachedObjectIn);
+
+public:
+	virtual void OnSerialize(FILE* FileIn) = 0;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };
 
 template<typename Attachment, typename ...Args>

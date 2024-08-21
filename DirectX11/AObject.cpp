@@ -25,3 +25,30 @@ void AObject::UpdateObject(const float& DeltaTimeIn)
 
 	TransformationBuffer.Upload(DeviceContextCached, TempTransformation);
 }
+
+void AObject::OnSerialize(FILE* FileIn)
+{
+	// Object Name
+	size_t PlaceableNameCount = ObjectName.size();
+	fwrite(&PlaceableNameCount, sizeof(size_t), 1, FileIn);
+	fwrite(ObjectName.c_str(), sizeof(char), PlaceableNameCount, FileIn);
+
+	// Transformation
+	fwrite(&Position, sizeof(SPosition4D), 1, FileIn);
+	fwrite(&Angle, sizeof(SAngle), 1, FileIn);
+	fwrite(&Scale, sizeof(SVector3D), 1, FileIn);
+}
+
+void AObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+	// Object Name
+	size_t PlaceableNameCount;
+	fread(&PlaceableNameCount, sizeof(size_t), 1, FileIn);
+	ObjectName.resize(PlaceableNameCount);
+	fread(ObjectName.data(), sizeof(char), PlaceableNameCount, FileIn);
+
+	// Transformation
+	fread(&Position, sizeof(SPosition4D), 1, FileIn);
+	fread(&Angle, sizeof(SAngle), 1, FileIn);
+	fread(&Scale, sizeof(SVector3D), 1, FileIn);
+}

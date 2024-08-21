@@ -691,29 +691,29 @@ template<typename T>
 struct ImPool
 {
     ImVector<T>     Buf;        // Contiguous data
-    ImGuiStorage    Map;        // ID->Index
+    ImGuiStorage    MapAsset;        // ID->Index
     ImPoolIdx       FreeIdx;    // Next free idx to use
     ImPoolIdx       AliveCount; // Number of active/alive items (for display purpose)
 
     ImPool()    { FreeIdx = AliveCount = 0; }
     ~ImPool()   { Clear(); }
-    T*          GetByKey(ImGuiID key)               { int idx = Map.GetInt(key, -1); return (idx != -1) ? &Buf[idx] : NULL; }
+    T*          GetByKey(ImGuiID key)               { int idx = MapAsset.GetInt(key, -1); return (idx != -1) ? &Buf[idx] : NULL; }
     T*          GetByIndex(ImPoolIdx n)             { return &Buf[n]; }
     ImPoolIdx   GetIndex(const T* p) const          { IM_ASSERT(p >= Buf.Data && p < Buf.Data + Buf.Size); return (ImPoolIdx)(p - Buf.Data); }
-    T*          GetOrAddByKey(ImGuiID key)          { int* p_idx = Map.GetIntRef(key, -1); if (*p_idx != -1) return &Buf[*p_idx]; *p_idx = FreeIdx; return Add(); }
+    T*          GetOrAddByKey(ImGuiID key)          { int* p_idx = MapAsset.GetIntRef(key, -1); if (*p_idx != -1) return &Buf[*p_idx]; *p_idx = FreeIdx; return Add(); }
     bool        Contains(const T* p) const          { return (p >= Buf.Data && p < Buf.Data + Buf.Size); }
-    void        Clear()                             { for (int n = 0; n < Map.Data.Size; n++) { int idx = Map.Data[n].val_i; if (idx != -1) Buf[idx].~T(); } Map.Clear(); Buf.clear(); FreeIdx = AliveCount = 0; }
+    void        Clear()                             { for (int n = 0; n < MapAsset.Data.Size; n++) { int idx = MapAsset.Data[n].val_i; if (idx != -1) Buf[idx].~T(); } MapAsset.Clear(); Buf.clear(); FreeIdx = AliveCount = 0; }
     T*          Add()                               { int idx = FreeIdx; if (idx == Buf.Size) { Buf.resize(Buf.Size + 1); FreeIdx++; } else { FreeIdx = *(int*)&Buf[idx]; } IM_PLACEMENT_NEW(&Buf[idx]) T(); AliveCount++; return &Buf[idx]; }
     void        Remove(ImGuiID key, const T* p)     { Remove(key, GetIndex(p)); }
-    void        Remove(ImGuiID key, ImPoolIdx idx)  { Buf[idx].~T(); *(int*)&Buf[idx] = FreeIdx; FreeIdx = idx; Map.SetInt(key, -1); AliveCount--; }
-    void        Reserve(int capacity)               { Buf.reserve(capacity); Map.Data.reserve(capacity); }
+    void        Remove(ImGuiID key, ImPoolIdx idx)  { Buf[idx].~T(); *(int*)&Buf[idx] = FreeIdx; FreeIdx = idx; MapAsset.SetInt(key, -1); AliveCount--; }
+    void        Reserve(int capacity)               { Buf.reserve(capacity); MapAsset.Data.reserve(capacity); }
 
     // To iterate a ImPool: for (int n = 0; n < pool.GetMapSize(); n++) if (T* t = pool.TryGetMapData(n)) { ... }
     // Can be avoided if you know .Remove() has never been called on the pool, or AliveCount == GetMapSize()
     int         GetAliveCount() const               { return AliveCount; }      // Number of active/alive items in the pool (for display purpose)
     int         GetBufSize() const                  { return Buf.Size; }
-    int         GetMapSize() const                  { return Map.Data.Size; }   // It is the map we need iterate to find valid items, since we don't have "alive" storage anywhere
-    T*          TryGetMapData(ImPoolIdx n)          { int idx = Map.Data[n].val_i; if (idx == -1) return NULL; return GetByIndex(idx); }
+    int         GetMapSize() const                  { return MapAsset.Data.Size; }   // It is the map we need iterate to find valid items, since we don't have "alive" storage anywhere
+    T*          TryGetMapData(ImPoolIdx n)          { int idx = MapAsset.Data[n].val_i; if (idx == -1) return NULL; return GetByIndex(idx); }
 };
 
 // Helper: ImChunkStream<>

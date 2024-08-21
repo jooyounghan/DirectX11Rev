@@ -47,6 +47,7 @@ void OrientedBoundingBox::InitOBB(ID3D11Device* DeviceIn)
 	BoundingOBBCount++;
 
 	ObjectName = BoundingOBBIdentifier + to_string(BoundingOBBCount);
+	AttachableKind = EAttachableObjectKind::OrientedBoundingBoxKind;
 
 	AutoZeroArrayMemory(CurrentAxises);
 	AutoZeroArrayMemory(HalfExtends);
@@ -250,4 +251,16 @@ bool OrientedBoundingBox::IsOverlappedWithOBBNormalBoth(OrientedBoundingBox* OBB
 void OrientedBoundingBox::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
+}
+
+void OrientedBoundingBox::OnSerialize(FILE* FileIn)
+{
+	AObject::OnSerialize(FileIn);
+	fwrite(HalfExtends, sizeof(HalfExtends), 1, FileIn);
+}
+
+void OrientedBoundingBox::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	fread(HalfExtends, sizeof(HalfExtends), 1, FileIn);
 }

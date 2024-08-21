@@ -1,21 +1,21 @@
-#include "IAssetFile.h"
+#include "AAssetFile.h"
 #include <stdio.h>
 #include <Windows.h>
 
 using namespace std;
 
-IAssetFile::IAssetFile(
+AAssetFile::AAssetFile(
 	const string& AssetNameIn, EAssetType AssetTypeIn
 )
 	: AssetName(AssetNameIn), AssetType(AssetTypeIn)
 {
 }
 
-IAssetFile::~IAssetFile()
+AAssetFile::~AAssetFile()
 {
 }
 
-FILE* IAssetFile::DefaultOpenFile(const std::string& OutputAdditionalPath)
+FILE* AAssetFile::DefaultOpenFile(const std::string& OutputAdditionalPath)
 {
 	const string OutputPath = OutputAdditionalPath.empty() ?
 		AssetOutPath : AssetOutPath + OutputAdditionalPath;
@@ -30,7 +30,7 @@ FILE* IAssetFile::DefaultOpenFile(const std::string& OutputAdditionalPath)
 	return OutputAssetFile;
 }
 
-void IAssetFile::SerializeHeader(FILE* FileIn)
+void AAssetFile::SerializeHeader(FILE* FileIn)
 {
 	// Asset Name
 	size_t AssetNameSize = AssetName.size();

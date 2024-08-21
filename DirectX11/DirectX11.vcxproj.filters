@@ -222,7 +222,7 @@
     <ClCompile Include="GraphicsPipeline.cpp">
       <Filter>소스 파일\App</Filter>
     </ClCompile>
-    <ClCompile Include="IAssetFile.cpp">
+    <ClCompile Include="AAssetFile.cpp">
       <Filter>소스 파일\Asset</Filter>
     </ClCompile>
     <ClCompile Include="BoneAsset.cpp">
@@ -255,7 +255,7 @@
     <ClCompile Include="MathematicalHelper.cpp">
       <Filter>소스 파일\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
+    <ClCompile Include="MapAsset.cpp">
       <Filter>소스 파일\Asset\Map</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
@@ -413,7 +413,7 @@
     <ClInclude Include="BoneAsset.h">
       <Filter>헤더 파일\Asset\Bone</Filter>
     </ClInclude>
-    <ClInclude Include="IAssetFile.h">
+    <ClInclude Include="AAssetFile.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="AssetManager.h">
@@ -422,7 +422,7 @@
     <ClInclude Include="AMeshAsset.h">
       <Filter>헤더 파일\Asset\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Serializable.h">
+    <ClInclude Include="ISerializable.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="StaticMeshAsset.h">
@@ -455,7 +455,7 @@
     <ClInclude Include="MathematicalHelper.h">
       <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
+    <ClInclude Include="MapAsset.h">
       <Filter>헤더 파일\Asset\Map</Filter>
     </ClInclude>
     <ClInclude Include="PortfolioApp.h">

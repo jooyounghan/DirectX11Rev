@@ -12,7 +12,7 @@
 #endif 
 
 #include "Camera.h"
-#include "Map.h"
+#include "MapAsset.h"
 
 using namespace std;
 
@@ -21,11 +21,25 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHand
 	: IWorld(GraphicsPipelineInstance)
 {
 	PSOManagerInstance = make_unique<PSOManager>((GraphicsPipelineInstance));
-	AssetManagerInstance = make_unique<AssetManager>(GraphicsPipelineCached->GetDevice());
+	AssetManagerInstance = make_unique<AssetManager>(GraphicsPipelineCached);
 	EditorWorldInstance = make_unique<EditorWorld>(this, WindowHandle);
 
-	MapInstances.emplace(0, std::move(make_unique<Map>(GraphicsPipelineInstance, PSOManagerInstance.get(), AssetManagerInstance.get())));
-	CurrentMap = MapInstances[0].get();
+	auto tests = AssetManagerInstance->GetManagingMaps();
+
+	if (tests.empty())
+	{
+		MapInstances.emplace(0, make_shared<MapAsset>("TestMap", AssetManagerInstance.get(), true));
+		CurrentMap = MapInstances[0].get();
+	}
+	else
+	{
+		UINT idx = 0;
+		for (auto& test : tests)
+		{
+			MapInstances.emplace(idx, test.second);
+		}
+		CurrentMap = MapInstances[0].get();
+	}
 
 	EditorActor* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
 	if (EditorActorInstnace != nullptr)
@@ -51,7 +65,7 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance)
 
 GameWorld::~GameWorld()
 {
-
+	bool test = true;
 }
 
 void GameWorld::LoadGameWorld()
@@ -75,7 +89,7 @@ void GameWorld::RenderWorld()
 {
 	if (CurrentMap)
 	{
-		CurrentMap->RenderMap();
+		CurrentMap->RenderMap(PSOManagerInstance.get());
 			
 #ifdef _DEBUG
 		EditorWorldInstance->RenderWorld();

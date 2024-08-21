@@ -1,14 +1,13 @@
 #pragma once
-#include "IAssetFile.h"
+#include "AAssetFile.h"
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <DirectXMath.h>
 
-class Bone
+class Bone : public IOnSerializable
 {
-
 	friend class BoneAsset;
 
 public:
@@ -36,14 +35,14 @@ private:
 	MakeGetter(ChildrenBones);
 
 public:
-	void AddChildBone(Bone* ChildBone)
-	{
-		ChildBone->SetParentBone(this);
-		ChildrenBones.push_back(ChildBone);
-	}
+	void AddChildBone(Bone* ChildBone);
+
+public:
+	virtual void OnSerialize(FILE* FileIn) override;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 
-class BoneAsset : public IAssetFile
+class BoneAsset : public AAssetFile
 {
 public:
 	BoneAsset(const std::string& AssetNameIn, bool LoadAsFile);
@@ -58,7 +57,7 @@ protected:
 	MakeSetterGetter(CurrentBone);
 
 protected:
-	std::map<std::string, Bone> NameToBones;
+	std::unordered_map<std::string, Bone> NameToBones;
 
 public:
 	Bone* FindBone(const std::string& BoneName);
@@ -70,10 +69,6 @@ public:
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath) override;
-	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn) override;
-
-private:
-	void OnSerializing(Bone* BoneIn, FILE* FileIn);
-	void OnDeserializing(FILE* FileIn);
+	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn) override;
 };
 

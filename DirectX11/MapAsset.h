@@ -1,5 +1,6 @@
 #pragma once
-#include "Serializable.h"
+#include "AAssetFile.h"
+
 #include "HeaderHelper.h"
 #include "StaticAssertHelper.h"
 
@@ -32,15 +33,14 @@ class AMeshAsset;
 
 class IIntersectable;
 
-class Map : public ISerializable
+class MapAsset : public AAssetFile
 {
 public:
-	Map(GraphicsPipeline* GraphicsPipelineInstance, PSOManager* PSOManagerInstance, AssetManager* AssetManagerInstance);
-	~Map();
+	MapAsset(const std::string& MapNameIn, AssetManager* AssetManagerInstance, bool LoadAsFile);
+	virtual ~MapAsset();
 
 protected:
 	GraphicsPipeline* GraphicsPipelineCached = nullptr;
-	PSOManager* PSOManagerCached = nullptr;
 	AssetManager* AssetManagerCached = nullptr;
 
 protected:
@@ -55,19 +55,27 @@ protected:
 	std::unordered_map<unsigned int, PlaceableObject*> IdToPlaceables;
 	MakeGetter(IdToPlaceables);
 
-protected:
-	std::list<IIntersectable*> Tests;
-
 public:
 	void AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
 
 public:
 	void UpdateMap(const float& DeltaTimeIn);
-	void RenderMap();
+	void RenderMap(PSOManager* PSOManagerInstance);
 
 public:
-	virtual void Serialize(const std::string& OutputAdditionalPath) override;
-	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn) override;
+	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
+	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn) override;
+
+private:
+	void SerializeChildrenObjects(PlaceableObject* ChildPlaceableObjectIn, FILE* FileIn);
+	void SerializeChildrenObjects(AttachableObject* ChildAttachableObjectIn, FILE* FileIn);
+
+private:
+	void DeserializeParentObject(PlaceableObject* ParentPlaceableObjectIn, FILE* FileIn, AssetManager* AssetManagerIn);
+	void DeserializeParentObject(AttachableObject* ParentAttachableObjectIn, FILE* FileIn, AssetManager* AssetManagerIn);
+
+public:
+	virtual FILE* DefaultOpenFile(const std::string& OutputAdditionalPath);
 
 public:
 	template<typename T, typename ...Args>

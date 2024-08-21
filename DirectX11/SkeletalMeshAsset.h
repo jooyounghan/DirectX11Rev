@@ -14,11 +14,7 @@ public:
 
 protected:
 	BoneAsset* LinkedBoneAsset = nullptr;
-	std::string BoneAssetName = "";
-
-public:
-	const std::string& GetBoneAssetName() { return BoneAssetName; }
-	void LinkBoneAsset(BoneAsset* BoneAssetIn);
+	MakeSetterGetter(LinkedBoneAsset)
 
 public:
 	Vertexable<SVector4D> BlendWeight;
@@ -34,6 +30,6 @@ public:
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
-	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn) override;
+	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn) override;
 };
 
