@@ -1,9 +1,12 @@
 #pragma once
 #include "AObject.h"
 #include "StaticAssertHelper.h"
+#include "IIntersectable.h"
 
 #include <list>
 #include <memory>
+
+class PlaceableObject;
 
 enum EAttachableObjectKind : int
 {
@@ -60,8 +63,12 @@ public:
 	template<typename Attachment, typename ...Args>
 	Attachment* AddAttachedObject(Args... args);
 
+private:
+	void AddIntersectableToRootPlaceable(PlaceableObject* RootPlaceable, IIntersectable* Intersectable);
+
 public:
 	void RemoveAttachedObject(AttachableObject* AttachedObjectIn);
+
 
 public:
 	virtual void OnSerialize(FILE* FileIn) = 0;
@@ -74,10 +81,26 @@ inline Attachment* AttachableObject::AddAttachedObject(Args ...args)
 	static_assert(std::is_base_of<AttachableObject, Attachment>::value, DerivedCondition(AttachableObject));
 
 	AttachedChildrenObjects.emplace_back(std::make_unique<Attachment>(args...));
-
 	Attachment* Attached = (Attachment*)AttachedChildrenObjects.back().get();
-	AttachableObject* AttachedObject = (AttachableObject*)Attached;
 
+	if (std::is_base_of<IIntersectable, Attachment>::value)
+	{
+		AObject* CurrentParent = ParentObject;
+		AttachableObject* AttachableParent = nullptr;
+		PlaceableObject* PlaceableParent = nullptr;
+
+		AttachableParent = dynamic_cast<AttachableObject*>(ParentObject);
+		while (AttachableParent != nullptr)
+		{
+			CurrentParent = AttachableParent->ParentObject;
+			AttachableParent = dynamic_cast<AttachableObject*>(AttachableParent->ParentObject);
+		}
+
+		PlaceableParent = (PlaceableObject*)CurrentParent;
+		AddIntersectableToRootPlaceable(PlaceableParent, (IIntersectable*)Attached);
+	}
+
+	AttachableObject* AttachedObject = (AttachableObject*)Attached;
 	AttachedObject->SetParentObject(this);
 	AttachedObject->SetPickingIDBufferCached(PickingIDBufferCached);
 

@@ -3,6 +3,7 @@
 #include "HeaderHelper.h"
 
 class GraphicsPipeline;
+class IIntersectable;
 
 class TestActor : public PlaceableObject
 {

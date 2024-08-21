@@ -2,6 +2,7 @@
 
 #include "AObject.h"
 #include "AttachableObject.h"
+#include "IIntersectable.h"
 #include "StaticAssertHelper.h"
 
 #include <list>
@@ -17,6 +18,8 @@ enum EPlaceableObjectKind : int
 
 class PlaceableObject : public AObject
 {
+	friend AttachableObject;
+
 public:
 	PlaceableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
 	virtual ~PlaceableObject();
@@ -37,6 +40,9 @@ protected:
 protected:
 	std::list<std::unique_ptr<AttachableObject>> AttachedChildrenObjects;
 	MakeGetter(AttachedChildrenObjects);
+
+protected:
+	std::list<IIntersectable*> Intersectables;
 
 public:
 	virtual DirectX::XMVECTOR GetRotationQuat() const;
@@ -76,12 +82,16 @@ inline Attachment* PlaceableObject::AddAttachedObject(Args ...args)
 	static_assert(std::is_base_of<AttachableObject, Attachment>::value, DerivedCondition(AttachableObject));
 
 	AttachedChildrenObjects.emplace_back(std::make_unique<Attachment>(args...));
-
 	Attachment* Attached = (Attachment*)AttachedChildrenObjects.back().get();
-	AttachableObject* AttachedObject = (AttachableObject*)Attached;
 
-	AttachedObject->SetParentObject(this);
-	AttachedObject->SetPickingIDBufferCached(PickingIDBuffer.GetBuffer());
+	if (std::is_base_of<IIntersectable, Attachment>::value)
+	{
+		Intersectables.push_back((IIntersectable*)Attached);
+	}
+
+	AttachableObject* AttachedObject = (AttachableObject*)Attached;
+	Attached->SetParentObject(this);
+	Attached->SetPickingIDBufferCached(PickingIDBuffer.GetBuffer());
 
 	return Attached;
 }

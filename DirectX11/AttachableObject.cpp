@@ -98,6 +98,11 @@ void AttachableObject::AcceptRenderer(ARenderer* Renderer)
 	}
 }
 
+void AttachableObject::AddIntersectableToRootPlaceable(PlaceableObject* RootPlaceable, IIntersectable* Intersectable)
+{
+	RootPlaceable->Intersectables.push_back(Intersectable);
+}
+
 void AttachableObject::RemoveAttachedObject(AttachableObject* AttachedObjectIn)
 {
 	auto it = std::find_if(AttachedChildrenObjects.begin(), AttachedChildrenObjects.end(),
