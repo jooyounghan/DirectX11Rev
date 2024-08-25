@@ -1,12 +1,14 @@
 #include "AddAttachableObjectHelper.h"
 
 #include "EditorWorld.h"
+#include "GlobalVariable.h"
 
-
+// Add Attachables
 #include "PlaceableObject.h"
 #include "MeshObject.h"
 #include "BoundingSphere.h"
 #include "OrientedBoundingBox.h"
+#include "Camera.h"
 
 #include <list>
 #include <memory>
@@ -32,7 +34,8 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
         const char* ItemIdentifiers[] = {
             MeshObject::MeshObjectIdentifier,
             BoundingSphere::BoundingSphereIdentifier,
-            OrientedBoundingBox::BoundingOBBIdentifier
+            OrientedBoundingBox::BoundingOBBIdentifier,
+            Camera::CameraIdentifier
         };
 
         static int ItemCurrentSelectedIdx = 0;
@@ -48,29 +51,34 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
         { 
             switch (ObjectKind)
             {
-            case EAttachableObjectKind::MeshObjectKind:
-            {
-                SelectedAttached != nullptr ?
-                    SelectedAttached->AddAttachedObject<MeshObject>(GraphicPipelineCached) :
-                    SelectedPlaced->AddAttachedObject<MeshObject>(GraphicPipelineCached);
-                break;
-            }
-            case EAttachableObjectKind::BoundingSphereKind:
-            {
-                SelectedAttached != nullptr ?
-                    SelectedAttached->AddAttachedObject<BoundingSphere>(GraphicPipelineCached) :
-                    SelectedPlaced->AddAttachedObject<BoundingSphere>(GraphicPipelineCached);
-                break;
-            }
-            case EAttachableObjectKind::OrientedBoundingBoxKind:
-            {
-                SelectedAttached != nullptr ?
-                    SelectedAttached->AddAttachedObject<OrientedBoundingBox>(GraphicPipelineCached) :
-                    SelectedPlaced->AddAttachedObject<OrientedBoundingBox>(GraphicPipelineCached);
-                break;
-            }
-            default:
-                break;
+                case EAttachableObjectKind::MeshObjectKind:
+                {
+                    SelectedAttached != nullptr ?
+                        SelectedAttached->AddAttachedObject<MeshObject>(GraphicPipelineCached) :
+                        SelectedPlaced->AddAttachedObject<MeshObject>(GraphicPipelineCached);
+                    break;
+                }
+                case EAttachableObjectKind::BoundingSphereKind:
+                {
+                    SelectedAttached != nullptr ?
+                        SelectedAttached->AddAttachedObject<BoundingSphere>(GraphicPipelineCached) :
+                        SelectedPlaced->AddAttachedObject<BoundingSphere>(GraphicPipelineCached);
+                    break;
+                }
+                case EAttachableObjectKind::OrientedBoundingBoxKind:
+                {
+                    SelectedAttached != nullptr ?
+                        SelectedAttached->AddAttachedObject<OrientedBoundingBox>(GraphicPipelineCached) :
+                        SelectedPlaced->AddAttachedObject<OrientedBoundingBox>(GraphicPipelineCached);
+                    break;
+                }
+                case EAttachableObjectKind::NormalCameraKind:
+                {
+                    SelectedAttached != nullptr ?
+                        SelectedAttached->AddAttachedObject<Camera>(GraphicPipelineCached, App::GWidth, App::GHeight) :
+                        SelectedPlaced->AddAttachedObject<Camera>(GraphicPipelineCached, App::GWidth, App::GHeight);
+                    break;
+                }
             }
             CloseCurrentPopup(); 
         }

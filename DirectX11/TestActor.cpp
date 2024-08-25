@@ -4,7 +4,7 @@
 using namespace std;
 
 TestActor::TestActor(GraphicsPipeline* GraphicsPipelineIn)
-	: PlaceableObject(GraphicsPipelineIn->GetDevice(), GraphicsPipelineIn->GetDeviceContext())
+	: PlaceableObject(GraphicsPipelineIn)
 {
 	static size_t TestActorCount = 0;
 	TestActorCount++;

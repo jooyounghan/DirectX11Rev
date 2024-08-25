@@ -1,15 +1,28 @@
 #include "Camera.h"
 #include "DefineUtility.h"
 #include "GraphicsPipeline.h"
+#include "BoundingFrustum.h"
+#include "ARenderer.h"
 
 using namespace std;
 
+const char* Camera::CameraIdentifier = "Camera";
+
+Camera* Camera::TestCamera = nullptr;
+
 Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, const UINT& HeightIn)
-	: Viewable(GraphicsPipelineInstance->GetDevice(), GraphicsPipelineInstance->GetDeviceContext(), WidthIn, HeightIn)
+	: Viewable(GraphicsPipelineInstance, WidthIn, HeightIn)
 {
+	TestCamera = this;
+
+	CamearaFrustum = make_unique<BoundingFrustum>(GraphicsPipelineInstance, this);
+	CamearaFrustum->SetParentObject(this);
+
 	static size_t CameraCount = 0;
 	CameraCount++;
-	ObjectName = "Camera " + to_string(CameraCount);
+
+	ObjectName = CameraIdentifier + to_string(CameraCount);
+	AttachableKind = EAttachableObjectKind::NormalCameraKind;
 
 	ID3D11Device* Device = GraphicsPipelineInstance->GetDevice();
 
@@ -86,6 +99,18 @@ Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, 
 
 Camera::~Camera()
 {
+}
+
+void Camera::UpdateObject(const float& DeltaTimeIn)
+{
+	Viewable::UpdateObject(DeltaTimeIn);
+	CamearaFrustum->UpdateObject(DeltaTimeIn);
+}
+
+void Camera::AcceptRenderer(ARenderer* Renderer)
+{
+	AttachableObject::AcceptRenderer(Renderer);
+	Renderer->Render(DeviceContextCached, CamearaFrustum.get());
 }
 
 void Camera::CleanupLens()

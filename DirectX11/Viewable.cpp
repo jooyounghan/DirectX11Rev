@@ -1,4 +1,7 @@
 #include "Viewable.h"
+
+
+#include "GraphicsPipeline.h"
 #include "DefineUtility.h"
 #include "GlobalVariable.h"
 
@@ -8,8 +11,8 @@
 using namespace std;
 using namespace DirectX;
 
-Viewable::Viewable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn, const UINT& WidthIn, const UINT& HeightIn)
-	: AttachableObject(DeviceIn, DeviceContextIn), ViewProjBuffer(DeviceIn)
+Viewable::Viewable(GraphicsPipeline* GraphicsInstance, const UINT& WidthIn, const UINT& HeightIn)
+	: AttachableObject(GraphicsInstance), ViewProjBuffer(GraphicsInstance->GetDevice())
 {
 	Resize(WidthIn, HeightIn);
 }
@@ -71,9 +74,19 @@ void Viewable::AcceptGui(IGuiModelVisitor* GuiVisitor)
 
 void Viewable::OnSerialize(FILE* FileIn)
 {
+	AObject::OnSerialize(FileIn);
+
+	fwrite(&Viewport, sizeof(D3D11_VIEWPORT), 1, FileIn);
+	fwrite(&FovAngle, sizeof(float), 1, FileIn);
+	fwrite(&NearZ, sizeof(float), 1, FileIn);
+	fwrite(&FarZ, sizeof(float), 1, FileIn);
 }
 
 void Viewable::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	fread(&Viewport, sizeof(D3D11_VIEWPORT), 1, FileIn);
+	fread(&FovAngle, sizeof(float), 1, FileIn);
+	fread(&NearZ, sizeof(float), 1, FileIn);
+	fread(&FarZ, sizeof(float), 1, FileIn);
 }
-

@@ -11,6 +11,7 @@
 
 #include <string>
 
+class GraphicsPipeline;
 class PSOObject;
 class ARenderer;
 class IGuiTopLevelVisitor;
@@ -25,7 +26,7 @@ struct TransformationMatrix
 class AObject : public IOnSerializable
 {
 public:
-	AObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
+	AObject(GraphicsPipeline* GraphicsPipelineInstance);
 
 protected:
 	std::string ObjectName;
@@ -50,9 +51,9 @@ public:
 	virtual DirectX::XMVECTOR GetRotationQuat() const = 0;
 
 public:
-	virtual DirectX::XMMATRIX GetScaleMatrix() const = 0;
-	virtual DirectX::XMMATRIX GetRotationMatrix() const = 0;
-	virtual DirectX::XMMATRIX GetTranslationMatrix() const = 0;
+	virtual SPosition4D GetAbsolutePosition() const = 0;
+	virtual SAngle GetAbsoluteAngle() const = 0;
+	virtual SVector3D GetAbsoluteScale() const = 0;
 
 public:
 	virtual DirectX::XMMATRIX GetTransformation() const = 0;

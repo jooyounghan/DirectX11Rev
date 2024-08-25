@@ -6,7 +6,7 @@
 #include "EditorCamera.h"
 
 EditorActor::EditorActor(GraphicsPipeline* GraphicsPipelineInstance)
-	: PlaceableObject(GraphicsPipelineInstance->GetDevice(), GraphicsPipelineInstance->GetDeviceContext())
+	: PlaceableObject(GraphicsPipelineInstance)
 {
 	EditorCameraCached = AddAttachedObject<EditorCamera>(GraphicsPipelineInstance, App::GWidth, App::GHeight);
 
@@ -22,8 +22,10 @@ EditorActor::~EditorActor()
 
 void EditorActor::OnSerialize(FILE* FileIn)
 {
+    AObject::OnSerialize(FileIn);
 }
 
 void EditorActor::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
+    AObject::OnDeserialize(FileIn, AssetManagerIn);
 }

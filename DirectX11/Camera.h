@@ -1,15 +1,27 @@
 #pragma once
 
 #include "Viewable.h"
+#include "HeaderHelper.h"
 #include <memory>
 
 class GraphicsPipeline;
+class BoundingFrustum;
 
 class Camera : public Viewable
 {
 public: 
 	Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, const UINT& HeightIn);
 	virtual ~Camera();
+
+public:
+	static Camera* TestCamera;
+
+public:
+	static const char* CameraIdentifier;
+
+protected:
+	std::unique_ptr<BoundingFrustum> CamearaFrustum;
+	MakeSmartPtrGetter(CamearaFrustum);
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				SceneTexture2D;
@@ -37,6 +49,12 @@ protected:
 
 protected:
 	const FLOAT ClearColor[4] = { 0.2f, 0.2f, 0.2f, 1.f };
+
+public:
+	virtual void UpdateObject(const float& DeltaTimeIn) override;
+
+public:
+	virtual void AcceptRenderer(ARenderer* Renderer) override;
 
 public:
 	virtual void CleanupLens();

@@ -144,26 +144,24 @@ bool BoundingSphere::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 
 void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
 {
-	ABoundingComponent::UpdateObject(DeltaTimeIn);
+	Scale.x *= Radius;
+	Scale.y *= Radius;
+	Scale.z *= Radius;
+	AObject::UpdateObject(DeltaTimeIn);
+	Scale.x /= Radius;
+	Scale.y /= Radius;
+	Scale.z /= Radius;
+
+	SetCollisionColor();
 
 	XMVECTOR Scaling;
 	XMVECTOR RotationQuat;
 	XMMatrixDecompose(&Scaling, &RotationQuat, &Center, GetTransformation());
 
-}
-
-void BoundingSphere::SetPropertyLength()
-{
-	Scale.x *= Radius;
-	Scale.y *= Radius;
-	Scale.z *= Radius;
-}
-
-void BoundingSphere::ResetPropertyLength()
-{
-	Scale.x /= Radius;
-	Scale.y /= Radius;
-	Scale.z /= Radius;
+	for (auto& ChildObject : AttachedChildrenObjects)
+	{
+		ChildObject->UpdateObject(DeltaTimeIn);
+	}
 }
 
 bool BoundingSphere::IsInsideOrOnPlane(const Plane& PlaneIn)

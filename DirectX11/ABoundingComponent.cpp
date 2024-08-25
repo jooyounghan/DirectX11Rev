@@ -5,10 +5,7 @@
 #include "ARenderer.h"
 
 ABoundingComponent::ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances)
-	: AttachableObject(
-		GraphicsPipelineInstances->GetDevice(),
-		GraphicsPipelineInstances->GetDeviceContext()
-	)
+	: AttachableObject(GraphicsPipelineInstances)
 {
 }
 
@@ -29,20 +26,6 @@ void ABoundingComponent::SetCollisionColor()
 			DebugObject->UpdateColor(XMVectorSet(1.f, 0.f, 0.f, 1.f), DeviceContextCached);
 		}
 	}
-}
-
-void ABoundingComponent::UpdateObject(const float& DeltaTimeIn)
-{
-	SetPropertyLength();
-	AObject::UpdateObject(DeltaTimeIn);
-	ResetPropertyLength();
-
-	for (auto& ChildObject : AttachedChildrenObjects)
-	{
-		ChildObject->UpdateObject(DeltaTimeIn);
-	}
-
-	SetCollisionColor();
 }
 
 void ABoundingComponent::AcceptRenderer(ARenderer* Renderer)

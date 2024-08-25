@@ -50,9 +50,34 @@ void MapAsset::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosY
 
 void MapAsset::UpdateMap(const float& DeltaTimeIn)
 {
+	if (Camera::TestCamera != CameraCached)
+	{
+		Camera::TestCamera->Angle.Yaw += 60.f * DeltaTimeIn;
+	}
+
 	for (auto& ro : RootPlaceables)
 	{
 		ro->UpdateObject(DeltaTimeIn);
+	}
+
+	
+	BoundingFrustum* CameraFrustum = Camera::TestCamera->GetCamearaFrustum();
+
+	for (auto& ro : RootPlaceables)
+	{
+		const std::list<IIntersectable*>& Intersectables = ro->GetIntersectables();
+		for (auto& intersectable : Intersectables)
+		{
+			CollisionVisitor CollisionVisitorInstance(intersectable);
+			if (CollisionVisitorInstance.Visit(CameraFrustum))
+			{
+				ro->IgoreRendering = false;
+			}
+			else
+			{
+				ro->IgoreRendering = true;
+			}
+		}
 	}
 }
 
@@ -73,7 +98,10 @@ void MapAsset::RenderMap(PSOManager* PSOManagerInstance)
 
 		for (const auto& ro : RootPlaceables)
 		{
-			ro->AcceptRenderer(Renderer);
+			if (!ro->IgoreRendering)
+			{
+				ro->AcceptRenderer(Renderer);
+			}
 		}
 
 		Renderer->ResetRendering();
@@ -172,8 +200,14 @@ void MapAsset::SerializeChildrenObjects(AttachableObject* ChildAttachableObjectI
 	}
 }
 
-void MapAsset::DeserializeParentObject(PlaceableObject* ParentPlaceableObjectIn, FILE* FileIn, AssetManager* AssetManagerIn)
+template<typename T>
+inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, AssetManager* AssetManagerIn)
 {
+	static_assert(
+		std::is_base_of<PlaceableObject, T>::value | std::is_base_of<AttachableObject, T>::value,
+		DerivedCondition(PlaceableObject | AttachableObject)
+		);
+
 	size_t ChildrenAttachedCount;
 	fread(&ChildrenAttachedCount, sizeof(size_t), 1, FileIn);
 
@@ -189,50 +223,16 @@ void MapAsset::DeserializeParentObject(PlaceableObject* ParentPlaceableObjectIn,
 		case AttachableNone:
 			break;
 		case MeshObjectKind:
-			AddedMeshObject = ParentPlaceableObjectIn->AddAttachedObject<MeshObject>(GraphicsPipelineCached);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<MeshObject>(GraphicsPipelineCached);
 			break;
 		case BoundingSphereKind:
-			AddedMeshObject = ParentPlaceableObjectIn->AddAttachedObject<BoundingSphere>(GraphicsPipelineCached);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphere>(GraphicsPipelineCached);
 			break;
 		case OrientedBoundingBoxKind:
-			AddedMeshObject = ParentPlaceableObjectIn->AddAttachedObject<OrientedBoundingBox>(GraphicsPipelineCached);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<OrientedBoundingBox>(GraphicsPipelineCached);
 			break;
-		default:
-			break;
-		}
-
-		if (AddedMeshObject != nullptr)
-		{
-			AddedMeshObject->OnDeserialize(FileIn, AssetManagerIn);
-			DeserializeParentObject(AddedMeshObject, FileIn, AssetManagerIn);
-		}
-	}
-}
-
-void MapAsset::DeserializeParentObject(AttachableObject* ParentAttachableObjectIn, FILE* FileIn, AssetManager* AssetManagerIn)
-{
-	size_t ChildrenAttachedCount;
-	fread(&ChildrenAttachedCount, sizeof(size_t), 1, FileIn);
-
-	for (size_t idx = 0; idx < ChildrenAttachedCount; ++idx)
-	{
-		// Object Kind
-		EAttachableObjectKind AttachedObjectKind;
-		fread(&AttachedObjectKind, sizeof(EAttachableObjectKind), 1, FileIn);
-
-		AttachableObject* AddedMeshObject = nullptr;
-		switch (AttachedObjectKind)
-		{
-		case AttachableNone:
-			break;
-		case MeshObjectKind:
-			AddedMeshObject = ParentAttachableObjectIn->AddAttachedObject<MeshObject>(GraphicsPipelineCached);
-			break;
-		case BoundingSphereKind:
-			AddedMeshObject = ParentAttachableObjectIn->AddAttachedObject<BoundingSphere>(GraphicsPipelineCached);
-			break;
-		case OrientedBoundingBoxKind:
-			AddedMeshObject = ParentAttachableObjectIn->AddAttachedObject<OrientedBoundingBox>(GraphicsPipelineCached);
+		case NormalCameraKind:
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<Camera>(GraphicsPipelineCached, App::GWidth, App::GHeight);
 			break;
 		default:
 			break;
@@ -244,6 +244,7 @@ void MapAsset::DeserializeParentObject(AttachableObject* ParentAttachableObjectI
 		}
 	}
 }
+
 
 FILE* MapAsset::DefaultOpenFile(const std::string& OutputAdditionalPath)
 {

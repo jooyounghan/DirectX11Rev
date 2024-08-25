@@ -1,15 +1,17 @@
 #include "PlaceableObject.h"
+
+#include "GraphicsPipeline.h"
 #include "AttachableObject.h"
 
 using namespace DirectX;
 
 UINT PlaceableObject::PickingIDIssued = 0xABCDEF12;
 
-PlaceableObject::PlaceableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
-	: AObject(DeviceIn, DeviceContextIn), PickingID(PickingIDIssued)
+PlaceableObject::PlaceableObject(GraphicsPipeline* GraphicsPipelineInstance)
+	: AObject(GraphicsPipelineInstance), PickingID(PickingIDIssued)
 {
 	PickingIDIssued++;
-	PickingIDBuffer.InitializeForGPU(DeviceIn, PickingID.GetColor());
+	PickingIDBuffer.InitializeForGPU(GraphicsPipelineInstance->GetDevice(), PickingID.GetColor());
 }
 
 PlaceableObject::~PlaceableObject()
@@ -25,23 +27,19 @@ DirectX::XMVECTOR PlaceableObject::GetRotationQuat() const
 	);
 }
 
-DirectX::XMMATRIX PlaceableObject::GetScaleMatrix() const 
-{ 
-	return DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z); 
+SPosition4D PlaceableObject::GetAbsolutePosition() const
+{
+	return Position;
 }
 
-DirectX::XMMATRIX PlaceableObject::GetRotationMatrix() const 
-{ 
-	return DirectX::XMMatrixRotationRollPitchYaw(
-		XMConvertToRadians(Angle.Pitch),
-		XMConvertToRadians(Angle.Yaw),
-		XMConvertToRadians(Angle.Roll)
-	); 
+SAngle PlaceableObject::GetAbsoluteAngle() const
+{
+	return Angle;
 }
 
-DirectX::XMMATRIX PlaceableObject::GetTranslationMatrix() const 
-{ 
-	return DirectX::XMMatrixTranslation(Position.x, Position.y, Position.z); 
+SVector3D PlaceableObject::GetAbsoluteScale() const
+{
+	return Scale;
 }
 
 DirectX::XMMATRIX PlaceableObject::GetTransformation() const

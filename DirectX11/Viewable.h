@@ -10,7 +10,7 @@ struct ViewProjBufferData
 class Viewable : public AttachableObject
 {
 public:
-	Viewable(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn, const UINT& WidthIn, const UINT& HeightIn);
+	Viewable(GraphicsPipeline* GraphicsInstance, const UINT& WidthIn, const UINT& HeightIn);
 	virtual ~Viewable();
 
 protected:

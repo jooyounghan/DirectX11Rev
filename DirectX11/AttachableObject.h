@@ -14,13 +14,14 @@ enum EAttachableObjectKind : int
 	MeshObjectKind,
 	BoundingSphereKind,
 	OrientedBoundingBoxKind,
+	NormalCameraKind,
 };
 
 class AttachableObject : public AObject
 {
 
 public:
-	AttachableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
+	AttachableObject(GraphicsPipeline* GraphicsPipelineInstance);
 	virtual~AttachableObject();
 
 protected:
@@ -43,9 +44,9 @@ public:
 	virtual DirectX::XMVECTOR GetRotationQuat() const override;
 
 public:
-	virtual DirectX::XMMATRIX GetScaleMatrix() const override;
-	virtual DirectX::XMMATRIX GetRotationMatrix() const override;
-	virtual DirectX::XMMATRIX GetTranslationMatrix() const override;
+	virtual SPosition4D GetAbsolutePosition() const override;
+	virtual SAngle GetAbsoluteAngle() const override;
+	virtual SVector3D GetAbsoluteScale() const override;
 
 public:
 	virtual DirectX::XMMATRIX GetTransformation() const override;

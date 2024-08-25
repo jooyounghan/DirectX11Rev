@@ -53,7 +53,10 @@ void OrientedBoundingBox::InitOBB(ID3D11Device* DeviceIn)
 	AutoZeroArrayMemory(HalfExtends);
 	AutoZeroMemory(Center);
 
-	DebugObject = OBBDebugObject.get();
+	//DebugObject = OBBDebugObject.get();
+
+	test = CreateDebugBoxObject(DeviceIn);
+	DebugObject = test.get();
 }
 
 shared_ptr<Debugable> OrientedBoundingBox::CreateDebugBoxObject(ID3D11Device* DeviceIn)
@@ -134,7 +137,16 @@ bool OrientedBoundingBox::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 
 void OrientedBoundingBox::UpdateObject(const float& DeltaTimeIn)
 {
-	ABoundingComponent::UpdateObject(DeltaTimeIn);
+
+	Scale.x *= HalfExtends[Direction::PlaneRight];
+	Scale.y *= HalfExtends[Direction::PlaneUp];
+	Scale.z *= HalfExtends[Direction::PlaneForward];
+	AObject::UpdateObject(DeltaTimeIn);
+	Scale.x /= HalfExtends[Direction::PlaneRight];
+	Scale.y /= HalfExtends[Direction::PlaneUp];
+	Scale.z /= HalfExtends[Direction::PlaneForward];
+
+	SetCollisionColor();
 
 	XMVECTOR Scaling;
 	XMVECTOR RotationQuat;
@@ -143,20 +155,11 @@ void OrientedBoundingBox::UpdateObject(const float& DeltaTimeIn)
 	CurrentAxises[Direction::PlaneRight] = XMVector3Rotate(Direction::GDefaultRight, RotationQuat);
 	CurrentAxises[Direction::PlaneUp] = XMVector3Rotate(Direction::GDefaultUp, RotationQuat);
 	CurrentAxises[Direction::PlaneForward] = XMVector3Rotate(Direction::GDefaultForward, RotationQuat);
-}
 
-void OrientedBoundingBox::SetPropertyLength()
-{
-	Scale.x *= HalfExtends[Direction::PlaneRight];
-	Scale.y *= HalfExtends[Direction::PlaneUp];
-	Scale.z *= HalfExtends[Direction::PlaneForward];
-}
-
-void OrientedBoundingBox::ResetPropertyLength()
-{
-	Scale.x /= HalfExtends[Direction::PlaneRight];
-	Scale.y /= HalfExtends[Direction::PlaneUp];
-	Scale.z /= HalfExtends[Direction::PlaneForward];
+	for (auto& ChildObject : AttachedChildrenObjects)
+	{
+		ChildObject->UpdateObject(DeltaTimeIn);
+	}
 }
 
 bool OrientedBoundingBox::IsInsideOrOnPlane(const Plane& PlaneIn)

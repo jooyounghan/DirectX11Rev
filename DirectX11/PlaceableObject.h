@@ -21,7 +21,7 @@ class PlaceableObject : public AObject
 	friend AttachableObject;
 
 public:
-	PlaceableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn);
+	PlaceableObject(GraphicsPipeline* GraphicsPipelineInstance);
 	virtual ~PlaceableObject();
 
 protected:
@@ -43,14 +43,18 @@ protected:
 
 protected:
 	std::list<IIntersectable*> Intersectables;
+	MakeGetter(Intersectables);
+
+public:
+	bool IgoreRendering = false;
 
 public:
 	virtual DirectX::XMVECTOR GetRotationQuat() const;
 
 public:
-	virtual DirectX::XMMATRIX GetScaleMatrix() const;
-	virtual DirectX::XMMATRIX GetRotationMatrix() const;
-	virtual DirectX::XMMATRIX GetTranslationMatrix() const;
+	virtual SPosition4D GetAbsolutePosition() const override;
+	virtual SAngle GetAbsoluteAngle() const override;
+	virtual SVector3D GetAbsoluteScale() const override;
 
 public:
 	virtual DirectX::XMMATRIX GetTransformation() const;

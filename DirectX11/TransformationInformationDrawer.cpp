@@ -40,7 +40,7 @@ void TransformationInformationDrawer::DrawInformation()
     DrawEntity<SPosition4D, plus<SPosition4D>, minus<SPosition4D>>(
         SelectedTranslationIndex, 
         ObjectCached ? ObjectCached->Position : DummyPosition,
-        ParentObjectCached ? ParentObjectCached->Position : SPosition4D(),
+        ParentObjectCached ? ParentObjectCached->GetAbsolutePosition() : SPosition4D(),
         0.1f
     );
 
@@ -49,7 +49,7 @@ void TransformationInformationDrawer::DrawInformation()
     DrawEntity<SAngle, plus<SAngle>, minus<SAngle>>(
         SelectedRotationIndex, 
         ObjectCached ? ObjectCached->Angle : DummyAngle,
-        ParentObjectCached ? ParentObjectCached->Angle : SAngle(),
+        ParentObjectCached ? ParentObjectCached->GetAbsoluteAngle() : SAngle(),
         0.1f
 );
 
@@ -58,7 +58,7 @@ void TransformationInformationDrawer::DrawInformation()
     DrawEntity<SVector3D, multiplies<SVector3D>, divides<SVector3D>>(
         SelectedScaleIndex, 
         ObjectCached ? ObjectCached->Scale : DummyScale,
-        ParentObjectCached ? ParentObjectCached->Scale : SVector3D(),
+        ParentObjectCached ? ParentObjectCached->GetAbsoluteScale() : SVector3D(),
         0.01f
     );
 }

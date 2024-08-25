@@ -717,7 +717,7 @@ static void ImGui_ImplDX11_RenderWindow(ImGuiViewport* viewport, void*)
 static void ImGui_ImplDX11_SwapBuffers(ImGuiViewport* viewport, void*)
 {
     ImGui_ImplDX11_ViewportData* vd = (ImGui_ImplDX11_ViewportData*)viewport->RendererUserData;
-    vd->SwapChain->Present(0, 0); // Present without vsync
+    vd->SwapChain->Present(1, 0); // Present without vsync
 }
 
 static void ImGui_ImplDX11_InitPlatformInterface()

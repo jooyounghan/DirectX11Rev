@@ -1,10 +1,13 @@
 #include "AObject.h"
+#include "GraphicsPipeline.h"
 #include <format>
 
 using namespace std;
 
-AObject::AObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
-	: ObjectID(string{ format("{}", (uint64_t)this) }), DeviceContextCached(DeviceContextIn), TransformationBuffer(DeviceIn)
+AObject::AObject(GraphicsPipeline* GraphicsPipelineInstance)
+	: ObjectID(string{ format("{}", (uint64_t)this) }), 
+	DeviceContextCached(GraphicsPipelineInstance->GetDeviceContext()), 
+	TransformationBuffer(GraphicsPipelineInstance->GetDevice())
 {
 	AutoZeroMemory(Position);
 	AutoZeroMemory(Scale);

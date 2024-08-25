@@ -71,8 +71,8 @@ private:
 	void SerializeChildrenObjects(AttachableObject* ChildAttachableObjectIn, FILE* FileIn);
 
 private:
-	void DeserializeParentObject(PlaceableObject* ParentPlaceableObjectIn, FILE* FileIn, AssetManager* AssetManagerIn);
-	void DeserializeParentObject(AttachableObject* ParentAttachableObjectIn, FILE* FileIn, AssetManager* AssetManagerIn);
+	template<typename T>
+	void DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, AssetManager* AssetManagerIn);
 
 public:
 	virtual FILE* DefaultOpenFile(const std::string& OutputAdditionalPath);

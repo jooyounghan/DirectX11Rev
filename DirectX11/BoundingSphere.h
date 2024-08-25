@@ -24,7 +24,6 @@ public:
 	static const char* BoundingSphereIdentifier;
 
 private:
-	static size_t BoundingSphereCount;
 	static std::shared_ptr<Debugable> CreateDebugSphereObject(ID3D11Device* DeviceIn);
 
 protected:
@@ -46,10 +45,6 @@ public:
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
-
-public:
-	virtual void SetPropertyLength() override;
-	virtual void ResetPropertyLength() override;
 
 public:
 	bool IsInsideOrOnPlane(const Plane& PlaneIn);

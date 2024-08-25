@@ -13,23 +13,17 @@ using namespace std;
 const char* MeshObject::MeshObjectIdentifier = "Mesh Object";
 size_t MeshObject::MeshObjectCount = 0;
 
-MeshObject::MeshObject(GraphicsPipeline* GraphicsPipelineInstances) 
-	: AttachableObject(
-	GraphicsPipelineInstances->GetDevice(),
-	GraphicsPipelineInstances->GetDeviceContext()
-	)
+MeshObject::MeshObject(GraphicsPipeline* GraphicsPipelineInstance) 
+	: AttachableObject(GraphicsPipelineInstance)
 {
 	InitMeshObject();
 }
 
 MeshObject::MeshObject(
-	GraphicsPipeline* GraphicsPipelineInstances, 
+	GraphicsPipeline* GraphicsPipelineInstance, 
 	AMeshAsset* MeshAssetInstanceIn
 )
-	: AttachableObject(
-		GraphicsPipelineInstances->GetDevice(),
-		GraphicsPipelineInstances->GetDeviceContext()
-	), MeshAssetInstance(MeshAssetInstanceIn)
+	: AttachableObject(GraphicsPipelineInstance), MeshAssetInstance(MeshAssetInstanceIn)
 {
 	InitMeshObject();
 }

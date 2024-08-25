@@ -1,8 +1,8 @@
 #include "AttachableObject.h"
 #include "PlaceableObject.h"
 
-AttachableObject::AttachableObject(ID3D11Device* DeviceIn, ID3D11DeviceContext* DeviceContextIn)
-	: AObject(DeviceIn, DeviceContextIn)
+AttachableObject::AttachableObject(GraphicsPipeline* GraphicsPipelineInstance)
+	: AObject(GraphicsPipelineInstance)
 {
 }
 
@@ -24,39 +24,36 @@ DirectX::XMVECTOR AttachableObject::GetRotationQuat() const
 	return ResultQuat;
 }
 
-DirectX::XMMATRIX AttachableObject::GetScaleMatrix() const
+SPosition4D AttachableObject::GetAbsolutePosition() const
 {
-	XMMATRIX ResultScale = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
+	SPosition4D ResultPostion = Position;
 	if (ParentObject)
 	{
-		ResultScale = XMMatrixMultiply(ResultScale, ParentObject->GetScaleMatrix());
+		ResultPostion = ResultPostion + ParentObject->GetAbsolutePosition();
+	}
+	return ResultPostion;
+}
+
+SAngle AttachableObject::GetAbsoluteAngle() const
+{
+	SAngle ResultAngle = Angle;
+	if (ParentObject)
+	{
+		ResultAngle = ResultAngle + ParentObject->GetAbsoluteAngle();
+	}
+	return ResultAngle;
+}
+
+SVector3D AttachableObject::GetAbsoluteScale() const
+{
+	SVector3D ResultScale = Scale;
+	if (ParentObject)
+	{
+		ResultScale = ResultScale * ParentObject->GetAbsoluteScale();
 	}
 	return ResultScale;
 }
 
-DirectX::XMMATRIX AttachableObject::GetRotationMatrix() const
-{
-	XMMATRIX ResultRotation = DirectX::XMMatrixRotationRollPitchYaw(
-		XMConvertToRadians(Angle.Pitch),
-		XMConvertToRadians(Angle.Yaw),
-		XMConvertToRadians(Angle.Roll)
-	);
-	if (ParentObject)
-	{
-		ResultRotation = XMMatrixMultiply(ResultRotation, ParentObject->GetRotationMatrix());
-	}
-	return ResultRotation;
-}
-
-DirectX::XMMATRIX AttachableObject::GetTranslationMatrix() const
-{
-	XMMATRIX ResultTranslation = DirectX::XMMatrixTranslation(Position.x, Position.y, Position.z);
-	if (ParentObject)
-	{
-		ResultTranslation = XMMatrixMultiply(ResultTranslation, ParentObject->GetTranslationMatrix());
-	}
-	return ResultTranslation;
-}
 
 DirectX::XMMATRIX AttachableObject::GetTransformation() const
 {

@@ -22,6 +22,10 @@ protected:
 public:
 	static const char* BoundingFrustumIdentifier;
 
+private:
+	static size_t BoundingFrustumCount;
+	static std::shared_ptr<Debugable> CreateDebugFrustumObject(ID3D11Device* DeviceIn);
+
 protected:
 	Plane FrustumPlanes[Direction::NumFrustumDirection];
 	XMVECTOR FrustumEdgeAxises[Direction::NumFrustumEdgeAxis];
@@ -38,10 +42,6 @@ public:
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
-
-public:
-	virtual void SetPropertyLength() override;
-	virtual void ResetPropertyLength() override;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

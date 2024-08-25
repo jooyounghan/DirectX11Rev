@@ -26,6 +26,9 @@ private:
 public:
 	static const char* BoundingOBBIdentifier;
 
+public:
+	std::shared_ptr<Debugable> test;
+
 protected:
 	static std::shared_ptr<Debugable> CreateDebugBoxObject(ID3D11Device* DeviceIn);
 
@@ -49,10 +52,6 @@ public:
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
-
-public:
-	virtual void SetPropertyLength() override;
-	virtual void ResetPropertyLength() override;
 
 public:
 	bool IsInsideOrOnPlane(const Plane& PlaneIn);

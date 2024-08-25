@@ -28,6 +28,7 @@ void BoundingComponentRenderer::ResetRendering()
 
 void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn)
 {
+	// Do Nothing
 }
 
 void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingComponent* MeshObjectIn)
@@ -59,4 +60,3 @@ void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABo
 	}
 
 }
-
