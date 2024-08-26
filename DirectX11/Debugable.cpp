@@ -2,7 +2,6 @@
 
 
 Debugable::Debugable(ID3D11Device* DeviceIn)
-	: DebuggingColorBuffer(DeviceIn)
 {
 }
 
@@ -19,9 +18,4 @@ void Debugable::Initialize(ID3D11Device* DeviceIn)
 {
 	VerticesBuffer.InitializeForGPU(DeviceIn, GetVertexCount(), Vertices.data());
 	IndicesBuffer.InitializeForGPU(DeviceIn, GetIndexCount(), Indices.data());
-}
-
-void Debugable::UpdateColor(const XMVECTOR& ColorIn, ID3D11DeviceContext* DeviceContextIn)
-{
-	DebuggingColorBuffer.Upload(DeviceContextIn, ColorIn);
 }

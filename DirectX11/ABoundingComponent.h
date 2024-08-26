@@ -18,6 +18,13 @@ protected:
 protected:
 	bool IsCollided = false;
 
+protected:
+	UploadBuffer<XMVECTOR> DebuggingColorBuffer;
+	MakeGetter(DebuggingColorBuffer);
+
+public:
+	void UpdateColor(const XMVECTOR& ColorIn, ID3D11DeviceContext* DeviceContextIn);
+
 public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) = 0; 
 

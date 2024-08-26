@@ -37,9 +37,17 @@ protected:
 	MakeGetter(ObjectID);
 
 public:
-	SPosition4D	Position;
-	SAngle		Angle;
-	SVector3D	Scale;
+	SPosition4D	RelativePosition;
+	SAngle		RelativeAngle;
+	SVector3D	RelativeScale;
+
+protected:
+	std::string RelativePositionID;
+	std::string RelativeAngleID;
+	std::string RelativeScaleID;
+	MakeGetter(RelativePositionID);
+	MakeGetter(RelativeAngleID);
+	MakeGetter(RelativeScaleID);
 
 protected:
 	ID3D11DeviceContext* DeviceContextCached = nullptr;

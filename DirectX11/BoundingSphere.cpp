@@ -43,7 +43,6 @@ void BoundingSphere::InitBoundingSphere(ID3D11Device* DeviceIn)
 	AutoZeroMemory(Center);
 
 	DebugObject = SphereDebugObject.get();
-	DebugObject->UpdateColor(XMVectorSet(1.f, 0.f, 0.f, 1.f), DeviceContextCached);
 }
 
 shared_ptr<Debugable> BoundingSphere::CreateDebugSphereObject(ID3D11Device* DeviceIn)
@@ -100,7 +99,7 @@ shared_ptr<Debugable> BoundingSphere::CreateDebugSphereObject(ID3D11Device* Devi
 
 bool BoundingSphere::Intersect(Ray* RayIn, float& DistanceOut)
 {
-	ScaledRadius = Radius * Scale.x; 
+	ScaledRadius = Radius * RelativeScale.x; 
 
 	const XMVECTOR ToCenter = RayIn->Origin - Center;
 
@@ -138,21 +137,26 @@ bool BoundingSphere::Intersect(Ray* RayIn, float& DistanceOut)
 bool BoundingSphere::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 {
 	IsCollided = CollisionVisitor->Visit(this);
+	SetCollisionColor();
 	return IsCollided;
 }
 
 
 void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
 {
-	Scale.x *= Radius;
-	Scale.y *= Radius;
-	Scale.z *= Radius;
-	AObject::UpdateObject(DeltaTimeIn);
-	Scale.x /= Radius;
-	Scale.y /= Radius;
-	Scale.z /= Radius;
+	RelativeScale.y = RelativeScale.x;
+	RelativeScale.z = RelativeScale.x;
 
-	SetCollisionColor();
+	ScaledRadius = RelativeScale.x * Radius;
+
+	RelativeScale.x *= Radius;
+	RelativeScale.y *= Radius;
+	RelativeScale.z *= Radius;
+	AObject::UpdateObject(DeltaTimeIn);
+	RelativeScale.x /= Radius;
+	RelativeScale.y /= Radius;
+	RelativeScale.z /= Radius;
+
 
 	XMVECTOR Scaling;
 	XMVECTOR RotationQuat;

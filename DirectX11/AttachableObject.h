@@ -65,11 +65,17 @@ public:
 	Attachment* AddAttachedObject(Args... args);
 
 private:
+	template<typename Attachment>
+	void AddToIntersectables(Attachment* AttachedObjet);
+
+private:
 	void AddIntersectableToRootPlaceable(PlaceableObject* RootPlaceable, IIntersectable* Intersectable);
 
 public:
 	void RemoveAttachedObject(AttachableObject* AttachedObjectIn);
 
+private:
+	void RemoveFromIntersectables(AttachableObject* AttachedObjectIn);
 
 public:
 	virtual void OnSerialize(FILE* FileIn) = 0;
@@ -84,6 +90,18 @@ inline Attachment* AttachableObject::AddAttachedObject(Args ...args)
 	AttachedChildrenObjects.emplace_back(std::make_unique<Attachment>(args...));
 	Attachment* Attached = (Attachment*)AttachedChildrenObjects.back().get();
 
+	AddToIntersectables(Attached);
+
+	AttachableObject* AttachedObject = (AttachableObject*)Attached;
+	AttachedObject->SetParentObject(this);
+	AttachedObject->SetPickingIDBufferCached(PickingIDBufferCached);
+
+	return Attached;
+}
+
+template<typename Attachment>
+inline void AttachableObject::AddToIntersectables(Attachment* AttachedObjet)
+{
 	if (std::is_base_of<IIntersectable, Attachment>::value)
 	{
 		AObject* CurrentParent = ParentObject;
@@ -98,13 +116,6 @@ inline Attachment* AttachableObject::AddAttachedObject(Args ...args)
 		}
 
 		PlaceableParent = (PlaceableObject*)CurrentParent;
-		AddIntersectableToRootPlaceable(PlaceableParent, (IIntersectable*)Attached);
+		AddIntersectableToRootPlaceable(PlaceableParent, (IIntersectable*)AttachedObjet);
 	}
-
-	AttachableObject* AttachedObject = (AttachableObject*)Attached;
-	AttachedObject->SetParentObject(this);
-	AttachedObject->SetPickingIDBufferCached(PickingIDBufferCached);
-
-	return Attached;
 }
-

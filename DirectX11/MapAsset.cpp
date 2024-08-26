@@ -42,9 +42,9 @@ void MapAsset::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosY
 	TestActor* ta = PlaceableAddHelper<TestActor>(GraphicsPipelineCached);
 	MeshObject* AddedObject = ta->AddAttachedObject<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
 
-	AddedObject->Position.x = PosXIn;
-	AddedObject->Position.y = PosYIn;
-	AddedObject->Position.z = PosZIn;
+	AddedObject->RelativePosition.x = PosXIn;
+	AddedObject->RelativePosition.y = PosYIn;
+	AddedObject->RelativePosition.z = PosZIn;
 }
 
 
@@ -52,7 +52,7 @@ void MapAsset::UpdateMap(const float& DeltaTimeIn)
 {
 	if (Camera::TestCamera != CameraCached)
 	{
-		Camera::TestCamera->Angle.Yaw += 60.f * DeltaTimeIn;
+		Camera::TestCamera->RelativeAngle.Yaw = 41.f;
 	}
 
 	for (auto& ro : RootPlaceables)

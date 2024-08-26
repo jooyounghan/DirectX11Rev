@@ -21,34 +21,34 @@ PlaceableObject::~PlaceableObject()
 DirectX::XMVECTOR PlaceableObject::GetRotationQuat() const
 {
 	return XMQuaternionRotationRollPitchYaw(
-		XMConvertToRadians(Angle.Pitch),
-		XMConvertToRadians(Angle.Yaw),
-		XMConvertToRadians(Angle.Roll)
+		XMConvertToRadians(RelativeAngle.Pitch),
+		XMConvertToRadians(RelativeAngle.Yaw),
+		XMConvertToRadians(RelativeAngle.Roll)
 	);
 }
 
 SPosition4D PlaceableObject::GetAbsolutePosition() const
 {
-	return Position;
+	return RelativePosition;
 }
 
 SAngle PlaceableObject::GetAbsoluteAngle() const
 {
-	return Angle;
+	return RelativeAngle;
 }
 
 SVector3D PlaceableObject::GetAbsoluteScale() const
 {
-	return Scale;
+	return RelativeScale;
 }
 
 DirectX::XMMATRIX PlaceableObject::GetTransformation() const
 {
 	return XMMatrixAffineTransformation(
-		XMVectorSet(Scale.x, Scale.y, Scale.z, 0.0f),
+		XMVectorSet(RelativeScale.x, RelativeScale.y, RelativeScale.z, 0.0f),
 		XMQuaternionIdentity(),
 		GetRotationQuat(),
-		Position.Position
+		RelativePosition.Position
 	);
 }
 
@@ -71,22 +71,28 @@ void PlaceableObject::AcceptRenderer(ARenderer* Renderer)
 
 void PlaceableObject::RemoveAttachedObject(AttachableObject* AttachedObjectIn)
 {
-	auto it = std::find_if(AttachedChildrenObjects.begin(), AttachedChildrenObjects.end(),
-		[AttachedObjectIn](const std::unique_ptr<AttachableObject>& ptr)
+	RemoveFromIntersectables(AttachedObjectIn);
+
+	uint64_t RemovedCount = AttachedChildrenObjects.remove_if([AttachedObjectIn](const std::unique_ptr<AttachableObject>& ptr)
 		{
 			return ptr.get() == AttachedObjectIn;
 		}
 	);
-
-	if (it != AttachedChildrenObjects.end())
-	{
-		AttachedChildrenObjects.erase(it);
-	}
-	else
+	
+	if (RemovedCount == 0)
 	{
 		for (auto& AtttachedChild : AttachedChildrenObjects)
 		{
 			AtttachedChild->RemoveAttachedObject(AttachedObjectIn);
 		}
+	}
+}
+
+void PlaceableObject::RemoveFromIntersectables(AttachableObject* AttachedObjectIn)
+{
+	IIntersectable* IntersectablePtr = dynamic_cast<IIntersectable*>(AttachedObjectIn);
+	if (IntersectablePtr != nullptr)
+	{
+		Intersectables.remove(IntersectablePtr);
 	}
 }

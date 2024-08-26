@@ -132,21 +132,20 @@ bool OrientedBoundingBox::Intersect(Ray* RayIn, float& DistanceOut)
 bool OrientedBoundingBox::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 {
 	IsCollided = CollisionVisitor->Visit(this);
+	SetCollisionColor();
 	return IsCollided;
 }
 
 void OrientedBoundingBox::UpdateObject(const float& DeltaTimeIn)
 {
 
-	Scale.x *= HalfExtends[Direction::PlaneRight];
-	Scale.y *= HalfExtends[Direction::PlaneUp];
-	Scale.z *= HalfExtends[Direction::PlaneForward];
+	RelativeScale.x *= HalfExtends[Direction::PlaneRight];
+	RelativeScale.y *= HalfExtends[Direction::PlaneUp];
+	RelativeScale.z *= HalfExtends[Direction::PlaneForward];
 	AObject::UpdateObject(DeltaTimeIn);
-	Scale.x /= HalfExtends[Direction::PlaneRight];
-	Scale.y /= HalfExtends[Direction::PlaneUp];
-	Scale.z /= HalfExtends[Direction::PlaneForward];
-
-	SetCollisionColor();
+	RelativeScale.x /= HalfExtends[Direction::PlaneRight];
+	RelativeScale.y /= HalfExtends[Direction::PlaneUp];
+	RelativeScale.z /= HalfExtends[Direction::PlaneForward];
 
 	XMVECTOR Scaling;
 	XMVECTOR RotationQuat;
@@ -194,7 +193,7 @@ float OrientedBoundingBox::GetHalfExtendsLengthToAxis(const XMVECTOR& AxisIn)
 		XMVECTOR OBB1HalfExtendVector = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 		OBB1HalfExtendVector.m128_f32[i] = HalfExtends[i];
 
-		HalfExtendsToAxisLength += fabs(XMVectorGetX(XMVector3Dot(OBB1HalfExtendVector, AxisIn)));
+		HalfExtendsToAxisLength += static_cast<float>(fabs(XMVectorGetX(XMVector3Dot(OBB1HalfExtendVector, AxisIn))));
 	}
 	return HalfExtendsToAxisLength;
 }
@@ -212,7 +211,7 @@ bool OrientedBoundingBox::IsOverlappedWithOBBByParellelEach(OrientedBoundingBox*
 		{
 			const XMVECTOR& CurrentAxis = CurrentOBB->CurrentAxises[AxisIdx];
 
-			float FromCenterToCenterLength = fabs(XMVectorGetX(XMVector3Dot(FromCenterToCenter, CurrentAxis)));
+			float FromCenterToCenterLength = static_cast<float>(fabs(XMVectorGetX(XMVector3Dot(FromCenterToCenter, CurrentAxis))));
 			float OBB1ToAxisLength = GetHalfExtendsLengthToAxis(CurrentAxis);
 			float OBB2ToAxisLength = OBBIn->GetHalfExtendsLengthToAxis(CurrentAxis);
 			if (FromCenterToCenterLength > OBB1ToAxisLength + OBB2ToAxisLength)
@@ -237,7 +236,7 @@ bool OrientedBoundingBox::IsOverlappedWithOBBNormalBoth(OrientedBoundingBox* OBB
 		{
 			const XMVECTOR CrossAxis = XMVector3Normalize(XMVector3Cross(CurrentAxises[i], OBBIn->CurrentAxises[j]));
 
-			float FromCenterToCenterLength = fabs(XMVectorGetX(XMVector3Dot(FromCenterToCenter, CrossAxis)));
+			float FromCenterToCenterLength = static_cast<float>(fabs(XMVectorGetX(XMVector3Dot(FromCenterToCenter, CrossAxis))));
 			float OBB1ToAxisLength = GetHalfExtendsLengthToAxis(CrossAxis);
 			float OBB2ToAxisLength = OBBIn->GetHalfExtendsLengthToAxis(CrossAxis);
 

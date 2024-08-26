@@ -13,7 +13,7 @@ enum ETransfomationSelect : size_t
 class TransformationInformationDrawer : AInformationDrawer<AObject>
 {
 public:
-    TransformationInformationDrawer(AObject* CurrentPlaceable, AObject* ParentPlaceable, const bool& IsPlaceable);
+    TransformationInformationDrawer(AObject* CurrentObject, AObject* ParentObject = nullptr);
 
 protected:
     AObject* ParentObjectCached = nullptr;
@@ -28,13 +28,10 @@ private:
         ETransfomationSelect& SelectedIndexOut
     );
 
-    template<typename T, typename Operator, typename ROperator>
-    static void DrawEntity(
-        const ETransfomationSelect& SelectedIndex,
-        T& Entity,
-        const T& ParentEntity,
-        const float& SpeedIn
-    );
+private:
+    void DrawPositionEntity(const ETransfomationSelect& PositionSelectedIndex);
+    void DrawAngleEntity(const ETransfomationSelect& PositionSelectedIndex);
+    void DrawScaleEntity(const ETransfomationSelect& PositionSelectedIndex);
 
 private:
     static const char* TransformationSelect[NumTransformationSelect];

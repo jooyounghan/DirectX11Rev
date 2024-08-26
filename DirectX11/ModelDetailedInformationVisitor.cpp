@@ -32,9 +32,7 @@ void ModelDetailedInformationVisitor::Visit(PlaceableObject* PlaceableInstance)
 {
     PushID(PlaceableInstance->GetObjectID().c_str());
 
-    TransformationInformationDrawer TransformDrawer(
-        PlaceableInstance, nullptr, false
-    );
+    TransformationInformationDrawer TransformDrawer(PlaceableInstance, nullptr);
     TransformDrawer.DrawInformation();
 
     PopID();
@@ -44,9 +42,7 @@ void ModelDetailedInformationVisitor::Visit(MeshObject* MeshObjectInsatnce)
 {
     PushID(MeshObjectInsatnce->GetObjectID().c_str());
 
-    TransformationInformationDrawer TransformDrawer(
-        MeshObjectInsatnce, MeshObjectInsatnce->GetParentObject(), false
-    );
+    TransformationInformationDrawer TransformDrawer(MeshObjectInsatnce, MeshObjectInsatnce->GetParentObject());
     TransformDrawer.DrawInformation();
 
     MeshObjectInformationDrawer MeshObjectDrawer(MeshObjectInsatnce);
@@ -61,9 +57,7 @@ void ModelDetailedInformationVisitor::Visit(BoundingSphere* BoundingSphereInstan
 
     PushID(BoundingSphereInstance->GetObjectID().c_str());
 
-    TransformationInformationDrawer TransformDrawer(
-        BoundingSphereInstance, BoundingSphereInstance->GetParentObject(), false
-    );
+    TransformationInformationDrawer TransformDrawer(BoundingSphereInstance, BoundingSphereInstance->GetParentObject());
     TransformDrawer.DrawInformation();
 
     BoundingSphereInformationDrawer BSDrawer(BoundingSphereInstance);
@@ -76,7 +70,7 @@ void ModelDetailedInformationVisitor::Visit(OrientedBoundingBox* OBBInstance)
 {
     PushID(OBBInstance->GetObjectID().c_str());
 
-    TransformationInformationDrawer TransformDrawer(OBBInstance, OBBInstance->GetParentObject(), false);
+    TransformationInformationDrawer TransformDrawer(OBBInstance, OBBInstance->GetParentObject());
     TransformDrawer.DrawInformation();
 
     BoundingOBBInformationDrawer OBBDrawer(OBBInstance);
@@ -89,7 +83,7 @@ void ModelDetailedInformationVisitor::Visit(BoundingFrustum* BoundingFrustumInst
 {
     PushID(BoundingFrustumInstance->GetObjectID().c_str());
 
-    TransformationInformationDrawer TransformDrawer(BoundingFrustumInstance, BoundingFrustumInstance->GetParentObject(), false);
+    TransformationInformationDrawer TransformDrawer(BoundingFrustumInstance, BoundingFrustumInstance->GetParentObject());
     TransformDrawer.DrawInformation();
 
     PopID();
@@ -99,7 +93,7 @@ void ModelDetailedInformationVisitor::Visit(Viewable* ViewableInstance)
 {
     PushID(ViewableInstance->GetObjectID().c_str());
 
-    TransformationInformationDrawer TransformDrawer(ViewableInstance, ViewableInstance->GetParentObject(), false);
+    TransformationInformationDrawer TransformDrawer(ViewableInstance, ViewableInstance->GetParentObject());
     TransformDrawer.DrawInformation();
 
     ViewableInformationDrawer ViewableDrawer(ViewableInstance);

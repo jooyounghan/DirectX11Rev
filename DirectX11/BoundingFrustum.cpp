@@ -91,7 +91,9 @@ bool BoundingFrustum::Intersect(Ray* RayIn, float& DistanceOut)
 
 bool BoundingFrustum::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 {
-    return CollisionVisitor->Visit(this);
+    IsCollided = CollisionVisitor->Visit(this);
+    SetCollisionColor();
+    return IsCollided;
 }
 
 void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
@@ -102,7 +104,7 @@ void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
 
         TempTransformation.TransfomationMat =
             XMMatrixInverse(nullptr, ViewableCached->GetProjectionMatrix()) *
-            XMMatrixLookToLH(Position.Position, Direction::GDefaultForward, Direction::GDefaultUp) *
+            XMMatrixLookToLH(RelativePosition.Position, Direction::GDefaultForward, Direction::GDefaultUp) *
             ViewableCached->GetTransformation();
 
         TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
@@ -116,35 +118,32 @@ void BoundingFrustum::UpdateObject(const float& DeltaTimeIn)
         const float HalfVSide = ViewableCached->FarZ * tanf(XMConvertToRadians(ViewableCached->FovAngle) * 0.5f);
         const float HalfHSide = HalfVSide * AspectRatio;
 
-        const XMVECTOR RotationQuat = ViewableCached->GetRotationQuat();
-        const XMMATRIX Transformation = ViewableCached->GetTransformation();
+        XMVECTOR Translation;
+        XMVECTOR Rotation;
+        XMVECTOR Scaling;
+        const XMMATRIX Transformation = ViewableCached->GetTransformation();       
+        XMMatrixDecompose(&Scaling, &Rotation, &Translation, Transformation);
 
-        
-
-        XMVECTOR CurrentForward = XMVector3Rotate(Direction::GDefaultForward, RotationQuat);
-        XMVECTOR CurrentUp = XMVector3Rotate(Direction::GDefaultUp, RotationQuat);
-        XMVECTOR CurrentRight = XMVector3Rotate(Direction::GDefaultRight, RotationQuat);
+        XMVECTOR CurrentForward = XMVector3Rotate(Direction::GDefaultForward, Rotation);
+        XMVECTOR CurrentUp = XMVector3Rotate(Direction::GDefaultUp, Rotation);
+        XMVECTOR CurrentRight = XMVector3Rotate(Direction::GDefaultRight, Rotation);
 
         const XMVECTOR NearPosition = ViewableCached->NearZ * CurrentForward;
         const XMVECTOR FarPosition = ViewableCached->FarZ * CurrentForward;
 
-        const SPosition4D& ViewablePostion = ViewableCached->Position;
-        XMVECTOR XMVPosition = XMVectorSet(ViewablePostion.x, ViewablePostion.y, ViewablePostion.z, ViewablePostion.w);
-        XMVPosition = XMVector3Transform(XMVPosition, Transformation);
+        const XMVECTOR& ViewablePostion = ViewableCached->GetAbsolutePosition().Position;
 
-        FrustumPlanes[Direction::EFrstumDirection::FrustumNear] = { XMVPosition + NearPosition, XMVector3Normalize(CurrentForward) };
-        FrustumPlanes[Direction::EFrstumDirection::FrustumFar] = { XMVPosition + FarPosition, -XMVector3Normalize(CurrentForward) };
-        FrustumPlanes[Direction::EFrstumDirection::FrustumRight] = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentRight * HalfHSide, CurrentUp)) };
-        FrustumPlanes[Direction::EFrstumDirection::FrustumLeft] = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentRight * HalfHSide, -CurrentUp)) };
-        FrustumPlanes[Direction::EFrstumDirection::FrustumTop] = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentUp * HalfVSide, -CurrentRight)) };
-        FrustumPlanes[Direction::EFrstumDirection::FrustumBottom] = { XMVPosition, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentUp * HalfVSide, CurrentRight)) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumNear] = { ViewablePostion + NearPosition, XMVector3Normalize(CurrentForward) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumFar] = { ViewablePostion + FarPosition, -XMVector3Normalize(CurrentForward) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumRight] = { ViewablePostion, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentRight * HalfHSide, CurrentUp)) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumLeft] = { ViewablePostion, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentRight * HalfHSide, -CurrentUp)) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumTop] = { ViewablePostion, XMVector3Normalize(XMVector3Cross(FarPosition + CurrentUp * HalfVSide, -CurrentRight)) };
+        FrustumPlanes[Direction::EFrstumDirection::FrustumBottom] = { ViewablePostion, XMVector3Normalize(XMVector3Cross(FarPosition - CurrentUp * HalfVSide, CurrentRight)) };
      
         FrustumEdgeAxises[Direction::LeftTop] = FarPosition - CurrentRight * HalfHSide + CurrentUp * HalfVSide;
         FrustumEdgeAxises[Direction::LeftBottom] = FarPosition - CurrentRight * HalfHSide - CurrentUp * HalfVSide;
         FrustumEdgeAxises[Direction::RightTop] = FarPosition + CurrentRight * HalfHSide + CurrentUp * HalfVSide;
         FrustumEdgeAxises[Direction::RightBottm] = FarPosition + CurrentRight * HalfHSide - CurrentUp * HalfVSide;
-
-        SetCollisionColor();
 
         for (auto& ChildObject : AttachedChildrenObjects)
         {

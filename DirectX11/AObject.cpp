@@ -6,16 +6,19 @@ using namespace std;
 
 AObject::AObject(GraphicsPipeline* GraphicsPipelineInstance)
 	: ObjectID(string{ format("{}", (uint64_t)this) }), 
+	RelativePositionID(string{ format("{}", (uint64_t)&RelativePosition) }),
+	RelativeAngleID(string{ format("{}", (uint64_t)&RelativeAngle) }),
+	RelativeScaleID(string{ format("{}", (uint64_t)&RelativeScale) }),
 	DeviceContextCached(GraphicsPipelineInstance->GetDeviceContext()), 
 	TransformationBuffer(GraphicsPipelineInstance->GetDevice())
 {
-	AutoZeroMemory(Position);
-	AutoZeroMemory(Scale);
-	AutoZeroMemory(Angle);
+	AutoZeroMemory(RelativePosition);
+	AutoZeroMemory(RelativeScale);
+	AutoZeroMemory(RelativeAngle);
 
-	Scale.x = 1.f;
-	Scale.y = 1.f;
-	Scale.z = 1.f;
+	RelativeScale.x = 1.f;
+	RelativeScale.y = 1.f;
+	RelativeScale.z = 1.f;
 }
 
 void AObject::UpdateObject(const float& DeltaTimeIn)
@@ -37,9 +40,9 @@ void AObject::OnSerialize(FILE* FileIn)
 	fwrite(ObjectName.c_str(), sizeof(char), PlaceableNameCount, FileIn);
 
 	// Transformation
-	fwrite(&Position, sizeof(SPosition4D), 1, FileIn);
-	fwrite(&Angle, sizeof(SAngle), 1, FileIn);
-	fwrite(&Scale, sizeof(SVector3D), 1, FileIn);
+	fwrite(&RelativePosition, sizeof(SPosition4D), 1, FileIn);
+	fwrite(&RelativeAngle, sizeof(SAngle), 1, FileIn);
+	fwrite(&RelativeScale, sizeof(SVector3D), 1, FileIn);
 }
 
 void AObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
@@ -51,7 +54,7 @@ void AObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	fread(ObjectName.data(), sizeof(char), PlaceableNameCount, FileIn);
 
 	// Transformation
-	fread(&Position, sizeof(SPosition4D), 1, FileIn);
-	fread(&Angle, sizeof(SAngle), 1, FileIn);
-	fread(&Scale, sizeof(SVector3D), 1, FileIn);
+	fread(&RelativePosition, sizeof(SPosition4D), 1, FileIn);
+	fread(&RelativeAngle, sizeof(SAngle), 1, FileIn);
+	fread(&RelativeScale, sizeof(SVector3D), 1, FileIn);
 }

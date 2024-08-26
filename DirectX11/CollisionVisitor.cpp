@@ -66,6 +66,11 @@ bool CollisionLogic::CheckCollision(BoundingSphere* t1, BoundingFrustum* t2)
 	{
 		result = result && (t1->IsInsideOrOnPlane(t2->GetFrustumPlane((Direction::EFrstumDirection)FrustumPlaneIdx)));
 	}
+	if (result)
+	{
+		bool test = true;
+	}
+
 	return result;
 }
 

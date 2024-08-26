@@ -4,12 +4,16 @@
 #include "PSOObject.h"
 #include "ARenderer.h"
 
-ABoundingComponent::ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstances)
-	: AttachableObject(GraphicsPipelineInstances)
+ABoundingComponent::ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstance)
+	: AttachableObject(GraphicsPipelineInstance), DebuggingColorBuffer(GraphicsPipelineInstance->GetDevice())
 {
 }
 
 ABoundingComponent::~ABoundingComponent()
+{
+}
+
+void ABoundingComponent::UpdateColor(const XMVECTOR& ColorIn, ID3D11DeviceContext* DeviceContextIn)
 {
 }
 
@@ -19,11 +23,11 @@ void ABoundingComponent::SetCollisionColor()
 	{
 		if (IsCollided)
 		{
-			DebugObject->UpdateColor(XMVectorSet(0.f, 1.f, 0.f, 1.f), DeviceContextCached);
+			DebuggingColorBuffer.Upload(DeviceContextCached, XMVectorSet(0.f, 1.f, 0.f, 1.f));
 		}
 		else
 		{
-			DebugObject->UpdateColor(XMVectorSet(1.f, 0.f, 0.f, 1.f), DeviceContextCached);
+			DebuggingColorBuffer.Upload(DeviceContextCached, XMVectorSet(1.f, 0.f, 0.f, 1.f));
 		}
 	}
 }

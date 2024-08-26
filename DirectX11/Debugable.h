@@ -17,7 +17,7 @@ constexpr EDebugObjectType GetIndexAsDebugObjectType(size_t DebugIndex) { return
 
 struct DebugVertex
 {
-	SPosition3D Position;
+	SPosition3D RelativePosition;
 };
 
 class Debugable : public IIndexable<uint16_t>, public Vertexable<DebugVertex>
@@ -29,12 +29,5 @@ public:
 public:
 	virtual DXGI_FORMAT GetIndexFormat() override;
 	virtual void Initialize(ID3D11Device* DeviceIn) override;
-
-protected:
-	UploadBuffer<XMVECTOR> DebuggingColorBuffer;
-	MakeGetter(DebuggingColorBuffer);
-
-public:
-	void UpdateColor(const XMVECTOR& ColorIn, ID3D11DeviceContext* DeviceContextIn);
 };
 

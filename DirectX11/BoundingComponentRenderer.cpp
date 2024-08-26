@@ -45,7 +45,7 @@ void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABo
 		DeviceContextIn->IASetIndexBuffer(DebugObject->GetIndexBuffer(), DebugObject->GetIndexFormat(), 0);
 
 		ID3D11Buffer* VSConstBuffers[] = { MeshObjectIn->TransformationBuffer.GetBuffer() };
-		ID3D11Buffer* PSConstBuffers[] = { DebugObject->GetDebuggingColorBuffer().GetBuffer() };
+		ID3D11Buffer* PSConstBuffers[] = { MeshObjectIn->GetDebuggingColorBuffer().GetBuffer() };
 
 		PSOObjectCached->SetVSConstantBuffers(1, 1, VSConstBuffers);
 		PSOObjectCached->SetPSConstantBuffers(0, 1, PSConstBuffers);

@@ -75,6 +75,9 @@ public:
 public:
 	void RemoveAttachedObject(AttachableObject* AttachedObjectIn);
 
+private:
+	void RemoveFromIntersectables(AttachableObject* AttachedObjectIn);
+
 public:
 	virtual void OnSerialize(FILE* FileIn) = 0;
 	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;

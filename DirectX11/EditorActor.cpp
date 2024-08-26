@@ -11,7 +11,7 @@ EditorActor::EditorActor(GraphicsPipeline* GraphicsPipelineInstance)
 	EditorCameraCached = AddAttachedObject<EditorCamera>(GraphicsPipelineInstance, App::GWidth, App::GHeight);
 
     // Test =============================================================
-    EditorCameraCached->Position = SPosition4D{ 0.f, 0.f, -300.f, 1.f };
+    EditorCameraCached->RelativePosition = SPosition4D{ 0.f, 0.f, -300.f, 1.f };
     // =============================================================
 }
 
