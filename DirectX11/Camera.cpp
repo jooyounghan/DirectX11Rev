@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "DefineUtility.h"
 #include "GraphicsPipeline.h"
-#include "BoundingFrustum.h"
+#include "BoundingFrustumObject.h"
 #include "ARenderer.h"
 
 using namespace std;
@@ -15,7 +15,7 @@ Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, 
 {
 	TestCamera = this;
 
-	CamearaFrustum = make_unique<BoundingFrustum>(GraphicsPipelineInstance, this);
+	CamearaFrustum = make_unique<BoundingFrustumObject>(GraphicsPipelineInstance, this);
 	CamearaFrustum->SetParentObject(this);
 
 	static size_t CameraCount = 0;

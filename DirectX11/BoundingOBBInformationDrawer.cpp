@@ -1,5 +1,5 @@
 #include "BoundingOBBInformationDrawer.h"
-#include "OrientedBoundingBox.h"
+#include "OBBObject.h"
 
 #include <numeric>
 
@@ -9,5 +9,5 @@ using namespace ImGui;
 void BoundingOBBInformationDrawer::DrawInformation()
 {
 	ImGui::SeparatorText("Oriented Bounding Box");
-	DragFloat3("Half Extends", ObjectCached->GetPointerHalfExtends(), 1.f, 1E-3f, numeric_limits<float>::max());
+	DragFloat3("Half Extends", (float*)&ObjectCached->DescaledExtents, 1.f, 1E-3f, numeric_limits<float>::max());
 }

@@ -37,9 +37,9 @@ protected:
 	MakeGetter(ObjectID);
 
 public:
-	SPosition4D	RelativePosition;
-	SAngle		RelativeAngle;
-	SVector3D	RelativeScale;
+	XMFLOAT3	RelativePosition;
+	XMFLOAT3	RelativeAngle;
+	XMFLOAT3	RelativeScale;
 
 protected:
 	std::string RelativePositionID;
@@ -59,9 +59,9 @@ public:
 	virtual DirectX::XMVECTOR GetRotationQuat() const = 0;
 
 public:
-	virtual SPosition4D GetAbsolutePosition() const = 0;
-	virtual SAngle GetAbsoluteAngle() const = 0;
-	virtual SVector3D GetAbsoluteScale() const = 0;
+	virtual XMFLOAT3 GetAbsolutePosition() const = 0;
+	virtual XMFLOAT3 GetAbsoluteAngle() const = 0;
+	virtual XMFLOAT3 GetAbsoluteScale() const = 0;
 
 public:
 	virtual DirectX::XMMATRIX GetTransformation() const = 0;

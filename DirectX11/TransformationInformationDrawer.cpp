@@ -27,9 +27,9 @@ void TransformationInformationDrawer::DrawInformation()
     static ETransfomationSelect SelectedRotationIndex = Absolute;
     static ETransfomationSelect SelectedScaleIndex = Absolute;
 
-    SPosition4D DummyPosition;
-    SAngle DummyAngle;
-    SVector3D DummyScale;
+    XMFLOAT3 DummyPosition;
+    XMFLOAT3 DummyAngle;
+    XMFLOAT3 DummyScale;
     AutoZeroMemory(DummyPosition);
     AutoZeroMemory(DummyAngle);
     AutoZeroMemory(DummyScale);
@@ -76,8 +76,6 @@ void TransformationInformationDrawer::DrawPositionEntity(const ETransfomationSel
 {
     ImGui::PushID(ObjectCached->GetRelativePositionID().c_str());
 
-
-
     switch (PositionSelectedIndex)
     {
     case ETransfomationSelect::Absolute:
@@ -88,13 +86,15 @@ void TransformationInformationDrawer::DrawPositionEntity(const ETransfomationSel
             XMVECTOR Rotation;
             XMVECTOR Scaling;
 
-            SPosition4D ObjectAbsolutePosition = ObjectCached->GetAbsolutePosition();
-            SPosition4D ParentAbsolutePosition = ParentObjectCached->GetAbsolutePosition();
+            XMFLOAT3 ObjectAbsolutePosition = ObjectCached->GetAbsolutePosition();
+            XMFLOAT3 ParentAbsolutePosition = ParentObjectCached->GetAbsolutePosition();
 
-            ImGui::DragFloat3("", (float*)&ObjectAbsolutePosition, 1.f);
+            XMVECTOR vObjectAbsolutePosition = XMLoadFloat3(&ObjectAbsolutePosition);
+            XMVECTOR vParentAbsolutePosition = XMLoadFloat3(&ParentAbsolutePosition);
 
-            SPosition4D DeltaAbsolutePosition = ObjectAbsolutePosition - ParentAbsolutePosition;
-            DeltaAbsolutePosition.w = 1.f;
+            ImGui::DragFloat3("", (float*)&vObjectAbsolutePosition, 1.f);
+
+            XMVECTOR vDeltaAbsolutePosition = vObjectAbsolutePosition - vParentAbsolutePosition;
 
             const XMMATRIX ParentTransformation = ParentObjectCached->GetTransformation();
             XMMatrixDecompose(&Scaling, &Rotation, &Translation, ParentTransformation);
@@ -110,7 +110,7 @@ void TransformationInformationDrawer::DrawPositionEntity(const ETransfomationSel
                 0.f, 0.f, 0.f, 1.f)
             );
 
-            ObjectCached->RelativePosition.Position = XMVector3Transform(DeltaAbsolutePosition.Position, CoordinateInvTransformation);
+            XMStoreFloat3(&ObjectCached->RelativePosition, XMVector3Transform(vDeltaAbsolutePosition, CoordinateInvTransformation));
         }
         else
         {
@@ -137,12 +137,16 @@ void TransformationInformationDrawer::DrawAngleEntity(const ETransfomationSelect
     {
         if (ParentObjectCached)
         {
-            SAngle ObjectAbsoluteAngle = ObjectCached->GetAbsoluteAngle();
-            SAngle ParentAbsoluteAngle = ParentObjectCached->GetAbsoluteAngle();
+            XMFLOAT3 ObjectAbsoluteAngle = ObjectCached->GetAbsoluteAngle();
+            XMFLOAT3 ParentAbsoluteAngle = ParentObjectCached->GetAbsoluteAngle();
 
             ImGui::DragFloat3("", (float*)&ObjectAbsoluteAngle, 1.f);
 
-            ObjectCached->RelativeAngle = ObjectAbsoluteAngle - ParentAbsoluteAngle;
+            ObjectCached->RelativeAngle = XMFLOAT3{
+                ObjectAbsoluteAngle.x - ParentAbsoluteAngle.x,
+                ObjectAbsoluteAngle.y - ParentAbsoluteAngle.y,
+                ObjectAbsoluteAngle.z - ParentAbsoluteAngle.z,
+            };
         }
         else
         {
@@ -169,12 +173,16 @@ void TransformationInformationDrawer::DrawScaleEntity(const ETransfomationSelect
     {
         if (ParentObjectCached)
         {
-            SAngle ObjectAbsoluteScale = ObjectCached->GetAbsoluteScale();
-            SAngle ParentAbsoluteScale = ParentObjectCached->GetAbsoluteScale();
+            XMFLOAT3 ObjectAbsoluteScale = ObjectCached->GetAbsoluteScale();
+            XMFLOAT3 ParentAbsoluteScale = ParentObjectCached->GetAbsoluteScale();
 
-            ImGui::DragFloat3("", (float*)&ObjectAbsoluteScale, 1.f);
+            ImGui::DragFloat3("", (float*)&ObjectAbsoluteScale, 0.01f);
 
-            ObjectCached->RelativeScale = ObjectAbsoluteScale / ParentAbsoluteScale;
+            ObjectCached->RelativeScale = XMFLOAT3{
+                ObjectAbsoluteScale.x / ParentAbsoluteScale.x,
+                ObjectAbsoluteScale.y / ParentAbsoluteScale.y,
+                ObjectAbsoluteScale.z / ParentAbsoluteScale.z,
+            };
         }
         else
         {

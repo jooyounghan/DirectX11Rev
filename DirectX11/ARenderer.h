@@ -5,7 +5,7 @@
 class PSOObject;
 
 class MeshObject;
-class ABoundingComponent;
+class ABoundingObject;
 class MapAsset;
 class Camera;
 
@@ -35,5 +35,5 @@ public:
 
 public:
 	virtual void Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn) = 0;
-	virtual void Render(ID3D11DeviceContext* DeviceContextIn, ABoundingComponent* MeshObjectIn) = 0;
+	virtual void Render(ID3D11DeviceContext* DeviceContextIn, ABoundingObject* MeshObjectIn) = 0;
 };

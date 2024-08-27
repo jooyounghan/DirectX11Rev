@@ -1,5 +1,5 @@
 #include "BoundingComponentRenderer.h"
-#include "ABoundingComponent.h"
+#include "ABoundingObject.h"
 #include "Debugable.h"
 
 #include "PSOObject.h"
@@ -31,7 +31,7 @@ void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, Mes
 	// Do Nothing
 }
 
-void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingComponent* MeshObjectIn)
+void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingObject* MeshObjectIn)
 {
 	Debugable* DebugObject = MeshObjectIn->GetDebugObject();
 

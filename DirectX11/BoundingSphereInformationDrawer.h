@@ -1,12 +1,12 @@
 #pragma once
 #include "IInformationDrawer.h"
 
-class BoundingSphere;
+class BoundingSphereObject;
 
-class BoundingSphereInformationDrawer : AInformationDrawer<BoundingSphere>
+class BoundingSphereInformationDrawer : AInformationDrawer<BoundingSphereObject>
 {
 public:
-	BoundingSphereInformationDrawer(BoundingSphere* BoundingSphereIn)
+	BoundingSphereInformationDrawer(BoundingSphereObject* BoundingSphereIn)
 		: AInformationDrawer(BoundingSphereIn) {};
 
 public:

@@ -13,9 +13,9 @@
 #include "AMeshAsset.h"
 
 #include "MeshObject.h"
-#include "BoundingSphere.h"
-#include "OrientedBoundingBox.h"
-#include "BoundingFrustum.h"
+#include "BoundingSphereObject.h"
+#include "OBBObject.h"
+#include "BoundingFrustumObject.h"
 
 #include "TestActor.h"
 
@@ -50,18 +50,13 @@ void MapAsset::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosY
 
 void MapAsset::UpdateMap(const float& DeltaTimeIn)
 {
-	if (Camera::TestCamera != CameraCached)
-	{
-		Camera::TestCamera->RelativeAngle.Yaw = 41.f;
-	}
-
 	for (auto& ro : RootPlaceables)
 	{
 		ro->UpdateObject(DeltaTimeIn);
 	}
 
 	
-	BoundingFrustum* CameraFrustum = Camera::TestCamera->GetCamearaFrustum();
+	BoundingFrustumObject* CameraFrustum = Camera::TestCamera->GetCamearaFrustum();
 
 	for (auto& ro : RootPlaceables)
 	{
@@ -226,10 +221,10 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<MeshObject>(GraphicsPipelineCached);
 			break;
 		case BoundingSphereKind:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphere>(GraphicsPipelineCached);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>(GraphicsPipelineCached);
 			break;
 		case OrientedBoundingBoxKind:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<OrientedBoundingBox>(GraphicsPipelineCached);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>(GraphicsPipelineCached);
 			break;
 		case NormalCameraKind:
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<Camera>(GraphicsPipelineCached, App::GWidth, App::GHeight);

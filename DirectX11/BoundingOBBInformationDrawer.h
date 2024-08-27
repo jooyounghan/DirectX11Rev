@@ -1,12 +1,12 @@
 #pragma once
 #include "IInformationDrawer.h"
 
-class OrientedBoundingBox;
+class OBBObject;
 
-class BoundingOBBInformationDrawer : AInformationDrawer<OrientedBoundingBox>
+class BoundingOBBInformationDrawer : AInformationDrawer<OBBObject>
 {
 public:
-	BoundingOBBInformationDrawer(OrientedBoundingBox* OBBIn)
+	BoundingOBBInformationDrawer(OBBObject* OBBIn)
 		: AInformationDrawer(OBBIn) {};
 
 public:

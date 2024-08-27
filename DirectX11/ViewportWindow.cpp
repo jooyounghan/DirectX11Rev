@@ -17,6 +17,7 @@
 #include "EditorWorld.h"
 
 using namespace std;
+using namespace ImGui;
 
 ViewportWindow::ViewportWindow(EditorWorld* EditorWorldIn)
     : IEditorLinkedWindow(EditorWorldIn)
@@ -34,35 +35,35 @@ ViewportWindow::~ViewportWindow()
 
 void ViewportWindow::RenderWindow()
 {
-    ImGui::Begin("Viewport");
+    Begin("Viewport");
     MapAsset* CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap != nullptr)
     {
         if (EditorCameraCached != nullptr)
         {
-            ImGui::Text(CurrentMap->GetAssetName().c_str());
-            ImagePosition = ImGui::GetCursorScreenPos();
-            ImageSize = ImGui::GetContentRegionAvail();
-            ImGui::Image(EditorCameraCached->GetResolvedSceneSRV(), ImageSize);
+            Text(CurrentMap->GetAssetName().c_str());
+            ImagePosition = GetCursorScreenPos();
+            ImageSize = GetContentRegionAvail();
+            Image(EditorCameraCached->GetResolvedSceneSRV(), ImageSize);
             ManageAssetDrop(CurrentMap);
             ManageMouseLBClick(CurrentMap);
         }
     }
-    ImGui::End();
+    End();
 }
 
 void ViewportWindow::ManageAssetDrop(MapAsset* CurrentMap)
 {
-    if (ImGui::BeginDragDropTarget())
+    if (BeginDragDropTarget())
     {
-        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DragDrop::GAsset))
+        if (const ImGuiPayload* payload = AcceptDragDropPayload(DragDrop::GAsset))
         {
             IM_ASSERT(payload->DataSize == sizeof(AAssetFile*));
             AAssetFile* AssetFile = *(AAssetFile**)(payload->Data);
 
             if (CurrentMap != nullptr)
             {
-                ImGuiIO& io = ImGui::GetIO();
+                ImGuiIO& io = GetIO();
                 ImVec2 AbsMousePos = io.MousePos;
                 ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - ImagePosition.x, AbsMousePos.y - ImagePosition.y);
                 switch (AssetFile->GetAssetType())
@@ -91,15 +92,15 @@ void ViewportWindow::ManageAssetDrop(MapAsset* CurrentMap)
                 }
             }
         }
-        ImGui::EndDragDropTarget();
+        EndDragDropTarget();
     }
 }
 
 void ViewportWindow::ManageMouseLBClick(MapAsset* CurrentMap)
 {
-    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
+    if (IsMouseClicked(ImGuiMouseButton_Left) && IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
     {
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO& io = GetIO();
         ImVec2 AbsMousePos = io.MousePos;
         ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - ImagePosition.x, AbsMousePos.y - ImagePosition.y);
 

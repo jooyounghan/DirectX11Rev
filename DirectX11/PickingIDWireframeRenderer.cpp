@@ -1,6 +1,6 @@
 #include "PickingIDWireframeRenderer.h"
 
-#include "ABoundingComponent.h"
+#include "ABoundingObject.h"
 #include "Debugable.h"
 
 #include "PSOObject.h"
@@ -14,7 +14,7 @@ void PickingIDWireframeRenderer::Render(ID3D11DeviceContext* DeviceContextIn, Me
 {
 }
 
-void PickingIDWireframeRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingComponent* BoundingObjectIn)
+void PickingIDWireframeRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingObject* BoundingObjectIn)
 {
 	Debugable* DebugObject = BoundingObjectIn->GetDebugObject();
 

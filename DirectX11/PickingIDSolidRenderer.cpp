@@ -44,7 +44,7 @@ void PickingIDSolidRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshOb
 	}
 }
 
-void PickingIDSolidRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingComponent* MeshObjectIn)
+void PickingIDSolidRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingObject* MeshObjectIn)
 {
 	// Do Nothing
 }

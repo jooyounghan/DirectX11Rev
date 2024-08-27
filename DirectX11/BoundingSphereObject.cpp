@@ -1,4 +1,4 @@
-#include "BoundingSphere.h"
+#include "BoundingSphereObject.h"
 #include "AssetManager.h"
 #include "Debugable.h"
 #include "GraphicsPipeline.h"
@@ -8,30 +8,30 @@
 using namespace std;
 using namespace DirectX;
 
-const char* BoundingSphere::BoundingSphereIdentifier = "Bounding Sphere";
+const char* BoundingSphereObject::BoundingSphereIdentifier = "Bounding Sphere";
 
-BoundingSphere::BoundingSphere(GraphicsPipeline* GraphicsPipelineInstances)
-	: ABoundingComponent(GraphicsPipelineInstances), Radius(100.f)
+BoundingSphereObject::BoundingSphereObject(GraphicsPipeline* GraphicsPipelineInstances)
+	: ABoundingObject(GraphicsPipelineInstances), DescaledRadius(100.f)
 {
 	InitBoundingSphere(GraphicsPipelineInstances->GetDevice());
 }
 
-BoundingSphere::BoundingSphere(
+BoundingSphereObject::BoundingSphereObject(
 	GraphicsPipeline* GraphicsPipelineInstances,
 	const float& RadiusIn
 )
-	: ABoundingComponent(GraphicsPipelineInstances),
-	Radius(RadiusIn)
+	: ABoundingObject(GraphicsPipelineInstances),
+	DescaledRadius(RadiusIn)
 {
 	InitBoundingSphere(GraphicsPipelineInstances->GetDevice());
 }
 
-BoundingSphere::~BoundingSphere()
+BoundingSphereObject::~BoundingSphereObject()
 {
 
 }
 
-void BoundingSphere::InitBoundingSphere(ID3D11Device* DeviceIn)
+void BoundingSphereObject::InitBoundingSphere(ID3D11Device* DeviceIn)
 {
 	static shared_ptr<Debugable> SphereDebugObject = CreateDebugSphereObject(DeviceIn);
 
@@ -45,7 +45,7 @@ void BoundingSphere::InitBoundingSphere(ID3D11Device* DeviceIn)
 	DebugObject = SphereDebugObject.get();
 }
 
-shared_ptr<Debugable> BoundingSphere::CreateDebugSphereObject(ID3D11Device* DeviceIn)
+shared_ptr<Debugable> BoundingSphereObject::CreateDebugSphereObject(ID3D11Device* DeviceIn)
 {
 	shared_ptr<Debugable> Result = make_shared<Debugable>(DeviceIn);
 
@@ -68,10 +68,10 @@ shared_ptr<Debugable> BoundingSphere::CreateDebugSphereObject(ID3D11Device* Devi
 			const float& fLongitudeLow = DirectX::XM_2PI / (DefaultSphereLevel * 2.f) * longitudeIdx;
 			const float& fLongitudeTextureCord = longitudeIdx / (DefaultSphereLevel * 2.f);
 
-			VerticesIn.emplace_back(SPosition3D{ cosf(fLongitudeLow) * cosf(fLatitudeLow), sinf(fLatitudeLow), cosf(fLatitudeLow) * sinf(fLongitudeLow) });
-			VerticesIn.emplace_back(SPosition3D{ cosf(fLongitudeLow) * cosf(fLatitudeHigh), sinf(fLatitudeHigh), cosf(fLatitudeHigh) * sinf(fLongitudeLow) });
-			VerticesIn.emplace_back(SPosition3D{ cosf(fLongitudeLow) * cosf(-fLatitudeLow), sinf(-fLatitudeLow), cosf(-fLatitudeLow) * sinf(fLongitudeLow) });
-			VerticesIn.emplace_back(SPosition3D{ cosf(fLongitudeLow) * cosf(-fLatitudeHigh), sinf(-fLatitudeHigh), cosf(-fLatitudeHigh) * sinf(fLongitudeLow) });
+			VerticesIn.emplace_back(XMFLOAT3{ cosf(fLongitudeLow) * cosf(fLatitudeLow), sinf(fLatitudeLow), cosf(fLatitudeLow) * sinf(fLongitudeLow) });
+			VerticesIn.emplace_back(XMFLOAT3{ cosf(fLongitudeLow) * cosf(fLatitudeHigh), sinf(fLatitudeHigh), cosf(fLatitudeHigh) * sinf(fLongitudeLow) });
+			VerticesIn.emplace_back(XMFLOAT3{ cosf(fLongitudeLow) * cosf(-fLatitudeLow), sinf(-fLatitudeLow), cosf(-fLatitudeLow) * sinf(fLongitudeLow) });
+			VerticesIn.emplace_back(XMFLOAT3{ cosf(fLongitudeLow) * cosf(-fLatitudeHigh), sinf(-fLatitudeHigh), cosf(-fLatitudeHigh) * sinf(fLongitudeLow) });
 		}
 
 		for (uint16_t longitudeIdx = 0; longitudeIdx < (uint16_t)DefaultSphereLevel * 2; ++longitudeIdx)
@@ -97,44 +97,12 @@ shared_ptr<Debugable> BoundingSphere::CreateDebugSphereObject(ID3D11Device* Devi
 	return Result;
 }
 
-bool BoundingSphere::Intersect(Ray* RayIn, float& DistanceOut)
+bool BoundingSphereObject::Intersect(Ray* RayIn, float& DistanceOut)
 {
-	ScaledRadius = Radius * RelativeScale.x; 
-
-	const XMVECTOR ToCenter = RayIn->Origin - Center;
-
-	float b = InnerProduct(RayIn->Direction, ToCenter);
-	float c = InnerProduct(ToCenter, ToCenter) - ScaledRadius * ScaledRadius;
-
-	float determinant = b * b - c;
-	if (determinant < 0) 
-	{ 
-		return false; 
-	}
-	else
-	{
-		if (b > 0)
-		{
-			return false;
-		}
-		else
-		{
-			if (determinant == 0)
-			{
-				DistanceOut = -b;
-			}
-			else
-			{
-				float t1 = -b - sqrtf(b * b - c);
-				float t2 = -b + sqrtf(b * b - c);
-				DistanceOut = t1 < t2 ? t1 : t2;
-			}
-			return true;
-		}
-	}
+	return Intersects(RayIn->Origin, RayIn->Direction, DistanceOut);
 }
 
-bool BoundingSphere::AcceptCollision(ICollisionVisitor* CollisionVisitor)
+bool BoundingSphereObject::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 {
 	IsCollided = CollisionVisitor->Visit(this);
 	SetCollisionColor();
@@ -142,25 +110,23 @@ bool BoundingSphere::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 }
 
 
-void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
+void BoundingSphereObject::UpdateObject(const float& DeltaTimeIn)
 {
-	RelativeScale.y = RelativeScale.x;
-	RelativeScale.z = RelativeScale.x;
+	Radius = DescaledRadius * RelativeScale.x;
 
-	ScaledRadius = RelativeScale.x * Radius;
-
-	RelativeScale.x *= Radius;
-	RelativeScale.y *= Radius;
-	RelativeScale.z *= Radius;
+	RelativeScale.x = Radius;
+	RelativeScale.y = Radius;
+	RelativeScale.z = Radius;
 	AObject::UpdateObject(DeltaTimeIn);
-	RelativeScale.x /= Radius;
-	RelativeScale.y /= Radius;
-	RelativeScale.z /= Radius;
-
+	RelativeScale.x /= DescaledRadius;
+	RelativeScale.y /= DescaledRadius;
+	RelativeScale.z /= DescaledRadius;
 
 	XMVECTOR Scaling;
-	XMVECTOR RotationQuat;
-	XMMatrixDecompose(&Scaling, &RotationQuat, &Center, GetTransformation());
+	XMVECTOR Rotation;
+	XMVECTOR Translation;
+	XMMatrixDecompose(&Scaling, &Rotation, &Translation, GetTransformation());
+	XMStoreFloat3(&Center, Translation);
 
 	for (auto& ChildObject : AttachedChildrenObjects)
 	{
@@ -168,31 +134,18 @@ void BoundingSphere::UpdateObject(const float& DeltaTimeIn)
 	}
 }
 
-bool BoundingSphere::IsInsideOrOnPlane(const Plane& PlaneIn)
-{
-	XMVECTOR FromPlaneToSphere = Center - PlaneIn.Point;
-	float DistanceFromPlaneToSphereCenter = XMVectorGetX(XMVector3Dot(FromPlaneToSphere, PlaneIn.Normal));
-	return DistanceFromPlaneToSphereCenter >= -ScaledRadius;
-}
-
-bool BoundingSphere::IsOverlappedWithSphere(BoundingSphere* SphereIn)
-{
-	float Distance = XMVectorGetX(XMVector3Length(Center - SphereIn->Center));
-	return Distance <= (ScaledRadius + SphereIn->ScaledRadius);
-}
-
-void BoundingSphere::AcceptGui(IGuiModelVisitor* GuiVisitor)
+void BoundingSphereObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
 }
 
-void BoundingSphere::OnSerialize(FILE* FileIn)
+void BoundingSphereObject::OnSerialize(FILE* FileIn)
 {
 	AObject::OnSerialize(FileIn);
 	fwrite(&Radius, sizeof(float), 1, FileIn);
 }
 
-void BoundingSphere::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void BoundingSphereObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	AObject::OnDeserialize(FileIn, AssetManagerIn);
 	fread(&Radius, sizeof(float), 1, FileIn);

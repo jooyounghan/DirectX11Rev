@@ -10,34 +10,6 @@ namespace App
 
 namespace Direction
 {
-	enum EPlaneDirection : size_t
-	{
-		PlaneRight,			// x
-		PlaneUp,			// y
-		PlaneForward,		// z
-		NumPlaneDirection
-	};
-
-	enum EFrstumDirection : size_t
-	{
-		FrustumTop,
-		FrustumBottom,
-		FrustumRight,
-		FrustumLeft,
-		FrustumFar,
-		FrustumNear,
-		NumFrustumDirection
-	};
-
-	enum EFrustumEdgeAxis : size_t
-	{
-		LeftTop,
-		LeftBottom,
-		RightTop,
-		RightBottm,
-		NumFrustumEdgeAxis
-	};
-
 	extern DirectX::XMVECTOR GDefaultForward;
 	extern DirectX::XMVECTOR GDefaultUp;
 	extern DirectX::XMVECTOR GDefaultRight;

@@ -57,7 +57,7 @@ void MeshObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject
 	}
 }
 
-void MeshObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingComponent* MeshObjectIn)
+void MeshObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingObject* MeshObjectIn)
 {
 	// Do Nothing
 }

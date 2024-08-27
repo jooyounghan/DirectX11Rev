@@ -6,8 +6,8 @@
 // Add Attachables
 #include "PlaceableObject.h"
 #include "MeshObject.h"
-#include "BoundingSphere.h"
-#include "OrientedBoundingBox.h"
+#include "BoundingSphereObject.h"
+#include "OBBObject.h"
 #include "Camera.h"
 
 #include <list>
@@ -33,8 +33,8 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
     {
         const char* ItemIdentifiers[] = {
             MeshObject::MeshObjectIdentifier,
-            BoundingSphere::BoundingSphereIdentifier,
-            OrientedBoundingBox::BoundingOBBIdentifier,
+            BoundingSphereObject::BoundingSphereIdentifier,
+            OBBObject::BoundingOBBIdentifier,
             Camera::CameraIdentifier
         };
 
@@ -61,15 +61,15 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
                 case EAttachableObjectKind::BoundingSphereKind:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<BoundingSphere>(GraphicPipelineCached) :
-                        SelectedPlaced->AddAttachedObject<BoundingSphere>(GraphicPipelineCached);
+                        SelectedAttached->AddAttachedObject<BoundingSphereObject>(GraphicPipelineCached) :
+                        SelectedPlaced->AddAttachedObject<BoundingSphereObject>(GraphicPipelineCached);
                     break;
                 }
                 case EAttachableObjectKind::OrientedBoundingBoxKind:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<OrientedBoundingBox>(GraphicPipelineCached) :
-                        SelectedPlaced->AddAttachedObject<OrientedBoundingBox>(GraphicPipelineCached);
+                        SelectedAttached->AddAttachedObject<OBBObject>(GraphicPipelineCached) :
+                        SelectedPlaced->AddAttachedObject<OBBObject>(GraphicPipelineCached);
                     break;
                 }
                 case EAttachableObjectKind::NormalCameraKind:

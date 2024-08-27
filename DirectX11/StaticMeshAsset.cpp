@@ -33,11 +33,11 @@ std::vector<UINT> StaticMeshAsset::GetStrides()
 {
 	return std::vector<UINT>
 	{
-		sizeof(SPosition3D),
-		sizeof(SCoordinate2D),
-		sizeof(SVector3D),
-		sizeof(SVector3D),
-		sizeof(SVector3D)
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT2),
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT3)
 	};
 }
 

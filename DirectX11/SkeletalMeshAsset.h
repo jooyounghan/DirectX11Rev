@@ -17,8 +17,8 @@ protected:
 	MakeSetterGetter(LinkedBoneAsset)
 
 public:
-	Vertexable<SVector4D> BlendWeight;
-	Vertexable<SVector4D> BlendIndex;
+	Vertexable<XMFLOAT4> BlendWeight;
+	Vertexable<XMINT4> BlendIndex;
 
 public:
 	virtual std::vector<ID3D11Buffer*> GetVertexBuffers() override;

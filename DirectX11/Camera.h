@@ -5,7 +5,7 @@
 #include <memory>
 
 class GraphicsPipeline;
-class BoundingFrustum;
+class BoundingFrustumObject;
 
 class Camera : public Viewable
 {
@@ -20,7 +20,7 @@ public:
 	static const char* CameraIdentifier;
 
 protected:
-	std::unique_ptr<BoundingFrustum> CamearaFrustum;
+	std::unique_ptr<BoundingFrustumObject> CamearaFrustum;
 	MakeSmartPtrGetter(CamearaFrustum);
 
 protected:

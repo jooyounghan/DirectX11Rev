@@ -2,9 +2,9 @@
 #include "ModelDetailWindow.h"
 
 #include "MeshObject.h"
-#include "BoundingSphere.h"
-#include "OrientedBoundingBox.h"
-#include "BoundingFrustum.h"
+#include "BoundingSphereObject.h"
+#include "OBBObject.h"
+#include "BoundingFrustumObject.h"
 
 #include "Viewable.h"
 
@@ -51,7 +51,7 @@ void ModelDetailedInformationVisitor::Visit(MeshObject* MeshObjectInsatnce)
     PopID();
 }
 
-void ModelDetailedInformationVisitor::Visit(BoundingSphere* BoundingSphereInstance)
+void ModelDetailedInformationVisitor::Visit(BoundingSphereObject* BoundingSphereInstance)
 {
     AObject* ParentObject = BoundingSphereInstance->GetParentObject();
 
@@ -66,7 +66,7 @@ void ModelDetailedInformationVisitor::Visit(BoundingSphere* BoundingSphereInstan
     PopID();
 }
 
-void ModelDetailedInformationVisitor::Visit(OrientedBoundingBox* OBBInstance)
+void ModelDetailedInformationVisitor::Visit(OBBObject* OBBInstance)
 {
     PushID(OBBInstance->GetObjectID().c_str());
 
@@ -79,7 +79,7 @@ void ModelDetailedInformationVisitor::Visit(OrientedBoundingBox* OBBInstance)
     PopID();
 }
 
-void ModelDetailedInformationVisitor::Visit(BoundingFrustum* BoundingFrustumInstance)
+void ModelDetailedInformationVisitor::Visit(BoundingFrustumObject* BoundingFrustumInstance)
 {
     PushID(BoundingFrustumInstance->GetObjectID().c_str());
 

@@ -271,11 +271,11 @@ void AssetManager::ProcessNodeForBone(
 
 void AssetManager::RestructBaseVertices(const unsigned int& NumVertices, AMeshAsset* MeshAssetIn)
 {
-    vector<SPosition3D> TempPositions;
-    vector<SCoordinate2D> TempUVTextures;
-    vector<SVector3D> TempNormals;
-    vector<SVector3D> TempTangents;
-    vector<SVector3D> TempBitangents;
+    vector<XMFLOAT3> TempPositions;
+    vector<XMFLOAT2> TempUVTextures;
+    vector<XMFLOAT3> TempNormals;
+    vector<XMFLOAT3> TempTangents;
+    vector<XMFLOAT3> TempBitangents;
 
     TempPositions.resize(NumVertices);
     TempUVTextures.resize(NumVertices);
@@ -330,11 +330,11 @@ void AssetManager::LoadMeshElement(
 
     RestructBaseVertices(Mesh->mNumVertices, SkeletalMesh);
 
-    vector<SVector4D> TempBlendWeight;
-    vector<SVector4D> TempBlendIndex;
+    vector<XMFLOAT4> TempBlendWeight;
+    vector<XMINT4> TempBlendIndex;
 
     TempBlendWeight.resize(Mesh->mNumVertices);
-    TempBlendIndex.resize(Mesh->mNumVertices);
+    TempBlendIndex.resize(Mesh->mNumVertices, XMINT4(-1.f, -1.f, -1.f, -1.f));
 
     SkeletalMesh->BlendWeight.Vertices.insert(SkeletalMesh->BlendWeight.Vertices.end(), TempBlendWeight.begin(), TempBlendWeight.end());
     SkeletalMesh->BlendIndex.Vertices.insert(SkeletalMesh->BlendIndex.Vertices.end(), TempBlendIndex.begin(), TempBlendIndex.end());
@@ -400,13 +400,29 @@ void AssetManager::LoadBone(
                 {
                     aiVertexWeight& VertexWeight = CurrentBone->mWeights[WeightIdx];
 
-                    SVector4D& CurrentBlendWeight = SkeletalMesh->BlendWeight.Vertices[VertexWeight.mVertexId];
-                    SVector4D& CurrentBlendIndex = SkeletalMesh->BlendIndex.Vertices[VertexWeight.mVertexId];
+                    XMFLOAT4& CurrentBlendWeight = SkeletalMesh->BlendWeight.Vertices[VertexWeight.mVertexId];
+                    XMINT4& CurrentBlendIndex = SkeletalMesh->BlendIndex.Vertices[VertexWeight.mVertexId];
 
-                    int InsertedIndex = CurrentBlendWeight.InsertToEmpty(VertexWeight.mWeight);
-                    if (InsertedIndex >= 0)
+                    int InsertedIndex = -1;
+                    if (CurrentBlendIndex.x == -1)
                     {
-                        CurrentBlendIndex.InsertWithIndex(InsertedIndex, BoneIdx);
+                        CurrentBlendIndex.x = BoneIdx; CurrentBlendWeight.x = VertexWeight.mWeight;
+                    }
+                    else if (CurrentBlendIndex.y == -1)
+                    {
+                        CurrentBlendIndex.y = BoneIdx; CurrentBlendWeight.y = VertexWeight.mWeight;
+                    }
+                    else if (CurrentBlendIndex.z == -1)
+                    {
+                        CurrentBlendIndex.z = BoneIdx; CurrentBlendWeight.z = VertexWeight.mWeight;
+                    }
+                    else if (CurrentBlendIndex.w == -1)
+                    {
+                        CurrentBlendIndex.w = BoneIdx; CurrentBlendWeight.w = VertexWeight.mWeight;
+                    }
+                    else
+                    {
+
                     }
                 }
             }

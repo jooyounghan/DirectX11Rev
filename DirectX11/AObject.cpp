@@ -40,9 +40,9 @@ void AObject::OnSerialize(FILE* FileIn)
 	fwrite(ObjectName.c_str(), sizeof(char), PlaceableNameCount, FileIn);
 
 	// Transformation
-	fwrite(&RelativePosition, sizeof(SPosition4D), 1, FileIn);
-	fwrite(&RelativeAngle, sizeof(SAngle), 1, FileIn);
-	fwrite(&RelativeScale, sizeof(SVector3D), 1, FileIn);
+	fwrite(&RelativePosition, sizeof(XMFLOAT3), 1, FileIn);
+	fwrite(&RelativeAngle, sizeof(XMFLOAT3), 1, FileIn);
+	fwrite(&RelativeScale, sizeof(XMFLOAT3), 1, FileIn);
 }
 
 void AObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
@@ -54,7 +54,7 @@ void AObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	fread(ObjectName.data(), sizeof(char), PlaceableNameCount, FileIn);
 
 	// Transformation
-	fread(&RelativePosition, sizeof(SPosition4D), 1, FileIn);
-	fread(&RelativeAngle, sizeof(SAngle), 1, FileIn);
-	fread(&RelativeScale, sizeof(SVector3D), 1, FileIn);
+	fread(&RelativePosition, sizeof(XMFLOAT3), 1, FileIn);
+	fread(&RelativeAngle, sizeof(XMFLOAT3), 1, FileIn);
+	fread(&RelativeScale, sizeof(XMFLOAT3), 1, FileIn);
 }

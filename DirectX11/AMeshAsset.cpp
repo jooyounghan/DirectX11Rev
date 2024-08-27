@@ -25,27 +25,27 @@ void AMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 	// Positions
 	size_t PositionCount = Positions.Vertices.size();
 	fwrite(&PositionCount, sizeof(size_t), 1, FileIn);
-	fwrite(Positions.Vertices.data(), sizeof(SPosition3D), PositionCount, FileIn);
+	fwrite(Positions.Vertices.data(), sizeof(XMFLOAT3), PositionCount, FileIn);
 
 	// UVTextures
 	size_t UVTexturesCount = UVTextures.Vertices.size();
 	fwrite(&UVTexturesCount, sizeof(size_t), 1, FileIn);
-	fwrite(UVTextures.Vertices.data(), sizeof(SCoordinate2D), UVTexturesCount, FileIn);
+	fwrite(UVTextures.Vertices.data(), sizeof(XMFLOAT2), UVTexturesCount, FileIn);
 
 	// Normals
 	size_t NormalsCount = Normals.Vertices.size();
 	fwrite(&NormalsCount, sizeof(size_t), 1, FileIn);
-	fwrite(Normals.Vertices.data(), sizeof(SVector3D), NormalsCount, FileIn);
+	fwrite(Normals.Vertices.data(), sizeof(XMFLOAT3), NormalsCount, FileIn);
 
 	// Tangents
 	size_t TangentsCount = Tangents.Vertices.size();
 	fwrite(&TangentsCount, sizeof(size_t), 1, FileIn);
-	fwrite(Tangents.Vertices.data(), sizeof(SVector3D), TangentsCount, FileIn);
+	fwrite(Tangents.Vertices.data(), sizeof(XMFLOAT3), TangentsCount, FileIn);
 
 	// Bitangents
 	size_t BitangentsCount = Bitangents.Vertices.size();
 	fwrite(&BitangentsCount, sizeof(size_t), 1, FileIn);
-	fwrite(Bitangents.Vertices.data(), sizeof(SVector3D), BitangentsCount, FileIn);
+	fwrite(Bitangents.Vertices.data(), sizeof(XMFLOAT3), BitangentsCount, FileIn);
 
 	// Indices
 	size_t IndexCount = Indices.size();
@@ -59,31 +59,31 @@ void AMeshAsset::DeserializeBaseMeshData(FILE* FileIn)
 	size_t PositionsCount;
 	fread(&PositionsCount, sizeof(size_t), 1, FileIn);
 	Positions.Vertices.resize(PositionsCount);
-	fread(Positions.Vertices.data(), sizeof(SPosition3D), PositionsCount, FileIn);
+	fread(Positions.Vertices.data(), sizeof(XMFLOAT3), PositionsCount, FileIn);
 
 	// UVTextures
 	size_t UVTexturesCount;
 	fread(&UVTexturesCount, sizeof(size_t), 1, FileIn);
 	UVTextures.Vertices.resize(UVTexturesCount);
-	fread(UVTextures.Vertices.data(), sizeof(SCoordinate2D), UVTexturesCount, FileIn);
+	fread(UVTextures.Vertices.data(), sizeof(XMFLOAT2), UVTexturesCount, FileIn);
 
 	// Normals
 	size_t NormalsCount;
 	fread(&NormalsCount, sizeof(size_t), 1, FileIn);
 	Normals.Vertices.resize(NormalsCount);
-	fread(Normals.Vertices.data(), sizeof(SVector3D), NormalsCount, FileIn);
+	fread(Normals.Vertices.data(), sizeof(XMFLOAT3), NormalsCount, FileIn);
 
 	// Tangents
 	size_t TangentsCount;
 	fread(&TangentsCount, sizeof(size_t), 1, FileIn);
 	Tangents.Vertices.resize(TangentsCount);
-	fread(Tangents.Vertices.data(), sizeof(SVector3D), TangentsCount, FileIn);
+	fread(Tangents.Vertices.data(), sizeof(XMFLOAT3), TangentsCount, FileIn);
 
 	// Bitangents
 	size_t BitangentsCount;
 	fread(&BitangentsCount, sizeof(size_t), 1, FileIn);
 	Bitangents.Vertices.resize(BitangentsCount);
-	fread(Bitangents.Vertices.data(), sizeof(SVector3D), BitangentsCount, FileIn);
+	fread(Bitangents.Vertices.data(), sizeof(XMFLOAT3), BitangentsCount, FileIn);
 
 	// Indices
 	size_t IndexCount;

@@ -309,19 +309,16 @@
     <ClCompile Include="AttachableObject.cpp">
       <Filter>소스 파일\Asset\Map\Object\Attachable</Filter>
     </ClCompile>
-    <ClCompile Include="ABoundingComponent.cpp">
+    <ClCompile Include="ABoundingObject.cpp">
       <Filter>소스 파일\Asset\Map\Object\Attachable\BoundingComponent</Filter>
     </ClCompile>
-    <ClCompile Include="BoundingCapsule.cpp">
+    <ClCompile Include="BoundingSphereObject.cpp">
       <Filter>소스 파일\Asset\Map\Object\Attachable\BoundingComponent</Filter>
     </ClCompile>
-    <ClCompile Include="BoundingSphere.cpp">
+    <ClCompile Include="OBBObject.cpp">
       <Filter>소스 파일\Asset\Map\Object\Attachable\BoundingComponent</Filter>
     </ClCompile>
-    <ClCompile Include="OrientedBoundingBox.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable\BoundingComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="BoundingFrustum.cpp">
+    <ClCompile Include="BoundingFrustumObject.cpp">
       <Filter>소스 파일\Asset\Map\Object\Attachable\BoundingComponent</Filter>
     </ClCompile>
     <ClCompile Include="CollisionVisitor.cpp">
@@ -539,16 +536,13 @@
     <ClInclude Include="IIntersectable.h">
       <Filter>헤더 파일\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="BoundingCapsule.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\BoundingComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="OrientedBoundingBox.h">
+    <ClInclude Include="OBBObject.h">
       <Filter>헤더 파일\Asset\Map\Object\Attachable\BoundingComponent</Filter>
     </ClInclude>
     <ClInclude Include="AObject.h">
       <Filter>헤더 파일\Asset\Map\Object</Filter>
     </ClInclude>
-    <ClInclude Include="BoundingSphere.h">
+    <ClInclude Include="BoundingSphereObject.h">
       <Filter>헤더 파일\Asset\Map\Object\Attachable\BoundingComponent</Filter>
     </ClInclude>
     <ClInclude Include="IIndexable.h">
@@ -566,10 +560,10 @@
     <ClInclude Include="AttachableObject.h">
       <Filter>헤더 파일\Asset\Map\Object\Attachable</Filter>
     </ClInclude>
-    <ClInclude Include="ABoundingComponent.h">
+    <ClInclude Include="ABoundingObject.h">
       <Filter>헤더 파일\Asset\Map\Object\Attachable\BoundingComponent</Filter>
     </ClInclude>
-    <ClInclude Include="BoundingFrustum.h">
+    <ClInclude Include="BoundingFrustumObject.h">
       <Filter>헤더 파일\Asset\Map\Object\Attachable\BoundingComponent</Filter>
     </ClInclude>
     <ClInclude Include="CollisionVisitor.h">

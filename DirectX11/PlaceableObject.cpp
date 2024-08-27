@@ -21,23 +21,23 @@ PlaceableObject::~PlaceableObject()
 DirectX::XMVECTOR PlaceableObject::GetRotationQuat() const
 {
 	return XMQuaternionRotationRollPitchYaw(
-		XMConvertToRadians(RelativeAngle.Pitch),
-		XMConvertToRadians(RelativeAngle.Yaw),
-		XMConvertToRadians(RelativeAngle.Roll)
+		XMConvertToRadians(RelativeAngle.x),
+		XMConvertToRadians(RelativeAngle.y),
+		XMConvertToRadians(RelativeAngle.z)
 	);
 }
 
-SPosition4D PlaceableObject::GetAbsolutePosition() const
+XMFLOAT3 PlaceableObject::GetAbsolutePosition() const
 {
 	return RelativePosition;
 }
 
-SAngle PlaceableObject::GetAbsoluteAngle() const
+XMFLOAT3 PlaceableObject::GetAbsoluteAngle() const
 {
 	return RelativeAngle;
 }
 
-SVector3D PlaceableObject::GetAbsoluteScale() const
+XMFLOAT3 PlaceableObject::GetAbsoluteScale() const
 {
 	return RelativeScale;
 }
@@ -45,10 +45,10 @@ SVector3D PlaceableObject::GetAbsoluteScale() const
 DirectX::XMMATRIX PlaceableObject::GetTransformation() const
 {
 	return XMMatrixAffineTransformation(
-		XMVectorSet(RelativeScale.x, RelativeScale.y, RelativeScale.z, 0.0f),
+		XMLoadFloat3(&RelativeScale),
 		XMQuaternionIdentity(),
 		GetRotationQuat(),
-		RelativePosition.Position
+		XMLoadFloat3(&RelativePosition)
 	);
 }
 

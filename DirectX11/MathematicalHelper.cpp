@@ -1,57 +1,86 @@
 #include "MathematicalHelper.h"
 
-float MathematicalHelper::InnerProduct(const SVector3D& Vector1, const SVector3D& Vector2)
+using namespace DirectX;
+
+float MathematicalHelper::InnerProduct(const XMFLOAT3& Vector1, const XMFLOAT3& Vector2)
 {
 	return Vector1.x * Vector2.x + Vector1.y * Vector2.y + Vector1.z * Vector2.z;
 }
 
-SVector3D MathematicalHelper::Projection(const SVector3D& RefVector, const SVector3D& TargetVector)
+XMFLOAT3 MathematicalHelper::Projection(const XMFLOAT3& RefVector, const XMFLOAT3& TargetVector)
 {
-	return (RefVector * (InnerProduct(RefVector, TargetVector) / InnerProduct(RefVector, RefVector)));
+	float ProjLength = (InnerProduct(RefVector, TargetVector) / InnerProduct(RefVector, RefVector));
+	return XMFLOAT3{ RefVector.x * ProjLength, RefVector.y * ProjLength, RefVector.z * ProjLength };
 }
 
 void MathematicalHelper::GramShmidt(
-	const SVector3D& Vector1In, 
-	const SVector3D& Vector2In, 
-	const SVector3D& Vector3In, 
-	SVector3D& Vector2Out, 
-	SVector3D& Vector3Out
+	const XMFLOAT3& Vector1In, 
+	const XMFLOAT3& Vector2In, 
+	const XMFLOAT3& Vector3In, 
+	XMFLOAT3& Vector2Out, 
+	XMFLOAT3& Vector3Out
 )
 {
-	Vector2Out = Vector2In - Projection(Vector1In, Vector2In);
-	Vector3Out = Vector3In - Projection(Vector1In, Vector3In) - Projection(Vector2Out, Vector3In);
+	const XMFLOAT3 Proj12 = Projection(Vector1In, Vector2In);
+	const XMFLOAT3 Proj13 = Projection(Vector1In, Vector3In);
+	const XMFLOAT3 Proj2out3 = Projection(Vector2Out, Vector3In);
+
+	Vector2Out = XMFLOAT3{
+		Vector2In.x - Proj12.x,
+		Vector2In.y - Proj12.y,
+		Vector2In.z - Proj12.z
+	};
+	Vector3Out = XMFLOAT3{
+		Vector3In.x - Proj13.x - Proj2out3.x,
+		Vector3In.y - Proj13.y - Proj2out3.y,
+		Vector3In.z - Proj13.z - Proj2out3.z,
+	};
 }
 
 void MathematicalHelper::GetTangentBitangent(
-	const SPosition3D& Pos0In, 
-	const SPosition3D& Pos1In, 
-	const SPosition3D& Pos2In, 
-	const SCoordinate2D& TexCoord0In, 
-	const SCoordinate2D& TexCoord1In, 
-	const SCoordinate2D& TexCoord2In, 
-	const SVector3D& Normal0In, 
-	const SVector3D& Normal1In, 
-	const SVector3D& Normal2In, 
-	SVector3D& Tangent0Out, 
-	SVector3D& Tangent1Out, 
-	SVector3D& Tangent2Out, 
-	SVector3D& Bitangent0Out, 
-	SVector3D& Bitangent1Out, 
-	SVector3D& Bitangent2Out
+	const XMFLOAT3& Pos0In, 
+	const XMFLOAT3& Pos1In,
+	const XMFLOAT3& Pos2In,
+	const XMFLOAT2& TexCoord0In,
+	const XMFLOAT2& TexCoord1In,
+	const XMFLOAT2& TexCoord2In,
+	const XMFLOAT3& Normal0In,
+	const XMFLOAT3& Normal1In,
+	const XMFLOAT3& Normal2In,
+	XMFLOAT3& Tangent0Out,
+	XMFLOAT3& Tangent1Out,
+	XMFLOAT3& Tangent2Out,
+	XMFLOAT3& Bitangent0Out,
+	XMFLOAT3& Bitangent1Out,
+	XMFLOAT3& Bitangent2Out
 )
 {
-	SPosition3D DeltaPos1 = Pos1In - Pos0In;
-    SPosition3D DeltaPos2 = Pos2In - Pos0In;
+	XMFLOAT3 DeltaPos1 = XMFLOAT3{ Pos1In.x - Pos0In.x, Pos1In.y - Pos0In.y, Pos1In.z - Pos0In.z };
+	XMFLOAT3 DeltaPos2 = XMFLOAT3{ Pos2In.x - Pos0In.x, Pos2In.y - Pos0In.y, Pos2In.z - Pos0In.z };
 
     // UV 벡터
-    SCoordinate2D DeltaUV1 = TexCoord1In - TexCoord0In;
-    SCoordinate2D DeltaUV2 = TexCoord2In - TexCoord0In;
+	XMFLOAT2 DeltaUV1 = XMFLOAT2{ TexCoord1In.x - TexCoord0In.x, TexCoord1In.y - TexCoord0In.y };
+	XMFLOAT2 DeltaUV2 = XMFLOAT2{ TexCoord2In.x - TexCoord0In.x, TexCoord2In.y - TexCoord0In.y };
 
     // 행렬의 요소 계산
     float Determinant = 1.0f / (DeltaUV1.x * DeltaUV2.y - DeltaUV1.y * DeltaUV2.x);
 
-    SVector3D Tangent = (DeltaPos1 * DeltaUV2.y - DeltaPos2 * DeltaUV1.y) * Determinant;
-    SVector3D Bitangent = (DeltaPos2 * DeltaUV1.x - DeltaPos1 * DeltaUV2.x) * -Determinant;
+	XMVECTOR vDeltaPos1 = XMLoadFloat3(&DeltaPos1);
+	XMVECTOR vDeltaPos2 = XMLoadFloat3(&DeltaPos2);
+	XMVECTOR vDeltaUV1 = XMLoadFloat2(&DeltaUV1);
+	XMVECTOR vDeltaUV2 = XMLoadFloat2(&DeltaUV2);
+
+	XMVECTOR vTangent = (vDeltaPos1 * vDeltaUV1.m128_f32[1] - vDeltaPos1 * vDeltaUV2.m128_f32[1])* Determinant;
+	XMVECTOR vBitangent = (vDeltaPos2 * vDeltaUV1.m128_f32[0] - vDeltaPos1 * vDeltaUV2.m128_f32[0]) * -Determinant;
+
+	vTangent = XMVector3Normalize(vTangent);
+	vBitangent = XMVector3Normalize(vBitangent);
+
+	XMFLOAT3 Tangent;
+	XMFLOAT3 Bitangent;
+
+    XMStoreFloat3(&Tangent, vTangent);
+    XMStoreFloat3(&Bitangent, vBitangent);
 
 	GramShmidt(
 		Normal0In,
@@ -74,12 +103,5 @@ void MathematicalHelper::GetTangentBitangent(
 		Tangent2Out,
 		Bitangent2Out
 	);
-
-	Tangent0Out.Normalize();
-	Tangent1Out.Normalize();
-	Tangent2Out.Normalize();
-	Bitangent0Out.Normalize();
-	Bitangent1Out.Normalize();
-	Bitangent2Out.Normalize();
 }
 

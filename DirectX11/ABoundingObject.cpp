@@ -1,23 +1,23 @@
-#include "ABoundingComponent.h"
+#include "ABoundingObject.h"
 #include "GraphicsPipeline.h"
 #include "Debugable.h"
 #include "PSOObject.h"
 #include "ARenderer.h"
 
-ABoundingComponent::ABoundingComponent(GraphicsPipeline* GraphicsPipelineInstance)
+ABoundingObject::ABoundingObject(GraphicsPipeline* GraphicsPipelineInstance)
 	: AttachableObject(GraphicsPipelineInstance), DebuggingColorBuffer(GraphicsPipelineInstance->GetDevice())
 {
 }
 
-ABoundingComponent::~ABoundingComponent()
+ABoundingObject::~ABoundingObject()
 {
 }
 
-void ABoundingComponent::UpdateColor(const XMVECTOR& ColorIn, ID3D11DeviceContext* DeviceContextIn)
+void ABoundingObject::UpdateColor(const XMVECTOR& ColorIn, ID3D11DeviceContext* DeviceContextIn)
 {
 }
 
-void ABoundingComponent::SetCollisionColor()
+void ABoundingObject::SetCollisionColor()
 {
 	if (DebugObject != nullptr)
 	{
@@ -32,7 +32,7 @@ void ABoundingComponent::SetCollisionColor()
 	}
 }
 
-void ABoundingComponent::AcceptRenderer(ARenderer* Renderer)
+void ABoundingObject::AcceptRenderer(ARenderer* Renderer)
 {
 	AttachableObject::AcceptRenderer(Renderer);
 	Renderer->Render(DeviceContextCached, this);

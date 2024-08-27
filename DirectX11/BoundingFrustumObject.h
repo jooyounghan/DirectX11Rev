@@ -1,20 +1,20 @@
 #pragma once
-#include "ABoundingComponent.h"
+#include "ABoundingObject.h"
 #include "DefineType.h"
 #include "GlobalVariable.h"
 
 class Viewable;
-class BoundingSphere;
-class OrientedBoundingBox;
+class BoundingSphereObject;
+class OBBObject;
 
-class BoundingFrustum : public ABoundingComponent
+class BoundingFrustumObject : public ABoundingObject, public BoundingFrustum
 {
 public:
-	BoundingFrustum(
+	BoundingFrustumObject(
 		GraphicsPipeline* GraphicsPipelineInstances,
 		Viewable* ViewableInstance
 	);
-	virtual ~BoundingFrustum();
+	virtual ~BoundingFrustumObject();
 
 protected:
 	Viewable* ViewableCached = nullptr;
@@ -25,14 +25,6 @@ public:
 private:
 	static size_t BoundingFrustumCount;
 	static std::shared_ptr<Debugable> CreateDebugFrustumObject(ID3D11Device* DeviceIn);
-
-protected:
-	Plane FrustumPlanes[Direction::NumFrustumDirection];
-	XMVECTOR FrustumEdgeAxises[Direction::NumFrustumEdgeAxis];
-
-public:
-	const Plane& GetFrustumPlane(Direction::EFrstumDirection DirectionIn);
-	const XMVECTOR& GetFrustumEdgeAxis(Direction::EFrustumEdgeAxis EdgeAxisIn);
 
 public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) override;

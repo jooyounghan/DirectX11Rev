@@ -17,7 +17,7 @@ constexpr EDebugObjectType GetIndexAsDebugObjectType(size_t DebugIndex) { return
 
 struct DebugVertex
 {
-	SPosition3D RelativePosition;
+	DirectX::XMFLOAT3 RelativePosition;
 };
 
 class Debugable : public IIndexable<uint16_t>, public Vertexable<DebugVertex>

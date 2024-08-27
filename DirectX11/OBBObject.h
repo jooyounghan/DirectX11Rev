@@ -1,24 +1,24 @@
 #pragma once
-#include "ABoundingComponent.h"
+#include "ABoundingObject.h"
 #include "GlobalVariable.h"
 
-class BoundingSphere;
+class BoundingSphereObject;
 
-class OrientedBoundingBox : public ABoundingComponent
+class OBBObject : public ABoundingObject, public BoundingOrientedBox
 {
 public:
-	OrientedBoundingBox(
+	OBBObject(
 		GraphicsPipeline* GraphicsPipelineInstances
 	);
 
 public:
-	OrientedBoundingBox(
+	OBBObject(
 		GraphicsPipeline* GraphicsPipelineInstances,
 		const float& HalfXIn, 
 		const float& HalfYIn, 
 		const float& HalfZIn
 	);
-	virtual ~OrientedBoundingBox();
+	virtual ~OBBObject();
 
 private:
 	void InitOBB(ID3D11Device* DeviceIn);
@@ -27,22 +27,10 @@ public:
 	static const char* BoundingOBBIdentifier;
 
 public:
-	std::shared_ptr<Debugable> test;
+	XMFLOAT3 DescaledExtents;
 
 protected:
 	static std::shared_ptr<Debugable> CreateDebugBoxObject(ID3D11Device* DeviceIn);
-
-protected:
-	XMVECTOR CurrentAxises[Direction::NumPlaneDirection];
-	float HalfExtends[Direction::NumPlaneDirection];
-	XMVECTOR Center;
-	MakeGetter(CurrentAxises);
-	MakeGetter(HalfExtends);
-	MakeGetter(Center);
-
-public:
-	float* GetPointerHalfExtends() { return &HalfExtends[0]; }
-
 
 public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) override;
@@ -52,19 +40,6 @@ public:
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
-
-public:
-	bool IsInsideOrOnPlane(const Plane& PlaneIn);
-
-public:
-	bool IsOverlappedWithOBB(OrientedBoundingBox* OBBIn);
-
-private:
-	bool IsOverlappedWithOBBByParellelEach(OrientedBoundingBox* OBBIn);
-	bool IsOverlappedWithOBBNormalBoth(OrientedBoundingBox* OBBIn);
-
-private:
-	float GetHalfExtendsLengthToAxis(const XMVECTOR& AxisIn);
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

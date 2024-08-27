@@ -1,5 +1,5 @@
 #include "BoundingSphereInformationDrawer.h"
-#include "BoundingSphere.h"
+#include "BoundingSphereObject.h"
 
 #include <numeric>
 
@@ -9,5 +9,5 @@ using namespace ImGui;
 void BoundingSphereInformationDrawer::DrawInformation()
 {
 	ImGui::SeparatorText("Boundging Sphere");
-	DragFloat("Radius", ObjectCached->GetPointerRadius(), 1.f, 1E-3f, numeric_limits<float>::max());
+	DragFloat("Radius", ObjectCached->GetPointerDescaledRadius(), 1.f, 1E-3f, numeric_limits<float>::max());
 }

@@ -14,9 +14,9 @@ AttachableObject::~AttachableObject()
 DirectX::XMVECTOR AttachableObject::GetRotationQuat() const
 {
 	XMVECTOR ResultQuat = XMQuaternionRotationRollPitchYaw(
-		XMConvertToRadians(RelativeAngle.Pitch),
-		XMConvertToRadians(RelativeAngle.Yaw),
-		XMConvertToRadians(RelativeAngle.Roll)
+		XMConvertToRadians(RelativeAngle.x),
+		XMConvertToRadians(RelativeAngle.y),
+		XMConvertToRadians(RelativeAngle.z)
 	);
 	if (ParentObject)
 	{
@@ -25,9 +25,9 @@ DirectX::XMVECTOR AttachableObject::GetRotationQuat() const
 	return ResultQuat;
 }
 
-SPosition4D AttachableObject::GetAbsolutePosition() const
+XMFLOAT3 AttachableObject::GetAbsolutePosition() const
 {
-	SPosition4D ResultPostion;
+	XMFLOAT3 AbsPostion = RelativePosition;
 
 	if (ParentObject)
 	{
@@ -35,57 +35,66 @@ SPosition4D AttachableObject::GetAbsolutePosition() const
 		XMVECTOR Rotation;
 		XMVECTOR Scaling;
 
+		XMVECTOR vRelativePos = XMLoadFloat3(&AbsPostion);
+
+		XMFLOAT3 ParentAbsPos = ParentObject->GetAbsolutePosition();
+		XMVECTOR vParentAbsPos = XMLoadFloat3(&ParentAbsPos);
+
 		const XMMATRIX ParentTransformation = ParentObject->GetTransformation();
 		XMMatrixDecompose(&Scaling, &Rotation, &Translation, ParentTransformation);
 
 		XMVECTOR CurrentForward = XMVector3Rotate(Direction::GDefaultForward, Rotation);
 		XMVECTOR CurrentUp = XMVector3Rotate(Direction::GDefaultUp, Rotation);
 		XMVECTOR CurrentRight = XMVector3Rotate(Direction::GDefaultRight, Rotation);
-
-		ResultPostion.Position = CurrentForward * RelativePosition.z + CurrentUp * RelativePosition.y + CurrentRight * RelativePosition.x;
-
-		ResultPostion = ResultPostion + ParentObject->GetAbsolutePosition();
-	}
-	else
-	{
-		ResultPostion = RelativePosition;
+		XMStoreFloat3(&AbsPostion, (CurrentForward * vRelativePos.m128_f32[2] + CurrentUp * vRelativePos.m128_f32[1] + CurrentRight * vRelativePos.m128_f32[0]) + vParentAbsPos);
 	}
 
-	return ResultPostion;
+	return AbsPostion;
 }
 
-SAngle AttachableObject::GetAbsoluteAngle() const
+XMFLOAT3  AttachableObject::GetAbsoluteAngle() const
 {
-	SAngle ResultAngle = RelativeAngle;
+	XMFLOAT3 AbsAngle = RelativeAngle;
+
 	if (ParentObject)
 	{
-		ResultAngle = ResultAngle + ParentObject->GetAbsoluteAngle();
+		XMVECTOR vRelativeAngle = XMLoadFloat3(&RelativeAngle);
+
+		XMFLOAT3 ParentAbsAngle = ParentObject->GetAbsoluteAngle();
+		XMVECTOR vParentAbsAngle = XMLoadFloat3(&ParentAbsAngle);
+
+		XMStoreFloat3(&AbsAngle, vRelativeAngle + vParentAbsAngle);
 	}
-	return ResultAngle;
+	return AbsAngle;
 }
 
-SVector3D AttachableObject::GetAbsoluteScale() const
+XMFLOAT3  AttachableObject::GetAbsoluteScale() const
 {
-	SVector3D ResultScale = RelativeScale;
+	XMFLOAT3 AbsScale = RelativeScale;
 	if (ParentObject)
 	{
-		ResultScale = ResultScale * ParentObject->GetAbsoluteScale();
+		XMVECTOR vRelativeScale = XMLoadFloat3(&RelativeScale);
+
+		XMFLOAT3 ParentAbsScale = ParentObject->GetAbsoluteScale();
+		XMVECTOR vParentAbsScale = XMLoadFloat3(&ParentAbsScale);
+
+		XMStoreFloat3(&AbsScale, vRelativeScale * vParentAbsScale);
 	}
-	return ResultScale;
+	return AbsScale;
 }
 
 
 DirectX::XMMATRIX AttachableObject::GetTransformation() const
 {
 	XMMATRIX ResultTransformation = XMMatrixAffineTransformation(
-		XMVectorSet(RelativeScale.x, RelativeScale.y, RelativeScale.z, 0.0f),
+		XMLoadFloat3(&RelativeScale),
 		XMQuaternionIdentity(),
 		XMQuaternionRotationRollPitchYaw(
-			XMConvertToRadians(RelativeAngle.Pitch),
-			XMConvertToRadians(RelativeAngle.Yaw),
-			XMConvertToRadians(RelativeAngle.Roll)
+			XMConvertToRadians(RelativeAngle.x),
+			XMConvertToRadians(RelativeAngle.y),
+			XMConvertToRadians(RelativeAngle.z)
 		),
-		RelativePosition.Position
+		XMLoadFloat3(&RelativePosition)
 	);
 
 	if (ParentObject)

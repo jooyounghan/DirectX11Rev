@@ -1,38 +1,38 @@
 #pragma once
-#include "DefineType.h"
+#include <DirectXMath.h>
 
 class MathematicalHelper
 {
 public:
-	static float InnerProduct(const SVector3D& Vector1, const SVector3D& Vector2);
+	static float InnerProduct(const DirectX::XMFLOAT3& Vector1, const DirectX::XMFLOAT3& Vector2);
 
-	static SVector3D Projection(const SVector3D& RefVector, const SVector3D& TargetVector);
+	static DirectX::XMFLOAT3 Projection(const DirectX::XMFLOAT3& RefVector, const DirectX::XMFLOAT3& TargetVector);
 
 	static void GramShmidt(
-		const SVector3D& Vector1In,
-		const SVector3D& Vector2In,
-		const SVector3D& Vector3In,
-		SVector3D& Vector2Out,
-		SVector3D& Vector3Out
+		const DirectX::XMFLOAT3& Vector1In,
+		const DirectX::XMFLOAT3& Vector2In,
+		const DirectX::XMFLOAT3& Vector3In,
+		DirectX::XMFLOAT3& Vector2Out,
+		DirectX::XMFLOAT3& Vector3Out
 	);
 
 public:
 	static void GetTangentBitangent(
-		const SPosition3D& Pos0In,
-		const SPosition3D& Pos1In,
-		const SPosition3D& Pos2In,
-		const SCoordinate2D& TexCoord0In,
-		const SCoordinate2D& TexCoord1In,
-		const SCoordinate2D& TexCoord2In,
-		const SVector3D& Normal0In,
-		const SVector3D& Normal1In,
-		const SVector3D& Normal2In,
-		SVector3D& Tangent0Out,
-		SVector3D& Tangent1Out,
-		SVector3D& Tangent2Out,
-		SVector3D& Bitangent0Out,
-		SVector3D& Bitangent1Out,
-		SVector3D& Bitangent2Out
+		const DirectX::XMFLOAT3& Pos0In,
+		const DirectX::XMFLOAT3& Pos1In,
+		const DirectX::XMFLOAT3& Pos2In,
+		const DirectX::XMFLOAT2& TexCoord0In,
+		const DirectX::XMFLOAT2& TexCoord1In,
+		const DirectX::XMFLOAT2& TexCoord2In,
+		const DirectX::XMFLOAT3& Normal0In,
+		const DirectX::XMFLOAT3& Normal1In,
+		const DirectX::XMFLOAT3& Normal2In,
+		DirectX::XMFLOAT3& Tangent0Out,
+		DirectX::XMFLOAT3& Tangent1Out,
+		DirectX::XMFLOAT3& Tangent2Out,
+		DirectX::XMFLOAT3& Bitangent0Out,
+		DirectX::XMFLOAT3& Bitangent1Out,
+		DirectX::XMFLOAT3& Bitangent2Out
 	);
 
 };

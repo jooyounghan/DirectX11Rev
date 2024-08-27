@@ -11,18 +11,18 @@ public:
 	virtual ~AMeshAsset();
 
 public:
-	Vertexable<SPosition3D> Positions;
-	Vertexable<SCoordinate2D> UVTextures;
-	Vertexable<SVector3D> Normals;
-	Vertexable<SVector3D> Tangents;
-	Vertexable<SVector3D> Bitangents;
+	Vertexable<XMFLOAT3> Positions;
+	Vertexable<XMFLOAT2> UVTextures;
+	Vertexable<XMFLOAT3> Normals;
+	Vertexable<XMFLOAT3> Tangents;
+	Vertexable<XMFLOAT3> Bitangents;
 
 public:
 	virtual DXGI_FORMAT GetIndexFormat() override { return DXGI_FORMAT_R32_UINT; }
 
 public:
 	inline std::vector<ID3D11Buffer*> GetPositionBuffer() { return { Positions.GetVertexBuffer() }; }
-	inline std::vector<UINT> GetPositionStride() { return { sizeof(SPosition3D)}; }
+	inline std::vector<UINT> GetPositionStride() { return { sizeof(XMFLOAT3)}; }
 	inline std::vector<UINT> GetPositionOffset() { return { 0 }; }
 
 public:

@@ -1,21 +1,21 @@
 #pragma once
-#include "ABoundingComponent.h"
+#include "ABoundingObject.h"
  
-class OrientedBoundingBox;
+class OBBObject;
 
-class BoundingSphere : public ABoundingComponent
+class BoundingSphereObject : public ABoundingObject, public DirectX::BoundingSphere
 {
 public:
-	BoundingSphere(
+	BoundingSphereObject(
 		GraphicsPipeline* GraphicsPipelineInstances
 	);
 
 public:
-	BoundingSphere(
+	BoundingSphereObject(
 		GraphicsPipeline* GraphicsPipelineInstances,
 		const float& RadiusIn
 	);
-	virtual ~BoundingSphere();
+	virtual ~BoundingSphereObject();
 
 private:
 	void InitBoundingSphere(ID3D11Device* DeviceIn);
@@ -27,15 +27,9 @@ private:
 	static std::shared_ptr<Debugable> CreateDebugSphereObject(ID3D11Device* DeviceIn);
 
 protected:
-	XMVECTOR Center;
-	float Radius;
-	MakeGetter(Center);
-	MakeGetter(Radius);
-	MakePointerGetter(Radius);
-
-protected:
-	float ScaledRadius;
-	MakeGetter(ScaledRadius);
+	float DescaledRadius;
+	MakeGetter(DescaledRadius);
+	MakePointerGetter(DescaledRadius);
 
 public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) override;
@@ -45,10 +39,6 @@ public:
 
 public:
 	virtual void UpdateObject(const float& DeltaTimeIn) override;
-
-public:
-	bool IsInsideOrOnPlane(const Plane& PlaneIn);
-	bool IsOverlappedWithSphere(BoundingSphere* SphereIn);
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

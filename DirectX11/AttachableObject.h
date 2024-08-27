@@ -44,9 +44,9 @@ public:
 	virtual DirectX::XMVECTOR GetRotationQuat() const override;
 
 public:
-	virtual SPosition4D GetAbsolutePosition() const override;
-	virtual SAngle GetAbsoluteAngle() const override;
-	virtual SVector3D GetAbsoluteScale() const override;
+	virtual DirectX::XMFLOAT3 GetAbsolutePosition() const override;
+	virtual DirectX::XMFLOAT3 GetAbsoluteAngle() const override;
+	virtual DirectX::XMFLOAT3 GetAbsoluteScale() const override;
 
 public:
 	virtual DirectX::XMMATRIX GetTransformation() const override;

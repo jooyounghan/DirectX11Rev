@@ -20,9 +20,9 @@ public:
 	virtual void Visit(MeshObject* AttachableInstance) override;
 
 public:
-	virtual void Visit(BoundingSphere* BoundingSphereInstance) override;
-	virtual void Visit(OrientedBoundingBox* OBBInstance) override;
-	virtual void Visit(BoundingFrustum* BoundingFrustumInstance) override;
+	virtual void Visit(BoundingSphereObject* BoundingSphereInstance) override;
+	virtual void Visit(OBBObject* OBBInstance) override;
+	virtual void Visit(BoundingFrustumObject* BoundingFrustumInstance) override;
 
 public:
 	virtual void Visit(Viewable* BoundingFrustumInstance) override;

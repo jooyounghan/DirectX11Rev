@@ -38,13 +38,13 @@ std::vector<UINT> SkeletalMeshAsset::GetStrides()
 {
 	return std::vector<UINT>
 	{
-		sizeof(SPosition3D),
-		sizeof(SCoordinate2D),
-		sizeof(SVector3D),
-		sizeof(SVector3D),
-		sizeof(SVector3D),
-		sizeof(SVector4D),
-		sizeof(SVector4D)
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT2),
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT4),
+		sizeof(XMINT4)
 	};
 }
 
@@ -86,12 +86,12 @@ void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 		// BlendWeight
 		size_t BlendWeightCount = BlendWeight.Vertices.size();
 		fwrite(&BlendWeightCount, sizeof(size_t), 1, OutputAssetFile);
-		fwrite(BlendWeight.Vertices.data(), sizeof(SVector4D), BlendWeightCount, OutputAssetFile);
+		fwrite(BlendWeight.Vertices.data(), sizeof(XMFLOAT4), BlendWeightCount, OutputAssetFile);
 
 		// BlendIndex
 		size_t BlendIndexCount = BlendIndex.Vertices.size();
 		fwrite(&BlendIndexCount, sizeof(size_t), 1, OutputAssetFile);
-		fwrite(BlendIndex.Vertices.data(), sizeof(SVector4D), BlendIndexCount, OutputAssetFile);
+		fwrite(BlendIndex.Vertices.data(), sizeof(XMINT4), BlendIndexCount, OutputAssetFile);
 
 		fclose(OutputAssetFile);
 	}
@@ -118,13 +118,13 @@ void SkeletalMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetM
 	size_t BlendWeightCount;
 	fread(&BlendWeightCount, sizeof(size_t), 1, FileIn);
 	BlendWeight.Vertices.resize(BlendWeightCount);
-	fread(BlendWeight.Vertices.data(), sizeof(SVector4D), BlendWeightCount, FileIn);
+	fread(BlendWeight.Vertices.data(), sizeof(XMFLOAT4), BlendWeightCount, FileIn);
 
 	// BlendIndex
 	size_t BlendIndexCount;
 	fread(&BlendIndexCount, sizeof(size_t), 1, FileIn);
 	BlendIndex.Vertices.resize(BlendIndexCount);
-	fread(BlendIndex.Vertices.data(), sizeof(SVector4D), BlendIndexCount, FileIn);
+	fread(BlendIndex.Vertices.data(), sizeof(XMINT4), BlendIndexCount, FileIn);
 
 	Initialize(DeviceIn);
 }

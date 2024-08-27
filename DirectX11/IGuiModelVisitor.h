@@ -8,9 +8,9 @@ class PlaceableObject;
 
 class MeshObject;
 
-class BoundingSphere;
-class OrientedBoundingBox;
-class BoundingFrustum;
+class BoundingSphereObject;
+class OBBObject;
+class BoundingFrustumObject;
 
 class Viewable;
 
@@ -23,9 +23,9 @@ public:
 	virtual void Visit(MeshObject* MeshObjectInstance) = 0;
 
 public:
-	virtual void Visit(BoundingSphere* BoundingSphereInstance) = 0;
-	virtual void Visit(OrientedBoundingBox* OBBInstance) = 0;
-	virtual void Visit(BoundingFrustum* BoundingFrustumInstance) = 0;
+	virtual void Visit(BoundingSphereObject* BoundingSphereInstance) = 0;
+	virtual void Visit(OBBObject* OBBInstance) = 0;
+	virtual void Visit(BoundingFrustumObject* BoundingFrustumInstance) = 0;
 
 public:
 	virtual void Visit(Viewable* BoundingFrustumInstance) = 0;

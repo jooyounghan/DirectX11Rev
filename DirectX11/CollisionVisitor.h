@@ -12,9 +12,9 @@ protected:
 	IIntersectable* CheckObjectCahced;
 
 public:
-	virtual bool Visit(BoundingSphere* BSInstance) override;
-	virtual bool Visit(OrientedBoundingBox* OBBInstance) override;
-	virtual bool Visit(BoundingFrustum* FrustumInstance) override;
+	virtual bool Visit(BoundingSphereObject* BSInstance) override;
+	virtual bool Visit(OBBObject* OBBInstance) override;
+	virtual bool Visit(BoundingFrustumObject* FrustumInstance) override;
 
 protected:
 	template<typename T>
@@ -27,24 +27,24 @@ protected:
 		T* SpecifiedObjectCached;
 
 	public:
-		virtual bool Visit(BoundingSphere* BSInstance) override;
-		virtual bool Visit(OrientedBoundingBox* OBBInstance) override;
-		virtual bool Visit(BoundingFrustum* FrustumInstance) override;
+		virtual bool Visit(BoundingSphereObject* BSInstance) override;
+		virtual bool Visit(OBBObject* OBBInstance) override;
+		virtual bool Visit(BoundingFrustumObject* FrustumInstance) override;
 	};
 };
 
 class CollisionLogic
 {
 public:
-	static bool CheckCollision(BoundingSphere* t1, BoundingSphere* t2);
-	static bool CheckCollision(BoundingSphere* t1, OrientedBoundingBox* t2);
-	static bool CheckCollision(BoundingSphere* t1, BoundingFrustum* t2);
-	static bool CheckCollision(OrientedBoundingBox* t1, BoundingSphere* t2);
-	static bool CheckCollision(OrientedBoundingBox* t1, OrientedBoundingBox* t2);
-	static bool CheckCollision(OrientedBoundingBox* t1, BoundingFrustum* t2);
-	static bool CheckCollision(BoundingFrustum* t1, BoundingSphere* t2);
-	static bool CheckCollision(BoundingFrustum* t1, OrientedBoundingBox* t2);
-	static bool CheckCollision(BoundingFrustum* t1, BoundingFrustum* t2);
+	static bool CheckCollision(BoundingSphereObject* t1, BoundingSphereObject* t2);
+	static bool CheckCollision(BoundingSphereObject* t1, OBBObject* t2);
+	static bool CheckCollision(BoundingSphereObject* t1, BoundingFrustumObject* t2);
+	static bool CheckCollision(OBBObject* t1, BoundingSphereObject* t2);
+	static bool CheckCollision(OBBObject* t1, OBBObject* t2);
+	static bool CheckCollision(OBBObject* t1, BoundingFrustumObject* t2);
+	static bool CheckCollision(BoundingFrustumObject* t1, BoundingSphereObject* t2);
+	static bool CheckCollision(BoundingFrustumObject* t1, OBBObject* t2);
+	static bool CheckCollision(BoundingFrustumObject* t1, BoundingFrustumObject* t2);
 };
 
 template<typename T>
@@ -54,19 +54,19 @@ inline CollisionVisitor::CollisionVisitorWrapper<T>::CollisionVisitorWrapper(T* 
 }
 
 template<typename T>
-inline bool CollisionVisitor::CollisionVisitorWrapper<T>::Visit(BoundingSphere* BSInstance)
+inline bool CollisionVisitor::CollisionVisitorWrapper<T>::Visit(BoundingSphereObject* BSInstance)
 {
 	return CollisionLogic::CheckCollision(SpecifiedObjectCached, BSInstance);
 }
 
 template<typename T>
-inline bool CollisionVisitor::CollisionVisitorWrapper<T>::Visit(OrientedBoundingBox* OBBInstance)
+inline bool CollisionVisitor::CollisionVisitorWrapper<T>::Visit(OBBObject* OBBInstance)
 {
 	return CollisionLogic::CheckCollision(SpecifiedObjectCached, OBBInstance);
 }
 
 template<typename T>
-inline bool CollisionVisitor::CollisionVisitorWrapper<T>::Visit(BoundingFrustum* FrustumInstance)
+inline bool CollisionVisitor::CollisionVisitorWrapper<T>::Visit(BoundingFrustumObject* FrustumInstance)
 {
 	return CollisionLogic::CheckCollision(SpecifiedObjectCached, FrustumInstance);
 }
