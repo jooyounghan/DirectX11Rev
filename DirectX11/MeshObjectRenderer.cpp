@@ -29,7 +29,7 @@ void MeshObjectRenderer::ResetRendering()
 
 void MeshObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn)
 {
-	AMeshAsset* MeshAssetInstance = MeshObjectIn->GetMeshAssetInstance();
+	AMeshAsset* MeshAssetInstance = MeshObjectIn->GetMeshAssetInstance().get();
 	if (MeshAssetInstance)
 	{
 		const vector<ID3D11Buffer*> VertexBuffers = MeshAssetInstance->GetVertexBuffers();

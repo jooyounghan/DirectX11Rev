@@ -122,11 +122,7 @@ void BoundingSphereObject::UpdateObject(const float& DeltaTimeIn)
 	RelativeScale.y /= DescaledRadius;
 	RelativeScale.z /= DescaledRadius;
 
-	XMVECTOR Scaling;
-	XMVECTOR Rotation;
-	XMVECTOR Translation;
-	XMMatrixDecompose(&Scaling, &Rotation, &Translation, GetTransformation());
-	XMStoreFloat3(&Center, Translation);
+	Center = GetAbsolutePosition();
 
 	for (auto& ChildObject : AttachedChildrenObjects)
 	{

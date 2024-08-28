@@ -1,11 +1,18 @@
 #pragma once
-#include "IEditorLinkedWindow.h"
+#include "IWindow.h"
 
-class ModelDetailWindow : public IEditorLinkedWindow
+class EditorWorld;
+class AssetManager;
+
+class ModelDetailWindow : public IWindow
 {
 public:
 	ModelDetailWindow(EditorWorld* EditorWorldIn);
 	virtual ~ModelDetailWindow();
+
+protected:
+	EditorWorld* EditorWorldCached = nullptr;
+	AssetManager* AssetManagerCached = nullptr;
 
 public:
 	virtual void RenderWindow() override;

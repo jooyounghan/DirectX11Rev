@@ -8,6 +8,6 @@ using namespace ImGui;
 
 void BoundingSphereInformationDrawer::DrawInformation()
 {
-	ImGui::SeparatorText("Boundging Sphere");
+	SeparatorText("Boundging Sphere");
 	DragFloat("Radius", ObjectCached->GetPointerDescaledRadius(), 1.f, 1E-3f, numeric_limits<float>::max());
 }

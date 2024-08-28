@@ -27,7 +27,7 @@ using namespace DirectX;
 MapAsset::MapAsset(const std::string& MapNameIn, AssetManager* AssetManagerInstance, bool LoadAsFile)
 	: 
 	AssetManagerCached(AssetManagerInstance),
-	AAssetFile(LoadAsFile ? MapNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::MapAsset)] : MapNameIn, EAssetType::MapAsset)
+	AAssetFile(LoadAsFile ? MapNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::Map)] : MapNameIn, EAssetType::Map)
 {
 	GraphicsPipelineCached = AssetManagerCached->GetGraphicsPipelineCached();
 }
@@ -37,7 +37,7 @@ MapAsset::~MapAsset()
 	Serialize();
 }
 
-void MapAsset::AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
+void MapAsset::AddRenderObject(std::shared_ptr<AMeshAsset> MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
 	TestActor* ta = PlaceableAddHelper<TestActor>(GraphicsPipelineCached);
 	MeshObject* AddedObject = ta->AddAttachedObject<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
@@ -54,9 +54,13 @@ void MapAsset::UpdateMap(const float& DeltaTimeIn)
 	{
 		ro->UpdateObject(DeltaTimeIn);
 	}
-
 	
-	BoundingFrustumObject* CameraFrustum = Camera::TestCamera->GetCamearaFrustum();
+	UpdateRenderState();
+}
+
+void MapAsset::UpdateRenderState()
+{
+	BoundingFrustumObject* CameraFrustum = CameraCached->GetCamearaFrustum();
 
 	for (auto& ro : RootPlaceables)
 	{

@@ -3,15 +3,15 @@
 #include <DirectXMath.h>
 
 class ModelDetailWindow;
-
+class AssetManager;
 
 class ModelDetailedInformationVisitor : public IGuiModelVisitor
 {
 public:
-	ModelDetailedInformationVisitor(ModelDetailWindow* ModelDetailWindowIn);
+	ModelDetailedInformationVisitor(AssetManager* AssetManagerInstanceIn);
 
 protected:
-	ModelDetailWindow* ModelDetailWindowCached;
+	AssetManager* AssetManagerCached;
 
 public:
 	virtual void Visit(PlaceableObject* PlaceableInstance) override;

@@ -1,7 +1,7 @@
 #pragma once
 #include "ISerializable.h"
 #include "HeaderHelper.h"
-#include <array>
+#include <memory>
 
 enum class EAssetType
 {
@@ -15,7 +15,7 @@ enum class EAssetType
 	Bone,
 
 	// Map
-	MapAsset,
+	Map,
 
 	// Texture
 	Texture,
@@ -23,7 +23,7 @@ enum class EAssetType
 	// Animation
 	Animation,
 
-	NumAssetType,
+	NumAssetType
 };
 
 constexpr size_t GetAssetTypeAsIndex(EAssetType AssetType) { return static_cast<size_t>(AssetType); }

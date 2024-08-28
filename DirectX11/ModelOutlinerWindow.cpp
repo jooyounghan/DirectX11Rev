@@ -23,8 +23,12 @@ const char* ModelOutlinerWindow::AddPlaceableModalID = "Add Placeable Object";
 const char* ModelOutlinerWindow::AddAttachableModalID = "Add Attachable Object";
 
 ModelOutlinerWindow::ModelOutlinerWindow(EditorWorld* EditorWorldIn)
-	: IEditorLinkedWindow(EditorWorldIn)
+	: EditorWorldCached(EditorWorldIn)
 {
+    if (EditorWorldCached != nullptr)
+    {
+        GameWorldCached = EditorWorldCached->GetGameWorldCached();
+    }
 }
 
 ModelOutlinerWindow::~ModelOutlinerWindow()

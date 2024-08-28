@@ -1,11 +1,12 @@
 #include "ModelDetailedInformationVisitor.h"
 #include "ModelDetailWindow.h"
 
+#include "GameWorld.h"
+
 #include "MeshObject.h"
 #include "BoundingSphereObject.h"
 #include "OBBObject.h"
 #include "BoundingFrustumObject.h"
-
 #include "Viewable.h"
 
 #include "TransformationInformationDrawer.h"
@@ -15,7 +16,6 @@
 #include "MeshObjectInformationDrawer.h"
 
 // 특정 개체 참조 후 삭제 예정
-#include "AttachableObject.h"
 #include "PlaceableObject.h"
 
 using namespace std;
@@ -23,8 +23,8 @@ using namespace ImGui;
 using namespace DirectX;
 
 
-ModelDetailedInformationVisitor::ModelDetailedInformationVisitor(ModelDetailWindow* ModelDetailWindowIn)
-	: ModelDetailWindowCached(ModelDetailWindowIn)
+ModelDetailedInformationVisitor::ModelDetailedInformationVisitor(AssetManager* AssetManagerInstanceIn)
+	: AssetManagerCached(AssetManagerInstanceIn)
 {
 }
 
@@ -45,7 +45,7 @@ void ModelDetailedInformationVisitor::Visit(MeshObject* MeshObjectInsatnce)
     TransformationInformationDrawer TransformDrawer(MeshObjectInsatnce, MeshObjectInsatnce->GetParentObject());
     TransformDrawer.DrawInformation();
 
-    MeshObjectInformationDrawer MeshObjectDrawer(MeshObjectInsatnce);
+    MeshObjectInformationDrawer MeshObjectDrawer(MeshObjectInsatnce, AssetManagerCached);
     MeshObjectDrawer.DrawInformation();
 
     PopID();

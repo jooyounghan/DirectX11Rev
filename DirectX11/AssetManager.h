@@ -5,14 +5,18 @@
 
 #include <string>
 #include <unordered_map>
+#include <list>
 #include <memory>
-#include <deque>
+#include <stack>
 
+struct ID3D11Device;
 struct aiScene;
 struct aiNode;
 struct aiMesh;
 
 class GraphicsPipeline;
+
+enum class EAssetType;
 
 class AAssetFile;
 class AMeshAsset;
@@ -34,6 +38,15 @@ protected:
 public:
 	void LoadAssetFile(const std::string& AssetPathIn);
 
+private:
+	template<typename T, typename ...Args>
+	void LoadAssetFileHelper(
+		FILE* FileIn,
+		std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer,
+		const std::string& AssetName,
+		Args... AssetConstructArgs
+	);
+
 public:
 	void LoadModelFile(const std::string& FilePathIn);
 
@@ -46,12 +59,37 @@ private:
 	bool HasBone(const aiScene* const Scene);
 
 private:
-	std::unordered_map<std::string, std::shared_ptr<AAssetFile>> ManagingAssets;
 	std::unordered_map<std::string, std::shared_ptr<MapAsset>> ManagingMaps;
+	std::unordered_map<std::string, std::shared_ptr<BoneAsset>> ManagingBones;
+	std::unordered_map<std::string, std::shared_ptr<StaticMeshAsset>> ManagingStaticMeshes;
+	std::unordered_map<std::string, std::shared_ptr<SkeletalMeshAsset>> ManagingSkeletalMeshes;
+	std::unordered_map<std::string, std::list<std::string>> FileNameToAssetNames;
 	MakeGetter(ManagingMaps);
+	MakeGetter(ManagingBones);
+	MakeGetter(ManagingStaticMeshes);
+	MakeGetter(ManagingSkeletalMeshes);
+
+private:
+	std::unordered_map<std::string, std::shared_ptr<AAssetFile>> ManagingAssets;
+	
+public:
+	AAssetFile* GetManagingAsset(const std::string& AssetNameIn);
+
+private:
+	std::stack<std::string> FileNameStack;
 
 public:
-	AAssetFile* GetAsset(const std::string AssetName);
+	std::shared_ptr<MapAsset> GetManagingMap(const std::string MapAssetName);
+	std::shared_ptr<BoneAsset> GetManagingBone(const std::string MapAssetName);
+	std::shared_ptr<StaticMeshAsset> GetManagingStaticMesh(const std::string MapAssetName);
+	std::shared_ptr<SkeletalMeshAsset> GetManagingSkeletalMesh(const std::string MapAssetName);
+
+private:
+	template<typename T> 
+	static std::shared_ptr<T> GetManagingAssetHelper(
+		std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer, 
+		const std::string AssetName
+	);
 
 private:
 	void ProcessNodeForMesh(

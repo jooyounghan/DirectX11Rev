@@ -8,13 +8,9 @@ using namespace std;
 
 const char* Camera::CameraIdentifier = "Camera";
 
-Camera* Camera::TestCamera = nullptr;
-
 Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, const UINT& HeightIn)
 	: Viewable(GraphicsPipelineInstance, WidthIn, HeightIn)
 {
-	TestCamera = this;
-
 	CamearaFrustum = make_unique<BoundingFrustumObject>(GraphicsPipelineInstance, this);
 	CamearaFrustum->SetParentObject(this);
 

@@ -29,7 +29,7 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHand
 	if (tests.empty())
 	{
 		MapInstances.emplace(0, make_shared<MapAsset>("TestMap", AssetManagerInstance.get(), true));
-		CurrentMap = MapInstances[0].get();
+		CurrentMap = (MapAsset*)MapInstances[0].get();
 	}
 	else
 	{
@@ -38,8 +38,8 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHand
 		{
 			MapInstances.emplace(idx, test.second);
 		}
-		CurrentMap = MapInstances[0].get();
 	}
+	CurrentMap = MapInstances[0].get();
 
 	EditorActor* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
 	if (EditorActorInstnace != nullptr)
@@ -65,7 +65,6 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance)
 
 GameWorld::~GameWorld()
 {
-	bool test = true;
 }
 
 void GameWorld::LoadGameWorld()

@@ -1,4 +1,4 @@
-#include "BoundingComponentRenderer.h"
+#include "BoundingObjectRenderer.h"
 #include "ABoundingObject.h"
 #include "Debugable.h"
 
@@ -8,12 +8,12 @@
 #include "MapAsset.h"
 
 
-BoundingComponentRenderer::BoundingComponentRenderer(PSOObject* PSOObjectIn)
+BoundingObjectRenderer::BoundingObjectRenderer(PSOObject* PSOObjectIn)
 	: ARenderer(PSOObjectIn)
 {
 }
 
-void BoundingComponentRenderer::PresetRendering(const unsigned int& RTVCountIn, ID3D11RenderTargetView** RTVsIn, D3D11_VIEWPORT* ViewportIn, ID3D11DepthStencilView* DSVIn, Camera* CameraIn, MapAsset* MapIn)
+void BoundingObjectRenderer::PresetRendering(const unsigned int& RTVCountIn, ID3D11RenderTargetView** RTVsIn, D3D11_VIEWPORT* ViewportIn, ID3D11DepthStencilView* DSVIn, Camera* CameraIn, MapAsset* MapIn)
 {
 	PSOObjectCached->SetPipelineObject(RTVCountIn, RTVsIn, ViewportIn, DSVIn);
 
@@ -21,17 +21,17 @@ void BoundingComponentRenderer::PresetRendering(const unsigned int& RTVCountIn, 
 	PSOObjectCached->SetVSConstantBuffers(0, 1, ViewProjBuffer);
 }
 
-void BoundingComponentRenderer::ResetRendering()
+void BoundingObjectRenderer::ResetRendering()
 {
 	PSOObjectCached->ResetVSConstantBuffers(0, 1);
 }
 
-void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn)
+void BoundingObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn)
 {
 	// Do Nothing
 }
 
-void BoundingComponentRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingObject* MeshObjectIn)
+void BoundingObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingObject* MeshObjectIn)
 {
 	Debugable* DebugObject = MeshObjectIn->GetDebugObject();
 

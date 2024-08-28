@@ -3,10 +3,10 @@
 
 class ABoundingObject;
 
-class BoundingComponentRenderer : public ARenderer
+class BoundingObjectRenderer : public ARenderer
 {
 public:
-	BoundingComponentRenderer(PSOObject* PSOObjectIn);
+	BoundingObjectRenderer(PSOObject* PSOObjectIn);
 
 public:
 	virtual void PresetRendering(

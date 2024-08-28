@@ -1,12 +1,16 @@
 #pragma once
-#include "IEditorLinkedWindow.h"
+#include "IWindow.h"
+
+class EditorWorld;
+class GameWorld;
+
+class MapAsset;
 
 class AObject;
 class PlaceableObject;
 class AttachableObject;
-class MapAsset;
 
-class ModelOutlinerWindow : public IEditorLinkedWindow
+class ModelOutlinerWindow : public IWindow
 {
 public:
 	ModelOutlinerWindow(EditorWorld* EditorWorldIn);
@@ -16,6 +20,8 @@ public:
 	virtual void RenderWindow() override;
 
 private:
+	EditorWorld* EditorWorldCached = nullptr;
+	GameWorld* GameWorldCached = nullptr;
 	MapAsset* CurrentMap = nullptr;
 
 private:
@@ -58,8 +64,5 @@ private:
 private:
 	void DoModalAddPlaceableObject();
 	void DoModalAddAttachableObject();
-
-
-
 };
 

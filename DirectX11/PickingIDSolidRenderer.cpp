@@ -14,7 +14,7 @@ PickingIDSolidRenderer::PickingIDSolidRenderer(PSOObject* PSOObjectIn)
 
 void PickingIDSolidRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn)
 {
-	AMeshAsset* MeshAssetInstance = MeshObjectIn->GetMeshAssetInstance();
+	AMeshAsset* MeshAssetInstance = MeshObjectIn->GetMeshAssetInstance().get();
 
 	if (MeshAssetInstance)
 	{

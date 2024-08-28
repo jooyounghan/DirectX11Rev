@@ -106,11 +106,8 @@ void SkeletalMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetM
 	BoneAssetName.resize(LinkedBoneAssetNameCount);
 	fread(BoneAssetName.data(), sizeof(char), LinkedBoneAssetNameCount, FileIn);
 
-	AAssetFile* AssetFile = AssetManagerIn->GetAsset(BoneAssetName);
-	if (AssetFile != nullptr)
-	{
-		LinkedBoneAsset = (BoneAsset*)AssetFile;
-	}
+	std::shared_ptr<BoneAsset> BoneAssetFile = AssetManagerIn->GetManagingBone(BoneAssetName);
+	LinkedBoneAsset = BoneAssetFile;
 
 	DeserializeBaseMeshData(FileIn);
 

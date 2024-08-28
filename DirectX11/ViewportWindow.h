@@ -1,10 +1,14 @@
 #pragma once
-#include "IEditorLinkedWindow.h"
+#include "IWindow.h"
 
-class MapAsset;
+class EditorWorld;
+class GameWorld;
+class AssetManager;
+
 class EditorCamera; 
+class MapAsset;
 
-class ViewportWindow : public IEditorLinkedWindow
+class ViewportWindow : public IWindow
 {
 public: 
 	ViewportWindow(EditorWorld* EditorWorldIn);
@@ -14,6 +18,9 @@ public:
 	virtual void RenderWindow() override;
 
 private:
+	EditorWorld* EditorWorldCached = nullptr;
+	GameWorld* GameWorldCached = nullptr;
+	AssetManager* AssetManagerCached = nullptr;
 	EditorCamera* EditorCameraCached = nullptr;
 
 private:

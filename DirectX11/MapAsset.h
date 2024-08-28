@@ -5,7 +5,7 @@
 #include "StaticAssertHelper.h"
 
 #include "MeshObjectRenderer.h"
-#include "BoundingComponentRenderer.h"
+#include "BoundingObjectRenderer.h"
 
 #include "PlaceableObject.h"
 #include "AttachableObject.h"
@@ -56,11 +56,14 @@ protected:
 	MakeGetter(IdToPlaceables);
 
 public:
-	void AddRenderObject(AMeshAsset* MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
+	void AddRenderObject(std::shared_ptr<AMeshAsset> MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
+	void RenderMap(PSOManager* PSOManagerInstance);
 
 public:
 	void UpdateMap(const float& DeltaTimeIn);
-	void RenderMap(PSOManager* PSOManagerInstance);
+
+private:
+	void UpdateRenderState();
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;

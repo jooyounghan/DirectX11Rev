@@ -12,7 +12,7 @@ public:
 	MeshObject(GraphicsPipeline* GraphicsPipelineInstances);
 	MeshObject(
 		GraphicsPipeline* GraphicsPipelineInstances, 
-		AMeshAsset* MeshAssetInstanceIn
+		std::shared_ptr<AMeshAsset> MeshAssetInstanceIn
 	);
 	virtual ~MeshObject();
 
@@ -26,7 +26,7 @@ protected:
 	static size_t MeshObjectCount;
 
 protected:
-	AMeshAsset* MeshAssetInstance = nullptr;
+	std::shared_ptr<AMeshAsset> MeshAssetInstance = nullptr;
 	MakeSetterGetter(MeshAssetInstance);
 
 public:

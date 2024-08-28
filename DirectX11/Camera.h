@@ -14,9 +14,6 @@ public:
 	virtual ~Camera();
 
 public:
-	static Camera* TestCamera;
-
-public:
 	static const char* CameraIdentifier;
 
 protected:

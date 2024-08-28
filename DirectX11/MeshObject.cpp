@@ -2,7 +2,8 @@
 #include "GraphicsPipeline.h"
 
 #include "AssetManager.h"
-#include "AMeshAsset.h"
+#include "StaticMeshAsset.h"
+#include "SkeletalMeshAsset.h"
 
 #include "PSOObject.h"
 #include "IGuiModelVisitor.h"
@@ -21,7 +22,7 @@ MeshObject::MeshObject(GraphicsPipeline* GraphicsPipelineInstance)
 
 MeshObject::MeshObject(
 	GraphicsPipeline* GraphicsPipelineInstance, 
-	AMeshAsset* MeshAssetInstanceIn
+	std::shared_ptr<AMeshAsset> MeshAssetInstanceIn
 )
 	: AttachableObject(GraphicsPipelineInstance), MeshAssetInstance(MeshAssetInstanceIn)
 {
@@ -60,9 +61,11 @@ void MeshObject::OnSerialize(FILE* FileIn)
 	AObject::OnSerialize(FileIn);
 
 	// Mesh Asset Name
-	size_t MeshAssetNameCount = 0;
 	if (MeshAssetInstance != nullptr)
 	{
+		fwrite(&MeshAssetInstance->GetAssetType(), sizeof(EAssetType), 1, FileIn);
+
+		size_t MeshAssetNameCount = 0;
 		const string& AssetName = MeshAssetInstance->GetAssetName();
 		MeshAssetNameCount = AssetName.size();
 		fwrite(&MeshAssetNameCount, sizeof(size_t), 1, FileIn);
@@ -70,7 +73,8 @@ void MeshObject::OnSerialize(FILE* FileIn)
 	}
 	else
 	{
-		fwrite(&MeshAssetNameCount, sizeof(size_t), 1, FileIn);
+		EAssetType NoneType = EAssetType::None;
+		fwrite(&NoneType, sizeof(EAssetType), 1, FileIn);
 	}
 }
 
@@ -78,15 +82,27 @@ void MeshObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	AObject::OnDeserialize(FileIn, AssetManagerIn);
 
-	string MeshAssetName;
-	size_t MeshAssetNameCount;
-	fread(&MeshAssetNameCount, sizeof(size_t), 1, FileIn);
-	MeshAssetName.resize(MeshAssetNameCount);
-	fread(MeshAssetName.data(), sizeof(char), MeshAssetNameCount, FileIn);
+	EAssetType MeshAssetType;
+	fread(&MeshAssetType, sizeof(EAssetType), 1, FileIn);
 
-	AAssetFile* AssetFile = AssetManagerIn->GetAsset(MeshAssetName);
-	if (AssetFile != nullptr)
+	if (MeshAssetType != EAssetType::None)
 	{
-		MeshAssetInstance = (AMeshAsset*)AssetFile;
+		size_t MeshAssetNameCount;
+		fread(&MeshAssetNameCount, sizeof(size_t), 1, FileIn);
+
+		string MeshAssetName;
+		MeshAssetName.resize(MeshAssetNameCount);
+		fread(MeshAssetName.data(), sizeof(char), MeshAssetNameCount, FileIn);
+
+		if (MeshAssetType == EAssetType::StaticMesh)
+		{
+			MeshAssetInstance = AssetManagerIn->GetManagingStaticMesh(MeshAssetName);
+		}
+		else if (MeshAssetType == EAssetType::SkeletalMesh)
+		{
+			MeshAssetInstance = AssetManagerIn->GetManagingSkeletalMesh(MeshAssetName);
+		}
+		else;
 	}
+
 }

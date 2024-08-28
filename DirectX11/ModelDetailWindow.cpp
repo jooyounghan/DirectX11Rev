@@ -1,16 +1,24 @@
 #include "ModelDetailWindow.h"
-
 #include "ModelDetailedInformationVisitor.h"
 
 #include "EditorWorld.h"
+#include "GameWorld.h"
 #include "AttachableObject.h"
 
 using namespace std;
 using namespace ImGui;
 
 ModelDetailWindow::ModelDetailWindow(EditorWorld* EditorWorldIn)
-	: IEditorLinkedWindow(EditorWorldIn)
+	: EditorWorldCached(EditorWorldIn)
 {
+    if (EditorWorldCached != nullptr)
+    {
+        GameWorld* GameWorldCached = EditorWorldCached->GetGameWorldCached();
+        if (GameWorldCached != nullptr)
+        {
+            AssetManagerCached = GameWorldCached->GetAssetManagerInstance();
+        }
+    }
 }
 
 ModelDetailWindow::~ModelDetailWindow()
@@ -35,9 +43,8 @@ void ModelDetailWindow::DrawDetailProperties()
 
     if (SelectedAttached != nullptr)
     {
-        ModelDetailedInformationVisitor InformationVisitor(this);
+        ModelDetailedInformationVisitor InformationVisitor(AssetManagerCached);
         SelectedAttached->AcceptGui(&InformationVisitor);
-
     }
 
     EndChild();

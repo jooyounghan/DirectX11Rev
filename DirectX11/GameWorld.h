@@ -10,6 +10,7 @@ class PSOManager;
 class AssetManager;
 
 class EditorWorld;
+class AAssetFile;
 class MapAsset;
 class Camera;
 

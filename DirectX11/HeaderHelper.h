@@ -27,3 +27,7 @@ public:																								\
 #define MakeSetterGetter(Variable)																	\
 	MakeGetter(Variable)																			\
 	MakeSetter(Variable)																			
+
+#define MakeSmartPtrSetterGetter(Variable)															\
+	MakeSmartPtrGetter(Variable)																			\
+	MakeSetter(Variable)										

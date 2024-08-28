@@ -48,27 +48,21 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
     EAssetType AssetType;
     fread(&AssetType, sizeof(AssetType), 1, InputAssetFile);
 
-    bool IsMapAsset = false;
-    shared_ptr<AAssetFile> AssetFile;
-    shared_ptr<MapAsset> MapAssetFile;
-
     switch (AssetType)
     {
     case EAssetType::None:
         break;
     case EAssetType::StaticMesh:
-        AssetFile = make_shared<StaticMeshAsset>(AssetName, false);
+        LoadAssetFileHelper(InputAssetFile, ManagingStaticMeshes, AssetName, false);
         break;
     case EAssetType::SkeletalMesh:
-        AssetFile = make_shared<SkeletalMeshAsset>(AssetName, false);
+        LoadAssetFileHelper(InputAssetFile, ManagingSkeletalMeshes, AssetName, false);
         break;
     case EAssetType::Bone:
-        AssetFile = make_shared<BoneAsset>(AssetName, false);
+        LoadAssetFileHelper(InputAssetFile, ManagingBones, AssetName, false);
         break;
-    case EAssetType::MapAsset:
-        IsMapAsset = true;
-        MapAssetFile = make_shared<MapAsset>(AssetName, this, false);
-        AssetFile = MapAssetFile;
+    case EAssetType::Map:
+        LoadAssetFileHelper(InputAssetFile, ManagingMaps, AssetName, this, false);
         break;
     case EAssetType::Texture:
         break;
@@ -77,20 +71,23 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
     default:
         break;
     }
-    
-    AssetFile->Deserialize(InputAssetFile, GraphicsPipelineCached->GetDevice(), this);
-    
-    if (IsMapAsset)
-    {
-        ManagingMaps.emplace(AssetName, MapAssetFile);
-    }
-    else
-    {
-        ManagingAssets.emplace(AssetName, AssetFile);
-    }
-
     fclose(InputAssetFile);
 }
+
+template<typename T, typename ...Args>
+void AssetManager::LoadAssetFileHelper(
+    FILE* FileIn,
+    std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer, 
+    const std::string& AssetName,
+    Args... AssetConstructArgs
+)
+{
+    shared_ptr<T> AssetFile = make_shared<T>(AssetName, AssetConstructArgs...);
+    AssetFile->Deserialize(FileIn, GraphicsPipelineCached->GetDevice(), this);
+    ManagingContainer.emplace(AssetName, AssetFile);
+    ManagingAssets.emplace(AssetName, AssetFile);
+}
+
 
 void AssetManager::LoadModelFile(const string& FilePathIn)
 {
@@ -98,8 +95,10 @@ void AssetManager::LoadModelFile(const string& FilePathIn)
     const string FileName = FilePath.stem().string();
     const string FileExtension = FilePath.extension().string();
     
-    if (ManagingAssets.find(FileName) == ManagingAssets.end())
+    if (FileNameToAssetNames.find(FileName) == FileNameToAssetNames.end())
     {
+        FileNameStack.push(FileName);
+
         auto test = FilePath.string();
         Assimp::Importer importer;
         const aiScene* pScene = importer.ReadFile(
@@ -125,14 +124,14 @@ void AssetManager::LoadModelFile(const string& FilePathIn)
                 LoadAnimation(FileName, pScene);
             }
         }
+        FileNameStack.pop();
+
+        assert(FileNameStack.empty());
     }
 }
 
 void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* const Scene)
 {
-    shared_ptr<AMeshAsset> Mesh = nullptr;
-    shared_ptr<AAssetFile> BoneA = nullptr;
-
     XMMATRIX RootTransform = DirectX::XMMatrixIdentity();
     aiNode* RootNode = Scene->mRootNode;
 
@@ -141,10 +140,7 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
         shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetLoaded = make_shared<SkeletalMeshAsset>(AssetName, true);
         shared_ptr<BoneAsset> BoneAssetLoaded = make_shared<BoneAsset>(AssetName, true);
 
-        SkeletalMeshAssetLoaded->SetLinkedBoneAsset(BoneAssetLoaded.get());
-
-        Mesh = SkeletalMeshAssetLoaded;
-        BoneA = BoneAssetLoaded;
+        SkeletalMeshAssetLoaded->SetLinkedBoneAsset(BoneAssetLoaded);
 
         SkeletalMeshAsset* SkeletalMeshAPtr = SkeletalMeshAssetLoaded.get();
         BoneAsset* BoneAPtr = BoneAssetLoaded.get();
@@ -153,20 +149,26 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
         LoadBone(Scene, SkeletalMeshAPtr, BoneAPtr);
 
         // Serialize Bone Asset
-        BoneA->Serialize();
-        ManagingAssets.emplace(BoneA->GetAssetName(), BoneA);
+        BoneAssetLoaded->Serialize();
+        ManagingBones.emplace(BoneAssetLoaded->GetAssetName(), BoneAssetLoaded);
+        ManagingAssets.emplace(BoneAssetLoaded->GetAssetName(), BoneAssetLoaded);
+
+        SkeletalMeshAssetLoaded->Initialize(GraphicsPipelineCached->GetDevice());
+        SkeletalMeshAssetLoaded->Serialize();
+        ManagingSkeletalMeshes.emplace(SkeletalMeshAssetLoaded->GetAssetName(), SkeletalMeshAssetLoaded);
+        ManagingAssets.emplace(SkeletalMeshAssetLoaded->GetAssetName(), SkeletalMeshAssetLoaded);
     }
     else
     {
-        Mesh = make_shared<StaticMeshAsset>(AssetName, true);
-        ProcessNodeForMesh(IsGltf, Scene, RootNode, (StaticMeshAsset*)Mesh.get(), RootTransform);
+        shared_ptr<StaticMeshAsset> StaticMeshLoaded = make_shared<StaticMeshAsset>(AssetName, true);
+        
+        ProcessNodeForMesh(IsGltf, Scene, RootNode, (StaticMeshAsset*)StaticMeshLoaded.get(), RootTransform);
+
+        StaticMeshLoaded->Initialize(GraphicsPipelineCached->GetDevice());
+        StaticMeshLoaded->Serialize();
+        ManagingStaticMeshes.emplace(StaticMeshLoaded->GetAssetName(), StaticMeshLoaded);
+        ManagingAssets.emplace(StaticMeshLoaded->GetAssetName(), StaticMeshLoaded);
     }
-
-    // Serialize Mesh Asset
-    Mesh->Initialize(GraphicsPipelineCached->GetDevice());
-
-    Mesh->Serialize();
-    ManagingAssets.emplace(Mesh->GetAssetName(), Mesh);
 }
 
 void AssetManager::LoadMaterial(const string AssetName, const aiScene* const Scene)
@@ -188,11 +190,47 @@ bool AssetManager::HasBone(const aiScene* const Scene)
     return false;
 }
 
-AAssetFile* AssetManager::GetAsset(const std::string AssetName)
+AAssetFile* AssetManager::GetManagingAsset(const std::string& AssetNameIn)
 {
-    if (ManagingAssets.find(AssetName) != ManagingAssets.end())
+    if (ManagingAssets.find(AssetNameIn) != ManagingAssets.end())
     {
-        return ManagingAssets[AssetName].get(); 
+        return ManagingAssets[AssetNameIn].get();
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
+std::shared_ptr<MapAsset> AssetManager::GetManagingMap(const std::string MapAssetName)
+{
+    return GetManagingAssetHelper(ManagingMaps, MapAssetName);
+}
+
+std::shared_ptr<BoneAsset> AssetManager::GetManagingBone(const std::string MapAssetName)
+{
+    return GetManagingAssetHelper(ManagingBones, MapAssetName);
+}
+
+std::shared_ptr<StaticMeshAsset> AssetManager::GetManagingStaticMesh(const std::string MapAssetName)
+{
+    return GetManagingAssetHelper(ManagingStaticMeshes, MapAssetName);
+}
+
+std::shared_ptr<SkeletalMeshAsset> AssetManager::GetManagingSkeletalMesh(const std::string MapAssetName)
+{
+    return GetManagingAssetHelper(ManagingSkeletalMeshes, MapAssetName);
+}
+
+template<typename T>
+std::shared_ptr<T> AssetManager::GetManagingAssetHelper(
+    std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer,
+    const std::string AssetName
+)
+{
+    if (ManagingContainer.find(AssetName) != ManagingContainer.end())
+    {
+        return ManagingContainer[AssetName];
     }
     else
     {
@@ -334,7 +372,7 @@ void AssetManager::LoadMeshElement(
     vector<XMINT4> TempBlendIndex;
 
     TempBlendWeight.resize(Mesh->mNumVertices);
-    TempBlendIndex.resize(Mesh->mNumVertices, XMINT4(-1.f, -1.f, -1.f, -1.f));
+    TempBlendIndex.resize(Mesh->mNumVertices, XMINT4(-1, -1, -1, -1));
 
     SkeletalMesh->BlendWeight.Vertices.insert(SkeletalMesh->BlendWeight.Vertices.end(), TempBlendWeight.begin(), TempBlendWeight.end());
     SkeletalMesh->BlendIndex.Vertices.insert(SkeletalMesh->BlendIndex.Vertices.end(), TempBlendIndex.begin(), TempBlendIndex.end());
@@ -354,6 +392,7 @@ void AssetManager::LoadMeshElement(
 
     CalculateTB(Mesh, IndicesStartIdx, SkeletalMesh);
 }
+
 
 
 template<typename T>

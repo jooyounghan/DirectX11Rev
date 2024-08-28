@@ -9,7 +9,7 @@
 #include "PickingIDSolidRenderer.h"
 #include "PickingIDWireframeRenderer.h"
 
-#include "BoundingComponentRenderer.h"
+#include "BoundingObjectRenderer.h"
 #include "MeshObjectRenderer.h"
 
 #include <d3dcompiler.h>
@@ -452,8 +452,8 @@ void PSOManager::CreateSkeletal()
 
 void PSOManager::CreateRenderers()
 {
-    Renderers[R8G8B8A8_BoundingComponent_Solid] = make_unique<BoundingComponentRenderer>(GetPSOObject(R8G8B8A8_BoundingComponent_Solid));
-    Renderers[R8G8B8A8_BoundingComponent_Wireframe] = make_unique<BoundingComponentRenderer>(GetPSOObject(R8G8B8A8_BoundingComponent_Wireframe));
+    Renderers[R8G8B8A8_BoundingComponent_Solid] = make_unique<BoundingObjectRenderer>(GetPSOObject(R8G8B8A8_BoundingComponent_Solid));
+    Renderers[R8G8B8A8_BoundingComponent_Wireframe] = make_unique<BoundingObjectRenderer>(GetPSOObject(R8G8B8A8_BoundingComponent_Wireframe));
     Renderers[R8G8B8A8_Picking_ID_Solid] = make_unique<PickingIDSolidRenderer>(GetPSOObject(R8G8B8A8_Picking_ID_Solid));
     Renderers[R8G8B8A8_Picking_ID_Wireframe] = make_unique<PickingIDWireframeRenderer>(GetPSOObject(R8G8B8A8_Picking_ID_Wireframe));
     Renderers[R8G8B8A8_Static_Solid] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Static_Solid));

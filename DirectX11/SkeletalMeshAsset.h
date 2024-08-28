@@ -13,7 +13,7 @@ public:
 	virtual ~SkeletalMeshAsset();
 
 protected:
-	BoneAsset* LinkedBoneAsset = nullptr;
+	std::shared_ptr<BoneAsset> LinkedBoneAsset = nullptr;
 	MakeSetterGetter(LinkedBoneAsset)
 
 public:

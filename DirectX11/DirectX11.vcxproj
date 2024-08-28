@@ -149,7 +149,7 @@
     <ClCompile Include="BoneAsset.cpp" />
     <ClCompile Include="CollisionVisitor.cpp" />
     <ClCompile Include="Debugable.cpp" />
-    <ClCompile Include="BoundingComponentRenderer.cpp" />
+    <ClCompile Include="BoundingObjectRenderer.cpp" />
     <ClCompile Include="DefineType.cpp" />
     <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
@@ -160,7 +160,6 @@
     <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="AAssetFile.cpp" />
     <ClCompile Include="IDColor.cpp" />
-    <ClCompile Include="IEditorLinkedWindow.cpp" />
     <ClCompile Include="AMeshAsset.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
@@ -214,7 +213,7 @@
     <ClInclude Include="CollisionVisitor.h" />
     <ClInclude Include="ConstantArrayBuffer.h" />
     <ClInclude Include="Debugable.h" />
-    <ClInclude Include="BoundingComponentRenderer.h" />
+    <ClInclude Include="BoundingObjectRenderer.h" />
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="EditorCamera.h" />
@@ -264,7 +263,6 @@
     <ClInclude Include="IBuffer.h" />
     <ClInclude Include="IWindow.h" />
     <ClInclude Include="IDownloadableBuffer.h" />
-    <ClInclude Include="IEditorLinkedWindow.h" />
     <ClInclude Include="AMeshAsset.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="IndexBuffer.h" />

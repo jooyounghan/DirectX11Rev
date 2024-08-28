@@ -9,6 +9,8 @@
 
 #include "AssetManager.h"
 #include "AAssetFile.h"
+#include "StaticMeshAsset.h"
+#include "SkeletalMeshAsset.h"
 
 #include "MapAsset.h"
 #include "GlobalVariable.h"
@@ -20,13 +22,23 @@ using namespace std;
 using namespace ImGui;
 
 ViewportWindow::ViewportWindow(EditorWorld* EditorWorldIn)
-    : IEditorLinkedWindow(EditorWorldIn)
+    : EditorWorldCached(EditorWorldIn)
 {
-    EditorActor* EditorActorInstance= EditorWorldCached->GetEditorActorInstance();
-    assert(EditorActorInstance != nullptr);
+    if (EditorWorldCached != nullptr)
+    {
+        EditorActor* EditorActorInstance= EditorWorldCached->GetEditorActorInstance();
+        if (EditorActorInstance != nullptr)
+        {
+            EditorCameraCached = EditorActorInstance->GetEditorCameraCached();
+        }
 
-    EditorCameraCached = EditorActorInstance->GetEditorCameraCached();
-    assert(EditorCameraCached != nullptr);
+        GameWorldCached = EditorWorldCached->GetGameWorldCached();
+
+        if (GameWorldCached != nullptr)
+        {
+            AssetManagerCached = GameWorldCached->GetAssetManagerInstance();
+        }
+    }
 }
 
 ViewportWindow::~ViewportWindow()
@@ -66,25 +78,35 @@ void ViewportWindow::ManageAssetDrop(MapAsset* CurrentMap)
                 ImGuiIO& io = GetIO();
                 ImVec2 AbsMousePos = io.MousePos;
                 ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - ImagePosition.x, AbsMousePos.y - ImagePosition.y);
+
+                Ray ClickedRay = Ray::CreateRay(
+                    RelativeMousePos.x, RelativeMousePos.y, 
+                    ImageSize.x, ImageSize.y,
+                    EditorCameraCached->GetProjectionMatrix(), 
+                    EditorCameraCached->GetViewMatrix()
+                );
+                const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
+                
                 switch (AssetFile->GetAssetType())
                 {
                 case EAssetType::StaticMesh:
-                case EAssetType::SkeletalMesh:
                 {
-                    Ray ClickedRay = Ray::CreateRay(
-                        RelativeMousePos.x, RelativeMousePos.y, 
-                        ImageSize.x, ImageSize.y,
-                        EditorCameraCached->GetProjectionMatrix(), 
-                        EditorCameraCached->GetViewMatrix()
-                    );
-                    const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
-
                     CurrentMap->AddRenderObject(
-                        (AMeshAsset*)AssetFile,
+                        AssetManagerCached->GetManagingStaticMesh(AssetFile->GetAssetName()),
                         PlacePositon.m128_f32[0],
                         PlacePositon.m128_f32[1],
                         PlacePositon.m128_f32[2]
-                    );                            
+                    );
+                    break;
+                }
+                case EAssetType::SkeletalMesh:
+                {
+                    CurrentMap->AddRenderObject(
+                        AssetManagerCached->GetManagingSkeletalMesh(AssetFile->GetAssetName()),
+                        PlacePositon.m128_f32[0],
+                        PlacePositon.m128_f32[1],
+                        PlacePositon.m128_f32[2]
+                    );
                     break;
                 }
                 default:

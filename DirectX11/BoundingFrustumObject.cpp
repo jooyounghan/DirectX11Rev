@@ -112,8 +112,6 @@ void BoundingFrustumObject::UpdateObject(const float& DeltaTimeIn)
         XMStoreFloat4(&Orientation, Rotation);
 
         XMVECTOR CurrentForward = XMVector3Rotate(Direction::GDefaultForward, Rotation);
-        XMVECTOR CurrentUp = XMVector3Rotate(Direction::GDefaultUp, Rotation);
-        XMVECTOR CurrentRight = XMVector3Rotate(Direction::GDefaultRight, Rotation);
 
         const XMVECTOR NearPosition = ViewableCached->NearZ * CurrentForward;
         const XMVECTOR FarPosition = ViewableCached->FarZ * CurrentForward;
@@ -121,11 +119,11 @@ void BoundingFrustumObject::UpdateObject(const float& DeltaTimeIn)
         Near = ViewableCached->NearZ;
         Far = ViewableCached->FarZ;
 
-        RightSlope = tanf(XMConvertToRadians(ViewableCached->FovAngle) * 0.5f);
-        LeftSlope = -RightSlope;
-
-        TopSlope = RightSlope * AspectRatio;
+        TopSlope = tanf(XMConvertToRadians(ViewableCached->FovAngle) * 0.5f);
         BottomSlope = -TopSlope;
+
+        RightSlope = TopSlope * AspectRatio;
+        LeftSlope = -RightSlope;
 
         for (auto& ChildObject : AttachedChildrenObjects)
         {
