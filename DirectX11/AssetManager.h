@@ -139,7 +139,7 @@ private:
 	void LoadPosition(
 		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		T* MeshAsset,
+		T* MeshObjectInstance,
 		const DirectX::XMMATRIX& ParentMatrix
 	);
 
@@ -155,12 +155,13 @@ private:
 	void LoadTextureCoord(
 		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		T* MeshAsset
+		T* MeshObjectInstance
 	);
 
 private:
 	void LoadIndices(
 		std::vector<uint32_t>& IndicesIn,
+		size_t VertexStartIdx,
 		const aiMesh* const Mesh
 	);
 
@@ -169,14 +170,14 @@ private:
 	void LoadTBN(
 		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		T* MeshAsset
+		T* MeshObjectInstance
 	);
 
 	template<typename T>
 	void LoadTBNAsGltf(
 		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		T* MeshAsset
+		T* MeshObjectInstance
 	);
 
 private:
@@ -184,7 +185,7 @@ private:
 	void CalculateTB(
 		const aiMesh* const Mesh,
 		size_t IndexStartIdx,
-		T* MeshAsset
+		T* MeshObjectInstance
 	);
 
 private:

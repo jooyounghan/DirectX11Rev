@@ -1,12 +1,12 @@
 #pragma once
-#include "AttachableObject.h"
+#include "AAttachableObject.h"
 
 #include <memory>
 
 class GraphicsPipeline;
 class AMeshAsset;
 
-class MeshObject : public AttachableObject
+class MeshObject : public AAttachableObject
 {
 public:
 	MeshObject(GraphicsPipeline* GraphicsPipelineInstances);
@@ -30,7 +30,7 @@ protected:
 	MakeSetterGetter(MeshAssetInstance);
 
 public:
-	virtual void UpdateObject(const float& DeltaTimeIn) override;
+	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
 	virtual void AcceptRenderer(ARenderer* Renderer) override;

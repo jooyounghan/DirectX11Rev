@@ -8,6 +8,7 @@
 #include "ConstantBuffer.h"
 
 #include "ISerializable.h"
+#include "IUpdatable.h"
 
 #include <string>
 
@@ -23,7 +24,7 @@ struct TransformationMatrix
 	DirectX::XMMATRIX InvTransfomationMat;
 };
 
-class AObject : public IOnSerializable
+class AObject : public IOnSerializable, public IUpdatable
 {
 public:
 	AObject(GraphicsPipeline* GraphicsPipelineInstance);
@@ -68,7 +69,7 @@ public:
 
 
 public:
-	virtual void UpdateObject(const float& DeltaTimeIn);
+	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
 	virtual void AcceptRenderer(ARenderer* Renderer) = 0;

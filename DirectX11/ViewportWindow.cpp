@@ -26,10 +26,10 @@ ViewportWindow::ViewportWindow(EditorWorld* EditorWorldIn)
 {
     if (EditorWorldCached != nullptr)
     {
-        EditorActor* EditorActorInstance= EditorWorldCached->GetEditorActorInstance();
-        if (EditorActorInstance != nullptr)
+        EditorActorCached  = EditorWorldCached->GetEditorActorInstance();
+        if (EditorActorCached != nullptr)
         {
-            EditorCameraCached = EditorActorInstance->GetEditorCameraCached();
+            EditorCameraCached = EditorActorCached->GetEditorCameraCached();
         }
 
         GameWorldCached = EditorWorldCached->GetGameWorldCached();
@@ -48,7 +48,7 @@ ViewportWindow::~ViewportWindow()
 void ViewportWindow::RenderWindow()
 {
     Begin("Viewport");
-    MapAsset* CurrentMap = GameWorldCached->GetCurrentMap();
+    CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap != nullptr)
     {
         if (EditorCameraCached != nullptr)
@@ -57,14 +57,16 @@ void ViewportWindow::RenderWindow()
             ImagePosition = GetCursorScreenPos();
             ImageSize = GetContentRegionAvail();
             Image(EditorCameraCached->GetResolvedSceneSRV(), ImageSize);
-            ManageAssetDrop(CurrentMap);
-            ManageMouseLBClick(CurrentMap);
+            ManageAssetDrop();
+            ManageMouseLBClick();
+            ManageEditorCameraByKey();
+            ManageEditorCameraByMouse();
         }
     }
     End();
 }
 
-void ViewportWindow::ManageAssetDrop(MapAsset* CurrentMap)
+void ViewportWindow::ManageAssetDrop()
 {
     if (BeginDragDropTarget())
     {
@@ -118,7 +120,7 @@ void ViewportWindow::ManageAssetDrop(MapAsset* CurrentMap)
     }
 }
 
-void ViewportWindow::ManageMouseLBClick(MapAsset* CurrentMap)
+void ViewportWindow::ManageMouseLBClick()
 {
     if (IsMouseClicked(ImGuiMouseButton_Left) && IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
     {
@@ -130,3 +132,30 @@ void ViewportWindow::ManageMouseLBClick(MapAsset* CurrentMap)
         EditorWorldCached->SetSelecteObjectByID(SelectedID);
     }
 }
+
+void ViewportWindow::ManageEditorCameraByKey()
+{
+    auto UpdateKeyPressed = [&](ImGuiKey KeyValue)
+        {
+            if (IsKeyPressed(KeyValue))
+            {
+                EditorActorCached->PressKey(KeyValue);
+            }
+            else
+            {
+                EditorActorCached->ReleaseKey(KeyValue);
+            }
+        };
+
+    UpdateKeyPressed(ImGuiKey_W);
+    UpdateKeyPressed(ImGuiKey_S);
+    UpdateKeyPressed(ImGuiKey_A);
+    UpdateKeyPressed(ImGuiKey_D);
+
+}
+
+void ViewportWindow::ManageEditorCameraByMouse()
+{
+    ImGuiIO& io = GetIO();
+}
+

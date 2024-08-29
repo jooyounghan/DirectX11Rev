@@ -21,7 +21,7 @@ AObject::AObject(GraphicsPipeline* GraphicsPipelineInstance)
 	RelativeScale.z = 1.f;
 }
 
-void AObject::UpdateObject(const float& DeltaTimeIn)
+void AObject::Update(const float& DeltaTimeIn)
 {
 	TransformationMatrix TempTransformation;
 

@@ -7,8 +7,10 @@
 #include "MeshObjectRenderer.h"
 #include "BoundingObjectRenderer.h"
 
-#include "PlaceableObject.h"
-#include "AttachableObject.h"
+#include "APlaceableObject.h"
+#include "AAttachableObject.h"
+
+#include "IUpdatable.h"
 
 #include <list>
 #include <memory>
@@ -23,8 +25,8 @@ class ARenderer;
 
 class AssetManager;
 
-class PlaceableObject;
-class AttachableObject;
+class APlaceableObject;
+class AAttachableObject;
 
 class Camera;
 class AObject;
@@ -33,7 +35,7 @@ class AMeshAsset;
 
 class IIntersectable;
 
-class MapAsset : public AAssetFile
+class MapAsset : public AAssetFile, public IUpdatable
 {
 public:
 	MapAsset(const std::string& MapNameIn, AssetManager* AssetManagerInstance, bool LoadAsFile);
@@ -48,11 +50,11 @@ protected:
 	MakeSetter(CameraCached);
 
 protected:
-	std::list<std::unique_ptr<PlaceableObject>> RootPlaceables;
+	std::list<std::unique_ptr<APlaceableObject>> RootPlaceables;
 	MakeGetter(RootPlaceables);
 
 protected:
-	std::unordered_map<unsigned int, PlaceableObject*> IdToPlaceables;
+	std::unordered_map<unsigned int, APlaceableObject*> IdToPlaceables;
 	MakeGetter(IdToPlaceables);
 
 public:
@@ -60,7 +62,7 @@ public:
 	void RenderMap(PSOManager* PSOManagerInstance);
 
 public:
-	void UpdateMap(const float& DeltaTimeIn);
+	virtual void Update(const float& DeltaTimeIn) override;
 
 private:
 	void UpdateRenderState();
@@ -70,8 +72,8 @@ public:
 	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn) override;
 
 private:
-	void SerializeChildrenObjects(PlaceableObject* ChildPlaceableObjectIn, FILE* FileIn);
-	void SerializeChildrenObjects(AttachableObject* ChildAttachableObjectIn, FILE* FileIn);
+	void SerializeChildrenObjects(APlaceableObject* ChildPlaceableObjectIn, FILE* FileIn);
+	void SerializeChildrenObjects(AAttachableObject* ChildAttachableObjectIn, FILE* FileIn);
 
 private:
 	template<typename T>
@@ -84,10 +86,10 @@ public:
 	template<typename T, typename ...Args>
 	T* PlaceableAddHelper(Args... args)
 	{
-		static_assert(std::is_base_of<PlaceableObject, T>::value, DerivedCondition(PlaceableObject));
+		static_assert(std::is_base_of<APlaceableObject, T>::value, DerivedCondition(APlaceableObject));
 
 		RootPlaceables.emplace_back(std::make_unique<T>(args...));
-		PlaceableObject* RootPlaceable = RootPlaceables.back().get();
+		APlaceableObject* RootPlaceable = RootPlaceables.back().get();
 
 		IdToPlaceables[RootPlaceable->GetPickingID().GetID()] = RootPlaceable;
 
@@ -96,6 +98,6 @@ public:
 	}
 
 public:
-	void PlaceableDeleteHelper(PlaceableObject* PlaceableObjectIn);
+	void PlaceableDeleteHelper(APlaceableObject* PlaceableObjectIn);
 };
 

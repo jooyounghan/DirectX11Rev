@@ -100,7 +100,7 @@ bool OBBObject::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 	return IsCollided;
 }
 
-void OBBObject::UpdateObject(const float& DeltaTimeIn)
+void OBBObject::Update(const float& DeltaTimeIn)
 {
 	Extents.x = DescaledExtents.x * RelativeScale.x;
 	Extents.y = DescaledExtents.y * RelativeScale.y;
@@ -109,7 +109,7 @@ void OBBObject::UpdateObject(const float& DeltaTimeIn)
 	RelativeScale.x = Extents.x;
 	RelativeScale.y = Extents.y;
 	RelativeScale.z = Extents.z;
-	AObject::UpdateObject(DeltaTimeIn);
+	AObject::Update(DeltaTimeIn);
 	RelativeScale.x /= DescaledExtents.x;
 	RelativeScale.y /= DescaledExtents.y;
 	RelativeScale.z /= DescaledExtents.z;
@@ -124,7 +124,7 @@ void OBBObject::UpdateObject(const float& DeltaTimeIn)
 
 	for (auto& ChildObject : AttachedChildrenObjects)
 	{
-		ChildObject->UpdateObject(DeltaTimeIn);
+		ChildObject->Update(DeltaTimeIn);
 	}
 }
 

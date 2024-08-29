@@ -15,7 +15,7 @@ const char* MeshObject::MeshObjectIdentifier = "Mesh Object";
 size_t MeshObject::MeshObjectCount = 0;
 
 MeshObject::MeshObject(GraphicsPipeline* GraphicsPipelineInstance) 
-	: AttachableObject(GraphicsPipelineInstance)
+	: AAttachableObject(GraphicsPipelineInstance)
 {
 	InitMeshObject();
 }
@@ -24,7 +24,7 @@ MeshObject::MeshObject(
 	GraphicsPipeline* GraphicsPipelineInstance, 
 	std::shared_ptr<AMeshAsset> MeshAssetInstanceIn
 )
-	: AttachableObject(GraphicsPipelineInstance), MeshAssetInstance(MeshAssetInstanceIn)
+	: AAttachableObject(GraphicsPipelineInstance), MeshAssetInstance(MeshAssetInstanceIn)
 {
 	InitMeshObject();
 }
@@ -40,14 +40,14 @@ void MeshObject::InitMeshObject()
 	AttachableKind = EAttachableObjectKind::MeshObjectKind;
 }
 
-void MeshObject::UpdateObject(const float& DeltaTimeIn)
+void MeshObject::Update(const float& DeltaTimeIn)
 {
-	AttachableObject::UpdateObject(DeltaTimeIn);
+	AAttachableObject::Update(DeltaTimeIn);
 }
 
 void MeshObject::AcceptRenderer(ARenderer* Renderer)
 {
-	AttachableObject::AcceptRenderer(Renderer);
+	AAttachableObject::AcceptRenderer(Renderer);
 	Renderer->Render(DeviceContextCached, this);
 }
 

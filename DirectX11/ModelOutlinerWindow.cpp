@@ -81,7 +81,7 @@ void ModelOutlinerWindow::DoModalDeletePlaceableObject()
     }
 
     SetWindowPosToCenter();
-    PlaceableObject* SelectedPlaceable = EditorWorldCached->GetSelectedPlaceable();
+    APlaceableObject* SelectedPlaceable = EditorWorldCached->GetSelectedPlaceable();
     if (SelectedPlaceable != nullptr)
     {
         if (BeginPopupModal(DeletePlaceableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
@@ -118,7 +118,7 @@ void ModelOutlinerWindow::DoModalDeleteAttachableObject()
     }
 
     SetWindowPosToCenter();
-    AttachableObject* SelectedAttached = EditorWorldCached->GetSelectedAttached();
+    AAttachableObject* SelectedAttached = EditorWorldCached->GetSelectedAttached();
     if (SelectedAttached != nullptr)
     {
         if (BeginPopupModal(DeleteAttachableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
@@ -128,7 +128,7 @@ void ModelOutlinerWindow::DoModalDeleteAttachableObject()
 
             if (Button("OK", ImVec2(120, 0))) 
             { 
-                PlaceableObject* SelectedPlaceableObject = EditorWorldCached->GetSelectedPlaceable();
+                APlaceableObject* SelectedPlaceableObject = EditorWorldCached->GetSelectedPlaceable();
                 if (SelectedPlaceableObject != nullptr)
                 {
                     SelectedPlaceableObject->RemoveAttachedObject(SelectedAttached);
@@ -150,10 +150,10 @@ void ModelOutlinerWindow::DoModalDeleteAttachableObject()
 
 void ModelOutlinerWindow::RenderPlacedListBox()
 {
-    const list<unique_ptr<PlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
+    const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
     for (auto& Placeable : RootPlaceables)
     {
-        PlaceableObject* PlaceableObj = Placeable.get();
+        APlaceableObject* PlaceableObj = Placeable.get();
 
         ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_SpanAvailWidth;
 
@@ -179,10 +179,10 @@ void ModelOutlinerWindow::RenderPlacedListBox()
 
 void ModelOutlinerWindow::RenderAttachedTree()
 {
-    PlaceableObject* SelectedPlaceable = EditorWorldCached->GetSelectedPlaceable();
+    APlaceableObject* SelectedPlaceable = EditorWorldCached->GetSelectedPlaceable();
     if (SelectedPlaceable != nullptr)
     {
-        const list<unique_ptr<AttachableObject>>& AttachedObjects = SelectedPlaceable->GetAttachedChildrenObjects();
+        const list<unique_ptr<AAttachableObject>>& AttachedObjects = SelectedPlaceable->GetAttachedChildrenObjects();
 
         ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
         if (AttachedObjects.size() == 0)
@@ -213,9 +213,9 @@ void ModelOutlinerWindow::RenderAttachedTree()
     }
 }
 
-void ModelOutlinerWindow::RenderAttachedOutline(AttachableObject* Attachment)
+void ModelOutlinerWindow::RenderAttachedOutline(AAttachableObject* Attachment)
 {
-    const list<unique_ptr<AttachableObject>>& AttachedObjects = Attachment->GetAttachedChildrenObjects();
+    const list<unique_ptr<AAttachableObject>>& AttachedObjects = Attachment->GetAttachedChildrenObjects();
 
     ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
     if (AttachedObjects.size() == 0)

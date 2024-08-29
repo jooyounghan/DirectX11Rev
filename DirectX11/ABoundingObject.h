@@ -1,12 +1,12 @@
 #pragma once
 #include "IIntersectable.h"
-#include "AttachableObject.h"
+#include "AAttachableObject.h"
 #include <DirectXCollision.h>
 
 class GraphicsPipeline;
 class Debugable;
 
-class ABoundingObject : public IIntersectable, public AttachableObject
+class ABoundingObject : public IIntersectable, public AAttachableObject
 {	
 public:
 	ABoundingObject(GraphicsPipeline* GraphicsPipelineInstances);
@@ -34,7 +34,7 @@ public:
 	void SetCollisionColor();
 
 public:
-	virtual void UpdateObject(const float& DeltaTimeIn) override = 0;
+	virtual void Update(const float& DeltaTimeIn) override = 0;
 
 public:
 	virtual void AcceptRenderer(ARenderer* Renderer) override;

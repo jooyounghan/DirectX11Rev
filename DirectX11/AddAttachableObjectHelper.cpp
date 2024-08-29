@@ -4,7 +4,7 @@
 #include "GlobalVariable.h"
 
 // Add Attachables
-#include "PlaceableObject.h"
+#include "APlaceableObject.h"
 #include "MeshObject.h"
 #include "BoundingSphereObject.h"
 #include "OBBObject.h"
@@ -26,8 +26,8 @@ AddAttachableObjectDrawer::AddAttachableObjectDrawer(
 
 void AddAttachableObjectDrawer::DrawAddObjectPopup()
 {
-    AttachableObject* SelectedAttached = EditorWorldCached->GetSelectedAttached();
-    PlaceableObject* SelectedPlaced = EditorWorldCached->GetSelectedPlaceable();
+    AAttachableObject* SelectedAttached = EditorWorldCached->GetSelectedAttached();
+    APlaceableObject* SelectedPlaced = EditorWorldCached->GetSelectedPlaceable();
 
     if (SelectedPlaced != nullptr || SelectedAttached != nullptr)
     {

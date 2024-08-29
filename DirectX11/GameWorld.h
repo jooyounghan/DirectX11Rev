@@ -27,7 +27,7 @@ public:
 
 public:
 	void LoadGameWorld();
-	virtual void UpdateWorld(const float& DeltaTimeIn) override;
+	virtual void Update(const float& DeltaTimeIn) override;
 
 protected:
 	std::unique_ptr<PSOManager> PSOManagerInstance;

@@ -1,9 +1,10 @@
 #pragma once
 #include <Windows.h>
+#include "IUpdatable.h"
 
 class GraphicsPipeline;
 
-class IWorld
+class IWorld : public IUpdatable
 {
 public:
 	IWorld(GraphicsPipeline* GraphicsPipelineInstance);
@@ -13,7 +14,6 @@ public:
 	GraphicsPipeline* GraphicsPipelineCached = nullptr;
 
 public:
-	virtual void UpdateWorld(const float& DeltaTimeIn) = 0;
 	virtual void RenderWorld() = 0;
 
 public:

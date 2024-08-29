@@ -1,6 +1,6 @@
 #pragma once
 #include "Vertexable.h"
-#include "IIndexable.h"
+#include "AIndexable.h"
 #include "UploadBuffer.h"
 #include "DefineType.h"
 
@@ -20,7 +20,7 @@ struct DebugVertex
 	DirectX::XMFLOAT3 RelativePosition;
 };
 
-class Debugable : public IIndexable<uint16_t>, public Vertexable<DebugVertex>
+class Debugable : public AIndexable<uint16_t>, public Vertexable<DebugVertex>
 {
 public:
 	Debugable(ID3D11Device* DeviceIn);

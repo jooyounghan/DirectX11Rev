@@ -3,6 +3,9 @@
 
 #include "GameWorld.h"
 
+#include "Actor.h"
+#include "EditorActor.h"
+
 #include "MeshObject.h"
 #include "BoundingSphereObject.h"
 #include "OBBObject.h"
@@ -15,9 +18,6 @@
 #include "ViewableInformationDrawer.h"
 #include "MeshObjectInformationDrawer.h"
 
-// 특정 개체 참조 후 삭제 예정
-#include "PlaceableObject.h"
-
 using namespace std;
 using namespace ImGui;
 using namespace DirectX;
@@ -28,11 +28,24 @@ ModelDetailedInformationVisitor::ModelDetailedInformationVisitor(AssetManager* A
 {
 }
 
-void ModelDetailedInformationVisitor::Visit(PlaceableObject* PlaceableInstance)
+void ModelDetailedInformationVisitor::Visit(Actor* ActorInstance)
 {
-    PushID(PlaceableInstance->GetObjectID().c_str());
+    PushID(ActorInstance->GetObjectID().c_str());
 
-    TransformationInformationDrawer TransformDrawer(PlaceableInstance, nullptr);
+    TransformationInformationDrawer TransformDrawer(ActorInstance, nullptr);
+    TransformDrawer.DrawInformation();
+
+    MeshObjectInformationDrawer MeshObjectDrawer(ActorInstance->GetMeshObjectInstance(), AssetManagerCached);
+    MeshObjectDrawer.DrawInformation();
+
+    PopID();
+}
+
+void ModelDetailedInformationVisitor::Visit(EditorActor* EditorActorInstance)
+{
+    PushID(EditorActorInstance->GetObjectID().c_str());
+
+    TransformationInformationDrawer TransformDrawer(EditorActorInstance, nullptr);
     TransformDrawer.DrawInformation();
 
     PopID();

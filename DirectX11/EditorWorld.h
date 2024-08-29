@@ -8,8 +8,8 @@
 #include <vector>
 #include <memory>
 
-class PlaceableObject;
-class AttachableObject;
+class APlaceableObject;
+class AAttachableObject;
 class GameWorld;
 class IWindow;
 class EditorActor;
@@ -36,18 +36,18 @@ protected:
 	std::vector<std::unique_ptr<IWindow>> Dialogs;
 
 protected:
-	PlaceableObject* SelectedPlaceable = nullptr;
+	APlaceableObject* SelectedPlaceable = nullptr;
 	MakeSetterGetter(SelectedPlaceable);
 
 protected:
-	AttachableObject* SelectedAttached = nullptr;
+	AAttachableObject* SelectedAttached = nullptr;
 	MakeSetterGetter(SelectedAttached);
 
 public:
 	void SetSelecteObjectByID(const UINT& Id);
 
 public:
-	virtual void UpdateWorld(const float& DeltaTimeIn) override;
+	virtual void Update(const float& DeltaTimeIn) override;
 	virtual void RenderWorld() override;
 
 public:

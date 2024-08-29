@@ -38,7 +38,7 @@ public:
 	virtual bool AcceptCollision(ICollisionVisitor* CollisionVisitor) override;
 
 public:
-	virtual void UpdateObject(const float& DeltaTimeIn) override;
+	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

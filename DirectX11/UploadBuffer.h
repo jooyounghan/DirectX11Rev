@@ -1,11 +1,11 @@
 #pragma once
-#include "IBuffer.h"
+#include "Buffer.h"
 #include "IUploadableBuffer.h"
 #include "HeaderHelper.h"
 #include "DefineUtility.h"
 
 template<typename T>
-class UploadBuffer : public IBuffer, public IUploadableBuffer<T>
+class UploadBuffer : public Buffer, public IUploadableBuffer<T>
 {
 public:
 	UploadBuffer(ID3D11Device* DeviceIn);

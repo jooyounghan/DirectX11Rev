@@ -6,8 +6,6 @@ using namespace ImGui;
 using namespace std;
 using namespace filesystem;
 
-ImVec2 AssetManagerWindow::FileSize = ImVec2(100, 100);
-
 AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
 	: AssetManagerCached(AssetManagerIn)
 {
@@ -131,8 +129,9 @@ void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& V
 
     ImGui::PushID(EntryFileName.c_str());
     ImGui::BeginGroup();
-    ImGui::Image(nullptr, FileSize);
-    ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + FileSize.x);
+    ImGui::ColorButton("TEST", UIColor::GBlack, NULL, UISize::FileSize);
+    //Image(nullptr, UISize::FileSize);
+    ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + UISize::FileSize.x);
     ImGui::Text(EntryFileName.string().c_str());
     ImGui::PopTextWrapPos();
     ImGui::EndGroup();

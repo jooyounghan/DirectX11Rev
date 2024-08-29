@@ -97,15 +97,15 @@ Camera::~Camera()
 {
 }
 
-void Camera::UpdateObject(const float& DeltaTimeIn)
+void Camera::Update(const float& DeltaTimeIn)
 {
-	Viewable::UpdateObject(DeltaTimeIn);
-	CamearaFrustum->UpdateObject(DeltaTimeIn);
+	Viewable::Update(DeltaTimeIn);
+	CamearaFrustum->Update(DeltaTimeIn);
 }
 
 void Camera::AcceptRenderer(ARenderer* Renderer)
 {
-	AttachableObject::AcceptRenderer(Renderer);
+	AAttachableObject::AcceptRenderer(Renderer);
 	Renderer->Render(DeviceContextCached, CamearaFrustum.get());
 }
 

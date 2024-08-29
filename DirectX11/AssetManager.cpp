@@ -103,7 +103,7 @@ void AssetManager::LoadModelFile(const string& FilePathIn)
         Assimp::Importer importer;
         const aiScene* pScene = importer.ReadFile(
             StringHelper::ConvertACPToUTF8(FilePathIn),
-            aiProcess_Triangulate | aiProcess_ConvertToLeftHanded
+            aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcess_ConvertToLeftHanded
         );
 
         if (pScene)
@@ -350,7 +350,7 @@ void AssetManager::LoadMeshElement(
     IsGltf ? LoadTBNAsGltf(Mesh, VertexStartIdx, StaticMesh) : LoadTBN(Mesh, VertexStartIdx, StaticMesh);
  
     // Load Index;
-    LoadIndices(StaticMesh->Indices, Mesh);
+    LoadIndices(StaticMesh->Indices, VertexStartIdx, Mesh);
 
     CalculateTB(Mesh, IndicesStartIdx, StaticMesh);
 }
@@ -388,7 +388,7 @@ void AssetManager::LoadMeshElement(
     IsGltf ? LoadTBNAsGltf(Mesh, VertexStartIdx, SkeletalMesh) : LoadTBN(Mesh, VertexStartIdx, SkeletalMesh);
     
     // Load Index;
-    LoadIndices(SkeletalMesh->Indices, Mesh);
+    LoadIndices(SkeletalMesh->Indices, VertexStartIdx, Mesh);
 
     CalculateTB(Mesh, IndicesStartIdx, SkeletalMesh);
 }
@@ -399,7 +399,7 @@ template<typename T>
 void AssetManager::LoadPosition(
     const aiMesh* const Mesh,
     size_t VertexStartIdx,
-    T* MeshAsset,
+    T* MeshObjectInstance,
     const DirectX::XMMATRIX& ParentMatrix
 )
 {
@@ -411,7 +411,7 @@ void AssetManager::LoadPosition(
             aiVector3D CurrentVertex = Mesh->mVertices[VertexIdx];
             DirectX::XMVECTOR TransformedVertex = DirectX::XMVectorSet(CurrentVertex.x, CurrentVertex.y, CurrentVertex.z, 0.f);
             TransformedVertex = DirectX::XMVector3TransformCoord(TransformedVertex, ParentMatrix);
-            memcpy(&MeshAsset->Positions.Vertices[AccessIdx], &TransformedVertex, sizeof(aiVector3D));
+            memcpy(&MeshObjectInstance->Positions.Vertices[AccessIdx], &TransformedVertex, sizeof(aiVector3D));
         }
     }
 }
@@ -476,7 +476,7 @@ template<typename T>
 void AssetManager::LoadTextureCoord(
     const aiMesh* const Mesh, 
     size_t VertexStartIdx, 
-    T* MeshAsset
+    T* MeshObjectInstance
 )
 {
     if (Mesh->HasTextureCoords(0))
@@ -485,13 +485,14 @@ void AssetManager::LoadTextureCoord(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTextureCoord = Mesh->mTextureCoords[0][VertexIdx];
-            memcpy(&MeshAsset->UVTextures.Vertices[AccessIdx], &CurrentTextureCoord, sizeof(aiVector2D));
+            memcpy(&MeshObjectInstance->UVTextures.Vertices[AccessIdx], &CurrentTextureCoord, sizeof(aiVector2D));
         }
     }
 }
 
 void AssetManager::LoadIndices(
     std::vector<uint32_t>& IndicesIn,
+    size_t VertexStartIdx,
     const aiMesh* const Mesh
 )
 {
@@ -502,7 +503,7 @@ void AssetManager::LoadIndices(
             aiFace& CurrentFace = Mesh->mFaces[FaceIdx];
             for (size_t Index = 0; Index < CurrentFace.mNumIndices; ++Index)
             {
-                IndicesIn.emplace_back(CurrentFace.mIndices[Index]);
+                IndicesIn.emplace_back(VertexStartIdx + CurrentFace.mIndices[Index]);
             }
         }
     }
@@ -548,7 +549,7 @@ template<typename T>
 void AssetManager::LoadTBN(
     const aiMesh* const Mesh, 
     size_t VertexStartIdx, 
-    T* MeshAsset
+    T* MeshObjectInstance
 )
 {
     if (Mesh->HasNormals())
@@ -557,7 +558,7 @@ void AssetManager::LoadTBN(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentNormal = Mesh->mNormals[VertexIdx];
-            memcpy(&MeshAsset->Normals.Vertices[AccessIdx], &CurrentNormal, sizeof(aiVector3D));
+            memcpy(&MeshObjectInstance->Normals.Vertices[AccessIdx], &CurrentNormal, sizeof(aiVector3D));
         }
     }
 
@@ -568,8 +569,8 @@ void AssetManager::LoadTBN(
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTangent = Mesh->mTangents[VertexIdx];
             aiVector3D& CurrentBiTangent = Mesh->mBitangents[VertexIdx];
-            memcpy(&MeshAsset->Tangents.Vertices[AccessIdx], &CurrentTangent, sizeof(aiVector3D));
-            memcpy(&MeshAsset->Bitangents.Vertices[AccessIdx], &CurrentBiTangent, sizeof(aiVector3D));
+            memcpy(&MeshObjectInstance->Tangents.Vertices[AccessIdx], &CurrentTangent, sizeof(aiVector3D));
+            memcpy(&MeshObjectInstance->Bitangents.Vertices[AccessIdx], &CurrentBiTangent, sizeof(aiVector3D));
         }
     }
 }
@@ -578,7 +579,7 @@ template<typename T>
 void AssetManager::LoadTBNAsGltf(
     const aiMesh* const Mesh,
     size_t VertexStartIdx, 
-    T* MeshAsset
+    T* MeshObjectInstance
 )
 {
     if (Mesh->HasNormals())
@@ -587,9 +588,9 @@ void AssetManager::LoadTBNAsGltf(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentNormal = Mesh->mNormals[VertexIdx];
-            MeshAsset->Normals.Vertices[AccessIdx].x = CurrentNormal.x;
-            MeshAsset->Normals.Vertices[AccessIdx].y = -CurrentNormal.z;
-            MeshAsset->Normals.Vertices[AccessIdx].z = CurrentNormal.x;
+            MeshObjectInstance->Normals.Vertices[AccessIdx].x = CurrentNormal.x;
+            MeshObjectInstance->Normals.Vertices[AccessIdx].y = -CurrentNormal.z;
+            MeshObjectInstance->Normals.Vertices[AccessIdx].z = CurrentNormal.x;
         }
     }
 
@@ -601,18 +602,18 @@ void AssetManager::LoadTBNAsGltf(
             aiVector3D& CurrentTangent = Mesh->mTangents[VertexIdx];
             aiVector3D& CurrentBiTangent = Mesh->mBitangents[VertexIdx];
 
-            MeshAsset->Tangents.Vertices[AccessIdx].x = CurrentTangent.x;
-            MeshAsset->Tangents.Vertices[AccessIdx].y = -CurrentTangent.z;
-            MeshAsset->Tangents.Vertices[AccessIdx].z = CurrentTangent.x;
-            MeshAsset->Bitangents.Vertices[AccessIdx].x = CurrentBiTangent.x;
-            MeshAsset->Bitangents.Vertices[AccessIdx].y = -CurrentBiTangent.z;
-            MeshAsset->Bitangents.Vertices[AccessIdx].z = CurrentBiTangent.x;
+            MeshObjectInstance->Tangents.Vertices[AccessIdx].x = CurrentTangent.x;
+            MeshObjectInstance->Tangents.Vertices[AccessIdx].y = -CurrentTangent.z;
+            MeshObjectInstance->Tangents.Vertices[AccessIdx].z = CurrentTangent.x;
+            MeshObjectInstance->Bitangents.Vertices[AccessIdx].x = CurrentBiTangent.x;
+            MeshObjectInstance->Bitangents.Vertices[AccessIdx].y = -CurrentBiTangent.z;
+            MeshObjectInstance->Bitangents.Vertices[AccessIdx].z = CurrentBiTangent.x;
         }
     }
 }
 
 template<typename T>
-void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T* MeshAsset)
+void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T* MeshObjectInstance)
 {
     if (Mesh->HasTangentsAndBitangents())
     {
@@ -620,27 +621,27 @@ void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T
     }
     else
     {
-        for (size_t IndexIdx = IndexStartIdx; IndexIdx < MeshAsset->Indices.size(); IndexIdx += 3)
+        for (size_t IndexIdx = IndexStartIdx; IndexIdx < MeshObjectInstance->Indices.size(); IndexIdx += 3)
         {
-            auto& p0 = MeshAsset->Positions.Vertices[MeshAsset->Indices[IndexIdx]];
-            auto& p1 = MeshAsset->Positions.Vertices[MeshAsset->Indices[IndexIdx + 1]];
-            auto& p2 = MeshAsset->Positions.Vertices[MeshAsset->Indices[IndexIdx + 2]];
+            auto& p0 = MeshObjectInstance->Positions.Vertices[MeshObjectInstance->Indices[IndexIdx]];
+            auto& p1 = MeshObjectInstance->Positions.Vertices[MeshObjectInstance->Indices[IndexIdx + 1]];
+            auto& p2 = MeshObjectInstance->Positions.Vertices[MeshObjectInstance->Indices[IndexIdx + 2]];
 
-            auto& uv0 = MeshAsset->UVTextures.Vertices[MeshAsset->Indices[IndexIdx]];
-            auto& uv1 = MeshAsset->UVTextures.Vertices[MeshAsset->Indices[IndexIdx + 1]];
-            auto& uv2 = MeshAsset->UVTextures.Vertices[MeshAsset->Indices[IndexIdx + 2]];
+            auto& uv0 = MeshObjectInstance->UVTextures.Vertices[MeshObjectInstance->Indices[IndexIdx]];
+            auto& uv1 = MeshObjectInstance->UVTextures.Vertices[MeshObjectInstance->Indices[IndexIdx + 1]];
+            auto& uv2 = MeshObjectInstance->UVTextures.Vertices[MeshObjectInstance->Indices[IndexIdx + 2]];
 
-            auto& n0 = MeshAsset->Normals.Vertices[MeshAsset->Indices[IndexIdx]];
-            auto& n1 = MeshAsset->Normals.Vertices[MeshAsset->Indices[IndexIdx + 1]];
-            auto& n2 = MeshAsset->Normals.Vertices[MeshAsset->Indices[IndexIdx + 2]];
+            auto& n0 = MeshObjectInstance->Normals.Vertices[MeshObjectInstance->Indices[IndexIdx]];
+            auto& n1 = MeshObjectInstance->Normals.Vertices[MeshObjectInstance->Indices[IndexIdx + 1]];
+            auto& n2 = MeshObjectInstance->Normals.Vertices[MeshObjectInstance->Indices[IndexIdx + 2]];
 
-            auto& t0 = MeshAsset->Tangents.Vertices[MeshAsset->Indices[IndexIdx]];
-            auto& t1 = MeshAsset->Tangents.Vertices[MeshAsset->Indices[IndexIdx + 1]];
-            auto& t2 = MeshAsset->Tangents.Vertices[MeshAsset->Indices[IndexIdx + 2]];
+            auto& t0 = MeshObjectInstance->Tangents.Vertices[MeshObjectInstance->Indices[IndexIdx]];
+            auto& t1 = MeshObjectInstance->Tangents.Vertices[MeshObjectInstance->Indices[IndexIdx + 1]];
+            auto& t2 = MeshObjectInstance->Tangents.Vertices[MeshObjectInstance->Indices[IndexIdx + 2]];
 
-            auto& bt0 = MeshAsset->Bitangents.Vertices[MeshAsset->Indices[IndexIdx]];
-            auto& bt1 = MeshAsset->Bitangents.Vertices[MeshAsset->Indices[IndexIdx + 1]];
-            auto& bt2 = MeshAsset->Bitangents.Vertices[MeshAsset->Indices[IndexIdx + 2]];
+            auto& bt0 = MeshObjectInstance->Bitangents.Vertices[MeshObjectInstance->Indices[IndexIdx]];
+            auto& bt1 = MeshObjectInstance->Bitangents.Vertices[MeshObjectInstance->Indices[IndexIdx + 1]];
+            auto& bt2 = MeshObjectInstance->Bitangents.Vertices[MeshObjectInstance->Indices[IndexIdx + 2]];
 
             MathematicalHelper::GetTangentBitangent(
                 p0,

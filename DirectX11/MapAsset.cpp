@@ -3,21 +3,18 @@
 #include "GraphicsPipeline.h"
 #include "GlobalVariable.h"
 
-#include "PlaceableObject.h"
-#include "AttachableObject.h"
-
 #include "PSOManager.h"
 #include "PSOObject.h"
-#include "AssetManager.h"
 
+#include "AssetManager.h"
 #include "AMeshAsset.h"
+
+#include "Actor.h"
 
 #include "MeshObject.h"
 #include "BoundingSphereObject.h"
 #include "OBBObject.h"
 #include "BoundingFrustumObject.h"
-
-#include "TestActor.h"
 
 #include "Camera.h"
 
@@ -39,20 +36,18 @@ MapAsset::~MapAsset()
 
 void MapAsset::AddRenderObject(std::shared_ptr<AMeshAsset> MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-	TestActor* ta = PlaceableAddHelper<TestActor>(GraphicsPipelineCached);
-	MeshObject* AddedObject = ta->AddAttachedObject<MeshObject>(GraphicsPipelineCached, MeshAssetIn);
-
-	AddedObject->RelativePosition.x = PosXIn;
-	AddedObject->RelativePosition.y = PosYIn;
-	AddedObject->RelativePosition.z = PosZIn;
+	Actor* ta = PlaceableAddHelper<Actor>(GraphicsPipelineCached, MeshAssetIn);
+	ta->RelativePosition.x = PosXIn;
+	ta->RelativePosition.y = PosYIn;
+	ta->RelativePosition.z = PosZIn;
 }
 
 
-void MapAsset::UpdateMap(const float& DeltaTimeIn)
+void MapAsset::Update(const float& DeltaTimeIn)
 {
 	for (auto& ro : RootPlaceables)
 	{
-		ro->UpdateObject(DeltaTimeIn);
+		ro->Update(DeltaTimeIn);
 	}
 	
 	UpdateRenderState();
@@ -148,7 +143,7 @@ void MapAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* A
 			break;
 		case ActorKind:
 		{
-			TestActor* AddedActor = PlaceableAddHelper<TestActor>(GraphicsPipelineCached);
+			Actor* AddedActor = PlaceableAddHelper<Actor>(GraphicsPipelineCached);
 			AddedActor->OnDeserialize(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 			break;
@@ -163,7 +158,7 @@ void MapAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* A
 	}
 }
 
-void MapAsset::SerializeChildrenObjects(PlaceableObject* ChildPlaceableObjectIn, FILE* FileIn)
+void MapAsset::SerializeChildrenObjects(APlaceableObject* ChildPlaceableObjectIn, FILE* FileIn)
 {
 	// Attached Children Count
 	size_t AttachedChildrenCount = ChildPlaceableObjectIn->GetAttachedChildrenObjects().size();
@@ -181,7 +176,7 @@ void MapAsset::SerializeChildrenObjects(PlaceableObject* ChildPlaceableObjectIn,
 	}
 }
 
-void MapAsset::SerializeChildrenObjects(AttachableObject* ChildAttachableObjectIn, FILE* FileIn)
+void MapAsset::SerializeChildrenObjects(AAttachableObject* ChildAttachableObjectIn, FILE* FileIn)
 {
 	// Attached Children Count
 	size_t AttachedChildrenCount = ChildAttachableObjectIn->GetAttachedChildrenObjects().size();
@@ -203,8 +198,8 @@ template<typename T>
 inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	static_assert(
-		std::is_base_of<PlaceableObject, T>::value | std::is_base_of<AttachableObject, T>::value,
-		DerivedCondition(PlaceableObject | AttachableObject)
+		std::is_base_of<APlaceableObject, T>::value | std::is_base_of<AAttachableObject, T>::value,
+		DerivedCondition(APlaceableObject | AAttachableObject)
 		);
 
 	size_t ChildrenAttachedCount;
@@ -216,7 +211,7 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 		EAttachableObjectKind AttachedObjectKind;
 		fread(&AttachedObjectKind, sizeof(EAttachableObjectKind), 1, FileIn);
 
-		AttachableObject* AddedMeshObject = nullptr;
+		AAttachableObject* AddedMeshObject = nullptr;
 		switch (AttachedObjectKind)
 		{
 		case AttachableNone:
@@ -261,7 +256,7 @@ FILE* MapAsset::DefaultOpenFile(const std::string& OutputAdditionalPath)
 
 }
 
-void MapAsset::PlaceableDeleteHelper(PlaceableObject* PlaceableObjectIn)
+void MapAsset::PlaceableDeleteHelper(APlaceableObject* PlaceableObjectIn)
 {
 	const unsigned int& PlaceableId = PlaceableObjectIn->GetPickingID().GetID();
 	if (IdToPlaceables.find(PlaceableId) != IdToPlaceables.end())
@@ -270,7 +265,7 @@ void MapAsset::PlaceableDeleteHelper(PlaceableObject* PlaceableObjectIn)
 	}
 
 	auto it = std::find_if(RootPlaceables.begin(), RootPlaceables.end(),
-		[PlaceableObjectIn](const std::unique_ptr<PlaceableObject>& ptr)
+		[PlaceableObjectIn](const std::unique_ptr<APlaceableObject>& ptr)
 		{
 			return ptr.get() == PlaceableObjectIn;
 		}

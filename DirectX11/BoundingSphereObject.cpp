@@ -110,14 +110,14 @@ bool BoundingSphereObject::AcceptCollision(ICollisionVisitor* CollisionVisitor)
 }
 
 
-void BoundingSphereObject::UpdateObject(const float& DeltaTimeIn)
+void BoundingSphereObject::Update(const float& DeltaTimeIn)
 {
 	Radius = DescaledRadius * RelativeScale.x;
 
 	RelativeScale.x = Radius;
 	RelativeScale.y = Radius;
 	RelativeScale.z = Radius;
-	AObject::UpdateObject(DeltaTimeIn);
+	AObject::Update(DeltaTimeIn);
 	RelativeScale.x /= DescaledRadius;
 	RelativeScale.y /= DescaledRadius;
 	RelativeScale.z /= DescaledRadius;
@@ -126,7 +126,7 @@ void BoundingSphereObject::UpdateObject(const float& DeltaTimeIn)
 
 	for (auto& ChildObject : AttachedChildrenObjects)
 	{
-		ChildObject->UpdateObject(DeltaTimeIn);
+		ChildObject->Update(DeltaTimeIn);
 	}
 }
 

@@ -48,7 +48,7 @@ protected:
 	const FLOAT ClearColor[4] = { 0.2f, 0.2f, 0.2f, 1.f };
 
 public:
-	virtual void UpdateObject(const float& DeltaTimeIn) override;
+	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
 	virtual void AcceptRenderer(ARenderer* Renderer) override;

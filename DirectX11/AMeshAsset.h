@@ -1,10 +1,10 @@
 #pragma once
 #include "AAssetFile.h"
 #include "Vertexable.h"
-#include "IIndexable.h"
+#include "AIndexable.h"
 #include "DefineType.h"
 
-class AMeshAsset : public AAssetFile, public IIndexable<uint32_t>
+class AMeshAsset : public AAssetFile, public AIndexable<uint32_t>
 {
 public:
 	AMeshAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn);

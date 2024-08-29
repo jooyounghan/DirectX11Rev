@@ -1,10 +1,10 @@
 #pragma once
-#include "IBuffer.h"
+#include "Buffer.h"
 #include "HeaderHelper.h"
 #include "DefineUtility.h"
 
 template<typename T>
-class ConstantBuffer : public IBuffer
+class ConstantBuffer : public Buffer
 {
 public:
 	ConstantBuffer();

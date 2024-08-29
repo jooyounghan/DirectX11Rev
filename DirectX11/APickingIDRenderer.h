@@ -1,7 +1,7 @@
 #pragma once
 #include "ARenderer.h"
 
-class PlaceableObject;
+class APlaceableObject;
 
 class APickingIDRenderer : public ARenderer
 {

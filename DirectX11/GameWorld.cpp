@@ -72,15 +72,15 @@ void GameWorld::LoadGameWorld()
 	// Load Current State Of GameWorld From Binary Files
 }
 
-void GameWorld::UpdateWorld(const float& DeltaTimeIn)
+void GameWorld::Update(const float& DeltaTimeIn)
 {
 #ifdef _DEBUG
-	EditorWorldInstance->UpdateWorld(DeltaTimeIn);
+	EditorWorldInstance->Update(DeltaTimeIn);
 #endif // _DEBUG
 
 	if (CurrentMap)
 	{
-		CurrentMap->UpdateMap(DeltaTimeIn);
+		CurrentMap->Update(DeltaTimeIn);
 	}
 }
 

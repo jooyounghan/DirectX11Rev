@@ -12,7 +12,7 @@ using namespace std;
 using namespace DirectX;
 
 Viewable::Viewable(GraphicsPipeline* GraphicsInstance, const UINT& WidthIn, const UINT& HeightIn)
-	: AttachableObject(GraphicsInstance), ViewProjBuffer(GraphicsInstance->GetDevice())
+	: AAttachableObject(GraphicsInstance), ViewProjBuffer(GraphicsInstance->GetDevice())
 {
 	Resize(WidthIn, HeightIn);
 }
@@ -54,9 +54,9 @@ const XMMATRIX Viewable::GetPerspectiveViewMatrix()
 	return GetViewMatrix() * GetProjectionMatrix();
 }
 
-void Viewable::UpdateObject(const float& DeltaTimeIn)
+void Viewable::Update(const float& DeltaTimeIn)
 {
-	AttachableObject::UpdateObject(DeltaTimeIn);
+	AAttachableObject::Update(DeltaTimeIn);
 
 	ViewProjBufferData TempViewProj;
 	TempViewProj.ViewProjMatrix = GetPerspectiveViewMatrix();

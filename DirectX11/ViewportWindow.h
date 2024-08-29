@@ -2,10 +2,11 @@
 #include "IWindow.h"
 
 class EditorWorld;
+class EditorActor;
+class EditorCamera; 
+
 class GameWorld;
 class AssetManager;
-
-class EditorCamera; 
 class MapAsset;
 
 class ViewportWindow : public IWindow
@@ -21,6 +22,10 @@ private:
 	EditorWorld* EditorWorldCached = nullptr;
 	GameWorld* GameWorldCached = nullptr;
 	AssetManager* AssetManagerCached = nullptr;
+	MapAsset* CurrentMap = nullptr;
+
+private:
+	EditorActor* EditorActorCached = nullptr;
 	EditorCamera* EditorCameraCached = nullptr;
 
 private:
@@ -28,7 +33,9 @@ private:
 	ImVec2 ImageSize = ImVec2();
 
 private:
-	void ManageAssetDrop(MapAsset* CurrentMap);
-	void ManageMouseLBClick(MapAsset* CurrentMap);
+	void ManageAssetDrop();
+	void ManageMouseLBClick();
+	void ManageEditorCameraByKey();
+	void ManageEditorCameraByMouse();
 };
 

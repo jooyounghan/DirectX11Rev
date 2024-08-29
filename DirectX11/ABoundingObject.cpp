@@ -5,7 +5,7 @@
 #include "ARenderer.h"
 
 ABoundingObject::ABoundingObject(GraphicsPipeline* GraphicsPipelineInstance)
-	: AttachableObject(GraphicsPipelineInstance), DebuggingColorBuffer(GraphicsPipelineInstance->GetDevice())
+	: AAttachableObject(GraphicsPipelineInstance), DebuggingColorBuffer(GraphicsPipelineInstance->GetDevice())
 {
 }
 
@@ -34,6 +34,6 @@ void ABoundingObject::SetCollisionColor()
 
 void ABoundingObject::AcceptRenderer(ARenderer* Renderer)
 {
-	AttachableObject::AcceptRenderer(Renderer);
+	AAttachableObject::AcceptRenderer(Renderer);
 	Renderer->Render(DeviceContextCached, this);
 }

@@ -10,21 +10,28 @@ namespace App
 
 namespace Direction
 {
-	extern DirectX::XMVECTOR GDefaultForward;
-	extern DirectX::XMVECTOR GDefaultUp;
-	extern DirectX::XMVECTOR GDefaultRight;
+	constexpr DirectX::XMVECTOR GDefaultForward = DirectX::XMVECTOR{ 0.f, 0.f, 1.f, 0.f };
+	constexpr DirectX::XMVECTOR GDefaultUp = DirectX::XMVECTOR{ 0.f, 1.f, 0.f, 0.f };
+	constexpr DirectX::XMVECTOR GDefaultRight = DirectX::XMVECTOR{ 1.f, 0.f, 0.f, 0.f };
 }
 
+struct ImVec2;
 struct ImVec4;
+
 namespace UIColor
 {
-	extern ImVec4 GBlack;
-	extern ImVec4 GWhite;
-	extern ImVec4 GDarkGray;
-	extern ImVec4 GLightGray;
-	extern ImVec4 GDarkBrown;
-	extern ImVec4 GMediumBrown;
-	extern ImVec4 GLightBrown;
+	extern const ImVec4 GBlack;
+	extern const ImVec4 GWhite;
+	extern const ImVec4 GDarkGray;
+	extern const ImVec4 GLightGray;
+	extern const ImVec4 GDarkBrown;
+	extern const ImVec4 GMediumBrown;
+	extern const ImVec4 GLightBrown;
+}
+
+namespace UISize
+{
+	extern const ImVec2 FileSize;
 }
 
 namespace DragDrop

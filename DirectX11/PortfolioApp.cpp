@@ -39,7 +39,7 @@ PortfolioApp::PortfolioApp()
 
 	ShowWindow(MainWindow, SW_SHOW);
 
-	ResetCursorHotSpot(0.f, 0.f);
+	ResetCursorHotSpot(0, 0);
 
 	GraphicsPipelineInstance = make_unique<GraphicsPipeline>();
 	GraphicsPipelineInstance->LoadPipeline(App::GWidth, App::GHeight, hWindow);
@@ -122,7 +122,7 @@ void PortfolioApp::Quit()
 void PortfolioApp::Update()
 {
 	const float& DeltaTime = GetDeltaTimeFromLastCall();
-	GameWorldInstance->UpdateWorld(DeltaTime);
+	GameWorldInstance->Update(DeltaTime);
 }
 
 void PortfolioApp::Render()

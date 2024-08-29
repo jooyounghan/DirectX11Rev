@@ -73,7 +73,7 @@ void EditorWorld::SetSelecteObjectByID(const UINT& Id)
     MapAsset* CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap != nullptr)
     {
-        const unordered_map<UINT, PlaceableObject*>& IdToPlaceables = CurrentMap->GetIdToPlaceables();
+        const unordered_map<UINT, APlaceableObject*>& IdToPlaceables = CurrentMap->GetIdToPlaceables();
         if (IdToPlaceables.find(Id) != IdToPlaceables.end())
         {
             SelectedPlaceable = IdToPlaceables.at(Id);
@@ -81,9 +81,9 @@ void EditorWorld::SetSelecteObjectByID(const UINT& Id)
     }
 }
 
-void EditorWorld::UpdateWorld(const float& DeltaTimeIn)
+void EditorWorld::Update(const float& DeltaTimeIn)
 {
-    EditorActorInstance->UpdateObject(DeltaTimeIn);
+    EditorActorInstance->Update(DeltaTimeIn);
 }
 
 void EditorWorld::RenderWorld()
@@ -102,7 +102,7 @@ void EditorWorld::RenderWorld()
                 PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Wireframe)
             };
 
-            const list<unique_ptr<PlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
+            const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
 
             ID3D11RenderTargetView* RTVs[] = { EditorCameraCached->GetIdSelectRTV() };
             D3D11_VIEWPORT Viewports[] = { EditorCameraCached->GetViewport() };

@@ -115,26 +115,8 @@
     <Filter Include="소스 파일\Asset\Map">
       <UniqueIdentifier>{4252095b-5211-49ea-b361-de1a938f27fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object">
-      <UniqueIdentifier>{6d0b603d-c627-4fc4-8c97-3d3f5390bad6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Asset\Map">
       <UniqueIdentifier>{62905561-a35a-43c3-98f6-64cf6584d93b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object">
-      <UniqueIdentifier>{cf287dd9-4094-4d15-b7de-af4edb0ed927}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object\Attachable">
-      <UniqueIdentifier>{c5f51f0a-ffb2-419e-9dc2-7de742bed981}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object\Placeable">
-      <UniqueIdentifier>{05fd7241-2d12-4c69-b419-1c4b56c60b77}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Attachable">
-      <UniqueIdentifier>{131a6598-d565-45d1-8ed8-6e028834a09b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Placeable">
-      <UniqueIdentifier>{4b88f40a-72f3-4fc9-ab87-0ade16acc919}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Collision">
       <UniqueIdentifier>{905256e4-f194-4f73-962b-4c7087e5de31}</UniqueIdentifier>
@@ -144,9 +126,6 @@
     </Filter>
     <Filter Include="헤더 파일\World\Editor\GUI\Visitor">
       <UniqueIdentifier>{cb6c6704-962e-4d59-9cc7-addab80df882}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object\View">
-      <UniqueIdentifier>{2ab6c005-d21d-4874-9e2e-899e368baae8}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner">
       <UniqueIdentifier>{b3341d71-9b14-4076-a6f3-5f5a8da5d2fd}</UniqueIdentifier>
@@ -178,21 +157,6 @@
     <Filter Include="헤더 파일\Rendering">
       <UniqueIdentifier>{17f45aa0-efee-4e64-a162-fc969d7b6caa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Attachable\Mesh">
-      <UniqueIdentifier>{0374edc9-88a0-48a3-8acb-8feeb624c928}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Attachable\View">
-      <UniqueIdentifier>{bc10aa97-649d-445a-bf64-bed7c2e71440}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object\Attachable\Mesh">
-      <UniqueIdentifier>{96c6f463-defb-4fdd-9569-1e0939fee0f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Placeable\Actor">
-      <UniqueIdentifier>{b5e020b5-bce8-44a3-ac97-9df96e43dd5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object\Placeable\Actor">
-      <UniqueIdentifier>{f9b343a1-5b1d-4eb3-8500-48b3fbd19ff9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer">
       <UniqueIdentifier>{12dbda4d-29c3-4535-9e1c-918f64db4dde}</UniqueIdentifier>
     </Filter>
@@ -205,11 +169,77 @@
     <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject">
       <UniqueIdentifier>{a838dca8-130d-4d1b-a812-fe45dd1d9863}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Asset\Map\Object\Attachable\BoundingObject">
+    <Filter Include="소스 파일\Controller">
+      <UniqueIdentifier>{c7ee91dd-ca3d-4f84-8ba9-6f913322c859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Controller">
+      <UniqueIdentifier>{3ca5c5f0-d87b-4c20-ae37-4cd32acd39ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object">
+      <UniqueIdentifier>{6d0b603d-c627-4fc4-8c97-3d3f5390bad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object\Attachable">
+      <UniqueIdentifier>{c5f51f0a-ffb2-419e-9dc2-7de742bed981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object\Attachable\Mesh">
+      <UniqueIdentifier>{96c6f463-defb-4fdd-9569-1e0939fee0f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object\Attachable\BoundingObject">
       <UniqueIdentifier>{15c9ed6a-e671-410a-9fe9-cd8de82fa103}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Asset\Map\Object\Attachable\BoundingObject">
+    <Filter Include="소스 파일\Object\Placeable">
+      <UniqueIdentifier>{05fd7241-2d12-4c69-b419-1c4b56c60b77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object\Placeable\Actor">
+      <UniqueIdentifier>{f9b343a1-5b1d-4eb3-8500-48b3fbd19ff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object\Placeable\Pawn">
+      <UniqueIdentifier>{c75582a7-9529-4fd5-a7a4-6a5bbca51cb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object\View">
+      <UniqueIdentifier>{2ab6c005-d21d-4874-9e2e-899e368baae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Object">
+      <UniqueIdentifier>{cf287dd9-4094-4d15-b7de-af4edb0ed927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Object\Attachable">
+      <UniqueIdentifier>{131a6598-d565-45d1-8ed8-6e028834a09b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Object\Attachable\Mesh">
+      <UniqueIdentifier>{0374edc9-88a0-48a3-8acb-8feeb624c928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Object\Attachable\View">
+      <UniqueIdentifier>{bc10aa97-649d-445a-bf64-bed7c2e71440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Object\Attachable\BoundingObject">
       <UniqueIdentifier>{b7f79190-37bb-437b-8da5-f9f2fc3bf0cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Object\Placeable">
+      <UniqueIdentifier>{4b88f40a-72f3-4fc9-ab87-0ade16acc919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Object\Placeable\Actor">
+      <UniqueIdentifier>{b5e020b5-bce8-44a3-ac97-9df96e43dd5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object\Placeable\Character">
+      <UniqueIdentifier>{09b158c2-7129-4197-8277-7da0e08cd8e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Object\Placeable\Pawn">
+      <UniqueIdentifier>{ad3ec5f3-4b8e-407f-b987-a79bd493250a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Object\Placeable\Character">
+      <UniqueIdentifier>{ae6f6187-3759-415e-af54-fc963a672703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Interface">
+      <UniqueIdentifier>{6fddc017-1621-4933-8376-8c8fa86dba4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Controller\UserController">
+      <UniqueIdentifier>{f9c49dc6-0341-40a6-b982-843c605dcc4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Controller\UserController">
+      <UniqueIdentifier>{5779cdb7-d2aa-49e4-af4b-bc327419ae1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Controller\Command">
+      <UniqueIdentifier>{d0447e4a-154b-4eb6-9a7e-98071b26576b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -298,46 +328,46 @@
       <Filter>소스 파일\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Debugable.cpp">
-      <Filter>소스 파일\Asset\Map\Object</Filter>
+      <Filter>소스 파일\Object</Filter>
     </ClCompile>
-    <ClCompile Include="PlaceableObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Placeable</Filter>
+    <ClCompile Include="APlaceableObject.cpp">
+      <Filter>소스 파일\Object\Placeable</Filter>
     </ClCompile>
-    <ClCompile Include="AttachableObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable</Filter>
+    <ClCompile Include="AAttachableObject.cpp">
+      <Filter>소스 파일\Object\Attachable</Filter>
     </ClCompile>
     <ClCompile Include="ABoundingObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable\BoundingObject</Filter>
+      <Filter>소스 파일\Object\Attachable\BoundingObject</Filter>
     </ClCompile>
     <ClCompile Include="BoundingSphereObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable\BoundingObject</Filter>
+      <Filter>소스 파일\Object\Attachable\BoundingObject</Filter>
     </ClCompile>
     <ClCompile Include="OBBObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable\BoundingObject</Filter>
+      <Filter>소스 파일\Object\Attachable\BoundingObject</Filter>
     </ClCompile>
     <ClCompile Include="BoundingFrustumObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable\BoundingObject</Filter>
+      <Filter>소스 파일\Object\Attachable\BoundingObject</Filter>
     </ClCompile>
     <ClCompile Include="CollisionVisitor.cpp">
       <Filter>소스 파일\Collision</Filter>
     </ClCompile>
     <ClCompile Include="MeshObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Attachable\Mesh</Filter>
+      <Filter>소스 파일\Object\Attachable\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Viewable.cpp">
-      <Filter>소스 파일\Asset\Map\Object\View</Filter>
+      <Filter>소스 파일\Object\View</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일\Asset\Map\Object\View</Filter>
+      <Filter>소스 파일\Object\View</Filter>
     </ClCompile>
     <ClCompile Include="EditorCamera.cpp">
       <Filter>소스 파일\World\Editor</Filter>
     </ClCompile>
     <ClCompile Include="IDColor.cpp">
-      <Filter>소스 파일\Asset\Map\Object</Filter>
+      <Filter>소스 파일\Object</Filter>
     </ClCompile>
     <ClCompile Include="AObject.cpp">
-      <Filter>소스 파일\Asset\Map\Object</Filter>
+      <Filter>소스 파일\Object</Filter>
     </ClCompile>
     <ClCompile Include="PSOManager.cpp">
       <Filter>소스 파일\PSO</Filter>
@@ -367,10 +397,7 @@
       <Filter>소스 파일\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="EditorActor.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Placeable\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="TestActor.cpp">
-      <Filter>소스 파일\Asset\Map\Object\Placeable\Actor</Filter>
+      <Filter>소스 파일\Object\Placeable\Actor</Filter>
     </ClCompile>
     <ClCompile Include="ModelDetailWindow.cpp">
       <Filter>소스 파일\World\Editor\GUI\Window</Filter>
@@ -402,6 +429,24 @@
     <ClCompile Include="AAddObjectHelper.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClCompile>
+    <ClCompile Include="AController.cpp">
+      <Filter>소스 파일\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>소스 파일\Object\Placeable\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="APawn.cpp">
+      <Filter>소스 파일\Object\Placeable\Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultController.cpp">
+      <Filter>소스 파일\Controller\UserController</Filter>
+    </ClCompile>
+    <ClCompile Include="ICommand.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AUserController.cpp">
+      <Filter>소스 파일\Controller\UserController</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
@@ -416,9 +461,6 @@
     <ClInclude Include="AMeshAsset.h">
       <Filter>헤더 파일\Asset\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="ISerializable.h">
-      <Filter>헤더 파일\Asset</Filter>
-    </ClInclude>
     <ClInclude Include="StaticMeshAsset.h">
       <Filter>헤더 파일\Asset\Mesh</Filter>
     </ClInclude>
@@ -429,9 +471,6 @@
       <Filter>헤더 파일\Asset\Texture</Filter>
     </ClInclude>
     <ClInclude Include="GameWorld.h">
-      <Filter>헤더 파일\World</Filter>
-    </ClInclude>
-    <ClInclude Include="IWorld.h">
       <Filter>헤더 파일\World</Filter>
     </ClInclude>
     <ClInclude Include="EditorWorld.h">
@@ -458,19 +497,13 @@
     <ClInclude Include="GraphicsPipeline.h">
       <Filter>헤더 파일\App</Filter>
     </ClInclude>
-    <ClInclude Include="IDownloadableBuffer.h">
-      <Filter>헤더 파일\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="IUploadableBuffer.h">
-      <Filter>헤더 파일\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
       <Filter>헤더 파일\Buffer\Constant</Filter>
     </ClInclude>
     <ClInclude Include="ConstantArrayBuffer.h">
       <Filter>헤더 파일\Buffer\Constant</Filter>
     </ClInclude>
-    <ClInclude Include="IBuffer.h">
+    <ClInclude Include="Buffer.h">
       <Filter>헤더 파일\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="UploadBuffer.h">
@@ -527,38 +560,35 @@
     <ClInclude Include="StringHelper.h">
       <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="IIntersectable.h">
-      <Filter>헤더 파일\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="OBBObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\BoundingObject</Filter>
+      <Filter>헤더 파일\Object\Attachable\BoundingObject</Filter>
     </ClInclude>
     <ClInclude Include="AObject.h">
-      <Filter>헤더 파일\Asset\Map\Object</Filter>
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="BoundingSphereObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\BoundingObject</Filter>
+      <Filter>헤더 파일\Object\Attachable\BoundingObject</Filter>
     </ClInclude>
-    <ClInclude Include="IIndexable.h">
+    <ClInclude Include="AIndexable.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="Vertexable.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="Debugable.h">
-      <Filter>헤더 파일\Asset\Map\Object</Filter>
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
-    <ClInclude Include="PlaceableObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placeable</Filter>
+    <ClInclude Include="APlaceableObject.h">
+      <Filter>헤더 파일\Object\Placeable</Filter>
     </ClInclude>
-    <ClInclude Include="AttachableObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable</Filter>
+    <ClInclude Include="AAttachableObject.h">
+      <Filter>헤더 파일\Object\Attachable</Filter>
     </ClInclude>
     <ClInclude Include="ABoundingObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\BoundingObject</Filter>
+      <Filter>헤더 파일\Object\Attachable\BoundingObject</Filter>
     </ClInclude>
     <ClInclude Include="BoundingFrustumObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\BoundingObject</Filter>
+      <Filter>헤더 파일\Object\Attachable\BoundingObject</Filter>
     </ClInclude>
     <ClInclude Include="CollisionVisitor.h">
       <Filter>헤더 파일\Collision</Filter>
@@ -566,17 +596,14 @@
     <ClInclude Include="ModelOutlinerWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
     </ClInclude>
-    <ClInclude Include="ICollisionVisitor.h">
-      <Filter>헤더 파일\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="MeshObject.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\Mesh</Filter>
+      <Filter>헤더 파일\Object\Attachable\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Viewable.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\View</Filter>
+      <Filter>헤더 파일\Object\Attachable\View</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>헤더 파일\Asset\Map\Object\Attachable\View</Filter>
+      <Filter>헤더 파일\Object\Attachable\View</Filter>
     </ClInclude>
     <ClInclude Include="IGuiModelVisitor.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
@@ -585,7 +612,7 @@
       <Filter>헤더 파일\World\Editor</Filter>
     </ClInclude>
     <ClInclude Include="IDColor.h">
-      <Filter>헤더 파일\Asset\Map\Object</Filter>
+      <Filter>헤더 파일\Object</Filter>
     </ClInclude>
     <ClInclude Include="PSOManager.h">
       <Filter>헤더 파일\PSO</Filter>
@@ -621,10 +648,7 @@
       <Filter>헤더 파일\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="EditorActor.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placeable\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="TestActor.h">
-      <Filter>헤더 파일\Asset\Map\Object\Placeable\Actor</Filter>
+      <Filter>헤더 파일\Object\Placeable\Actor</Filter>
     </ClInclude>
     <ClInclude Include="ModelDetailWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
@@ -658,6 +682,51 @@
     </ClInclude>
     <ClInclude Include="AAddObjectHelper.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
+    </ClInclude>
+    <ClInclude Include="AController.h">
+      <Filter>헤더 파일\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>헤더 파일\Object\Placeable\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="APawn.h">
+      <Filter>헤더 파일\Object\Placeable\Pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="ISerializable.h">
+      <Filter>헤더 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IWorld.h">
+      <Filter>헤더 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IIntersectable.h">
+      <Filter>헤더 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ICollisionVisitor.h">
+      <Filter>헤더 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IDownloadableBuffer.h">
+      <Filter>헤더 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IUploadableBuffer.h">
+      <Filter>헤더 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IUpdatable.h">
+      <Filter>헤더 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineKey.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultController.h">
+      <Filter>헤더 파일\Controller\UserController</Filter>
+    </ClInclude>
+    <ClInclude Include="Todo.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommand.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AUserController.h">
+      <Filter>헤더 파일\Controller\UserController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

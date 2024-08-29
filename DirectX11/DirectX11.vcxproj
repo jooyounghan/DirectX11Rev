@@ -134,13 +134,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AAddObjectHelper.cpp" />
+    <ClCompile Include="AController.cpp" />
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
+    <ClCompile Include="AUserController.cpp" />
+    <ClCompile Include="DefaultController.cpp" />
     <ClCompile Include="EditorActor.cpp" />
     <ClCompile Include="ABoundingObject.cpp" />
     <ClCompile Include="AObject.cpp" />
     <ClCompile Include="AssetManagerWindow.cpp" />
-    <ClCompile Include="AttachableObject.cpp" />
+    <ClCompile Include="AAttachableObject.cpp" />
     <ClCompile Include="BoundingFrustumObject.cpp" />
     <ClCompile Include="BoundingOBBInformationDrawer.cpp" />
     <ClCompile Include="BoundingSphereObject.cpp" />
@@ -159,6 +163,7 @@
     <ClCompile Include="GlobalVariable.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="AAssetFile.cpp" />
+    <ClCompile Include="ICommand.cpp" />
     <ClCompile Include="IDColor.cpp" />
     <ClCompile Include="AMeshAsset.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
@@ -178,9 +183,10 @@
     <ClCompile Include="ModelDetailedInformationVisitor.cpp" />
     <ClCompile Include="OBBObject.cpp" />
     <ClCompile Include="APickingIDRenderer.cpp" />
+    <ClCompile Include="APawn.cpp" />
     <ClCompile Include="PickingIDSolidRenderer.cpp" />
     <ClCompile Include="PickingIDWireframeRenderer.cpp" />
-    <ClCompile Include="PlaceableObject.cpp" />
+    <ClCompile Include="APlaceableObject.cpp" />
     <ClCompile Include="PortfolioApp.cpp" />
     <ClCompile Include="PSOManager.cpp" />
     <ClCompile Include="PSOObject.cpp" />
@@ -190,7 +196,6 @@
     <ClCompile Include="MeshObjectRenderer.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TaskAnalyzerWindow.cpp" />
-    <ClCompile Include="TestActor.cpp" />
     <ClCompile Include="TextureAsset.cpp" />
     <ClCompile Include="TransformationInformationDrawer.cpp" />
     <ClCompile Include="Viewable.cpp" />
@@ -198,12 +203,17 @@
     <ClCompile Include="ViewportWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AController.h" />
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="AddAttachableObjectHelper.h" />
     <ClInclude Include="AddPlaceableObjectHelper.h" />
+    <ClInclude Include="AUserController.h" />
+    <ClInclude Include="DefaultController.h" />
+    <ClInclude Include="DefineKey.h" />
     <ClInclude Include="EditorActor.h" />
     <ClInclude Include="ABoundingObject.h" />
     <ClInclude Include="AssetManagerWindow.h" />
-    <ClInclude Include="AttachableObject.h" />
+    <ClInclude Include="AAttachableObject.h" />
     <ClInclude Include="BoundingFrustumObject.h" />
     <ClInclude Include="BoundingOBBInformationDrawer.h" />
     <ClInclude Include="BoundingSphereObject.h" />
@@ -220,10 +230,11 @@
     <ClInclude Include="FileSelectDialog.h" />
     <ClInclude Include="AAddObjectHelper.h" />
     <ClInclude Include="ICollisionVisitor.h" />
+    <ClInclude Include="ICommand.h" />
     <ClInclude Include="IDColor.h" />
     <ClInclude Include="IDialog.h" />
     <ClInclude Include="IGuiModelVisitor.h" />
-    <ClInclude Include="IIndexable.h" />
+    <ClInclude Include="AIndexable.h" />
     <ClInclude Include="IInformationDrawer.h" />
     <ClInclude Include="IIntersectable.h" />
     <ClInclude Include="ImGui\imconfig.h" />
@@ -235,17 +246,19 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="AObject.h" />
+    <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="MeshObjectInformationDrawer.h" />
     <ClInclude Include="ModelDetailWindow.h" />
     <ClInclude Include="ModelDetailedInformationVisitor.h" />
     <ClInclude Include="APickingIDRenderer.h" />
+    <ClInclude Include="APawn.h" />
     <ClInclude Include="PickingIDSolidRenderer.h" />
     <ClInclude Include="PickingIDWireframeRenderer.h" />
-    <ClInclude Include="PlaceableObject.h" />
+    <ClInclude Include="APlaceableObject.h" />
     <ClInclude Include="ARenderer.h" />
     <ClInclude Include="MeshObjectRenderer.h" />
     <ClInclude Include="StaticAssertHelper.h" />
-    <ClInclude Include="TestActor.h" />
+    <ClInclude Include="Todo.h" />
     <ClInclude Include="TransformationInformationDrawer.h" />
     <ClInclude Include="Vertexable.h" />
     <ClInclude Include="OBBObject.h" />
@@ -260,7 +273,7 @@
     <ClInclude Include="GraphicsPipeline.h" />
     <ClInclude Include="HeaderHelper.h" />
     <ClInclude Include="AAssetFile.h" />
-    <ClInclude Include="IBuffer.h" />
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="IWindow.h" />
     <ClInclude Include="IDownloadableBuffer.h" />
     <ClInclude Include="AMeshAsset.h" />

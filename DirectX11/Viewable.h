@@ -1,5 +1,5 @@
 #pragma once
-#include "AttachableObject.h"
+#include "AAttachableObject.h"
  
 struct ViewProjBufferData
 {
@@ -7,7 +7,7 @@ struct ViewProjBufferData
 	DirectX::XMMATRIX InvViewProjMatrix;
 };
 
-class Viewable : public AttachableObject
+class Viewable : public AAttachableObject
 {
 public:
 	Viewable(GraphicsPipeline* GraphicsInstance, const UINT& WidthIn, const UINT& HeightIn);
@@ -40,7 +40,7 @@ public:
 	UploadBuffer<ViewProjBufferData> ViewProjBuffer;
 
 public:
-	virtual void UpdateObject(const float& DeltaTimeIn) override;
+	virtual void Update(const float& DeltaTimeIn) override;
 	virtual void Resize(const UINT& WidthIn, const UINT& HeightIn);
 
 public:

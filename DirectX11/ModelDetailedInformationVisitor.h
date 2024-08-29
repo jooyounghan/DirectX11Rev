@@ -14,19 +14,15 @@ protected:
 	AssetManager* AssetManagerCached;
 
 public:
-	virtual void Visit(PlaceableObject* PlaceableInstance) override;
+	virtual void Visit(Actor* ActorInstance) override;
+	virtual void Visit(EditorActor* ActorInstance) override;
 
 public:
 	virtual void Visit(MeshObject* AttachableInstance) override;
-
-public:
 	virtual void Visit(BoundingSphereObject* BoundingSphereInstance) override;
 	virtual void Visit(OBBObject* OBBInstance) override;
 	virtual void Visit(BoundingFrustumObject* BoundingFrustumInstance) override;
-
-public:
 	virtual void Visit(Viewable* BoundingFrustumInstance) override;
-
 };
 
 

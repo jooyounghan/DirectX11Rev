@@ -81,7 +81,7 @@ bool BoundingFrustumObject::AcceptCollision(ICollisionVisitor* CollisionVisitor)
     return IsCollided;
 }
 
-void BoundingFrustumObject::UpdateObject(const float& DeltaTimeIn)
+void BoundingFrustumObject::Update(const float& DeltaTimeIn)
 {
 	if (ViewableCached != nullptr)
 	{
@@ -127,7 +127,7 @@ void BoundingFrustumObject::UpdateObject(const float& DeltaTimeIn)
 
         for (auto& ChildObject : AttachedChildrenObjects)
         {
-            ChildObject->UpdateObject(DeltaTimeIn);
+            ChildObject->Update(DeltaTimeIn);
         }
 
 	}

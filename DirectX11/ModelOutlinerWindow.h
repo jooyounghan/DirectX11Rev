@@ -7,8 +7,8 @@ class GameWorld;
 class MapAsset;
 
 class AObject;
-class PlaceableObject;
-class AttachableObject;
+class APlaceableObject;
+class AAttachableObject;
 
 class ModelOutlinerWindow : public IWindow
 {
@@ -40,7 +40,7 @@ private:
 	void RenderAttachedTree();
 
 private:
-	void RenderAttachedOutline(AttachableObject* Attachment);
+	void RenderAttachedOutline(AAttachableObject* Attachment);
 
 private:
 	void SetWindowPosToCenter();

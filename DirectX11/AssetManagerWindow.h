@@ -38,7 +38,6 @@ public:
 	void RefreshAssetDirectories();
 
 private:
-	static ImVec2 FileSize;
 	void RenderCurrentDirectoryAsset();
 	void RenderAssetFile(const std::filesystem::path& AssetPathIn, const float& VisibleWidthIn);
 };

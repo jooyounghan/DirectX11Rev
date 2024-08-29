@@ -50,5 +50,5 @@ inline void VertexBuffer<T>::InitializeForGPU(
 	SubresourceData.SysMemPitch = ArrayCountIn * sizeof(T);
 	SubresourceData.SysMemSlicePitch = SubresourceData.SysMemPitch;
 
-	DeviceIn->CreateBuffer(&BufferDesc, &SubresourceData, IBuffer::Buffer.GetAddressOf());
+	DeviceIn->CreateBuffer(&BufferDesc, &SubresourceData, Buffer::Buffer.GetAddressOf());
 }
