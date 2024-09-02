@@ -17,8 +17,6 @@
 #include <unordered_map>
 #include <type_traits>
 
-class GraphicsPipeline;
-
 class PSOManager;
 class PSOObject;
 class ARenderer;
@@ -38,11 +36,14 @@ class IIntersectable;
 class MapAsset : public AAssetFile, public IUpdatable
 {
 public:
-	MapAsset(const std::string& MapNameIn, AssetManager* AssetManagerInstance, bool LoadAsFile);
+	MapAsset(
+		const std::string& MapNameIn, 
+		AssetManager* AssetManagerIn, 
+		bool LoadAsFile
+	);
 	virtual ~MapAsset();
 
 protected:
-	GraphicsPipeline* GraphicsPipelineCached = nullptr;
 	AssetManager* AssetManagerCached = nullptr;
 
 protected:
@@ -69,7 +70,7 @@ private:
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
-	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn) override;
+	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 
 private:
 	void SerializeChildrenObjects(APlaceableObject* ChildPlaceableObjectIn, FILE* FileIn);

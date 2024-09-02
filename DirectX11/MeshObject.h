@@ -9,11 +9,8 @@ class AMeshAsset;
 class MeshObject : public AAttachableObject
 {
 public:
-	MeshObject(GraphicsPipeline* GraphicsPipelineInstances);
-	MeshObject(
-		GraphicsPipeline* GraphicsPipelineInstances, 
-		std::shared_ptr<AMeshAsset> MeshAssetInstanceIn
-	);
+	MeshObject();
+	MeshObject(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn);
 	virtual ~MeshObject();
 
 private:

@@ -6,15 +6,8 @@ class OBBObject;
 class BoundingSphereObject : public ABoundingObject, public DirectX::BoundingSphere
 {
 public:
-	BoundingSphereObject(
-		GraphicsPipeline* GraphicsPipelineInstances
-	);
-
-public:
-	BoundingSphereObject(
-		GraphicsPipeline* GraphicsPipelineInstances,
-		const float& RadiusIn
-	);
+	BoundingSphereObject();
+	BoundingSphereObject(const float& RadiusIn);
 	virtual ~BoundingSphereObject();
 
 private:

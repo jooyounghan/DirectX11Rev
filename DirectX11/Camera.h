@@ -10,7 +10,7 @@ class BoundingFrustumObject;
 class Camera : public Viewable
 {
 public: 
-	Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, const UINT& HeightIn);
+	Camera(const UINT& WidthIn, const UINT& HeightIn);
 	virtual ~Camera();
 
 public:

@@ -11,7 +11,6 @@ public:
 
 public:
 	virtual void InitializeForGPU(
-		ID3D11Device* DeviceIn,
 		const UINT& ArrayCountIn,
 		T* CPUDataPtr
 	) override;
@@ -29,7 +28,6 @@ inline VertexBuffer<T>::~VertexBuffer()
 
 template<typename T>
 inline void VertexBuffer<T>::InitializeForGPU(
-	ID3D11Device* DeviceIn, 
 	const UINT& ArrayCountIn,
 	T* CPUDataPtr
 )
@@ -50,5 +48,6 @@ inline void VertexBuffer<T>::InitializeForGPU(
 	SubresourceData.SysMemPitch = ArrayCountIn * sizeof(T);
 	SubresourceData.SysMemSlicePitch = SubresourceData.SysMemPitch;
 
-	DeviceIn->CreateBuffer(&BufferDesc, &SubresourceData, Buffer::Buffer.GetAddressOf());
+	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
+	Device->CreateBuffer(&BufferDesc, &SubresourceData, Buffer::Buffer.GetAddressOf());
 }

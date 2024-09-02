@@ -10,10 +10,7 @@ class OBBObject;
 class BoundingFrustumObject : public ABoundingObject, public BoundingFrustum
 {
 public:
-	BoundingFrustumObject(
-		GraphicsPipeline* GraphicsPipelineInstances,
-		Viewable* ViewableInstance
-	);
+	BoundingFrustumObject(Viewable* ViewableInstance);
 	virtual ~BoundingFrustumObject();
 
 protected:

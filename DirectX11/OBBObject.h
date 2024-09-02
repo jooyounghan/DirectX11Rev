@@ -7,13 +7,10 @@ class BoundingSphereObject;
 class OBBObject : public ABoundingObject, public BoundingOrientedBox
 {
 public:
-	OBBObject(
-		GraphicsPipeline* GraphicsPipelineInstances
-	);
+	OBBObject();
 
 public:
 	OBBObject(
-		GraphicsPipeline* GraphicsPipelineInstances,
 		const float& HalfXIn, 
 		const float& HalfYIn, 
 		const float& HalfZIn

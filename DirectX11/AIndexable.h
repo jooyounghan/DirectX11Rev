@@ -18,6 +18,6 @@ public:
 
 public:
 	virtual DXGI_FORMAT GetIndexFormat() = 0;
-	virtual void Initialize(ID3D11Device* DeviceIn) = 0;
+	virtual void Initialize() = 0;
 };
 

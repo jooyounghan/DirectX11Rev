@@ -10,7 +10,7 @@ struct ViewProjBufferData
 class Viewable : public AAttachableObject
 {
 public:
-	Viewable(GraphicsPipeline* GraphicsInstance, const UINT& WidthIn, const UINT& HeightIn);
+	Viewable(const UINT& WidthIn, const UINT& HeightIn);
 	virtual ~Viewable();
 
 protected:

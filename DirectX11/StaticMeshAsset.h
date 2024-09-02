@@ -14,9 +14,9 @@ public:
 	virtual std::vector<UINT> GetOffsets() override;
 
 public:
-	virtual void Initialize(ID3D11Device* DeviceIn) override;
+	virtual void Initialize() override;
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
-	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn) override;
+	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };

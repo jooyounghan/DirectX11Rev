@@ -5,7 +5,7 @@
 class EditorCamera : public Camera
 {
 public:
-	EditorCamera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, const UINT& HeightIn);
+	EditorCamera(const UINT& WidthIn, const UINT& HeightIn);
 	virtual ~EditorCamera();
 
 protected:

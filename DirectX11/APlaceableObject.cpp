@@ -1,5 +1,6 @@
 #include "APlaceableObject.h"
 
+#include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
 #include "AAttachableObject.h"
 
@@ -7,11 +8,11 @@ using namespace DirectX;
 
 UINT APlaceableObject::PickingIDIssued = 0xABCDEF12;
 
-APlaceableObject::APlaceableObject(GraphicsPipeline* GraphicsPipelineInstance)
-	: AObject(GraphicsPipelineInstance), PickingID(PickingIDIssued)
+APlaceableObject::APlaceableObject()
+	: AObject(), PickingID(PickingIDIssued)
 {
 	PickingIDIssued++;
-	PickingIDBuffer.InitializeForGPU(GraphicsPipelineInstance->GetDevice(), PickingID.GetColor());
+	PickingIDBuffer.InitializeForGPU(PickingID.GetColor());
 }
 
 APlaceableObject::~APlaceableObject()
@@ -56,7 +57,11 @@ void APlaceableObject::MoveForward(const float& DeltaForward)
 {
 	if (!IsPassingTranslation)
 	{
-		RelativePosition.z += DeltaForward;
+		XMVECTOR CurrentDeltaForward = DeltaForward * XMVector3Rotate(Direction::GDefaultForward, GetRotationQuat());
+		RelativePosition.x += CurrentDeltaForward.m128_f32[0];
+		RelativePosition.y += CurrentDeltaForward.m128_f32[1];
+		RelativePosition.z += CurrentDeltaForward.m128_f32[2];
+
 		for (auto& AttachedChild : AttachedChildrenObjects)
 		{
 			AttachedChild->MoveForward(DeltaForward);
@@ -76,7 +81,11 @@ void APlaceableObject::MoveRight(const float& DeltaRight)
 {
 	if (!IsPassingTranslation)
 	{
-		RelativePosition.x += DeltaRight;
+		XMVECTOR CurrentDeltaRight = DeltaRight * XMVector3Rotate(Direction::GDefaultRight, GetRotationQuat());
+		RelativePosition.x += CurrentDeltaRight.m128_f32[0];
+		RelativePosition.y += CurrentDeltaRight.m128_f32[1];
+		RelativePosition.z += CurrentDeltaRight.m128_f32[2];
+
 		for (auto& AttachedChild : AttachedChildrenObjects)
 		{
 			AttachedChild->MoveRight(DeltaRight);

@@ -1,11 +1,12 @@
 #include "ABoundingObject.h"
+#include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
 #include "Debugable.h"
 #include "PSOObject.h"
 #include "ARenderer.h"
 
-ABoundingObject::ABoundingObject(GraphicsPipeline* GraphicsPipelineInstance)
-	: AAttachableObject(GraphicsPipelineInstance), DebuggingColorBuffer(GraphicsPipelineInstance->GetDevice())
+ABoundingObject::ABoundingObject()
+	: AAttachableObject(), DebuggingColorBuffer()
 {
 }
 
@@ -23,11 +24,11 @@ void ABoundingObject::SetCollisionColor()
 	{
 		if (IsCollided)
 		{
-			DebuggingColorBuffer.Upload(DeviceContextCached, XMVectorSet(0.f, 1.f, 0.f, 1.f));
+			DebuggingColorBuffer.Upload(XMVectorSet(0.f, 1.f, 0.f, 1.f));
 		}
 		else
 		{
-			DebuggingColorBuffer.Upload(DeviceContextCached, XMVectorSet(1.f, 0.f, 0.f, 1.f));
+			DebuggingColorBuffer.Upload(XMVectorSet(1.f, 0.f, 0.f, 1.f));
 		}
 	}
 }
@@ -35,5 +36,5 @@ void ABoundingObject::SetCollisionColor()
 void ABoundingObject::AcceptRenderer(ARenderer* Renderer)
 {
 	AAttachableObject::AcceptRenderer(Renderer);
-	Renderer->Render(DeviceContextCached, this);
+	Renderer->Render(this);
 }

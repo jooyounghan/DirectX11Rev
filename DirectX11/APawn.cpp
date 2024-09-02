@@ -1,15 +1,16 @@
 #include "APawn.h"
 #include "AController.h"
+#include "InputEventManager.h"
 
 using namespace std;
 
-APawn::APawn(GraphicsPipeline* GraphicsPipelineIn)
-	: Actor(GraphicsPipelineIn)
+APawn::APawn()
+	: Actor()
 {
 }
 
-APawn::APawn(GraphicsPipeline* GraphicsPipelineIn, shared_ptr<AMeshAsset> MeshAssetInstanceIn)
-	: Actor(GraphicsPipelineIn, MeshAssetInstanceIn)
+APawn::APawn(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn)
+	: Actor(MeshAssetInstanceIn)
 {
 }
 

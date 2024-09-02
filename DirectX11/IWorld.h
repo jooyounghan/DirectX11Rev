@@ -2,19 +2,13 @@
 #include <Windows.h>
 #include "IUpdatable.h"
 
-class GraphicsPipeline;
-
 class IWorld : public IUpdatable
 {
 public:
-	IWorld(GraphicsPipeline* GraphicsPipelineInstance);
-	virtual ~IWorld();
-
-public:
-	GraphicsPipeline* GraphicsPipelineCached = nullptr;
-
-public:
 	virtual void RenderWorld() = 0;
+
+public:
+	virtual void Update(const float& DeltaTimeIn) = 0;
 
 public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;

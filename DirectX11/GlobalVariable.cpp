@@ -4,9 +4,11 @@
 
 using namespace DirectX;
 
-InputEventManager* App::InputEventManagerCached = nullptr;
 UINT App::GWidth = 0;
 UINT App::GHeight = 0;
+PortfolioApp* App::GApp = nullptr;
+GraphicsPipeline* App::GGraphicPipeline = nullptr;
+InputEventManager* App::GInputEventManager = nullptr;
 
 const ImVec4 UIColor::GBlack = ImVec4(0.f, 0.f, 0.f, 1.f);
 const ImVec4 UIColor::GWhite = ImVec4(1.f, 1.f, 1.f, 1.f);

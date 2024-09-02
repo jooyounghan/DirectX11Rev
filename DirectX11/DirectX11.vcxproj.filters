@@ -279,9 +279,6 @@
     <ClCompile Include="TextureAsset.cpp">
       <Filter>소스 파일\Asset\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="IWorld.cpp">
-      <Filter>소스 파일\World</Filter>
-    </ClCompile>
     <ClCompile Include="GameWorld.cpp">
       <Filter>소스 파일\World</Filter>
     </ClCompile>
@@ -457,6 +454,9 @@
       <Filter>소스 파일\Controller\InputEvent\Events</Filter>
     </ClCompile>
     <ClCompile Include="MouseEvent.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ARenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

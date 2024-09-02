@@ -1,7 +1,11 @@
 #include "BoundingSphereObject.h"
+
+#include "GlobalVariable.h"
+#include "GraphicsPipeline.h"
+
 #include "AssetManager.h"
 #include "Debugable.h"
-#include "GraphicsPipeline.h"
+
 #include "CollisionVisitor.h"
 #include "IGuiModelVisitor.h"
 
@@ -10,20 +14,16 @@ using namespace DirectX;
 
 const char* BoundingSphereObject::BoundingSphereIdentifier = "Bounding Sphere";
 
-BoundingSphereObject::BoundingSphereObject(GraphicsPipeline* GraphicsPipelineInstances)
-	: ABoundingObject(GraphicsPipelineInstances), DescaledRadius(100.f)
+BoundingSphereObject::BoundingSphereObject()
+	: ABoundingObject(), DescaledRadius(100.f)
 {
-	InitBoundingSphere(GraphicsPipelineInstances->GetDevice());
+	InitBoundingSphere(App::GGraphicPipeline->GetDevice());
 }
 
-BoundingSphereObject::BoundingSphereObject(
-	GraphicsPipeline* GraphicsPipelineInstances,
-	const float& RadiusIn
-)
-	: ABoundingObject(GraphicsPipelineInstances),
-	DescaledRadius(RadiusIn)
+BoundingSphereObject::BoundingSphereObject(const float& RadiusIn)
+	: ABoundingObject(), DescaledRadius(RadiusIn)
 {
-	InitBoundingSphere(GraphicsPipelineInstances->GetDevice());
+	InitBoundingSphere(App::GGraphicPipeline->GetDevice());
 }
 
 BoundingSphereObject::~BoundingSphereObject()
@@ -93,7 +93,7 @@ shared_ptr<Debugable> BoundingSphereObject::CreateDebugSphereObject(ID3D11Device
 		}
 	}
 
-	Result->Initialize(DeviceIn);
+	Result->Initialize();
 	return Result;
 }
 

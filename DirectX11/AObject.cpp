@@ -1,16 +1,17 @@
 #include "AObject.h"
+#include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
 #include <format>
 
 using namespace std;
 
-AObject::AObject(GraphicsPipeline* GraphicsPipelineInstance)
+AObject::AObject()
 	: ObjectID(string{ format("{}", (uint64_t)this) }), 
 	RelativePositionID(string{ format("{}", (uint64_t)&RelativePosition) }),
 	RelativeAngleID(string{ format("{}", (uint64_t)&RelativeAngle) }),
 	RelativeScaleID(string{ format("{}", (uint64_t)&RelativeScale) }),
-	DeviceContextCached(GraphicsPipelineInstance->GetDeviceContext()), 
-	TransformationBuffer(GraphicsPipelineInstance->GetDevice())
+	DeviceContextCached(App::GGraphicPipeline->GetDeviceContext()),
+	TransformationBuffer()
 {
 	AutoZeroMemory(RelativePosition);
 	AutoZeroMemory(RelativeScale);
@@ -29,7 +30,7 @@ void AObject::Update(const float& DeltaTimeIn)
 	TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
 	TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
 
-	TransformationBuffer.Upload(DeviceContextCached, TempTransformation);
+	TransformationBuffer.Upload(TempTransformation);
 }
 
 void AObject::OnSerialize(FILE* FileIn)

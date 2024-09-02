@@ -1,21 +1,22 @@
 #include "EditorPawn.h"
 
 #include "GlobalVariable.h"
+#include "InputEventManager.h"
 #include "GraphicsPipeline.h"
 #include "DefaultController.h"
 #include "EditorCamera.h"
 
 using namespace std;
 
-EditorPawn::EditorPawn(GraphicsPipeline* GraphicsPipelineInstance)
-	: APawn(GraphicsPipelineInstance)
+EditorPawn::EditorPawn()
+	: APawn()
 {
 
     Controller = make_unique<DefaultController>();
     Controller->SetPossesdPawn(this);
 
     // Test =============================================================
-	EditorCameraCached = AddAttachedObject<EditorCamera>(GraphicsPipelineInstance, App::GWidth, App::GHeight);
+	EditorCameraCached = AddAttachedObject<EditorCamera>(App::GWidth, App::GHeight);
     EditorCameraCached->SetParentObject(this);
     // =============================================================
 }

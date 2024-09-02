@@ -49,9 +49,9 @@ std::vector<UINT> StaticMeshAsset::GetOffsets()
 	};
 }
 
-void StaticMeshAsset::Initialize(ID3D11Device* DeviceIn)
+void StaticMeshAsset::Initialize()
 {
-	AMeshAsset::Initialize(DeviceIn);
+	AMeshAsset::Initialize();
 }
 
 
@@ -68,8 +68,8 @@ void StaticMeshAsset::Serialize(const string& OutputAdditionalPath)
 	}
 }
 
-void StaticMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn)
+void StaticMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	DeserializeBaseMeshData(FileIn);
-	Initialize(DeviceIn);
+	Initialize();
 }

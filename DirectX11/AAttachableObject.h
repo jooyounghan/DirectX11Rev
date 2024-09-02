@@ -21,7 +21,7 @@ class AAttachableObject : public AObject
 {
 
 public:
-	AAttachableObject(GraphicsPipeline* GraphicsPipelineInstance);
+	AAttachableObject();
 	virtual~AAttachableObject();
 
 protected:

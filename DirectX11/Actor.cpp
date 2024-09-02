@@ -7,26 +7,23 @@
 
 using namespace std;
 
-Actor::Actor(GraphicsPipeline* GraphicsPipelineIn)
-	: APlaceableObject(GraphicsPipelineIn)
+Actor::Actor()
+	: APlaceableObject()
 {
-	Initialize(GraphicsPipelineIn, nullptr);
+	Initialize(nullptr);
 }
 
-Actor::Actor(
-	GraphicsPipeline* GraphicsPipelineIn,
-	std::shared_ptr<AMeshAsset> MeshAssetInstanceIn
-)
-	: APlaceableObject(GraphicsPipelineIn)
+Actor::Actor(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn)
+	: APlaceableObject()
 {
-	Initialize(GraphicsPipelineIn, MeshAssetInstanceIn);
+	Initialize(MeshAssetInstanceIn);
 }
 
 Actor::~Actor()
 {
 }
 
-void Actor::Initialize(GraphicsPipeline* GraphicsPipelineIn, std::shared_ptr<AMeshAsset> MeshAssetInstanceIn)
+void Actor::Initialize(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn)
 {
 	static size_t ActorCount = 0;
 	ActorCount++;
@@ -34,7 +31,7 @@ void Actor::Initialize(GraphicsPipeline* GraphicsPipelineIn, std::shared_ptr<AMe
 
 	PlaceableKind = EPlaceableObjectKind::ACTOR_KIND;
 
-	MeshObjectInstance = make_unique<MeshObject>(GraphicsPipelineIn, MeshAssetInstanceIn);
+	MeshObjectInstance = make_unique<MeshObject>(MeshAssetInstanceIn);
 	MeshObjectInstance->SetParentObject(this);
 }
 

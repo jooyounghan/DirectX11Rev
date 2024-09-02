@@ -7,7 +7,6 @@ AController::AController()
 {
 }
 
-
 void AController::MoveForward(const float& DeltaTime)
 {
 	if (PossesdPawn != nullptr)

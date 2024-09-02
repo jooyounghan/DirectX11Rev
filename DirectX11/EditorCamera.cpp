@@ -1,11 +1,12 @@
 #include "EditorCamera.h"
-#include "DefineUtility.h"
+#include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
+#include "DefineUtility.h"
 
-EditorCamera::EditorCamera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, const UINT& HeightIn)
-	: Camera(GraphicsPipelineInstance, WidthIn, HeightIn)
+EditorCamera::EditorCamera(const UINT& WidthIn, const UINT& HeightIn)
+	: Camera(WidthIn, HeightIn)
 {
-	ID3D11Device* Device = GraphicsPipelineInstance->GetDevice();
+	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
 
 	D3D11_TEXTURE2D_DESC IdTexture2DDesc;
 	AutoZeroMemory(IdTexture2DDesc);

@@ -9,15 +9,15 @@ AMeshAsset::~AMeshAsset()
 {
 }
 
-void AMeshAsset::Initialize(ID3D11Device* DeviceIn)
+void AMeshAsset::Initialize()
 {
-	Positions.VerticesBuffer.InitializeForGPU(DeviceIn, Positions.GetVertexCount(), Positions.Vertices.data());
-	UVTextures.VerticesBuffer.InitializeForGPU(DeviceIn, UVTextures.GetVertexCount(), UVTextures.Vertices.data());
-	Normals.VerticesBuffer.InitializeForGPU(DeviceIn, Normals.GetVertexCount(), Normals.Vertices.data());
-	Tangents.VerticesBuffer.InitializeForGPU(DeviceIn, Tangents.GetVertexCount(), Tangents.Vertices.data());
-	Bitangents.VerticesBuffer.InitializeForGPU(DeviceIn, Bitangents.GetVertexCount(), Bitangents.Vertices.data());
+	Positions.VerticesBuffer.InitializeForGPU(Positions.GetVertexCount(), Positions.Vertices.data());
+	UVTextures.VerticesBuffer.InitializeForGPU(UVTextures.GetVertexCount(), UVTextures.Vertices.data());
+	Normals.VerticesBuffer.InitializeForGPU(Normals.GetVertexCount(), Normals.Vertices.data());
+	Tangents.VerticesBuffer.InitializeForGPU(Tangents.GetVertexCount(), Tangents.Vertices.data());
+	Bitangents.VerticesBuffer.InitializeForGPU(Bitangents.GetVertexCount(), Bitangents.Vertices.data());
 
-	IndicesBuffer.InitializeForGPU(DeviceIn, GetIndexCount(), Indices.data());
+	IndicesBuffer.InitializeForGPU(GetIndexCount(), Indices.data());
 }
 
 void AMeshAsset::SerializeBaseMeshData(FILE* FileIn)

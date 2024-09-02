@@ -27,7 +27,7 @@ void MeshObjectRenderer::ResetRendering()
 	PSOObjectCached->ResetVSConstantBuffers(0, 1);
 }
 
-void MeshObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn)
+void MeshObjectRenderer::Render(MeshObject* MeshObjectIn)
 {
 	AMeshAsset* MeshAssetInstance = MeshObjectIn->GetMeshAssetInstance().get();
 	if (MeshAssetInstance)
@@ -36,12 +36,12 @@ void MeshObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject
 		const vector<UINT> Strides = MeshAssetInstance->GetStrides();
 		const vector<UINT> Offsets = MeshAssetInstance->GetOffsets();
 
-		DeviceContextIn->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
+		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
 			VertexBuffers.data(),
 			Strides.data(),
 			Offsets.data()
 		);
-		DeviceContextIn->IASetIndexBuffer(MeshAssetInstance->GetIndexBuffer(), MeshAssetInstance->GetIndexFormat(), 0);
+		DeviceContextCached->IASetIndexBuffer(MeshAssetInstance->GetIndexBuffer(), MeshAssetInstance->GetIndexFormat(), 0);
 
 		ID3D11Buffer* VSConstBuffers[] = { MeshObjectIn->TransformationBuffer.GetBuffer() };
 
@@ -51,13 +51,13 @@ void MeshObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject
 		PSOObjectCached->CheckPipelineValidation();
 #endif // DEBUG
 
-		DeviceContextIn->DrawIndexed(static_cast<UINT>(MeshAssetInstance->GetIndexCount()), 0, 0);
+		DeviceContextCached->DrawIndexed(static_cast<UINT>(MeshAssetInstance->GetIndexCount()), 0, 0);
 
 		PSOObjectCached->ResetVSConstantBuffers(1, 1);
 	}
 }
 
-void MeshObjectRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingObject* MeshObjectIn)
+void MeshObjectRenderer::Render(ABoundingObject* MeshObjectIn)
 {
 	// Do Nothing
 }

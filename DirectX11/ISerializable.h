@@ -8,7 +8,7 @@ class ISerializable
 {
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") = 0;
-	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn) = 0;
+	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };
 
 class IOnSerializable

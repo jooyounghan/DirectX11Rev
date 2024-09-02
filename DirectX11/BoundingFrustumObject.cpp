@@ -1,7 +1,7 @@
 #include "BoundingFrustumObject.h"
 
-#include "GraphicsPipeline.h"
 #include "GlobalVariable.h"
+#include "GraphicsPipeline.h"
 #include "DefineUtility.h"
 
 #include "Viewable.h"
@@ -14,13 +14,10 @@ using namespace std;
 
 const char* BoundingFrustumObject::BoundingFrustumIdentifier = "Bounding Frustum";
 
-BoundingFrustumObject::BoundingFrustumObject(
-	GraphicsPipeline* GraphicsPipelineInstances,
-	Viewable* ViewableInstance
-)
-	: ABoundingObject(GraphicsPipelineInstances), ViewableCached(ViewableInstance)
+BoundingFrustumObject::BoundingFrustumObject(Viewable* ViewableInstance)
+	: ABoundingObject(), ViewableCached(ViewableInstance)
 {
-    static shared_ptr<Debugable> FrustumDebugObject = CreateDebugFrustumObject(GraphicsPipelineInstances->GetDevice());
+    static shared_ptr<Debugable> FrustumDebugObject = CreateDebugFrustumObject(App::GGraphicPipeline->GetDevice());
 
     static size_t BoundingFrustumCount = 0;
     BoundingFrustumCount++;
@@ -65,7 +62,7 @@ std::shared_ptr<Debugable> BoundingFrustumObject::CreateDebugFrustumObject(ID3D1
         1, 2, 6, 1, 6, 5
     };
 
-    Result->Initialize(DeviceIn);
+    Result->Initialize();
     return Result;
 }
 
@@ -97,7 +94,7 @@ void BoundingFrustumObject::Update(const float& DeltaTimeIn)
         TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
         TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
 
-        TransformationBuffer.Upload(DeviceContextCached, TempTransformation);
+        TransformationBuffer.Upload(TempTransformation);
 
         const D3D11_VIEWPORT& Viewport = ViewableCached->GetViewport();
         const float AspectRatio = Viewport.Width / Viewport.Height;

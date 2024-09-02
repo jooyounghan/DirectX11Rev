@@ -150,7 +150,7 @@ void BoneAsset::Serialize(const std::string& OutputAdditionalPath)
 	}
 }
 
-void BoneAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn)
+void BoneAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	// Total Bone Count
 	size_t BoneCount;

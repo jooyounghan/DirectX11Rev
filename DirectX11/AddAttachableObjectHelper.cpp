@@ -43,9 +43,6 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
 
         Separator();
 
-        GraphicsPipeline* GraphicPipelineCached = EditorWorldCached->GraphicsPipelineCached;
-
-
         EAttachableObjectKind ObjectKind = (EAttachableObjectKind)(ItemCurrentSelectedIdx + 1);
         if (Button("OK", ImVec2(120, 0))) 
         { 
@@ -54,29 +51,29 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
                 case EAttachableObjectKind::MESH_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<MeshObject>(GraphicPipelineCached) :
-                        SelectedPlaced->AddAttachedObject<MeshObject>(GraphicPipelineCached);
+                        SelectedAttached->AddAttachedObject<MeshObject>() :
+                        SelectedPlaced->AddAttachedObject<MeshObject>();
                     break;
                 }
                 case EAttachableObjectKind::BOUNDING_SPHERE_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<BoundingSphereObject>(GraphicPipelineCached) :
-                        SelectedPlaced->AddAttachedObject<BoundingSphereObject>(GraphicPipelineCached);
+                        SelectedAttached->AddAttachedObject<BoundingSphereObject>() :
+                        SelectedPlaced->AddAttachedObject<BoundingSphereObject>();
                     break;
                 }
                 case EAttachableObjectKind::OBB_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<OBBObject>(GraphicPipelineCached) :
-                        SelectedPlaced->AddAttachedObject<OBBObject>(GraphicPipelineCached);
+                        SelectedAttached->AddAttachedObject<OBBObject>() :
+                        SelectedPlaced->AddAttachedObject<OBBObject>();
                     break;
                 }
                 case EAttachableObjectKind::NORMAL_CAMERA_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<Camera>(GraphicPipelineCached, App::GWidth, App::GHeight) :
-                        SelectedPlaced->AddAttachedObject<Camera>(GraphicPipelineCached, App::GWidth, App::GHeight);
+                        SelectedAttached->AddAttachedObject<Camera>(App::GWidth, App::GHeight) :
+                        SelectedPlaced->AddAttachedObject<Camera>(App::GWidth, App::GHeight);
                     break;
                 }
             }

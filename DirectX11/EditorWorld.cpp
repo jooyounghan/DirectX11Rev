@@ -15,9 +15,11 @@
 #include "AssetManager.h"
 #include "PSOManager.h"
 
+#include "GlobalVariable.h"
+#include "GraphicsPipeline.h"
+
 #include "GameWorld.h"
 #include "MapAsset.h"
-#include "GraphicsPipeline.h"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -28,9 +30,9 @@ using namespace std;
 
 
 EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
-    : IWorld(GameWorldIn->GraphicsPipelineCached), GameWorldCached(GameWorldIn)
+    : IWorld(), GameWorldCached(GameWorldIn)
 {
-    EditorActorInstance = make_unique<EditorPawn>(GraphicsPipelineCached);
+    EditorActorInstance = make_unique<EditorPawn>();
 
     IMGUI_CHECKVERSION();
 
@@ -46,8 +48,8 @@ EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
 
     ImGui_ImplWin32_Init(WindowHandle);
     ImGui_ImplDX11_Init(
-        GraphicsPipelineCached->GetDevice(),
-        GraphicsPipelineCached->GetDeviceContext()
+        App::GGraphicPipeline->GetDevice(),
+        App::GGraphicPipeline->GetDeviceContext()
     );
 
     Dialogs.push_back(make_unique<TaskAnalyzerWindow>());
@@ -135,8 +137,8 @@ void EditorWorld::RenderWorld()
 
     const FLOAT ClearColor[] = { 0.5f, 0.2f, 0.4f, 1.0f };
 
-    ID3D11RenderTargetView* BackBufferRTV = GraphicsPipelineCached->GetBackBufferRTV();
-    ID3D11DeviceContext* DeviceContext = GraphicsPipelineCached->GetDeviceContext();
+    ID3D11RenderTargetView* BackBufferRTV = App::GGraphicPipeline->GetBackBufferRTV();
+    ID3D11DeviceContext* DeviceContext = App::GGraphicPipeline->GetDeviceContext();
 
     DeviceContext->ClearRenderTargetView(BackBufferRTV, ClearColor);
     DeviceContext->OMSetRenderTargets(1, &BackBufferRTV, nullptr);

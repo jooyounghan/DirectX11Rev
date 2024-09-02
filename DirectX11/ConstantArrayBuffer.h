@@ -1,6 +1,9 @@
 #pragma once
 #include "Buffer.h"
 #include "HeaderHelper.h"
+
+#include "GlobalVariable.h"
+#include "GraphicsPipeline.h"
 #include "DefineUtility.h"
 
 template<typename T>
@@ -12,7 +15,6 @@ public:
 
 public:
 	virtual void InitializeForGPU(
-		ID3D11Device* DeviceIn, 
 		const UINT& ArrayCountIn, 
 		T* CPUDataPtr
 	);
@@ -29,7 +31,7 @@ inline ConstantArrayBuffer<T>::~ConstantArrayBuffer()
 }
 
 template<typename T>
-inline void ConstantArrayBuffer<T>::InitializeForGPU(ID3D11Device* DeviceIn, const UINT& ArrayCountIn, T* CPUDataPtr)
+inline void ConstantArrayBuffer<T>::InitializeForGPU(const UINT& ArrayCountIn, T* CPUDataPtr)
 {
 	BUFFER_ALIGN_CHECK(ArrayCountIn * sizeof(T));
 
@@ -49,5 +51,6 @@ inline void ConstantArrayBuffer<T>::InitializeForGPU(ID3D11Device* DeviceIn, con
 	SubresourceData.SysMemPitch = ArrayCountIn * sizeof(T);
 	SubresourceData.SysMemSlicePitch = SubresourceData.SysMemPitch;
 
-	DeviceIn->CreateBuffer(&BufferDesc, &SubresourceData, Buffer.GetAddressOf());
+	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
+	Device->CreateBuffer(&BufferDesc, &SubresourceData, Buffer.GetAddressOf());
 }

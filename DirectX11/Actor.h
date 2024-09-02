@@ -8,12 +8,12 @@ class MeshObject;
 class Actor : public APlaceableObject
 {
 public:
-	Actor(GraphicsPipeline* GraphicsPipelineIn);
-	Actor(GraphicsPipeline* GraphicsPipelineIn, std::shared_ptr<AMeshAsset> MeshAssetInstanceIn);
+	Actor();
+	Actor(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn);
 	virtual ~Actor();
 
 private:
-	void Initialize(GraphicsPipeline* GraphicsPipelineIn, std::shared_ptr<AMeshAsset> MeshAssetInstanceIn);
+	void Initialize(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn);
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

@@ -11,7 +11,6 @@ public:
 
 public:
 	virtual void InitializeForGPU(
-		ID3D11Device* DeviceIn, 
 		const UINT& ArrayCountIn,
 		T* CPUDataPtr
 	) override;
@@ -22,7 +21,7 @@ protected:
 };
 
 template<typename T>
-inline void IndexBuffer<T>::InitializeForGPU(ID3D11Device* DeviceIn, const UINT& ArrayCountIn, T* CPUDataPtr)
+inline void IndexBuffer<T>::InitializeForGPU(const UINT& ArrayCountIn, T* CPUDataPtr)
 {
 	IndicesCount = static_cast<UINT>(ArrayCountIn);
 
@@ -42,5 +41,6 @@ inline void IndexBuffer<T>::InitializeForGPU(ID3D11Device* DeviceIn, const UINT&
 	SubresourceData.SysMemPitch = ArrayCountIn * sizeof(T);
 	SubresourceData.SysMemSlicePitch = SubresourceData.SysMemPitch;
 
-	DeviceIn->CreateBuffer(&BufferDesc, &SubresourceData, ConstantArrayBuffer<T>::Buffer.GetAddressOf());
+	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
+	Device->CreateBuffer(&BufferDesc, &SubresourceData, ConstantArrayBuffer<T>::Buffer.GetAddressOf());
 }

@@ -1,6 +1,5 @@
 #include "Debugable.h"
 
-
 Debugable::Debugable(ID3D11Device* DeviceIn)
 {
 }
@@ -14,8 +13,8 @@ DXGI_FORMAT Debugable::GetIndexFormat()
 	return DXGI_FORMAT::DXGI_FORMAT_R16_UINT;
 }
 
-void Debugable::Initialize(ID3D11Device* DeviceIn)
+void Debugable::Initialize()
 {
-	VerticesBuffer.InitializeForGPU(DeviceIn, GetVertexCount(), Vertices.data());
-	IndicesBuffer.InitializeForGPU(DeviceIn, GetIndexCount(), Indices.data());
+	VerticesBuffer.InitializeForGPU(GetVertexCount(), Vertices.data());
+	IndicesBuffer.InitializeForGPU(GetIndexCount(), Indices.data());
 }

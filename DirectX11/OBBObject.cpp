@@ -1,7 +1,7 @@
 #include "OBBObject.h"
 
-#include "GraphicsPipeline.h"
 #include "GlobalVariable.h"
+#include "GraphicsPipeline.h"
 #include "DefineUtility.h"
 
 #include "Debugable.h"
@@ -14,10 +14,10 @@ using namespace DirectX;
 
 const char* OBBObject::BoundingOBBIdentifier = "Bounding OBB";
 
-OBBObject::OBBObject(GraphicsPipeline* GraphicsPipelineInstances)
-	: ABoundingObject(GraphicsPipelineInstances)
+OBBObject::OBBObject()
+	: ABoundingObject()
 {
-	InitOBB(GraphicsPipelineInstances->GetDevice());
+	InitOBB(App::GGraphicPipeline->GetDevice());
 
 	DescaledExtents.x = 100.f;
 	DescaledExtents.y = 100.f;
@@ -25,14 +25,13 @@ OBBObject::OBBObject(GraphicsPipeline* GraphicsPipelineInstances)
 }
 
 OBBObject::OBBObject(
-	GraphicsPipeline* GraphicsPipelineInstances,
 	const float& HalfXIn, 
 	const float& HalfYIn,
 	const float& HalfZIn
 )
-	: ABoundingObject(GraphicsPipelineInstances)
+	: ABoundingObject()
 {
-	InitOBB(GraphicsPipelineInstances->GetDevice());
+	InitOBB(App::GGraphicPipeline->GetDevice());
 	DescaledExtents.x = HalfXIn;
 	DescaledExtents.y = HalfYIn;
 	DescaledExtents.z = HalfZIn;
@@ -84,7 +83,7 @@ shared_ptr<Debugable> OBBObject::CreateDebugBoxObject(ID3D11Device* DeviceIn)
 		1, 2, 6, 1, 6, 5
 	};
 
-	Result->Initialize(DeviceIn);
+	Result->Initialize();
 	return Result;
 }
 

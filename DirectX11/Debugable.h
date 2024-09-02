@@ -28,6 +28,6 @@ public:
 
 public:
 	virtual DXGI_FORMAT GetIndexFormat() override;
-	virtual void Initialize(ID3D11Device* DeviceIn) override;
+	virtual void Initialize() override;
 };
 

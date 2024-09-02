@@ -8,7 +8,6 @@
 
 class PSOManager;
 class AssetManager;
-class InputEventManager;
 class EditorWorld;
 class AAssetFile;
 class MapAsset;
@@ -18,15 +17,15 @@ class GameWorld : public IWorld
 {
 public:
 #ifdef _DEBUG
-	GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHandle);
+	GameWorld(HWND WindowHandle);
 #else
-	GameWorld(GraphicsPipeline* GraphicsPipelineInstance);
+	GameWorld();
 	std::unique_ptr<Camera> TestCamera;
 #endif // _DEBUG
 	virtual ~GameWorld();
 
 public:
-	void LoadGameWorld();
+	void LoadManagingMaps();
 	virtual void Update(const float& DeltaTimeIn) override;
 
 protected:
@@ -47,10 +46,6 @@ protected:
 	std::unordered_map<UINT, std::shared_ptr<MapAsset>> MapInstances;
 	MapAsset* CurrentMap = nullptr;
 	MakeGetter(CurrentMap);
-
-protected:
-	std::unique_ptr<InputEventManager> InputEventManagerInstance;
-	MakeSmartPtrGetter(InputEventManagerInstance)
 
 public:
 	virtual void RenderWorld() override;

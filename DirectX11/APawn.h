@@ -7,8 +7,8 @@ class InputEventManager;
 class APawn : public Actor
 {
 public:
-	APawn(GraphicsPipeline* GraphicsPipelineIn);
-	APawn(GraphicsPipeline* GraphicsPipelineIn, std::shared_ptr<AMeshAsset> MeshAssetInstanceIn);
+	APawn();
+	APawn(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn);
 	virtual ~APawn();
 
 protected:

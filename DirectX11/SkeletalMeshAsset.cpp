@@ -56,11 +56,11 @@ std::vector<UINT> SkeletalMeshAsset::GetOffsets()
 	};
 }
 
-void SkeletalMeshAsset::Initialize(ID3D11Device* DeviceIn)
+void SkeletalMeshAsset::Initialize()
 {
-	AMeshAsset::Initialize(DeviceIn);
-	BlendWeight.VerticesBuffer.InitializeForGPU(DeviceIn, BlendWeight.GetVertexCount(), BlendWeight.Vertices.data());
-	BlendIndex.VerticesBuffer.InitializeForGPU(DeviceIn, BlendIndex.GetVertexCount(), BlendIndex.Vertices.data());
+	AMeshAsset::Initialize();
+	BlendWeight.VerticesBuffer.InitializeForGPU(BlendWeight.GetVertexCount(), BlendWeight.Vertices.data());
+	BlendIndex.VerticesBuffer.InitializeForGPU(BlendIndex.GetVertexCount(), BlendIndex.Vertices.data());
 }
 
 void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
@@ -97,7 +97,7 @@ void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 	}
 }
 
-void SkeletalMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn)
+void SkeletalMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	// Linked Bone Name
 	string BoneAssetName;
@@ -123,6 +123,5 @@ void SkeletalMeshAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetM
 	BlendIndex.Vertices.resize(BlendIndexCount);
 	fread(BlendIndex.Vertices.data(), sizeof(XMINT4), BlendIndexCount, FileIn);
 
-	Initialize(DeviceIn);
+	Initialize();
 }
-

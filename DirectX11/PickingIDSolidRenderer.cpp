@@ -12,7 +12,7 @@ PickingIDSolidRenderer::PickingIDSolidRenderer(PSOObject* PSOObjectIn)
 {
 }
 
-void PickingIDSolidRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn)
+void PickingIDSolidRenderer::Render(MeshObject* MeshObjectIn)
 {
 	AMeshAsset* MeshAssetInstance = MeshObjectIn->GetMeshAssetInstance().get();
 
@@ -22,12 +22,12 @@ void PickingIDSolidRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshOb
 		const vector<UINT> Strides = MeshAssetInstance->GetPositionStride();
 		const vector<UINT> Offsets = MeshAssetInstance->GetPositionOffset();
 
-		DeviceContextIn->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
+		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
 			VertexBuffers.data(),
 			Strides.data(),
 			Offsets.data()
 		);
-		DeviceContextIn->IASetIndexBuffer(MeshAssetInstance->GetIndexBuffer(), MeshAssetInstance->GetIndexFormat(), 0);
+		DeviceContextCached->IASetIndexBuffer(MeshAssetInstance->GetIndexBuffer(), MeshAssetInstance->GetIndexFormat(), 0);
 
 		ID3D11Buffer* VSConstBuffers[] = { MeshObjectIn->TransformationBuffer.GetBuffer() };
 		ID3D11Buffer* PSConstBuffers[] = { MeshObjectIn->GetPickingIDBufferCached() };
@@ -38,13 +38,13 @@ void PickingIDSolidRenderer::Render(ID3D11DeviceContext* DeviceContextIn, MeshOb
 		PSOObjectCached->CheckPipelineValidation();
 	#endif // DEBUG
 
-		DeviceContextIn->DrawIndexed(static_cast<UINT>(MeshAssetInstance->GetIndexCount()), 0, 0);
+		DeviceContextCached->DrawIndexed(static_cast<UINT>(MeshAssetInstance->GetIndexCount()), 0, 0);
 
 		PSOObjectCached->ResetVSConstantBuffers(1, 1);
 	}
 }
 
-void PickingIDSolidRenderer::Render(ID3D11DeviceContext* DeviceContextIn, ABoundingObject* MeshObjectIn)
+void PickingIDSolidRenderer::Render(ABoundingObject* MeshObjectIn)
 {
 	// Do Nothing
 }

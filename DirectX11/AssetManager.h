@@ -14,8 +14,6 @@ struct aiScene;
 struct aiNode;
 struct aiMesh;
 
-class GraphicsPipeline;
-
 enum class EAssetType;
 
 class AAssetFile;
@@ -28,12 +26,8 @@ class MapAsset;
 class AssetManager
 {
 public:
-	AssetManager(GraphicsPipeline* GraphicsPipelineInstance);
+	AssetManager();
 	~AssetManager();
-
-protected:
-	GraphicsPipeline* GraphicsPipelineCached = nullptr;
-	MakeGetter(GraphicsPipelineCached);
 
 public:
 	void LoadAssetFile(const std::string& AssetPathIn);

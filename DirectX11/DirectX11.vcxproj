@@ -138,6 +138,7 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
+    <ClCompile Include="ARenderer.cpp" />
     <ClCompile Include="DefaultController.cpp" />
     <ClCompile Include="EditorPawn.cpp" />
     <ClCompile Include="ABoundingObject.cpp" />
@@ -173,7 +174,6 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="InputEventManager.cpp" />
-    <ClCompile Include="IWorld.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapAsset.cpp" />
     <ClCompile Include="MeshObjectInformationDrawer.cpp" />

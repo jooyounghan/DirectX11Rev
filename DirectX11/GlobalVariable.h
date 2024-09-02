@@ -2,13 +2,17 @@
 #include <windows.h>
 #include <DirectXMath.h>
 
+class PortfolioApp;
+class GraphicsPipeline;
 class InputEventManager;
 
 namespace App
 {
-	extern InputEventManager* InputEventManagerCached;
 	extern UINT GWidth;
 	extern UINT GHeight;
+	extern PortfolioApp* GApp;
+	extern GraphicsPipeline* GGraphicPipeline;
+	extern InputEventManager* GInputEventManager;
 }
 
 namespace Direction

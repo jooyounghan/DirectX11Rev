@@ -9,7 +9,7 @@ class Debugable;
 class ABoundingObject : public IIntersectable, public AAttachableObject
 {	
 public:
-	ABoundingObject(GraphicsPipeline* GraphicsPipelineInstances);
+	ABoundingObject();
 	virtual ~ABoundingObject();
 
 protected:

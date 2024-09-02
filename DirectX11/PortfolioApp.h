@@ -6,6 +6,7 @@
 #include <memory>
 
 class GraphicsPipeline;
+class InputEventManager;
 class GameWorld;
 
 class PortfolioApp
@@ -27,6 +28,7 @@ protected:
 
 protected:
 	std::unique_ptr<GraphicsPipeline>	GraphicsPipelineInstance;
+	std::unique_ptr<InputEventManager>	InputEventManagerInstance;
 	std::unique_ptr<GameWorld>			GameWorldInstance;
 
 private:

@@ -13,6 +13,6 @@ void TextureAsset::Serialize(const std::string& OutputAdditionalPath)
 {
 }
 
-void TextureAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn)
+void TextureAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 }

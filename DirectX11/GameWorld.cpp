@@ -4,7 +4,6 @@
 #include "GraphicsPipeline.h"
 #include "PSOManager.h"
 #include "AssetManager.h"
-#include "InputEventManager.h"
 
 #ifdef _DEBUG
 #include "EditorWorld.h"
@@ -18,52 +17,25 @@
 using namespace std;
 
 #ifdef _DEBUG
-GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHandle)
-	: IWorld(GraphicsPipelineInstance)
+GameWorld::GameWorld(HWND WindowHandle)
 {
-	PSOManagerInstance = make_unique<PSOManager>((GraphicsPipelineInstance));
-	AssetManagerInstance = make_unique<AssetManager>(GraphicsPipelineCached);
-	InputEventManagerInstance = make_unique<InputEventManager>();
-	App::InputEventManagerCached = InputEventManagerInstance.get();
-
+	PSOManagerInstance = make_unique<PSOManager>();
+	AssetManagerInstance = make_unique<AssetManager>();
 	EditorWorldInstance = make_unique<EditorWorld>(this, WindowHandle);
 
-
-	auto tests = AssetManagerInstance->GetManagingMaps();
-
-	if (tests.empty())
-	{
-		MapInstances.emplace(0, make_shared<MapAsset>("TestMap", AssetManagerInstance.get(), true));
-		CurrentMap = (MapAsset*)MapInstances[0].get();
-	}
-	else
-	{
-		UINT idx = 0;
-		for (auto& test : tests)
-		{
-			MapInstances.emplace(idx, test.second);
-		}
-	}
-	CurrentMap = MapInstances[0].get();
-
-	EditorPawn* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
-	if (EditorActorInstnace != nullptr)
-	{
-		CurrentMap->SetCameraCached(EditorActorInstnace->GetEditorCameraCached());
-	}
+	LoadManagingMaps();
 }
 #else
-GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance)
-	: IWorld(GraphicsPipelineInstance)
+GameWorld::GameWorld()
+	: IWorld()
 {
-	PSOManagerInstance = make_unique<PSOManager>((GraphicsPipelineInstance));
-	AssetManagerInstance = make_unique<AssetManager>(GraphicsPipelineCached->GetDevice());
+	PSOManagerInstance = make_unique<PSOManager>();
+	AssetManagerInstance = make_unique<AssetManager>();
 
-	TestCamera = make_unique<Camera>(GraphicsPipelineInstance, App::GWidth, App::GHeight);
+	TestCamera = make_unique<Camera>(App::GWidth, App::GHeight);
 	TestCamera->Position.z = -300.f;
 
-	MapInstances.emplace(0, std::move(make_unique<Map>(GraphicsPipelineInstance, PSOManagerInstance.get(), AssetManagerInstance.get())));
-	CurrentMap = MapInstances[0].get();
+	LoadManagingMaps();
 }
 #endif // _DEBUG
 
@@ -72,9 +44,35 @@ GameWorld::~GameWorld()
 {
 }
 
-void GameWorld::LoadGameWorld()
+void GameWorld::LoadManagingMaps()
 {
-	// Load Current State Of GameWorld From Binary Files
+	static UINT MapCount = 0;
+
+	const unordered_map<string, shared_ptr<MapAsset>>& ManagingMaps = AssetManagerInstance->GetManagingMaps();
+
+	if (ManagingMaps.empty())
+	{
+		MapInstances.emplace(MapCount, make_shared<MapAsset>("TestMap", AssetManagerInstance.get(), true));
+		CurrentMap = (MapAsset*)MapInstances[MapCount].get();
+		MapCount++;
+	}
+	else
+	{
+		for (auto& ManagingMap : ManagingMaps)
+		{
+			MapInstances.emplace(MapCount, ManagingMap.second);
+			MapCount++;
+		}
+	}
+
+	// TODO : Map을 선택하는 과정 추가하기
+	CurrentMap = MapInstances[0].get();
+
+	EditorPawn* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
+	if (EditorActorInstnace != nullptr)
+	{
+		CurrentMap->SetCameraCached(EditorActorInstnace->GetEditorCameraCached());
+	}
 }
 
 void GameWorld::Update(const float& DeltaTimeIn)
@@ -82,8 +80,6 @@ void GameWorld::Update(const float& DeltaTimeIn)
 #ifdef _DEBUG
 	EditorWorldInstance->Update(DeltaTimeIn);
 #endif // _DEBUG
-
-	InputEventManagerInstance->Update(DeltaTimeIn);
 
 	if (CurrentMap)
 	{
@@ -114,8 +110,6 @@ void GameWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 #ifdef _DEBUG
 	EditorWorldInstance->AppProc(hWnd, msg, wParam, lParam);
 #endif
-	InputEventManagerInstance->ManageInput(msg, wParam, lParam);
-
 	ManageMessage(hWnd, msg, wParam, lParam);
 }
 

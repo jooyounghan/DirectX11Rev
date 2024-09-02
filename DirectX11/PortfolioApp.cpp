@@ -3,20 +3,19 @@
 #include "DefineUtility.h"
 
 #include "GraphicsPipeline.h"
+#include "InputEventManager.h"
 #include "GameWorld.h"
 
 using namespace std;
 
-PortfolioApp* PortfolioApp::GApp = nullptr;
-
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	return PortfolioApp::GApp->AppProc(hWnd, msg, wParam, lParam);
+	return App::GApp->AppProc(hWnd, msg, wParam, lParam);
 }
 
 PortfolioApp::PortfolioApp()
 {
-	GApp = this;
+	App::GApp = this;
 
 	LoadMonitorInfo();
 
@@ -43,18 +42,21 @@ PortfolioApp::PortfolioApp()
 
 	GraphicsPipelineInstance = make_unique<GraphicsPipeline>();
 	GraphicsPipelineInstance->LoadPipeline(App::GWidth, App::GHeight, hWindow);
+	App::GGraphicPipeline = GraphicsPipelineInstance.get();
 
 	OnChangeWindow();
 
 	QueryPerformanceFrequency(&Frequency);
 	QueryPerformanceCounter(&PrevTime);
 
+	InputEventManagerInstance = make_unique<InputEventManager>();
+	App::GInputEventManager = InputEventManagerInstance.get();
+
 #ifdef _DEBUG
-	GameWorldInstance = make_unique<GameWorld>(GraphicsPipelineInstance.get(), MainWindow);
+	GameWorldInstance = make_unique<GameWorld>(MainWindow);
 #else
-	GameWorldInstance = make_unique<GameWorld>(GraphicsPipelineInstance.get());
+	GameWorldInstance = make_unique<GameWorld>();
 #endif // _DEBUG
-	GameWorldInstance->LoadGameWorld();
 }
 
 PortfolioApp::~PortfolioApp()
@@ -122,6 +124,8 @@ void PortfolioApp::Quit()
 void PortfolioApp::Update()
 {
 	const float& DeltaTime = GetDeltaTimeFromLastCall();
+
+	InputEventManagerInstance->Update(DeltaTime);
 	GameWorldInstance->Update(DeltaTime);
 }
 
@@ -174,6 +178,8 @@ float PortfolioApp::GetDeltaTimeFromLastCall()
 LRESULT __stdcall PortfolioApp::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	ManageMessage(hWnd, msg, wParam, lParam);
+	
+	InputEventManagerInstance->ManageInput(msg, wParam, lParam);
 
 	if (GameWorldInstance)
 		GameWorldInstance->AppProc(hWnd, msg, wParam, lParam);

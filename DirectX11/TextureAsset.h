@@ -9,7 +9,7 @@ public:
 	virtual ~TextureAsset();
 
 public:
-	virtual void Serialize(const std::string& OutputAdditionalPath = "");
-	virtual void Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn);
+	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
+	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

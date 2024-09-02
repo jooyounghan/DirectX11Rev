@@ -14,17 +14,14 @@ using namespace std;
 const char* MeshObject::MeshObjectIdentifier = "Mesh Object";
 size_t MeshObject::MeshObjectCount = 0;
 
-MeshObject::MeshObject(GraphicsPipeline* GraphicsPipelineInstance) 
-	: AAttachableObject(GraphicsPipelineInstance)
+MeshObject::MeshObject() 
+	: AAttachableObject()
 {
 	InitMeshObject();
 }
 
-MeshObject::MeshObject(
-	GraphicsPipeline* GraphicsPipelineInstance, 
-	std::shared_ptr<AMeshAsset> MeshAssetInstanceIn
-)
-	: AAttachableObject(GraphicsPipelineInstance), MeshAssetInstance(MeshAssetInstanceIn)
+MeshObject::MeshObject(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn)
+	: AAttachableObject(), MeshAssetInstance(MeshAssetInstanceIn)
 {
 	InitMeshObject();
 }
@@ -48,7 +45,7 @@ void MeshObject::Update(const float& DeltaTimeIn)
 void MeshObject::AcceptRenderer(ARenderer* Renderer)
 {
 	AAttachableObject::AcceptRenderer(Renderer);
-	Renderer->Render(DeviceContextCached, this);
+	Renderer->Render(this);
 }
 
 void MeshObject::AcceptGui(IGuiModelVisitor* GuiVisitor)

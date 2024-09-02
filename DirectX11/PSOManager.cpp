@@ -1,6 +1,7 @@
 #include "PSOManager.h"
 #include "DefineUtility.h"
 
+#include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
 #include "PSOObject.h"
 
@@ -17,8 +18,7 @@
 using namespace std;
 using namespace Microsoft::WRL;
 
-PSOManager::PSOManager(GraphicsPipeline* GraphicsPipelineIn)
-    : GraphicsPipelineCached(GraphicsPipelineIn)
+PSOManager::PSOManager()
 {
     CreatePositionOnlyPSO();
     CreateStatic();
@@ -32,8 +32,8 @@ PSOManager::~PSOManager()
 
 void PSOManager::CreatePositionOnlyPSO()
 {
-    ID3D11Device* Device = GraphicsPipelineCached->GetDevice();
-    ID3D11DeviceContext* DeviceContext = GraphicsPipelineCached->GetDeviceContext();
+    ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
+    ID3D11DeviceContext* DeviceContext = App::GGraphicPipeline->GetDeviceContext();
 
     ComPtr<ID3DBlob> VertexShaderByteCode;
     ComPtr<ID3DBlob> DebugObjectPSByteCode;
@@ -195,8 +195,8 @@ void PSOManager::CreatePositionOnlyPSO()
 
 void PSOManager::CreateStatic()
 {
-    ID3D11Device* Device = GraphicsPipelineCached->GetDevice();
-    ID3D11DeviceContext* DeviceContext = GraphicsPipelineCached->GetDeviceContext();
+    ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
+    ID3D11DeviceContext* DeviceContext = App::GGraphicPipeline->GetDeviceContext();
 
     ComPtr<ID3DBlob> VertexShaderByteCode;
     ComPtr<ID3DBlob> PixelShaderByteCode;
@@ -323,8 +323,8 @@ void PSOManager::CreateStatic()
 
 void PSOManager::CreateSkeletal()
 {
-    ID3D11Device* Device = GraphicsPipelineCached->GetDevice();
-    ID3D11DeviceContext* DeviceContext = GraphicsPipelineCached->GetDeviceContext();
+    ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
+    ID3D11DeviceContext* DeviceContext = App::GGraphicPipeline->GetDeviceContext();
 
     ComPtr<ID3DBlob> VertexShaderByteCode;
     ComPtr<ID3DBlob> PixelShaderByteCode;

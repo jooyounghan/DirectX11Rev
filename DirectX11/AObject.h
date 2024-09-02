@@ -27,7 +27,7 @@ struct TransformationMatrix
 class AObject : public IOnSerializable, public IUpdatable
 {
 public:
-	AObject(GraphicsPipeline* GraphicsPipelineInstance);
+	AObject();
 
 protected:
 	std::string ObjectName;

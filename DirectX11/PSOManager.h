@@ -22,19 +22,14 @@ enum EPSOType : size_t
 	PSOTypeCount
 };
 
-
-class GraphicsPipeline;
 class PSOObject;
 class ARenderer;
 
 class PSOManager
 {
 public:
-	PSOManager(GraphicsPipeline* GraphicsPipelineIn);
+	PSOManager();
 	~PSOManager();
-
-private:
-	GraphicsPipeline* GraphicsPipelineCached = nullptr;
 
 protected:
 	std::unique_ptr<PSOObject> PSOObjects[PSOTypeCount];

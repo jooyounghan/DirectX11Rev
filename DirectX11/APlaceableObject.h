@@ -21,7 +21,7 @@ class APlaceableObject : public AObject
 	friend AAttachableObject;
 
 public:
-	APlaceableObject(GraphicsPipeline* GraphicsPipelineInstance);
+	APlaceableObject();
 	virtual ~APlaceableObject();
 
 protected:

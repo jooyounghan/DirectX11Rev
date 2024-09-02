@@ -22,12 +22,15 @@
 using namespace std;
 using namespace DirectX;
 
-MapAsset::MapAsset(const std::string& MapNameIn, AssetManager* AssetManagerInstance, bool LoadAsFile)
+MapAsset::MapAsset(
+	const std::string& MapNameIn,
+	AssetManager* AssetManagerIn,
+	bool LoadAsFile
+)
 	: 
-	AssetManagerCached(AssetManagerInstance),
+	AssetManagerCached(AssetManagerIn),
 	AAssetFile(LoadAsFile ? MapNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::Map)] : MapNameIn, EAssetType::Map)
 {
-	GraphicsPipelineCached = AssetManagerCached->GetGraphicsPipelineCached();
 }
 
 MapAsset::~MapAsset()
@@ -37,7 +40,7 @@ MapAsset::~MapAsset()
 
 void MapAsset::AddRenderObject(std::shared_ptr<AMeshAsset> MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-	Actor* ta = PlaceableAddHelper<Actor>(GraphicsPipelineCached, MeshAssetIn);
+	Actor* ta = PlaceableAddHelper<Actor>(MeshAssetIn);
 	ta->RelativePosition.x = PosXIn;
 	ta->RelativePosition.y = PosYIn;
 	ta->RelativePosition.z = PosZIn;
@@ -127,7 +130,7 @@ void MapAsset::Serialize(const std::string& OutputAdditionalPath)
 	}
 }
 
-void MapAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* AssetManagerIn)
+void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	size_t RootPlaceablesCount;
 	fread(&RootPlaceablesCount, sizeof(size_t), 1, FileIn);
@@ -144,14 +147,14 @@ void MapAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* A
 			break;
 		case ACTOR_KIND:
 		{
-			Actor* AddedActor = PlaceableAddHelper<Actor>(GraphicsPipelineCached);
+			Actor* AddedActor = PlaceableAddHelper<Actor>();
 			AddedActor->OnDeserialize(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 			break;
 		}
 		case PAWN_KIND:
 		{
-			//APawn* AddedPawn = PlaceableAddHelper<APawn>(GraphicsPipelineCached);
+			//APawn* AddedPawn = PlaceableAddHelper<APawn>();
 			//AddedPawn->OnDeserialize(FileIn, AssetManagerIn);
 			//DeserializeParentObject(AddedPawn, FileIn, AssetManagerIn);
 			//break;
@@ -224,16 +227,16 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 		case ATTACHABLE_NONE:
 			break;
 		case MESH_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<MeshObject>(GraphicsPipelineCached);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<MeshObject>();
 			break;
 		case BOUNDING_SPHERE_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>(GraphicsPipelineCached);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>();
 			break;
 		case OBB_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>(GraphicsPipelineCached);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>();
 			break;
 		case NORMAL_CAMERA_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<Camera>(GraphicsPipelineCached, App::GWidth, App::GHeight);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<Camera>(App::GWidth, App::GHeight);
 			break;
 		default:
 			break;

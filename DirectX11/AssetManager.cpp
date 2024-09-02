@@ -22,8 +22,7 @@ using namespace std;
 using namespace DirectX;
 using namespace filesystem;
 
-AssetManager::AssetManager(GraphicsPipeline* GraphicsPipelineInstance)
-    : GraphicsPipelineCached(GraphicsPipelineInstance)
+AssetManager::AssetManager()
 {
     PreloadAssets();
 }
@@ -83,7 +82,7 @@ void AssetManager::LoadAssetFileHelper(
 )
 {
     shared_ptr<T> AssetFile = make_shared<T>(AssetName, AssetConstructArgs...);
-    AssetFile->Deserialize(FileIn, GraphicsPipelineCached->GetDevice(), this);
+    AssetFile->Deserialize(FileIn, this);
     ManagingContainer.emplace(AssetName, AssetFile);
     ManagingAssets.emplace(AssetName, AssetFile);
 }
@@ -153,7 +152,7 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
         ManagingBones.emplace(BoneAssetLoaded->GetAssetName(), BoneAssetLoaded);
         ManagingAssets.emplace(BoneAssetLoaded->GetAssetName(), BoneAssetLoaded);
 
-        SkeletalMeshAssetLoaded->Initialize(GraphicsPipelineCached->GetDevice());
+        SkeletalMeshAssetLoaded->Initialize();
         SkeletalMeshAssetLoaded->Serialize();
         ManagingSkeletalMeshes.emplace(SkeletalMeshAssetLoaded->GetAssetName(), SkeletalMeshAssetLoaded);
         ManagingAssets.emplace(SkeletalMeshAssetLoaded->GetAssetName(), SkeletalMeshAssetLoaded);
@@ -164,7 +163,7 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
         
         ProcessNodeForMesh(IsGltf, Scene, RootNode, (StaticMeshAsset*)StaticMeshLoaded.get(), RootTransform);
 
-        StaticMeshLoaded->Initialize(GraphicsPipelineCached->GetDevice());
+        StaticMeshLoaded->Initialize();
         StaticMeshLoaded->Serialize();
         ManagingStaticMeshes.emplace(StaticMeshLoaded->GetAssetName(), StaticMeshLoaded);
         ManagingAssets.emplace(StaticMeshLoaded->GetAssetName(), StaticMeshLoaded);

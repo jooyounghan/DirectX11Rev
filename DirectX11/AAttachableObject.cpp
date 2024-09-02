@@ -2,8 +2,8 @@
 #include "APlaceableObject.h"
 #include "GlobalVariable.h"
 
-AAttachableObject::AAttachableObject(GraphicsPipeline* GraphicsPipelineInstance)
-	: AObject(GraphicsPipelineInstance)
+AAttachableObject::AAttachableObject()
+	: AObject()
 {
 }
 

@@ -20,7 +20,7 @@ public:
 	virtual void ResetRendering() override final;
 
 public:
-	virtual void Render(ID3D11DeviceContext* DeviceContextIn, MeshObject* MeshObjectIn) = 0;
-	virtual void Render(ID3D11DeviceContext* DeviceContextIn, ABoundingObject* MeshObjectIn) = 0;
+	virtual void Render(MeshObject* MeshObjectIn) = 0;
+	virtual void Render(ABoundingObject* MeshObjectIn) = 0;
 };
 

@@ -8,10 +8,10 @@ using namespace std;
 
 const char* Camera::CameraIdentifier = "Camera";
 
-Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, const UINT& HeightIn)
-	: Viewable(GraphicsPipelineInstance, WidthIn, HeightIn)
+Camera::Camera(const UINT& WidthIn, const UINT& HeightIn)
+	: Viewable(WidthIn, HeightIn)
 {
-	CamearaFrustum = make_unique<BoundingFrustumObject>(GraphicsPipelineInstance, this);
+	CamearaFrustum = make_unique<BoundingFrustumObject>(this);
 	CamearaFrustum->SetParentObject(this);
 
 	static size_t CameraCount = 0;
@@ -20,7 +20,7 @@ Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, 
 	ObjectName = CameraIdentifier + to_string(CameraCount);
 	AttachableKind = EAttachableObjectKind::NORMAL_CAMERA_KIND;
 
-	ID3D11Device* Device = GraphicsPipelineInstance->GetDevice();
+	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
 
 	D3D11_TEXTURE2D_DESC SceneTexture2DDesc;
 	AutoZeroMemory(SceneTexture2DDesc);
@@ -106,7 +106,7 @@ void Camera::Update(const float& DeltaTimeIn)
 void Camera::AcceptRenderer(ARenderer* Renderer)
 {
 	AAttachableObject::AcceptRenderer(Renderer);
-	Renderer->Render(DeviceContextCached, CamearaFrustum.get());
+	Renderer->Render(CamearaFrustum.get());
 }
 
 void Camera::CleanupLens()

@@ -1,9 +1,9 @@
 #include "Viewable.h"
 
 
+#include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
 #include "DefineUtility.h"
-#include "GlobalVariable.h"
 
 #include "ARenderer.h"
 #include "IGuiModelVisitor.h"
@@ -11,8 +11,8 @@
 using namespace std;
 using namespace DirectX;
 
-Viewable::Viewable(GraphicsPipeline* GraphicsInstance, const UINT& WidthIn, const UINT& HeightIn)
-	: AAttachableObject(GraphicsInstance), ViewProjBuffer(GraphicsInstance->GetDevice())
+Viewable::Viewable(const UINT& WidthIn, const UINT& HeightIn)
+	: AAttachableObject(), ViewProjBuffer()
 {
 	Resize(WidthIn, HeightIn);
 }
@@ -64,7 +64,7 @@ void Viewable::Update(const float& DeltaTimeIn)
 	TempViewProj.InvViewProjMatrix = XMMatrixInverse(nullptr, TempViewProj.ViewProjMatrix);
 	TempViewProj.ViewProjMatrix = XMMatrixTranspose(TempViewProj.ViewProjMatrix);
 
-	ViewProjBuffer.Upload(DeviceContextCached, TempViewProj);
+	ViewProjBuffer.Upload(TempViewProj);
 }
 
 

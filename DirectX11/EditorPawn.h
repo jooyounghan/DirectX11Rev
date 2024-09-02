@@ -8,7 +8,7 @@ class EditorCamera;
 class EditorPawn : public APawn
 {
 public:
-	EditorPawn(GraphicsPipeline* GraphicsPipelineInstance);
+	EditorPawn();
 	virtual ~EditorPawn();
 
 protected:

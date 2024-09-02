@@ -11,18 +11,22 @@ class InputEventManager : public IUpdatable
 {
 protected:
 	KeyEvent KeyEvents[KeyActionCount][KeyInputCount];
-
-protected:
 	bool IsKeyPressed[KeyInputCount];
 
 protected:
-	MouseEvent MouseEvent[MouseActionCount]
+	MouseEvent MouseEvents[MouseActionCount];
+	bool IsMousePressed[MouseInputCount];
 
 protected:
 	static std::unordered_map<WPARAM, EKeyInput> WinMsgToKeyInput;
 
 public:
+	static EKeyInput GetKeyInputFromWinMsg(WPARAM wParam);
+
+public:
 	KeyEvent& GetKeyEvent(EKeyAction KeyActionEnum, EKeyInput KeyInputEnum);
+	MouseEvent& GetMouseEvnet(EMouseAction MouseActionEnum);
+
 	virtual void Update(const float& DeltaTimeIn) override;
 
 public:

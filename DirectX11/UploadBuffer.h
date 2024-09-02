@@ -1,26 +1,32 @@
 #pragma once
 #include "Buffer.h"
 #include "IUploadableBuffer.h"
+
 #include "HeaderHelper.h"
 #include "DefineUtility.h"
+#include "GlobalVariable.h"
+#include "GraphicsPipeline.h"
 
 template<typename T>
 class UploadBuffer : public Buffer, public IUploadableBuffer<T>
 {
 public:
-	UploadBuffer(ID3D11Device* DeviceIn);
+	UploadBuffer();
 	~UploadBuffer();
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> StagingBuffer;
 
+protected:
+	ID3D11DeviceContext* DeviceContextCached;
 
 public:
-	virtual void Upload(ID3D11DeviceContext* DeviceContextIn, const T& CpuDataIn) override;
+	virtual void Upload(const T& CpuDataIn) override;
 };
 
 template<typename T>
-inline UploadBuffer<T>::UploadBuffer(ID3D11Device* DeviceIn)
+inline UploadBuffer<T>::UploadBuffer()
+	: DeviceContextCached(App::GGraphicPipeline->GetDeviceContext())
 {
 	BUFFER_ALIGN_CHECK(sizeof(T));
 
@@ -44,8 +50,9 @@ inline UploadBuffer<T>::UploadBuffer(ID3D11Device* DeviceIn)
 	StagingBufferDesc.MiscFlags = NULL;
 	StagingBufferDesc.StructureByteStride = 0;
 
-	DeviceIn->CreateBuffer(&BufferDesc, NULL, Buffer.GetAddressOf());
-	DeviceIn->CreateBuffer(&StagingBufferDesc, NULL, StagingBuffer.GetAddressOf());
+	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
+	Device->CreateBuffer(&BufferDesc, NULL, Buffer.GetAddressOf());
+	Device->CreateBuffer(&StagingBufferDesc, NULL, StagingBuffer.GetAddressOf());
 }
 
 template<typename T>
@@ -54,12 +61,12 @@ inline UploadBuffer<T>::~UploadBuffer()
 }
 
 template<typename T>
-inline void UploadBuffer<T>::Upload(ID3D11DeviceContext* DeviceContextIn, const T& CpuDataIn)
+inline void UploadBuffer<T>::Upload(const T& CpuDataIn)
 {
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
 	AutoZeroMemory(MappedResource);
-	AssertIfFailed(DeviceContextIn->Map(StagingBuffer.Get(), 0, D3D11_MAP_WRITE, 0, &MappedResource));
+	AssertIfFailed(DeviceContextCached->Map(StagingBuffer.Get(), 0, D3D11_MAP_WRITE, 0, &MappedResource));
 	memcpy(MappedResource.pData, &CpuDataIn, sizeof(T));
-	DeviceContextIn->Unmap(StagingBuffer.Get(), 0);
-	DeviceContextIn->CopyResource(Buffer.Get(), StagingBuffer.Get());
+	DeviceContextCached->Unmap(StagingBuffer.Get(), 0);
+	DeviceContextCached->CopyResource(Buffer.Get(), StagingBuffer.Get());
 }
