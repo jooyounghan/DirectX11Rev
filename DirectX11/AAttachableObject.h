@@ -10,11 +10,11 @@ class APlaceableObject;
 
 enum EAttachableObjectKind : int
 {
-	AttachableNone,
-	MeshObjectKind,
-	BoundingSphereKind,
-	OrientedBoundingBoxKind,
-	NormalCameraKind,
+	ATTACHABLE_NONE,
+	MESH_KIND,
+	BOUNDING_SPHERE_KIND,
+	OBB_KIND,
+	NORMAL_CAMERA_KIND,
 };
 
 class AAttachableObject : public AObject
@@ -25,7 +25,7 @@ public:
 	virtual~AAttachableObject();
 
 protected:
-	EAttachableObjectKind AttachableKind = EAttachableObjectKind::AttachableNone;
+	EAttachableObjectKind AttachableKind = EAttachableObjectKind::ATTACHABLE_NONE;
 	MakeSetterGetter(AttachableKind);
 
 protected:
@@ -40,6 +40,10 @@ protected:
 	ID3D11Buffer* PickingIDBufferCached = nullptr;
 	MakeSetterGetter(PickingIDBufferCached);
 
+protected:
+	bool bIsConsumeMove = true;
+	MakePointerGetter(bIsConsumeMove);
+
 public:
 	virtual DirectX::XMVECTOR GetRotationQuat() const override;
 
@@ -50,6 +54,25 @@ public:
 
 public:
 	virtual DirectX::XMMATRIX GetTransformation() const override;
+
+protected:
+	bool IsIgnoreParentTranslation = false;
+	bool IsIgnoreParentRoll = false;
+	bool IsIgnoreParentYaw = false;
+	bool IsIgnoreParentPitch = false;
+	MakePointerGetter(IsIgnoreParentTranslation);
+	MakePointerGetter(IsIgnoreParentRoll);
+	MakePointerGetter(IsIgnoreParentYaw);
+	MakePointerGetter(IsIgnoreParentPitch);
+
+public:
+	virtual void MoveForward(const float& DeltaForward) override;
+	virtual void MoveRight(const float& DeltaRight) override;
+
+public:
+	virtual void RotatePitch(const float& DeltaPitch) override;
+	virtual void RotateRoll(const float& DeltaRoll) override;
+	virtual void RotateYaw(const float& DeltaYaw) override;
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

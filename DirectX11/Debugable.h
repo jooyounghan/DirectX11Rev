@@ -6,10 +6,10 @@
 
 enum class EDebugObjectType
 {
-	Sphere,
-	Box,
-	Capsule,
-	NumDebugObject
+	DEBUG_SPHERE,
+	DEBUG_BOX,
+	DEBUG_CAPSULE,
+	NUM_DEBUG_OBJECT
 };
 
 constexpr size_t GetDebugObjectTypeAsIndex(EDebugObjectType DebugObjectType) { return static_cast<size_t>(DebugObjectType); }

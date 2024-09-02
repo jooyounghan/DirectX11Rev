@@ -238,8 +238,17 @@
     <Filter Include="헤더 파일\Controller\UserController">
       <UniqueIdentifier>{5779cdb7-d2aa-49e4-af4b-bc327419ae1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Controller\Command">
+    <Filter Include="소스 파일\Controller\InputEvent">
+      <UniqueIdentifier>{7f3fcac5-f995-44d6-bb6e-602054edb02e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Controller\InputEvent">
       <UniqueIdentifier>{d0447e4a-154b-4eb6-9a7e-98071b26576b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Controller\InputEvent\Events">
+      <UniqueIdentifier>{a2c166fb-8925-4a26-a2a1-3c75d9086826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Controller\InputEvent\Events">
+      <UniqueIdentifier>{2b533479-5c9a-41f2-adfc-b8602b1c1e07}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -396,7 +405,7 @@
     <ClCompile Include="PickingIDWireframeRenderer.cpp">
       <Filter>소스 파일\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="EditorActor.cpp">
+    <ClCompile Include="EditorPawn.cpp">
       <Filter>소스 파일\Object\Placeable\Actor</Filter>
     </ClCompile>
     <ClCompile Include="ModelDetailWindow.cpp">
@@ -441,11 +450,14 @@
     <ClCompile Include="DefaultController.cpp">
       <Filter>소스 파일\Controller\UserController</Filter>
     </ClCompile>
-    <ClCompile Include="ICommand.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="InputEventManager.cpp">
+      <Filter>소스 파일\Controller\InputEvent</Filter>
     </ClCompile>
-    <ClCompile Include="AUserController.cpp">
-      <Filter>소스 파일\Controller\UserController</Filter>
+    <ClCompile Include="KeyEvent.cpp">
+      <Filter>소스 파일\Controller\InputEvent\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseEvent.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -647,7 +659,7 @@
     <ClInclude Include="PickingIDWireframeRenderer.h">
       <Filter>헤더 파일\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="EditorActor.h">
+    <ClInclude Include="EditorPawn.h">
       <Filter>헤더 파일\Object\Placeable\Actor</Filter>
     </ClInclude>
     <ClInclude Include="ModelDetailWindow.h">
@@ -713,20 +725,23 @@
     <ClInclude Include="IUpdatable.h">
       <Filter>헤더 파일\Interface</Filter>
     </ClInclude>
-    <ClInclude Include="DefineKey.h">
-      <Filter>헤더 파일\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="DefaultController.h">
       <Filter>헤더 파일\Controller\UserController</Filter>
     </ClInclude>
     <ClInclude Include="Todo.h">
       <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="ICommand.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="InputEventManager.h">
+      <Filter>헤더 파일\Controller\InputEvent</Filter>
     </ClInclude>
-    <ClInclude Include="AUserController.h">
-      <Filter>헤더 파일\Controller\UserController</Filter>
+    <ClInclude Include="KeyEvent.h">
+      <Filter>헤더 파일\Controller\InputEvent\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseEvent.h">
+      <Filter>헤더 파일\Controller\InputEvent\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineInput.h">
+      <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

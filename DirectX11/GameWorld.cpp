@@ -4,10 +4,11 @@
 #include "GraphicsPipeline.h"
 #include "PSOManager.h"
 #include "AssetManager.h"
+#include "InputEventManager.h"
 
 #ifdef _DEBUG
 #include "EditorWorld.h"
-#include "EditorActor.h"
+#include "EditorPawn.h"
 #include "EditorCamera.h"
 #endif 
 
@@ -22,7 +23,11 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHand
 {
 	PSOManagerInstance = make_unique<PSOManager>((GraphicsPipelineInstance));
 	AssetManagerInstance = make_unique<AssetManager>(GraphicsPipelineCached);
+	InputEventManagerInstance = make_unique<InputEventManager>();
+	App::InputEventManagerCached = InputEventManagerInstance.get();
+
 	EditorWorldInstance = make_unique<EditorWorld>(this, WindowHandle);
+
 
 	auto tests = AssetManagerInstance->GetManagingMaps();
 
@@ -41,7 +46,7 @@ GameWorld::GameWorld(GraphicsPipeline* GraphicsPipelineInstance, HWND WindowHand
 	}
 	CurrentMap = MapInstances[0].get();
 
-	EditorActor* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
+	EditorPawn* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
 	if (EditorActorInstnace != nullptr)
 	{
 		CurrentMap->SetCameraCached(EditorActorInstnace->GetEditorCameraCached());
@@ -78,6 +83,8 @@ void GameWorld::Update(const float& DeltaTimeIn)
 	EditorWorldInstance->Update(DeltaTimeIn);
 #endif // _DEBUG
 
+	InputEventManagerInstance->Update(DeltaTimeIn);
+
 	if (CurrentMap)
 	{
 		CurrentMap->Update(DeltaTimeIn);
@@ -107,6 +114,7 @@ void GameWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 #ifdef _DEBUG
 	EditorWorldInstance->AppProc(hWnd, msg, wParam, lParam);
 #endif
+	InputEventManagerInstance->ManageInput(msg, wParam, lParam);
 
 	ManageMessage(hWnd, msg, wParam, lParam);
 }

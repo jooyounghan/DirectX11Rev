@@ -52,6 +52,106 @@ DirectX::XMMATRIX APlaceableObject::GetTransformation() const
 	);
 }
 
+void APlaceableObject::MoveForward(const float& DeltaForward)
+{
+	if (!IsPassingTranslation)
+	{
+		RelativePosition.z += DeltaForward;
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->MoveForward(DeltaForward);
+		}
+	}
+	else
+	{
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RelativePosition.z += DeltaForward;
+			AttachedChild->MoveForward(DeltaForward);
+		}
+	}
+}
+
+void APlaceableObject::MoveRight(const float& DeltaRight)
+{
+	if (!IsPassingTranslation)
+	{
+		RelativePosition.x += DeltaRight;
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->MoveRight(DeltaRight);
+		}
+	}
+	else
+	{
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RelativePosition.x += DeltaRight;
+			AttachedChild->MoveRight(DeltaRight);
+		}
+	}
+}
+
+void APlaceableObject::RotatePitch(const float& DeltaPitch)
+{
+	if (!IsPassingPitch)
+	{
+		RelativeAngle.x += DeltaPitch;
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RotatePitch(DeltaPitch);
+		}
+	}
+	else
+	{
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RelativeAngle.x += DeltaPitch;
+			AttachedChild->RotatePitch(DeltaPitch);
+		}
+	}
+}
+
+void APlaceableObject::RotateRoll(const float& DeltaRoll)
+{
+	if (!IsPassingRoll)
+	{
+		RelativeAngle.z += DeltaRoll;
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RotateRoll(DeltaRoll);
+		}
+	}
+	else
+	{
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RelativeAngle.z += DeltaRoll;
+			AttachedChild->RotateRoll(DeltaRoll);
+		}
+	}
+}
+
+void APlaceableObject::RotateYaw(const float& DeltaYaw)
+{
+	if (!IsPassingYaw)
+	{
+		RelativeAngle.y += DeltaYaw;
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RotateYaw(DeltaYaw);
+		}
+	}
+	else
+	{
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RelativeAngle.y += DeltaYaw;
+			AttachedChild->RotateYaw(DeltaYaw);
+		}
+	}
+}
+
 void APlaceableObject::Update(const float& DeltaTimeIn)
 {	
 	AObject::Update(DeltaTimeIn);

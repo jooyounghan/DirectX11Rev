@@ -48,7 +48,7 @@ void OBBObject::InitOBB(ID3D11Device* DeviceIn)
 	BoundingOBBCount++;
 
 	ObjectName = BoundingOBBIdentifier + to_string(BoundingOBBCount);
-	AttachableKind = EAttachableObjectKind::OrientedBoundingBoxKind;
+	AttachableKind = EAttachableObjectKind::OBB_KIND;
 
 	DebugObject = OBBDebugObject.get();
 }
@@ -136,11 +136,11 @@ void OBBObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 void OBBObject::OnSerialize(FILE* FileIn)
 {
 	AObject::OnSerialize(FileIn);
-	fwrite(&Extents, sizeof(XMFLOAT3), 1, FileIn);
+	fwrite(&DescaledExtents, sizeof(XMFLOAT3), 1, FileIn);
 }
 
 void OBBObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	AObject::OnDeserialize(FileIn, AssetManagerIn);
-	fread(&Extents, sizeof(XMFLOAT3), 1, FileIn);
+	fread(&DescaledExtents, sizeof(XMFLOAT3), 1, FileIn);
 }

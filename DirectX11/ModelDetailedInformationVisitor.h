@@ -15,7 +15,7 @@ protected:
 
 public:
 	virtual void Visit(Actor* ActorInstance) override;
-	virtual void Visit(EditorActor* ActorInstance) override;
+	virtual void Visit(EditorPawn* ActorInstance) override;
 
 public:
 	virtual void Visit(MeshObject* AttachableInstance) override;

@@ -18,7 +18,7 @@ Camera::Camera(GraphicsPipeline* GraphicsPipelineInstance, const UINT& WidthIn, 
 	CameraCount++;
 
 	ObjectName = CameraIdentifier + to_string(CameraCount);
-	AttachableKind = EAttachableObjectKind::NormalCameraKind;
+	AttachableKind = EAttachableObjectKind::NORMAL_CAMERA_KIND;
 
 	ID3D11Device* Device = GraphicsPipelineInstance->GetDevice();
 

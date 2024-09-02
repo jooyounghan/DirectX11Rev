@@ -4,6 +4,7 @@
 
 using namespace DirectX;
 
+InputEventManager* App::InputEventManagerCached = nullptr;
 UINT App::GWidth = 0;
 UINT App::GHeight = 0;
 

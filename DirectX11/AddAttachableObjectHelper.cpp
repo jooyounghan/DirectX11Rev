@@ -51,28 +51,28 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
         { 
             switch (ObjectKind)
             {
-                case EAttachableObjectKind::MeshObjectKind:
+                case EAttachableObjectKind::MESH_KIND:
                 {
                     SelectedAttached != nullptr ?
                         SelectedAttached->AddAttachedObject<MeshObject>(GraphicPipelineCached) :
                         SelectedPlaced->AddAttachedObject<MeshObject>(GraphicPipelineCached);
                     break;
                 }
-                case EAttachableObjectKind::BoundingSphereKind:
+                case EAttachableObjectKind::BOUNDING_SPHERE_KIND:
                 {
                     SelectedAttached != nullptr ?
                         SelectedAttached->AddAttachedObject<BoundingSphereObject>(GraphicPipelineCached) :
                         SelectedPlaced->AddAttachedObject<BoundingSphereObject>(GraphicPipelineCached);
                     break;
                 }
-                case EAttachableObjectKind::OrientedBoundingBoxKind:
+                case EAttachableObjectKind::OBB_KIND:
                 {
                     SelectedAttached != nullptr ?
                         SelectedAttached->AddAttachedObject<OBBObject>(GraphicPipelineCached) :
                         SelectedPlaced->AddAttachedObject<OBBObject>(GraphicPipelineCached);
                     break;
                 }
-                case EAttachableObjectKind::NormalCameraKind:
+                case EAttachableObjectKind::NORMAL_CAMERA_KIND:
                 {
                     SelectedAttached != nullptr ?
                         SelectedAttached->AddAttachedObject<Camera>(GraphicPipelineCached, App::GWidth, App::GHeight) :

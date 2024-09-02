@@ -32,7 +32,7 @@ void Actor::Initialize(GraphicsPipeline* GraphicsPipelineIn, std::shared_ptr<AMe
 	ActorCount++;
 	ObjectName = "Actor" + to_string(ActorCount);
 
-	PlaceableKind = EPlaceableObjectKind::ActorKind;
+	PlaceableKind = EPlaceableObjectKind::ACTOR_KIND;
 
 	MeshObjectInstance = make_unique<MeshObject>(GraphicsPipelineIn, MeshAssetInstanceIn);
 	MeshObjectInstance->SetParentObject(this);

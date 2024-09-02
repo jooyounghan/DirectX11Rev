@@ -2,6 +2,7 @@
 #include "Actor.h"
 
 class AController;
+class InputEventManager;
 
 class APawn : public Actor
 {

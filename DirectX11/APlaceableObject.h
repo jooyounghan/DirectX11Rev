@@ -10,10 +10,10 @@
 
 enum EPlaceableObjectKind : int
 {
-	PlaceableNone,
-	ActorKind,
-	PawnKind,
-	CharacterKind,
+	PLACABLE_NONE,
+	ACTOR_KIND,
+	PAWN_KIND,
+	CHARACTER_KIND,
 };
 
 class APlaceableObject : public AObject
@@ -25,7 +25,7 @@ public:
 	virtual ~APlaceableObject();
 
 protected:
-	EPlaceableObjectKind PlaceableKind = EPlaceableObjectKind::PlaceableNone;
+	EPlaceableObjectKind PlaceableKind = EPlaceableObjectKind::PLACABLE_NONE;
 	MakeSetterGetter(PlaceableKind);
 
 protected:
@@ -58,6 +58,25 @@ public:
 
 public:
 	virtual DirectX::XMMATRIX GetTransformation() const;
+
+public:
+	virtual void MoveForward(const float& DeltaForward) override;
+	virtual void MoveRight(const float& DeltaRight) override;
+
+public:
+	virtual void RotatePitch(const float& DeltaPitch) override;
+	virtual void RotateRoll(const float& DeltaRoll) override;
+	virtual void RotateYaw(const float& DeltaYaw) override;
+
+protected:
+	bool IsPassingTranslation = false;
+	bool IsPassingRoll = false;
+	bool IsPassingYaw = false;
+	bool IsPassingPitch = false;
+	MakePointerGetter(IsPassingTranslation);
+	MakePointerGetter(IsPassingRoll);
+	MakePointerGetter(IsPassingYaw);
+	MakePointerGetter(IsPassingPitch);
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

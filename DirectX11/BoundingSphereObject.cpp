@@ -38,7 +38,7 @@ void BoundingSphereObject::InitBoundingSphere(ID3D11Device* DeviceIn)
 	static size_t BoundingSphereCount = 0;
 	BoundingSphereCount++;
 	ObjectName = BoundingSphereIdentifier + to_string(BoundingSphereCount);
-	AttachableKind = EAttachableObjectKind::BoundingSphereKind;
+	AttachableKind = EAttachableObjectKind::BOUNDING_SPHERE_KIND;
 
 	AutoZeroMemory(Center);
 

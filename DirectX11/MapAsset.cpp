@@ -10,6 +10,7 @@
 #include "AMeshAsset.h"
 
 #include "Actor.h"
+#include "APawn.h"
 
 #include "MeshObject.h"
 #include "BoundingSphereObject.h"
@@ -139,18 +140,24 @@ void MapAsset::Deserialize(FILE* FileIn, ID3D11Device* DeviceIn, AssetManager* A
 
 		switch (PlaceableObjectKind)
 		{
-		case PlaceableNone:
+		case PLACABLE_NONE:
 			break;
-		case ActorKind:
+		case ACTOR_KIND:
 		{
 			Actor* AddedActor = PlaceableAddHelper<Actor>(GraphicsPipelineCached);
 			AddedActor->OnDeserialize(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 			break;
 		}
-		case PawnKind:
+		case PAWN_KIND:
+		{
+			//APawn* AddedPawn = PlaceableAddHelper<APawn>(GraphicsPipelineCached);
+			//AddedPawn->OnDeserialize(FileIn, AssetManagerIn);
+			//DeserializeParentObject(AddedPawn, FileIn, AssetManagerIn);
+			//break;
+		}
 			break;
-		case CharacterKind:
+		case CHARACTER_KIND:
 			break;
 		default:
 			break;
@@ -214,18 +221,18 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 		AAttachableObject* AddedMeshObject = nullptr;
 		switch (AttachedObjectKind)
 		{
-		case AttachableNone:
+		case ATTACHABLE_NONE:
 			break;
-		case MeshObjectKind:
+		case MESH_KIND:
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<MeshObject>(GraphicsPipelineCached);
 			break;
-		case BoundingSphereKind:
+		case BOUNDING_SPHERE_KIND:
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>(GraphicsPipelineCached);
 			break;
-		case OrientedBoundingBoxKind:
+		case OBB_KIND:
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>(GraphicsPipelineCached);
 			break;
-		case NormalCameraKind:
+		case NORMAL_CAMERA_KIND:
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<Camera>(GraphicsPipelineCached, App::GWidth, App::GHeight);
 			break;
 		default:

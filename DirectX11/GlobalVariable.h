@@ -2,8 +2,11 @@
 #include <windows.h>
 #include <DirectXMath.h>
 
+class InputEventManager;
+
 namespace App
 {
+	extern InputEventManager* InputEventManagerCached;
 	extern UINT GWidth;
 	extern UINT GHeight;
 }

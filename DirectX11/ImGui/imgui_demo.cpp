@@ -8111,7 +8111,7 @@ struct ExampleAppConsole
 {
     char                  InputBuf[256];
     ImVector<char*>       Items;
-    ImVector<const char*> Commands;
+    ImVector<const char*> KeyCommands;
     ImVector<char*>       History;
     int                   HistoryPos;    // -1: new line, 0..History.Size-1 browsing history.
     ImGuiTextFilter       Filter;
@@ -8126,10 +8126,10 @@ struct ExampleAppConsole
         HistoryPos = -1;
 
         // "CLASSIFY" is here to provide the test case where "C"+[tab] completes to "CL" and display multiple matches.
-        Commands.push_back("HELP");
-        Commands.push_back("HISTORY");
-        Commands.push_back("CLEAR");
-        Commands.push_back("CLASSIFY");
+        KeyCommands.push_back("HELP");
+        KeyCommands.push_back("HISTORY");
+        KeyCommands.push_back("CLEAR");
+        KeyCommands.push_back("CLASSIFY");
         AutoScroll = true;
         ScrollToBottom = false;
         AddLog("Welcome to Dear ImGui!");
@@ -8331,8 +8331,8 @@ struct ExampleAppConsole
         else if (Stricmp(command_line, "HELP") == 0)
         {
             AddLog("Commands:");
-            for (int i = 0; i < Commands.Size; i++)
-                AddLog("- %s", Commands[i]);
+            for (int i = 0; i < KeyCommands.Size; i++)
+                AddLog("- %s", KeyCommands[i]);
         }
         else if (Stricmp(command_line, "HISTORY") == 0)
         {
@@ -8378,9 +8378,9 @@ struct ExampleAppConsole
 
                 // Build a list of candidates
                 ImVector<const char*> candidates;
-                for (int i = 0; i < Commands.Size; i++)
-                    if (Strnicmp(Commands[i], word_start, (int)(word_end - word_start)) == 0)
-                        candidates.push_back(Commands[i]);
+                for (int i = 0; i < KeyCommands.Size; i++)
+                    if (Strnicmp(KeyCommands[i], word_start, (int)(word_end - word_start)) == 0)
+                        candidates.push_back(KeyCommands[i]);
 
                 if (candidates.Size == 0)
                 {

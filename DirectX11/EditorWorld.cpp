@@ -3,7 +3,7 @@
 #include "GlobalVariable.h"
 #include "DefineUtility.h"
 
-#include "EditorActor.h"
+#include "EditorPawn.h"
 #include "EditorCamera.h"
 
 #include "TaskAnalyzerWindow.h"
@@ -30,7 +30,7 @@ using namespace std;
 EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
     : IWorld(GameWorldIn->GraphicsPipelineCached), GameWorldCached(GameWorldIn)
 {
-    EditorActorInstance = make_unique<EditorActor>(GraphicsPipelineCached);
+    EditorActorInstance = make_unique<EditorPawn>(GraphicsPipelineCached);
 
     IMGUI_CHECKVERSION();
 

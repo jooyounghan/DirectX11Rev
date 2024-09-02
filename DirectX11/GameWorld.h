@@ -8,7 +8,7 @@
 
 class PSOManager;
 class AssetManager;
-
+class InputEventManager;
 class EditorWorld;
 class AAssetFile;
 class MapAsset;
@@ -47,6 +47,10 @@ protected:
 	std::unordered_map<UINT, std::shared_ptr<MapAsset>> MapInstances;
 	MapAsset* CurrentMap = nullptr;
 	MakeGetter(CurrentMap);
+
+protected:
+	std::unique_ptr<InputEventManager> InputEventManagerInstance;
+	MakeSmartPtrGetter(InputEventManagerInstance)
 
 public:
 	virtual void RenderWorld() override;

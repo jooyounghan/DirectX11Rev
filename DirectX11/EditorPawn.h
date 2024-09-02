@@ -1,26 +1,19 @@
 #pragma once
-#include "APlaceableObject.h"
+#include "APawn.h"
 #include "HeaderHelper.h"
 #include "imgui.h"
 
 class EditorCamera;
 
-class EditorActor : public APlaceableObject
+class EditorPawn : public APawn
 {
 public:
-	EditorActor(GraphicsPipeline* GraphicsPipelineInstance);
-	virtual ~EditorActor();
+	EditorPawn(GraphicsPipeline* GraphicsPipelineInstance);
+	virtual ~EditorPawn();
 
 protected:
 	EditorCamera* EditorCameraCached = nullptr;
 	MakeGetter(EditorCameraCached);
-
-protected:
-	bool IsKeyPressed[ImGuiKey_COUNT];
-
-public:
-	inline void PressKey(ImGuiKey KeyEnum) { IsKeyPressed[KeyEnum] = true; }
-	inline void ReleaseKey(ImGuiKey KeyEnum) { IsKeyPressed[KeyEnum] = false; }
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

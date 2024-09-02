@@ -67,6 +67,14 @@ public:
 public:
 	virtual DirectX::XMMATRIX GetTransformation() const = 0;
 
+public:
+	virtual void MoveForward(const float& DeltaForward) = 0;
+	virtual void MoveRight(const float& DeltaRight) = 0;
+
+public:
+	virtual void RotatePitch(const float& DeltaPitch) = 0;
+	virtual void RotateRoll(const float& DeltaRoll) = 0;
+	virtual void RotateYaw(const float& DeltaYaw) = 0;
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

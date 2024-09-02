@@ -4,7 +4,7 @@
 #include "GameWorld.h"
 #include "MapAsset.h"
 
-#include "EditorActor.h"
+#include "EditorPawn.h"
 #include "EditorCamera.h"
 
 #include "AssetManager.h"
@@ -59,8 +59,6 @@ void ViewportWindow::RenderWindow()
             Image(EditorCameraCached->GetResolvedSceneSRV(), ImageSize);
             ManageAssetDrop();
             ManageMouseLBClick();
-            ManageEditorCameraByKey();
-            ManageEditorCameraByMouse();
         }
     }
     End();
@@ -132,30 +130,3 @@ void ViewportWindow::ManageMouseLBClick()
         EditorWorldCached->SetSelecteObjectByID(SelectedID);
     }
 }
-
-void ViewportWindow::ManageEditorCameraByKey()
-{
-    auto UpdateKeyPressed = [&](ImGuiKey KeyValue)
-        {
-            if (IsKeyPressed(KeyValue))
-            {
-                EditorActorCached->PressKey(KeyValue);
-            }
-            else
-            {
-                EditorActorCached->ReleaseKey(KeyValue);
-            }
-        };
-
-    UpdateKeyPressed(ImGuiKey_W);
-    UpdateKeyPressed(ImGuiKey_S);
-    UpdateKeyPressed(ImGuiKey_A);
-    UpdateKeyPressed(ImGuiKey_D);
-
-}
-
-void ViewportWindow::ManageEditorCameraByMouse()
-{
-    ImGuiIO& io = GetIO();
-}
-

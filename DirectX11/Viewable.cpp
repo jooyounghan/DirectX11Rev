@@ -41,7 +41,8 @@ const XMMATRIX Viewable::GetViewMatrix()
 	XMVECTOR CurrentForward = XMVector3Rotate(Direction::GDefaultForward, RotationQuat);
 	XMVECTOR CurrentUp = XMVector3Rotate(Direction::GDefaultUp, RotationQuat);
 
-	return XMMatrixLookToLH(XMLoadFloat3(&RelativePosition), CurrentForward, CurrentUp);
+	XMFLOAT3 AbsPosition = GetAbsolutePosition();
+	return XMMatrixLookToLH(XMLoadFloat3(&AbsPosition), CurrentForward, CurrentUp);
 }
 
 const XMMATRIX Viewable::GetProjectionMatrix()

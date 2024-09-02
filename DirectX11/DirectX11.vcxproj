@@ -138,9 +138,8 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
-    <ClCompile Include="AUserController.cpp" />
     <ClCompile Include="DefaultController.cpp" />
-    <ClCompile Include="EditorActor.cpp" />
+    <ClCompile Include="EditorPawn.cpp" />
     <ClCompile Include="ABoundingObject.cpp" />
     <ClCompile Include="AObject.cpp" />
     <ClCompile Include="AssetManagerWindow.cpp" />
@@ -163,9 +162,9 @@
     <ClCompile Include="GlobalVariable.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="AAssetFile.cpp" />
-    <ClCompile Include="ICommand.cpp" />
     <ClCompile Include="IDColor.cpp" />
     <ClCompile Include="AMeshAsset.cpp" />
+    <ClCompile Include="KeyEvent.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -173,6 +172,7 @@
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="InputEventManager.cpp" />
     <ClCompile Include="IWorld.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapAsset.cpp" />
@@ -181,6 +181,7 @@
     <ClCompile Include="MathematicalHelper.cpp" />
     <ClCompile Include="ModelDetailWindow.cpp" />
     <ClCompile Include="ModelDetailedInformationVisitor.cpp" />
+    <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="OBBObject.cpp" />
     <ClCompile Include="APickingIDRenderer.cpp" />
     <ClCompile Include="APawn.cpp" />
@@ -207,10 +208,9 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="AddAttachableObjectHelper.h" />
     <ClInclude Include="AddPlaceableObjectHelper.h" />
-    <ClInclude Include="AUserController.h" />
     <ClInclude Include="DefaultController.h" />
-    <ClInclude Include="DefineKey.h" />
-    <ClInclude Include="EditorActor.h" />
+    <ClInclude Include="DefineInput.h" />
+    <ClInclude Include="EditorPawn.h" />
     <ClInclude Include="ABoundingObject.h" />
     <ClInclude Include="AssetManagerWindow.h" />
     <ClInclude Include="AAttachableObject.h" />
@@ -230,13 +230,13 @@
     <ClInclude Include="FileSelectDialog.h" />
     <ClInclude Include="AAddObjectHelper.h" />
     <ClInclude Include="ICollisionVisitor.h" />
-    <ClInclude Include="ICommand.h" />
     <ClInclude Include="IDColor.h" />
     <ClInclude Include="IDialog.h" />
     <ClInclude Include="IGuiModelVisitor.h" />
     <ClInclude Include="AIndexable.h" />
     <ClInclude Include="IInformationDrawer.h" />
     <ClInclude Include="IIntersectable.h" />
+    <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
@@ -246,6 +246,8 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="AObject.h" />
+    <ClInclude Include="MouseEvent.h" />
+    <ClInclude Include="InputEventManager.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="MeshObjectInformationDrawer.h" />
     <ClInclude Include="ModelDetailWindow.h" />

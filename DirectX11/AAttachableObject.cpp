@@ -107,6 +107,86 @@ DirectX::XMMATRIX AAttachableObject::GetTransformation() const
 	return ResultTransformation;
 }
 
+void AAttachableObject::MoveForward(const float& DeltaForward)
+{
+	if (IsIgnoreParentTranslation)
+	{
+		RelativePosition.z -= DeltaForward;
+		return;
+	}
+	else
+	{
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->MoveForward(DeltaForward);
+		}
+	}
+}
+
+void AAttachableObject::MoveRight(const float& DeltaRight)
+{
+	if (IsIgnoreParentTranslation)
+	{
+		RelativePosition.x -= DeltaRight;
+		return;
+	}
+	else
+	{
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->MoveRight(DeltaRight);
+		}
+	}
+}
+
+void AAttachableObject::RotatePitch(const float& DeltaPitch)
+{
+	if (IsIgnoreParentPitch)
+	{
+		RelativePosition.x -= DeltaPitch;
+		return;
+	}
+	else
+	{
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RotatePitch(DeltaPitch);
+		}
+	}
+}
+
+void AAttachableObject::RotateRoll(const float& DeltaRoll)
+{
+	if (IsIgnoreParentPitch)
+	{
+		RelativePosition.z -= DeltaRoll;
+		return;
+	}
+	else
+	{
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RotateRoll(DeltaRoll);
+		}
+	}
+}
+
+void AAttachableObject::RotateYaw(const float& DeltaYaw)
+{
+	if (IsIgnoreParentPitch)
+	{
+		RelativePosition.y -= DeltaYaw;
+		return;
+	}
+	else
+	{
+		for (auto& AttachedChild : AttachedChildrenObjects)
+		{
+			AttachedChild->RotateYaw(DeltaYaw);
+		}
+	}
+}
+
 void AAttachableObject::Update(const float& DeltaTimeIn)
 {
 	AObject::Update(DeltaTimeIn);
@@ -169,4 +249,3 @@ void AAttachableObject::RemoveFromIntersectables(AAttachableObject* AttachedObje
 		PlaceableParent->Intersectables.remove(IntersectablePtr);
 	}
 }
-

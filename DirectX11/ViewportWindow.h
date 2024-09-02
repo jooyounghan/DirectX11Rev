@@ -2,7 +2,7 @@
 #include "IWindow.h"
 
 class EditorWorld;
-class EditorActor;
+class EditorPawn;
 class EditorCamera; 
 
 class GameWorld;
@@ -25,7 +25,7 @@ private:
 	MapAsset* CurrentMap = nullptr;
 
 private:
-	EditorActor* EditorActorCached = nullptr;
+	EditorPawn* EditorActorCached = nullptr;
 	EditorCamera* EditorCameraCached = nullptr;
 
 private:
@@ -35,7 +35,5 @@ private:
 private:
 	void ManageAssetDrop();
 	void ManageMouseLBClick();
-	void ManageEditorCameraByKey();
-	void ManageEditorCameraByMouse();
 };
 

@@ -5,7 +5,7 @@
 #include "imgui_internal.h"
 
 class Actor;
-class EditorActor;
+class EditorPawn;
 
 class MeshObject;
 class BoundingSphereObject;
@@ -18,7 +18,7 @@ class IGuiModelVisitor
 {
 public:
 	virtual void Visit(Actor* ActorInstance) = 0;
-	virtual void Visit(EditorActor* EditorActorInstance) = 0;
+	virtual void Visit(EditorPawn* EditorActorInstance) = 0;
 
 public:
 	virtual void Visit(MeshObject* MeshObjectInstance) = 0;

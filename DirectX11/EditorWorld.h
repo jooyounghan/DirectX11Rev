@@ -12,7 +12,7 @@ class APlaceableObject;
 class AAttachableObject;
 class GameWorld;
 class IWindow;
-class EditorActor;
+class EditorPawn;
 
 class EditorWorld : public IWorld
 {
@@ -29,7 +29,7 @@ protected:
 	MakeGetter(FontSrvHandleID);
 
 protected:
-	std::unique_ptr<EditorActor> EditorActorInstance;
+	std::unique_ptr<EditorPawn> EditorActorInstance;
 	MakeSmartPtrGetter(EditorActorInstance);
 
 protected:

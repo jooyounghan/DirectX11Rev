@@ -4,7 +4,7 @@
 #include "GameWorld.h"
 
 #include "Actor.h"
-#include "EditorActor.h"
+#include "EditorPawn.h"
 
 #include "MeshObject.h"
 #include "BoundingSphereObject.h"
@@ -41,7 +41,7 @@ void ModelDetailedInformationVisitor::Visit(Actor* ActorInstance)
     PopID();
 }
 
-void ModelDetailedInformationVisitor::Visit(EditorActor* EditorActorInstance)
+void ModelDetailedInformationVisitor::Visit(EditorPawn* EditorActorInstance)
 {
     PushID(EditorActorInstance->GetObjectID().c_str());
 
@@ -111,6 +111,8 @@ void ModelDetailedInformationVisitor::Visit(Viewable* ViewableInstance)
 
     ViewableInformationDrawer ViewableDrawer(ViewableInstance);
     ViewableDrawer.DrawInformation();
+
+    Checkbox("Consume Movement", ViewableInstance->GetPointerbIsConsumeMove());
 
     PopID();
 }

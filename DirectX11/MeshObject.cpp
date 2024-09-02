@@ -37,7 +37,7 @@ void MeshObject::InitMeshObject()
 {
 	MeshObjectCount++;
 	ObjectName = MeshObjectIdentifier + to_string(MeshObjectCount);
-	AttachableKind = EAttachableObjectKind::MeshObjectKind;
+	AttachableKind = EAttachableObjectKind::MESH_KIND;
 }
 
 void MeshObject::Update(const float& DeltaTimeIn)
