@@ -23,6 +23,12 @@ class SkeletalMeshAsset;
 class BoneAsset;
 class MapAsset;
 
+enum class EFileType
+{
+	ModelFile,
+	TextureFile
+};
+
 class AssetManager
 {
 public:
@@ -42,7 +48,14 @@ private:
 	);
 
 public:
-	void LoadModelFile(const std::string& FilePathIn);
+	void LoadFile(const std::string& FilePathIn);
+
+private:
+	static std::unordered_map<std::string, EFileType> FileExtensionToType;
+
+private:
+	void LoadModelFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
+	void LoadTextureFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
 
 private:
 	void LoadMesh(bool IsGltf, const std::string AssetName, const aiScene* const Scene);

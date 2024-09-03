@@ -250,6 +250,9 @@
     <Filter Include="소스 파일\Controller\InputEvent\Events">
       <UniqueIdentifier>{2b533479-5c9a-41f2-adfc-b8602b1c1e07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Stb">
+      <UniqueIdentifier>{7a524d01-9db6-4c53-bcac-193abffec8ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -293,27 +296,6 @@
     </ClCompile>
     <ClCompile Include="MapAsset.cpp">
       <Filter>소스 파일\Asset\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_tables.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="FileSelectDialog.cpp">
       <Filter>소스 파일\World\Editor\GUI\DIalog</Filter>
@@ -453,11 +435,38 @@
     <ClCompile Include="KeyEvent.cpp">
       <Filter>소스 파일\Controller\InputEvent\Events</Filter>
     </ClCompile>
+    <ClCompile Include="MaterialAsset.cpp">
+      <Filter>소스 파일\Asset\Texture</Filter>
+    </ClCompile>
     <ClCompile Include="MouseEvent.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Controller\InputEvent</Filter>
     </ClCompile>
     <ClCompile Include="ARenderer.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_tables.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\imgui\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\stb\stb_vorbis.c">
+      <Filter>Stb</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -526,30 +535,6 @@
     </ClInclude>
     <ClInclude Include="IndexBuffer.h">
       <Filter>헤더 파일\Buffer\Constant</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imconfig.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_dx11.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_win32.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_rectpack.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_textedit.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_truetype.h">
-      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="TaskAnalyzerWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
@@ -742,6 +727,93 @@
     </ClInclude>
     <ClInclude Include="DefineInput.h">
       <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialAsset.h">
+      <Filter>헤더 파일\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\imgui\imstb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_c_lexer.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_connected_components.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_divide.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_ds.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_dxt.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_easy_font.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_herringbone_wang_tile.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_hexwave.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_image.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_image_resize2.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_image_write.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_include.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_leakcheck.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_perlin.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_rect_pack.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_sprintf.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_textedit.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_tilemap_editor.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_truetype.h">
+      <Filter>Stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\stb\stb_voxel_render.h">
+      <Filter>Stb</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

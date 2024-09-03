@@ -17,7 +17,8 @@ enum class EAssetType
 	// Map
 	Map,
 
-	// Texture
+	// Material
+	Material,
 	Texture,
 
 	// Animation
@@ -42,7 +43,8 @@ constexpr const char* AssetSuffix[GetAssetTypeAsIndex(EAssetType::NumAssetType)]
 	// Map
 	"_Map",
 
-	// Texture
+	// Material
+	"_Material",
 	"_Texture",
 
 	// Animation

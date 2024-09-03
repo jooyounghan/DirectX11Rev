@@ -44,8 +44,8 @@ EditorCamera::~EditorCamera()
 
 UINT EditorCamera::GetID(const float& RelativeMousePosX, const float& RelativeMousePosY, const float& WindowSizeX, const float& WindowSizeY)
 {
-	UINT TextureXPos = static_cast<UINT>((RelativeMousePosX / WindowSizeX) * Width);
-	UINT TextureYPos = static_cast<UINT>((RelativeMousePosY / WindowSizeY) * Height);
+	UINT TextureXPos = static_cast<UINT>((RelativeMousePosX / WindowSizeX) * Viewport.Width);
+	UINT TextureYPos = static_cast<UINT>((RelativeMousePosY / WindowSizeY) * Viewport.Height);
 
 	D3D11_BOX BoxData;
 	AutoZeroMemory(BoxData);

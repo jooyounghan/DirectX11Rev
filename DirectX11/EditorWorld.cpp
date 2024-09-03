@@ -178,7 +178,7 @@ void EditorWorld::OnDropFiles(HDROP hDropIn)
         if (DragQueryFileA(hDropIn, i, filePath, MAX_PATH))
         {
             string filePathStr = string(filePath);
-            GameWorldCached->GetAssetManagerInstance()->LoadModelFile(filePathStr);
+            GameWorldCached->GetAssetManagerInstance()->LoadFile(filePathStr);
         }
     }
     DragFinish(hDropIn);

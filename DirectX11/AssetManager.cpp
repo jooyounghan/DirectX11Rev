@@ -1,7 +1,13 @@
 #include "AssetManager.h"
-#include "assimp/Importer.hpp"
-#include "assimp/postprocess.h"
-#include "assimp/scene.h"
+
+#include "Importer.hpp"
+#include "postprocess.h"
+#include "scene.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+
+#include "stb_image.h"
+#include "stb_image_write.h"
 
 #include "GraphicsPipeline.h"
 
@@ -9,6 +15,7 @@
 #include "SkeletalMeshAsset.h"
 #include "BoneAsset.h"
 #include "MapAsset.h"
+#include "TextureAsset.h"
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -21,6 +28,17 @@
 using namespace std;
 using namespace DirectX;
 using namespace filesystem;
+
+unordered_map<string, EFileType> AssetManager::FileExtensionToType
+{
+    { ".gltf", EFileType::ModelFile },
+    { ".fbx", EFileType::ModelFile },
+    { ".obj", EFileType::ModelFile },
+    { ".jpg", EFileType::TextureFile },
+    { ".jpeg", EFileType::TextureFile},
+    { ".png", EFileType::TextureFile },
+    { ".exr", EFileType::TextureFile },
+};
 
 AssetManager::AssetManager()
 {
@@ -36,41 +54,48 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
     FILE* InputAssetFile = nullptr;
     fopen_s(&InputAssetFile, AssetPathIn.c_str(), "rb");
 
-    // Asset Name
-    size_t AssetNameSize;
-    fread(&AssetNameSize, sizeof(size_t), 1, InputAssetFile);
-    string AssetName;
-    AssetName.resize(AssetNameSize);
-    fread(AssetName.data(), sizeof(char), AssetNameSize, InputAssetFile);
-
-    // Asset Type
-    EAssetType AssetType;
-    fread(&AssetType, sizeof(AssetType), 1, InputAssetFile);
-
-    switch (AssetType)
+    if (InputAssetFile != nullptr)
     {
-    case EAssetType::None:
-        break;
-    case EAssetType::StaticMesh:
-        LoadAssetFileHelper(InputAssetFile, ManagingStaticMeshes, AssetName, false);
-        break;
-    case EAssetType::SkeletalMesh:
-        LoadAssetFileHelper(InputAssetFile, ManagingSkeletalMeshes, AssetName, false);
-        break;
-    case EAssetType::Bone:
-        LoadAssetFileHelper(InputAssetFile, ManagingBones, AssetName, false);
-        break;
-    case EAssetType::Map:
-        LoadAssetFileHelper(InputAssetFile, ManagingMaps, AssetName, this, false);
-        break;
-    case EAssetType::Texture:
-        break;
-    case EAssetType::Animation:
-        break;
-    default:
-        break;
+        // Asset Name
+        size_t AssetNameSize;
+        fread(&AssetNameSize, sizeof(size_t), 1, InputAssetFile);
+        string AssetName;
+        AssetName.resize(AssetNameSize);
+        fread(AssetName.data(), sizeof(char), AssetNameSize, InputAssetFile);
+
+        // Asset Type
+        EAssetType AssetType;
+        fread(&AssetType, sizeof(AssetType), 1, InputAssetFile);
+
+        switch (AssetType)
+        {
+        case EAssetType::None:
+            break;
+        case EAssetType::StaticMesh:
+            LoadAssetFileHelper(InputAssetFile, ManagingStaticMeshes, AssetName, false);
+            break;
+        case EAssetType::SkeletalMesh:
+            LoadAssetFileHelper(InputAssetFile, ManagingSkeletalMeshes, AssetName, false);
+            break;
+        case EAssetType::Bone:
+            LoadAssetFileHelper(InputAssetFile, ManagingBones, AssetName, false);
+            break;
+        case EAssetType::Map:
+            LoadAssetFileHelper(InputAssetFile, ManagingMaps, AssetName, this, false);
+            break;
+        case EAssetType::Texture:
+            break;
+        case EAssetType::Animation:
+            break;
+        default:
+            break;
+        }
+        fclose(InputAssetFile);
     }
-    fclose(InputAssetFile);
+    else
+    {
+
+    }
 }
 
 template<typename T, typename ...Args>
@@ -88,17 +113,32 @@ void AssetManager::LoadAssetFileHelper(
 }
 
 
-void AssetManager::LoadModelFile(const string& FilePathIn)
+void AssetManager::LoadFile(const std::string& FilePathIn)
 {
     path FilePath = FilePathIn;
     const string FileName = FilePath.stem().string();
     const string FileExtension = FilePath.extension().string();
-    
-    if (FileNameToAssetNames.find(FileName) == FileNameToAssetNames.end())
-    {
-        FileNameStack.push(FileName);
 
-        auto test = FilePath.string();
+    if (FileExtensionToType.find(FileExtension) != FileExtensionToType.end())
+    {
+        switch (FileExtensionToType[FileExtension])
+        {
+        case EFileType::ModelFile:
+            LoadModelFile(FilePathIn, FileName, FileExtension);
+            break;
+        case EFileType::TextureFile:
+            LoadTextureFile(FilePathIn, FileName, FileExtension);
+            break;
+        }
+    }
+}
+
+void AssetManager::LoadModelFile(const string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn)
+{
+    if (FileNameToAssetNames.find(FileNameIn) == FileNameToAssetNames.end())
+    {
+        FileNameStack.push(FileNameIn);
+
         Assimp::Importer importer;
         const aiScene* pScene = importer.ReadFile(
             StringHelper::ConvertACPToUTF8(FilePathIn),
@@ -110,22 +150,45 @@ void AssetManager::LoadModelFile(const string& FilePathIn)
             // Load Mesh
             if (pScene->HasMeshes())
             {
-                LoadMesh(FileExtension == ".gltf", FileName, pScene);
+                LoadMesh(FileExtensionIn == ".gltf", FileNameIn, pScene);
             }
 
             if (pScene->HasMaterials())
             {
-                LoadMaterial(FileName, pScene);
+                LoadMaterial(FileNameIn, pScene);
             }
 
             if (pScene->HasAnimations())
             {
-                LoadAnimation(FileName, pScene);
+                LoadAnimation(FileNameIn, pScene);
             }
         }
         FileNameStack.pop();
 
         assert(FileNameStack.empty());
+    }
+}
+
+void AssetManager::LoadTextureFile(const string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn)
+{
+    FILE* FileHandle;
+    fopen_s(&FileHandle, FilePathIn.c_str(), "rb");
+
+    if (FileHandle != nullptr)
+    {
+        uint8_t* ImageBuffer = nullptr;
+        int WidthOut, HeightOut, ChannelOut;
+        ImageBuffer = stbi_load_from_file(FileHandle, &WidthOut, &HeightOut, &ChannelOut, 4);
+
+        if (ImageBuffer != nullptr)
+        {
+            shared_ptr<TextureAsset> TextureAssetLoaded = make_shared<TextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut, FileExtensionIn == ".exr");
+        }
+        fclose(FileHandle);
+
+    }
+    else
+    {
     }
 }
 
@@ -497,12 +560,12 @@ void AssetManager::LoadIndices(
 {
     if (Mesh->HasFaces())
     {
-        for (size_t FaceIdx = 0; FaceIdx < Mesh->mNumFaces; ++FaceIdx)
+        for (UINT FaceIdx = 0; FaceIdx < Mesh->mNumFaces; ++FaceIdx)
         {
             aiFace& CurrentFace = Mesh->mFaces[FaceIdx];
-            for (size_t Index = 0; Index < CurrentFace.mNumIndices; ++Index)
+            for (UINT Index = 0; Index < CurrentFace.mNumIndices; ++Index)
             {
-                IndicesIn.emplace_back(VertexStartIdx + CurrentFace.mIndices[Index]);
+                IndicesIn.emplace_back(static_cast<uint32_t>(VertexStartIdx + CurrentFace.mIndices[Index]));
             }
         }
     }

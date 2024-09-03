@@ -11,14 +11,11 @@ using namespace std;
 EditorPawn::EditorPawn()
 	: APawn()
 {
-
     Controller = make_unique<DefaultController>();
     Controller->SetPossesdPawn(this);
 
-    // Test =============================================================
 	EditorCameraCached = AddAttachedObject<EditorCamera>(App::GWidth, App::GHeight);
     EditorCameraCached->SetParentObject(this);
-    // =============================================================
 }
 
 EditorPawn::~EditorPawn()

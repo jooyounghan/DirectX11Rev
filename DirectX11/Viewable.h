@@ -14,17 +14,13 @@ public:
 	virtual ~Viewable();
 
 protected:
-	UINT Width = 0;
-	UINT Height = 0;
-
-protected:
 	D3D11_VIEWPORT	Viewport;
 	MakeGetter(Viewport);
 
 public:
-	float FovAngle	= 90.f;
+	float FovAngle	= 80.f;
 	float NearZ		= 0.1f;
-	float FarZ		= 1000.f;
+	float FarZ		= 10000.f;
 	MakePointerGetter(FovAngle);
 	MakePointerGetter(NearZ);
 	MakePointerGetter(FarZ);

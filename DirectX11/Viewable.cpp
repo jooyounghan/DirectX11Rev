@@ -23,9 +23,6 @@ Viewable::~Viewable()
 
 void Viewable::Resize(const UINT& WidthIn, const UINT& HeightIn)
 {
-	Width = WidthIn;
-	Height = HeightIn;
-
 	AutoZeroMemory(Viewport);
 	Viewport.Width = static_cast<FLOAT>(WidthIn);
 	Viewport.Height = static_cast<FLOAT>(HeightIn);
@@ -47,7 +44,7 @@ const XMMATRIX Viewable::GetViewMatrix()
 
 const XMMATRIX Viewable::GetProjectionMatrix()
 {
-	return XMMatrixPerspectiveFovLH(XMConvertToRadians(FovAngle), static_cast<float>(Width) / Height, NearZ, FarZ);
+	return XMMatrixPerspectiveFovLH(XMConvertToRadians(FovAngle), static_cast<float>(Viewport.Width) / Viewport.Height, NearZ, FarZ);
 }
 
 const XMMATRIX Viewable::GetPerspectiveViewMatrix()

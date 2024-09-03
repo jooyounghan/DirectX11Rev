@@ -70,6 +70,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -105,12 +108,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectX11\Archive\include\assimp;$(ProjectDir)Externals\stb;$(ProjectDir)Externals\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DirectX11\Archive\lib\assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -158,6 +162,14 @@
     <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="Externals\imgui\imgui.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Externals\stb\stb_vorbis.c" />
     <ClCompile Include="FileSelectDialog.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="GlobalVariable.cpp" />
@@ -166,16 +178,10 @@
     <ClCompile Include="IDColor.cpp" />
     <ClCompile Include="AMeshAsset.cpp" />
     <ClCompile Include="KeyEvent.cpp" />
-    <ClCompile Include="ImGui\imgui.cpp" />
-    <ClCompile Include="ImGui\imgui_demo.cpp" />
-    <ClCompile Include="ImGui\imgui_draw.cpp" />
-    <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="ImGui\imgui_tables.cpp" />
-    <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="InputEventManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapAsset.cpp" />
+    <ClCompile Include="MaterialAsset.cpp" />
     <ClCompile Include="MeshObjectInformationDrawer.cpp" />
     <ClCompile Include="ModelOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
@@ -227,6 +233,34 @@
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="EditorCamera.h" />
+    <ClInclude Include="Externals\imgui\imconfig.h" />
+    <ClInclude Include="Externals\imgui\imgui.h" />
+    <ClInclude Include="Externals\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="Externals\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="Externals\imgui\imgui_internal.h" />
+    <ClInclude Include="Externals\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Externals\imgui\imstb_textedit.h" />
+    <ClInclude Include="Externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Externals\stb\stb_connected_components.h" />
+    <ClInclude Include="Externals\stb\stb_c_lexer.h" />
+    <ClInclude Include="Externals\stb\stb_divide.h" />
+    <ClInclude Include="Externals\stb\stb_ds.h" />
+    <ClInclude Include="Externals\stb\stb_dxt.h" />
+    <ClInclude Include="Externals\stb\stb_easy_font.h" />
+    <ClInclude Include="Externals\stb\stb_herringbone_wang_tile.h" />
+    <ClInclude Include="Externals\stb\stb_hexwave.h" />
+    <ClInclude Include="Externals\stb\stb_image.h" />
+    <ClInclude Include="Externals\stb\stb_image_resize2.h" />
+    <ClInclude Include="Externals\stb\stb_image_write.h" />
+    <ClInclude Include="Externals\stb\stb_include.h" />
+    <ClInclude Include="Externals\stb\stb_leakcheck.h" />
+    <ClInclude Include="Externals\stb\stb_perlin.h" />
+    <ClInclude Include="Externals\stb\stb_rect_pack.h" />
+    <ClInclude Include="Externals\stb\stb_sprintf.h" />
+    <ClInclude Include="Externals\stb\stb_textedit.h" />
+    <ClInclude Include="Externals\stb\stb_tilemap_editor.h" />
+    <ClInclude Include="Externals\stb\stb_truetype.h" />
+    <ClInclude Include="Externals\stb\stb_voxel_render.h" />
     <ClInclude Include="FileSelectDialog.h" />
     <ClInclude Include="AAddObjectHelper.h" />
     <ClInclude Include="ICollisionVisitor.h" />
@@ -237,15 +271,8 @@
     <ClInclude Include="IInformationDrawer.h" />
     <ClInclude Include="IIntersectable.h" />
     <ClInclude Include="KeyEvent.h" />
-    <ClInclude Include="ImGui\imconfig.h" />
-    <ClInclude Include="ImGui\imgui.h" />
-    <ClInclude Include="ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="ImGui\imgui_internal.h" />
-    <ClInclude Include="ImGui\imstb_rectpack.h" />
-    <ClInclude Include="ImGui\imstb_textedit.h" />
-    <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="AObject.h" />
+    <ClInclude Include="MaterialAsset.h" />
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="InputEventManager.h" />
     <ClInclude Include="IUpdatable.h" />
