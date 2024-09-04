@@ -3,10 +3,6 @@
 
 using namespace std;
 
-StaticMeshAsset::StaticMeshAsset()
-	: AMeshAsset("", EAssetType::None)
-{
-}
 
 StaticMeshAsset::StaticMeshAsset(const string& AssetNameIn, bool LoadAsFile)
 	: AMeshAsset(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::StaticMesh)] : AssetNameIn, EAssetType::StaticMesh)

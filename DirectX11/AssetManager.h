@@ -21,6 +21,7 @@ class AMeshAsset;
 class StaticMeshAsset;
 class SkeletalMeshAsset;
 class BoneAsset;
+class TextureAsset;
 class MapAsset;
 
 enum class EFileType
@@ -70,11 +71,14 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<BoneAsset>> ManagingBones;
 	std::unordered_map<std::string, std::shared_ptr<StaticMeshAsset>> ManagingStaticMeshes;
 	std::unordered_map<std::string, std::shared_ptr<SkeletalMeshAsset>> ManagingSkeletalMeshes;
-	std::unordered_map<std::string, std::list<std::string>> FileNameToAssetNames;
+	std::unordered_map < std::string, std::shared_ptr<TextureAsset>> ManagingTextures;
 	MakeGetter(ManagingMaps);
 	MakeGetter(ManagingBones);
 	MakeGetter(ManagingStaticMeshes);
 	MakeGetter(ManagingSkeletalMeshes);
+
+private:
+	std::unordered_map<std::string, std::list<std::string>> FileNameToAssetNames;
 
 private:
 	std::unordered_map<std::string, std::shared_ptr<AAssetFile>> ManagingAssets;

@@ -6,11 +6,6 @@
 
 using namespace std;
 
-SkeletalMeshAsset::SkeletalMeshAsset()
-	: AMeshAsset("", EAssetType::SkeletalMesh)
-{
-}
-
 SkeletalMeshAsset::SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadAsFile)
 	: AMeshAsset(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::SkeletalMesh)] : AssetNameIn, EAssetType::SkeletalMesh)
 {

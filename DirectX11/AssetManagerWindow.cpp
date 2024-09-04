@@ -1,6 +1,7 @@
 #include "AssetManagerWindow.h"
 #include "AssetManager.h"
 #include "GlobalVariable.h"
+#include "AAssetFile.h"
 
 using namespace ImGui;
 using namespace std;
@@ -106,7 +107,6 @@ void AssetManagerWindow::RenderCurrentDirectoryAsset()
     {
         path CurrentDirectory = SelectedDirectory->Directory;
         
-
         float VisibleWidth = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
         for (const auto& entry : directory_iterator(CurrentDirectory))
@@ -126,29 +126,41 @@ void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& V
     ImGuiStyle& Style = ImGui::GetStyle();
     const path& EntryFileName = AssetPathIn.filename();
 
+    const string AssetName = EntryFileName.stem().string();
+    AAssetFile* AssetFile =  AssetManagerCached->GetManagingAsset(AssetName);
 
-    ImGui::PushID(EntryFileName.c_str());
-    ImGui::BeginGroup();
-    ImGui::ColorButton("TEST", UIColor::GBlack, NULL, UISize::FileSize);
-    //Image(nullptr, UISize::FileSize);
-    ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + UISize::FileSize.x);
-    ImGui::Text(EntryFileName.string().c_str());
-    ImGui::PopTextWrapPos();
-    ImGui::EndGroup();
-    ImGui::PopID();
-
-    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+    if (AssetFile != nullptr)
     {
-        const string AssetName = EntryFileName.stem().string();
-        AAssetFile* AssetFile =  AssetManagerCached->GetManagingAsset(AssetName);
+        ImGui::PushID(EntryFileName.c_str());
+        ImGui::BeginGroup();
 
-        ImGui::SetDragDropPayload(DragDrop::GAsset, &AssetFile, sizeof(AAssetFile*));
-        ImGui::Text("%s", AssetName.c_str());
-        ImGui::EndDragDropSource();
+        EAssetType AssetType = AssetFile->GetAssetType();
+        switch (AssetType)
+        {
+        case EAssetType::Texture:
+            Image(AssetFile->GetThumbnailSRV(), UISize::FileSize);
+            break;
+        default:
+            ColorButton("NULL", UIColor::GBlack, NULL, UISize::FileSize);
+            break;
+        }
+
+        ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + UISize::FileSize.x);
+        ImGui::Text(EntryFileName.string().c_str());
+        ImGui::PopTextWrapPos();
+        ImGui::EndGroup();
+        ImGui::PopID();
+
+        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+        {
+            ImGui::SetDragDropPayload(DragDrop::GAsset, &AssetFile, sizeof(AAssetFile*));
+            ImGui::Text("%s", AssetName.c_str());
+            ImGui::EndDragDropSource();
+        }
+
+        float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
+        float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
+        if (NextStartWidthPos < VisibleWidthIn) ImGui::SameLine();
     }
-
-    float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
-    float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
-    if (NextStartWidthPos < VisibleWidthIn) ImGui::SameLine();
 }
 

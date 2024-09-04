@@ -8,7 +8,6 @@ class BoneAsset;
 class SkeletalMeshAsset : public AMeshAsset
 {
 public:
-	SkeletalMeshAsset();
 	SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadAsFile);
 	virtual ~SkeletalMeshAsset();
 

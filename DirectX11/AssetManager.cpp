@@ -84,6 +84,7 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
             LoadAssetFileHelper(InputAssetFile, ManagingMaps, AssetName, this, false);
             break;
         case EAssetType::Texture:
+            LoadAssetFileHelper(InputAssetFile, ManagingTextures, AssetName);
             break;
         case EAssetType::Animation:
             break;
@@ -182,7 +183,11 @@ void AssetManager::LoadTextureFile(const string& FilePathIn, const std::string& 
 
         if (ImageBuffer != nullptr)
         {
-            shared_ptr<TextureAsset> TextureAssetLoaded = make_shared<TextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut, FileExtensionIn == ".exr");
+            shared_ptr<TextureAsset> TextureAssetLoaded = make_shared<TextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut);
+            
+            TextureAssetLoaded->Serialize();
+            ManagingTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
+            ManagingTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
         }
         fclose(FileHandle);
 

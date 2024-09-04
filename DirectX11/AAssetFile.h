@@ -1,6 +1,9 @@
 #pragma once
 #include "ISerializable.h"
 #include "HeaderHelper.h"
+#include <windows.h>
+#include <wrl/client.h>
+#include <d3d11.h>
 #include <memory>
 
 enum class EAssetType
@@ -55,8 +58,6 @@ constexpr const char* AssetOutPath = ".\\Assets\\";
 constexpr const char* MapAssetOutPath = ".\\Assets\\Maps\\";
 constexpr const char* AssetExtension = ".Asset";
 
-struct ID3D11Device;
-
 class AAssetFile : public ISerializable
 {
 public:
@@ -68,6 +69,12 @@ protected:
 	EAssetType AssetType;
 	MakeGetter(AssetName);
 	MakeGetter(AssetType);
+
+protected:
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> ThumbnailTexture2D;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> ThumbnailSRV;
+	MakeComPtrGetter(ThumbnailTexture2D);
+	MakeComPtrGetter(ThumbnailSRV);
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") = 0;

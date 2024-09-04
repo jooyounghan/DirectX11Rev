@@ -4,7 +4,6 @@
 class StaticMeshAsset : public AMeshAsset
 {
 public:
-	StaticMeshAsset();
 	StaticMeshAsset(const std::string& AssetNameIn, bool LoadAsFile);
 	virtual ~StaticMeshAsset();
 

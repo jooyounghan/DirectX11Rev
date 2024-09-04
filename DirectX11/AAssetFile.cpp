@@ -1,6 +1,5 @@
 #include "AAssetFile.h"
 #include <stdio.h>
-#include <Windows.h>
 
 using namespace std;
 
