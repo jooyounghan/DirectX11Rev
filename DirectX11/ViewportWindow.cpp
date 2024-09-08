@@ -56,7 +56,7 @@ void ViewportWindow::RenderWindow()
             Text(CurrentMap->GetAssetName().c_str());
             ImagePosition = GetCursorScreenPos();
             ImageSize = GetContentRegionAvail();
-            Image(EditorCameraCached->GetResolvedSceneSRV(), ImageSize);
+            Image(EditorCameraCached->GetSceneSRV(), ImageSize);
             ManageAssetDrop();
             ManageMouseLBClick();
         }

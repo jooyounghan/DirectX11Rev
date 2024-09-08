@@ -93,16 +93,11 @@ void EditorWorld::RenderWorld()
     EditorCamera* EditorCameraCached = EditorActorInstance->GetEditorCameraCached();
     if (EditorCameraCached != nullptr)
     {
-        EditorCameraCached->CleanupLens();
         MapAsset* CurrentMap = GameWorldCached->GetCurrentMap();
         PSOManager* PSOManagerInstance = GameWorldCached->GetPSOManagerInstance();
         if (CurrentMap != nullptr)
         {
-            ARenderer* PickingIDRenderers[] =
-            {
-                PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Solid),
-                PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Wireframe)
-            };
+            ARenderer* PickingIDRenderers = PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Solid);
 
             const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
 
@@ -110,20 +105,19 @@ void EditorWorld::RenderWorld()
             D3D11_VIEWPORT Viewports[] = { EditorCameraCached->GetViewport() };
             ID3D11DepthStencilView* DSV = EditorCameraCached->GetIdSelectDSV();
 
-            for (ARenderer* PickingIDRenderer : PickingIDRenderers)
+
+            PickingIDRenderers->PresetRendering(1, RTVs, Viewports, DSV, EditorCameraCached, CurrentMap);
+            for (auto& Placeable : RootPlaceables)
             {
-                PickingIDRenderer->PresetRendering(1, RTVs, Viewports, DSV, EditorCameraCached, CurrentMap);
-                for (auto& Placeable : RootPlaceables)
-                {
-                    Placeable->AcceptRenderer(PickingIDRenderer);
-                }
-                PickingIDRenderer->ResetRendering();
+                Placeable->AcceptRenderer(PickingIDRenderers);
             }
+            PickingIDRenderers->ResetRendering();
         }
     }
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
+
     ImGui::NewFrame();
 
     ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
@@ -143,6 +137,8 @@ void EditorWorld::RenderWorld()
     DeviceContext->ClearRenderTargetView(BackBufferRTV, ClearColor);
     DeviceContext->OMSetRenderTargets(1, &BackBufferRTV, nullptr);
 
+    ImGui::EndFrame();
+    ImGui::UpdatePlatformWindows();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 

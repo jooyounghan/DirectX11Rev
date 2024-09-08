@@ -1,34 +1,44 @@
 #include "PSOObject.h"
 #include "DefineUtility.h"
 
+using namespace std;
+
 PSOObject::PSOObject(
-	ID3D11DeviceContext*										DeviceContextIn,
-	const Microsoft::WRL::ComPtr<ID3D11InputLayout>&			InputLayoutIn, 
-	const Microsoft::WRL::ComPtr<ID3D11VertexShader>&			VertexShaderIn, 
-	const UINT&													NumVSConstBuffersIn,
-	const UINT&													NumVSSRVsIn,
-	const Microsoft::WRL::ComPtr<ID3D11PixelShader>&			PixelShaderIn, 
-	const UINT&													NumPSConstBuffersIn,
-	const UINT&													NumPSSRVsIn,
-	const D3D11_PRIMITIVE_TOPOLOGY&								PrimitiveTopologyIn, 
-	const UINT&													NumRenderTargetsIn, 
-	const DXGI_FORMAT*											RTVFormatsIn, 
-	const DXGI_FORMAT &											DSVFormatIn, 
-	const DXGI_SAMPLE_DESC&										SampleDeskIn, 
-	const Microsoft::WRL::ComPtr<ID3D11RasterizerState>			RasterizerStateIn, 
-	const Microsoft::WRL::ComPtr<ID3D11DepthStencilState>		DepthStencilStateIn, 
-	const UINT&													StencilRefIn,
-	const Microsoft::WRL::ComPtr<ID3D11BlendState>				BlendStateIn
+	ID3D11DeviceContext*											DeviceContextIn,
+	const Microsoft::WRL::ComPtr<ID3D11InputLayout>&				InputLayoutIn, 
+	const Microsoft::WRL::ComPtr<ID3D11VertexShader>&				VertexShaderIn, 
+	const UINT&														NumVSConstBuffersIn,
+	const UINT&														NumVSSRVsIn,
+	const Microsoft::WRL::ComPtr<ID3D11PixelShader>&				PixelShaderIn, 
+	const UINT&														NumPSConstBuffersIn,
+	const UINT&														NumPSSRVsIn,
+	const D3D11_PRIMITIVE_TOPOLOGY&									PrimitiveTopologyIn, 
+	const UINT&														NumRenderTargetsIn, 
+	const DXGI_FORMAT*												RTVFormatsIn, 
+	const DXGI_FORMAT &												DSVFormatIn, 
+	const DXGI_SAMPLE_DESC&											SampleDescIn, 
+	const Microsoft::WRL::ComPtr<ID3D11RasterizerState>				RasterizerStateIn, 
+	const Microsoft::WRL::ComPtr<ID3D11DepthStencilState>			DepthStencilStateIn, 
+	const UINT&														StencilRefIn,
+	const Microsoft::WRL::ComPtr<ID3D11BlendState>					BlendStateIn,
+	const vector<Microsoft::WRL::ComPtr<ID3D11SamplerState>>&	SamplerStatesIn
 )
 	: DeviceContextCached(DeviceContextIn), VertexShader(VertexShaderIn),
 	InputLayout(InputLayoutIn),  NumVSConstBuffers(NumVSConstBuffersIn), 
 	NumVSSRVs(NumVSSRVsIn), PixelShader(PixelShaderIn), 
 	NumPSConstBuffers(NumPSConstBuffersIn), NumPSSRVs(NumPSSRVsIn),
 	PrimitiveTopology(PrimitiveTopologyIn), NumRenderTargets(NumRenderTargetsIn), 
-	DSVFormat(DSVFormatIn), SampleDesk(SampleDeskIn), RasterizerState(RasterizerStateIn),
-	DepthStencilState(DepthStencilStateIn), StencilRef(StencilRefIn), BlendState(BlendStateIn)
+	DSVFormat(DSVFormatIn), SampleDesc(SampleDescIn), RasterizerState(RasterizerStateIn),
+	DepthStencilState(DepthStencilStateIn), StencilRef(StencilRefIn), BlendState(BlendStateIn),
+	SamplerStates(SamplerStatesIn)
 {
 	memcpy(RTVFormats, RTVFormatsIn, sizeof(DXGI_FORMAT) * NumRenderTargets);
+
+	SamplerStatesCached.clear();
+	for (auto& SamplerState : SamplerStates)
+	{
+		SamplerStatesCached.push_back(SamplerState.Get());
+	}
 }
 
 PSOObject::~PSOObject()
@@ -46,7 +56,7 @@ void PSOObject::ResetResourceFlag()
 #endif // _DEBUG
 
 
-void PSOObject::SetPipelineObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVsIn, D3D11_VIEWPORT* ViewportIn, ID3D11DepthStencilView* DSVIn)
+void PSOObject::SetPipelineStateObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVsIn, D3D11_VIEWPORT* ViewportIn, ID3D11DepthStencilView* DSVIn)
 {
 	assert(RTVCountIn == NumRenderTargets);
 
@@ -59,7 +69,7 @@ void PSOObject::SetPipelineObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVs
 		RTVsIn[RtvIndex]->GetDesc(&RenderTargetViewDesc);
 		assert(RenderTargetViewDesc.Format == SeletectedRTVFormat);
 
-		if (SampleDesk.Count > 1)
+		if (SampleDesc.Count > 1)
 		{
 			assert(RenderTargetViewDesc.ViewDimension == D3D11_RTV_DIMENSION_TEXTURE2DMS);
 		}
@@ -70,11 +80,10 @@ void PSOObject::SetPipelineObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVs
 	}
 
 
-
-
 	D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc;
 	DSVIn->GetDesc(&DepthStencilViewDesc);
 	assert(DepthStencilViewDesc.Format == DSVFormat);
+
 #endif // _DEBUG
 
 	DeviceContextCached->IASetInputLayout(InputLayout.Get());
@@ -82,6 +91,9 @@ void PSOObject::SetPipelineObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVs
 
 	DeviceContextCached->VSSetShader(VertexShader.Get(), NULL, NULL);
 	DeviceContextCached->PSSetShader(PixelShader.Get(), NULL, NULL);
+
+	DeviceContextCached->VSSetSamplers(0, static_cast<UINT>(SamplerStates.size()), SamplerStatesCached.data());
+	DeviceContextCached->PSSetSamplers(0, static_cast<UINT>(SamplerStates.size()), SamplerStatesCached.data());
 
 	DeviceContextCached->RSSetState(RasterizerState.Get());
 	DeviceContextCached->RSSetViewports(1, ViewportIn);

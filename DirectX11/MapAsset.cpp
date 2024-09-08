@@ -81,6 +81,8 @@ void MapAsset::UpdateRenderState()
 
 void MapAsset::RenderMap(PSOManager* PSOManagerInstance)
 {
+	CameraCached->CleanupLens();
+
 	vector<ARenderer*> Renderers = {
 		PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Skeletal_Solid),
 		PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_BoundingComponent_Wireframe)

@@ -21,13 +21,15 @@ class AMeshAsset;
 class StaticMeshAsset;
 class SkeletalMeshAsset;
 class BoneAsset;
-class TextureAsset;
+class NormalTextureAsset;
+class HDRTextureAsset;
 class MapAsset;
 
 enum class EFileType
 {
 	ModelFile,
-	TextureFile
+	NormalTextureFile,
+	HDRTextureFile
 };
 
 class AssetManager
@@ -56,7 +58,8 @@ private:
 
 private:
 	void LoadModelFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
-	void LoadTextureFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
+	void LoadNormalTextureFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
+	void LoadHDRTextureFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
 
 private:
 	void LoadMesh(bool IsGltf, const std::string AssetName, const aiScene* const Scene);
@@ -71,11 +74,14 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<BoneAsset>> ManagingBones;
 	std::unordered_map<std::string, std::shared_ptr<StaticMeshAsset>> ManagingStaticMeshes;
 	std::unordered_map<std::string, std::shared_ptr<SkeletalMeshAsset>> ManagingSkeletalMeshes;
-	std::unordered_map < std::string, std::shared_ptr<TextureAsset>> ManagingTextures;
+	std::unordered_map<std::string, std::shared_ptr<NormalTextureAsset>> ManagingNormalTextures;
+	std::unordered_map<std::string, std::shared_ptr<HDRTextureAsset>> ManagingHDRTextures;
 	MakeGetter(ManagingMaps);
 	MakeGetter(ManagingBones);
 	MakeGetter(ManagingStaticMeshes);
 	MakeGetter(ManagingSkeletalMeshes);
+	MakeGetter(ManagingNormalTextures);
+	MakeGetter(ManagingHDRTextures);
 
 private:
 	std::unordered_map<std::string, std::list<std::string>> FileNameToAssetNames;

@@ -1,6 +1,11 @@
 #include "SkeletalHeader.hlsli"
 
+Texture2D TestTexture : register(t0);
+
+SamplerState WrapSampler : register(s0);
+SamplerState ClampSampler : register(s1);
+
 float4 main(BasicVertexOutput Input) : SV_TARGET
 {
-    return float4(Input.f3ModelNormal.x, Input.f3ModelNormal.y, Input.f3ModelNormal.z, 1.f);
+    return TestTexture.Sample(WrapSampler, Input.f2TexCoord);
 }

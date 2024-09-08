@@ -142,9 +142,6 @@
     <Filter Include="Shader\PositionOnly">
       <UniqueIdentifier>{fa3c8c60-12b7-4660-a671-a87b670a8b12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{403cc663-d6d5-4213-9a13-d27170d7c6a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\PSO">
       <UniqueIdentifier>{ac23e4ea-c4f6-4e8b-be39-4a11458338e0}</UniqueIdentifier>
     </Filter>
@@ -250,8 +247,11 @@
     <Filter Include="소스 파일\Controller\InputEvent\Events">
       <UniqueIdentifier>{2b533479-5c9a-41f2-adfc-b8602b1c1e07}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Stb">
-      <UniqueIdentifier>{7a524d01-9db6-4c53-bcac-193abffec8ea}</UniqueIdentifier>
+    <Filter Include="Externals">
+      <UniqueIdentifier>{a247d1c7-0bb3-499c-8b84-4e979ce8e2e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\Imgui">
+      <UniqueIdentifier>{7158f144-cc79-419a-9a92-91e1a3c3d62d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -279,7 +279,7 @@
     <ClCompile Include="StaticMeshAsset.cpp">
       <Filter>소스 파일\Asset\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="TextureAsset.cpp">
+    <ClCompile Include="NormalTextureAsset.cpp">
       <Filter>소스 파일\Asset\Texture</Filter>
     </ClCompile>
     <ClCompile Include="GameWorld.cpp">
@@ -444,29 +444,14 @@
     <ClCompile Include="ARenderer.cpp">
       <Filter>소스 파일\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_demo.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_draw.cpp">
-      <Filter>ImGui</Filter>
+    <ClCompile Include="HDRTextureAsset.cpp">
+      <Filter>소스 파일\Asset\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Externals\imgui\imgui_impl_dx11.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Externals\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_tables.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\stb\stb_vorbis.c">
-      <Filter>Stb</Filter>
+      <Filter>Externals\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -488,7 +473,7 @@
     <ClInclude Include="SkeletalMeshAsset.h">
       <Filter>헤더 파일\Asset\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="TextureAsset.h">
+    <ClInclude Include="NormalTextureAsset.h">
       <Filter>헤더 파일\Asset\Texture</Filter>
     </ClInclude>
     <ClInclude Include="GameWorld.h">
@@ -731,89 +716,14 @@
     <ClInclude Include="MaterialAsset.h">
       <Filter>헤더 파일\Asset\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Externals\imgui\imconfig.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imgui.h">
-      <Filter>ImGui</Filter>
+    <ClInclude Include="HDRTextureAsset.h">
+      <Filter>헤더 파일\Asset\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Externals\imgui\imgui_impl_dx11.h">
-      <Filter>ImGui</Filter>
+      <Filter>Externals\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Externals\imgui\imgui_impl_win32.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imgui_internal.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imstb_rectpack.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imstb_textedit.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui\imstb_truetype.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_c_lexer.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_connected_components.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_divide.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_ds.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_dxt.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_easy_font.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_herringbone_wang_tile.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_hexwave.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_image.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_image_resize2.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_image_write.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_include.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_leakcheck.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_perlin.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_rect_pack.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_sprintf.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_textedit.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_tilemap_editor.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_truetype.h">
-      <Filter>Stb</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\stb\stb_voxel_render.h">
-      <Filter>Stb</Filter>
+      <Filter>Externals\Imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -829,7 +739,7 @@
     <FxCompile Include="Shaders\StaticVS.hlsl">
       <Filter>Shader\StaticMesh</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\DebugObjectPS.hlsl">
+    <FxCompile Include="Shaders\BoundingComponentPS.hlsl">
       <Filter>Shader\PositionOnly</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PositionOnlyPathVS.hlsl">

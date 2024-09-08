@@ -21,7 +21,7 @@ void APickingIDRenderer::PresetRendering(
 	MapAsset* MapIn
 )
 {
-	PSOObjectCached->SetPipelineObject(RTVCountIn, RTVsIn, ViewportIn, DSVIn);
+	PSOObjectCached->SetPipelineStateObject(RTVCountIn, RTVsIn, ViewportIn, DSVIn);
 
 	ID3D11Buffer* ViewProjBuffer[] = { CameraIn->ViewProjBuffer.GetBuffer() };
 	PSOObjectCached->SetVSConstantBuffers(0, 1, ViewProjBuffer);

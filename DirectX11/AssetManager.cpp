@@ -1,8 +1,8 @@
 #include "AssetManager.h"
 
-#include "Importer.hpp"
-#include "postprocess.h"
-#include "scene.h"
+#include "assimp/Importer.hpp"
+#include "assimp/postprocess.h"
+#include "assimp/scene.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -15,7 +15,8 @@
 #include "SkeletalMeshAsset.h"
 #include "BoneAsset.h"
 #include "MapAsset.h"
-#include "TextureAsset.h"
+#include "NormalTextureAsset.h"
+#include "HDRTextureAsset.h"
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -24,6 +25,7 @@
 #include "StringHelper.h"
 
 #include <filesystem>
+#include "DirectXTexEXR.h"
 
 using namespace std;
 using namespace DirectX;
@@ -34,10 +36,10 @@ unordered_map<string, EFileType> AssetManager::FileExtensionToType
     { ".gltf", EFileType::ModelFile },
     { ".fbx", EFileType::ModelFile },
     { ".obj", EFileType::ModelFile },
-    { ".jpg", EFileType::TextureFile },
-    { ".jpeg", EFileType::TextureFile},
-    { ".png", EFileType::TextureFile },
-    { ".exr", EFileType::TextureFile },
+    { ".jpg", EFileType::NormalTextureFile },
+    { ".jpeg", EFileType::NormalTextureFile},
+    { ".png", EFileType::NormalTextureFile },
+    { ".exr", EFileType::HDRTextureFile },
 };
 
 AssetManager::AssetManager()
@@ -83,8 +85,11 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
         case EAssetType::Map:
             LoadAssetFileHelper(InputAssetFile, ManagingMaps, AssetName, this, false);
             break;
-        case EAssetType::Texture:
-            LoadAssetFileHelper(InputAssetFile, ManagingTextures, AssetName);
+        case EAssetType::NormalTexture:
+            LoadAssetFileHelper(InputAssetFile, ManagingNormalTextures, AssetName);
+            break;
+        case EAssetType::HDRTexture:
+            //LoadAssetFileHelper(InputAssetFile, ManagingHDRTextures, AssetName);
             break;
         case EAssetType::Animation:
             break;
@@ -127,8 +132,11 @@ void AssetManager::LoadFile(const std::string& FilePathIn)
         case EFileType::ModelFile:
             LoadModelFile(FilePathIn, FileName, FileExtension);
             break;
-        case EFileType::TextureFile:
-            LoadTextureFile(FilePathIn, FileName, FileExtension);
+        case EFileType::NormalTextureFile:
+            LoadNormalTextureFile(FilePathIn, FileName, FileExtension);
+            break;
+        case EFileType::HDRTextureFile:
+            LoadHDRTextureFile(FilePathIn, FileName, FileExtension);
             break;
         }
     }
@@ -170,7 +178,11 @@ void AssetManager::LoadModelFile(const string& FilePathIn, const std::string& Fi
     }
 }
 
-void AssetManager::LoadTextureFile(const string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn)
+void AssetManager::LoadNormalTextureFile(
+    const string& FilePathIn, 
+    const std::string& FileNameIn, 
+    const std::string& FileExtensionIn
+)
 {
     FILE* FileHandle;
     fopen_s(&FileHandle, FilePathIn.c_str(), "rb");
@@ -183,11 +195,38 @@ void AssetManager::LoadTextureFile(const string& FilePathIn, const std::string& 
 
         if (ImageBuffer != nullptr)
         {
-            shared_ptr<TextureAsset> TextureAssetLoaded = make_shared<TextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut);
+            shared_ptr<NormalTextureAsset> TextureAssetLoaded = make_shared<NormalTextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut);
             
             TextureAssetLoaded->Serialize();
-            ManagingTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
-            ManagingTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
+            ManagingNormalTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
+            ManagingNormalTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
+        }
+        fclose(FileHandle);
+
+    }
+    else
+    {
+    }
+}
+
+void AssetManager::LoadHDRTextureFile(
+    const std::string& FilePathIn, 
+    const std::string& FileNameIn, 
+    const std::string& FileExtensionIn
+)
+{
+    FILE* FileHandle;
+    fopen_s(&FileHandle, FilePathIn.c_str(), "rb");
+
+    if (FileHandle != nullptr)
+    {
+        uint16_t* ImageBuffer = nullptr;
+        int WidthOut, HeightOut, ChannelOut;
+
+        ImageBuffer = stbi_load_from_file_16(FileHandle, &WidthOut, &HeightOut, &ChannelOut, 4);
+        const char* error = stbi_failure_reason();
+        if (ImageBuffer != nullptr)
+        {
         }
         fclose(FileHandle);
 

@@ -23,11 +23,12 @@ public:
 		const UINT&														NumRenderTargetsIn,
 		const DXGI_FORMAT* const										RTVFormatsIn,
 		const DXGI_FORMAT&												DSVFormatIn,
-		const DXGI_SAMPLE_DESC&											SampleDeskIn,
+		const DXGI_SAMPLE_DESC&											SampleDescIn,
 		const Microsoft::WRL::ComPtr<ID3D11RasterizerState>				RasterizerStateIn,
 		const Microsoft::WRL::ComPtr<ID3D11DepthStencilState>			DepthStencilStateIn,
 		const UINT&														StencilRefIn,
-		const Microsoft::WRL::ComPtr<ID3D11BlendState>					BlendStateIn
+		const Microsoft::WRL::ComPtr<ID3D11BlendState>					BlendStateIn,
+		const std::vector<Microsoft::WRL::ComPtr<ID3D11SamplerState>>&	SamplerStatesIn
 	);
 	~PSOObject();
 
@@ -55,11 +56,11 @@ private:
 #endif // _DEBUG
 
 
-	D3D11_PRIMITIVE_TOPOLOGY						PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;;
+	D3D11_PRIMITIVE_TOPOLOGY						PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 	UINT											NumRenderTargets = 0;
 	DXGI_FORMAT										RTVFormats[8]{ DXGI_FORMAT_UNKNOWN };
 	DXGI_FORMAT										DSVFormat = DXGI_FORMAT_UNKNOWN;
-	DXGI_SAMPLE_DESC								SampleDesk;
+	DXGI_SAMPLE_DESC								SampleDesc;
 
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState>	RasterizerState;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> DepthStencilState;
@@ -67,9 +68,12 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11BlendState>		BlendState;	
 
+private:
+	std::vector<Microsoft::WRL::ComPtr<ID3D11SamplerState>> SamplerStates;
+	std::vector<ID3D11SamplerState*> SamplerStatesCached;
 
 public:
-	void SetPipelineObject(
+	void SetPipelineStateObject(
 		UINT						RTVCountIn,
 		ID3D11RenderTargetView**	RTVsIn,
 		D3D11_VIEWPORT*				ViewportIn,
