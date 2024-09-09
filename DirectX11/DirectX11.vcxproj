@@ -105,7 +105,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)DirectX11\Archive\include;$(SolutionDir)DirectX11\Externals\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -169,7 +169,7 @@
     <ClCompile Include="GlobalVariable.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="AAssetFile.cpp" />
-    <ClCompile Include="HDRTextureAsset.cpp" />
+    <ClCompile Include="EXRTextureAsset.cpp" />
     <ClCompile Include="IDColor.cpp" />
     <ClCompile Include="AMeshAsset.cpp" />
     <ClCompile Include="KeyEvent.cpp" />
@@ -232,7 +232,7 @@
     <ClInclude Include="Externals\imgui\imgui_impl_win32.h" />
     <ClInclude Include="FileSelectDialog.h" />
     <ClInclude Include="AAddObjectHelper.h" />
-    <ClInclude Include="HDRTextureAsset.h" />
+    <ClInclude Include="EXRTextureAsset.h" />
     <ClInclude Include="ICollisionVisitor.h" />
     <ClInclude Include="IDColor.h" />
     <ClInclude Include="IDialog.h" />

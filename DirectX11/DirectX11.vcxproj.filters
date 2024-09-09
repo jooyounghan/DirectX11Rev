@@ -444,7 +444,7 @@
     <ClCompile Include="ARenderer.cpp">
       <Filter>소스 파일\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="HDRTextureAsset.cpp">
+    <ClCompile Include="EXRTextureAsset.cpp">
       <Filter>소스 파일\Asset\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Externals\imgui\imgui_impl_dx11.cpp">
@@ -716,7 +716,7 @@
     <ClInclude Include="MaterialAsset.h">
       <Filter>헤더 파일\Asset\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="HDRTextureAsset.h">
+    <ClInclude Include="EXRTextureAsset.h">
       <Filter>헤더 파일\Asset\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Externals\imgui\imgui_impl_dx11.h">

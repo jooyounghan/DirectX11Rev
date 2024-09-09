@@ -4,6 +4,7 @@
 class StringHelper
 {
 public:
-	static std::string ConvertACPToUTF8(const std::string& UTF8String);
+	static std::string ConvertACPToUTF8(const std::string& ACPString);
+	static std::wstring ConvertACPToWString(const std::string ACPString);
 };
 

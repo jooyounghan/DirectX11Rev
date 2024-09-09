@@ -68,8 +68,6 @@ void NormalTextureAsset::CreateTexture(uint8_t* ImageBufferIn, const UINT& Width
 
 	ThumbnailTexture2D = Texture2D;
 	ThumbnailSRV = SRV;
-
-	DeviceContext->PSSetShaderResources(0, 1, SRV.GetAddressOf());
 }
 
 void NormalTextureAsset::Serialize(const std::string& OutputAdditionalPath)

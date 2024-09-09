@@ -16,7 +16,7 @@
 #include "BoneAsset.h"
 #include "MapAsset.h"
 #include "NormalTextureAsset.h"
-#include "HDRTextureAsset.h"
+#include "EXRTextureAsset.h"
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -25,6 +25,7 @@
 #include "StringHelper.h"
 
 #include <filesystem>
+
 #include "DirectXTexEXR.h"
 
 using namespace std;
@@ -39,7 +40,7 @@ unordered_map<string, EFileType> AssetManager::FileExtensionToType
     { ".jpg", EFileType::NormalTextureFile },
     { ".jpeg", EFileType::NormalTextureFile},
     { ".png", EFileType::NormalTextureFile },
-    { ".exr", EFileType::HDRTextureFile },
+    { ".exr", EFileType::EXRTextureFile },
 };
 
 AssetManager::AssetManager()
@@ -88,8 +89,8 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
         case EAssetType::NormalTexture:
             LoadAssetFileHelper(InputAssetFile, ManagingNormalTextures, AssetName);
             break;
-        case EAssetType::HDRTexture:
-            //LoadAssetFileHelper(InputAssetFile, ManagingHDRTextures, AssetName);
+        case EAssetType::EXRTexture:
+            LoadAssetFileHelper(InputAssetFile, ManagingEXRTextures, AssetName);
             break;
         case EAssetType::Animation:
             break;
@@ -135,8 +136,8 @@ void AssetManager::LoadFile(const std::string& FilePathIn)
         case EFileType::NormalTextureFile:
             LoadNormalTextureFile(FilePathIn, FileName, FileExtension);
             break;
-        case EFileType::HDRTextureFile:
-            LoadHDRTextureFile(FilePathIn, FileName, FileExtension);
+        case EFileType::EXRTextureFile:
+            LoadEXRTextureFile(FilePathIn, FileName, FileExtension);
             break;
         }
     }
@@ -199,7 +200,7 @@ void AssetManager::LoadNormalTextureFile(
             
             TextureAssetLoaded->Serialize();
             ManagingNormalTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
-            ManagingNormalTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
+            ManagingAssets.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
         }
         fclose(FileHandle);
 
@@ -209,30 +210,24 @@ void AssetManager::LoadNormalTextureFile(
     }
 }
 
-void AssetManager::LoadHDRTextureFile(
+void AssetManager::LoadEXRTextureFile(
     const std::string& FilePathIn, 
     const std::string& FileNameIn, 
     const std::string& FileExtensionIn
 )
 {
-    FILE* FileHandle;
-    fopen_s(&FileHandle, FilePathIn.c_str(), "rb");
+    uint16_t* ImageBuffer = nullptr;
 
-    if (FileHandle != nullptr)
+    ScratchImage scratch;
+    TexMetadata metaData;
+    HRESULT hResult = LoadFromEXRFile(StringHelper::ConvertACPToWString(FilePathIn).c_str(), &metaData, scratch);
+    if (!FAILED(hResult))
     {
-        uint16_t* ImageBuffer = nullptr;
-        int WidthOut, HeightOut, ChannelOut;
-
-        ImageBuffer = stbi_load_from_file_16(FileHandle, &WidthOut, &HeightOut, &ChannelOut, 4);
-        const char* error = stbi_failure_reason();
-        if (ImageBuffer != nullptr)
-        {
-        }
-        fclose(FileHandle);
-
-    }
-    else
-    {
+        shared_ptr<EXRTextureAsset> TextureAssetLoaded = make_shared<EXRTextureAsset>(FileNameIn, scratch, metaData);
+       
+        TextureAssetLoaded->Serialize();
+        ManagingEXRTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
+        ManagingAssets.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
     }
 }
 
