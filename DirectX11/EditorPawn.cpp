@@ -15,7 +15,7 @@ EditorPawn::EditorPawn()
     Controller->SetPossesdPawn(this);
 
 	EditorCameraCached = AddAttachedObject<EditorCamera>(App::GWidth, App::GHeight);
-    EditorCameraCached->SetParentObject(this);
+    EditorCameraCached->SetParent(this, PickingIDBuffer.GetBuffer());
 }
 
 EditorPawn::~EditorPawn()

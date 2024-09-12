@@ -32,7 +32,7 @@ void Actor::Initialize(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn)
 	PlaceableKind = EPlaceableObjectKind::ACTOR_KIND;
 
 	MeshObjectInstance = make_unique<MeshObject>(MeshAssetInstanceIn);
-	MeshObjectInstance->SetParentObject(this);
+	MeshObjectInstance->SetParent(this, PickingIDBuffer.GetBuffer());
 }
 
 void Actor::AcceptGui(IGuiModelVisitor* GuiVisitor) 

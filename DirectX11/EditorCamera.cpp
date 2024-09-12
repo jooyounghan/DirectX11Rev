@@ -3,6 +3,8 @@
 #include "GraphicsPipeline.h"
 #include "DefineUtility.h"
 
+const FLOAT EditorCamera::IDClearColor[4] = { 1.f, 1.f, 1.f, 1.f };
+
 EditorCamera::EditorCamera(const UINT& WidthIn, const UINT& HeightIn)
 	: Camera(WidthIn, HeightIn)
 {
@@ -72,6 +74,6 @@ UINT EditorCamera::GetID(const float& RelativeMousePosX, const float& RelativeMo
 void EditorCamera::CleanupLens()
 {
 	Camera::CleanupLens();
-	DeviceContextCached->ClearRenderTargetView(IdSelectRTV.Get(), ClearColor);
+	DeviceContextCached->ClearRenderTargetView(IdSelectRTV.Get(), IDClearColor);
 	DeviceContextCached->ClearDepthStencilView(IdSelectDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 }

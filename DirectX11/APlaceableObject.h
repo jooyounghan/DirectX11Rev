@@ -116,8 +116,7 @@ inline Attachment* APlaceableObject::AddAttachedObject(Args ...args)
 	}
 
 	AAttachableObject* AttachedObject = (AAttachableObject*)Attached;
-	Attached->SetParentObject(this);
-	Attached->SetPickingIDBufferCached(PickingIDBuffer.GetBuffer());
+	Attached->SetParent(this, PickingIDBuffer.GetBuffer());
 
 	return Attached;
 }

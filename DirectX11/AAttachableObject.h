@@ -30,15 +30,18 @@ protected:
 
 protected:
 	AObject* ParentObject = nullptr;
-	MakeSetterGetter(ParentObject);
+	MakeGetter(ParentObject);
+
+protected:
+	ID3D11Buffer* PickingIDBufferCached = nullptr;
+	MakeGetter(PickingIDBufferCached);
+
+public:
+	void SetParent(AObject* ParentObjectIn, ID3D11Buffer* PickingIDBufferCachedIn);
 
 protected:
 	std::list<std::unique_ptr<AAttachableObject>> AttachedChildrenObjects;
 	MakeGetter(AttachedChildrenObjects);
-
-protected:
-	ID3D11Buffer* PickingIDBufferCached = nullptr;
-	MakeSetterGetter(PickingIDBufferCached);
 
 protected:
 	bool bIsConsumeMove = true;
@@ -116,8 +119,7 @@ inline Attachment* AAttachableObject::AddAttachedObject(Args ...args)
 	AddToIntersectables(Attached);
 
 	AAttachableObject* AttachedObject = (AAttachableObject*)Attached;
-	AttachedObject->SetParentObject(this);
-	AttachedObject->SetPickingIDBufferCached(PickingIDBufferCached);
+	AttachedObject->SetParent(this, PickingIDBufferCached);
 
 	return Attached;
 }

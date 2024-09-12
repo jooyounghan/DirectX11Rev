@@ -253,6 +253,9 @@
     <Filter Include="Externals\Imgui">
       <UniqueIdentifier>{7158f144-cc79-419a-9a92-91e1a3c3d62d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Externals\DDSTextureLoader">
+      <UniqueIdentifier>{161dbda4-e877-4e45-8c0b-47435a5f4b3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -452,6 +455,18 @@
     </ClCompile>
     <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp">
       <Filter>Externals\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureAsset.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ATextureAsset.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\DDSTextureLoader\DDSTextureLoader11.cpp">
+      <Filter>Externals\DDSTextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="AScratchTextureAsset.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -724,6 +739,18 @@
     </ClInclude>
     <ClInclude Include="Externals\imgui\imgui_impl_win32.h">
       <Filter>Externals\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureAsset.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ATextureAsset.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\DDSTextureLoader\DDSTextureLoader11.h">
+      <Filter>Externals\DDSTextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="AScratchTextureAsset.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

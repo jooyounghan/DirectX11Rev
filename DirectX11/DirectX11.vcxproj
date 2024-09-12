@@ -108,7 +108,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectX11\Archive\include;$(SolutionDir)DirectX11\Externals\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectX11\Archive\include;$(SolutionDir)DirectX11\Externals\Imgui;$(SolutionDir)DirectX11\Externals\DDSTextureLoader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,6 +143,9 @@
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
     <ClCompile Include="ARenderer.cpp" />
+    <ClCompile Include="AScratchTextureAsset.cpp" />
+    <ClCompile Include="ATextureAsset.cpp" />
+    <ClCompile Include="DDSTextureAsset.cpp" />
     <ClCompile Include="DefaultController.cpp" />
     <ClCompile Include="EditorPawn.cpp" />
     <ClCompile Include="ABoundingObject.cpp" />
@@ -162,6 +165,7 @@
     <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="Externals\DDSTextureLoader\DDSTextureLoader11.cpp" />
     <ClCompile Include="Externals\imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="FileSelectDialog.cpp" />
@@ -209,6 +213,9 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="AddAttachableObjectHelper.h" />
     <ClInclude Include="AddPlaceableObjectHelper.h" />
+    <ClInclude Include="AScratchTextureAsset.h" />
+    <ClInclude Include="ATextureAsset.h" />
+    <ClInclude Include="DDSTextureAsset.h" />
     <ClInclude Include="DefaultController.h" />
     <ClInclude Include="DefineInput.h" />
     <ClInclude Include="EditorPawn.h" />
@@ -228,6 +235,7 @@
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="EditorCamera.h" />
+    <ClInclude Include="Externals\DDSTextureLoader\DDSTextureLoader11.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_dx11.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_win32.h" />
     <ClInclude Include="FileSelectDialog.h" />

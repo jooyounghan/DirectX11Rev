@@ -11,6 +11,12 @@ AAttachableObject::~AAttachableObject()
 {
 }
 
+void AAttachableObject::SetParent(AObject* ParentObjectIn, ID3D11Buffer* PickingIDBufferCachedIn)
+{
+	ParentObject = ParentObjectIn;
+	PickingIDBufferCached = PickingIDBufferCachedIn;
+}
+
 DirectX::XMVECTOR AAttachableObject::GetRotationQuat() const
 {
 	XMVECTOR ResultQuat = XMQuaternionRotationRollPitchYaw(

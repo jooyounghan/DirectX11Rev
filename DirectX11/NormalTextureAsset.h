@@ -1,8 +1,7 @@
 #pragma once
-#include "AAssetFile.h"
-#include "HeaderHelper.h"
+#include "ATextureAsset.h"
 
-class NormalTextureAsset : public AAssetFile
+class NormalTextureAsset : public ATextureAsset
 {
 public:
 	NormalTextureAsset(const std::string& AssetNameIn);
@@ -14,25 +13,22 @@ public:
 	);
 	virtual ~NormalTextureAsset();
 
-protected:
-	Microsoft::WRL::ComPtr<ID3D11Texture2D>				Texture2D;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	SRV;
-	MakeComPtrGetter(Texture2D);
-	MakeComPtrGetter(SRV);
-
 private:
-	void CreateTexture(
-		uint8_t* ImageBufferIn,
-		const UINT& WidthIn,
-		const UINT& HeightIn
-	);
-
-protected:
-	int ImageSize = 0;
-	uint8_t* CompressedBuffer = nullptr;
+	virtual void CreateTexture(
+		const std::vector<uint8_t*>& ImageBufferPerArray
+	) override;
 
 public:
-	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual std::vector<std::vector<uint8_t>> CompressDataArray(
+		const std::vector<uint8_t*>& DecompressedBufferPerArrayIn,
+		const std::vector<size_t>& OriginalSizePerArray,
+		std::vector<size_t>& CompressedSizeOut
+	) override;
+
+	virtual std::vector<std::vector<uint8_t>> DecompressDataArray(
+		const std::vector<uint8_t*>& CompressedBufferPerArrayIn,
+		const std::vector<size_t>& CompressedSize,
+		const std::vector<size_t>& OriginalSize
+	) override;
 };
 

@@ -34,7 +34,7 @@ protected:
 	MakeComPtrGetter(SceneDSV);
 
 protected:
-	const FLOAT ClearColor[4] = { 0.2f, 0.2f, 0.2f, 1.f };
+	static const FLOAT ClearColor[4];
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

@@ -30,6 +30,9 @@ public:
 		const float& WindowSizeX, const float& WindowSizeY
 	);
 
+protected:
+	static const FLOAT IDClearColor[4];
+
 public:
 	virtual void CleanupLens();
 };

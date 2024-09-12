@@ -15,8 +15,10 @@
 #include "SkeletalMeshAsset.h"
 #include "BoneAsset.h"
 #include "MapAsset.h"
+
 #include "NormalTextureAsset.h"
 #include "EXRTextureAsset.h"
+#include "DDSTextureAsset.h"
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -41,6 +43,7 @@ unordered_map<string, EFileType> AssetManager::FileExtensionToType
     { ".jpeg", EFileType::NormalTextureFile},
     { ".png", EFileType::NormalTextureFile },
     { ".exr", EFileType::EXRTextureFile },
+    { ".dds", EFileType::DDSTextureFile },
 };
 
 AssetManager::AssetManager()
@@ -92,6 +95,9 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
         case EAssetType::EXRTexture:
             LoadAssetFileHelper(InputAssetFile, ManagingEXRTextures, AssetName);
             break;
+        case EAssetType::DDSTexture:
+            LoadAssetFileHelper(InputAssetFile, ManagingDDSTextures, AssetName);
+            break;
         case EAssetType::Animation:
             break;
         default:
@@ -138,6 +144,11 @@ void AssetManager::LoadFile(const std::string& FilePathIn)
             break;
         case EFileType::EXRTextureFile:
             LoadEXRTextureFile(FilePathIn, FileName, FileExtension);
+            break;
+        case EFileType::DDSTextureFile:
+            LoadDDSTextureFile(FilePathIn, FileName, FileExtension);
+            break;
+        default:
             break;
         }
     }
@@ -197,10 +208,7 @@ void AssetManager::LoadNormalTextureFile(
         if (ImageBuffer != nullptr)
         {
             shared_ptr<NormalTextureAsset> TextureAssetLoaded = make_shared<NormalTextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut);
-            
-            TextureAssetLoaded->Serialize();
-            ManagingNormalTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
-            ManagingAssets.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
+            AddToManagingContainer(ManagingNormalTextures, TextureAssetLoaded);
         }
         fclose(FileHandle);
 
@@ -216,18 +224,25 @@ void AssetManager::LoadEXRTextureFile(
     const std::string& FileExtensionIn
 )
 {
-    uint16_t* ImageBuffer = nullptr;
-
     ScratchImage scratch;
     TexMetadata metaData;
     HRESULT hResult = LoadFromEXRFile(StringHelper::ConvertACPToWString(FilePathIn).c_str(), &metaData, scratch);
     if (!FAILED(hResult))
     {
         shared_ptr<EXRTextureAsset> TextureAssetLoaded = make_shared<EXRTextureAsset>(FileNameIn, scratch, metaData);
-       
-        TextureAssetLoaded->Serialize();
-        ManagingEXRTextures.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
-        ManagingAssets.emplace(TextureAssetLoaded->GetAssetName(), TextureAssetLoaded);
+        AddToManagingContainer(ManagingEXRTextures, TextureAssetLoaded);
+    }
+}
+
+void AssetManager::LoadDDSTextureFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn)
+{
+    ScratchImage scratch;
+    TexMetadata metaData;
+    HRESULT hResult = LoadFromDDSFile(StringHelper::ConvertACPToWString(FilePathIn).c_str(), DDS_FLAGS_NONE, &metaData, scratch);
+    if (!FAILED(hResult))
+    {
+        shared_ptr<DDSTextureAsset> TextureAssetLoaded = make_shared<DDSTextureAsset>(FileNameIn, scratch, metaData);
+        AddToManagingContainer(ManagingDDSTextures, TextureAssetLoaded);
     }
 }
 
@@ -250,14 +265,10 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
         LoadBone(Scene, SkeletalMeshAPtr, BoneAPtr);
 
         // Serialize Bone Asset
-        BoneAssetLoaded->Serialize();
-        ManagingBones.emplace(BoneAssetLoaded->GetAssetName(), BoneAssetLoaded);
-        ManagingAssets.emplace(BoneAssetLoaded->GetAssetName(), BoneAssetLoaded);
+        AddToManagingContainer(ManagingBones, BoneAssetLoaded);
 
         SkeletalMeshAssetLoaded->Initialize();
-        SkeletalMeshAssetLoaded->Serialize();
-        ManagingSkeletalMeshes.emplace(SkeletalMeshAssetLoaded->GetAssetName(), SkeletalMeshAssetLoaded);
-        ManagingAssets.emplace(SkeletalMeshAssetLoaded->GetAssetName(), SkeletalMeshAssetLoaded);
+        AddToManagingContainer(ManagingSkeletalMeshes, SkeletalMeshAssetLoaded);
     }
     else
     {
@@ -266,9 +277,7 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
         ProcessNodeForMesh(IsGltf, Scene, RootNode, (StaticMeshAsset*)StaticMeshLoaded.get(), RootTransform);
 
         StaticMeshLoaded->Initialize();
-        StaticMeshLoaded->Serialize();
-        ManagingStaticMeshes.emplace(StaticMeshLoaded->GetAssetName(), StaticMeshLoaded);
-        ManagingAssets.emplace(StaticMeshLoaded->GetAssetName(), StaticMeshLoaded);
+        AddToManagingContainer(ManagingStaticMeshes, StaticMeshLoaded);
     }
 }
 
@@ -321,6 +330,17 @@ std::shared_ptr<StaticMeshAsset> AssetManager::GetManagingStaticMesh(const std::
 std::shared_ptr<SkeletalMeshAsset> AssetManager::GetManagingSkeletalMesh(const std::string MapAssetName)
 {
     return GetManagingAssetHelper(ManagingSkeletalMeshes, MapAssetName);
+}
+
+template<typename T>
+void AssetManager::AddToManagingContainer(
+    unordered_map<string, shared_ptr<T>>& ManagingContainer, 
+    shared_ptr<T>& AddedAsset
+)
+{
+    AddedAsset->Serialize();
+    ManagingContainer.emplace(AddedAsset->GetAssetName(), AddedAsset);
+    ManagingAssets.emplace(AddedAsset->GetAssetName(), AddedAsset);
 }
 
 template<typename T>
@@ -612,9 +632,10 @@ void AssetManager::LoadIndices(
 
 void AssetManager::PreloadAssets()
 {
+
     path AssetPath = path(AssetOutPath);
     path MapPath = path(MapAssetOutPath);
-    
+
     if (!exists(AssetPath) && create_directories(AssetPath)) {/* Do Nothing But Make Directory */ };
     if (!exists(MapPath) && create_directories(MapPath)) {/* Do Nothing But Make Directory */ };
 
@@ -642,8 +663,6 @@ void AssetManager::PreloadAssets()
             }
         }
     }
-
-    
 }
 
 template<typename T>

@@ -22,8 +22,9 @@ enum class EAssetType
 
 	// Material
 	Material,
-	EXRTexture,
 	NormalTexture,
+	EXRTexture,
+	DDSTexture,
 
 	// Animation
 	Animation,
@@ -49,8 +50,9 @@ constexpr const char* AssetSuffix[GetAssetTypeAsIndex(EAssetType::NumAssetType)]
 
 	// Material
 	"_Material",
-	"_EXRTexture",
 	"_NormalTexture",
+	"_EXRTexture",
+	"_DDSTexture",
 
 	// Animation
 	"_Animation"

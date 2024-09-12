@@ -7,12 +7,13 @@
 using namespace std;
 
 const char* Camera::CameraIdentifier = "Camera";
+const FLOAT Camera::ClearColor[4] = { 0.2f, 0.2f, 0.2f, 1.f };
 
 Camera::Camera(const UINT& WidthIn, const UINT& HeightIn)
 	: Viewable(WidthIn, HeightIn)
 {
 	CamearaFrustum = make_unique<BoundingFrustumObject>(this);
-	CamearaFrustum->SetParentObject(this);
+	CamearaFrustum->SetParent(this, PickingIDBufferCached);
 
 	static size_t CameraCount = 0;
 	CameraCount++;
