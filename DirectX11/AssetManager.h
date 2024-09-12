@@ -19,6 +19,8 @@ enum class EAssetType;
 class AAssetFile;
 
 class AMeshAsset;
+class BaseMeshAsset;
+class ANBTMeshAsset;
 class StaticMeshAsset;
 class SkeletalMeshAsset;
 class BoneAsset;
@@ -93,23 +95,25 @@ private:
 	MakeGetter(ManagingDDSTextures);
 
 private:
+	std::unordered_map<std::string, BaseMeshAsset*> ManagingBaseMeshes;
+	MakeGetter(ManagingBaseMeshes);
+
+
+private:
 	template<typename T>
 	void AddToManagingContainer(
-		std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer,
-		std::shared_ptr<T>& AddedAsset
+		std::unordered_map<std::string, T>& ManagingContainer,
+		T& AddedAsset
 	);
 
 private:
 	std::unordered_map<std::string, std::list<std::string>> FileNameToAssetNames;
 
 private:
-	std::unordered_map<std::string, std::shared_ptr<AAssetFile>> ManagingAssets;
-	
+	std::stack<std::string> FileNameStack;
+
 public:
 	AAssetFile* GetManagingAsset(const std::string& AssetNameIn);
-
-private:
-	std::stack<std::string> FileNameStack;
 
 public:
 	std::shared_ptr<MapAsset> GetManagingMap(const std::string MapAssetName);
@@ -119,8 +123,8 @@ public:
 
 private:
 	template<typename T> 
-	static std::shared_ptr<T> GetManagingAssetHelper(
-		std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer, 
+	static T GetManagingAssetHelper(
+		std::unordered_map<std::string, T>& ManagingContainer, 
 		const std::string AssetName
 	);
 
@@ -149,7 +153,7 @@ private:
 	);
 
 private:
-	void RestructBaseVertices(const unsigned int& NumVertices, AMeshAsset* MeshAssetIn);
+	void RestructBaseVertices(const unsigned int& NumVertices, ANBTMeshAsset* MeshAssetIn);
 
 private:
 	void LoadMeshElement(

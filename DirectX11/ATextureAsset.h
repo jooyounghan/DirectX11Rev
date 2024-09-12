@@ -10,7 +10,8 @@ public:
 
 public:
 	virtual void CreateTexture(
-		const std::vector<uint8_t*>& ImageBufferPerArray
+		const std::vector<uint8_t*>& ImageBufferPerArray,
+		const std::vector<size_t>& RowPitches
 	) = 0;
 
 protected:
@@ -35,6 +36,7 @@ protected:
 protected:
 	virtual D3D11_TEXTURE2D_DESC CreateTexture2D(
 		const std::vector<uint8_t*>& ImageBufferPerArray,
+		const std::vector<size_t>& RowPitches,
 		const UINT/*D3D11_BIND_FLAG*/& BindFlagIn,
 		const UINT/*D3D11_CPU_ACCESS_FLAG*/& CPUAccessFlagIn,
 		const UINT/*D3D11_RESOURCE_MISC_FLAG*/& MiscFlagIn,

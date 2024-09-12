@@ -1,11 +1,9 @@
 #pragma once
-#include "AMeshAsset.h"
-#include "Vertexable.h"
-#include "DefineType.h"
+#include "ANBTMeshAsset.h"
 
 class BoneAsset;
 
-class SkeletalMeshAsset : public AMeshAsset
+class SkeletalMeshAsset : public ANBTMeshAsset
 {
 public:
 	SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadAsFile);

@@ -1,7 +1,7 @@
 #pragma once
-#include "AMeshAsset.h"
+#include "ANBTMeshAsset.h"
 
-class StaticMeshAsset : public AMeshAsset
+class StaticMeshAsset : public ANBTMeshAsset
 {
 public:
 	StaticMeshAsset(const std::string& AssetNameIn, bool LoadAsFile);

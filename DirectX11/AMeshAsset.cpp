@@ -14,9 +14,6 @@ void AMeshAsset::Initialize()
 	Positions.VerticesBuffer.InitializeForGPU(Positions.GetVertexCount(), Positions.Vertices.data());
 	UVTextures.VerticesBuffer.InitializeForGPU(UVTextures.GetVertexCount(), UVTextures.Vertices.data());
 	Normals.VerticesBuffer.InitializeForGPU(Normals.GetVertexCount(), Normals.Vertices.data());
-	Tangents.VerticesBuffer.InitializeForGPU(Tangents.GetVertexCount(), Tangents.Vertices.data());
-	Bitangents.VerticesBuffer.InitializeForGPU(Bitangents.GetVertexCount(), Bitangents.Vertices.data());
-
 	IndicesBuffer.InitializeForGPU(GetIndexCount(), Indices.data());
 }
 
@@ -36,16 +33,6 @@ void AMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 	size_t NormalsCount = Normals.Vertices.size();
 	fwrite(&NormalsCount, sizeof(size_t), 1, FileIn);
 	fwrite(Normals.Vertices.data(), sizeof(XMFLOAT3), NormalsCount, FileIn);
-
-	// Tangents
-	size_t TangentsCount = Tangents.Vertices.size();
-	fwrite(&TangentsCount, sizeof(size_t), 1, FileIn);
-	fwrite(Tangents.Vertices.data(), sizeof(XMFLOAT3), TangentsCount, FileIn);
-
-	// Bitangents
-	size_t BitangentsCount = Bitangents.Vertices.size();
-	fwrite(&BitangentsCount, sizeof(size_t), 1, FileIn);
-	fwrite(Bitangents.Vertices.data(), sizeof(XMFLOAT3), BitangentsCount, FileIn);
 
 	// Indices
 	size_t IndexCount = Indices.size();
@@ -72,18 +59,6 @@ void AMeshAsset::DeserializeBaseMeshData(FILE* FileIn)
 	fread(&NormalsCount, sizeof(size_t), 1, FileIn);
 	Normals.Vertices.resize(NormalsCount);
 	fread(Normals.Vertices.data(), sizeof(XMFLOAT3), NormalsCount, FileIn);
-
-	// Tangents
-	size_t TangentsCount;
-	fread(&TangentsCount, sizeof(size_t), 1, FileIn);
-	Tangents.Vertices.resize(TangentsCount);
-	fread(Tangents.Vertices.data(), sizeof(XMFLOAT3), TangentsCount, FileIn);
-
-	// Bitangents
-	size_t BitangentsCount;
-	fread(&BitangentsCount, sizeof(size_t), 1, FileIn);
-	Bitangents.Vertices.resize(BitangentsCount);
-	fread(Bitangents.Vertices.data(), sizeof(XMFLOAT3), BitangentsCount, FileIn);
 
 	// Indices
 	size_t IndexCount;

@@ -16,6 +16,9 @@
 #include "BoneAsset.h"
 #include "MapAsset.h"
 
+#include "BaseCubeMeshAsset.h"
+#include "BaseSphereMeshAsset.h"
+
 #include "NormalTextureAsset.h"
 #include "EXRTextureAsset.h"
 #include "DDSTextureAsset.h"
@@ -122,7 +125,6 @@ void AssetManager::LoadAssetFileHelper(
     shared_ptr<T> AssetFile = make_shared<T>(AssetName, AssetConstructArgs...);
     AssetFile->Deserialize(FileIn, this);
     ManagingContainer.emplace(AssetName, AssetFile);
-    ManagingAssets.emplace(AssetName, AssetFile);
 }
 
 
@@ -302,14 +304,45 @@ bool AssetManager::HasBone(const aiScene* const Scene)
 
 AAssetFile* AssetManager::GetManagingAsset(const std::string& AssetNameIn)
 {
-    if (ManagingAssets.find(AssetNameIn) != ManagingAssets.end())
+    AAssetFile* Result = nullptr;
+    const string AssetSuffix = AssetNameIn.substr(AssetNameIn.find_last_of("_"));
+    EAssetType AssetType = AAssetFile::AssetSuffixToType[AssetSuffix];
+
+    switch (AssetType)
     {
-        return ManagingAssets[AssetNameIn].get();
+    case EAssetType::BaseMesh:
+        Result = GetManagingAssetHelper(ManagingBaseMeshes, AssetNameIn);
+        break;
+    case EAssetType::StaticMesh:
+        Result = GetManagingAssetHelper(ManagingStaticMeshes, AssetNameIn).get();
+        break;
+    case EAssetType::SkeletalMesh:
+        Result = GetManagingAssetHelper(ManagingSkeletalMeshes, AssetNameIn).get();
+        break;
+    case EAssetType::Bone:
+        Result = GetManagingAssetHelper(ManagingBones, AssetNameIn).get();
+        break;
+    case EAssetType::Map:
+        Result = GetManagingAssetHelper(ManagingMaps, AssetNameIn).get();
+        break;
+    case EAssetType::Material:
+        break;
+    case EAssetType::NormalTexture:
+        Result = GetManagingAssetHelper(ManagingNormalTextures, AssetNameIn).get();
+        break;
+    case EAssetType::EXRTexture:
+        Result = GetManagingAssetHelper(ManagingEXRTextures, AssetNameIn).get();
+        break;
+    case EAssetType::DDSTexture:
+        Result = GetManagingAssetHelper(ManagingDDSTextures, AssetNameIn).get();
+        break;
+    case EAssetType::Animation:
+        break;
+    default:
+        break;
     }
-    else
-    {
-        return nullptr;
-    }
+
+    return Result;
 }
 
 std::shared_ptr<MapAsset> AssetManager::GetManagingMap(const std::string MapAssetName)
@@ -334,19 +367,18 @@ std::shared_ptr<SkeletalMeshAsset> AssetManager::GetManagingSkeletalMesh(const s
 
 template<typename T>
 void AssetManager::AddToManagingContainer(
-    unordered_map<string, shared_ptr<T>>& ManagingContainer, 
-    shared_ptr<T>& AddedAsset
+    unordered_map<string, T>& ManagingContainer, 
+    T& AddedAsset
 )
 {
     AddedAsset->Serialize();
     ManagingContainer.emplace(AddedAsset->GetAssetName(), AddedAsset);
-    ManagingAssets.emplace(AddedAsset->GetAssetName(), AddedAsset);
 }
 
 template<typename T>
-std::shared_ptr<T> AssetManager::GetManagingAssetHelper(
-    std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer,
-    const std::string AssetName
+T AssetManager::GetManagingAssetHelper(
+    std::unordered_map<string, T>& ManagingContainer,
+    const string AssetName
 )
 {
     if (ManagingContainer.find(AssetName) != ManagingContainer.end())
@@ -428,7 +460,7 @@ void AssetManager::ProcessNodeForBone(
     if (IsNodeValid) BoneA->TraverseUpBone();
 }
 
-void AssetManager::RestructBaseVertices(const unsigned int& NumVertices, AMeshAsset* MeshAssetIn)
+void AssetManager::RestructBaseVertices(const unsigned int& NumVertices, ANBTMeshAsset* MeshAssetIn)
 {
     vector<XMFLOAT3> TempPositions;
     vector<XMFLOAT2> TempUVTextures;
@@ -632,6 +664,16 @@ void AssetManager::LoadIndices(
 
 void AssetManager::PreloadAssets()
 {
+    vector<BaseMeshAsset*> BaseMeshAssets
+    {
+        BaseCubeMeshAsset::GetInstance(),
+        BaseSphereMeshAsset::GetInstance()
+    };
+
+    for (BaseMeshAsset* BaseMeshAssetInstance : BaseMeshAssets)
+    {
+        AddToManagingContainer(ManagingBaseMeshes, BaseMeshAssetInstance);
+    }
 
     path AssetPath = path(AssetOutPath);
     path MapPath = path(MapAssetOutPath);

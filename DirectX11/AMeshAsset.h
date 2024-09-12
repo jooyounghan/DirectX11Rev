@@ -14,8 +14,6 @@ public:
 	Vertexable<XMFLOAT3> Positions;
 	Vertexable<XMFLOAT2> UVTextures;
 	Vertexable<XMFLOAT3> Normals;
-	Vertexable<XMFLOAT3> Tangents;
-	Vertexable<XMFLOAT3> Bitangents;
 
 public:
 	virtual DXGI_FORMAT GetIndexFormat() override { return DXGI_FORMAT_R32_UINT; }
@@ -31,14 +29,14 @@ public:
 	virtual std::vector<UINT> GetOffsets() = 0;
 
 public:
-	virtual void Initialize() override;
+	virtual void Initialize();
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") = 0;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 
 protected:
-	void SerializeBaseMeshData(FILE* FileIn);
-	void DeserializeBaseMeshData(FILE* FileIn);
+	virtual void SerializeBaseMeshData(FILE* FileIn);
+	virtual void DeserializeBaseMeshData(FILE* FileIn);
 };
 

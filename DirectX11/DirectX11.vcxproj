@@ -142,9 +142,13 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
+    <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="ARenderer.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
     <ClCompile Include="ATextureAsset.cpp" />
+    <ClCompile Include="BaseCubeMeshAsset.cpp" />
+    <ClCompile Include="BaseMeshAsset.cpp" />
+    <ClCompile Include="BaseSphereMeshAsset.cpp" />
     <ClCompile Include="DDSTextureAsset.cpp" />
     <ClCompile Include="DefaultController.cpp" />
     <ClCompile Include="EditorPawn.cpp" />
@@ -165,6 +169,7 @@
     <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="EnvironmentActor.cpp" />
     <ClCompile Include="Externals\DDSTextureLoader\DDSTextureLoader11.cpp" />
     <ClCompile Include="Externals\imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp" />
@@ -182,6 +187,7 @@
     <ClCompile Include="MapAsset.cpp" />
     <ClCompile Include="MaterialAsset.cpp" />
     <ClCompile Include="MeshObjectInformationDrawer.cpp" />
+    <ClCompile Include="ModelHelper.cpp" />
     <ClCompile Include="ModelOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
     <ClCompile Include="ModelDetailWindow.cpp" />
@@ -213,8 +219,12 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="AddAttachableObjectHelper.h" />
     <ClInclude Include="AddPlaceableObjectHelper.h" />
+    <ClInclude Include="ANBTMeshAsset.h" />
     <ClInclude Include="AScratchTextureAsset.h" />
     <ClInclude Include="ATextureAsset.h" />
+    <ClInclude Include="BaseCubeMeshAsset.h" />
+    <ClInclude Include="BaseMeshAsset.h" />
+    <ClInclude Include="BaseSphereMeshAsset.h" />
     <ClInclude Include="DDSTextureAsset.h" />
     <ClInclude Include="DefaultController.h" />
     <ClInclude Include="DefineInput.h" />
@@ -235,6 +245,7 @@
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="EditorCamera.h" />
+    <ClInclude Include="EnvironmentActor.h" />
     <ClInclude Include="Externals\DDSTextureLoader\DDSTextureLoader11.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_dx11.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_win32.h" />
@@ -251,6 +262,7 @@
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="AObject.h" />
     <ClInclude Include="MaterialAsset.h" />
+    <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="InputEventManager.h" />
     <ClInclude Include="IUpdatable.h" />

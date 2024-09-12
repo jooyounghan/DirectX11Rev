@@ -58,7 +58,7 @@ void Bone::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 }
 
 BoneAsset::BoneAsset(const std::string& AssetNameIn, bool LoadAsFile)
-	: AAssetFile(LoadAsFile ? AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::Bone)] : AssetNameIn, EAssetType::Bone)
+	: AAssetFile(LoadAsFile ? AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Bone)] : AssetNameIn, EAssetType::Bone)
 {
 }
 

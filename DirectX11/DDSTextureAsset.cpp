@@ -21,7 +21,7 @@ DDSTextureAsset::DDSTextureAsset(
 	const DirectX::TexMetadata& metaData
 )
 	: AScratchTextureAsset(
-		AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::DDSTexture)], 
+		AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::DDSTexture)], 
 		EAssetType::DDSTexture, scratch, metaData
 	)
 {
@@ -31,26 +31,30 @@ DDSTextureAsset::DDSTextureAsset(
 	ArraySize = metaData.arraySize;
 
 	vector<uint8_t*> ImageBufferPerArray;
+	std::vector<size_t> RowPitches;
 	for (size_t ArrayIdx = 0; ArrayIdx < ArraySize; ++ArrayIdx)
 	{
 		const Image* img = scratch.GetImage(0, ArrayIdx, 0);
 		ImageBufferPerArray.push_back(img->pixels);
+		RowPitches.push_back(img->rowPitch);
 		OriginalSizePerArray.push_back(img->rowPitch * img->height);
 	}
 	CompressedSizePerArray.resize(ArraySize);
 
-	CreateTexture(ImageBufferPerArray);
+	CreateTexture(ImageBufferPerArray, RowPitches);
 	CompressedBufferPerArray = CompressDataArray(ImageBufferPerArray, OriginalSizePerArray, CompressedSizePerArray);
 }
 
 void DDSTextureAsset::CreateTexture(
-	const std::vector<uint8_t*>& ImageBufferPerArray
+	const std::vector<uint8_t*>& ImageBufferPerArray,
+	const std::vector<size_t>& RowPitches
 )
 {
 	ID3D11DeviceContext* DeviceContext = App::GGraphicPipeline->GetDeviceContext();
 
 	D3D11_TEXTURE2D_DESC Texture2DDesc = CreateTexture2D(
-		ImageBufferPerArray, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
+		ImageBufferPerArray, RowPitches,
+		D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
 		NULL, D3D11_RESOURCE_MISC_GENERATE_MIPS | D3D11_RESOURCE_MISC_TEXTURECUBE,
 		D3D11_USAGE_DEFAULT
 	);

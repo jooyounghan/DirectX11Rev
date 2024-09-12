@@ -25,7 +25,7 @@ void MeshObjectInformationDrawer::DrawInformation()
     const std::unordered_map<std::string, std::shared_ptr<StaticMeshAsset>>& ManagingStaticMeshes = AssetManagerCached->GetManagingStaticMeshes();
     const std::unordered_map<std::string, std::shared_ptr<SkeletalMeshAsset>>& ManagingSkeletalMeshes = AssetManagerCached->GetManagingSkeletalMeshes();
 
-    const shared_ptr<AMeshAsset>& MeshAssetInstance = ObjectCached->GetMeshAssetInstance();
+    const AMeshAsset* MeshAssetInstance = ObjectCached->GetMeshAssetInstance();
 
     ImGui::ColorButton("TEST", UIColor::GBlack, NULL, UISize::FileSize);
     //Image(nullptr, UISize::FileSize);

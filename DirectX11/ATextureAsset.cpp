@@ -9,6 +9,7 @@ using namespace DirectX;
 
 D3D11_TEXTURE2D_DESC ATextureAsset::CreateTexture2D(
 	const std::vector<uint8_t*>& ImageBufferPerArray, 
+	const vector<size_t>& RowPitches,
 	const UINT/*D3D11_BIND_FLAG*/& BindFlagIn,
 	const UINT/*D3D11_CPU_ACCESS_FLAG*/& CPUAccessFlagIn, 
 	const UINT/*D3D11_RESOURCE_MISC_FLAG*/& MiscFlagIn,
@@ -22,7 +23,7 @@ D3D11_TEXTURE2D_DESC ATextureAsset::CreateTexture2D(
 	AutoZeroMemory(Texture2DDesc);
 	Texture2DDesc.Width = Width;
 	Texture2DDesc.Height = Height;
-	Texture2DDesc.ArraySize = ArraySize;
+	Texture2DDesc.ArraySize = static_cast<UINT>(ArraySize);
 	Texture2DDesc.MipLevels = 0;
 	Texture2DDesc.BindFlags = BindFlagIn;
 	Texture2DDesc.CPUAccessFlags = CPUAccessFlagIn;
@@ -34,12 +35,12 @@ D3D11_TEXTURE2D_DESC ATextureAsset::CreateTexture2D(
 	AssertIfFailed(Device->CreateTexture2D(&Texture2DDesc, NULL, Texture2D.GetAddressOf()));
 
 	Texture2D->GetDesc(&Texture2DDesc);
-	for (size_t idx = 0; idx < ImageBufferPerArray.size(); ++idx)
+	for (size_t ArrayIdx = 0; ArrayIdx < ImageBufferPerArray.size(); ++ArrayIdx)
 	{
-		const uint8_t* ImageBuffer = ImageBufferPerArray[idx];
+		const uint8_t* ImageBuffer = ImageBufferPerArray[ArrayIdx];
 		DeviceContext->UpdateSubresource(
-			Texture2D.Get(), D3D11CalcSubresource(0, idx, Texture2DDesc.MipLevels), nullptr, 
-			ImageBuffer, Format == DXGI_FORMAT_R8G8B8A8_UNORM ? Width * 4 : Width * 8, NULL
+			Texture2D.Get(), D3D11CalcSubresource(0, static_cast<UINT>(ArrayIdx), Texture2DDesc.MipLevels), nullptr,
+			ImageBuffer, RowPitches[ArrayIdx], NULL
 		);
 	}
 
@@ -119,12 +120,14 @@ void ATextureAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 
 	vector<vector<uint8_t>> DecompressedBufferPerArray = DecompressDataArray(vCompressedBufferPerArray, CompressedSizePerArray, OriginalSizePerArray);
 	vector<uint8_t*> vDecompressedBufferPerArray;
+	vector<size_t> RowPitches;
 	for (vector<uint8_t>& DecompressedBuffer : DecompressedBufferPerArray)
 	{
 		vDecompressedBufferPerArray.push_back(DecompressedBuffer.data());
+		RowPitches.push_back(DecompressedBuffer.size() / Height);
 	}
 
-	CreateTexture(vDecompressedBufferPerArray);
+	CreateTexture(vDecompressedBufferPerArray, RowPitches);
 
 	DecompressedBufferPerArray.clear();
 }

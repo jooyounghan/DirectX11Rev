@@ -29,7 +29,7 @@ MapAsset::MapAsset(
 )
 	: 
 	AssetManagerCached(AssetManagerIn),
-	AAssetFile(LoadAsFile ? MapNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::Map)] : MapNameIn, EAssetType::Map)
+	AAssetFile(LoadAsFile ? MapNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Map)] : MapNameIn, EAssetType::Map)
 {
 }
 

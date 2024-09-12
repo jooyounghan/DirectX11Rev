@@ -35,7 +35,7 @@ std::shared_ptr<Debugable> BoundingFrustumObject::CreateDebugFrustumObject(ID3D1
 {
     shared_ptr<Debugable> Result = make_shared<Debugable>(DeviceIn);
 
-    std::vector<DebugVertex>& VerticesIn = Result->Vertices;
+    std::vector<XMFLOAT3>& VerticesIn = Result->Vertices;
     std::vector<uint16_t>& IndicesIn = Result->Indices;
 
     VerticesIn.emplace_back(XMFLOAT3{ -1.0f, -1.0f, 0.0f });

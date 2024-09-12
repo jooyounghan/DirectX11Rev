@@ -24,7 +24,7 @@ protected:
 
 protected:
 	std::shared_ptr<AMeshAsset> MeshAssetInstance = nullptr;
-	MakeSetterGetter(MeshAssetInstance);
+	MakeSmartPtrSetterGetter(MeshAssetInstance);
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

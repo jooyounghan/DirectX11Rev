@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <wrl/client.h>
 #include <d3d11.h>
+#include <unordered_map>
 #include <memory>
 
 enum class EAssetType
@@ -11,6 +12,7 @@ enum class EAssetType
 	None,
 
 	// Mesh
+	BaseMesh,
 	StaticMesh,
 	SkeletalMesh,
 
@@ -32,32 +34,6 @@ enum class EAssetType
 	NumAssetType
 };
 
-constexpr size_t GetAssetTypeAsIndex(EAssetType AssetType) { return static_cast<size_t>(AssetType); }
-
-constexpr const char* AssetSuffix[GetAssetTypeAsIndex(EAssetType::NumAssetType)] =
-{
-	"",
-
-	// Mesh
-	"_StaticMesh",
-	"_SkeletalMesh",
-
-	// Bone
-	"_Bone",
-
-	// Map
-	"_Map",
-
-	// Material
-	"_Material",
-	"_NormalTexture",
-	"_EXRTexture",
-	"_DDSTexture",
-
-	// Animation
-	"_Animation"
-};
-
 constexpr const char* AssetOutPath = ".\\Assets\\";
 constexpr const char* MapAssetOutPath = ".\\Assets\\Maps\\";
 constexpr const char* AssetExtension = ".Asset";
@@ -73,6 +49,10 @@ protected:
 	EAssetType AssetType;
 	MakeGetter(AssetName);
 	MakeGetter(AssetType);
+
+public:
+	static std::unordered_map<EAssetType, std::string> AssetTypeToSuffix;
+	static std::unordered_map<std::string, EAssetType> AssetSuffixToType;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> ThumbnailTexture2D;

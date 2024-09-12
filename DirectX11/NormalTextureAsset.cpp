@@ -22,7 +22,7 @@ NormalTextureAsset::NormalTextureAsset(
 	const UINT& WidthIn, 
 	const UINT& HeightIn
 )
-	: ATextureAsset(AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::NormalTexture)], EAssetType::NormalTexture)
+	: ATextureAsset(AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::NormalTexture)], EAssetType::NormalTexture)
 {
 	Width = WidthIn;
 	Height = HeightIn;
@@ -33,7 +33,8 @@ NormalTextureAsset::NormalTextureAsset(
 	CompressedSizePerArray.resize(ArraySize);
 
 	vector<uint8_t*> ImageBufferPerArray{ ImageBufferIn };
-	CreateTexture(ImageBufferPerArray);
+	vector<size_t> RowPitches{ Width * 4 };
+	CreateTexture(ImageBufferPerArray, RowPitches);
 
 	CompressedBufferPerArray = CompressDataArray(ImageBufferPerArray, OriginalSizePerArray, CompressedSizePerArray);
 }
@@ -43,11 +44,13 @@ NormalTextureAsset::~NormalTextureAsset()
 }
 
 void NormalTextureAsset::CreateTexture(
-	const std::vector<uint8_t*>& ImageBufferPerArray
+	const std::vector<uint8_t*>& ImageBufferPerArray,
+	const std::vector<size_t>& RowPitches
 )
 {
 	D3D11_TEXTURE2D_DESC Texture2DDesc = CreateTexture2D(
-		ImageBufferPerArray, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
+		ImageBufferPerArray, RowPitches, 
+		D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
 		NULL, D3D11_RESOURCE_MISC_GENERATE_MIPS, D3D11_USAGE_DEFAULT
 	);
 

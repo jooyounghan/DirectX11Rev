@@ -126,42 +126,47 @@ void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& V
     ImGuiStyle& Style = ImGui::GetStyle();
     const path& EntryFileName = AssetPathIn.filename();
 
-    const string AssetName = EntryFileName.stem().string();
-    AAssetFile* AssetFile =  AssetManagerCached->GetManagingAsset(AssetName);
+    const string CurrentAssetName = EntryFileName.stem().string();
+    const string CurrentAssetExtension = EntryFileName.extension().string();
 
-    if (AssetFile != nullptr)
+    if (CurrentAssetExtension == AssetExtension)
     {
-        ImGui::PushID(EntryFileName.c_str());
-        ImGui::BeginGroup();
+        AAssetFile* AssetFile = AssetManagerCached->GetManagingAsset(CurrentAssetName);
 
-        EAssetType AssetType = AssetFile->GetAssetType();
-        switch (AssetType)
+        if (AssetFile != nullptr)
         {
-        case EAssetType::NormalTexture:
-        case EAssetType::EXRTexture:
-            Image(AssetFile->GetThumbnailSRV(), UISize::FileSize);
-            break;
-        default:
-            ColorButton("NULL", UIColor::GBlack, NULL, UISize::FileSize);
-            break;
+            ImGui::PushID(EntryFileName.c_str());
+            ImGui::BeginGroup();
+
+            EAssetType AssetType = AssetFile->GetAssetType();
+            switch (AssetType)
+            {
+            case EAssetType::NormalTexture:
+            case EAssetType::EXRTexture:
+                Image(AssetFile->GetThumbnailSRV(), UISize::FileSize);
+                break;
+            default:
+                Image(nullptr, UISize::FileSize);
+                break;
+            }
+
+            ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + UISize::FileSize.x);
+            ImGui::Text(EntryFileName.string().c_str());
+            ImGui::PopTextWrapPos();
+            ImGui::EndGroup();
+            ImGui::PopID();
+
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                ImGui::SetDragDropPayload(DragDrop::GAsset, &AssetFile, sizeof(AAssetFile*));
+                ImGui::Text("%s", CurrentAssetName.c_str());
+                ImGui::EndDragDropSource();
+            }
+
+            float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
+            float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
+            if (NextStartWidthPos < VisibleWidthIn) ImGui::SameLine();
         }
-
-        ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + UISize::FileSize.x);
-        ImGui::Text(EntryFileName.string().c_str());
-        ImGui::PopTextWrapPos();
-        ImGui::EndGroup();
-        ImGui::PopID();
-
-        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
-        {
-            ImGui::SetDragDropPayload(DragDrop::GAsset, &AssetFile, sizeof(AAssetFile*));
-            ImGui::Text("%s", AssetName.c_str());
-            ImGui::EndDragDropSource();
-        }
-
-        float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
-        float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
-        if (NextStartWidthPos < VisibleWidthIn) ImGui::SameLine();
     }
 }
 

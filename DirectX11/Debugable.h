@@ -4,23 +4,7 @@
 #include "UploadBuffer.h"
 #include "DefineType.h"
 
-enum class EDebugObjectType
-{
-	DEBUG_SPHERE,
-	DEBUG_BOX,
-	DEBUG_CAPSULE,
-	NUM_DEBUG_OBJECT
-};
-
-constexpr size_t GetDebugObjectTypeAsIndex(EDebugObjectType DebugObjectType) { return static_cast<size_t>(DebugObjectType); }
-constexpr EDebugObjectType GetIndexAsDebugObjectType(size_t DebugIndex) { return static_cast<EDebugObjectType>(DebugIndex); }
-
-struct DebugVertex
-{
-	DirectX::XMFLOAT3 RelativePosition;
-};
-
-class Debugable : public AIndexable<uint16_t>, public Vertexable<DebugVertex>
+class Debugable : public AIndexable<uint16_t>, public Vertexable<DirectX::XMFLOAT3>
 {
 public:
 	Debugable(ID3D11Device* DeviceIn);

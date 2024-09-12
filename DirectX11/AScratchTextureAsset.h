@@ -19,7 +19,8 @@ public:
 
 private:
 	virtual void CreateTexture(
-		const std::vector<uint8_t*>& ImageBufferPerArray
+		const std::vector<uint8_t*>& ImageBufferPerArray,
+		const std::vector<size_t>& RowPitches
 	) = 0;
 
 public:

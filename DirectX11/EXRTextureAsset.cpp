@@ -20,7 +20,7 @@ EXRTextureAsset::EXRTextureAsset(
 	const TexMetadata& metaData
 )
 	: AScratchTextureAsset(
-		AssetNameIn + AssetSuffix[GetAssetTypeAsIndex(EAssetType::EXRTexture)], 
+		AssetNameIn + AAssetFile::AssetTypeToSuffix[EAssetType::EXRTexture], 
 		EAssetType::EXRTexture, scratch, metaData
 	)
 {	
@@ -30,26 +30,30 @@ EXRTextureAsset::EXRTextureAsset(
 	ArraySize = metaData.arraySize;
 
 	vector<uint8_t*> ImageBufferPerArray;
+	vector<size_t> RowPitches;
+
 	for (size_t ArrayIdx = 0; ArrayIdx < ArraySize; ++ArrayIdx)
 	{
 		const Image* img = scratch.GetImage(0, ArrayIdx, 0);
 		ImageBufferPerArray.push_back(img->pixels);
+		RowPitches.push_back(img->rowPitch);
 		OriginalSizePerArray.push_back(img->rowPitch * img->height);
 	}
 	CompressedSizePerArray.resize(ArraySize);
 
-	CreateTexture(ImageBufferPerArray);
+	CreateTexture(ImageBufferPerArray, RowPitches);
 	CompressedBufferPerArray = CompressDataArray(ImageBufferPerArray, OriginalSizePerArray, CompressedSizePerArray);
 }
 
 void EXRTextureAsset::CreateTexture(
-	const std::vector<uint8_t*>& ImageBufferPerArray
+	const std::vector<uint8_t*>& ImageBufferPerArray,
+	const std::vector<size_t>& RowPitches
 )
 {
 	ID3D11DeviceContext* DeviceContext = App::GGraphicPipeline->GetDeviceContext();
 
 	D3D11_TEXTURE2D_DESC Texture2DDesc = CreateTexture2D(
-		ImageBufferPerArray,
+		ImageBufferPerArray, RowPitches,
 		D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
 		NULL,
 		D3D11_RESOURCE_MISC_GENERATE_MIPS,

@@ -3,6 +3,56 @@
 
 using namespace std;
 
+unordered_map<EAssetType, string> AAssetFile::AssetTypeToSuffix
+{
+	{ EAssetType::None,				"" },
+
+	// Mesh
+	{ EAssetType::BaseMesh,			"_BaseMesh"},
+	{ EAssetType::StaticMesh,		"_StaticMesh"},
+	{ EAssetType::SkeletalMesh,		"_SkeletalMesh" },
+
+	// Bone
+	{ EAssetType::Bone,				"_Bone" },
+
+	// Map
+	{ EAssetType::Map,				"_Map" },
+
+	// Material
+	{ EAssetType::Material,			"_Material" },
+	{ EAssetType::NormalTexture,	"_NormalTexture" },
+	{ EAssetType::EXRTexture,		"_EXRTexture" },
+	{ EAssetType::DDSTexture,		"_DDSTexture" },
+
+	// Animation
+	{ EAssetType::Animation,		"_Animation"}
+};
+
+unordered_map<string, EAssetType> AAssetFile::AssetSuffixToType
+{
+	{ "", EAssetType::None },
+
+	// Mesh
+	{ "_BaseMesh", EAssetType::BaseMesh },
+	{ "_StaticMesh", EAssetType::StaticMesh },
+	{ "_SkeletalMesh" , EAssetType::SkeletalMesh },
+
+	// Bone
+	{ "_Bone", EAssetType::Bone },
+
+	// Map
+	{ "_Map", EAssetType::Map },
+
+	// Material
+	{ "_Material", EAssetType::Material },
+	{ "_NormalTexture", EAssetType::NormalTexture },
+	{ "_EXRTexture", EAssetType::EXRTexture },
+	{ "_DDSTexture", EAssetType::DDSTexture },
+
+	// Animation
+	{ "_Animation", EAssetType::Animation }
+};
+
 AAssetFile::AAssetFile(
 	const string& AssetNameIn, EAssetType AssetTypeIn
 )

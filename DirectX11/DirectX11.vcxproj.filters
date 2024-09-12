@@ -256,6 +256,18 @@
     <Filter Include="Externals\DDSTextureLoader">
       <UniqueIdentifier>{161dbda4-e877-4e45-8c0b-47435a5f4b3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Asset\Mesh\NBTMesh">
+      <UniqueIdentifier>{8dca9185-0fd9-48ba-b3fe-2f512271dd93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset\Mesh\BaseMesh">
+      <UniqueIdentifier>{55f0060e-6454-4612-a3d5-c658a329a27f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Asset\Mesh\NBTMesh">
+      <UniqueIdentifier>{c2785752-724e-4f0c-b88d-0683d06b4264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Mesh\BaseMesh">
+      <UniqueIdentifier>{055d0c8a-e674-42b7-992b-7d0775eecd1b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -274,12 +286,6 @@
       <Filter>소스 파일\Asset\Bone</Filter>
     </ClCompile>
     <ClCompile Include="AMeshAsset.cpp">
-      <Filter>소스 파일\Asset\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="SkeletalMeshAsset.cpp">
-      <Filter>소스 파일\Asset\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="StaticMeshAsset.cpp">
       <Filter>소스 파일\Asset\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="NormalTextureAsset.cpp">
@@ -387,9 +393,6 @@
     <ClCompile Include="PickingIDWireframeRenderer.cpp">
       <Filter>소스 파일\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="EditorPawn.cpp">
-      <Filter>소스 파일\Object\Placeable\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="ModelDetailWindow.cpp">
       <Filter>소스 파일\World\Editor\GUI\Window</Filter>
     </ClCompile>
@@ -456,17 +459,44 @@
     <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp">
       <Filter>Externals\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="DDSTextureAsset.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ATextureAsset.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Externals\DDSTextureLoader\DDSTextureLoader11.cpp">
       <Filter>Externals\DDSTextureLoader</Filter>
     </ClCompile>
+    <ClCompile Include="ATextureAsset.cpp">
+      <Filter>소스 파일\Asset\Texture</Filter>
+    </ClCompile>
     <ClCompile Include="AScratchTextureAsset.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureAsset.cpp">
+      <Filter>소스 파일\Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorPawn.cpp">
+      <Filter>소스 파일\Object\Placeable\Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentActor.cpp">
+      <Filter>소스 파일\Object\Placeable\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="ANBTMeshAsset.cpp">
+      <Filter>소스 파일\Asset\Mesh\NBTMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseSphereMeshAsset.cpp">
+      <Filter>소스 파일\Asset\Mesh\BaseMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshAsset.cpp">
+      <Filter>소스 파일\Asset\Mesh\NBTMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshAsset.cpp">
+      <Filter>소스 파일\Asset\Mesh\NBTMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseCubeMeshAsset.cpp">
+      <Filter>소스 파일\Asset\Mesh\BaseMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMeshAsset.cpp">
+      <Filter>소스 파일\Asset\Mesh\BaseMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelHelper.cpp">
+      <Filter>소스 파일\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -480,12 +510,6 @@
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="AMeshAsset.h">
-      <Filter>헤더 파일\Asset\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticMeshAsset.h">
-      <Filter>헤더 파일\Asset\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="SkeletalMeshAsset.h">
       <Filter>헤더 파일\Asset\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="NormalTextureAsset.h">
@@ -644,9 +668,6 @@
     <ClInclude Include="PickingIDWireframeRenderer.h">
       <Filter>헤더 파일\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="EditorPawn.h">
-      <Filter>헤더 파일\Object\Placeable\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="ModelDetailWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
     </ClInclude>
@@ -740,17 +761,44 @@
     <ClInclude Include="Externals\imgui\imgui_impl_win32.h">
       <Filter>Externals\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="DDSTextureAsset.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ATextureAsset.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Externals\DDSTextureLoader\DDSTextureLoader11.h">
       <Filter>Externals\DDSTextureLoader</Filter>
     </ClInclude>
     <ClInclude Include="AScratchTextureAsset.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="ATextureAsset.h">
+      <Filter>헤더 파일\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureAsset.h">
+      <Filter>헤더 파일\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorPawn.h">
+      <Filter>헤더 파일\Object\Placeable\Pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentActor.h">
+      <Filter>헤더 파일\Object\Placeable\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="ANBTMeshAsset.h">
+      <Filter>헤더 파일\Asset\Mesh\NBTMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshAsset.h">
+      <Filter>헤더 파일\Asset\Mesh\NBTMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshAsset.h">
+      <Filter>헤더 파일\Asset\Mesh\NBTMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseSphereMeshAsset.h">
+      <Filter>헤더 파일\Asset\Mesh\BaseMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMeshAsset.h">
+      <Filter>헤더 파일\Asset\Mesh\BaseMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseCubeMeshAsset.h">
+      <Filter>헤더 파일\Asset\Mesh\BaseMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelHelper.h">
+      <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

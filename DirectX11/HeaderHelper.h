@@ -29,5 +29,10 @@ public:																								\
 	MakeSetter(Variable)																			
 
 #define MakeSmartPtrSetterGetter(Variable)															\
-	MakeSmartPtrGetter(Variable)																			\
-	MakeSetter(Variable)										
+	MakeSmartPtrGetter(Variable)																	\
+	MakeSetter(Variable)
+
+#define MakeSingleton(ClassName)															\
+private:																					\
+	ClassName(const ClassName&) = delete;													\
+	ClassName(ClassName&&) = delete;														

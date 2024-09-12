@@ -7,6 +7,9 @@
 #include "Debugable.h"
 #include "CollisionVisitor.h"
 #include "IGuiModelVisitor.h"
+
+#include "ModelHelper.h"
+
 #include <limits>
 
 using namespace std;
@@ -56,32 +59,10 @@ shared_ptr<Debugable> OBBObject::CreateDebugBoxObject(ID3D11Device* DeviceIn)
 {
 	shared_ptr<Debugable> Result = make_shared<Debugable>(DeviceIn);
 
-	std::vector<DebugVertex>& VerticesIn = Result->Vertices;
+	std::vector<XMFLOAT3>& VerticesIn = Result->Vertices;
 	std::vector<uint16_t>& IndicesIn = Result->Indices;
 
-	VerticesIn.emplace_back(XMFLOAT3{ -1.0f, -1.0f, -1.0f });
-	VerticesIn.emplace_back(XMFLOAT3{ 1.0f, -1.0f, -1.0f });
-	VerticesIn.emplace_back(XMFLOAT3{ 1.0f,  1.0f, -1.0f });
-	VerticesIn.emplace_back(XMFLOAT3{ -1.0f,  1.0f, -1.0f });
-	VerticesIn.emplace_back(XMFLOAT3{ -1.0f, -1.0f,  1.0f });
-	VerticesIn.emplace_back(XMFLOAT3{ 1.0f, -1.0f,  1.0f });
-	VerticesIn.emplace_back(XMFLOAT3{ 1.0f,  1.0f,  1.0f });
-	VerticesIn.emplace_back(XMFLOAT3{ -1.0f,  1.0f,  1.0f });
-
-	IndicesIn = std::vector<uint16_t>{
-		// Front face
-		0, 2, 1, 0, 3, 2,
-		// Back face
-		4, 5, 6, 4, 6, 7,
-		// Bottom face
-		0, 1, 5, 0, 5, 4,
-		// Top face
-		3, 7, 6, 3, 6, 2,
-		// Left face
-		0, 4, 7, 0, 7, 3,
-		// Right face
-		1, 2, 6, 1, 6, 5
-	};
+	ModelHelper::CreateCube(&VerticesIn, nullptr, nullptr, &IndicesIn);
 
 	Result->Initialize();
 	return Result;
