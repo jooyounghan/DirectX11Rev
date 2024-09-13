@@ -4,7 +4,8 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 
-class Actor;
+class MeshObjectActor;
+class EnvironmentActor;
 class EditorPawn;
 
 class MeshObject;
@@ -17,7 +18,8 @@ class Viewable;
 class IGuiModelVisitor
 {
 public:
-	virtual void Visit(Actor* ActorInstance) = 0;
+	virtual void Visit(MeshObjectActor* MeshObjectActorInstance) = 0;
+	virtual void Visit(EnvironmentActor* EnvironmentActorInstance) = 0;
 	virtual void Visit(EditorPawn* EditorActorInstance) = 0;
 
 public:

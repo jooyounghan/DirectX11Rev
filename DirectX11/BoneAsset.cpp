@@ -28,7 +28,7 @@ void Bone::AddChildBone(Bone* ChildBone)
 	ChildrenBones.push_back(ChildBone);
 }
 
-void Bone::OnSerialize(FILE* FileIn)
+void Bone::OnSerializeFromMap(FILE* FileIn)
 {
 	// Bone Name
 	size_t BoneNameCount = BoneName.size();
@@ -42,7 +42,7 @@ void Bone::OnSerialize(FILE* FileIn)
 	fwrite(&(OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
 }
 
-void Bone::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void Bone::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	// Bone Name
 	size_t BoneNameCount;
@@ -124,7 +124,7 @@ void BoneAsset::Serialize(const std::string& OutputAdditionalPath)
 			size_t BoneNameCount = NameToBone.first.size();
 			fwrite(&BoneNameCount, sizeof(size_t), 1, OutputAssetFile);
 			fwrite(NameToBone.first.c_str(), sizeof(char), BoneNameCount, OutputAssetFile);
-			NameToBone.second.OnSerialize(OutputAssetFile);
+			NameToBone.second.OnSerializeFromMap(OutputAssetFile);
 		}
 
 		// Child - Parent Relation
@@ -166,7 +166,7 @@ void BoneAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 		fread(BoneName.data(), sizeof(char), BoneNameCount, FileIn);
 		NameToBones.emplace(BoneName, Bone());
 
-		NameToBones[BoneName].OnDeserialize(FileIn, AssetManagerIn);
+		NameToBones[BoneName].OnDeserializeToMap(FileIn, AssetManagerIn);
 	}
 
 	for (auto& NameToBone : NameToBones)

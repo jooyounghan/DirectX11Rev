@@ -10,6 +10,10 @@ PickingIDWireframeRenderer::PickingIDWireframeRenderer(PSOObject* PSOObjectIn)
 {
 }
 
+void PickingIDWireframeRenderer::Render(EnvironmentActor* EnvironmentActorIn)
+{
+}
+
 void PickingIDWireframeRenderer::Render(MeshObject* MeshObjectIn)
 {
 }

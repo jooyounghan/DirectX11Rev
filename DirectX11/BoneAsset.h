@@ -6,7 +6,7 @@
 #include <memory>
 #include <DirectXMath.h>
 
-class Bone : public IOnSerializable
+class Bone : public IOnSerializableMap
 {
 	friend class BoneAsset;
 
@@ -38,8 +38,8 @@ public:
 	void AddChildBone(Bone* ChildBone);
 
 public:
-	virtual void OnSerialize(FILE* FileIn) override;
-	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void OnSerializeFromMap(FILE* FileIn) override;
+	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 
 class BoneAsset : public AAssetFile

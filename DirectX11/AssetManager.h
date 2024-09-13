@@ -120,6 +120,10 @@ public:
 	std::shared_ptr<BoneAsset> GetManagingBone(const std::string MapAssetName);
 	std::shared_ptr<StaticMeshAsset> GetManagingStaticMesh(const std::string MapAssetName);
 	std::shared_ptr<SkeletalMeshAsset> GetManagingSkeletalMesh(const std::string MapAssetName);
+	std::shared_ptr<NormalTextureAsset> GetManagingNormalTexture(const std::string MapAssetName);
+	std::shared_ptr<EXRTextureAsset> GetManagingEXRTexture(const std::string MapAssetName);
+	std::shared_ptr<DDSTextureAsset> GetManagingDDSTexture(const std::string MapAssetName);
+	BaseMeshAsset* GetManagingBaseMesh(const std::string MapAssetName);
 
 private:
 	template<typename T> 

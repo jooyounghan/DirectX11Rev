@@ -51,8 +51,8 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
                 case EAttachableObjectKind::MESH_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<MeshObject>() :
-                        SelectedPlaced->AddAttachedObject<MeshObject>();
+                        SelectedAttached->AddAttachedObject<MeshObject>(nullptr) :
+                        SelectedPlaced->AddAttachedObject<MeshObject>(nullptr);
                     break;
                 }
                 case EAttachableObjectKind::BOUNDING_SPHERE_KIND:

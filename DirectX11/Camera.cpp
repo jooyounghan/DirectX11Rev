@@ -74,8 +74,8 @@ void Camera::Update(const float& DeltaTimeIn)
 
 void Camera::AcceptRenderer(ARenderer* Renderer)
 {
-	AAttachableObject::AcceptRenderer(Renderer);
 	Renderer->Render(CamearaFrustum.get());
+	AcceptChildrenRenderer(Renderer);
 }
 
 void Camera::CleanupLens()

@@ -1,4 +1,4 @@
-#include "SkeletalHeader.hlsli"
+#include "SkeletalAssetHeader.hlsli"
 
 cbuffer CameraViewProj : register(b0)
 {

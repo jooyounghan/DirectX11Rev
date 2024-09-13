@@ -3,7 +3,8 @@
 
 #include "GameWorld.h"
 
-#include "Actor.h"
+#include "MeshObjectActor.h"
+#include "EnvironmentActor.h"
 #include "EditorPawn.h"
 
 #include "MeshObject.h"
@@ -28,7 +29,7 @@ ModelDetailedInformationVisitor::ModelDetailedInformationVisitor(AssetManager* A
 {
 }
 
-void ModelDetailedInformationVisitor::Visit(Actor* ActorInstance)
+void ModelDetailedInformationVisitor::Visit(MeshObjectActor* ActorInstance)
 {
     PushID(ActorInstance->GetObjectID().c_str());
 
@@ -37,6 +38,16 @@ void ModelDetailedInformationVisitor::Visit(Actor* ActorInstance)
 
     MeshObjectInformationDrawer MeshObjectDrawer(ActorInstance->GetMeshObjectInstance(), AssetManagerCached);
     MeshObjectDrawer.DrawInformation();
+
+    PopID();
+}
+
+void ModelDetailedInformationVisitor::Visit(EnvironmentActor* EnvironmentActorInstance)
+{
+    PushID(EnvironmentActorInstance->GetObjectID().c_str());
+
+    TransformationInformationDrawer TransformDrawer(EnvironmentActorInstance, nullptr);
+    TransformDrawer.DrawInformation();
 
     PopID();
 }

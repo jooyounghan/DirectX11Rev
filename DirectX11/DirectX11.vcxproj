@@ -139,7 +139,7 @@
   <ItemGroup>
     <ClCompile Include="AAddObjectHelper.cpp" />
     <ClCompile Include="AController.cpp" />
-    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="AActor.cpp" />
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
     <ClCompile Include="ANBTMeshAsset.cpp" />
@@ -186,6 +186,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapAsset.cpp" />
     <ClCompile Include="MaterialAsset.cpp" />
+    <ClCompile Include="MeshObjectActor.cpp" />
     <ClCompile Include="MeshObjectInformationDrawer.cpp" />
     <ClCompile Include="ModelHelper.cpp" />
     <ClCompile Include="ModelOutlinerWindow.cpp" />
@@ -216,7 +217,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AController.h" />
-    <ClInclude Include="Actor.h" />
+    <ClInclude Include="AActor.h" />
     <ClInclude Include="AddAttachableObjectHelper.h" />
     <ClInclude Include="AddPlaceableObjectHelper.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
@@ -262,6 +263,7 @@
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="AObject.h" />
     <ClInclude Include="MaterialAsset.h" />
+    <ClInclude Include="MeshObjectActor.h" />
     <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="InputEventManager.h" />
@@ -317,11 +319,19 @@
     <ClInclude Include="ViewportWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\BoundingComponentPS.hlsl">
+    <FxCompile Include="Shaders\BoundingObjectPS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\EnvironmentActorPS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\EnvironmentActorVS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\PickingIDPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
@@ -335,25 +345,25 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shaders\StaticPS.hlsl">
+    <FxCompile Include="Shaders\StaticAssetPS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shaders\StaticVS.hlsl">
+    <FxCompile Include="Shaders\StaticAssetVS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shaders\SkeletalPS.hlsl">
+    <FxCompile Include="Shaders\SkeletalAssetPS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shaders\SkeletalVS.hlsl">
+    <FxCompile Include="Shaders\SkeletalAssetVS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -361,9 +371,10 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\EnvironmentActorHeader.hlsli" />
     <None Include="Shaders\PositionOnlyPathHeader.hlsli" />
-    <None Include="Shaders\StaticHeader.hlsli" />
-    <None Include="Shaders\SkeletalHeader.hlsli" />
+    <None Include="Shaders\StaticAssetHeader.hlsli" />
+    <None Include="Shaders\SkeletalAssetHeader.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

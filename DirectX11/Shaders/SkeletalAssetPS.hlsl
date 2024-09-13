@@ -1,4 +1,4 @@
-#include "SkeletalHeader.hlsli"
+#include "SkeletalAssetHeader.hlsli"
 
 Texture2D TestTexture : register(t0);
 TextureCube CubeTexture : register(t1);

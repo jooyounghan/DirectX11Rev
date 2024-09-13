@@ -1,4 +1,4 @@
-#include "StaticHeader.hlsli"
+#include "StaticAssetHeader.hlsli"
 
 float4 main(BasicVertexOutput Input) : SV_TARGET
 {

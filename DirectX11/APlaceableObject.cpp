@@ -170,7 +170,7 @@ void APlaceableObject::Update(const float& DeltaTimeIn)
 	}
 }
 
-void APlaceableObject::AcceptRenderer(ARenderer* Renderer)
+void APlaceableObject::AcceptChildrenRenderer(ARenderer* Renderer)
 {
 	for (auto& AtttachedChild : AttachedChildrenObjects)
 	{

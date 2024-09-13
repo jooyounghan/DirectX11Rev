@@ -7,6 +7,7 @@ public:
 	PickingIDSolidRenderer(PSOObject* PSOObjectIn);
 
 public:
+	virtual void Render(EnvironmentActor* EnvironmentActorIn) override;
 	virtual void Render(MeshObject* MeshObjectIn) override;
 	virtual void Render(ABoundingObject* MeshObjectIn) override;
 };

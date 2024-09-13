@@ -71,7 +71,7 @@ PSOManager::PSOManager()
     CreateVertexShader(L"./Shaders/PositionOnlyPathVS.hlsl", OnlyPositionInputElementDesc, 1, PositionOnlyPathVS, PostionOnlyInputLayout);
 
     ComPtr<ID3D11PixelShader>   BoundingComponentPS;
-    CreatePixelShader(L"./Shaders/BoundingComponentPS.hlsl", BoundingComponentPS);
+    CreatePixelShader(L"./Shaders/BoundingObjectPS.hlsl", BoundingComponentPS);
 
     PSOObjects[R8G8B8A8_BoundingComponent_Solid] = make_unique<PSOObject>(
         DeviceContext,
@@ -135,10 +135,10 @@ PSOManager::PSOManager()
         { "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 4, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
-    CreateVertexShader(L"./Shaders/StaticVS.hlsl", StaticMeshElementDescs, 5, StaticMeshVS, StaticMeshInputLayout);
+    CreateVertexShader(L"./Shaders/StaticAssetVS.hlsl", StaticMeshElementDescs, 5, StaticMeshVS, StaticMeshInputLayout);
 
     ComPtr<ID3D11PixelShader> StaticMeshPS;
-    CreatePixelShader(L"./Shaders/StaticPS.hlsl", StaticMeshPS);
+    CreatePixelShader(L"./Shaders/StaticAssetPS.hlsl", StaticMeshPS);
 
     PSOObjects[R8G8B8A8_Static_Solid] = make_unique<PSOObject>(
         DeviceContext,
@@ -186,10 +186,10 @@ PSOManager::PSOManager()
         { "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 6, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
-    CreateVertexShader(L"./Shaders/SkeletalVS.hlsl", SkeletalMeshInputElementDescs, 7, SkeletalMeshVS, SkeletalMeshInputLayout);
+    CreateVertexShader(L"./Shaders/SkeletalAssetVS.hlsl", SkeletalMeshInputElementDescs, 7, SkeletalMeshVS, SkeletalMeshInputLayout);
 
     ComPtr<ID3D11PixelShader> SkeletalMeshPS;
-    CreatePixelShader(L"./Shaders/SkeletalPS.hlsl", SkeletalMeshPS);
+    CreatePixelShader(L"./Shaders/SkeletalAssetPS.hlsl", SkeletalMeshPS);
 
     PSOObjects[R8G8B8A8_Skeletal_Solid] = make_unique<PSOObject>(
         DeviceContext,

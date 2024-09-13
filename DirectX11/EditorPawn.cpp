@@ -28,12 +28,12 @@ void EditorPawn::Update(const float& DeltaTimeIn)
     APlaceableObject::Update(DeltaTimeIn);
 }
 
-void EditorPawn::OnSerialize(FILE* FileIn)
+void EditorPawn::OnSerializeFromMap(FILE* FileIn)
 {
-    AObject::OnSerialize(FileIn);
+    AObject::OnSerializeFromMap(FileIn);
 }
 
-void EditorPawn::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void EditorPawn::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-    AObject::OnDeserialize(FileIn, AssetManagerIn);
+    AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
 }

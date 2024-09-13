@@ -26,11 +26,6 @@ void BoundingObjectRenderer::ResetRendering()
 	PSOObjectCached->ResetVSConstantBuffers(0, 1);
 }
 
-void BoundingObjectRenderer::Render(MeshObject* MeshObjectIn)
-{
-	// Do Nothing
-}
-
 void BoundingObjectRenderer::Render(ABoundingObject* MeshObjectIn)
 {
 	Debugable* DebugObject = MeshObjectIn->GetDebugObject();

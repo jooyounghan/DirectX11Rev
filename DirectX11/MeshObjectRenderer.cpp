@@ -56,8 +56,3 @@ void MeshObjectRenderer::Render(MeshObject* MeshObjectIn)
 		PSOObjectCached->ResetVSConstantBuffers(1, 1);
 	}
 }
-
-void MeshObjectRenderer::Render(ABoundingObject* MeshObjectIn)
-{
-	// Do Nothing
-}

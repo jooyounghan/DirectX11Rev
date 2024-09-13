@@ -24,7 +24,7 @@ struct TransformationMatrix
 	DirectX::XMMATRIX InvTransfomationMat;
 };
 
-class AObject : public IOnSerializable, public IUpdatable
+class AObject : public IOnSerializableMap, public IUpdatable
 {
 public:
 	AObject();
@@ -86,7 +86,11 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
 
 public:
-	virtual void OnSerialize(FILE* FileIn) override;
-	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void OnSerializeFromMap(FILE* FileIn) override;
+	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
+
+protected:
+	void SerializeString(const std::string& String, FILE* FileIn);
+	void DeserializeString(std::string& String, FILE* FileIn);
 };
 

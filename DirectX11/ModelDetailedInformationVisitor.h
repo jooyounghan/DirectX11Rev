@@ -14,7 +14,8 @@ protected:
 	AssetManager* AssetManagerCached;
 
 public:
-	virtual void Visit(Actor* ActorInstance) override;
+	virtual void Visit(MeshObjectActor* MeshObjectActorInstance) override;
+	virtual void Visit(EnvironmentActor* EnvironmentActorInstance) override;
 	virtual void Visit(EditorPawn* ActorInstance) override;
 
 public:

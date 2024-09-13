@@ -20,7 +20,8 @@ public:
 	virtual void ResetRendering() override;
 
 public:
+	virtual void Render(EnvironmentActor* EnvironmentActorIn) override { /*Do Nothing*/ };
 	virtual void Render(MeshObject* MeshObjectIn) override;
-	virtual void Render(ABoundingObject* MeshObjectIn) override;
+	virtual void Render(ABoundingObject* MeshObjectIn) override { /*Do Nothing*/ };
 };
 

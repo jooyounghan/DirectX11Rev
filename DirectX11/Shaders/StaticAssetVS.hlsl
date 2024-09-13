@@ -1,4 +1,4 @@
-#include "StaticHeader.hlsli"
+#include "StaticAssetHeader.hlsli"
 
 cbuffer ModelMatrix : register(b0)
 {

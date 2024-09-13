@@ -20,6 +20,7 @@ public:
 	virtual void ResetRendering() override final;
 
 public:
+	virtual void Render(EnvironmentActor* EnvironmentActorIn) = 0;
 	virtual void Render(MeshObject* MeshObjectIn) = 0;
 	virtual void Render(ABoundingObject* MeshObjectIn) = 0;
 };

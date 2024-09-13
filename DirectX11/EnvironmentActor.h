@@ -1,25 +1,37 @@
 #pragma once
-#include "Actor.h"
+#include "AActor.h"
 
-class BaseSphereMeshAsset;
+class BaseMeshAsset;
 class EXRTextureAsset;
 class DDSTextureAsset;
-class NormalTextureAsset;
 
-class EnvironmentActor : public Actor
+class EnvironmentActor : public AActor
 {
 public:
 	EnvironmentActor();
 	virtual ~EnvironmentActor();
 
 protected:
-	BaseSphereMeshAsset* EnvironmentMeshAsset;
+	BaseMeshAsset* EnvironmentMeshAsset = nullptr;
 	MakeSetterGetter(EnvironmentMeshAsset);
 
 protected:
-	std::shared_ptr<EXRTextureAsset> EnvironmentBackgroundEXRTextureAsset;
-	std::shared_ptr<DDSTextureAsset> EnvironmentSpecularDDSTextureAsset;
-	std::shared_ptr<DDSTextureAsset> EnvironmentDiffuseDDSTextureAsset;
-	std::shared_ptr<DDSTextureAsset> EnvironmentBRDFDDSTextureAsset;
+	std::shared_ptr<EXRTextureAsset> EnvironmentBackgroundEXRTextureAsset = nullptr;
+	std::shared_ptr<DDSTextureAsset> EnvironmentSpecularDDSTextureAsset = nullptr;
+	std::shared_ptr<DDSTextureAsset> EnvironmentDiffuseDDSTextureAsset = nullptr;
+	std::shared_ptr<DDSTextureAsset> EnvironmentBRDFDDSTextureAsset = nullptr;
+
+public:
+	virtual void AcceptRenderer(ARenderer* Renderer) override;
+	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
+
+public:
+	virtual void OnSerializeFromMap(FILE* FileIn) override;
+	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
+
+private:
+	template<typename T>
+	void AssetNameSerializeHelper(T AssetIn, FILE* FileIn);
+
 };
 

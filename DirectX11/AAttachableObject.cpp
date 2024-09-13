@@ -202,11 +202,11 @@ void AAttachableObject::Update(const float& DeltaTimeIn)
 	}
 }
 
-void AAttachableObject::AcceptRenderer(ARenderer* Renderer) 
+void AAttachableObject::AcceptChildrenRenderer(ARenderer* Renderer)
 {
-	for (auto& ChildObject : AttachedChildrenObjects)
+	for (auto& AtttachedChild : AttachedChildrenObjects)
 	{
-		ChildObject->AcceptRenderer(Renderer);
+		AtttachedChild->AcceptRenderer(Renderer);
 	}
 }
 

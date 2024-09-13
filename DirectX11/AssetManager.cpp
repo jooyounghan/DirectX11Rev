@@ -365,6 +365,26 @@ std::shared_ptr<SkeletalMeshAsset> AssetManager::GetManagingSkeletalMesh(const s
     return GetManagingAssetHelper(ManagingSkeletalMeshes, MapAssetName);
 }
 
+std::shared_ptr<NormalTextureAsset> AssetManager::GetManagingNormalTexture(const std::string MapAssetName)
+{
+    return GetManagingAssetHelper(ManagingNormalTextures, MapAssetName);
+}
+
+std::shared_ptr<EXRTextureAsset> AssetManager::GetManagingEXRTexture(const std::string MapAssetName)
+{
+    return GetManagingAssetHelper(ManagingEXRTextures, MapAssetName);
+}
+
+std::shared_ptr<DDSTextureAsset> AssetManager::GetManagingDDSTexture(const std::string MapAssetName)
+{
+    return GetManagingAssetHelper(ManagingDDSTextures, MapAssetName);
+}
+
+BaseMeshAsset* AssetManager::GetManagingBaseMesh(const std::string MapAssetName)
+{
+    return GetManagingAssetHelper(ManagingBaseMeshes, MapAssetName);
+}
+
 template<typename T>
 void AssetManager::AddToManagingContainer(
     unordered_map<string, T>& ManagingContainer, 
@@ -681,7 +701,7 @@ void AssetManager::PreloadAssets()
     if (!exists(AssetPath) && create_directories(AssetPath)) {/* Do Nothing But Make Directory */ };
     if (!exists(MapPath) && create_directories(MapPath)) {/* Do Nothing But Make Directory */ };
 
-    // TODO : Asset의 로딩 순서 결정하기
+    // TODO : 위상 정렬등을 활용하여 Asset의 로딩 순서 결정하기 
     for (const auto& entry : directory_iterator(AssetPath))
     {
         if (entry.is_regular_file())

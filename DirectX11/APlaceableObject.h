@@ -11,8 +11,9 @@
 enum EPlaceableObjectKind : int
 {
 	PLACABLE_NONE,
-	ACTOR_KIND,
-	PAWN_KIND,
+	MESH_ACTOR_KIND,
+	ENVIORNMENT_ACTOR_KIND,
+	EDITOR_PAWN_KIND,
 	CHARACTER_KIND,
 };
 
@@ -82,10 +83,11 @@ public:
 	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
-	virtual void AcceptRenderer(ARenderer* Renderer) override;
-
-public:
+	virtual void AcceptRenderer(ARenderer* Renderer) = 0;
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
+
+protected:
+	void AcceptChildrenRenderer(ARenderer* Renderer);
 
 public:
 	template<typename Attachment, typename ...Args>
@@ -98,8 +100,8 @@ private:
 	void RemoveFromIntersectables(AAttachableObject* AttachedObjectIn);
 
 public:
-	virtual void OnSerialize(FILE* FileIn) = 0;
-	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
+	virtual void OnSerializeFromMap(FILE* FileIn) = 0;
+	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };
 
 template<typename Attachment, typename ...Args>

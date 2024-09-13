@@ -268,6 +268,9 @@
     <Filter Include="헤더 파일\Asset\Mesh\BaseMesh">
       <UniqueIdentifier>{055d0c8a-e674-42b7-992b-7d0775eecd1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Environment">
+      <UniqueIdentifier>{602c7d87-9fcd-4fdb-a497-8e16d5991a0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -426,7 +429,7 @@
     <ClCompile Include="AController.cpp">
       <Filter>소스 파일\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="Actor.cpp">
+    <ClCompile Include="AActor.cpp">
       <Filter>소스 파일\Object\Placeable\Actor</Filter>
     </ClCompile>
     <ClCompile Include="APawn.cpp">
@@ -497,6 +500,9 @@
     </ClCompile>
     <ClCompile Include="ModelHelper.cpp">
       <Filter>소스 파일\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshObjectActor.cpp">
+      <Filter>소스 파일\Object\Placeable\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -704,7 +710,7 @@
     <ClInclude Include="AController.h">
       <Filter>헤더 파일\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="Actor.h">
+    <ClInclude Include="AActor.h">
       <Filter>헤더 파일\Object\Placeable\Actor</Filter>
     </ClInclude>
     <ClInclude Include="APawn.h">
@@ -800,21 +806,24 @@
     <ClInclude Include="ModelHelper.h">
       <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="MeshObjectActor.h">
+      <Filter>헤더 파일\Object\Placeable\Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\SkeletalPS.hlsl">
+    <FxCompile Include="Shaders\SkeletalAssetPS.hlsl">
       <Filter>Shader\SkeletalMesh</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SkeletalVS.hlsl">
+    <FxCompile Include="Shaders\SkeletalAssetVS.hlsl">
       <Filter>Shader\SkeletalMesh</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\StaticPS.hlsl">
+    <FxCompile Include="Shaders\StaticAssetPS.hlsl">
       <Filter>Shader\StaticMesh</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\StaticVS.hlsl">
+    <FxCompile Include="Shaders\StaticAssetVS.hlsl">
       <Filter>Shader\StaticMesh</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\BoundingComponentPS.hlsl">
+    <FxCompile Include="Shaders\BoundingObjectPS.hlsl">
       <Filter>Shader\PositionOnly</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PositionOnlyPathVS.hlsl">
@@ -823,16 +832,25 @@
     <FxCompile Include="Shaders\PickingIDPS.hlsl">
       <Filter>Shader\PositionOnly</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\EnvironmentActorPS.hlsl">
+      <Filter>Shader\Environment</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\EnvironmentActorVS.hlsl">
+      <Filter>Shader\Environment</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\SkeletalHeader.hlsli">
+    <None Include="Shaders\SkeletalAssetHeader.hlsli">
       <Filter>Shader\SkeletalMesh</Filter>
     </None>
-    <None Include="Shaders\StaticHeader.hlsli">
+    <None Include="Shaders\StaticAssetHeader.hlsli">
       <Filter>Shader\StaticMesh</Filter>
     </None>
     <None Include="Shaders\PositionOnlyPathHeader.hlsli">
       <Filter>Shader\PositionOnly</Filter>
+    </None>
+    <None Include="Shaders\EnvironmentActorHeader.hlsli">
+      <Filter>Shader\Environment</Filter>
     </None>
   </ItemGroup>
 </Project>

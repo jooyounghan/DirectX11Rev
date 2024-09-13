@@ -37,13 +37,11 @@ public:
 	virtual void Update(const float& DeltaTimeIn) override = 0;
 
 public:
-	virtual void AcceptRenderer(ARenderer* Renderer) override;
-
-public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
+	virtual void AcceptRenderer(ARenderer* Renderer) override final;
 
 public:
-	virtual void OnSerialize(FILE* FileIn) = 0;
-	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
+	virtual void OnSerializeFromMap(FILE* FileIn) = 0;
+	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };
 

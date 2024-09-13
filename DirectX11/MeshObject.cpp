@@ -14,27 +14,16 @@ using namespace std;
 const char* MeshObject::MeshObjectIdentifier = "Mesh Object";
 size_t MeshObject::MeshObjectCount = 0;
 
-MeshObject::MeshObject() 
-	: AAttachableObject()
-{
-	InitMeshObject();
-}
-
 MeshObject::MeshObject(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn)
 	: AAttachableObject(), MeshAssetInstance(MeshAssetInstanceIn)
-{
-	InitMeshObject();
-}
-
-MeshObject::~MeshObject()
-{
-}
-
-void MeshObject::InitMeshObject()
 {
 	MeshObjectCount++;
 	ObjectName = MeshObjectIdentifier + to_string(MeshObjectCount);
 	AttachableKind = EAttachableObjectKind::MESH_KIND;
+}
+
+MeshObject::~MeshObject()
+{
 }
 
 void MeshObject::Update(const float& DeltaTimeIn)
@@ -44,8 +33,8 @@ void MeshObject::Update(const float& DeltaTimeIn)
 
 void MeshObject::AcceptRenderer(ARenderer* Renderer)
 {
-	AAttachableObject::AcceptRenderer(Renderer);
 	Renderer->Render(this);
+	AcceptChildrenRenderer(Renderer);
 }
 
 void MeshObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
@@ -53,20 +42,16 @@ void MeshObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 	GuiVisitor->Visit(this);
 }
 
-void MeshObject::OnSerialize(FILE* FileIn)
+void MeshObject::OnSerializeFromMap(FILE* FileIn)
 {
-	AObject::OnSerialize(FileIn);
+	AObject::OnSerializeFromMap(FileIn);
 
 	// Mesh Asset Name
 	if (MeshAssetInstance != nullptr)
 	{
 		fwrite(&MeshAssetInstance->GetAssetType(), sizeof(EAssetType), 1, FileIn);
-
-		size_t MeshAssetNameCount = 0;
 		const string& AssetName = MeshAssetInstance->GetAssetName();
-		MeshAssetNameCount = AssetName.size();
-		fwrite(&MeshAssetNameCount, sizeof(size_t), 1, FileIn);
-		fwrite(AssetName.c_str(), sizeof(char), MeshAssetNameCount, FileIn);
+		SerializeString(AssetName, FileIn);
 	}
 	else
 	{
@@ -75,21 +60,17 @@ void MeshObject::OnSerialize(FILE* FileIn)
 	}
 }
 
-void MeshObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void MeshObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
 
 	EAssetType MeshAssetType;
 	fread(&MeshAssetType, sizeof(EAssetType), 1, FileIn);
 
 	if (MeshAssetType != EAssetType::None)
 	{
-		size_t MeshAssetNameCount;
-		fread(&MeshAssetNameCount, sizeof(size_t), 1, FileIn);
-
 		string MeshAssetName;
-		MeshAssetName.resize(MeshAssetNameCount);
-		fread(MeshAssetName.data(), sizeof(char), MeshAssetNameCount, FileIn);
+		DeserializeString(MeshAssetName, FileIn);
 
 		if (MeshAssetType == EAssetType::StaticMesh)
 		{

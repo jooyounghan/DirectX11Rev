@@ -33,12 +33,10 @@ void AObject::Update(const float& DeltaTimeIn)
 	TransformationBuffer.Upload(TempTransformation);
 }
 
-void AObject::OnSerialize(FILE* FileIn)
+void AObject::OnSerializeFromMap(FILE* FileIn)
 {
 	// Object Name
-	size_t PlaceableNameCount = ObjectName.size();
-	fwrite(&PlaceableNameCount, sizeof(size_t), 1, FileIn);
-	fwrite(ObjectName.c_str(), sizeof(char), PlaceableNameCount, FileIn);
+	SerializeString(ObjectName, FileIn);
 
 	// Transformation
 	fwrite(&RelativePosition, sizeof(XMFLOAT3), 1, FileIn);
@@ -46,16 +44,30 @@ void AObject::OnSerialize(FILE* FileIn)
 	fwrite(&RelativeScale, sizeof(XMFLOAT3), 1, FileIn);
 }
 
-void AObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void AObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	// Object Name
-	size_t PlaceableNameCount;
-	fread(&PlaceableNameCount, sizeof(size_t), 1, FileIn);
-	ObjectName.resize(PlaceableNameCount);
-	fread(ObjectName.data(), sizeof(char), PlaceableNameCount, FileIn);
+	DeserializeString(ObjectName, FileIn);
 
 	// Transformation
 	fread(&RelativePosition, sizeof(XMFLOAT3), 1, FileIn);
 	fread(&RelativeAngle, sizeof(XMFLOAT3), 1, FileIn);
 	fread(&RelativeScale, sizeof(XMFLOAT3), 1, FileIn);
+}
+
+void AObject::SerializeString(const std::string& String, FILE* FileIn)
+{
+	// Object Name
+	size_t NameCount = String.size();
+	fwrite(&NameCount, sizeof(size_t), 1, FileIn);
+	fwrite(String.c_str(), sizeof(char), NameCount, FileIn);
+}
+
+void AObject::DeserializeString(std::string& String, FILE* FileIn)
+{
+	// Object Name
+	size_t NameCount;
+	fread(&NameCount, sizeof(size_t), 1, FileIn);
+	String.resize(NameCount);
+	fread(String.data(), sizeof(char), NameCount, FileIn);
 }

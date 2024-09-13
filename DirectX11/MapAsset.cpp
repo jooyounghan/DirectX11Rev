@@ -9,8 +9,9 @@
 #include "AssetManager.h"
 #include "AMeshAsset.h"
 
-#include "Actor.h"
-#include "APawn.h"
+#include "MeshObjectActor.h"
+#include "EnvironmentActor.h"
+#include "EditorPawn.h"
 
 #include "MeshObject.h"
 #include "BoundingSphereObject.h"
@@ -38,9 +39,9 @@ MapAsset::~MapAsset()
 	Serialize();
 }
 
-void MapAsset::AddRenderObject(std::shared_ptr<AMeshAsset> MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
+void MapAsset::AddMeshObjectActor(std::shared_ptr<AMeshAsset> MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-	Actor* ta = PlaceableAddHelper<Actor>(MeshAssetIn);
+	MeshObjectActor* ta = PlaceableAddHelper<MeshObjectActor>(MeshAssetIn);
 	ta->RelativePosition.x = PosXIn;
 	ta->RelativePosition.y = PosYIn;
 	ta->RelativePosition.z = PosZIn;
@@ -124,7 +125,7 @@ void MapAsset::Serialize(const std::string& OutputAdditionalPath)
 				const EPlaceableObjectKind& PlaceableObjectKind = RootPlaceable->GetPlaceableKind();
 				fwrite(&PlaceableObjectKind, sizeof(EPlaceableObjectKind), 1, OutputAssetFile);
 
-				RootPlaceable->OnSerialize(OutputAssetFile);
+				RootPlaceable->OnSerializeFromMap(OutputAssetFile);
 
 				SerializeChildrenObjects(RootPlaceable.get(), OutputAssetFile);
 		}
@@ -147,17 +148,22 @@ void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 		{
 		case PLACABLE_NONE:
 			break;
-		case ACTOR_KIND:
+		case MESH_ACTOR_KIND:
 		{
-			Actor* AddedActor = PlaceableAddHelper<Actor>();
-			AddedActor->OnDeserialize(FileIn, AssetManagerIn);
+			MeshObjectActor* AddedActor = PlaceableAddHelper<MeshObjectActor>(nullptr);
+			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 			break;
 		}
-		case PAWN_KIND:
+		case ENVIORNMENT_ACTOR_KIND:
+		{
+
+			break;
+		}
+		case EDITOR_PAWN_KIND:
 		{
 			//APawn* AddedPawn = PlaceableAddHelper<APawn>();
-			//AddedPawn->OnDeserialize(FileIn, AssetManagerIn);
+			//AddedPawn->OnDeserializeToMap(FileIn, AssetManagerIn);
 			//DeserializeParentObject(AddedPawn, FileIn, AssetManagerIn);
 			//break;
 		}
@@ -182,7 +188,7 @@ void MapAsset::SerializeChildrenObjects(APlaceableObject* ChildPlaceableObjectIn
 		const EAttachableObjectKind& AttachedObjectKind = AttachedChild->GetAttachableKind();
 		fwrite(&AttachedObjectKind, sizeof(EAttachableObjectKind), 1, FileIn);
 
-		AttachedChild->OnSerialize(FileIn);
+		AttachedChild->OnSerializeFromMap(FileIn);
 
 		SerializeChildrenObjects(AttachedChild.get(), FileIn);
 	}
@@ -200,7 +206,7 @@ void MapAsset::SerializeChildrenObjects(AAttachableObject* ChildAttachableObject
 		const EAttachableObjectKind& AttachedObjectKind = AttachedChild->GetAttachableKind();
 		fwrite(&AttachedObjectKind, sizeof(EAttachableObjectKind), 1, FileIn);
 
-		AttachedChild->OnSerialize(FileIn);
+		AttachedChild->OnSerializeFromMap(FileIn);
 
 		SerializeChildrenObjects(AttachedChild.get(), FileIn);
 	}
@@ -229,7 +235,7 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 		case ATTACHABLE_NONE:
 			break;
 		case MESH_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<MeshObject>();
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<MeshObject>(nullptr);
 			break;
 		case BOUNDING_SPHERE_KIND:
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>();
@@ -245,7 +251,7 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 		}
 		if (AddedMeshObject != nullptr)
 		{
-			AddedMeshObject->OnDeserialize(FileIn, AssetManagerIn);
+			AddedMeshObject->OnDeserializeToMap(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedMeshObject, FileIn, AssetManagerIn);
 		}
 	}

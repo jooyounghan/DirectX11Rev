@@ -135,10 +135,10 @@ void BoundingFrustumObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
     GuiVisitor->Visit(this);
 }
 
-void BoundingFrustumObject::OnSerialize(FILE* FileIn)
+void BoundingFrustumObject::OnSerializeFromMap(FILE* FileIn)
 {
 }
 
-void BoundingFrustumObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void BoundingFrustumObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 }

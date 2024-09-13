@@ -1,10 +1,10 @@
 #pragma once
-#include "Actor.h"
+#include "MeshObjectActor.h"
 
 class AController;
 class InputEventManager;
 
-class APawn : public Actor
+class APawn : public MeshObjectActor
 {
 public:
 	APawn();
@@ -21,7 +21,7 @@ public:
 	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
-	virtual void OnSerialize(FILE* FileIn) override;
-	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void OnSerializeFromMap(FILE* FileIn) override;
+	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

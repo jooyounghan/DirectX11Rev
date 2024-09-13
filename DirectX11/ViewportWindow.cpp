@@ -91,7 +91,7 @@ void ViewportWindow::ManageAssetDrop()
                 {
                 case EAssetType::StaticMesh:
                 {
-                    CurrentMap->AddRenderObject(
+                    CurrentMap->AddMeshObjectActor(
                         AssetManagerCached->GetManagingStaticMesh(AssetFile->GetAssetName()),
                         PlacePositon.m128_f32[0],
                         PlacePositon.m128_f32[1],
@@ -101,7 +101,7 @@ void ViewportWindow::ManageAssetDrop()
                 }
                 case EAssetType::SkeletalMesh:
                 {
-                    CurrentMap->AddRenderObject(
+                    CurrentMap->AddMeshObjectActor(
                         AssetManagerCached->GetManagingSkeletalMesh(AssetFile->GetAssetName()),
                         PlacePositon.m128_f32[0],
                         PlacePositon.m128_f32[1],

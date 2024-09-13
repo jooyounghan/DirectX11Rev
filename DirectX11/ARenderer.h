@@ -3,7 +3,7 @@
 #include <list>
 
 class PSOObject;
-
+class EnvironmentActor;
 class MeshObject;
 class ABoundingObject;
 class MapAsset;
@@ -17,7 +17,7 @@ struct ID3D11DeviceContext;
 class ARenderer
 {
 public:
-	ARenderer(PSOObject* PSOObjectIn);;
+	ARenderer(PSOObject* PSOObjectIn);
 
 protected:
 	PSOObject* PSOObjectCached = nullptr;
@@ -35,6 +35,7 @@ public:
 	virtual void ResetRendering() = 0;
 
 public:
+	virtual void Render(EnvironmentActor* EnvironmentActorIn) = 0;
 	virtual void Render(MeshObject* MeshObjectIn) = 0;
 	virtual void Render(ABoundingObject* MeshObjectIn) = 0;
 };

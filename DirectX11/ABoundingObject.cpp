@@ -35,6 +35,6 @@ void ABoundingObject::SetCollisionColor()
 
 void ABoundingObject::AcceptRenderer(ARenderer* Renderer)
 {
-	AAttachableObject::AcceptRenderer(Renderer);
 	Renderer->Render(this);
+	AcceptChildrenRenderer(Renderer);
 }

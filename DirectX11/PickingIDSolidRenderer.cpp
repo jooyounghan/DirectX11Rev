@@ -12,6 +12,10 @@ PickingIDSolidRenderer::PickingIDSolidRenderer(PSOObject* PSOObjectIn)
 {
 }
 
+void PickingIDSolidRenderer::Render(EnvironmentActor* EnvironmentActorIn)
+{
+}
+
 void PickingIDSolidRenderer::Render(MeshObject* MeshObjectIn)
 {
 	AMeshAsset* MeshAssetInstance = MeshObjectIn->GetMeshAssetInstance();

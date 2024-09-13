@@ -59,7 +59,7 @@ protected:
 	MakeGetter(IdToPlaceables);
 
 public:
-	void AddRenderObject(std::shared_ptr<AMeshAsset> MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
+	void AddMeshObjectActor(std::shared_ptr<AMeshAsset> MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
 	void RenderMap(PSOManager* PSOManagerInstance);
 
 public:

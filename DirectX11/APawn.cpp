@@ -5,12 +5,12 @@
 using namespace std;
 
 APawn::APawn()
-	: Actor()
+	: MeshObjectActor(nullptr)
 {
 }
 
 APawn::APawn(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn)
-	: Actor(MeshAssetInstanceIn)
+	: MeshObjectActor(MeshAssetInstanceIn)
 {
 }
 
@@ -20,15 +20,15 @@ APawn::~APawn()
 
 void APawn::Update(const float& DeltaTimeIn)
 {
-	Actor::Update(DeltaTimeIn);
+	MeshObjectActor::Update(DeltaTimeIn);
 }
 
-void APawn::OnSerialize(FILE* FileIn)
+void APawn::OnSerializeFromMap(FILE* FileIn)
 {
-	Actor::OnSerialize(FileIn);
+	MeshObjectActor::OnSerializeFromMap(FileIn);
 }
 
-void APawn::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void APawn::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	Actor::OnDeserialize(FileIn, AssetManagerIn);
+	MeshObjectActor::OnDeserializeToMap(FileIn, AssetManagerIn);
 }
