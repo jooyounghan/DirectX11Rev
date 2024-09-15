@@ -13,8 +13,7 @@
 #include <string>
 
 class GraphicsPipeline;
-class PSOObject;
-class ARenderer;
+class APSOObject;
 class IGuiTopLevelVisitor;
 class IGuiModelVisitor;
 
@@ -53,6 +52,10 @@ protected:
 protected:
 	ID3D11DeviceContext* DeviceContextCached = nullptr;
 
+protected:
+	bool IsRenderable = true;
+	MakeSetterGetter(IsRenderable);
+
 public:
 	UploadBuffer<TransformationMatrix> TransformationBuffer;
 
@@ -78,9 +81,7 @@ public:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
-
-public:
-	virtual void AcceptRenderer(ARenderer* Renderer) = 0;
+	virtual void UpdateRenderable(const bool& RenderableFlag) = 0;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;

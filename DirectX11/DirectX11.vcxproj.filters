@@ -148,12 +148,6 @@
     <Filter Include="헤더 파일\PSO">
       <UniqueIdentifier>{d99c8647-eebb-41b7-bf4c-d84e12e08d5c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Rendering">
-      <UniqueIdentifier>{398e826f-a612-435c-9b43-b9ed52258cc7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Rendering">
-      <UniqueIdentifier>{17f45aa0-efee-4e64-a162-fc969d7b6caa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer">
       <UniqueIdentifier>{12dbda4d-29c3-4535-9e1c-918f64db4dde}</UniqueIdentifier>
     </Filter>
@@ -271,6 +265,12 @@
     <Filter Include="Shader\Environment">
       <UniqueIdentifier>{602c7d87-9fcd-4fdb-a497-8e16d5991a0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PSO\Extended">
+      <UniqueIdentifier>{344cbf6c-2fc6-4958-b796-b56ef998c3f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\PSO\Extended">
+      <UniqueIdentifier>{877757fd-af1f-480e-ab9f-402d9a9cafa3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -351,9 +351,6 @@
     <ClCompile Include="CollisionVisitor.cpp">
       <Filter>소스 파일\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="MeshObject.cpp">
-      <Filter>소스 파일\Object\Attachable\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Viewable.cpp">
       <Filter>소스 파일\Object\View</Filter>
     </ClCompile>
@@ -372,7 +369,7 @@
     <ClCompile Include="PSOManager.cpp">
       <Filter>소스 파일\PSO</Filter>
     </ClCompile>
-    <ClCompile Include="PSOObject.cpp">
+    <ClCompile Include="APSOObject.cpp">
       <Filter>소스 파일\PSO</Filter>
     </ClCompile>
     <ClCompile Include="AssetManager.cpp">
@@ -380,21 +377,6 @@
     </ClCompile>
     <ClCompile Include="GlobalVariable.cpp">
       <Filter>소스 파일\Global</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshObjectRenderer.cpp">
-      <Filter>소스 파일\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="BoundingObjectRenderer.cpp">
-      <Filter>소스 파일\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="APickingIDRenderer.cpp">
-      <Filter>소스 파일\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="PickingIDSolidRenderer.cpp">
-      <Filter>소스 파일\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="PickingIDWireframeRenderer.cpp">
-      <Filter>소스 파일\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ModelDetailWindow.cpp">
       <Filter>소스 파일\World\Editor\GUI\Window</Filter>
@@ -405,7 +387,7 @@
     <ClCompile Include="BoundingSphereInformationDrawer.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
     </ClCompile>
-    <ClCompile Include="MeshObjectInformationDrawer.cpp">
+    <ClCompile Include="StaticMeshObjectInformationDrawer.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
     </ClCompile>
     <ClCompile Include="TransformationInformationDrawer.cpp">
@@ -449,9 +431,6 @@
     </ClCompile>
     <ClCompile Include="MouseEvent.cpp">
       <Filter>소스 파일\Controller\InputEvent</Filter>
-    </ClCompile>
-    <ClCompile Include="ARenderer.cpp">
-      <Filter>소스 파일\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="EXRTextureAsset.cpp">
       <Filter>소스 파일\Asset\Texture</Filter>
@@ -501,7 +480,28 @@
     <ClCompile Include="ModelHelper.cpp">
       <Filter>소스 파일\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="MeshObjectActor.cpp">
+    <ClCompile Include="BoundingObjectPSO.cpp">
+      <Filter>소스 파일\PSO\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="PickingIDWireframePSO.cpp">
+      <Filter>소스 파일\PSO\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshObject.cpp">
+      <Filter>소스 파일\Object\Attachable\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshObject.cpp">
+      <Filter>소스 파일\Object\Attachable\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshObjectInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
+    </ClCompile>
+    <ClCompile Include="AMeshObject.cpp">
+      <Filter>소스 파일\Object\Attachable\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshObjectActor.cpp">
+      <Filter>소스 파일\Object\Placeable\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshObjectActor.cpp">
       <Filter>소스 파일\Object\Placeable\Actor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -623,9 +623,6 @@
     <ClInclude Include="ModelOutlinerWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
     </ClInclude>
-    <ClInclude Include="MeshObject.h">
-      <Filter>헤더 파일\Object\Attachable\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="Viewable.h">
       <Filter>헤더 파일\Object\Attachable\View</Filter>
     </ClInclude>
@@ -644,7 +641,7 @@
     <ClInclude Include="PSOManager.h">
       <Filter>헤더 파일\PSO</Filter>
     </ClInclude>
-    <ClInclude Include="PSOObject.h">
+    <ClInclude Include="APSOObject.h">
       <Filter>헤더 파일\PSO</Filter>
     </ClInclude>
     <ClInclude Include="PSOObjectHelper.h">
@@ -653,26 +650,8 @@
     <ClInclude Include="GlobalVariable.h">
       <Filter>헤더 파일\Global</Filter>
     </ClInclude>
-    <ClInclude Include="ARenderer.h">
-      <Filter>헤더 파일\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshObjectRenderer.h">
-      <Filter>헤더 파일\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingObjectRenderer.h">
-      <Filter>헤더 파일\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="APickingIDRenderer.h">
-      <Filter>헤더 파일\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="StaticAssertHelper.h">
       <Filter>헤더 파일\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="PickingIDSolidRenderer.h">
-      <Filter>헤더 파일\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="PickingIDWireframeRenderer.h">
-      <Filter>헤더 파일\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ModelDetailWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
@@ -683,7 +662,7 @@
     <ClInclude Include="BoundingSphereInformationDrawer.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
     </ClInclude>
-    <ClInclude Include="MeshObjectInformationDrawer.h">
+    <ClInclude Include="StaticMeshObjectInformationDrawer.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
     </ClInclude>
     <ClInclude Include="TransformationInformationDrawer.h">
@@ -806,7 +785,34 @@
     <ClInclude Include="ModelHelper.h">
       <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="MeshObjectActor.h">
+    <ClInclude Include="BoundingObjectPSO.h">
+      <Filter>헤더 파일\PSO\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshObjectPSO.h">
+      <Filter>헤더 파일\PSO\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="PickingIDWireframePSO.h">
+      <Filter>헤더 파일\PSO\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="PickingIDSolidPSO.h">
+      <Filter>헤더 파일\PSO\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshObject.h">
+      <Filter>헤더 파일\Object\Attachable\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshObject.h">
+      <Filter>헤더 파일\Object\Attachable\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshObjectInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
+    </ClInclude>
+    <ClInclude Include="AMeshObject.h">
+      <Filter>헤더 파일\Object\Attachable\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshObjectActor.h">
+      <Filter>헤더 파일\Object\Placeable\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshObjectActor.h">
       <Filter>헤더 파일\Object\Placeable\Actor</Filter>
     </ClInclude>
   </ItemGroup>

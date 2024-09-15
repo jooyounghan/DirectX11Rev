@@ -40,9 +40,6 @@ public:
 	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
-	virtual void AcceptRenderer(ARenderer* Renderer) override;
-
-public:
 	virtual void CleanupLens();
 };
 

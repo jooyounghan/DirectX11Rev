@@ -17,6 +17,7 @@ protected:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
+	virtual void UpdateRenderable(const bool& RenderableFlag) override;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override {};

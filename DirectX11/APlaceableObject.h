@@ -11,7 +11,8 @@
 enum EPlaceableObjectKind : int
 {
 	PLACABLE_NONE,
-	MESH_ACTOR_KIND,
+	STATIC_MESH_ACTOR_KIND,
+	SKELETAL_MESH_ACTOR_KIND,
 	ENVIORNMENT_ACTOR_KIND,
 	EDITOR_PAWN_KIND,
 	CHARACTER_KIND,
@@ -47,9 +48,6 @@ protected:
 	MakeGetter(Intersectables);
 
 public:
-	bool IgoreRendering = false;
-
-public:
 	virtual DirectX::XMVECTOR GetRotationQuat() const override;
 
 public:
@@ -81,13 +79,10 @@ protected:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
+	virtual void UpdateRenderable(const bool& RenderableFlag) = 0;
 
 public:
-	virtual void AcceptRenderer(ARenderer* Renderer) = 0;
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
-
-protected:
-	void AcceptChildrenRenderer(ARenderer* Renderer);
 
 public:
 	template<typename Attachment, typename ...Args>

@@ -28,6 +28,15 @@ void EditorPawn::Update(const float& DeltaTimeIn)
     APlaceableObject::Update(DeltaTimeIn);
 }
 
+void EditorPawn::UpdateRenderable(const bool& RenderableFlag)
+{
+	IsRenderable = RenderableFlag;
+	for (unique_ptr<AAttachableObject>& AttachedObject : AttachedChildrenObjects)
+	{
+		AttachedObject->UpdateRenderable(RenderableFlag);
+	}
+}
+
 void EditorPawn::OnSerializeFromMap(FILE* FileIn)
 {
     AObject::OnSerializeFromMap(FileIn);

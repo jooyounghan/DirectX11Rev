@@ -38,7 +38,6 @@ public:
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
-	virtual void AcceptRenderer(ARenderer* Renderer) override final;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) = 0;

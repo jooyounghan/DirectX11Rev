@@ -1,24 +1,26 @@
 #pragma once
-
 #include "AActor.h"
 #include "HeaderHelper.h"
 
-class MeshObjectActor : public AActor
+class StaticMeshAsset;
+class StaticMeshObject;
+
+class StaticMeshObjectActor : public AActor
 {
 public:
-	MeshObjectActor(std::shared_ptr<AMeshAsset> MeshAssetInstanceIn);
-	~MeshObjectActor();
+	StaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> MeshAssetInstanceIn);
+	~StaticMeshObjectActor();
 
 protected:
-	std::unique_ptr<MeshObject> MeshObjectInstance;
-	MakeSmartPtrGetter(MeshObjectInstance);
+	std::unique_ptr<StaticMeshObject> StaticMeshObjectInstance;
+	MakeSmartPtrGetter(StaticMeshObjectInstance);
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
+	virtual void UpdateRenderable(const bool& RenderableFlag) override;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
-	virtual void AcceptRenderer(ARenderer* Renderer) override;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;

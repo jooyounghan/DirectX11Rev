@@ -1,27 +1,28 @@
-#include "PSOObject.h"
+#include "APSOObject.h"
 #include "DefineUtility.h"
 
 using namespace std;
+using namespace Microsoft::WRL;
 
-PSOObject::PSOObject(
-	ID3D11DeviceContext*											DeviceContextIn,
-	const Microsoft::WRL::ComPtr<ID3D11InputLayout>&				InputLayoutIn, 
-	const Microsoft::WRL::ComPtr<ID3D11VertexShader>&				VertexShaderIn, 
-	const UINT&														NumVSConstBuffersIn,
-	const UINT&														NumVSSRVsIn,
-	const Microsoft::WRL::ComPtr<ID3D11PixelShader>&				PixelShaderIn, 
-	const UINT&														NumPSConstBuffersIn,
-	const UINT&														NumPSSRVsIn,
-	const D3D11_PRIMITIVE_TOPOLOGY&									PrimitiveTopologyIn, 
-	const UINT&														NumRenderTargetsIn, 
-	const DXGI_FORMAT*												RTVFormatsIn, 
-	const DXGI_FORMAT &												DSVFormatIn, 
-	const DXGI_SAMPLE_DESC&											SampleDescIn, 
-	const Microsoft::WRL::ComPtr<ID3D11RasterizerState>				RasterizerStateIn, 
-	const Microsoft::WRL::ComPtr<ID3D11DepthStencilState>			DepthStencilStateIn, 
-	const UINT&														StencilRefIn,
-	const Microsoft::WRL::ComPtr<ID3D11BlendState>					BlendStateIn,
-	const vector<Microsoft::WRL::ComPtr<ID3D11SamplerState>>&	SamplerStatesIn
+APSOObject::APSOObject(
+	ID3D11DeviceContext*							DeviceContextIn,
+	const ComPtr<ID3D11InputLayout>&				InputLayoutIn, 
+	const ComPtr<ID3D11VertexShader>&				VertexShaderIn, 
+	const UINT&										NumVSConstBuffersIn,
+	const UINT&										NumVSSRVsIn,
+	const ComPtr<ID3D11PixelShader>&				PixelShaderIn, 
+	const UINT&										NumPSConstBuffersIn,
+	const UINT&										NumPSSRVsIn,
+	const D3D11_PRIMITIVE_TOPOLOGY&					PrimitiveTopologyIn, 
+	const UINT&										NumRenderTargetsIn, 
+	const DXGI_FORMAT*								RTVFormatsIn, 
+	const DXGI_FORMAT &								DSVFormatIn, 
+	const DXGI_SAMPLE_DESC&							SampleDescIn, 
+	const ComPtr<ID3D11RasterizerState>				RasterizerStateIn, 
+	const ComPtr<ID3D11DepthStencilState>			DepthStencilStateIn, 
+	const UINT&										StencilRefIn,
+	const ComPtr<ID3D11BlendState>					BlendStateIn,
+	const vector<ComPtr<ID3D11SamplerState>>&		SamplerStatesIn
 )
 	: DeviceContextCached(DeviceContextIn), VertexShader(VertexShaderIn),
 	InputLayout(InputLayoutIn),  NumVSConstBuffers(NumVSConstBuffersIn), 
@@ -41,12 +42,12 @@ PSOObject::PSOObject(
 	}
 }
 
-PSOObject::~PSOObject()
+APSOObject::~APSOObject()
 {
 }
 
 #ifdef _DEBUG
-void PSOObject::ResetResourceFlag()
+void APSOObject::ResetResourceFlag()
 {
 	memset(IsVSConstBufferSet, false, CONST_BUFFER_MAX_COUNT);
 	memset(IsVSSRVSet, false, SRV_MAX_COUNT);
@@ -56,7 +57,12 @@ void PSOObject::ResetResourceFlag()
 #endif // _DEBUG
 
 
-void PSOObject::SetPipelineStateObject(UINT RTVCountIn, ID3D11RenderTargetView** RTVsIn, D3D11_VIEWPORT* ViewportIn, ID3D11DepthStencilView* DSVIn)
+void APSOObject::SetPipelineStateObject(
+	const UINT& RTVCountIn, 
+	ID3D11RenderTargetView** RTVsIn, 
+	const D3D11_VIEWPORT* ViewportIn, 
+	ID3D11DepthStencilView* DSVIn
+)
 {
 	assert(RTVCountIn == NumRenderTargets);
 
@@ -105,7 +111,7 @@ void PSOObject::SetPipelineStateObject(UINT RTVCountIn, ID3D11RenderTargetView**
 }
 
 
-void PSOObject::CheckPipelineValidation()
+void APSOObject::CheckPipelineValidation()
 {
 	for (UINT VsCBIdx = 0; VsCBIdx < NumVSConstBuffers; ++VsCBIdx)
 	{

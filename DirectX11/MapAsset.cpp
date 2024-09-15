@@ -4,16 +4,19 @@
 #include "GlobalVariable.h"
 
 #include "PSOManager.h"
-#include "PSOObject.h"
+#include "APSOObject.h"
 
 #include "AssetManager.h"
-#include "AMeshAsset.h"
+#include "StaticMeshAsset.h"
+#include "SkeletalMeshAsset.h"
 
-#include "MeshObjectActor.h"
+#include "StaticMeshObjectActor.h"
+#include "SkeletalMeshObjectActor.h"
 #include "EnvironmentActor.h"
 #include "EditorPawn.h"
 
-#include "MeshObject.h"
+#include "StaticMeshObject.h"
+#include "SkeletalMeshObject.h"
 #include "BoundingSphereObject.h"
 #include "OBBObject.h"
 #include "BoundingFrustumObject.h"
@@ -39,14 +42,21 @@ MapAsset::~MapAsset()
 	Serialize();
 }
 
-void MapAsset::AddMeshObjectActor(std::shared_ptr<AMeshAsset> MeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
+void MapAsset::AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticMeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-	MeshObjectActor* ta = PlaceableAddHelper<MeshObjectActor>(MeshAssetIn);
-	ta->RelativePosition.x = PosXIn;
-	ta->RelativePosition.y = PosYIn;
-	ta->RelativePosition.z = PosZIn;
+	StaticMeshObjectActor* StaticMeshObjectIn = PlaceableAddHelper<StaticMeshObjectActor>(StaticMeshAssetIn);
+	StaticMeshObjectIn->RelativePosition.x = PosXIn;
+	StaticMeshObjectIn->RelativePosition.y = PosYIn;
+	StaticMeshObjectIn->RelativePosition.z = PosZIn;
 }
 
+void MapAsset::AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
+{
+	SkeletalMeshObjectActor* SkeletalMeshObjectIn = PlaceableAddHelper<SkeletalMeshObjectActor>(SkeletalMeshAssetIn);
+	SkeletalMeshObjectIn->RelativePosition.x = PosXIn;
+	SkeletalMeshObjectIn->RelativePosition.y = PosYIn;
+	SkeletalMeshObjectIn->RelativePosition.z = PosZIn;
+}
 
 void MapAsset::Update(const float& DeltaTimeIn)
 {
@@ -62,50 +72,22 @@ void MapAsset::UpdateRenderState()
 {
 	BoundingFrustumObject* CameraFrustum = CameraCached->GetCamearaFrustum();
 
-	for (auto& ro : RootPlaceables)
+	for (auto& RootPlaceable : RootPlaceables)
 	{
-		const std::list<IIntersectable*>& Intersectables = ro->GetIntersectables();
+		const std::list<IIntersectable*>& Intersectables = RootPlaceable->GetIntersectables();
 		for (auto& intersectable : Intersectables)
 		{
 			CollisionVisitor CollisionVisitorInstance(intersectable);
 			if (CollisionVisitorInstance.Visit(CameraFrustum))
 			{
-				ro->IgoreRendering = false;
+				RootPlaceable->UpdateRenderable(true);
+				break;
 			}
 			else
 			{
-				ro->IgoreRendering = true;
+				RootPlaceable->UpdateRenderable(false);
 			}
 		}
-	}
-}
-
-void MapAsset::RenderMap(PSOManager* PSOManagerInstance)
-{
-	CameraCached->CleanupLens();
-
-	vector<ARenderer*> Renderers = {
-		PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Skeletal_Solid),
-		PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_BoundingComponent_Wireframe)
-	};
-
-	ID3D11RenderTargetView* RTVs[] = { CameraCached->GetSceneRTV() };
-	D3D11_VIEWPORT Viewports[] = { CameraCached->GetViewport() };
-	ID3D11DepthStencilView* DSV = CameraCached->GetSceneDSV();
-
-	for (auto& Renderer : Renderers)
-	{
-		Renderer->PresetRendering(1, RTVs, Viewports, DSV, CameraCached, this);
-
-		for (const auto& ro : RootPlaceables)
-		{
-			if (!ro->IgoreRendering)
-			{
-				ro->AcceptRenderer(Renderer);
-			}
-		}
-
-		Renderer->ResetRendering();
 	}
 }
 
@@ -148,9 +130,16 @@ void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 		{
 		case PLACABLE_NONE:
 			break;
-		case MESH_ACTOR_KIND:
+		case STATIC_MESH_ACTOR_KIND:
 		{
-			MeshObjectActor* AddedActor = PlaceableAddHelper<MeshObjectActor>(nullptr);
+			StaticMeshObjectActor* AddedActor = PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
+			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
+			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
+			break;
+		}
+		case SKELETAL_MESH_ACTOR_KIND:
+		{
+			SkeletalMeshObjectActor* AddedActor = PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
 			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 			break;
@@ -234,8 +223,11 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 		{
 		case ATTACHABLE_NONE:
 			break;
-		case MESH_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<MeshObject>(nullptr);
+		case STATIC_MESH_KIND:
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<StaticMeshObject>(nullptr);
+			break;
+		case SKELETAL_MESH_KIND:
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<SkeletalMeshObject>(nullptr);
 			break;
 		case BOUNDING_SPHERE_KIND:
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>();

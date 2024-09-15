@@ -6,7 +6,6 @@
 #include "EXRTextureAsset.h"
 #include "DDSTextureAsset.h"
 
-#include "ARenderer.h"
 #include "IGuiModelVisitor.h"
 
 using namespace std;
@@ -18,12 +17,6 @@ EnvironmentActor::EnvironmentActor()
 
 EnvironmentActor::~EnvironmentActor()
 {
-}
-
-void EnvironmentActor::AcceptRenderer(ARenderer* Renderer)
-{
-	AcceptChildrenRenderer(Renderer);
-	Renderer->Render(this);
 }
 
 void EnvironmentActor::AcceptGui(IGuiModelVisitor* GuiVisitor)

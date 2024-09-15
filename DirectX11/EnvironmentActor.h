@@ -22,7 +22,6 @@ protected:
 	std::shared_ptr<DDSTextureAsset> EnvironmentBRDFDDSTextureAsset = nullptr;
 
 public:
-	virtual void AcceptRenderer(ARenderer* Renderer) override;
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 
 public:

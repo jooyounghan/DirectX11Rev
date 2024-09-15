@@ -2,7 +2,6 @@
 #include "DefineUtility.h"
 #include "GraphicsPipeline.h"
 #include "BoundingFrustumObject.h"
-#include "ARenderer.h"
 
 using namespace std;
 
@@ -70,12 +69,6 @@ void Camera::Update(const float& DeltaTimeIn)
 {
 	Viewable::Update(DeltaTimeIn);
 	CamearaFrustum->Update(DeltaTimeIn);
-}
-
-void Camera::AcceptRenderer(ARenderer* Renderer)
-{
-	Renderer->Render(CamearaFrustum.get());
-	AcceptChildrenRenderer(Renderer);
 }
 
 void Camera::CleanupLens()

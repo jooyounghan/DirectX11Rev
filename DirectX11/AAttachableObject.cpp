@@ -2,6 +2,8 @@
 #include "APlaceableObject.h"
 #include "GlobalVariable.h"
 
+using namespace std;
+
 AAttachableObject::AAttachableObject()
 	: AObject()
 {
@@ -202,11 +204,12 @@ void AAttachableObject::Update(const float& DeltaTimeIn)
 	}
 }
 
-void AAttachableObject::AcceptChildrenRenderer(ARenderer* Renderer)
+void AAttachableObject::UpdateRenderable(const bool& RenderableFlag)
 {
-	for (auto& AtttachedChild : AttachedChildrenObjects)
+	IsRenderable = RenderableFlag;
+	for (unique_ptr<AAttachableObject>& AttachedObject : AttachedChildrenObjects)
 	{
-		AtttachedChild->AcceptRenderer(Renderer);
+		AttachedObject->UpdateRenderable(RenderableFlag);
 	}
 }
 
@@ -220,7 +223,7 @@ void AAttachableObject::RemoveAttachedObject(AAttachableObject* AttachedObjectIn
 	RemoveFromIntersectables(AttachedObjectIn);
 
 	uint64_t RemovedCount = AttachedChildrenObjects.remove_if(
-		[AttachedObjectIn](const std::unique_ptr<AAttachableObject>& ptr)
+		[AttachedObjectIn](const unique_ptr<AAttachableObject>& ptr)
 		{
 			return ptr.get() == AttachedObjectIn;
 		}

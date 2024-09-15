@@ -90,31 +90,6 @@ void EditorWorld::Update(const float& DeltaTimeIn)
 
 void EditorWorld::RenderWorld()
 {
-    EditorCamera* EditorCameraCached = EditorActorInstance->GetEditorCameraCached();
-    if (EditorCameraCached != nullptr)
-    {
-        MapAsset* CurrentMap = GameWorldCached->GetCurrentMap();
-        PSOManager* PSOManagerInstance = GameWorldCached->GetPSOManagerInstance();
-        if (CurrentMap != nullptr)
-        {
-            ARenderer* PickingIDRenderers = PSOManagerInstance->GetRenderers(EPSOType::R8G8B8A8_Picking_ID_Solid);
-
-            const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
-
-            ID3D11RenderTargetView* RTVs[] = { EditorCameraCached->GetIdSelectRTV() };
-            D3D11_VIEWPORT Viewports[] = { EditorCameraCached->GetViewport() };
-            ID3D11DepthStencilView* DSV = EditorCameraCached->GetIdSelectDSV();
-
-
-            PickingIDRenderers->PresetRendering(1, RTVs, Viewports, DSV, EditorCameraCached, CurrentMap);
-            for (auto& Placeable : RootPlaceables)
-            {
-                Placeable->AcceptRenderer(PickingIDRenderers);
-            }
-            PickingIDRenderers->ResetRendering();
-        }
-    }
-
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
 

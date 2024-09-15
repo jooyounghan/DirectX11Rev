@@ -8,6 +8,7 @@ UINT App::GWidth = 0;
 UINT App::GHeight = 0;
 PortfolioApp* App::GApp = nullptr;
 GraphicsPipeline* App::GGraphicPipeline = nullptr;
+PSOManager* App::GPSOManager = nullptr;
 InputEventManager* App::GInputEventManager = nullptr;
 
 const ImVec4 UIColor::GBlack = ImVec4(0.f, 0.f, 0.f, 1.f);

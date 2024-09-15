@@ -5,7 +5,9 @@
 
 // Add Attachables
 #include "APlaceableObject.h"
-#include "MeshObject.h"
+
+#include "StaticMeshObject.h"
+#include "SkeletalMeshObject.h"
 #include "BoundingSphereObject.h"
 #include "OBBObject.h"
 #include "Camera.h"
@@ -32,7 +34,8 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
     if (SelectedPlaced != nullptr || SelectedAttached != nullptr)
     {
         const char* ItemIdentifiers[] = {
-            MeshObject::MeshObjectIdentifier,
+            StaticMeshObject::StaticMeshObjectIdentifier,
+            SkeletalMeshObject::SkeletalMeshObjectIdentifier,
             BoundingSphereObject::BoundingSphereIdentifier,
             OBBObject::BoundingOBBIdentifier,
             Camera::CameraIdentifier
@@ -48,11 +51,18 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
         { 
             switch (ObjectKind)
             {
-                case EAttachableObjectKind::MESH_KIND:
+                case EAttachableObjectKind::STATIC_MESH_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<MeshObject>(nullptr) :
-                        SelectedPlaced->AddAttachedObject<MeshObject>(nullptr);
+                        SelectedAttached->AddAttachedObject<StaticMeshObject>(nullptr) :
+                        SelectedPlaced->AddAttachedObject<StaticMeshObject>(nullptr);
+                    break;
+                }
+                case EAttachableObjectKind::SKELETAL_MESH_KIND:
+                {
+                    SelectedAttached != nullptr ?
+                        SelectedAttached->AddAttachedObject<SkeletalMeshObject>(nullptr) :
+                        SelectedPlaced->AddAttachedObject<SkeletalMeshObject>(nullptr);
                     break;
                 }
                 case EAttachableObjectKind::BOUNDING_SPHERE_KIND:

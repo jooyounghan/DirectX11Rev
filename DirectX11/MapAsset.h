@@ -4,9 +4,6 @@
 #include "HeaderHelper.h"
 #include "StaticAssertHelper.h"
 
-#include "MeshObjectRenderer.h"
-#include "BoundingObjectRenderer.h"
-
 #include "APlaceableObject.h"
 #include "AAttachableObject.h"
 
@@ -18,8 +15,7 @@
 #include <type_traits>
 
 class PSOManager;
-class PSOObject;
-class ARenderer;
+class APSOObject;
 
 class AssetManager;
 
@@ -28,8 +24,8 @@ class AAttachableObject;
 
 class Camera;
 class AObject;
-class MeshObject;
-class AMeshAsset;
+class StaticMeshAsset;
+class SkeletalMeshAsset;
 
 class IIntersectable;
 
@@ -59,8 +55,8 @@ protected:
 	MakeGetter(IdToPlaceables);
 
 public:
-	void AddMeshObjectActor(std::shared_ptr<AMeshAsset> MeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
-	void RenderMap(PSOManager* PSOManagerInstance);
+	void AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticMeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
+	void AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

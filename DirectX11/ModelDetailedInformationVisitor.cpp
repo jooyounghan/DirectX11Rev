@@ -3,21 +3,25 @@
 
 #include "GameWorld.h"
 
-#include "MeshObjectActor.h"
+#include "StaticMeshObjectActor.h"
+#include "SkeletalMeshObjectActor.h"
 #include "EnvironmentActor.h"
 #include "EditorPawn.h"
 
-#include "MeshObject.h"
+#include "StaticMeshObject.h"
+#include "SkeletalMeshObject.h"
 #include "BoundingSphereObject.h"
 #include "OBBObject.h"
 #include "BoundingFrustumObject.h"
 #include "Viewable.h"
 
 #include "TransformationInformationDrawer.h"
+#include "StaticMeshObjectInformationDrawer.h"
+#include "SkeletalMeshObjectInformationDrawer.h"
 #include "BoundingSphereInformationDrawer.h"
 #include "BoundingOBBInformationDrawer.h"
 #include "ViewableInformationDrawer.h"
-#include "MeshObjectInformationDrawer.h"
+#include "StaticMeshObjectInformationDrawer.h"
 
 using namespace std;
 using namespace ImGui;
@@ -29,14 +33,27 @@ ModelDetailedInformationVisitor::ModelDetailedInformationVisitor(AssetManager* A
 {
 }
 
-void ModelDetailedInformationVisitor::Visit(MeshObjectActor* ActorInstance)
+void ModelDetailedInformationVisitor::Visit(StaticMeshObjectActor* ActorInstance)
 {
     PushID(ActorInstance->GetObjectID().c_str());
 
     TransformationInformationDrawer TransformDrawer(ActorInstance, nullptr);
     TransformDrawer.DrawInformation();
 
-    MeshObjectInformationDrawer MeshObjectDrawer(ActorInstance->GetMeshObjectInstance(), AssetManagerCached);
+    StaticMeshObjectInformationDrawer MeshObjectDrawer(ActorInstance->GetStaticMeshObjectInstance(), AssetManagerCached);
+    MeshObjectDrawer.DrawInformation();
+
+    PopID();
+}
+
+void ModelDetailedInformationVisitor::Visit(SkeletalMeshObjectActor* ActorInstance)
+{
+    PushID(ActorInstance->GetObjectID().c_str());
+
+    TransformationInformationDrawer TransformDrawer(ActorInstance, nullptr);
+    TransformDrawer.DrawInformation();
+
+    SkeletalMeshObjectInformationDrawer MeshObjectDrawer(ActorInstance->GetSkeletalMeshObjectInstance(), AssetManagerCached);
     MeshObjectDrawer.DrawInformation();
 
     PopID();
@@ -62,14 +79,27 @@ void ModelDetailedInformationVisitor::Visit(EditorPawn* EditorActorInstance)
     PopID();
 }
 
-void ModelDetailedInformationVisitor::Visit(MeshObject* MeshObjectInsatnce)
+void ModelDetailedInformationVisitor::Visit(StaticMeshObject* StaticMeshObjectInstance)
 {
-    PushID(MeshObjectInsatnce->GetObjectID().c_str());
+    PushID(StaticMeshObjectInstance->GetObjectID().c_str());
 
-    TransformationInformationDrawer TransformDrawer(MeshObjectInsatnce, MeshObjectInsatnce->GetParentObject());
+    TransformationInformationDrawer TransformDrawer(StaticMeshObjectInstance, StaticMeshObjectInstance->GetParentObject());
     TransformDrawer.DrawInformation();
 
-    MeshObjectInformationDrawer MeshObjectDrawer(MeshObjectInsatnce, AssetManagerCached);
+    StaticMeshObjectInformationDrawer MeshObjectDrawer(StaticMeshObjectInstance, AssetManagerCached);
+    MeshObjectDrawer.DrawInformation();
+
+    PopID();
+}
+
+void ModelDetailedInformationVisitor::Visit(SkeletalMeshObject* SkeletalMeshObjectInstance)
+{
+    PushID(SkeletalMeshObjectInstance->GetObjectID().c_str());
+
+    TransformationInformationDrawer TransformDrawer(SkeletalMeshObjectInstance, SkeletalMeshObjectInstance->GetParentObject());
+    TransformDrawer.DrawInformation();
+
+    SkeletalMeshObjectInformationDrawer MeshObjectDrawer(SkeletalMeshObjectInstance, AssetManagerCached);
     MeshObjectDrawer.DrawInformation();
 
     PopID();

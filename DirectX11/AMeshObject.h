@@ -1,19 +1,16 @@
 #pragma once
-#include "APlaceableObject.h"
-#include "HeaderHelper.h"
+#include "AAttachableObject.h"
 
 class AMeshAsset;
 
-class AActor : public APlaceableObject
+class AMeshObject : public AAttachableObject
 {
 public:
-	AActor();
-	virtual ~AActor();
+	AMeshObject();
+	virtual ~AMeshObject();
 
 public:
-	virtual void UpdateRenderable(const bool& RenderableFlag) = 0;
-
-public:
+	virtual AMeshAsset* GetMeshAssetInstance() = 0;
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
 
 public:

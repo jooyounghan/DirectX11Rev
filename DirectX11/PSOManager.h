@@ -7,22 +7,22 @@
 enum EPSOType : size_t
 {
 	// Position Only
-	R8G8B8A8_BoundingComponent_Solid,
 	R8G8B8A8_BoundingComponent_Wireframe,
-	R8G8B8A8_Picking_ID_Solid,
-
-	// Static
+	// Static / Skeletal
 	R8G8B8A8_Static_Solid,
-	R8G8B8A8_Static_Wireframe,
-
-	// Skeletal
 	R8G8B8A8_Skeletal_Solid,
-	R8G8B8A8_Skeletal_Wireframe,
+
+	// ID
+	R8G8B8A8_BoundingComponent_ID_Wireframe,
+	// Static / Skeletal
+	R8G8B8A8_Static_ID_Solid,
+	R8G8B8A8_Skeletal_ID_Solid,
+
+	// Count
 	PSOTypeCount
 };
 
-class PSOObject;
-class ARenderer;
+class APSOObject;
 
 class PSOManager
 {
@@ -31,12 +31,10 @@ public:
 	~PSOManager();
 
 protected:
-	std::unique_ptr<PSOObject> PSOObjects[PSOTypeCount];
-	std::unique_ptr<ARenderer> Renderers[PSOTypeCount];
+	std::unique_ptr<APSOObject> PSOObjects[PSOTypeCount];
 
 public:
-	inline PSOObject* GetPSOObject(EPSOType PsoTypeIn) { return PSOObjects[PsoTypeIn].get(); }
-	inline ARenderer* GetRenderers(EPSOType PsoTypeIn) { return Renderers[PsoTypeIn].get(); }
+	inline APSOObject* GetPSOObject(EPSOType PsoTypeIn) { return PSOObjects[PsoTypeIn].get(); }
 
 private:
 	void CreateVertexShader(
@@ -136,7 +134,4 @@ private:
 		const D3D11_FILTER& Filter,
 		Microsoft::WRL::ComPtr<ID3D11SamplerState>& SamplerState
 	);
-
-private:
-	void CreateRenderers();
 };

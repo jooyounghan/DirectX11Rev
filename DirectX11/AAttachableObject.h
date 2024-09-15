@@ -11,7 +11,8 @@ class APlaceableObject;
 enum EAttachableObjectKind : int
 {
 	ATTACHABLE_NONE,
-	MESH_KIND,
+	STATIC_MESH_KIND,
+	SKELETAL_MESH_KIND,
 	BOUNDING_SPHERE_KIND,
 	OBB_KIND,
 	NORMAL_CAMERA_KIND,
@@ -78,13 +79,10 @@ public:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
+	virtual void UpdateRenderable(const bool& RenderableFlag) override;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
-	virtual void AcceptRenderer(ARenderer* Renderer) = 0;
-
-protected:
-	void AcceptChildrenRenderer(ARenderer* Renderer);
 
 public:
 	template<typename Attachment, typename ...Args>

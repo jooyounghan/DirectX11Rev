@@ -3,6 +3,7 @@
 #include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
 #include "PSOManager.h"
+#include "APSOObject.h"
 #include "AssetManager.h"
 
 #ifdef _DEBUG
@@ -16,28 +17,22 @@
 
 using namespace std;
 
-#ifdef _DEBUG
+
 GameWorld::GameWorld(HWND WindowHandle)
 {
 	PSOManagerInstance = make_unique<PSOManager>();
+	App::GPSOManager = PSOManagerInstance.get();
+
 	AssetManagerInstance = make_unique<AssetManager>();
+
+#ifdef _DEBUG
 	EditorWorldInstance = make_unique<EditorWorld>(this, WindowHandle);
-
-	LoadManagingMaps();
-}
 #else
-GameWorld::GameWorld()
-	: IWorld()
-{
-	PSOManagerInstance = make_unique<PSOManager>();
-	AssetManagerInstance = make_unique<AssetManager>();
-
 	TestCamera = make_unique<Camera>(App::GWidth, App::GHeight);
 	TestCamera->Position.z = -300.f;
-
+#endif
 	LoadManagingMaps();
 }
-#endif // _DEBUG
 
 
 GameWorld::~GameWorld()
@@ -67,12 +62,8 @@ void GameWorld::LoadManagingMaps()
 
 	// TODO : Map을 선택하는 과정 추가하기
 	CurrentMap = MapInstances[0].get();
-
 	EditorPawn* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
-	if (EditorActorInstnace != nullptr)
-	{
-		CurrentMap->SetCameraCached(EditorActorInstnace->GetEditorCameraCached());
-	}
+	SetCurrentCamera(EditorActorInstnace->GetEditorCameraCached());
 }
 
 void GameWorld::Update(const float& DeltaTimeIn)
@@ -87,14 +78,30 @@ void GameWorld::Update(const float& DeltaTimeIn)
 	}
 }
 
+void GameWorld::SetCurrentCamera(Camera* CurrentCameraIn)
+{
+	CurrentCamera = CurrentCameraIn;
+	CurrentMap->SetCameraCached(CurrentCameraIn);
+}
+
 void GameWorld::RenderWorld()
 {
+	CurrentCamera->CleanupLens();
+
+	for (size_t PSOType = 0; PSOType < PSOTypeCount; ++PSOType)
+	{		
+		const auto& PsoObject = PSOManagerInstance->GetPSOObject(static_cast<EPSOType>(PSOType));
+		PsoObject->PresetRendering(CurrentCamera, CurrentMap);
+		PsoObject->Render();
+		PsoObject->ResetRendering();
+
+	}
+
+	EditorWorldInstance->RenderWorld();
 	if (CurrentMap)
 	{
-		CurrentMap->RenderMap(PSOManagerInstance.get());
 			
 #ifdef _DEBUG
-		EditorWorldInstance->RenderWorld();
 #else
 		GraphicsPipelineCached->GetDeviceContext()->CopyResource(
 			GraphicsPipelineCached->GetBackBufferTexture(),

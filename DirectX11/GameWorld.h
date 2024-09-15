@@ -46,6 +46,12 @@ protected:
 	std::unordered_map<UINT, std::shared_ptr<MapAsset>> MapInstances;
 	MapAsset* CurrentMap = nullptr;
 	MakeGetter(CurrentMap);
+	
+protected:
+	Camera* CurrentCamera = nullptr;
+
+public:
+	void SetCurrentCamera(Camera* CurrentCameraIn);
 
 public:
 	virtual void RenderWorld() override;

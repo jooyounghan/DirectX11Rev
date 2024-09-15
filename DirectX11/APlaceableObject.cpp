@@ -4,6 +4,7 @@
 #include "GraphicsPipeline.h"
 #include "AAttachableObject.h"
 
+using namespace std;
 using namespace DirectX;
 
 UINT APlaceableObject::PickingIDIssued = 0xABCDEF12;
@@ -170,19 +171,11 @@ void APlaceableObject::Update(const float& DeltaTimeIn)
 	}
 }
 
-void APlaceableObject::AcceptChildrenRenderer(ARenderer* Renderer)
-{
-	for (auto& AtttachedChild : AttachedChildrenObjects)
-	{
-		AtttachedChild->AcceptRenderer(Renderer);
-	}
-}
-
 void APlaceableObject::RemoveAttachedObject(AAttachableObject* AttachedObjectIn)
 {
 	RemoveFromIntersectables(AttachedObjectIn);
 
-	uint64_t RemovedCount = AttachedChildrenObjects.remove_if([AttachedObjectIn](const std::unique_ptr<AAttachableObject>& ptr)
+	uint64_t RemovedCount = AttachedChildrenObjects.remove_if([AttachedObjectIn](const unique_ptr<AAttachableObject>& ptr)
 		{
 			return ptr.get() == AttachedObjectIn;
 		}

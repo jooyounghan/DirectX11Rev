@@ -5,7 +5,6 @@
 #include "GraphicsPipeline.h"
 #include "DefineUtility.h"
 
-#include "ARenderer.h"
 #include "IGuiModelVisitor.h"
 
 using namespace std;

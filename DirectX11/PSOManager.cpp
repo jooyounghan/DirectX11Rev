@@ -3,15 +3,14 @@
 
 #include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
-#include "PSOObject.h"
 
-#include "ARenderer.h"
+#include "BoundingObjectPSO.h"
+#include "MeshObjectPSO.h"
+#include "PickingIDSolidPSO.h"
+#include "PickingIDWireframePSO.h"
 
-#include "PickingIDSolidRenderer.h"
-#include "PickingIDWireframeRenderer.h"
-
-#include "BoundingObjectRenderer.h"
-#include "MeshObjectRenderer.h"
+#include "StaticMeshObject.h"
+#include "SkeletalMeshObject.h"
 
 #include <d3dcompiler.h>
 
@@ -60,36 +59,20 @@ PSOManager::PSOManager()
     const UINT SRVFormatCount = 1;
     DXGI_FORMAT SRVFormats[SRVFormatCount] = { DXGI_FORMAT_R8G8B8A8_UNORM };
 
-#pragma region R8G8B8A8_BoundingComponent_Solid
-    ComPtr<ID3D11VertexShader>  PositionOnlyPathVS;
-    ComPtr<ID3D11InputLayout>   PostionOnlyInputLayout;
+#pragma region R8G8B8A8_BoundingComponent_Wireframe
     D3D11_INPUT_ELEMENT_DESC OnlyPositionInputElementDesc[1] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-    CreateVertexShader(L"./Shaders/PositionOnlyPathVS.hlsl", OnlyPositionInputElementDesc, 1, PositionOnlyPathVS, PostionOnlyInputLayout);
-
+    ComPtr<ID3D11VertexShader>  PositionOnlyPathVS;
     ComPtr<ID3D11PixelShader>   BoundingComponentPS;
+    ComPtr<ID3D11InputLayout>   PostionOnlyInputLayout;
+
+    CreateVertexShader(L"./Shaders/PositionOnlyPathVS.hlsl", OnlyPositionInputElementDesc, 1, PositionOnlyPathVS, PostionOnlyInputLayout);
     CreatePixelShader(L"./Shaders/BoundingObjectPS.hlsl", BoundingComponentPS);
 
-    PSOObjects[R8G8B8A8_BoundingComponent_Solid] = make_unique<PSOObject>(
-        DeviceContext,
-        PostionOnlyInputLayout,
-        PositionOnlyPathVS, 2, 0,
-        BoundingComponentPS, 1, 0,
-        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        SRVFormatCount, SRVFormats,
-        DXGI_FORMAT_D24_UNORM_S8_UINT,
-        SampleDesc,
-        CullBackSolidRS,
-        DepthCompLessDSS, NULL,
-        DisabledBS.Get(), SamplerStates
-    );
-#pragma endregion
-
-#pragma region R8G8B8A8_BoundingComponent_Wireframe
-    PSOObjects[R8G8B8A8_BoundingComponent_Wireframe] = make_unique<PSOObject>(
+    PSOObjects[R8G8B8A8_BoundingComponent_Wireframe] = make_unique<BoundingObjectPSO>(
         DeviceContext,
         PostionOnlyInputLayout,
         PositionOnlyPathVS, 2, 0,
@@ -99,25 +82,6 @@ PSOManager::PSOManager()
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         CullBackWireframeRS,
-        DepthCompLessDSS, NULL,
-        DisabledBS.Get(), SamplerStates
-    );
-#pragma endregion
-
-#pragma region R8G8B8A8_PickingID_Solid
-    ComPtr<ID3D11PixelShader> PickingIDPS;
-    CreatePixelShader(L"./Shaders/PickingIDPS.hlsl", PickingIDPS);
-
-    PSOObjects[R8G8B8A8_Picking_ID_Solid] = make_unique<PSOObject>(
-        DeviceContext,
-        PostionOnlyInputLayout,
-        PositionOnlyPathVS, 2, 0,
-        PickingIDPS, 1, 0,
-        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        SRVFormatCount, SRVFormats,
-        DXGI_FORMAT_D24_UNORM_S8_UINT,
-        SampleDesc,
-        CullBackSolidRS,
         DepthCompLessDSS, NULL,
         DisabledBS.Get(), SamplerStates
     );
@@ -140,7 +104,7 @@ PSOManager::PSOManager()
     ComPtr<ID3D11PixelShader> StaticMeshPS;
     CreatePixelShader(L"./Shaders/StaticAssetPS.hlsl", StaticMeshPS);
 
-    PSOObjects[R8G8B8A8_Static_Solid] = make_unique<PSOObject>(
+    PSOObjects[R8G8B8A8_Static_Solid] = make_unique<MeshObjectPSO<StaticMeshObject>>(
         DeviceContext,
         StaticMeshInputLayout,
         StaticMeshVS, 2, 0,
@@ -155,26 +119,10 @@ PSOManager::PSOManager()
     );
 #pragma endregion
 
-#pragma region R8G8B8A8_Static_Wireframe
-    PSOObjects[R8G8B8A8_Static_Wireframe] = make_unique<PSOObject>(
-        DeviceContext,
-        StaticMeshInputLayout,
-        StaticMeshVS, 2, 0,
-        StaticMeshPS, 0, 0,
-        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        SRVFormatCount, SRVFormats,
-        DXGI_FORMAT_D24_UNORM_S8_UINT,
-        SampleDesc,
-        CullBackWireframeRS,
-        DepthCompLessDSS, NULL,
-        DisabledBS.Get(), SamplerStates
-    );
-#pragma endregion
-
 #pragma region R8G8B8A8_Skeletal_Solid
     ComPtr<ID3D11VertexShader> SkeletalMeshVS;
     ComPtr<ID3D11InputLayout> SkeletalMeshInputLayout;
-    
+
     D3D11_INPUT_ELEMENT_DESC SkeletalMeshInputElementDescs[7] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -191,7 +139,7 @@ PSOManager::PSOManager()
     ComPtr<ID3D11PixelShader> SkeletalMeshPS;
     CreatePixelShader(L"./Shaders/SkeletalAssetPS.hlsl", SkeletalMeshPS);
 
-    PSOObjects[R8G8B8A8_Skeletal_Solid] = make_unique<PSOObject>(
+    PSOObjects[R8G8B8A8_Skeletal_Solid] = make_unique<MeshObjectPSO<SkeletalMeshObject>>(
         DeviceContext,
         SkeletalMeshInputLayout,
         SkeletalMeshVS, 2, 0,
@@ -206,12 +154,14 @@ PSOManager::PSOManager()
     );
 #pragma endregion
 
-#pragma region R8G8B8A8_Skeletal_Wireframe
-    PSOObjects[R8G8B8A8_Skeletal_Wireframe] = make_unique<PSOObject>(
+#pragma region R8G8B8A8_BoundingComponent_ID_Wireframe
+    ComPtr<ID3D11PixelShader> PickingIDPS;
+    CreatePixelShader(L"./Shaders/PickingIDPS.hlsl", PickingIDPS);
+    PSOObjects[R8G8B8A8_BoundingComponent_ID_Wireframe] = make_unique<PickingIDWireframePSO>(
         DeviceContext,
-        SkeletalMeshInputLayout,
-        SkeletalMeshVS, 2, 0,
-        SkeletalMeshPS, 0, 0,
+        PostionOnlyInputLayout,
+        PositionOnlyPathVS, 2, 0,
+        PickingIDPS, 1, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SRVFormatCount, SRVFormats,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
@@ -222,7 +172,39 @@ PSOManager::PSOManager()
     );
 #pragma endregion
 
-    CreateRenderers();
+#pragma region R8G8B8A8_Static_ID_Solid
+    PSOObjects[R8G8B8A8_Static_ID_Solid] = make_unique<PickingIDSolidPSO<StaticMeshObject>>(
+        DeviceContext,
+        PostionOnlyInputLayout,
+        PositionOnlyPathVS, 2, 0,
+        PickingIDPS, 1, 0,
+        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+        SRVFormatCount, SRVFormats,
+        DXGI_FORMAT_D24_UNORM_S8_UINT,
+        SampleDesc,
+        CullBackSolidRS,
+        DepthCompLessDSS, NULL,
+        DisabledBS.Get(), SamplerStates
+    );
+#pragma endregion
+
+#pragma region R8G8B8A8_Skeletal_ID_Solid
+    PSOObjects[R8G8B8A8_Skeletal_ID_Solid] = make_unique<PickingIDSolidPSO<SkeletalMeshObject>>(
+        DeviceContext,
+        PostionOnlyInputLayout,
+        PositionOnlyPathVS, 2, 0,
+        PickingIDPS, 1, 0,
+        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+        SRVFormatCount, SRVFormats,
+        DXGI_FORMAT_D24_UNORM_S8_UINT,
+        SampleDesc,
+        CullBackSolidRS,
+        DepthCompLessDSS, NULL,
+        DisabledBS.Get(), SamplerStates
+    );
+#pragma endregion
+
+
 }
 
 PSOManager::~PSOManager()
@@ -486,15 +468,4 @@ void PSOManager::CreateSamplerState(
     SamplerDesc.Filter = Filter;
 
     Device->CreateSamplerState(&SamplerDesc, SamplerState.GetAddressOf());
-}
-
-void PSOManager::CreateRenderers()
-{
-    Renderers[R8G8B8A8_BoundingComponent_Solid] = make_unique<BoundingObjectRenderer>(GetPSOObject(R8G8B8A8_BoundingComponent_Solid));
-    Renderers[R8G8B8A8_BoundingComponent_Wireframe] = make_unique<BoundingObjectRenderer>(GetPSOObject(R8G8B8A8_BoundingComponent_Wireframe));
-    Renderers[R8G8B8A8_Picking_ID_Solid] = make_unique<PickingIDSolidRenderer>(GetPSOObject(R8G8B8A8_Picking_ID_Solid));
-    Renderers[R8G8B8A8_Static_Solid] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Static_Solid));
-    Renderers[R8G8B8A8_Static_Wireframe] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Static_Wireframe));
-    Renderers[R8G8B8A8_Skeletal_Solid] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Skeletal_Solid));
-    Renderers[R8G8B8A8_Skeletal_Wireframe] = make_unique<MeshObjectRenderer>(GetPSOObject(R8G8B8A8_Skeletal_Wireframe));
 }

@@ -1,5 +1,14 @@
 #pragma once
+#include <list>
 #include <vector>
+
+#define ManageForRendering(Object)															\
+protected:																					\
+	std::list<Object*> ##Object##s;															\
+public:																						\
+	inline void Add##Object##(Object* ObjectIn) { ##Object##s.emplace_back(ObjectIn); }		\
+	inline void Remove##Object##(Object* ObjectIn) { ##Object##s.remove(ObjectIn); }		
+
 
 #ifdef _DEBUG
 	#define CONSTANT_BUFFER_SETTER(Shader)																					\

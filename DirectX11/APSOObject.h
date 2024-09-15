@@ -7,10 +7,13 @@
 #define CONST_BUFFER_MAX_COUNT	16
 #define SRV_MAX_COUNT			128
 
-class PSOObject
+class Camera;
+class MapAsset;
+
+class APSOObject
 {
 public:
-	PSOObject(
+	APSOObject(
 		ID3D11DeviceContext*											DeviceContextIn,
 		const Microsoft::WRL::ComPtr<ID3D11InputLayout>&				InputLayoutIn,
 		const Microsoft::WRL::ComPtr<ID3D11VertexShader>&				VertexShaderIn,
@@ -30,9 +33,9 @@ public:
 		const Microsoft::WRL::ComPtr<ID3D11BlendState>					BlendStateIn,
 		const std::vector<Microsoft::WRL::ComPtr<ID3D11SamplerState>>&	SamplerStatesIn
 	);
-	~PSOObject();
+	~APSOObject();
 
-private:
+protected:
 	ID3D11DeviceContext*							DeviceContextCached = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D11VertexShader>		VertexShader;
@@ -53,6 +56,7 @@ private:
 
 private:
 	void ResetResourceFlag();
+
 #endif // _DEBUG
 
 
@@ -74,10 +78,10 @@ private:
 
 public:
 	void SetPipelineStateObject(
-		UINT						RTVCountIn,
-		ID3D11RenderTargetView**	RTVsIn,
-		D3D11_VIEWPORT*				ViewportIn,
-		ID3D11DepthStencilView*		DSVIn
+		const UINT&						RTVCountIn,
+		ID3D11RenderTargetView**		RTVsIn,
+		const D3D11_VIEWPORT*			ViewportIn,
+		ID3D11DepthStencilView*	DSVIn
 	);
 
 	CONSTANT_BUFFER_SETTER(VS);
@@ -91,5 +95,10 @@ public:
 	SRV_RESETTER(PS);
 
 	void CheckPipelineValidation();
+
+public:
+	virtual void PresetRendering(Camera* CameraIn, MapAsset* MapIn) = 0;
+	virtual void Render() = 0;
+	virtual void ResetRendering() = 0;
 };
 

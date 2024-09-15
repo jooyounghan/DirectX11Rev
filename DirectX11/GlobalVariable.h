@@ -4,6 +4,7 @@
 
 class PortfolioApp;
 class GraphicsPipeline;
+class PSOManager;
 class InputEventManager;
 
 namespace App
@@ -12,6 +13,7 @@ namespace App
 	extern UINT GHeight;
 	extern PortfolioApp* GApp;
 	extern GraphicsPipeline* GGraphicPipeline;
+	extern PSOManager* GPSOManager;
 	extern InputEventManager* GInputEventManager;
 }
 
