@@ -21,12 +21,20 @@ protected:
 	MakeSmartPtrGetter(CamearaFrustum);
 
 protected:
-	Microsoft::WRL::ComPtr<ID3D11Texture2D>				SceneTexture2D;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	SceneSRV;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		SceneRTV;
-	MakeComPtrGetter(SceneTexture2D);
-	MakeComPtrGetter(SceneSRV);
-	MakeComPtrGetter(SceneRTV);
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				SDRSceneTexture2D;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	SDRSceneSRV;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		SDRSceneRTV;
+	MakeComPtrGetter(SDRSceneTexture2D);
+	MakeComPtrGetter(SDRSceneSRV);
+	MakeComPtrGetter(SDRSceneRTV);
+
+protected:
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				HDRSceneTexture2D;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	HDRSceneSRV;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		HDRSceneRTV;
+	MakeComPtrGetter(HDRSceneTexture2D);
+	MakeComPtrGetter(HDRSceneSRV);
+	MakeComPtrGetter(HDRSceneRTV);
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				DepthStencilTexture2D;
@@ -41,5 +49,8 @@ public:
 
 public:
 	virtual void CleanupLens();
+
+public:
+	virtual void ToneMapping();
 };
 

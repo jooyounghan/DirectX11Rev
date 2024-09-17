@@ -64,13 +64,11 @@ void MapAsset::Update(const float& DeltaTimeIn)
 	{
 		ro->Update(DeltaTimeIn);
 	}
-	
-	UpdateRenderState();
 }
 
-void MapAsset::UpdateRenderState()
+void MapAsset::UpdateRenderState(Camera* CurrentCameraIn)
 {
-	BoundingFrustumObject* CameraFrustum = CameraCached->GetCamearaFrustum();
+	BoundingFrustumObject* CameraFrustum = CurrentCameraIn->GetCamearaFrustum();
 
 	for (auto& RootPlaceable : RootPlaceables)
 	{

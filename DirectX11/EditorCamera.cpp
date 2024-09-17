@@ -12,7 +12,7 @@ EditorCamera::EditorCamera(const UINT& WidthIn, const UINT& HeightIn)
 
 	D3D11_TEXTURE2D_DESC IdTexture2DDesc;
 	AutoZeroMemory(IdTexture2DDesc);
-	SceneTexture2D->GetDesc(&IdTexture2DDesc);
+	SDRSceneTexture2D->GetDesc(&IdTexture2DDesc);
 
 	IdTexture2DDesc.SampleDesc.Count = 1;
 	IdTexture2DDesc.SampleDesc.Quality = 0;

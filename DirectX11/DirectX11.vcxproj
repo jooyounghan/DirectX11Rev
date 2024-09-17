@@ -143,7 +143,9 @@
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
     <ClCompile Include="AMeshObject.cpp" />
+    <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ANBTMeshAsset.cpp" />
+    <ClCompile Include="APawn.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
     <ClCompile Include="ATextureAsset.cpp" />
     <ClCompile Include="BaseCubeMeshAsset.cpp" />
@@ -170,6 +172,7 @@
     <ClCompile Include="EditorWorld.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="EnvironmentActor.cpp" />
+    <ClCompile Include="EnvironmentActorPSO.cpp" />
     <ClCompile Include="Externals\DDSTextureLoader\DDSTextureLoader11.cpp" />
     <ClCompile Include="Externals\imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp" />
@@ -196,7 +199,6 @@
     <ClCompile Include="ModelDetailedInformationVisitor.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="OBBObject.cpp" />
-    <ClCompile Include="APawn.cpp" />
     <ClCompile Include="PickingIDWireframePSO.cpp" />
     <ClCompile Include="APlaceableObject.cpp" />
     <ClCompile Include="PortfolioApp.cpp" />
@@ -221,6 +223,7 @@
     <ClInclude Include="AddAttachableObjectHelper.h" />
     <ClInclude Include="AddPlaceableObjectHelper.h" />
     <ClInclude Include="AMeshObject.h" />
+    <ClInclude Include="AMovable.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
     <ClInclude Include="AScratchTextureAsset.h" />
     <ClInclude Include="ATextureAsset.h" />
@@ -248,6 +251,7 @@
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="EditorCamera.h" />
     <ClInclude Include="EnvironmentActor.h" />
+    <ClInclude Include="EnvironmentActorPSO.h" />
     <ClInclude Include="Externals\DDSTextureLoader\DDSTextureLoader11.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_dx11.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_win32.h" />

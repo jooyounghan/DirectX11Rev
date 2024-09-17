@@ -8,11 +8,16 @@
 
 #include "IGuiModelVisitor.h"
 
+#include "PSOManager.h"
+#include "EnvironmentActorPSO.h"
+
 using namespace std;
 
 EnvironmentActor::EnvironmentActor()
 	: AActor()
 {
+	EnvironmentActorPSO* Pso = reinterpret_cast<EnvironmentActorPSO*>(App::GPSOManager->GetPSOObject(EPSOType::R8G8B8A8_Static_Solid));
+	if (Pso != nullptr) Pso->AddEnvironmentActor(this);
 }
 
 EnvironmentActor::~EnvironmentActor()

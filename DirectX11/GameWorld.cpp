@@ -63,7 +63,7 @@ void GameWorld::LoadManagingMaps()
 	// TODO : Map을 선택하는 과정 추가하기
 	CurrentMap = MapInstances[0].get();
 	EditorPawn* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
-	SetCurrentCamera(EditorActorInstnace->GetEditorCameraCached());
+	CurrentCamera = EditorActorInstnace->GetEditorCameraCached();
 }
 
 void GameWorld::Update(const float& DeltaTimeIn)
@@ -75,13 +75,8 @@ void GameWorld::Update(const float& DeltaTimeIn)
 	if (CurrentMap)
 	{
 		CurrentMap->Update(DeltaTimeIn);
+		CurrentMap->UpdateRenderState(CurrentCamera);
 	}
-}
-
-void GameWorld::SetCurrentCamera(Camera* CurrentCameraIn)
-{
-	CurrentCamera = CurrentCameraIn;
-	CurrentMap->SetCameraCached(CurrentCameraIn);
 }
 
 void GameWorld::RenderWorld()

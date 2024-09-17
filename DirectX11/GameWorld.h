@@ -51,9 +51,6 @@ protected:
 	Camera* CurrentCamera = nullptr;
 
 public:
-	void SetCurrentCamera(Camera* CurrentCameraIn);
-
-public:
 	virtual void RenderWorld() override;
 
 public:

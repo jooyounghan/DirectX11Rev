@@ -4,7 +4,7 @@
 
 class BoundingSphereObject;
 
-class OBBObject : public ABoundingObject, public BoundingOrientedBox
+class OBBObject : public ABoundingObject, public DirectX::BoundingOrientedBox
 {
 public:
 	OBBObject();
@@ -24,7 +24,7 @@ public:
 	static const char* BoundingOBBIdentifier;
 
 public:
-	XMFLOAT3 DescaledExtents;
+	DirectX::XMFLOAT3 DescaledExtents;
 
 protected:
 	static std::shared_ptr<Debugable> CreateDebugBoxObject(ID3D11Device* DeviceIn);

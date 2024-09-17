@@ -3,6 +3,7 @@
 #include "GlobalVariable.h"
 
 using namespace std;
+using namespace DirectX;
 
 AAttachableObject::AAttachableObject()
 	: AObject()
@@ -19,7 +20,7 @@ void AAttachableObject::SetParent(AObject* ParentObjectIn, ID3D11Buffer* Picking
 	PickingIDBufferCached = PickingIDBufferCachedIn;
 }
 
-DirectX::XMVECTOR AAttachableObject::GetRotationQuat() const
+XMVECTOR AAttachableObject::GetRotationQuat() const
 {
 	XMVECTOR ResultQuat = XMQuaternionRotationRollPitchYaw(
 		XMConvertToRadians(RelativeAngle.x),
@@ -92,7 +93,7 @@ XMFLOAT3  AAttachableObject::GetAbsoluteScale() const
 }
 
 
-DirectX::XMMATRIX AAttachableObject::GetTransformation() const
+XMMATRIX AAttachableObject::GetTransformation() const
 {
 	XMMATRIX ResultTransformation = XMMatrixAffineTransformation(
 		XMLoadFloat3(&RelativeScale),

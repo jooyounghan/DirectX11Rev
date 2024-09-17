@@ -4,22 +4,14 @@
 #include <format>
 
 using namespace std;
+using namespace DirectX;
 
 AObject::AObject()
-	: ObjectID(string{ format("{}", (uint64_t)this) }), 
-	RelativePositionID(string{ format("{}", (uint64_t)&RelativePosition) }),
-	RelativeAngleID(string{ format("{}", (uint64_t)&RelativeAngle) }),
-	RelativeScaleID(string{ format("{}", (uint64_t)&RelativeScale) }),
+	: AMovable(), ObjectID(string{ format("{}", (uint64_t)this) }),
 	DeviceContextCached(App::GGraphicPipeline->GetDeviceContext()),
 	TransformationBuffer()
 {
-	AutoZeroMemory(RelativePosition);
-	AutoZeroMemory(RelativeScale);
-	AutoZeroMemory(RelativeAngle);
 
-	RelativeScale.x = 1.f;
-	RelativeScale.y = 1.f;
-	RelativeScale.z = 1.f;
 }
 
 void AObject::Update(const float& DeltaTimeIn)

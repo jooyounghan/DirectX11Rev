@@ -51,7 +51,7 @@ public:
 template<typename MeshObject>
 void PickingIDSolidPSO<MeshObject>::PresetRendering(Camera* CameraIn, MapAsset* MapIn)
 {
-	ID3D11RenderTargetView* RTVs[]{ CameraIn->GetSceneRTV() };
+	ID3D11RenderTargetView* RTVs[]{ CameraIn->GetSDRSceneRTV() };
 
 	SetPipelineStateObject(1, RTVs, &CameraIn->GetViewport(), CameraIn->GetSceneDSV());
 	ID3D11Buffer* ViewProjBuffer[] = { CameraIn->ViewProjBuffer.GetBuffer() };

@@ -20,6 +20,10 @@ protected:
 	std::shared_ptr<DDSTextureAsset> EnvironmentSpecularDDSTextureAsset = nullptr;
 	std::shared_ptr<DDSTextureAsset> EnvironmentDiffuseDDSTextureAsset = nullptr;
 	std::shared_ptr<DDSTextureAsset> EnvironmentBRDFDDSTextureAsset = nullptr;
+	MakeSmartPtrGetter(EnvironmentBackgroundEXRTextureAsset);
+	MakeSmartPtrGetter(EnvironmentSpecularDDSTextureAsset);
+	MakeSmartPtrGetter(EnvironmentDiffuseDDSTextureAsset);
+	MakeSmartPtrGetter(EnvironmentBRDFDDSTextureAsset);
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

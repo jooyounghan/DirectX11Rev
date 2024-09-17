@@ -43,10 +43,6 @@ protected:
 	AssetManager* AssetManagerCached = nullptr;
 
 protected:
-	Camera* CameraCached = nullptr;
-	MakeSetter(CameraCached);
-
-protected:
 	std::list<std::unique_ptr<APlaceableObject>> RootPlaceables;
 	MakeGetter(RootPlaceables);
 
@@ -60,9 +56,7 @@ public:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
-
-private:
-	void UpdateRenderState();
+	void UpdateRenderState(Camera* CurrentCameraIn);
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;

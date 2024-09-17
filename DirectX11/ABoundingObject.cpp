@@ -11,6 +11,7 @@ ABoundingObject::ABoundingObject()
 {
 	BoundingObjectPSO* Pso = reinterpret_cast<BoundingObjectPSO*>(App::GPSOManager->GetPSOObject(EPSOType::R8G8B8A8_BoundingComponent_Wireframe));
 	if (Pso != nullptr) Pso->AddABoundingObject(this);
+
 	PickingIDWireframePSO* PsoForID = reinterpret_cast<PickingIDWireframePSO*>(App::GPSOManager->GetPSOObject(EPSOType::R8G8B8A8_BoundingComponent_ID_Wireframe));
 	if (PsoForID != nullptr) PsoForID->AddABoundingObject(this);
 }
