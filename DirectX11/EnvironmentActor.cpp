@@ -30,6 +30,7 @@ void EnvironmentActor::AcceptGui(IGuiModelVisitor* GuiVisitor)
 
 void EnvironmentActor::Render()
 {
+	AActor::Render();
 }
 
 void EnvironmentActor::Update(const float& DeltaTimeIn)

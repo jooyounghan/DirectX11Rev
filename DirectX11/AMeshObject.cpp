@@ -12,3 +12,8 @@ AMeshObject::AMeshObject(MapAsset* MapAssetInstance)
 AMeshObject::~AMeshObject()
 {
 }
+
+void AMeshObject::Render()
+{
+	AAttachableObject::Render();
+}

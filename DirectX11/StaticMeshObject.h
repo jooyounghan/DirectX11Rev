@@ -2,6 +2,7 @@
 #include "AMeshObject.h"
 
 class StaticMeshAsset;
+class PSOObject;
 
 class StaticMeshObject : public AMeshObject
 {

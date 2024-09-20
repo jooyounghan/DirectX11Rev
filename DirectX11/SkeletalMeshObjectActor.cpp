@@ -42,6 +42,7 @@ void SkeletalMeshObjectActor::AcceptGui(IGuiModelVisitor* GuiVisitor)
 
 void SkeletalMeshObjectActor::Render()
 {
+	AActor::Render();
 	SkeletalMeshObjectInstance->Render();
 }
 

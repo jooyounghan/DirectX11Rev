@@ -17,7 +17,7 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
 
 public:
-	virtual void Render() = 0;
+	virtual void Render() override;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) = 0;

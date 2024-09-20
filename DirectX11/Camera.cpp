@@ -136,5 +136,6 @@ void Camera::CleanupLens()
 
 void Camera::Render()
 {
+	Viewable::Render();
 	CamearaFrustum->Render();
 }

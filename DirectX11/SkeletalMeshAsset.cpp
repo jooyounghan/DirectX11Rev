@@ -7,7 +7,7 @@
 using namespace std;
 
 SkeletalMeshAsset::SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadAsFile)
-	: ANBTMeshAsset(LoadAsFile ? AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::SkeletalMesh)] : AssetNameIn, EAssetType::SkeletalMesh)
+	: ANBTMeshAsset(LoadAsFile ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::SkeletalMesh)], EAssetType::SkeletalMesh)
 {
 }
 

@@ -31,6 +31,7 @@ void EditorPawn::Update(const float& DeltaTimeIn)
 
 void EditorPawn::Render()
 {
+    AActor::Render();
 }
 
 void EditorPawn::OnSerializeFromMap(FILE* FileIn)

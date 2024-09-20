@@ -25,9 +25,6 @@ protected:
 	MakeGetter(DebuggingColorBuffer);
 
 public:
-	void UpdateColor(const DirectX::XMVECTOR& ColorIn, ID3D11DeviceContext* DeviceContextIn);
-
-public:
 	virtual bool Intersect(Ray* RayIn, float& DistanceOut) = 0;
 
 public:

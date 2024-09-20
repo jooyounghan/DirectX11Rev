@@ -5,7 +5,7 @@ using namespace std;
 
 
 StaticMeshAsset::StaticMeshAsset(const string& AssetNameIn, bool LoadAsFile)
-	: ANBTMeshAsset(LoadAsFile ? AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::StaticMesh)] : AssetNameIn, EAssetType::StaticMesh)
+	: ANBTMeshAsset(LoadAsFile ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::StaticMesh)], EAssetType::StaticMesh)
 {
 }
 

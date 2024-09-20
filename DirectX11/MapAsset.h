@@ -57,7 +57,6 @@ public:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
-	void UpdateRenderState();
 
 public:
 	void RenderMap();

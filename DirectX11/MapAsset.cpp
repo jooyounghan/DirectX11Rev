@@ -65,20 +65,14 @@ void MapAsset::AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> Ske
 
 void MapAsset::Update(const float& DeltaTimeIn)
 {
-	CurrentCamera->CleanupLens();
-	for (auto& ro : RootPlaceables)
-	{
-		ro->Update(DeltaTimeIn);
-	}
-}
-
-void MapAsset::UpdateRenderState()
-{
 	if (CurrentCamera != nullptr)
 	{
+		CurrentCamera->Update(DeltaTimeIn);
 		BoundingFrustumObject* CameraFrustum = CurrentCamera->GetCamearaFrustum();
 		for (auto& RootPlaceable : RootPlaceables)
 		{
+			RootPlaceable->Update(DeltaTimeIn);
+
 			const std::list<IIntersectable*>& Intersectables = RootPlaceable->GetIntersectables();
 			for (auto& intersectable : Intersectables)
 			{
@@ -93,7 +87,7 @@ void MapAsset::UpdateRenderState()
 					RootPlaceable->SetIsRenderable(false);
 				}
 			}
-		}		
+		}
 	}
 }
 
@@ -102,9 +96,7 @@ void MapAsset::RenderMap()
 	CurrentCamera->CleanupLens();
 
 	for (auto& RootPlaceable : RootPlaceables)
-	{
-		//RootPlaceable->Render()
-	}
+		if (RootPlaceable->GetIsRenderable()) RootPlaceable->Render();
 }
 
 void MapAsset::Serialize(const std::string& OutputAdditionalPath)

@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AActor.cpp" />
     <ClCompile Include="AAddObjectHelper.cpp" />
     <ClCompile Include="AController.cpp" />
     <ClCompile Include="AddAttachableObjectHelper.cpp" />

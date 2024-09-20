@@ -205,6 +205,14 @@ void AAttachableObject::Update(const float& DeltaTimeIn)
 	}
 }
 
+void AAttachableObject::Render()
+{
+	for (auto& AttachedChild : AttachedChildrenObjects)
+	{
+		AttachedChild->Render();
+	}
+}
+
 void AAttachableObject::AddIntersectableToRootPlaceable(APlaceableObject* RootPlaceable, IIntersectable* Intersectable)
 {
 	RootPlaceable->Intersectables.push_back(Intersectable);

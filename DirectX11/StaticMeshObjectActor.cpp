@@ -39,6 +39,7 @@ void StaticMeshObjectActor::AcceptGui(IGuiModelVisitor* GuiVisitor)
 
 void StaticMeshObjectActor::Render()
 {
+	AActor::Render();
 	StaticMeshObjectInstance->Render();
 }
 

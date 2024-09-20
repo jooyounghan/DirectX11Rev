@@ -7,6 +7,10 @@
 #include "IGuiModelVisitor.h"
 
 #include "PSOManager.h"
+#include "PSOObject.h"
+
+#include "MapAsset.h"
+#include "Camera.h"
 
 using namespace std;
 
@@ -41,6 +45,63 @@ void StaticMeshObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 
 void StaticMeshObject::Render()
 {
+	AAttachableObject::Render();
+
+	Camera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	if (CurrentCamera != nullptr && StaticMeshAssetInstance != nullptr)
+	{
+		ID3D11RenderTargetView* RTVs[]{ CurrentCamera->GetSDRSceneRTV() };
+		const std::vector<ID3D11Buffer*> VertexBuffers = StaticMeshAssetInstance->GetVertexBuffers();
+		const std::vector<UINT> Strides = StaticMeshAssetInstance->GetStrides();
+		const std::vector<UINT> Offsets = StaticMeshAssetInstance->GetOffsets();
+		ID3D11Buffer* VSConstBuffers[] = { CurrentCamera->ViewProjBuffer.GetBuffer(), TransformationBuffer.GetBuffer() };
+		ID3D11Buffer* PSConstBuffers[] = { PickingIDBufferCached };
+
+#pragma region StaticMeshObjectPSOCached
+		StaticMeshObjectPSOCached->SetPipelineStateObject(1, RTVs, &CurrentCamera->GetViewport(), CurrentCamera->GetSceneDSV());
+		StaticMeshObjectPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
+
+		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
+			VertexBuffers.data(),
+			Strides.data(),
+			Offsets.data()
+		);
+		DeviceContextCached->IASetIndexBuffer(StaticMeshAssetInstance->GetIndexBuffer(), StaticMeshAssetInstance->GetIndexFormat(), 0);
+
+#ifdef _DEBUG
+		StaticMeshObjectPSOCached->CheckPipelineValidation();
+#endif // DEBUG
+
+		DeviceContextCached->DrawIndexed(static_cast<UINT>(StaticMeshAssetInstance->GetIndexCount()), 0, 0);
+
+		StaticMeshObjectPSOCached->ResetVSConstantBuffers(0, 2);
+#pragma endregion
+
+#pragma region PickingIDSolidStaticPSOCached
+
+
+		PickingIDSolidStaticPSOCached->SetPipelineStateObject(1, RTVs, &CurrentCamera->GetViewport(), CurrentCamera->GetSceneDSV());
+
+		PickingIDSolidStaticPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
+		PickingIDSolidStaticPSOCached->SetPSConstantBuffers(0, 1, PSConstBuffers);
+
+		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
+			VertexBuffers.data(),
+			Strides.data(),
+			Offsets.data()
+		);
+		DeviceContextCached->IASetIndexBuffer(StaticMeshAssetInstance->GetIndexBuffer(), StaticMeshAssetInstance->GetIndexFormat(), 0);
+
+
+#ifdef _DEBUG
+		PickingIDSolidStaticPSOCached->CheckPipelineValidation();
+#endif // DEBUG
+
+		DeviceContextCached->DrawIndexed(static_cast<UINT>(StaticMeshAssetInstance->GetIndexCount()), 0, 0);
+
+		PickingIDSolidStaticPSOCached->ResetVSConstantBuffers(0, 2);
+#pragma endregion
+	}
 }
 
 void StaticMeshObject::OnSerializeFromMap(FILE* FileIn)

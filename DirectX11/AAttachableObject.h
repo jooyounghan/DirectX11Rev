@@ -85,7 +85,7 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
 
 public:
-	virtual void Render() = 0;
+	virtual void Render() override;
 
 public:
 	template<typename Attachment, typename ...Args>

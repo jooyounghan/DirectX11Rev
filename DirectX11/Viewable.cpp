@@ -87,3 +87,8 @@ void Viewable::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 	fread(&NearZ, sizeof(float), 1, FileIn);
 	fread(&FarZ, sizeof(float), 1, FileIn);
 }
+
+void Viewable::Render()
+{
+	AAttachableObject::Render();
+}

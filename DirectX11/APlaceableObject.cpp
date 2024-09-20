@@ -171,6 +171,14 @@ void APlaceableObject::Update(const float& DeltaTimeIn)
 	}
 }
 
+void APlaceableObject::Render()
+{
+	for (auto& AttachedChild : AttachedChildrenObjects)
+	{
+		AttachedChild->Render();
+	}
+}
+
 void APlaceableObject::RemoveAttachedObject(AAttachableObject* AttachedObjectIn)
 {
 	RemoveFromIntersectables(AttachedObjectIn);

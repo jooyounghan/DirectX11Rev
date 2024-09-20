@@ -47,6 +47,6 @@ public:
 	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
 
 public:
-	virtual void Render() = 0;
+	virtual void Render() override;
 };
 

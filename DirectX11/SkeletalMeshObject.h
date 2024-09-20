@@ -2,6 +2,7 @@
 #include "AMeshObject.h"
 
 class SkeletalMeshAsset;
+class PSOObject;
 
 class SkeletalMeshObject : public AMeshObject
 {
