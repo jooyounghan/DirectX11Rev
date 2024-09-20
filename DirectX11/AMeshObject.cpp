@@ -4,7 +4,8 @@
 
 using namespace std;
 
-AMeshObject::AMeshObject()
+AMeshObject::AMeshObject(MapAsset* MapAssetInstance)
+	: AAttachableObject(MapAssetInstance)
 {
 }
 

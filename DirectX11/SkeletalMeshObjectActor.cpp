@@ -4,7 +4,11 @@
 
 using namespace std;
 
-SkeletalMeshObjectActor::SkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> MeshAssetInstanceIn)
+SkeletalMeshObjectActor::SkeletalMeshObjectActor(
+	MapAsset* MapAssetInstance, 
+	std::shared_ptr<SkeletalMeshAsset> MeshAssetInstanceIn
+)
+	: AActor(MapAssetInstance)
 {
 	static size_t SkeletalActorCount = 0;
 	SkeletalActorCount++;
@@ -12,7 +16,7 @@ SkeletalMeshObjectActor::SkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAss
 
 	PlaceableKind = EPlaceableObjectKind::SKELETAL_MESH_ACTOR_KIND;
 
-	SkeletalMeshObjectInstance = make_unique<SkeletalMeshObject>(MeshAssetInstanceIn);
+	SkeletalMeshObjectInstance = make_unique<SkeletalMeshObject>(MapAssetInstance, MeshAssetInstanceIn);
 	SkeletalMeshObjectInstance->SetParent(this, PickingIDBuffer.GetBuffer());
 
 }
@@ -31,15 +35,14 @@ void SkeletalMeshObjectActor::Update(const float& DeltaTimeIn)
 	}
 }
 
-void SkeletalMeshObjectActor::UpdateRenderable(const bool& RenderableFlag)
-{
-	APlaceableObject::UpdateRenderable(RenderableFlag);
-	SkeletalMeshObjectInstance->UpdateRenderable(RenderableFlag);
-}
-
 void SkeletalMeshObjectActor::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
+}
+
+void SkeletalMeshObjectActor::Render()
+{
+	SkeletalMeshObjectInstance->Render();
 }
 
 void SkeletalMeshObjectActor::OnSerializeFromMap(FILE* FileIn)

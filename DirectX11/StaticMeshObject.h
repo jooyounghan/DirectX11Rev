@@ -6,7 +6,7 @@ class StaticMeshAsset;
 class StaticMeshObject : public AMeshObject
 {
 public:
-	StaticMeshObject(std::shared_ptr<StaticMeshAsset> SkeletalMeshAssetInstanceIn);
+	StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> SkeletalMeshAssetInstanceIn);
 	virtual ~StaticMeshObject();
 
 protected:
@@ -19,6 +19,13 @@ public:
 public:
 	virtual AMeshAsset* GetMeshAssetInstance() override;
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
+
+protected:
+	PSOObject* StaticMeshObjectPSOCached = nullptr;
+	PSOObject* PickingIDSolidStaticPSOCached = nullptr;
+
+public:
+	virtual void Render() override final;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;

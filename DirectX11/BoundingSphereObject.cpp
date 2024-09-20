@@ -16,14 +16,14 @@ using namespace DirectX;
 
 const char* BoundingSphereObject::BoundingSphereIdentifier = "Bounding Sphere";
 
-BoundingSphereObject::BoundingSphereObject()
-	: ABoundingObject(), DescaledRadius(100.f)
+BoundingSphereObject::BoundingSphereObject(MapAsset* MapAssetInstance)
+	: ABoundingObject(MapAssetInstance), DescaledRadius(100.f)
 {
 	InitBoundingSphere(App::GGraphicPipeline->GetDevice());
 }
 
-BoundingSphereObject::BoundingSphereObject(const float& RadiusIn)
-	: ABoundingObject(), DescaledRadius(RadiusIn)
+BoundingSphereObject::BoundingSphereObject(MapAsset* MapAssetInstance, const float& RadiusIn)
+	: ABoundingObject(MapAssetInstance), DescaledRadius(RadiusIn)
 {
 	InitBoundingSphere(App::GGraphicPipeline->GetDevice());
 }

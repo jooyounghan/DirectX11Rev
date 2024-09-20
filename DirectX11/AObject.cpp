@@ -1,14 +1,16 @@
 #include "AObject.h"
 #include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
+
 #include <format>
 
 using namespace std;
 using namespace DirectX;
 
-AObject::AObject()
-	: AMovable(), ObjectID(string{ format("{}", (uint64_t)this) }),
+AObject::AObject(MapAsset* MapAssetInstance)
+	: AMovable(), MapAssetCached(MapAssetInstance), 
 	DeviceContextCached(App::GGraphicPipeline->GetDeviceContext()),
+	ObjectID(string{ format("{}", (uint64_t)this) }),
 	TransformationBuffer()
 {
 

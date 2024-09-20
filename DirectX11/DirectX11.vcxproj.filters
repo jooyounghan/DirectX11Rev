@@ -265,21 +265,6 @@
     <Filter Include="Shader\Environment">
       <UniqueIdentifier>{602c7d87-9fcd-4fdb-a497-8e16d5991a0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\PSO\Extended">
-      <UniqueIdentifier>{344cbf6c-2fc6-4958-b796-b56ef998c3f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\PSO\Extended">
-      <UniqueIdentifier>{877757fd-af1f-480e-ab9f-402d9a9cafa3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\PSO\PSOWithHDRCamera">
-      <UniqueIdentifier>{2c69d291-8b9e-4234-8af5-70670ca66ae5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\PSO\PSOWithNormalCamera">
-      <UniqueIdentifier>{43642253-bb62-40fb-ba3b-67aea2f35d74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\PSO\PSOWithHDRCamera">
-      <UniqueIdentifier>{4ecf5acf-7ba8-48d8-b5d0-68cce1f0ca15}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -375,7 +360,7 @@
     <ClCompile Include="PSOManager.cpp">
       <Filter>소스 파일\PSO</Filter>
     </ClCompile>
-    <ClCompile Include="APSOObject.cpp">
+    <ClCompile Include="PSOObject.cpp">
       <Filter>소스 파일\PSO</Filter>
     </ClCompile>
     <ClCompile Include="AssetManager.cpp">
@@ -416,9 +401,6 @@
     </ClCompile>
     <ClCompile Include="AController.cpp">
       <Filter>소스 파일\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="AActor.cpp">
-      <Filter>소스 파일\Object\Placeable\Actor</Filter>
     </ClCompile>
     <ClCompile Include="DefaultController.cpp">
       <Filter>소스 파일\Controller\UserController</Filter>
@@ -483,12 +465,6 @@
     <ClCompile Include="ModelHelper.cpp">
       <Filter>소스 파일\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="BoundingObjectPSO.cpp">
-      <Filter>소스 파일\PSO\Extended</Filter>
-    </ClCompile>
-    <ClCompile Include="PickingIDWireframePSO.cpp">
-      <Filter>소스 파일\PSO\Extended</Filter>
-    </ClCompile>
     <ClCompile Include="StaticMeshObject.cpp">
       <Filter>소스 파일\Object\Attachable\Mesh</Filter>
     </ClCompile>
@@ -510,20 +486,11 @@
     <ClCompile Include="AMovable.cpp">
       <Filter>소스 파일\Object</Filter>
     </ClCompile>
-    <ClCompile Include="APawn.cpp">
-      <Filter>소스 파일\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="EnvironmentActorPSO.cpp">
-      <Filter>소스 파일\PSO\Extended</Filter>
-    </ClCompile>
-    <ClCompile Include="APSOObjectWIthHDRCamera.cpp">
-      <Filter>소스 파일\PSO\PSOWithHDRCamera</Filter>
-    </ClCompile>
-    <ClCompile Include="IDSelectCamera.cpp">
-      <Filter>소스 파일\Object\View</Filter>
-    </ClCompile>
     <ClCompile Include="HDRCamera.cpp">
       <Filter>소스 파일\Object\View</Filter>
+    </ClCompile>
+    <ClCompile Include="APawn.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -659,7 +626,7 @@
     <ClInclude Include="PSOManager.h">
       <Filter>헤더 파일\PSO</Filter>
     </ClInclude>
-    <ClInclude Include="APSOObject.h">
+    <ClInclude Include="PSOObject.h">
       <Filter>헤더 파일\PSO</Filter>
     </ClInclude>
     <ClInclude Include="PSOObjectHelper.h">
@@ -803,18 +770,6 @@
     <ClInclude Include="ModelHelper.h">
       <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="BoundingObjectPSO.h">
-      <Filter>헤더 파일\PSO\Extended</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshObjectPSO.h">
-      <Filter>헤더 파일\PSO\Extended</Filter>
-    </ClInclude>
-    <ClInclude Include="PickingIDWireframePSO.h">
-      <Filter>헤더 파일\PSO\Extended</Filter>
-    </ClInclude>
-    <ClInclude Include="PickingIDSolidPSO.h">
-      <Filter>헤더 파일\PSO\Extended</Filter>
-    </ClInclude>
     <ClInclude Include="StaticMeshObject.h">
       <Filter>헤더 파일\Object\Attachable\Mesh</Filter>
     </ClInclude>
@@ -835,18 +790,6 @@
     </ClInclude>
     <ClInclude Include="AMovable.h">
       <Filter>헤더 파일\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="EnvironmentActorPSO.h">
-      <Filter>헤더 파일\PSO\Extended</Filter>
-    </ClInclude>
-    <ClInclude Include="APSOObjectWIthHDRCamera.h">
-      <Filter>헤더 파일\PSO\PSOWithHDRCamera</Filter>
-    </ClInclude>
-    <ClInclude Include="APSOObjectWithNormalCamera.h">
-      <Filter>헤더 파일\PSO\PSOWithNormalCamera</Filter>
-    </ClInclude>
-    <ClInclude Include="IDSelectCamera.h">
-      <Filter>헤더 파일\Object\Attachable\View</Filter>
     </ClInclude>
     <ClInclude Include="HDRCamera.h">
       <Filter>헤더 파일\Object\Attachable\View</Filter>

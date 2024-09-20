@@ -3,7 +3,7 @@
 
 class EditorWorld;
 class EditorPawn;
-class IDSelectCamera; 
+class Camera; 
 
 class GameWorld;
 class AssetManager;
@@ -12,7 +12,7 @@ class MapAsset;
 class ViewportWindow : public IWindow
 {
 public: 
-	ViewportWindow(EditorWorld* EditorWorldIn);
+	ViewportWindow(EditorWorld* EditorWorldCached);
 	virtual ~ViewportWindow();
 
 public:
@@ -25,8 +25,7 @@ private:
 	MapAsset* CurrentMap = nullptr;
 
 private:
-	EditorPawn* EditorActorCached = nullptr;
-	IDSelectCamera* IDSelectCameraCached = nullptr;
+	Camera* CameraCached = nullptr;
 
 private:
 	ImVec2 ImagePosition = ImVec2();

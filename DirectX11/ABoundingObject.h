@@ -5,11 +5,12 @@
 
 class GraphicsPipeline;
 class Debugable;
+class PSOObject;
 
 class ABoundingObject : public IIntersectable, public AAttachableObject
 {	
 public:
-	ABoundingObject();
+	ABoundingObject(MapAsset* MapAssetInstance);
 	virtual ~ABoundingObject();
 
 protected:
@@ -35,5 +36,12 @@ public:
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
+
+protected:
+	PSOObject* BoundingObjectPSOCached = nullptr;
+	PSOObject* PickingIDWireframePSOCached = nullptr;
+
+public:
+	virtual void Render() override final;
 };
 

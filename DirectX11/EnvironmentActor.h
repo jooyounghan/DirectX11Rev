@@ -14,7 +14,7 @@ struct SHDRToneMappingConstant
 class EnvironmentActor : public AActor
 {
 public:
-	EnvironmentActor();
+	EnvironmentActor(MapAsset* MapAssetInstance);
 	virtual ~EnvironmentActor();
 
 protected:
@@ -40,6 +40,9 @@ protected:
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
+
+public:
+	virtual void Render() override final;
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

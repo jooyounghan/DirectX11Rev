@@ -14,8 +14,8 @@ using namespace std;
 
 const char* BoundingFrustumObject::BoundingFrustumIdentifier = "Bounding Frustum";
 
-BoundingFrustumObject::BoundingFrustumObject(Viewable* ViewableInstance)
-	: ABoundingObject(), ViewableCached(ViewableInstance)
+BoundingFrustumObject::BoundingFrustumObject(MapAsset* MapAssetInstance, Viewable* ViewableInstance)
+	: ABoundingObject(MapAssetInstance), ViewableCached(ViewableInstance)
 {
     static shared_ptr<Debugable> FrustumDebugObject = CreateDebugFrustumObject(App::GGraphicPipeline->GetDevice());
 

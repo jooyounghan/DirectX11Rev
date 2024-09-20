@@ -10,7 +10,7 @@ struct ViewProjBufferData
 class Viewable : public AAttachableObject
 {
 public:
-	Viewable(const UINT& WidthIn, const UINT& HeightIn);
+	Viewable(MapAsset* MapAssetInstance, const UINT& WidthIn, const UINT& HeightIn);
 	virtual ~Viewable();
 
 protected:
@@ -45,5 +45,8 @@ public:
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;
 	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
+
+public:
+	virtual void Render() = 0;
 };
 

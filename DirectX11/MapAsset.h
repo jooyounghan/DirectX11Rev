@@ -10,24 +10,17 @@
 #include "IUpdatable.h"
 
 #include <list>
-#include <memory>
 #include <unordered_map>
+#include <memory>
 #include <type_traits>
-
-class PSOManager;
-class APSOObject;
 
 class AssetManager;
 
-class APlaceableObject;
-class AAttachableObject;
+class EditorPawn;
 
 class Camera;
-class AObject;
 class StaticMeshAsset;
 class SkeletalMeshAsset;
-
-class IIntersectable;
 
 class MapAsset : public AAssetFile, public IUpdatable
 {
@@ -43,6 +36,14 @@ protected:
 	AssetManager* AssetManagerCached = nullptr;
 
 protected:
+	std::unique_ptr<EditorPawn> EditorActorInstance;
+	MakeSmartPtrGetter(EditorActorInstance);
+
+protected:
+	Camera* CurrentCamera = nullptr;
+	MakeGetter(CurrentCamera);
+
+protected:
 	std::list<std::unique_ptr<APlaceableObject>> RootPlaceables;
 	MakeGetter(RootPlaceables);
 
@@ -56,7 +57,10 @@ public:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
-	void UpdateRenderState(Camera* CurrentCameraIn);
+	void UpdateRenderState();
+
+public:
+	void RenderMap();
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;

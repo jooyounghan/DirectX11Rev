@@ -10,7 +10,7 @@ class OBBObject;
 class BoundingFrustumObject : public ABoundingObject, public BoundingFrustum
 {
 public:
-	BoundingFrustumObject(Viewable* ViewableInstance);
+	BoundingFrustumObject(MapAsset* MapAssetInstance, Viewable* ViewableInstance);
 	virtual ~BoundingFrustumObject();
 
 protected:

@@ -4,7 +4,7 @@
 #include "GlobalVariable.h"
 
 #include "PSOManager.h"
-#include "APSOObject.h"
+#include "PSOObject.h"
 
 #include "AssetManager.h"
 #include "StaticMeshAsset.h"
@@ -33,8 +33,13 @@ MapAsset::MapAsset(
 )
 	: 
 	AssetManagerCached(AssetManagerIn),
-	AAssetFile(LoadAsFile ? MapNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Map)] : MapNameIn, EAssetType::Map)
+	AAssetFile(LoadAsFile ? MapNameIn : MapNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Map)], EAssetType::Map)
 {
+	if (!LoadAsFile)
+	{
+		EditorActorInstance = make_unique<EditorPawn>(this);
+		CurrentCamera = EditorActorInstance->GetCameraInstance();
+	}
 }
 
 MapAsset::~MapAsset()
@@ -44,7 +49,7 @@ MapAsset::~MapAsset()
 
 void MapAsset::AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticMeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-	StaticMeshObjectActor* StaticMeshObjectIn = PlaceableAddHelper<StaticMeshObjectActor>(StaticMeshAssetIn);
+	StaticMeshObjectActor* StaticMeshObjectIn = PlaceableAddHelper<StaticMeshObjectActor>(this, StaticMeshAssetIn);
 	StaticMeshObjectIn->RelativePosition.x = PosXIn;
 	StaticMeshObjectIn->RelativePosition.y = PosYIn;
 	StaticMeshObjectIn->RelativePosition.z = PosZIn;
@@ -52,7 +57,7 @@ void MapAsset::AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticM
 
 void MapAsset::AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-	SkeletalMeshObjectActor* SkeletalMeshObjectIn = PlaceableAddHelper<SkeletalMeshObjectActor>(SkeletalMeshAssetIn);
+	SkeletalMeshObjectActor* SkeletalMeshObjectIn = PlaceableAddHelper<SkeletalMeshObjectActor>(this, SkeletalMeshAssetIn);
 	SkeletalMeshObjectIn->RelativePosition.x = PosXIn;
 	SkeletalMeshObjectIn->RelativePosition.y = PosYIn;
 	SkeletalMeshObjectIn->RelativePosition.z = PosZIn;
@@ -60,32 +65,45 @@ void MapAsset::AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> Ske
 
 void MapAsset::Update(const float& DeltaTimeIn)
 {
+	CurrentCamera->CleanupLens();
 	for (auto& ro : RootPlaceables)
 	{
 		ro->Update(DeltaTimeIn);
 	}
 }
 
-void MapAsset::UpdateRenderState(Camera* CurrentCameraIn)
+void MapAsset::UpdateRenderState()
 {
-	BoundingFrustumObject* CameraFrustum = CurrentCameraIn->GetCamearaFrustum();
+	if (CurrentCamera != nullptr)
+	{
+		BoundingFrustumObject* CameraFrustum = CurrentCamera->GetCamearaFrustum();
+		for (auto& RootPlaceable : RootPlaceables)
+		{
+			const std::list<IIntersectable*>& Intersectables = RootPlaceable->GetIntersectables();
+			for (auto& intersectable : Intersectables)
+			{
+				CollisionVisitor CollisionVisitorInstance(intersectable);
+				if (CollisionVisitorInstance.Visit(CameraFrustum))
+				{
+					RootPlaceable->SetIsRenderable(true);
+					break;
+				}
+				else
+				{
+					RootPlaceable->SetIsRenderable(false);
+				}
+			}
+		}		
+	}
+}
+
+void MapAsset::RenderMap()
+{
+	CurrentCamera->CleanupLens();
 
 	for (auto& RootPlaceable : RootPlaceables)
 	{
-		const std::list<IIntersectable*>& Intersectables = RootPlaceable->GetIntersectables();
-		for (auto& intersectable : Intersectables)
-		{
-			CollisionVisitor CollisionVisitorInstance(intersectable);
-			if (CollisionVisitorInstance.Visit(CameraFrustum))
-			{
-				RootPlaceable->UpdateRenderable(true);
-				break;
-			}
-			else
-			{
-				RootPlaceable->UpdateRenderable(false);
-			}
-		}
+		//RootPlaceable->Render()
 	}
 }
 
@@ -95,6 +113,8 @@ void MapAsset::Serialize(const std::string& OutputAdditionalPath)
 	if (OutputAssetFile != nullptr)
 	{
 		SerializeHeader(OutputAssetFile);
+
+		EditorActorInstance->OnSerializeFromMap(OutputAssetFile);
 
 		size_t RootPlaceablesCount = RootPlaceables.size();
 		fwrite(&RootPlaceablesCount, sizeof(size_t), 1, OutputAssetFile);
@@ -115,6 +135,10 @@ void MapAsset::Serialize(const std::string& OutputAdditionalPath)
 
 void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
+	EditorActorInstance = make_unique<EditorPawn>(this);
+	EditorActorInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
+	CurrentCamera = EditorActorInstance->GetCameraInstance();
+
 	size_t RootPlaceablesCount;
 	fread(&RootPlaceablesCount, sizeof(size_t), 1, FileIn);
 
@@ -130,14 +154,14 @@ void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 			break;
 		case STATIC_MESH_ACTOR_KIND:
 		{
-			StaticMeshObjectActor* AddedActor = PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
+			StaticMeshObjectActor* AddedActor = PlaceableAddHelper<StaticMeshObjectActor>(this, nullptr);
 			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 			break;
 		}
 		case SKELETAL_MESH_ACTOR_KIND:
 		{
-			SkeletalMeshObjectActor* AddedActor = PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
+			SkeletalMeshObjectActor* AddedActor = PlaceableAddHelper<SkeletalMeshObjectActor>(this, nullptr);
 			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 			break;
@@ -222,19 +246,19 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 		case ATTACHABLE_NONE:
 			break;
 		case STATIC_MESH_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<StaticMeshObject>(nullptr);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<StaticMeshObject>(this, nullptr);
 			break;
 		case SKELETAL_MESH_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<SkeletalMeshObject>(nullptr);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<SkeletalMeshObject>(this, nullptr);
 			break;
 		case BOUNDING_SPHERE_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>();
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>(this);
 			break;
 		case OBB_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>();
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>(this);
 			break;
 		case SDR_CAMERA_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<Camera>(App::GWidth, App::GHeight);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<Camera>(this, App::GWidth, App::GHeight);
 			break;
 		default:
 			break;

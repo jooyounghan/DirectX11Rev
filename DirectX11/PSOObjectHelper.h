@@ -28,14 +28,6 @@ PixelShaderIn, NumPSConstBuffersIn, NumPSSRVsIn, PrimitiveTopologyIn, NumRenderT
 RTVFormatsIn, DSVFormatIn, SampleDescIn, RasterizerStateIn, DepthStencilStateIn,				\
 StencilRefIn, BlendStateIn, SamplerStatesIn
 
-#define ManageTargetObjects(Object)                                                            \
-protected:                                                                                    \
-    std::list<Object*> ##Object##s;                                                            \
-public:                                                                                        \
-    inline void AddObject(Object* ObjectIn) { ##Object##s.emplace_back(ObjectIn); }        \
-    inline void RemoveObject(Object* ObjectIn) { ##Object##s.remove(ObjectIn); }        
-
-
 #ifdef _DEBUG
 	#define CONSTANT_BUFFER_SETTER(Shader)																					\
 	public:																													\

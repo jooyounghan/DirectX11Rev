@@ -7,14 +7,14 @@
 #include "IGuiModelVisitor.h"
 
 #include "PSOManager.h"
-#include "MeshObjectPSO.h"
-#include "PickingIDSolidPSO.h"
+#include "PSOObject.h"
+
 using namespace std;
 
 const char* SkeletalMeshObject::SkeletalMeshObjectIdentifier = "Skeletal Mesh Object";
 
-SkeletalMeshObject::SkeletalMeshObject(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstanceIn)
-	: AMeshObject(), SkeletalMeshAssetInstance(SkeletalMeshAssetInstanceIn)
+SkeletalMeshObject::SkeletalMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstanceIn)
+	: AMeshObject(MapAssetInstance), SkeletalMeshAssetInstance(SkeletalMeshAssetInstanceIn)
 {
 	static size_t SkeletalMeshObjectCount = 0;
 
@@ -22,14 +22,12 @@ SkeletalMeshObject::SkeletalMeshObject(std::shared_ptr<SkeletalMeshAsset> Skelet
 	ObjectName = SkeletalMeshObjectIdentifier + to_string(SkeletalMeshObjectCount);
 	AttachableKind = EAttachableObjectKind::SKELETAL_MESH_KIND;
 
-	App::GPSOManager->AddObjectToPSO<SkeletalMeshObject, MeshObjectPSO<SkeletalMeshObject>>(EPSOType::Skeletal_Solid, this);
-	App::GPSOManager->AddObjectToPSO<SkeletalMeshObject, PickingIDSolidPSO<SkeletalMeshObject>>(EPSOType::Skeletal_ID_Solid, this);
+	SkeletalMeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_Solid);
+	PickingIDSolidSkeletalPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_ID_Solid);
 }
 
 SkeletalMeshObject::~SkeletalMeshObject()
 {
-	App::GPSOManager->RemoveObjectFromPSO<SkeletalMeshObject, MeshObjectPSO<SkeletalMeshObject>>(EPSOType::Skeletal_Solid, this);
-	App::GPSOManager->RemoveObjectFromPSO<SkeletalMeshObject, PickingIDSolidPSO<SkeletalMeshObject>>(EPSOType::Skeletal_ID_Solid, this);
 }
 
 AMeshAsset* SkeletalMeshObject::GetMeshAssetInstance()
@@ -40,6 +38,10 @@ AMeshAsset* SkeletalMeshObject::GetMeshAssetInstance()
 void SkeletalMeshObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
+}
+
+void SkeletalMeshObject::Render()
+{
 }
 
 void SkeletalMeshObject::OnSerializeFromMap(FILE* FileIn)

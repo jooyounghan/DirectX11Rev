@@ -7,15 +7,13 @@
 #include "IGuiModelVisitor.h"
 
 #include "PSOManager.h"
-#include "MeshObjectPSO.h"
-#include "PickingIDSolidPSO.h"
 
 using namespace std;
 
 const char* StaticMeshObject::StaticMeshObjectIdentifier = "Static Mesh Object";
 
-StaticMeshObject::StaticMeshObject(std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn)
-	: AMeshObject(), StaticMeshAssetInstance(StaticMeshAssetInstanceIn)
+StaticMeshObject::StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn)
+	: AMeshObject(MapAssetInstance), StaticMeshAssetInstance(StaticMeshAssetInstanceIn)
 {
 	static size_t StaticMeshObjectCount = 0;
 
@@ -23,14 +21,12 @@ StaticMeshObject::StaticMeshObject(std::shared_ptr<StaticMeshAsset> StaticMeshAs
 	ObjectName = StaticMeshObjectIdentifier + to_string(StaticMeshObjectCount);
 	AttachableKind = EAttachableObjectKind::STATIC_MESH_KIND;
 
-	App::GPSOManager->AddObjectToPSO<StaticMeshObject, MeshObjectPSO<StaticMeshObject>>(EPSOType::Static_Solid, this);
-	App::GPSOManager->AddObjectToPSO<StaticMeshObject, PickingIDSolidPSO<StaticMeshObject>>(EPSOType::Static_ID_Solid, this);
+	StaticMeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_Solid);
+	PickingIDSolidStaticPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_ID_Solid);
 }
 
 StaticMeshObject::~StaticMeshObject()
 {
-	App::GPSOManager->RemoveObjectFromPSO<StaticMeshObject, MeshObjectPSO<StaticMeshObject>>(EPSOType::Static_Solid, this);
-	App::GPSOManager->RemoveObjectFromPSO<StaticMeshObject, PickingIDSolidPSO<StaticMeshObject>>(EPSOType::Static_ID_Solid, this);
 }
 
 AMeshAsset* StaticMeshObject::GetMeshAssetInstance() 
@@ -41,6 +37,10 @@ AMeshAsset* StaticMeshObject::GetMeshAssetInstance()
 void StaticMeshObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
+}
+
+void StaticMeshObject::Render()
+{
 }
 
 void StaticMeshObject::OnSerializeFromMap(FILE* FileIn)

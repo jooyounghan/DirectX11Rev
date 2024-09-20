@@ -4,18 +4,18 @@
 #include "InputEventManager.h"
 #include "GraphicsPipeline.h"
 #include "DefaultController.h"
-#include "IDSelectCamera.h"
+#include "Camera.h"
 
 using namespace std;
 
-EditorPawn::EditorPawn()
-	: APawn()
+EditorPawn::EditorPawn(MapAsset* MapAssetInstance)
+	: APawn(MapAssetInstance)
 {
     Controller = make_unique<DefaultController>();
     Controller->SetPossesdPawn(this);
 
-	IDSelectCameraCached = AddAttachedObject<IDSelectCamera>(App::GWidth, App::GHeight);
-    IDSelectCameraCached->SetParent(this, PickingIDBuffer.GetBuffer());
+    CameraInstance = make_unique<Camera>(MapAssetInstance, App::GWidth, App::GHeight);
+    CameraInstance->SetParent(this, PickingIDBuffer.GetBuffer());
 }
 
 EditorPawn::~EditorPawn()
@@ -26,19 +26,21 @@ EditorPawn::~EditorPawn()
 void EditorPawn::Update(const float& DeltaTimeIn)
 {
     APlaceableObject::Update(DeltaTimeIn);
+    CameraInstance->Update(DeltaTimeIn);
 }
 
-void EditorPawn::UpdateRenderable(const bool& RenderableFlag)
+void EditorPawn::Render()
 {
-    APlaceableObject::UpdateRenderable(RenderableFlag);
 }
 
 void EditorPawn::OnSerializeFromMap(FILE* FileIn)
 {
     AObject::OnSerializeFromMap(FileIn);
+    CameraInstance->OnSerializeFromMap(FileIn);
 }
 
 void EditorPawn::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
     AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+    CameraInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
 }

@@ -3,6 +3,7 @@
 #include "DefineUtility.h"
 
 #include "GraphicsPipeline.h"
+#include "PSOManager.h"
 #include "InputEventManager.h"
 #include "GameWorld.h"
 
@@ -43,6 +44,9 @@ PortfolioApp::PortfolioApp()
 	GraphicsPipelineInstance = make_unique<GraphicsPipeline>();
 	GraphicsPipelineInstance->LoadPipeline(App::GWidth, App::GHeight, hWindow);
 	App::GGraphicPipeline = GraphicsPipelineInstance.get();
+
+	PSOManagerInstance = make_unique<PSOManager>();
+	App::GPSOManager = PSOManagerInstance.get();
 
 	OnChangeWindow();
 

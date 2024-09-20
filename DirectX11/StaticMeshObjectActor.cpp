@@ -4,7 +4,11 @@
 
 using namespace std;
 
-StaticMeshObjectActor::StaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> MeshAssetInstanceIn)
+StaticMeshObjectActor::StaticMeshObjectActor(
+	MapAsset* MapAssetInstance, 
+	std::shared_ptr<StaticMeshAsset> MeshAssetInstanceIn
+)
+	: AActor(MapAssetInstance)
 {
 	static size_t StaticActorCount = 0;
 	StaticActorCount++;
@@ -12,7 +16,7 @@ StaticMeshObjectActor::StaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> Me
 
 	PlaceableKind = EPlaceableObjectKind::STATIC_MESH_ACTOR_KIND;
 
-	StaticMeshObjectInstance = make_unique<StaticMeshObject>(MeshAssetInstanceIn);
+	StaticMeshObjectInstance = make_unique<StaticMeshObject>(MapAssetInstance, MeshAssetInstanceIn);
 	StaticMeshObjectInstance->SetParent(this, PickingIDBuffer.GetBuffer());
 }
 
@@ -28,15 +32,14 @@ void StaticMeshObjectActor::Update(const float& DeltaTimeIn)
 	}
 }
 
-void StaticMeshObjectActor::UpdateRenderable(const bool& RenderableFlag)
-{
-	APlaceableObject::UpdateRenderable(RenderableFlag);
-	StaticMeshObjectInstance->UpdateRenderable(RenderableFlag);
-}
-
 void StaticMeshObjectActor::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
+}
+
+void StaticMeshObjectActor::Render()
+{
+	StaticMeshObjectInstance->Render();
 }
 
 void StaticMeshObjectActor::OnSerializeFromMap(FILE* FileIn)

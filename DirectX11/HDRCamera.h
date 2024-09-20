@@ -4,7 +4,7 @@
 class HDRCamera : public Camera
 {
 public:
-	HDRCamera(const UINT& WidthIn, const UINT& HeightIn);
+	HDRCamera(MapAsset* MapAssetInstance, const UINT& WidthIn, const UINT& HeightIn);
 	virtual ~HDRCamera();;
 
 public:

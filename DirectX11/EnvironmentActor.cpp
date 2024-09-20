@@ -9,24 +9,27 @@
 #include "IGuiModelVisitor.h"
 
 #include "PSOManager.h"
-#include "EnvironmentActorPSO.h"
+#include "PSOObject.h"
 
 using namespace std;
 
-EnvironmentActor::EnvironmentActor()
-	: AActor()
+EnvironmentActor::EnvironmentActor(MapAsset* MapAssetInstance)
+	: AActor(MapAssetInstance)
 {
-	App::GPSOManager->AddObjectToPSO<EnvironmentActor, EnvironmentActorPSO>(EPSOType::Static_Solid, this);
+	//App::GPSOManager->AddObjectToPSO<EnvironmentActor, EnvironmentActorPSO>(EPSOType::Static_Solid, this);
 }
 
 EnvironmentActor::~EnvironmentActor()
 {
-	App::GPSOManager->RemoveObjectFromPSO<EnvironmentActor, EnvironmentActorPSO>(EPSOType::Static_Solid, this);
 }
 
 void EnvironmentActor::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);
+}
+
+void EnvironmentActor::Render()
+{
 }
 
 void EnvironmentActor::Update(const float& DeltaTimeIn)

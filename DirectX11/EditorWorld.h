@@ -12,7 +12,6 @@ class APlaceableObject;
 class AAttachableObject;
 class GameWorld;
 class IWindow;
-class EditorPawn;
 
 class EditorWorld : public IWorld
 {
@@ -29,10 +28,6 @@ protected:
 	MakeGetter(FontSrvHandleID);
 
 protected:
-	std::unique_ptr<EditorPawn> EditorActorInstance;
-	MakeSmartPtrGetter(EditorActorInstance);
-
-protected:
 	std::vector<std::unique_ptr<IWindow>> Dialogs;
 
 protected:
@@ -47,7 +42,6 @@ public:
 	void SetSelecteObjectByID(const UINT& Id);
 
 public:
-	virtual void Update(const float& DeltaTimeIn) override;
 	virtual void RenderWorld() override;
 
 public:

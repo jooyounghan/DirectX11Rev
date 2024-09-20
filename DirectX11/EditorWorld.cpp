@@ -1,10 +1,8 @@
 #include "EditorWorld.h"
 
 #include "GlobalVariable.h"
+#include "GraphicsPipeline.h"
 #include "DefineUtility.h"
-
-#include "EditorPawn.h"
-#include "IDSelectCamera.h"
 
 #include "TaskAnalyzerWindow.h"
 #include "ViewportWindow.h" 
@@ -13,10 +11,6 @@
 #include "AssetManagerWindow.h"
 
 #include "AssetManager.h"
-#include "PSOManager.h"
-
-#include "GlobalVariable.h"
-#include "GraphicsPipeline.h"
 
 #include "GameWorld.h"
 #include "MapAsset.h"
@@ -32,7 +26,6 @@ using namespace std;
 EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
     : IWorld(), GameWorldCached(GameWorldIn)
 {
-    EditorActorInstance = make_unique<EditorPawn>();
 
     IMGUI_CHECKVERSION();
 
@@ -81,11 +74,6 @@ void EditorWorld::SetSelecteObjectByID(const UINT& Id)
             SelectedPlaceable = IdToPlaceables.at(Id);
         }
     }
-}
-
-void EditorWorld::Update(const float& DeltaTimeIn)
-{
-    EditorActorInstance->Update(DeltaTimeIn);
 }
 
 void EditorWorld::RenderWorld()

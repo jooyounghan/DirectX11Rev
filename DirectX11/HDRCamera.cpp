@@ -4,8 +4,8 @@ using namespace std;
 
 const char* HDRCamera::HDRCameraIdentifier = "HDR Camera";
 
-HDRCamera::HDRCamera(const UINT& WidthIn, const UINT& HeightIn)
-	: Camera(WidthIn, HeightIn)
+HDRCamera::HDRCamera(MapAsset* MapAssetInstance, const UINT& WidthIn, const UINT& HeightIn)
+	: Camera(MapAssetInstance, WidthIn, HeightIn)
 {
 	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
 

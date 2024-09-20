@@ -7,17 +7,17 @@ class InputEventManager;
 class APawn : public AActor
 {
 public:
-	APawn();
+	APawn(MapAsset* MapAssetInstance);
 	virtual ~APawn();
 
 protected:
 	std::unique_ptr<AController> Controller;
 
 public:
-	virtual void UpdateRenderable(const bool& RenderableFlag) = 0;
+	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
 
 public:
-	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
+	virtual void Render() = 0;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) = 0;

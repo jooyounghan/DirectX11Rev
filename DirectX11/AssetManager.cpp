@@ -81,16 +81,16 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
         case EAssetType::None:
             break;
         case EAssetType::StaticMesh:
-            LoadAssetFileHelper(InputAssetFile, ManagingStaticMeshes, AssetName, false);
+            LoadAssetFileHelper(InputAssetFile, ManagingStaticMeshes, AssetName, true);
             break;
         case EAssetType::SkeletalMesh:
-            LoadAssetFileHelper(InputAssetFile, ManagingSkeletalMeshes, AssetName, false);
+            LoadAssetFileHelper(InputAssetFile, ManagingSkeletalMeshes, AssetName, true);
             break;
         case EAssetType::Bone:
-            LoadAssetFileHelper(InputAssetFile, ManagingBones, AssetName, false);
+            LoadAssetFileHelper(InputAssetFile, ManagingBones, AssetName, true);
             break;
         case EAssetType::Map:
-            LoadAssetFileHelper(InputAssetFile, ManagingMaps, AssetName, this, false);
+            LoadAssetFileHelper(InputAssetFile, ManagingMaps, AssetName, this, true);
             break;
         case EAssetType::NormalTexture:
             LoadAssetFileHelper(InputAssetFile, ManagingNormalTextures, AssetName);

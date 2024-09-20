@@ -7,10 +7,11 @@ class BoundingSphereObject;
 class OBBObject : public ABoundingObject, public DirectX::BoundingOrientedBox
 {
 public:
-	OBBObject();
+	OBBObject(MapAsset* MapAssetInstance);
 
 public:
 	OBBObject(
+		MapAsset* MapAssetInstance,
 		const float& HalfXIn, 
 		const float& HalfYIn, 
 		const float& HalfZIn

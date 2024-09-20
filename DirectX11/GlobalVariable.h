@@ -9,12 +9,12 @@ class InputEventManager;
 
 namespace App
 {
-	extern UINT GWidth;
-	extern UINT GHeight;
-	extern PortfolioApp* GApp;
-	extern GraphicsPipeline* GGraphicPipeline;
-	extern PSOManager* GPSOManager;
-	extern InputEventManager* GInputEventManager;
+	extern UINT						GWidth;
+	extern UINT						GHeight;
+	extern PortfolioApp*			GApp;
+	extern GraphicsPipeline*		GGraphicPipeline;
+	extern PSOManager*				GPSOManager;
+	extern InputEventManager*		GInputEventManager;
 }
 
 namespace Direction

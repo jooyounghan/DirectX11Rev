@@ -16,14 +16,13 @@ enum EAttachableObjectKind : int
 	BOUNDING_SPHERE_KIND,
 	OBB_KIND,
 	SDR_CAMERA_KIND,
-	ID_SELECT_CAMERA_KIND,
 	HDR_CAMERA_KIND
 };
 
 class AAttachableObject : public AObject
 {
 public:
-	AAttachableObject();
+	AAttachableObject(MapAsset* MapAssetInstance);
 	virtual~AAttachableObject();
 
 protected:
@@ -81,10 +80,12 @@ public:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
-	virtual void UpdateRenderable(const bool& RenderableFlag) override;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
+
+public:
+	virtual void Render() = 0;
 
 public:
 	template<typename Attachment, typename ...Args>

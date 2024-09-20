@@ -1,10 +1,10 @@
-#include "APSOObject.h"
+#include "PSOObject.h"
 #include "DefineUtility.h"
 
 using namespace std;
 using namespace Microsoft::WRL;
 
-APSOObject::APSOObject(PSOArgsIn)
+PSOObject::PSOObject(PSOArgsIn)
 	: DeviceContextCached(DeviceContextIn), VertexShader(VertexShaderIn),
 	InputLayout(InputLayoutIn),  NumVSConstBuffers(NumVSConstBuffersIn), 
 	NumVSSRVs(NumVSSRVsIn), PixelShader(PixelShaderIn), 
@@ -23,12 +23,12 @@ APSOObject::APSOObject(PSOArgsIn)
 	}
 }
 
-APSOObject::~APSOObject()
+PSOObject::~PSOObject()
 {
 }
 
 #ifdef _DEBUG
-void APSOObject::ResetResourceFlag()
+void PSOObject::ResetResourceFlag()
 {
 	memset(IsVSConstBufferSet, false, CONST_BUFFER_MAX_COUNT);
 	memset(IsVSSRVSet, false, SRV_MAX_COUNT);
@@ -38,7 +38,7 @@ void APSOObject::ResetResourceFlag()
 #endif // _DEBUG
 
 
-void APSOObject::SetPipelineStateObject(
+void PSOObject::SetPipelineStateObject(
 	const UINT& RTVCountIn, 
 	ID3D11RenderTargetView** RTVsIn, 
 	const D3D11_VIEWPORT* ViewportIn, 
@@ -93,7 +93,7 @@ void APSOObject::SetPipelineStateObject(
 }
 
 
-void APSOObject::CheckPipelineValidation()
+void PSOObject::CheckPipelineValidation()
 {
 	for (UINT VsCBIdx = 0; VsCBIdx < NumVSConstBuffers; ++VsCBIdx)
 	{

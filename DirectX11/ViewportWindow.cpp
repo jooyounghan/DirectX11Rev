@@ -5,38 +5,29 @@
 #include "MapAsset.h"
 
 #include "EditorPawn.h"
-#include "IDSelectCamera.h"
+#include "Camera.h"
 
 #include "AssetManager.h"
 #include "AAssetFile.h"
-#include "StaticMeshAsset.h"
-#include "SkeletalMeshAsset.h"
-
-#include "MapAsset.h"
-#include "GlobalVariable.h"
-
-#include "IIntersectable.h"
-#include "EditorWorld.h"
 
 using namespace std;
 using namespace ImGui;
 
-ViewportWindow::ViewportWindow(EditorWorld* EditorWorldIn)
-    : EditorWorldCached(EditorWorldIn)
+ViewportWindow::ViewportWindow(EditorWorld* EditorWorldCached)
+    : EditorWorldCached(EditorWorldCached)
 {
+
     if (EditorWorldCached != nullptr)
     {
-        EditorActorCached  = EditorWorldCached->GetEditorActorInstance();
-        if (EditorActorCached != nullptr)
-        {
-            IDSelectCameraCached = EditorActorCached->GetIDSelectCameraCached();
-        }
-
         GameWorldCached = EditorWorldCached->GetGameWorldCached();
-
         if (GameWorldCached != nullptr)
         {
             AssetManagerCached = GameWorldCached->GetAssetManagerInstance();
+            CurrentMap = GameWorldCached->GetCurrentMap();
+            if (CurrentMap != nullptr)
+            {
+                CameraCached = CurrentMap->GetCurrentCamera();
+            }
         }
     }
 }
@@ -51,14 +42,18 @@ void ViewportWindow::RenderWindow()
     CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap != nullptr)
     {
-        if (IDSelectCameraCached != nullptr)
+        if (CameraCached != nullptr)
         {
             Text(CurrentMap->GetAssetName().c_str());
             ImagePosition = GetCursorScreenPos();
             ImageSize = GetContentRegionAvail();
-            Image(IDSelectCameraCached->GetSDRSceneSRV(), ImageSize);
+            Image(CameraCached->GetSDRSceneSRV(), ImageSize);
             ManageAssetDrop();
             ManageMouseLBClick();
+        }
+        else
+        {
+            CameraCached = CurrentMap->GetCurrentCamera();
         }
     }
     End();
@@ -82,8 +77,8 @@ void ViewportWindow::ManageAssetDrop()
                 Ray ClickedRay = Ray::CreateRay(
                     RelativeMousePos.x, RelativeMousePos.y, 
                     ImageSize.x, ImageSize.y,
-                    IDSelectCameraCached->GetProjectionMatrix(), 
-                    IDSelectCameraCached->GetViewMatrix()
+                    CameraCached->GetProjectionMatrix(),
+                    CameraCached->GetViewMatrix()
                 );
                 const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
                 
@@ -126,7 +121,7 @@ void ViewportWindow::ManageMouseLBClick()
         ImVec2 AbsMousePos = io.MousePos;
         ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - ImagePosition.x, AbsMousePos.y - ImagePosition.y);
 
-        UINT SelectedID = IDSelectCameraCached->GetID(RelativeMousePos.x, RelativeMousePos.y, ImageSize.x, ImageSize.y);
+        UINT SelectedID = CameraCached->GetID(RelativeMousePos.x, RelativeMousePos.y, ImageSize.x, ImageSize.y);
         EditorWorldCached->SetSelecteObjectByID(SelectedID);
     }
 }

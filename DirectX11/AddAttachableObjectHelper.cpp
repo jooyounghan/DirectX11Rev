@@ -54,36 +54,36 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
                 case EAttachableObjectKind::STATIC_MESH_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<StaticMeshObject>(nullptr) :
-                        SelectedPlaced->AddAttachedObject<StaticMeshObject>(nullptr);
+                        SelectedAttached->AddAttachedObject<StaticMeshObject>(CurrentMapCached, nullptr) :
+                        SelectedPlaced->AddAttachedObject<StaticMeshObject>(CurrentMapCached, nullptr);
                     break;
                 }
                 case EAttachableObjectKind::SKELETAL_MESH_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<SkeletalMeshObject>(nullptr) :
-                        SelectedPlaced->AddAttachedObject<SkeletalMeshObject>(nullptr);
+                        SelectedAttached->AddAttachedObject<SkeletalMeshObject>(CurrentMapCached, nullptr) :
+                        SelectedPlaced->AddAttachedObject<SkeletalMeshObject>(CurrentMapCached, nullptr);
                     break;
                 }
                 case EAttachableObjectKind::BOUNDING_SPHERE_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<BoundingSphereObject>() :
-                        SelectedPlaced->AddAttachedObject<BoundingSphereObject>();
+                        SelectedAttached->AddAttachedObject<BoundingSphereObject>(CurrentMapCached) :
+                        SelectedPlaced->AddAttachedObject<BoundingSphereObject>(CurrentMapCached);
                     break;
                 }
                 case EAttachableObjectKind::OBB_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<OBBObject>() :
-                        SelectedPlaced->AddAttachedObject<OBBObject>();
+                        SelectedAttached->AddAttachedObject<OBBObject>(CurrentMapCached) :
+                        SelectedPlaced->AddAttachedObject<OBBObject>(CurrentMapCached);
                     break;
                 }
                 case EAttachableObjectKind::SDR_CAMERA_KIND:
                 {
                     SelectedAttached != nullptr ?
-                        SelectedAttached->AddAttachedObject<Camera>(App::GWidth, App::GHeight) :
-                        SelectedPlaced->AddAttachedObject<Camera>(App::GWidth, App::GHeight);
+                        SelectedAttached->AddAttachedObject<Camera>(CurrentMapCached, App::GWidth, App::GHeight) :
+                        SelectedPlaced->AddAttachedObject<Camera>(CurrentMapCached, App::GWidth, App::GHeight);
                     break;
                 }
             }

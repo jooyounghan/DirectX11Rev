@@ -23,7 +23,7 @@ class APlaceableObject : public AObject
 	friend AAttachableObject;
 
 public:
-	APlaceableObject();
+	APlaceableObject(MapAsset* MapAssetInstance);
 	virtual ~APlaceableObject();
 
 protected:
@@ -77,12 +77,18 @@ protected:
 	MakePointerGetter(IsPassingYaw);
 	MakePointerGetter(IsPassingPitch);
 
+protected:
+	bool IsRenderable = true;
+	MakeSetterGetter(IsRenderable);
+
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
-	virtual void UpdateRenderable(const bool& RenderableFlag) override;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
+
+public:
+	virtual void Render() = 0;
 
 public:
 	template<typename Attachment, typename ...Args>

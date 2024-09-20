@@ -5,8 +5,8 @@
 using namespace std;
 using namespace DirectX;
 
-AAttachableObject::AAttachableObject()
-	: AObject()
+AAttachableObject::AAttachableObject(MapAsset* MapAssetInstance)
+	: AObject(MapAssetInstance)
 {
 }
 
@@ -202,15 +202,6 @@ void AAttachableObject::Update(const float& DeltaTimeIn)
 	for (auto& ChildObject : AttachedChildrenObjects)
 	{
 		ChildObject->Update(DeltaTimeIn);
-	}
-}
-
-void AAttachableObject::UpdateRenderable(const bool& RenderableFlag)
-{
-	IsRenderable = RenderableFlag;
-	for (unique_ptr<AAttachableObject>& AttachedObject : AttachedChildrenObjects)
-	{
-		AttachedObject->UpdateRenderable(RenderableFlag);
 	}
 }
 

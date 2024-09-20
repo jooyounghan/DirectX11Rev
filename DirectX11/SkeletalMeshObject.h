@@ -6,7 +6,7 @@ class SkeletalMeshAsset;
 class SkeletalMeshObject : public AMeshObject
 {
 public:
-	SkeletalMeshObject(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstanceIn);
+	SkeletalMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstanceIn);
 	virtual ~SkeletalMeshObject();
 
 protected:
@@ -19,6 +19,13 @@ public:
 public:
 	virtual AMeshAsset* GetMeshAssetInstance() override;
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
+
+protected:
+	PSOObject* SkeletalMeshObjectPSOCached = nullptr;
+	PSOObject* PickingIDSolidSkeletalPSOCached = nullptr;
+
+public:
+	virtual void Render() override final;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;

@@ -9,8 +9,8 @@ using namespace DirectX;
 
 UINT APlaceableObject::PickingIDIssued = 0xABCDEF12;
 
-APlaceableObject::APlaceableObject()
-	: AObject(), PickingID(PickingIDIssued)
+APlaceableObject::APlaceableObject(MapAsset* MapAssetInstance)
+	: AObject(MapAssetInstance), PickingID(PickingIDIssued)
 {
 	PickingIDIssued++;
 	PickingIDBuffer.InitializeForGPU(PickingID.GetColor());
@@ -168,15 +168,6 @@ void APlaceableObject::Update(const float& DeltaTimeIn)
 	for (auto& ChildObject : AttachedChildrenObjects)
 	{
 		ChildObject->Update(DeltaTimeIn);
-	}
-}
-
-void APlaceableObject::UpdateRenderable(const bool& RenderableFlag)
-{
-	IsRenderable = RenderableFlag;
-	for (unique_ptr<AAttachableObject>& AttachedObject : AttachedChildrenObjects)
-	{
-		AttachedObject->UpdateRenderable(RenderableFlag);
 	}
 }
 

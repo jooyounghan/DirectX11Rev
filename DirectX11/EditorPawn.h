@@ -3,21 +3,23 @@
 #include "HeaderHelper.h"
 #include "imgui.h"
 
-class IDSelectCamera;
+class Camera;
 
 class EditorPawn : public APawn
 {
 public:
-	EditorPawn();
+	EditorPawn(MapAsset* MapAssetInstance);
 	virtual ~EditorPawn();
 
 protected:
-	IDSelectCamera* IDSelectCameraCached = nullptr;
-	MakeGetter(IDSelectCameraCached);
+	std::unique_ptr<Camera> CameraInstance = nullptr;
+	MakeSmartPtrGetter(CameraInstance);
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
-	virtual void UpdateRenderable(const bool& RenderableFlag) override;
+
+public:
+	virtual void Render() override final;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override {};

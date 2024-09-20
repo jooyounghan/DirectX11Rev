@@ -8,11 +8,11 @@
 #define SRV_MAX_COUNT			128
 
 
-class APSOObject
+class PSOObject
 {
 public:
-	APSOObject(PSOArgsIn);
-	~APSOObject();
+	PSOObject(PSOArgsIn);
+	~PSOObject();
 
 protected:
 	ID3D11DeviceContext*							DeviceContextCached = nullptr;
@@ -77,9 +77,5 @@ public:
 
 public:
 	void CheckPipelineValidation();
-
-public:
-	virtual void Render() = 0;
-	virtual void ResetPSO() = 0;
 };
 

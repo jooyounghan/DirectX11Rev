@@ -4,14 +4,7 @@
 #include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
 
-#include "EnvironmentActorPSO.h"
-#include "BoundingObjectPSO.h"
-#include "MeshObjectPSO.h"
-#include "PickingIDSolidPSO.h"
-#include "PickingIDWireframePSO.h"
-
-#include "StaticMeshObject.h"
-#include "SkeletalMeshObject.h"
+#include "PSOObject.h"
 
 #include <d3dcompiler.h>
 
@@ -79,7 +72,7 @@ PSOManager::PSOManager()
     CreateVertexShader(L"./Shaders/EnvironmentActorVS.hlsl", EnvironmentActorInputElementDesc, 1, EnvironmentActorVS, EnvironmentActorInputLayout);
     CreatePixelShader(L"./Shaders/EnvironmentActorPS.hlsl", EnvironmentActorPS);
 
-    PSOObjects.emplace(EPSOType::Environment_Solid, make_unique<EnvironmentActorPSO>(
+    PSOObjects.emplace(EPSOType::Environment_Solid, make_unique<PSOObject>(
         DeviceContext,
         EnvironmentActorInputLayout,
         EnvironmentActorVS, 2, 0,
@@ -94,7 +87,7 @@ PSOManager::PSOManager()
     ));
 #pragma endregion
 
-#pragma region BoundingComponent_Wireframe
+#pragma region BoundingObject_Wireframe
     D3D11_INPUT_ELEMENT_DESC OnlyPositionInputElementDesc[1] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -107,7 +100,7 @@ PSOManager::PSOManager()
     CreateVertexShader(L"./Shaders/PositionOnlyPathVS.hlsl", OnlyPositionInputElementDesc, 1, PositionOnlyPathVS, PostionOnlyInputLayout);
     CreatePixelShader(L"./Shaders/BoundingObjectPS.hlsl", BoundingComponentPS);
 
-    PSOObjects.emplace(EPSOType::BoundingComponent_Wireframe, make_unique<BoundingObjectPSO>(
+    PSOObjects.emplace(EPSOType::BoundingObject_Wireframe, make_unique<PSOObject>(
         DeviceContext,
         PostionOnlyInputLayout,
         PositionOnlyPathVS, 2, 0,
@@ -139,7 +132,7 @@ PSOManager::PSOManager()
     ComPtr<ID3D11PixelShader> StaticMeshPS;
     CreatePixelShader(L"./Shaders/StaticAssetPS.hlsl", StaticMeshPS);
 
-    PSOObjects.emplace(EPSOType::Static_Solid, make_unique<MeshObjectPSO<StaticMeshObject>>(
+    PSOObjects.emplace(EPSOType::Static_Solid, make_unique<PSOObject>(
         DeviceContext,
         StaticMeshInputLayout,
         StaticMeshVS, 2, 0,
@@ -174,7 +167,7 @@ PSOManager::PSOManager()
     ComPtr<ID3D11PixelShader> SkeletalMeshPS;
     CreatePixelShader(L"./Shaders/SkeletalAssetPS.hlsl", SkeletalMeshPS);
 
-    PSOObjects.emplace(EPSOType::Skeletal_Solid, make_unique<MeshObjectPSO<SkeletalMeshObject>>(
+    PSOObjects.emplace(EPSOType::Skeletal_Solid, make_unique<PSOObject>(
         DeviceContext,
         SkeletalMeshInputLayout,
         SkeletalMeshVS, 2, 0,
@@ -189,10 +182,10 @@ PSOManager::PSOManager()
     ));
 #pragma endregion
 
-#pragma region BoundingComponent_ID_Wireframe
+#pragma region BoundingObject_ID_Wireframe
     ComPtr<ID3D11PixelShader> PickingIDPS;
     CreatePixelShader(L"./Shaders/PickingIDPS.hlsl", PickingIDPS);
-    PSOObjects.emplace(EPSOType::BoundingComponent_ID_Wireframe, make_unique<PickingIDWireframePSO>(
+    PSOObjects.emplace(EPSOType::BoundingObject_ID_Wireframe, make_unique<PSOObject>(
         DeviceContext,
         PostionOnlyInputLayout,
         PositionOnlyPathVS, 2, 0,
@@ -208,7 +201,7 @@ PSOManager::PSOManager()
 #pragma endregion
 
 #pragma region Static_ID_Solid
-    PSOObjects.emplace(EPSOType::Static_ID_Solid, make_unique<PickingIDSolidPSO<StaticMeshObject>>(
+    PSOObjects.emplace(EPSOType::Static_ID_Solid, make_unique<PSOObject>(
         DeviceContext,
         PostionOnlyInputLayout,
         PositionOnlyPathVS, 2, 0,
@@ -224,7 +217,7 @@ PSOManager::PSOManager()
 #pragma endregion
 
 #pragma region Skeletal_ID_Solid
-    PSOObjects.emplace(EPSOType::Skeletal_ID_Solid, make_unique<PickingIDSolidPSO<SkeletalMeshObject>>(
+    PSOObjects.emplace(EPSOType::Skeletal_ID_Solid, make_unique<PSOObject>(
         DeviceContext,
         PostionOnlyInputLayout,
         PositionOnlyPathVS, 2, 0,
@@ -244,7 +237,7 @@ PSOManager::~PSOManager()
 {
 }
 
-APSOObject* PSOManager::GetPSOObject(EPSOType PsoTypeIn) 
+PSOObject* PSOManager::GetPSOObject(EPSOType PsoTypeIn) 
 { 
     if (PSOObjects.find(PsoTypeIn) != PSOObjects.end())
     {

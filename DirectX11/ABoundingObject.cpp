@@ -3,20 +3,17 @@
 #include "Debugable.h"
 
 #include "PSOManager.h"
-#include "BoundingObjectPSO.h"
-#include "PickingIDWireframePSO.h"
+#include "PSOObject.h"
 
-ABoundingObject::ABoundingObject()
-	: AAttachableObject(), DebuggingColorBuffer()
+ABoundingObject::ABoundingObject(MapAsset* MapAssetInstance)
+	: AAttachableObject(MapAssetInstance), DebuggingColorBuffer()
 {
-	App::GPSOManager->AddObjectToPSO<ABoundingObject, BoundingObjectPSO>(EPSOType::BoundingComponent_Wireframe, this);
-	App::GPSOManager->AddObjectToPSO<ABoundingObject, PickingIDWireframePSO>(EPSOType::BoundingComponent_ID_Wireframe, this);
+	BoundingObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::BoundingObject_Wireframe);
+	PickingIDWireframePSOCached = App::GPSOManager->GetPSOObject(EPSOType::BoundingObject_ID_Wireframe);
 }
 
 ABoundingObject::~ABoundingObject()
 {
-	App::GPSOManager->RemoveObjectFromPSO<ABoundingObject, BoundingObjectPSO>(EPSOType::BoundingComponent_Wireframe, this);
-	App::GPSOManager->RemoveObjectFromPSO<ABoundingObject, PickingIDWireframePSO>(EPSOType::BoundingComponent_ID_Wireframe, this);
 }
 
 void ABoundingObject::UpdateColor(const XMVECTOR& ColorIn, ID3D11DeviceContext* DeviceContextIn)
@@ -36,4 +33,8 @@ void ABoundingObject::SetCollisionColor()
 			DebuggingColorBuffer.Upload(XMVectorSet(1.f, 0.f, 0.f, 1.f));
 		}
 	}
+}
+
+void ABoundingObject::Render()
+{
 }

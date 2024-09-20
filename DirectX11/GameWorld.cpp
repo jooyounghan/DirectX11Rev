@@ -1,18 +1,8 @@
 #include "GameWorld.h"
 
-#include "GlobalVariable.h"
-#include "GraphicsPipeline.h"
-#include "PSOManager.h"
-#include "APSOObject.h"
 #include "AssetManager.h"
 
-#ifdef _DEBUG
 #include "EditorWorld.h"
-#include "EditorPawn.h"
-#include "IDSelectCamera.h"
-#endif 
-
-#include "Camera.h"
 #include "MapAsset.h"
 
 using namespace std;
@@ -20,16 +10,12 @@ using namespace std;
 
 GameWorld::GameWorld(HWND WindowHandle)
 {
-	PSOManagerInstance = make_unique<PSOManager>();
-	App::GPSOManager = PSOManagerInstance.get();
-
 	AssetManagerInstance = make_unique<AssetManager>();
 
 #ifdef _DEBUG
 	EditorWorldInstance = make_unique<EditorWorld>(this, WindowHandle);
 #else
-	TestCamera = make_unique<Camera>(App::GWidth, App::GHeight);
-	TestCamera->Position.z = -300.f;
+
 #endif
 	LoadManagingMaps();
 }
@@ -47,7 +33,7 @@ void GameWorld::LoadManagingMaps()
 
 	if (ManagingMaps.empty())
 	{
-		MapInstances.emplace(MapCount, make_shared<MapAsset>("TestMap", AssetManagerInstance.get(), true));
+		MapInstances.emplace(MapCount, make_shared<MapAsset>("TestMap", AssetManagerInstance.get(), false));
 		CurrentMap = (MapAsset*)MapInstances[MapCount].get();
 		MapCount++;
 	}
@@ -62,58 +48,25 @@ void GameWorld::LoadManagingMaps()
 
 	// TODO : Map을 선택하는 과정 추가하기
 	CurrentMap = MapInstances[0].get();
-	EditorPawn* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
-	CurrentCamera = EditorActorInstnace->GetIDSelectCameraCached();
 }
 
 void GameWorld::Update(const float& DeltaTimeIn)
 {
-#ifdef _DEBUG
-	EditorWorldInstance->Update(DeltaTimeIn);
-#endif // _DEBUG
-
 	if (CurrentMap)
 	{
 		CurrentMap->Update(DeltaTimeIn);
-		CurrentMap->UpdateRenderState(CurrentCamera);
 	}
 }
 
 void GameWorld::RenderWorld()
 {
-	CurrentCamera->CleanupLens();
-
-	APSOObject* test= PSOManagerInstance->GetPSOObject(EPSOType::Environment_Solid);
-
-	vector<APSOObject*> SRDRenderingPsos{
-		PSOManagerInstance->GetPSOObject(EPSOType::BoundingComponent_ID_Wireframe),
-		PSOManagerInstance->GetPSOObject(EPSOType::BoundingComponent_Wireframe),
-		PSOManagerInstance->GetPSOObject(EPSOType::Skeletal_Solid),
-		PSOManagerInstance->GetPSOObject(EPSOType::Skeletal_ID_Solid),
-		PSOManagerInstance->GetPSOObject(EPSOType::Static_ID_Solid),
-		PSOManagerInstance->GetPSOObject(EPSOType::Static_Solid)
-	};
-
-	for (APSOObject* SRDRenderingPso : SRDRenderingPsos)
+	
+	if (CurrentMap)
 	{
-		SRDRenderingPso->PresetRendering(CurrentCamera, CurrentMap);
-		SRDRenderingPso->Render();
-		SRDRenderingPso->ResetRendering();
+		CurrentMap->RenderMap();
 	}
 
 	EditorWorldInstance->RenderWorld();
-	if (CurrentMap)
-	{
-			
-#ifdef _DEBUG
-#else
-		GraphicsPipelineCached->GetDeviceContext()->CopyResource(
-			GraphicsPipelineCached->GetBackBufferTexture(),
-			TestCamera->GetSceneTexture2D()
-		);
-#endif // _DEBUG
-	}
-
 }
 
 

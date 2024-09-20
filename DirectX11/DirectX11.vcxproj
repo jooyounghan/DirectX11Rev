@@ -139,20 +139,17 @@
   <ItemGroup>
     <ClCompile Include="AAddObjectHelper.cpp" />
     <ClCompile Include="AController.cpp" />
-    <ClCompile Include="AActor.cpp" />
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
     <ClCompile Include="AMeshObject.cpp" />
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="APawn.cpp" />
-    <ClCompile Include="APSOObjectWIthHDRCamera.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
     <ClCompile Include="ATextureAsset.cpp" />
     <ClCompile Include="BaseCubeMeshAsset.cpp" />
     <ClCompile Include="BaseMeshAsset.cpp" />
     <ClCompile Include="BaseSphereMeshAsset.cpp" />
-    <ClCompile Include="BoundingObjectPSO.cpp" />
     <ClCompile Include="DDSTextureAsset.cpp" />
     <ClCompile Include="DefaultController.cpp" />
     <ClCompile Include="EditorPawn.cpp" />
@@ -170,11 +167,9 @@
     <ClCompile Include="Debugable.cpp" />
     <ClCompile Include="DefineType.cpp" />
     <ClCompile Include="HDRCamera.cpp" />
-    <ClCompile Include="IDSelectCamera.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="EnvironmentActor.cpp" />
-    <ClCompile Include="EnvironmentActorPSO.cpp" />
     <ClCompile Include="Externals\DDSTextureLoader\DDSTextureLoader11.cpp" />
     <ClCompile Include="Externals\imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="Externals\imgui\imgui_impl_win32.cpp" />
@@ -201,11 +196,10 @@
     <ClCompile Include="ModelDetailedInformationVisitor.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="OBBObject.cpp" />
-    <ClCompile Include="PickingIDWireframePSO.cpp" />
     <ClCompile Include="APlaceableObject.cpp" />
     <ClCompile Include="PortfolioApp.cpp" />
     <ClCompile Include="PSOManager.cpp" />
-    <ClCompile Include="APSOObject.cpp" />
+    <ClCompile Include="PSOObject.cpp" />
     <ClCompile Include="SkeletalMeshAsset.cpp" />
     <ClCompile Include="SkeletalMeshObject.cpp" />
     <ClCompile Include="SkeletalMeshObjectInformationDrawer.cpp" />
@@ -227,14 +221,11 @@
     <ClInclude Include="AMeshObject.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
-    <ClInclude Include="APSOObjectWIthHDRCamera.h" />
-    <ClInclude Include="APSOObjectWithNormalCamera.h" />
     <ClInclude Include="AScratchTextureAsset.h" />
     <ClInclude Include="ATextureAsset.h" />
     <ClInclude Include="BaseCubeMeshAsset.h" />
     <ClInclude Include="BaseMeshAsset.h" />
     <ClInclude Include="BaseSphereMeshAsset.h" />
-    <ClInclude Include="BoundingObjectPSO.h" />
     <ClInclude Include="DDSTextureAsset.h" />
     <ClInclude Include="DefaultController.h" />
     <ClInclude Include="DefineInput.h" />
@@ -254,9 +245,7 @@
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="HDRCamera.h" />
-    <ClInclude Include="IDSelectCamera.h" />
     <ClInclude Include="EnvironmentActor.h" />
-    <ClInclude Include="EnvironmentActorPSO.h" />
     <ClInclude Include="Externals\DDSTextureLoader\DDSTextureLoader11.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_dx11.h" />
     <ClInclude Include="Externals\imgui\imgui_impl_win32.h" />
@@ -273,7 +262,6 @@
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="AObject.h" />
     <ClInclude Include="MaterialAsset.h" />
-    <ClInclude Include="MeshObjectPSO.h" />
     <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="InputEventManager.h" />
@@ -284,8 +272,6 @@
     <ClInclude Include="ModelDetailWindow.h" />
     <ClInclude Include="ModelDetailedInformationVisitor.h" />
     <ClInclude Include="APawn.h" />
-    <ClInclude Include="PickingIDSolidPSO.h" />
-    <ClInclude Include="PickingIDWireframePSO.h" />
     <ClInclude Include="APlaceableObject.h" />
     <ClInclude Include="SkeletalMeshObject.h" />
     <ClInclude Include="SkeletalMeshObjectInformationDrawer.h" />
@@ -295,7 +281,7 @@
     <ClInclude Include="TransformationInformationDrawer.h" />
     <ClInclude Include="Vertexable.h" />
     <ClInclude Include="OBBObject.h" />
-    <ClInclude Include="APSOObject.h" />
+    <ClInclude Include="PSOObject.h" />
     <ClInclude Include="PSOObjectHelper.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="UploadBuffer.h" />
