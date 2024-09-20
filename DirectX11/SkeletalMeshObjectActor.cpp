@@ -33,12 +33,8 @@ void SkeletalMeshObjectActor::Update(const float& DeltaTimeIn)
 
 void SkeletalMeshObjectActor::UpdateRenderable(const bool& RenderableFlag)
 {
-	IsRenderable = RenderableFlag;
+	APlaceableObject::UpdateRenderable(RenderableFlag);
 	SkeletalMeshObjectInstance->UpdateRenderable(RenderableFlag);
-	for (unique_ptr<AAttachableObject>& AttachedObject : AttachedChildrenObjects)
-	{
-		AttachedObject->UpdateRenderable(RenderableFlag);
-	}
 }
 
 void SkeletalMeshObjectActor::AcceptGui(IGuiModelVisitor* GuiVisitor)

@@ -79,7 +79,7 @@ protected:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
-	virtual void UpdateRenderable(const bool& RenderableFlag) = 0;
+	virtual void UpdateRenderable(const bool& RenderableFlag) override;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
@@ -93,10 +93,6 @@ public:
 
 private:
 	void RemoveFromIntersectables(AAttachableObject* AttachedObjectIn);
-
-public:
-	virtual void OnSerializeFromMap(FILE* FileIn) = 0;
-	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };
 
 template<typename Attachment, typename ...Args>

@@ -3,7 +3,7 @@
 #include "HeaderHelper.h"
 #include "imgui.h"
 
-class EditorCamera;
+class IDSelectCamera;
 
 class EditorPawn : public APawn
 {
@@ -12,8 +12,8 @@ public:
 	virtual ~EditorPawn();
 
 protected:
-	EditorCamera* EditorCameraCached = nullptr;
-	MakeGetter(EditorCameraCached);
+	IDSelectCamera* IDSelectCameraCached = nullptr;
+	MakeGetter(IDSelectCameraCached);
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

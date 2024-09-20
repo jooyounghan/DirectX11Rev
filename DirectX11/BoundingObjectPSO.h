@@ -30,7 +30,7 @@ public:
 	virtual ~BoundingObjectPSO();
 
 protected:
-	ManageForRendering(ABoundingObject);
+	ManageTargetObjects(ABoundingObject);
 
 public:
 	virtual void PresetRendering(Camera* CameraIn, MapAsset* MapIn) override;

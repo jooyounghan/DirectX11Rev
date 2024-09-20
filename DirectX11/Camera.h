@@ -29,14 +29,6 @@ protected:
 	MakeComPtrGetter(SDRSceneRTV);
 
 protected:
-	Microsoft::WRL::ComPtr<ID3D11Texture2D>				HDRSceneTexture2D;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	HDRSceneSRV;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		HDRSceneRTV;
-	MakeComPtrGetter(HDRSceneTexture2D);
-	MakeComPtrGetter(HDRSceneSRV);
-	MakeComPtrGetter(HDRSceneRTV);
-
-protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				DepthStencilTexture2D;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		SceneDSV;
 	MakeComPtrGetter(SceneDSV);
@@ -49,8 +41,5 @@ public:
 
 public:
 	virtual void CleanupLens();
-
-public:
-	virtual void ToneMapping();
 };
 

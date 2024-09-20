@@ -29,7 +29,7 @@ public:
 	virtual ~EnvironmentActorPSO() {};
 
 protected:
-	ManageForRendering(EnvironmentActor);
+	ManageTargetObjects(EnvironmentActor);
 
 public:
 	virtual void PresetRendering(Camera* CameraIn, MapAsset* MapIn) override;

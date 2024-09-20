@@ -30,12 +30,8 @@ void StaticMeshObjectActor::Update(const float& DeltaTimeIn)
 
 void StaticMeshObjectActor::UpdateRenderable(const bool& RenderableFlag)
 {
-	IsRenderable = RenderableFlag;
+	APlaceableObject::UpdateRenderable(RenderableFlag);
 	StaticMeshObjectInstance->UpdateRenderable(RenderableFlag);
-	for (unique_ptr<AAttachableObject>& AttachedObject : AttachedChildrenObjects)
-	{
-		AttachedObject->UpdateRenderable(RenderableFlag);
-	}
 }
 
 void StaticMeshObjectActor::AcceptGui(IGuiModelVisitor* GuiVisitor)

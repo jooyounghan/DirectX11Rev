@@ -5,6 +5,12 @@ class BaseMeshAsset;
 class EXRTextureAsset;
 class DDSTextureAsset;
 
+struct SHDRToneMappingConstant
+{
+	float Exposure;
+	float Gamma;
+};
+
 class EnvironmentActor : public AActor
 {
 public:
@@ -25,8 +31,18 @@ protected:
 	MakeSmartPtrGetter(EnvironmentDiffuseDDSTextureAsset);
 	MakeSmartPtrGetter(EnvironmentBRDFDDSTextureAsset);
 
+protected:
+	SHDRToneMappingConstant HDRToneMappingConstant;
+	MakePointerGetter(HDRToneMappingConstant);
+
+protected:
+	UploadBuffer<SHDRToneMappingConstant> HDRToneMappingConstantBuffer;
+
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
+
+public:
+	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;

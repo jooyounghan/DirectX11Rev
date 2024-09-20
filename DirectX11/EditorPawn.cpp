@@ -4,7 +4,7 @@
 #include "InputEventManager.h"
 #include "GraphicsPipeline.h"
 #include "DefaultController.h"
-#include "EditorCamera.h"
+#include "IDSelectCamera.h"
 
 using namespace std;
 
@@ -14,8 +14,8 @@ EditorPawn::EditorPawn()
     Controller = make_unique<DefaultController>();
     Controller->SetPossesdPawn(this);
 
-	EditorCameraCached = AddAttachedObject<EditorCamera>(App::GWidth, App::GHeight);
-    EditorCameraCached->SetParent(this, PickingIDBuffer.GetBuffer());
+	IDSelectCameraCached = AddAttachedObject<IDSelectCamera>(App::GWidth, App::GHeight);
+    IDSelectCameraCached->SetParent(this, PickingIDBuffer.GetBuffer());
 }
 
 EditorPawn::~EditorPawn()
@@ -30,11 +30,7 @@ void EditorPawn::Update(const float& DeltaTimeIn)
 
 void EditorPawn::UpdateRenderable(const bool& RenderableFlag)
 {
-	IsRenderable = RenderableFlag;
-	for (unique_ptr<AAttachableObject>& AttachedObject : AttachedChildrenObjects)
-	{
-		AttachedObject->UpdateRenderable(RenderableFlag);
-	}
+    APlaceableObject::UpdateRenderable(RenderableFlag);
 }
 
 void EditorPawn::OnSerializeFromMap(FILE* FileIn)

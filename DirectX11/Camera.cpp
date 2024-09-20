@@ -18,7 +18,7 @@ Camera::Camera(const UINT& WidthIn, const UINT& HeightIn)
 	CameraCount++;
 
 	ObjectName = CameraIdentifier + to_string(CameraCount);
-	AttachableKind = EAttachableObjectKind::NORMAL_CAMERA_KIND;
+	AttachableKind = EAttachableObjectKind::SDR_CAMERA_KIND;
 
 	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
 
@@ -41,11 +41,6 @@ Camera::Camera(const UINT& WidthIn, const UINT& HeightIn)
 	Device->CreateTexture2D(&SceneTexture2DDesc, NULL, SDRSceneTexture2D.GetAddressOf());
 	Device->CreateShaderResourceView(SDRSceneTexture2D.Get(), NULL, SDRSceneSRV.GetAddressOf());
 	Device->CreateRenderTargetView(SDRSceneTexture2D.Get(), NULL, SDRSceneRTV.GetAddressOf());
-
-	SceneTexture2DDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-	Device->CreateTexture2D(&SceneTexture2DDesc, NULL, HDRSceneTexture2D.GetAddressOf());
-	Device->CreateShaderResourceView(HDRSceneTexture2D.Get(), NULL, HDRSceneSRV.GetAddressOf());
-	Device->CreateRenderTargetView(HDRSceneTexture2D.Get(), NULL, HDRSceneRTV.GetAddressOf());
 
 	D3D11_TEXTURE2D_DESC DepthStencilTexture2DDesc;
 	AutoZeroMemory(DepthStencilTexture2DDesc);
@@ -80,9 +75,4 @@ void Camera::CleanupLens()
 {
 	DeviceContextCached->ClearRenderTargetView(SDRSceneRTV.Get(), ClearColor);
 	DeviceContextCached->ClearDepthStencilView(SceneDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
-}
-
-void Camera::ToneMapping()
-{
-
 }

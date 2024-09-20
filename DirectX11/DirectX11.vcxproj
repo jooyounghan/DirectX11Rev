@@ -146,6 +146,7 @@
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="APawn.cpp" />
+    <ClCompile Include="APSOObjectWIthHDRCamera.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
     <ClCompile Include="ATextureAsset.cpp" />
     <ClCompile Include="BaseCubeMeshAsset.cpp" />
@@ -168,7 +169,8 @@
     <ClCompile Include="CollisionVisitor.cpp" />
     <ClCompile Include="Debugable.cpp" />
     <ClCompile Include="DefineType.cpp" />
-    <ClCompile Include="EditorCamera.cpp" />
+    <ClCompile Include="HDRCamera.cpp" />
+    <ClCompile Include="IDSelectCamera.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="EnvironmentActor.cpp" />
@@ -225,6 +227,8 @@
     <ClInclude Include="AMeshObject.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
+    <ClInclude Include="APSOObjectWIthHDRCamera.h" />
+    <ClInclude Include="APSOObjectWithNormalCamera.h" />
     <ClInclude Include="AScratchTextureAsset.h" />
     <ClInclude Include="ATextureAsset.h" />
     <ClInclude Include="BaseCubeMeshAsset.h" />
@@ -249,7 +253,8 @@
     <ClInclude Include="Debugable.h" />
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
-    <ClInclude Include="EditorCamera.h" />
+    <ClInclude Include="HDRCamera.h" />
+    <ClInclude Include="IDSelectCamera.h" />
     <ClInclude Include="EnvironmentActor.h" />
     <ClInclude Include="EnvironmentActorPSO.h" />
     <ClInclude Include="Externals\DDSTextureLoader\DDSTextureLoader11.h" />

@@ -26,11 +26,11 @@ public:
 		const UINT& StencilRefIn,
 		const Microsoft::WRL::ComPtr<ID3D11BlendState>					BlendStateIn,
 		const std::vector<Microsoft::WRL::ComPtr<ID3D11SamplerState>>& SamplerStatesIn
-	);;
+	);
 	virtual ~PickingIDWireframePSO();
 
-protected:
-	ManageForRendering(ABoundingObject);
+public:
+	ManageTargetObjects(ABoundingObject);
 
 public:
 	virtual void PresetRendering(Camera* CameraIn, MapAsset* MapIn) override;

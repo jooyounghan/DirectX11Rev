@@ -7,8 +7,3 @@ struct PositionOnlyVertexOutPut
 {
     float4 f4ProjPos : SV_Position;
 };
-
-struct PickinIDPixelOutput
-{
-    float4 f4ProjPos : SV_Position;
-};

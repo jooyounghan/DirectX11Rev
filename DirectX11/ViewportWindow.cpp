@@ -5,7 +5,7 @@
 #include "MapAsset.h"
 
 #include "EditorPawn.h"
-#include "EditorCamera.h"
+#include "IDSelectCamera.h"
 
 #include "AssetManager.h"
 #include "AAssetFile.h"
@@ -29,7 +29,7 @@ ViewportWindow::ViewportWindow(EditorWorld* EditorWorldIn)
         EditorActorCached  = EditorWorldCached->GetEditorActorInstance();
         if (EditorActorCached != nullptr)
         {
-            EditorCameraCached = EditorActorCached->GetEditorCameraCached();
+            IDSelectCameraCached = EditorActorCached->GetIDSelectCameraCached();
         }
 
         GameWorldCached = EditorWorldCached->GetGameWorldCached();
@@ -51,12 +51,12 @@ void ViewportWindow::RenderWindow()
     CurrentMap = GameWorldCached->GetCurrentMap();
     if (CurrentMap != nullptr)
     {
-        if (EditorCameraCached != nullptr)
+        if (IDSelectCameraCached != nullptr)
         {
             Text(CurrentMap->GetAssetName().c_str());
             ImagePosition = GetCursorScreenPos();
             ImageSize = GetContentRegionAvail();
-            Image(EditorCameraCached->GetSDRSceneSRV(), ImageSize);
+            Image(IDSelectCameraCached->GetSDRSceneSRV(), ImageSize);
             ManageAssetDrop();
             ManageMouseLBClick();
         }
@@ -82,8 +82,8 @@ void ViewportWindow::ManageAssetDrop()
                 Ray ClickedRay = Ray::CreateRay(
                     RelativeMousePos.x, RelativeMousePos.y, 
                     ImageSize.x, ImageSize.y,
-                    EditorCameraCached->GetProjectionMatrix(), 
-                    EditorCameraCached->GetViewMatrix()
+                    IDSelectCameraCached->GetProjectionMatrix(), 
+                    IDSelectCameraCached->GetViewMatrix()
                 );
                 const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
                 
@@ -126,7 +126,7 @@ void ViewportWindow::ManageMouseLBClick()
         ImVec2 AbsMousePos = io.MousePos;
         ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - ImagePosition.x, AbsMousePos.y - ImagePosition.y);
 
-        UINT SelectedID = EditorCameraCached->GetID(RelativeMousePos.x, RelativeMousePos.y, ImageSize.x, ImageSize.y);
+        UINT SelectedID = IDSelectCameraCached->GetID(RelativeMousePos.x, RelativeMousePos.y, ImageSize.x, ImageSize.y);
         EditorWorldCached->SetSelecteObjectByID(SelectedID);
     }
 }

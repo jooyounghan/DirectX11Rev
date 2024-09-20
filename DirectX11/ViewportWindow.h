@@ -3,7 +3,7 @@
 
 class EditorWorld;
 class EditorPawn;
-class EditorCamera; 
+class IDSelectCamera; 
 
 class GameWorld;
 class AssetManager;
@@ -26,7 +26,7 @@ private:
 
 private:
 	EditorPawn* EditorActorCached = nullptr;
-	EditorCamera* EditorCameraCached = nullptr;
+	IDSelectCamera* IDSelectCameraCached = nullptr;
 
 private:
 	ImVec2 ImagePosition = ImVec2();

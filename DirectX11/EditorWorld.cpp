@@ -4,7 +4,7 @@
 #include "DefineUtility.h"
 
 #include "EditorPawn.h"
-#include "EditorCamera.h"
+#include "IDSelectCamera.h"
 
 #include "TaskAnalyzerWindow.h"
 #include "ViewportWindow.h" 

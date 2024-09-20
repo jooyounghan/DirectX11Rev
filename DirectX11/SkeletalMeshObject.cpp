@@ -22,16 +22,14 @@ SkeletalMeshObject::SkeletalMeshObject(std::shared_ptr<SkeletalMeshAsset> Skelet
 	ObjectName = SkeletalMeshObjectIdentifier + to_string(SkeletalMeshObjectCount);
 	AttachableKind = EAttachableObjectKind::SKELETAL_MESH_KIND;
 
-	MeshObjectPSO<SkeletalMeshObject>* Pso 
-		= reinterpret_cast<MeshObjectPSO<SkeletalMeshObject>*>(App::GPSOManager->GetPSOObject(EPSOType::R8G8B8A8_Skeletal_Solid));
-	if (Pso != nullptr) Pso->AddMeshObject(this);
-	PickingIDSolidPSO<SkeletalMeshObject>* PsoForID
-		= reinterpret_cast<PickingIDSolidPSO<SkeletalMeshObject>*>(App::GPSOManager->GetPSOObject(EPSOType::R8G8B8A8_Skeletal_ID_Solid));
-	if (PsoForID != nullptr) PsoForID->AddMeshObject(this);
+	App::GPSOManager->AddObjectToPSO<SkeletalMeshObject, MeshObjectPSO<SkeletalMeshObject>>(EPSOType::Skeletal_Solid, this);
+	App::GPSOManager->AddObjectToPSO<SkeletalMeshObject, PickingIDSolidPSO<SkeletalMeshObject>>(EPSOType::Skeletal_ID_Solid, this);
 }
 
 SkeletalMeshObject::~SkeletalMeshObject()
 {
+	App::GPSOManager->RemoveObjectFromPSO<SkeletalMeshObject, MeshObjectPSO<SkeletalMeshObject>>(EPSOType::Skeletal_Solid, this);
+	App::GPSOManager->RemoveObjectFromPSO<SkeletalMeshObject, PickingIDSolidPSO<SkeletalMeshObject>>(EPSOType::Skeletal_ID_Solid, this);
 }
 
 AMeshAsset* SkeletalMeshObject::GetMeshAssetInstance()

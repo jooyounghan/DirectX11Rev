@@ -23,16 +23,14 @@ StaticMeshObject::StaticMeshObject(std::shared_ptr<StaticMeshAsset> StaticMeshAs
 	ObjectName = StaticMeshObjectIdentifier + to_string(StaticMeshObjectCount);
 	AttachableKind = EAttachableObjectKind::STATIC_MESH_KIND;
 
-	MeshObjectPSO<StaticMeshObject>* Pso
-		= reinterpret_cast<MeshObjectPSO<StaticMeshObject>*>(App::GPSOManager->GetPSOObject(EPSOType::R8G8B8A8_Static_Solid));
-	if (Pso != nullptr) Pso->AddMeshObject(this);
-	PickingIDSolidPSO<StaticMeshObject>* PsoForID
-		= reinterpret_cast<PickingIDSolidPSO<StaticMeshObject>*>(App::GPSOManager->GetPSOObject(EPSOType::R8G8B8A8_Static_ID_Solid));
-	if (PsoForID != nullptr) PsoForID->AddMeshObject(this);
+	App::GPSOManager->AddObjectToPSO<StaticMeshObject, MeshObjectPSO<StaticMeshObject>>(EPSOType::Static_Solid, this);
+	App::GPSOManager->AddObjectToPSO<StaticMeshObject, PickingIDSolidPSO<StaticMeshObject>>(EPSOType::Static_ID_Solid, this);
 }
 
 StaticMeshObject::~StaticMeshObject()
 {
+	App::GPSOManager->RemoveObjectFromPSO<StaticMeshObject, MeshObjectPSO<StaticMeshObject>>(EPSOType::Static_Solid, this);
+	App::GPSOManager->RemoveObjectFromPSO<StaticMeshObject, PickingIDSolidPSO<StaticMeshObject>>(EPSOType::Static_ID_Solid, this);
 }
 
 AMeshAsset* StaticMeshObject::GetMeshAssetInstance() 

@@ -36,7 +36,7 @@ public:
 	virtual ~MeshObjectPSO() {};
 
 protected:
-	ManageForRendering(MeshObject);
+	ManageTargetObjects(MeshObject);
 
 public:
 	virtual void PresetRendering(Camera* CameraIn, MapAsset* MapIn) override;

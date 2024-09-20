@@ -3,23 +3,29 @@
 #include <wrl/client.h>
 #include <d3d11.h>
 #include <memory>
+#include <unordered_map>
 
-enum EPSOType : size_t
+enum class EPSOType
 {
+	// Environment
+	Environment_Solid,
+
 	// Position Only
-	R8G8B8A8_BoundingComponent_Wireframe,
+	BoundingComponent_Wireframe,
+
 	// Static / Skeletal
-	R8G8B8A8_Static_Solid,
-	R8G8B8A8_Skeletal_Solid,
+	Static_Solid,
+	Skeletal_Solid,
 
 	// ID
-	R8G8B8A8_BoundingComponent_ID_Wireframe,
+	BoundingComponent_ID_Wireframe,
+
 	// Static / Skeletal
-	R8G8B8A8_Static_ID_Solid,
-	R8G8B8A8_Skeletal_ID_Solid,
+	Static_ID_Solid,
+	Skeletal_ID_Solid,
 
 	// Count
-	PSOTypeCount
+	EPSOTypeCount
 };
 
 class APSOObject;
@@ -31,10 +37,10 @@ public:
 	~PSOManager();
 
 protected:
-	std::unique_ptr<APSOObject> PSOObjects[PSOTypeCount];
+	std::unordered_map<EPSOType, std::unique_ptr<APSOObject>> PSOObjects;
 
 public:
-	inline APSOObject* GetPSOObject(EPSOType PsoTypeIn) { return PSOObjects[PsoTypeIn].get(); }
+	APSOObject* GetPSOObject(EPSOType PsoTypeIn);
 
 private:
 	void CreateVertexShader(
@@ -134,4 +140,25 @@ private:
 		const D3D11_FILTER& Filter,
 		Microsoft::WRL::ComPtr<ID3D11SamplerState>& SamplerState
 	);
+
+public:
+	template<typename ObjectType, typename PSOType>
+	void AddObjectToPSO(EPSOType PsoTypeIn, ObjectType* ObjectIn);
+
+	template<typename ObjectType, typename PSOType>
+	void RemoveObjectFromPSO(EPSOType PsoTypeIn, ObjectType* ObjectIn);
 };
+
+template<typename ObjectType, typename PSOType>
+inline void PSOManager::AddObjectToPSO(EPSOType PsoTypeIn, ObjectType* ObjectIn)
+{
+	PSOType* Pso = reinterpret_cast<PSOType*>(GetPSOObject(PsoTypeIn));
+	if (Pso != nullptr)	Pso->AddObject(ObjectIn);
+}
+
+template<typename ObjectType, typename PSOType>
+inline void PSOManager::RemoveObjectFromPSO(EPSOType PsoTypeIn, ObjectType* ObjectIn)
+{
+	PSOType* Pso = reinterpret_cast<PSOType*>(GetPSOObject(PsoTypeIn));
+	if (Pso != nullptr)	Pso->RemoveObject(ObjectIn);
+}

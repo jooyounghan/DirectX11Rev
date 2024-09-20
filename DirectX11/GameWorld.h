@@ -53,6 +53,11 @@ protected:
 public:
 	virtual void RenderWorld() override;
 
+private:
+	void RenderBeforeToneMapping();
+	void ToneMapping();
+	void RenderAfterToneMapping();
+
 public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 	virtual void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;

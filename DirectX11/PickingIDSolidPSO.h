@@ -35,12 +35,8 @@ public:
 	) {};
 	virtual ~PickingIDSolidPSO() {};
 
-protected:																					
-	std::list<MeshObject*> MeshObjects;															
-
-public:																						
-	inline void AddMeshObject(MeshObject* ObjectIn) { MeshObjects.emplace_back(ObjectIn); }	
-	inline void RemoveMeshObject(MeshObject* ObjectIn) { MeshObjects.remove(ObjectIn); }
+public:
+	ManageTargetObjects(MeshObject);
 
 public:
 	virtual void PresetRendering(Camera* CameraIn, MapAsset* MapIn) override;

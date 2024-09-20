@@ -2,11 +2,14 @@
 #include "Camera.h"
 #include "IDColor.h"
 
-class EditorCamera : public Camera
+class IDSelectCamera : public Viewable
 {
 public:
-	EditorCamera(const UINT& WidthIn, const UINT& HeightIn);
-	virtual ~EditorCamera();
+	IDSelectCamera(const UINT& WidthIn, const UINT& HeightIn);
+	virtual ~IDSelectCamera();
+
+public:
+	static const char* IDSelectCameraIdentifier;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				IdSelectTexture2D;
@@ -32,6 +35,9 @@ public:
 
 protected:
 	static const FLOAT IDClearColor[4];
+
+public:
+	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
 	virtual void CleanupLens();

@@ -233,7 +233,7 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 		case OBB_KIND:
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>();
 			break;
-		case NORMAL_CAMERA_KIND:
+		case SDR_CAMERA_KIND:
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<Camera>(App::GWidth, App::GHeight);
 			break;
 		default:

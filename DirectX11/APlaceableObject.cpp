@@ -171,6 +171,15 @@ void APlaceableObject::Update(const float& DeltaTimeIn)
 	}
 }
 
+void APlaceableObject::UpdateRenderable(const bool& RenderableFlag)
+{
+	IsRenderable = RenderableFlag;
+	for (unique_ptr<AAttachableObject>& AttachedObject : AttachedChildrenObjects)
+	{
+		AttachedObject->UpdateRenderable(RenderableFlag);
+	}
+}
+
 void APlaceableObject::RemoveAttachedObject(AAttachableObject* AttachedObjectIn)
 {
 	RemoveFromIntersectables(AttachedObjectIn);

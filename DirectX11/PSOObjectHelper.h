@@ -2,12 +2,38 @@
 #include <list>
 #include <vector>
 
-#define ManageForRendering(Object)															\
-protected:																					\
-	std::list<Object*> ##Object##s;															\
-public:																						\
-	inline void Add##Object##(Object* ObjectIn) { ##Object##s.emplace_back(ObjectIn); }		\
-	inline void Remove##Object##(Object* ObjectIn) { ##Object##s.remove(ObjectIn); }		
+#define PSOArgsIn																				\
+ID3D11DeviceContext* DeviceContextIn,															\
+const Microsoft::WRL::ComPtr<ID3D11InputLayout>& InputLayoutIn,									\
+const Microsoft::WRL::ComPtr<ID3D11VertexShader>& VertexShaderIn,								\
+const UINT& NumVSConstBuffersIn,																\
+const UINT& NumVSSRVsIn,																		\
+const Microsoft::WRL::ComPtr<ID3D11PixelShader>& PixelShaderIn,									\
+const UINT& NumPSConstBuffersIn,																\
+const UINT& NumPSSRVsIn,																		\
+const D3D11_PRIMITIVE_TOPOLOGY& PrimitiveTopologyIn,											\
+const UINT& NumRenderTargetsIn,																	\
+const DXGI_FORMAT* const										RTVFormatsIn,					\
+const DXGI_FORMAT& DSVFormatIn,																	\
+const DXGI_SAMPLE_DESC& SampleDescIn,															\
+const Microsoft::WRL::ComPtr<ID3D11RasterizerState>				RasterizerStateIn,				\
+const Microsoft::WRL::ComPtr<ID3D11DepthStencilState>			DepthStencilStateIn,			\
+const UINT& StencilRefIn,																		\
+const Microsoft::WRL::ComPtr<ID3D11BlendState>					BlendStateIn,					\
+const std::vector<Microsoft::WRL::ComPtr<ID3D11SamplerState>>& SamplerStatesIn					
+
+#define PSOArgs																					\
+DeviceContextIn, InputLayoutIn, VertexShaderIn, NumVSConstBuffersIn, NumVSSRVsIn,				\
+PixelShaderIn, NumPSConstBuffersIn, NumPSSRVsIn, PrimitiveTopologyIn, NumRenderTargetsIn,		\
+RTVFormatsIn, DSVFormatIn, SampleDescIn, RasterizerStateIn, DepthStencilStateIn,				\
+StencilRefIn, BlendStateIn, SamplerStatesIn
+
+#define ManageTargetObjects(Object)                                                            \
+protected:                                                                                    \
+    std::list<Object*> ##Object##s;                                                            \
+public:                                                                                        \
+    inline void AddObject(Object* ObjectIn) { ##Object##s.emplace_back(ObjectIn); }        \
+    inline void RemoveObject(Object* ObjectIn) { ##Object##s.remove(ObjectIn); }        
 
 
 #ifdef _DEBUG

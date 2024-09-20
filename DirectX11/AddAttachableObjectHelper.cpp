@@ -79,7 +79,7 @@ void AddAttachableObjectDrawer::DrawAddObjectPopup()
                         SelectedPlaced->AddAttachedObject<OBBObject>();
                     break;
                 }
-                case EAttachableObjectKind::NORMAL_CAMERA_KIND:
+                case EAttachableObjectKind::SDR_CAMERA_KIND:
                 {
                     SelectedAttached != nullptr ?
                         SelectedAttached->AddAttachedObject<Camera>(App::GWidth, App::GHeight) :

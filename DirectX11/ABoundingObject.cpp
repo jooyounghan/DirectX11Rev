@@ -9,15 +9,14 @@
 ABoundingObject::ABoundingObject()
 	: AAttachableObject(), DebuggingColorBuffer()
 {
-	BoundingObjectPSO* Pso = reinterpret_cast<BoundingObjectPSO*>(App::GPSOManager->GetPSOObject(EPSOType::R8G8B8A8_BoundingComponent_Wireframe));
-	if (Pso != nullptr) Pso->AddABoundingObject(this);
-
-	PickingIDWireframePSO* PsoForID = reinterpret_cast<PickingIDWireframePSO*>(App::GPSOManager->GetPSOObject(EPSOType::R8G8B8A8_BoundingComponent_ID_Wireframe));
-	if (PsoForID != nullptr) PsoForID->AddABoundingObject(this);
+	App::GPSOManager->AddObjectToPSO<ABoundingObject, BoundingObjectPSO>(EPSOType::BoundingComponent_Wireframe, this);
+	App::GPSOManager->AddObjectToPSO<ABoundingObject, PickingIDWireframePSO>(EPSOType::BoundingComponent_ID_Wireframe, this);
 }
 
 ABoundingObject::~ABoundingObject()
 {
+	App::GPSOManager->RemoveObjectFromPSO<ABoundingObject, BoundingObjectPSO>(EPSOType::BoundingComponent_Wireframe, this);
+	App::GPSOManager->RemoveObjectFromPSO<ABoundingObject, PickingIDWireframePSO>(EPSOType::BoundingComponent_ID_Wireframe, this);
 }
 
 void ABoundingObject::UpdateColor(const XMVECTOR& ColorIn, ID3D11DeviceContext* DeviceContextIn)

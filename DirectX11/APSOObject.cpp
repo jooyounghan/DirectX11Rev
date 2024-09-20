@@ -4,26 +4,7 @@
 using namespace std;
 using namespace Microsoft::WRL;
 
-APSOObject::APSOObject(
-	ID3D11DeviceContext*							DeviceContextIn,
-	const ComPtr<ID3D11InputLayout>&				InputLayoutIn, 
-	const ComPtr<ID3D11VertexShader>&				VertexShaderIn, 
-	const UINT&										NumVSConstBuffersIn,
-	const UINT&										NumVSSRVsIn,
-	const ComPtr<ID3D11PixelShader>&				PixelShaderIn, 
-	const UINT&										NumPSConstBuffersIn,
-	const UINT&										NumPSSRVsIn,
-	const D3D11_PRIMITIVE_TOPOLOGY&					PrimitiveTopologyIn, 
-	const UINT&										NumRenderTargetsIn, 
-	const DXGI_FORMAT*								RTVFormatsIn, 
-	const DXGI_FORMAT &								DSVFormatIn, 
-	const DXGI_SAMPLE_DESC&							SampleDescIn, 
-	const ComPtr<ID3D11RasterizerState>				RasterizerStateIn, 
-	const ComPtr<ID3D11DepthStencilState>			DepthStencilStateIn, 
-	const UINT&										StencilRefIn,
-	const ComPtr<ID3D11BlendState>					BlendStateIn,
-	const vector<ComPtr<ID3D11SamplerState>>&		SamplerStatesIn
-)
+APSOObject::APSOObject(PSOArgsIn)
 	: DeviceContextCached(DeviceContextIn), VertexShader(VertexShaderIn),
 	InputLayout(InputLayoutIn),  NumVSConstBuffers(NumVSConstBuffersIn), 
 	NumVSSRVs(NumVSSRVsIn), PixelShader(PixelShaderIn), 
@@ -105,6 +86,7 @@ void APSOObject::SetPipelineStateObject(
 	DeviceContextCached->RSSetViewports(1, ViewportIn);
 
 	DeviceContextCached->OMSetDepthStencilState(DepthStencilState.Get(), StencilRef);
+
 	const FLOAT BlendFactor[4] = { 1.f, 1.f, 1.f, 1.f };
 	DeviceContextCached->OMSetBlendState(BlendState.Get(), BlendFactor, 0xFFFFFFFF);
 	DeviceContextCached->OMSetRenderTargets(NumRenderTargets, RTVsIn, DSVIn);

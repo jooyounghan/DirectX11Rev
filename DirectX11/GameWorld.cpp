@@ -9,7 +9,7 @@
 #ifdef _DEBUG
 #include "EditorWorld.h"
 #include "EditorPawn.h"
-#include "EditorCamera.h"
+#include "IDSelectCamera.h"
 #endif 
 
 #include "Camera.h"
@@ -63,7 +63,7 @@ void GameWorld::LoadManagingMaps()
 	// TODO : Map을 선택하는 과정 추가하기
 	CurrentMap = MapInstances[0].get();
 	EditorPawn* EditorActorInstnace = EditorWorldInstance->GetEditorActorInstance();
-	CurrentCamera = EditorActorInstnace->GetEditorCameraCached();
+	CurrentCamera = EditorActorInstnace->GetIDSelectCameraCached();
 }
 
 void GameWorld::Update(const float& DeltaTimeIn)
@@ -83,13 +83,22 @@ void GameWorld::RenderWorld()
 {
 	CurrentCamera->CleanupLens();
 
-	for (size_t PSOType = 0; PSOType < PSOTypeCount; ++PSOType)
-	{		
-		const auto& PsoObject = PSOManagerInstance->GetPSOObject(static_cast<EPSOType>(PSOType));
-		PsoObject->PresetRendering(CurrentCamera, CurrentMap);
-		PsoObject->Render();
-		PsoObject->ResetRendering();
+	APSOObject* test= PSOManagerInstance->GetPSOObject(EPSOType::Environment_Solid);
 
+	vector<APSOObject*> SRDRenderingPsos{
+		PSOManagerInstance->GetPSOObject(EPSOType::BoundingComponent_ID_Wireframe),
+		PSOManagerInstance->GetPSOObject(EPSOType::BoundingComponent_Wireframe),
+		PSOManagerInstance->GetPSOObject(EPSOType::Skeletal_Solid),
+		PSOManagerInstance->GetPSOObject(EPSOType::Skeletal_ID_Solid),
+		PSOManagerInstance->GetPSOObject(EPSOType::Static_ID_Solid),
+		PSOManagerInstance->GetPSOObject(EPSOType::Static_Solid)
+	};
+
+	for (APSOObject* SRDRenderingPso : SRDRenderingPsos)
+	{
+		SRDRenderingPso->PresetRendering(CurrentCamera, CurrentMap);
+		SRDRenderingPso->Render();
+		SRDRenderingPso->ResetRendering();
 	}
 
 	EditorWorldInstance->RenderWorld();
@@ -106,6 +115,7 @@ void GameWorld::RenderWorld()
 	}
 
 }
+
 
 void GameWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {

@@ -15,7 +15,9 @@ enum EAttachableObjectKind : int
 	SKELETAL_MESH_KIND,
 	BOUNDING_SPHERE_KIND,
 	OBB_KIND,
-	NORMAL_CAMERA_KIND,
+	SDR_CAMERA_KIND,
+	ID_SELECT_CAMERA_KIND,
+	HDR_CAMERA_KIND
 };
 
 class AAttachableObject : public AObject
@@ -100,10 +102,6 @@ public:
 
 private:
 	void RemoveFromIntersectables(AAttachableObject* AttachedObjectIn);
-
-public:
-	virtual void OnSerializeFromMap(FILE* FileIn) = 0;
-	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };
 
 template<typename Attachment, typename ...Args>
