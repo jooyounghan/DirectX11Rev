@@ -40,7 +40,7 @@ void PSOObject::ResetResourceFlag()
 
 void PSOObject::SetPipelineStateObject(
 	const UINT& RTVCountIn, 
-	ID3D11RenderTargetView** RTVsIn, 
+	ID3D11RenderTargetView* const* RTVsIn, 
 	const D3D11_VIEWPORT* ViewportIn, 
 	ID3D11DepthStencilView* DSVIn
 )

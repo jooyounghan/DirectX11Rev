@@ -246,6 +246,48 @@ PSOObject* PSOManager::GetPSOObject(EPSOType PsoTypeIn)
     return nullptr;
 }
 
+void PSOManager::ProcessRender()
+{
+    ID3D11DeviceContext* DeviceContext = App::GGraphicPipeline->GetDeviceContext();
+
+    for (auto& PSORenderCommand : PSORenderCommandSet)
+    {
+        PSOObject* SelectedPSO = PSORenderCommand.first;
+        const vector<SPSOArgument>& SelectedPSOArguments = PSORenderCommand.second;
+
+        for (auto& SelectedPSOArgument : SelectedPSOArguments)
+        {
+            SelectedPSO->SetPipelineStateObject(
+                SelectedPSOArgument.RTVs.size(), SelectedPSOArgument.RTVs.data(), 
+                SelectedPSOArgument.Viewport, SelectedPSOArgument.DSV
+            );
+
+            SelectedPSO->SetVSConstantBuffers(0, SelectedPSOArgument.VSConstantBuffers.size(), SelectedPSOArgument.VSConstantBuffers.data());
+            SelectedPSO->SetVSShaderResourceViews(0, SelectedPSOArgument.VSSRVs.size(), SelectedPSOArgument.VSSRVs.data());
+            SelectedPSO->SetPSConstantBuffers(0, SelectedPSOArgument.PSConstantBuffers.size(), SelectedPSOArgument.PSConstantBuffers.data());
+            SelectedPSO->SetPSShaderResourceViews(0, SelectedPSOArgument.PSSRVs.size(), SelectedPSOArgument.PSSRVs.data());
+
+            DeviceContext->IASetIndexBuffer(SelectedPSOArgument.IndexBuffer, SelectedPSOArgument.IndexFormat, 0);
+            DeviceContext->IASetVertexBuffers(
+                0, SelectedPSOArgument.VertexBuffers.size(), SelectedPSOArgument.VertexBuffers.data(), 
+                SelectedPSOArgument.Strides.data(), SelectedPSOArgument.Offsets.data()
+            );
+
+#ifdef _DEBUG
+            SelectedPSO->CheckPipelineValidation();
+#endif // DEBUG
+            DeviceContext->DrawIndexed(static_cast<UINT>(SelectedPSOArgument.IndexCount), 0, 0);
+
+            SelectedPSO->ResetVSConstantBuffers(0, SelectedPSOArgument.VSConstantBuffers.size());
+            SelectedPSO->ResetVSShaderResourceViews(0, SelectedPSOArgument.VSSRVs.size());
+            SelectedPSO->ResetPSConstantBuffers(0, SelectedPSOArgument.PSConstantBuffers.size());
+            SelectedPSO->ResetPSShaderResourceViews(0, SelectedPSOArgument.PSSRVs.size());
+        }
+    }
+
+    PSORenderCommandSet.clear();
+}
+
 void PSOManager::CreateVertexShader(
     const wchar_t* HlslFileName, 
     const D3D11_INPUT_ELEMENT_DESC* InputElementDescs, 

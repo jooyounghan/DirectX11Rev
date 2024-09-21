@@ -188,6 +188,7 @@
     <ClCompile Include="MapAsset.cpp" />
     <ClCompile Include="MaterialAsset.cpp" />
     <ClCompile Include="SkeletalMeshObjectActor.cpp" />
+    <ClCompile Include="SkeletalMeshObjetPSO.cpp" />
     <ClCompile Include="StaticMeshObjectActor.cpp" />
     <ClCompile Include="StaticMeshObjectInformationDrawer.cpp" />
     <ClCompile Include="ModelHelper.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="InputEventManager.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="SkeletalMeshObjectActor.h" />
+    <ClInclude Include="SkeletalMeshObjetPSO.h" />
     <ClInclude Include="StaticMeshObjectActor.h" />
     <ClInclude Include="StaticMeshObjectInformationDrawer.h" />
     <ClInclude Include="ModelDetailWindow.h" />

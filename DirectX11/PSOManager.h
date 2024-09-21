@@ -5,6 +5,8 @@
 #include <memory>
 #include <unordered_map>
 
+//#define DIRECT_RENDER
+
 enum class EPSOType
 {
 	// Environment
@@ -30,6 +32,23 @@ enum class EPSOType
 
 class PSOObject;
 
+struct SPSOArgument
+{
+	std::vector<ID3D11Buffer*>				VertexBuffers;
+	std::vector<UINT>						Strides;
+	std::vector<UINT>						Offsets;
+	ID3D11Buffer*							IndexBuffer;
+	DXGI_FORMAT								IndexFormat;
+	UINT									IndexCount;
+	std::vector<ID3D11Buffer*>				VSConstantBuffers;
+	std::vector<ID3D11ShaderResourceView*>	VSSRVs;
+	std::vector<ID3D11Buffer*>				PSConstantBuffers;
+	std::vector<ID3D11ShaderResourceView*>	PSSRVs;
+	std::vector<ID3D11RenderTargetView*>	RTVs;
+	ID3D11DepthStencilView*					DSV;
+	const D3D11_VIEWPORT*					Viewport;
+};
+
 class PSOManager
 {
 public:
@@ -41,6 +60,13 @@ protected:
 	
 public:
 	PSOObject* GetPSOObject(EPSOType PsoTypeIn);
+
+protected:
+	std::unordered_map<PSOObject*, std::vector<SPSOArgument>> PSORenderCommandSet;
+
+public:
+	inline void AddRenderCommand(PSOObject* PSOObjectIn, const SPSOArgument& PSOArgument) { PSORenderCommandSet[PSOObjectIn].push_back(PSOArgument); }
+	void ProcessRender();
 
 private:
 	void CreateVertexShader(

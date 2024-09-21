@@ -96,7 +96,14 @@ void MapAsset::RenderMap()
 	CurrentCamera->CleanupLens();
 
 	for (auto& RootPlaceable : RootPlaceables)
-		if (RootPlaceable->GetIsRenderable()) RootPlaceable->Render();
+	{
+		if (RootPlaceable->GetIsRenderable())
+		{
+			RootPlaceable->Render();
+		}
+	}
+
+	App::GPSOManager->ProcessRender();
 }
 
 void MapAsset::Serialize(const std::string& OutputAdditionalPath)

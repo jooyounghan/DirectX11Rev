@@ -495,6 +495,9 @@
     <ClCompile Include="AActor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="SkeletalMeshObjetPSO.cpp">
+      <Filter>소스 파일\PSO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
@@ -796,6 +799,9 @@
     </ClInclude>
     <ClInclude Include="HDRCamera.h">
       <Filter>헤더 파일\Object\Attachable\View</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshObjetPSO.h">
+      <Filter>헤더 파일\PSO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

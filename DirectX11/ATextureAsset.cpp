@@ -56,10 +56,39 @@ D3D11_SHADER_RESOURCE_VIEW_DESC ATextureAsset::CreateSRV(const D3D11_TEXTURE2D_D
 	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
 	AutoZeroMemory(SRVDesc);
 	SRVDesc.Format = TextureDescIn.Format;
-	SRVDesc.ViewDimension = TextureDescIn.ArraySize > 1 ? D3D11_SRV_DIMENSION_TEXTURE2DARRAY : D3D11_SRV_DIMENSION_TEXTURE2D;
-	SRVDesc.Texture2DArray.ArraySize = TextureDescIn.ArraySize;
-	SRVDesc.Texture2DArray.MipLevels = TextureDescIn.MipLevels;
-	SRVDesc.Texture2DArray.MostDetailedMip = 0;
+
+	if (TextureDescIn.MiscFlags & D3D11_RESOURCE_MISC_TEXTURECUBE)
+	{
+		if (TextureDescIn.ArraySize > 1)
+		{
+			SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
+			SRVDesc.TextureCubeArray.NumCubes = ArraySize / 6;
+			SRVDesc.TextureCubeArray.MipLevels = TextureDescIn.MipLevels;
+			SRVDesc.TextureCubeArray.MostDetailedMip = 0;
+		}
+		else
+		{
+			SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+			SRVDesc.TextureCube.MipLevels = TextureDescIn.MipLevels;
+			SRVDesc.TextureCube.MostDetailedMip = 0;
+		}
+	}
+	else
+	{
+		if (TextureDescIn.ArraySize > 1)
+		{
+			SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+			SRVDesc.Texture2DArray.ArraySize = ArraySize;
+			SRVDesc.Texture2DArray.MipLevels = TextureDescIn.MipLevels;
+			SRVDesc.Texture2DArray.MostDetailedMip = 0;
+		}
+		else
+		{
+			SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			SRVDesc.Texture2D.MipLevels = TextureDescIn.MipLevels;
+			SRVDesc.Texture2D.MostDetailedMip = 0;
+		}
+	}
 
 	Device->CreateShaderResourceView(Texture2D.Get(), &SRVDesc, SRV.GetAddressOf());
 	DeviceContext->GenerateMips(SRV.Get());
