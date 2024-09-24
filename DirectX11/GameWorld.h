@@ -37,11 +37,14 @@ protected:
 
 protected:
 	std::unordered_map<UINT, std::shared_ptr<MapAsset>> MapInstances;
+	MakeGetter(MapInstances);
+
+protected:
 	MapAsset* CurrentMap = nullptr;
 	MakeGetter(CurrentMap);
 
 public:
-	virtual void RenderWorld() override;
+	virtual void Render() override;
 
 public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;

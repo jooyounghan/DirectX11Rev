@@ -8,6 +8,7 @@
 #include <vector>
 #include <memory>
 
+class MapAsset;
 class APlaceableObject;
 class AAttachableObject;
 class GameWorld;
@@ -31,8 +32,18 @@ protected:
 	std::vector<std::unique_ptr<IWindow>> Dialogs;
 
 protected:
+	MapAsset* SelectedMapAsset = nullptr;
+	MakeGetter(SelectedMapAsset);
+
+public:
+	void SetSelectedMapAsset(MapAsset* MapAssetIn);
+
+protected:
 	APlaceableObject* SelectedPlaceable = nullptr;
-	MakeSetterGetter(SelectedPlaceable);
+	MakeGetter(SelectedPlaceable);
+
+public:
+	void SetSelectedPlaceable(APlaceableObject* APlaceableObjectIn);
 
 protected:
 	AAttachableObject* SelectedAttached = nullptr;
@@ -42,7 +53,7 @@ public:
 	void SetSelecteObjectByID(const UINT& Id);
 
 public:
-	virtual void RenderWorld() override;
+	virtual void Render() override;
 
 public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;

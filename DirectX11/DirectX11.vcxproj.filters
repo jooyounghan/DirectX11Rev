@@ -265,6 +265,12 @@
     <Filter Include="Shader\Environment">
       <UniqueIdentifier>{602c7d87-9fcd-4fdb-a497-8e16d5991a0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper">
+      <UniqueIdentifier>{9fd178dd-7fbd-4839-8ee4-5a77b6963001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper">
+      <UniqueIdentifier>{acaedad8-b7e5-4e72-93f0-3f058931f28c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -306,7 +312,7 @@
     <ClCompile Include="FileSelectDialog.cpp">
       <Filter>소스 파일\World\Editor\GUI\DIalog</Filter>
     </ClCompile>
-    <ClCompile Include="ModelOutlinerWindow.cpp">
+    <ClCompile Include="MapOutlinerWindow.cpp">
       <Filter>소스 파일\World\Editor\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="TaskAnalyzerWindow.cpp">
@@ -371,24 +377,6 @@
     </ClCompile>
     <ClCompile Include="ModelDetailWindow.cpp">
       <Filter>소스 파일\World\Editor\GUI\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="BoundingOBBInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClCompile>
-    <ClCompile Include="BoundingSphereInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClCompile>
-    <ClCompile Include="StaticMeshObjectInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClCompile>
-    <ClCompile Include="TransformationInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClCompile>
-    <ClCompile Include="ViewableInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelDetailedInformationVisitor.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
     </ClCompile>
     <ClCompile Include="AddPlaceableObjectHelper.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
@@ -471,9 +459,6 @@
     <ClCompile Include="SkeletalMeshObject.cpp">
       <Filter>소스 파일\Object\Attachable\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="SkeletalMeshObjectInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClCompile>
     <ClCompile Include="AMeshObject.cpp">
       <Filter>소스 파일\Object\Attachable\Mesh</Filter>
     </ClCompile>
@@ -497,6 +482,30 @@
     </ClCompile>
     <ClCompile Include="SkeletalMeshObjetPSO.cpp">
       <Filter>소스 파일\PSO</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingOBBInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphereInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshObjectInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshObjectInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformationInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewableInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelDetailedInformationVisitor.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironementActorDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -614,7 +623,7 @@
     <ClInclude Include="CollisionVisitor.h">
       <Filter>헤더 파일\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="ModelOutlinerWindow.h">
+    <ClInclude Include="MapOutlinerWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
     </ClInclude>
     <ClInclude Include="Viewable.h">
@@ -646,24 +655,6 @@
     </ClInclude>
     <ClInclude Include="ModelDetailWindow.h">
       <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingOBBInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingSphereInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticMeshObjectInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClInclude>
-    <ClInclude Include="TransformationInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewableInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClInclude>
-    <ClInclude Include="IInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
     </ClInclude>
     <ClInclude Include="ModelDetailedInformationVisitor.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
@@ -782,9 +773,6 @@
     <ClInclude Include="SkeletalMeshObject.h">
       <Filter>헤더 파일\Object\Attachable\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="SkeletalMeshObjectInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClInclude>
     <ClInclude Include="AMeshObject.h">
       <Filter>헤더 파일\Object\Attachable\Mesh</Filter>
     </ClInclude>
@@ -802,6 +790,36 @@
     </ClInclude>
     <ClInclude Include="SkeletalMeshObjetPSO.h">
       <Filter>헤더 파일\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingOBBInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphereInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="IInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshObjectInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshObjectInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformationInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewableInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironementActorDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="IGuiModelAcceptor.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderable.h">
+      <Filter>헤더 파일\Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

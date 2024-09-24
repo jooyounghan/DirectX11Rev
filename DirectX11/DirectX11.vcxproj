@@ -167,6 +167,7 @@
     <ClCompile Include="CollisionVisitor.cpp" />
     <ClCompile Include="Debugable.cpp" />
     <ClCompile Include="DefineType.cpp" />
+    <ClCompile Include="EnvironementActorDrawer.cpp" />
     <ClCompile Include="HDRCamera.cpp" />
     <ClCompile Include="EditorWorld.cpp" />
     <ClCompile Include="AssetManager.cpp" />
@@ -192,7 +193,7 @@
     <ClCompile Include="StaticMeshObjectActor.cpp" />
     <ClCompile Include="StaticMeshObjectInformationDrawer.cpp" />
     <ClCompile Include="ModelHelper.cpp" />
-    <ClCompile Include="ModelOutlinerWindow.cpp" />
+    <ClCompile Include="MapOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
     <ClCompile Include="ModelDetailWindow.cpp" />
     <ClCompile Include="ModelDetailedInformationVisitor.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="Debugable.h" />
     <ClInclude Include="DefineType.h" />
     <ClInclude Include="DefineUtility.h" />
+    <ClInclude Include="EnvironementActorDrawer.h" />
     <ClInclude Include="HDRCamera.h" />
     <ClInclude Include="EnvironmentActor.h" />
     <ClInclude Include="Externals\DDSTextureLoader\DDSTextureLoader11.h" />
@@ -257,10 +259,12 @@
     <ClInclude Include="ICollisionVisitor.h" />
     <ClInclude Include="IDColor.h" />
     <ClInclude Include="IDialog.h" />
+    <ClInclude Include="IGuiModelAcceptor.h" />
     <ClInclude Include="IGuiModelVisitor.h" />
     <ClInclude Include="Indexable.h" />
     <ClInclude Include="IInformationDrawer.h" />
     <ClInclude Include="IIntersectable.h" />
+    <ClInclude Include="IRenderable.h" />
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="AObject.h" />
     <ClInclude Include="MaterialAsset.h" />
@@ -304,7 +308,7 @@
     <ClInclude Include="IUploadableBuffer.h" />
     <ClInclude Include="IWorld.h" />
     <ClInclude Include="MapAsset.h" />
-    <ClInclude Include="ModelOutlinerWindow.h" />
+    <ClInclude Include="MapOutlinerWindow.h" />
     <ClInclude Include="MathematicalHelper.h" />
     <ClInclude Include="PortfolioApp.h" />
     <ClInclude Include="PSOManager.h" />

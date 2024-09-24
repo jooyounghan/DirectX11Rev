@@ -2,6 +2,8 @@
 #include "SkeletalMeshObject.h"
 #include "IGuiModelVisitor.h"
 
+const char* SkeletalMeshObjectActor::SkeletalMeshObjectActorIdentifier = "Skeletal Actor";
+
 using namespace std;
 
 SkeletalMeshObjectActor::SkeletalMeshObjectActor(
@@ -12,7 +14,7 @@ SkeletalMeshObjectActor::SkeletalMeshObjectActor(
 {
 	static size_t SkeletalActorCount = 0;
 	SkeletalActorCount++;
-	ObjectName = "Skeletal Actor" + to_string(SkeletalActorCount);
+	ObjectName = SkeletalMeshObjectActorIdentifier + to_string(SkeletalActorCount);
 
 	PlaceableKind = EPlaceableObjectKind::SKELETAL_MESH_ACTOR_KIND;
 

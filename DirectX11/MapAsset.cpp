@@ -6,6 +6,8 @@
 #include "PSOManager.h"
 #include "PSOObject.h"
 
+#include "IGuiModelVisitor.h"
+
 #include "AssetManager.h"
 #include "StaticMeshAsset.h"
 #include "SkeletalMeshAsset.h"
@@ -39,6 +41,10 @@ MapAsset::MapAsset(
 	{
 		EditorActorInstance = make_unique<EditorPawn>(this);
 		CurrentCamera = EditorActorInstance->GetCameraInstance();
+
+		EnvironmentActorInstance = make_unique<EnvironmentActor>(this);
+		BaseMeshAsset* BaseMeshInstance = AssetManagerCached->GetManagingBaseMesh("BaseSphere");
+		EnvironmentActorInstance->SetEnvironmentMeshAsset(BaseMeshInstance);
 	}
 }
 
@@ -49,7 +55,7 @@ MapAsset::~MapAsset()
 
 void MapAsset::AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticMeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-	StaticMeshObjectActor* StaticMeshObjectIn = PlaceableAddHelper<StaticMeshObjectActor>(this, StaticMeshAssetIn);
+	StaticMeshObjectActor* StaticMeshObjectIn = PlaceableAddHelper<StaticMeshObjectActor>(StaticMeshAssetIn);
 	StaticMeshObjectIn->RelativePosition.x = PosXIn;
 	StaticMeshObjectIn->RelativePosition.y = PosYIn;
 	StaticMeshObjectIn->RelativePosition.z = PosZIn;
@@ -57,7 +63,7 @@ void MapAsset::AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticM
 
 void MapAsset::AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
 {
-	SkeletalMeshObjectActor* SkeletalMeshObjectIn = PlaceableAddHelper<SkeletalMeshObjectActor>(this, SkeletalMeshAssetIn);
+	SkeletalMeshObjectActor* SkeletalMeshObjectIn = PlaceableAddHelper<SkeletalMeshObjectActor>(SkeletalMeshAssetIn);
 	SkeletalMeshObjectIn->RelativePosition.x = PosXIn;
 	SkeletalMeshObjectIn->RelativePosition.y = PosYIn;
 	SkeletalMeshObjectIn->RelativePosition.z = PosZIn;
@@ -65,35 +71,38 @@ void MapAsset::AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> Ske
 
 void MapAsset::Update(const float& DeltaTimeIn)
 {
-	if (CurrentCamera != nullptr)
-	{
-		CurrentCamera->Update(DeltaTimeIn);
-		BoundingFrustumObject* CameraFrustum = CurrentCamera->GetCamearaFrustum();
-		for (auto& RootPlaceable : RootPlaceables)
-		{
-			RootPlaceable->Update(DeltaTimeIn);
+	EditorActorInstance->Update(DeltaTimeIn);
+	EnvironmentActorInstance->RelativePosition = EditorActorInstance->RelativePosition;
+	EnvironmentActorInstance->Update(DeltaTimeIn);
 
-			const std::list<IIntersectable*>& Intersectables = RootPlaceable->GetIntersectables();
-			for (auto& intersectable : Intersectables)
+
+	BoundingFrustumObject* CameraFrustum = CurrentCamera->GetCamearaFrustum();
+	for (auto& RootPlaceable : RootPlaceables)
+	{
+		RootPlaceable->Update(DeltaTimeIn);
+
+		const std::list<IIntersectable*>& Intersectables = RootPlaceable->GetIntersectables();
+		for (auto& intersectable : Intersectables)
+		{
+			CollisionVisitor CollisionVisitorInstance(intersectable);
+			if (CollisionVisitorInstance.Visit(CameraFrustum))
 			{
-				CollisionVisitor CollisionVisitorInstance(intersectable);
-				if (CollisionVisitorInstance.Visit(CameraFrustum))
-				{
-					RootPlaceable->SetIsRenderable(true);
-					break;
-				}
-				else
-				{
-					RootPlaceable->SetIsRenderable(false);
-				}
+				RootPlaceable->SetIsRenderable(true);
+				break;
+			}
+			else
+			{
+				RootPlaceable->SetIsRenderable(false);
 			}
 		}
 	}
 }
 
-void MapAsset::RenderMap()
+void MapAsset::Render()
 {
 	CurrentCamera->CleanupLens();
+
+	EnvironmentActorInstance->Render();
 
 	for (auto& RootPlaceable : RootPlaceables)
 	{
@@ -104,6 +113,11 @@ void MapAsset::RenderMap()
 	}
 }
 
+void MapAsset::AcceptGui(IGuiModelVisitor* GuiVisitor)
+{
+	GuiVisitor->Visit(this);
+}
+
 void MapAsset::Serialize(const std::string& OutputAdditionalPath)
 {
 	FILE* OutputAssetFile = DefaultOpenFile(OutputAdditionalPath);
@@ -112,6 +126,7 @@ void MapAsset::Serialize(const std::string& OutputAdditionalPath)
 		SerializeHeader(OutputAssetFile);
 
 		EditorActorInstance->OnSerializeFromMap(OutputAssetFile);
+		EnvironmentActorInstance->OnSerializeFromMap(OutputAssetFile);
 
 		size_t RootPlaceablesCount = RootPlaceables.size();
 		fwrite(&RootPlaceablesCount, sizeof(size_t), 1, OutputAssetFile);
@@ -133,7 +148,11 @@ void MapAsset::Serialize(const std::string& OutputAdditionalPath)
 void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	EditorActorInstance = make_unique<EditorPawn>(this);
+	EnvironmentActorInstance = make_unique<EnvironmentActor>(this);
+	
 	EditorActorInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
+	EnvironmentActorInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
+
 	CurrentCamera = EditorActorInstance->GetCameraInstance();
 
 	size_t RootPlaceablesCount;
@@ -151,22 +170,24 @@ void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 			break;
 		case STATIC_MESH_ACTOR_KIND:
 		{
-			StaticMeshObjectActor* AddedActor = PlaceableAddHelper<StaticMeshObjectActor>(this, nullptr);
+			StaticMeshObjectActor* AddedActor = PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
 			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 			break;
 		}
 		case SKELETAL_MESH_ACTOR_KIND:
 		{
-			SkeletalMeshObjectActor* AddedActor = PlaceableAddHelper<SkeletalMeshObjectActor>(this, nullptr);
+			SkeletalMeshObjectActor* AddedActor = PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
 			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 			break;
 		}
 		case ENVIORNMENT_ACTOR_KIND:
 		{
-
-			break;
+			//EnvironmentActor* AddedEnvironment = PlaceableAddHelper<EnvironmentActor>();
+			//AddedEnvironment->OnDeserializeToMap(FileIn, AssetManagerIn);
+			//DeserializeParentObject(AddedEnvironment, FileIn, AssetManagerIn);
+			//break;
 		}
 		case EDITOR_PAWN_KIND:
 		{

@@ -11,6 +11,9 @@ public:
 	SkeletalMeshObjectActor(MapAsset* MapAssetInstance, std::shared_ptr<SkeletalMeshAsset> MeshAssetInstanceIn);
 	~SkeletalMeshObjectActor();
 
+public:
+	static const char* SkeletalMeshObjectActorIdentifier;
+
 protected:
 	std::unique_ptr<SkeletalMeshObject> SkeletalMeshObjectInstance;
 	MakeSmartPtrGetter(SkeletalMeshObjectInstance);

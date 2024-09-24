@@ -22,7 +22,7 @@ public:
 	virtual void Render() override final;
 
 public:
-	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override {};
+	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;

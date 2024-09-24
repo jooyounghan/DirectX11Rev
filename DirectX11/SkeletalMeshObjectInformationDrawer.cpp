@@ -9,10 +9,6 @@
 using namespace std;
 using namespace ImGui;
 
-
-using namespace std;
-using namespace ImGui;
-
 SkeletalMeshObjectInformationDrawer::SkeletalMeshObjectInformationDrawer(SkeletalMeshObject* ObjectIn, AssetManager* AssetManagerIn)
     : AInformationDrawer(ObjectIn), AssetManagerCached(AssetManagerIn)
 {
@@ -24,22 +20,22 @@ void SkeletalMeshObjectInformationDrawer::DrawInformation()
 
     const std::unordered_map<std::string, std::shared_ptr<SkeletalMeshAsset>>& ManagingSkeletalMeshes = AssetManagerCached->GetManagingSkeletalMeshes();
 
-    const AMeshAsset* MeshAssetInstance = ObjectCached->GetSkeletalMeshAssetInstance();
+    const SkeletalMeshAsset* const MeshAssetInstance = ObjectCached->GetSkeletalMeshAssetInstance();
 
-    ImGui::ColorButton("TEST", UIColor::GBlack, NULL, UISize::FileSize);
+    ColorButton("SkeletalMeshAseetThumbnail", UIColor::GBlack, NULL, UISize::FileSize);
 
     SameLine();
 
-    if (ImGui::BeginCombo("Skeletal Mesh Asset", MeshAssetInstance != nullptr ? MeshAssetInstance->GetAssetName().c_str() : "Choose Skeletal Mesh Asset"))
+    if (BeginCombo("Skeletal Mesh Asset", MeshAssetInstance != nullptr ? MeshAssetInstance->GetAssetName().c_str() : "Choose Skeletal Mesh Asset"))
     {
         for (auto& SkeletalMesh : ManagingSkeletalMeshes)
         {
-            if (ImGui::Selectable(SkeletalMesh.first.c_str()))
+            if (Selectable(SkeletalMesh.first.c_str()))
             {
                 ObjectCached->SetSkeletalMeshAssetInstance(SkeletalMesh.second);
             }
         }
 
-        ImGui::EndCombo();
+        EndCombo();
     }
 }

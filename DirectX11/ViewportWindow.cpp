@@ -44,8 +44,6 @@ void ViewportWindow::RenderWindow()
     {
         if (CameraCached != nullptr)
         {
-            Text(CurrentMap->GetAssetName().c_str());
-            ImagePosition = GetCursorScreenPos();
             ImageSize = GetContentRegionAvail();
             Image(CameraCached->GetSDRSceneSRV(), ImageSize);
             ManageAssetDrop();
@@ -96,15 +94,12 @@ void ViewportWindow::ManageAssetDrop()
                 }
                 case EAssetType::SkeletalMesh:
                 {
-                    for (int i = 0; i < 100; ++i)
-                    {
                         CurrentMap->AddSkeletalMeshObjectActor(
                             AssetManagerCached->GetManagingSkeletalMesh(AssetFile->GetAssetName()),
-                            PlacePositon.m128_f32[0] + i * 50,
+                            PlacePositon.m128_f32[0],
                             PlacePositon.m128_f32[1],
                             PlacePositon.m128_f32[2]
                         );
-                    }
                     break;
                 }
                 default:

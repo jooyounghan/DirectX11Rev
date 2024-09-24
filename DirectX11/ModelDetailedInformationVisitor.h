@@ -14,6 +14,9 @@ protected:
 	AssetManager* AssetManagerCached;
 
 public:
+	virtual void Visit(MapAsset* MapAssetInstance) override;
+
+public:
 	virtual void Visit(StaticMeshObjectActor* MeshObjectActorInstance) override;
 	virtual void Visit(SkeletalMeshObjectActor* MeshObjectActorInstance) override;
 	virtual void Visit(EnvironmentActor* EnvironmentActorInstance) override;

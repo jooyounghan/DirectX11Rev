@@ -2,6 +2,8 @@
 #include "StaticMeshObject.h"
 #include "IGuiModelVisitor.h"
 
+const char* StaticMeshObjectActor::StaticMeshObjectActorIdentifier = "Static Actor";
+
 using namespace std;
 
 StaticMeshObjectActor::StaticMeshObjectActor(
@@ -12,7 +14,7 @@ StaticMeshObjectActor::StaticMeshObjectActor(
 {
 	static size_t StaticActorCount = 0;
 	StaticActorCount++;
-	ObjectName = "Static Actor" + to_string(StaticActorCount);
+	ObjectName = StaticMeshObjectActorIdentifier + to_string(StaticActorCount);
 
 	PlaceableKind = EPlaceableObjectKind::STATIC_MESH_ACTOR_KIND;
 

@@ -53,8 +53,8 @@ PSOManager::PSOManager()
     const UINT SingleR8G8B8A8Count = 1;
     DXGI_FORMAT SingleR8G8B8A8Format[SingleR8G8B8A8Count] = { DXGI_FORMAT_R8G8B8A8_UNORM };
 
-    const UINT SingleR16G16B16A16Count = 1;
-    DXGI_FORMAT SingleR16G16B16A16Format[SingleR16G16B16A16Count] = { DXGI_FORMAT_R16G16B16A16_FLOAT };
+    //const UINT SingleR16G16B16A16Count = 1;
+    //DXGI_FORMAT SingleR16G16B16A16Format[SingleR16G16B16A16Count] = { DXGI_FORMAT_R16G16B16A16_FLOAT };
 
 
 #pragma region EnvironmentActor_Solid
@@ -78,7 +78,7 @@ PSOManager::PSOManager()
         EnvironmentActorVS, 2, 0,
         EnvironmentActorPS, 0, 1,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        SingleR16G16B16A16Count, SingleR16G16B16A16Format,
+        SingleR8G8B8A8Count, SingleR8G8B8A8Format,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         CullBackSolidRS,

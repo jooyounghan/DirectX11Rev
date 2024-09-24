@@ -3,6 +3,8 @@
 
 #include "GameWorld.h"
 
+#include "MapAsset.h"
+
 #include "StaticMeshObjectActor.h"
 #include "SkeletalMeshObjectActor.h"
 #include "EnvironmentActor.h"
@@ -21,7 +23,7 @@
 #include "BoundingSphereInformationDrawer.h"
 #include "BoundingOBBInformationDrawer.h"
 #include "ViewableInformationDrawer.h"
-#include "StaticMeshObjectInformationDrawer.h"
+#include "EnvironementActorDrawer.h"
 
 using namespace std;
 using namespace ImGui;
@@ -31,6 +33,12 @@ using namespace DirectX;
 ModelDetailedInformationVisitor::ModelDetailedInformationVisitor(AssetManager* AssetManagerInstanceIn)
 	: AssetManagerCached(AssetManagerInstanceIn)
 {
+}
+
+void ModelDetailedInformationVisitor::Visit(MapAsset* MapAssetInstance)
+{
+    MapAssetInstance->GetEditorActorInstance()->AcceptGui(this);
+    MapAssetInstance->GetEnvironmentActorInstance()->AcceptGui(this);
 }
 
 void ModelDetailedInformationVisitor::Visit(StaticMeshObjectActor* ActorInstance)
@@ -63,8 +71,8 @@ void ModelDetailedInformationVisitor::Visit(EnvironmentActor* EnvironmentActorIn
 {
     PushID(EnvironmentActorInstance->GetObjectID().c_str());
 
-    TransformationInformationDrawer TransformDrawer(EnvironmentActorInstance, nullptr);
-    TransformDrawer.DrawInformation();
+    EnvironementActorDrawer EnvironmentDrawer(EnvironmentActorInstance, AssetManagerCached);
+    EnvironmentDrawer.DrawInformation();
 
     PopID();
 }
@@ -72,9 +80,6 @@ void ModelDetailedInformationVisitor::Visit(EnvironmentActor* EnvironmentActorIn
 void ModelDetailedInformationVisitor::Visit(EditorPawn* EditorActorInstance)
 {
     PushID(EditorActorInstance->GetObjectID().c_str());
-
-    TransformationInformationDrawer TransformDrawer(EditorActorInstance, nullptr);
-    TransformDrawer.DrawInformation();
 
     PopID();
 }

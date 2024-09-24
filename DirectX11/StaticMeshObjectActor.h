@@ -11,6 +11,9 @@ public:
 	StaticMeshObjectActor(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> MeshAssetInstanceIn);
 	~StaticMeshObjectActor();
 
+public:
+	static const char* StaticMeshObjectActorIdentifier;
+
 protected:
 	std::unique_ptr<StaticMeshObject> StaticMeshObjectInstance;
 	MakeSmartPtrGetter(StaticMeshObjectInstance);

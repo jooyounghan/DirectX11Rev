@@ -4,6 +4,8 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 
+class MapAsset;
+
 class StaticMeshObjectActor;
 class SkeletalMeshObjectActor;
 class EnvironmentActor;
@@ -19,6 +21,9 @@ class Viewable;
 
 class IGuiModelVisitor
 {
+public:
+	virtual void Visit(MapAsset* MapAssetInstance) = 0;
+
 public:
 	virtual void Visit(StaticMeshObjectActor* StaticMeshObjectActorInstance) = 0;
 	virtual void Visit(SkeletalMeshObjectActor* SkeletalMeshObjectActorInstance) = 0;

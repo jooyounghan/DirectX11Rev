@@ -6,7 +6,7 @@
 
 #include "TaskAnalyzerWindow.h"
 #include "ViewportWindow.h" 
-#include "ModelOutlinerWindow.h"
+#include "MapOutlinerWindow.h"
 #include "ModelDetailWindow.h"
 #include "AssetManagerWindow.h"
 
@@ -47,7 +47,7 @@ EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
 
     Dialogs.push_back(make_unique<TaskAnalyzerWindow>());
     Dialogs.push_back(make_unique<ViewportWindow>(this));
-    Dialogs.push_back(make_unique<ModelOutlinerWindow>(this));
+    Dialogs.push_back(make_unique<MapOutlinerWindow>(this));
     Dialogs.push_back(make_unique<ModelDetailWindow>(this));
     Dialogs.push_back(make_unique<AssetManagerWindow>(GameWorldCached->GetAssetManagerInstance()));
 }
@@ -63,6 +63,19 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
     LPARAM lParam
 );
 
+void EditorWorld::SetSelectedMapAsset(MapAsset* MapAssetIn)
+{
+    SelectedMapAsset = MapAssetIn;
+    SelectedPlaceable = nullptr;
+    SelectedAttached = nullptr;
+}
+
+void EditorWorld::SetSelectedPlaceable(APlaceableObject* APlaceableObjectIn)
+{
+    SelectedPlaceable = APlaceableObjectIn;
+    SelectedAttached = nullptr;
+}
+
 void EditorWorld::SetSelecteObjectByID(const UINT& Id)
 {
     MapAsset* CurrentMap = GameWorldCached->GetCurrentMap();
@@ -76,7 +89,7 @@ void EditorWorld::SetSelecteObjectByID(const UINT& Id)
     }
 }
 
-void EditorWorld::RenderWorld()
+void EditorWorld::Render()
 {
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();

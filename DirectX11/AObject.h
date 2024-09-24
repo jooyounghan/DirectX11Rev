@@ -8,8 +8,10 @@
 #include "UploadBuffer.h"
 #include "ConstantBuffer.h"
 
+#include "IGuiModelAcceptor.h"
 #include "ISerializable.h"
 #include "IUpdatable.h"
+#include "IRenderable.h"
 
 #include <string>
 
@@ -22,7 +24,7 @@ struct TransformationMatrix
 	DirectX::XMMATRIX InvTransfomationMat;
 };
 
-class AObject : public IOnSerializableMap, public IUpdatable, public AMovable
+class AObject : public IOnSerializableMap, public IUpdatable, public IRenderable, public IGuiModelAcceptor, public AMovable
 {
 public:
 	AObject(MapAsset* MapAssetInstance);
@@ -46,12 +48,6 @@ public:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
-
-public:
-	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
-
-public:
-	virtual void Render() = 0;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;

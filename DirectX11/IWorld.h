@@ -1,11 +1,10 @@
 #pragma once
+#include "IRenderable.h"
+
 #include <Windows.h>
 
-class IWorld
+class IWorld : public IRenderable
 {
-public:
-	virtual void RenderWorld() = 0;
-
 public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
 	virtual void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;

@@ -135,7 +135,7 @@ void PortfolioApp::Update()
 
 void PortfolioApp::Render()
 {
-	GameWorldInstance->RenderWorld();
+	GameWorldInstance->Render();
 	GraphicsPipelineInstance->GetSwapChain()->Present(0, 0);
 }
 

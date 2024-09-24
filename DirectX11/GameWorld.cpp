@@ -58,15 +58,15 @@ void GameWorld::Update(const float& DeltaTimeIn)
 	}
 }
 
-void GameWorld::RenderWorld()
+void GameWorld::Render()
 {
 	
 	if (CurrentMap)
 	{
-		CurrentMap->RenderMap();
+		CurrentMap->Render();
 	}
 
-	EditorWorldInstance->RenderWorld();
+	EditorWorldInstance->Render();
 }
 
 

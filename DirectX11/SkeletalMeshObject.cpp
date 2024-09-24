@@ -12,7 +12,6 @@
 #include "MapAsset.h"
 #include "Camera.h"
 
-
 using namespace std;
 
 const char* SkeletalMeshObject::SkeletalMeshObjectIdentifier = "Skeletal Mesh Object";
@@ -72,13 +71,14 @@ void SkeletalMeshObject::Render()
 
 #pragma region SkeletalMeshObjectPSOCached
 		SkeletalMeshObjectPSOCached->SetPipelineStateObject(1, RTVs, Viewport, DSV);
-		SkeletalMeshObjectPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
+		DeviceContextCached->IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
 		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
 			VertexBuffers.data(),
 			Strides.data(),
 			Offsets.data()
 		);
-		DeviceContextCached->IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
+
+		SkeletalMeshObjectPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
 
 #ifdef _DEBUG
 		SkeletalMeshObjectPSOCached->CheckPipelineValidation();
@@ -92,11 +92,7 @@ void SkeletalMeshObject::Render()
 
 #pragma region PickingIDSolidSkeletalPSOCached
 
-
 		PickingIDSolidSkeletalPSOCached->SetPipelineStateObject(1, RTVs, &CurrentCamera->GetViewport(), CurrentCamera->GetSceneDSV());
-
-		PickingIDSolidSkeletalPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
-		PickingIDSolidSkeletalPSOCached->SetPSConstantBuffers(0, 1, PSConstBuffers);
 
 		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
 			VertexBuffers.data(),
@@ -105,6 +101,8 @@ void SkeletalMeshObject::Render()
 		);
 		DeviceContextCached->IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
 
+		PickingIDSolidSkeletalPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
+		PickingIDSolidSkeletalPSOCached->SetPSConstantBuffers(0, 1, PSConstBuffers);
 
 #ifdef _DEBUG
 		PickingIDSolidSkeletalPSOCached->CheckPipelineValidation();

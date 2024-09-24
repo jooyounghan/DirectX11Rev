@@ -4,11 +4,14 @@
 class BaseMeshAsset;
 class EXRTextureAsset;
 class DDSTextureAsset;
+class PSOObject;
 
 struct SHDRToneMappingConstant
 {
 	float Exposure;
 	float Gamma;
+	float Dummy1;
+	float Dummy2;
 };
 
 class EnvironmentActor : public AActor
@@ -16,6 +19,8 @@ class EnvironmentActor : public AActor
 public:
 	EnvironmentActor(MapAsset* MapAssetInstance);
 	virtual ~EnvironmentActor();
+
+	static const char* EnvironmentActorIdentifier;
 
 protected:
 	BaseMeshAsset* EnvironmentMeshAsset = nullptr;
@@ -26,20 +31,30 @@ protected:
 	std::shared_ptr<DDSTextureAsset> EnvironmentSpecularDDSTextureAsset = nullptr;
 	std::shared_ptr<DDSTextureAsset> EnvironmentDiffuseDDSTextureAsset = nullptr;
 	std::shared_ptr<DDSTextureAsset> EnvironmentBRDFDDSTextureAsset = nullptr;
-	MakeSmartPtrGetter(EnvironmentBackgroundEXRTextureAsset);
-	MakeSmartPtrGetter(EnvironmentSpecularDDSTextureAsset);
-	MakeSmartPtrGetter(EnvironmentDiffuseDDSTextureAsset);
-	MakeSmartPtrGetter(EnvironmentBRDFDDSTextureAsset);
+	MakeSmartPtrSetterGetter(EnvironmentBackgroundEXRTextureAsset);
+	MakeSmartPtrSetterGetter(EnvironmentSpecularDDSTextureAsset);
+	MakeSmartPtrSetterGetter(EnvironmentDiffuseDDSTextureAsset);
+	MakeSmartPtrSetterGetter(EnvironmentBRDFDDSTextureAsset);
+
+protected:
+	float& Exposure;
+	MakeGetter(Exposure);
+
+protected:
+	float& Gamma;
+	MakeGetter(Gamma);
 
 protected:
 	SHDRToneMappingConstant HDRToneMappingConstant;
-	MakePointerGetter(HDRToneMappingConstant);
 
 protected:
 	UploadBuffer<SHDRToneMappingConstant> HDRToneMappingConstantBuffer;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
+
+protected:
+	PSOObject* EnvironmentActorPSOCached = nullptr;
 
 public:
 	virtual void Render() override final;

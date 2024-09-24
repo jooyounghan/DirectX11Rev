@@ -2,6 +2,9 @@
 
 #include "GlobalVariable.h"
 #include "InputEventManager.h"
+
+#include "IGuiModelVisitor.h"
+
 #include "GraphicsPipeline.h"
 #include "DefaultController.h"
 #include "Camera.h"
@@ -32,6 +35,11 @@ void EditorPawn::Update(const float& DeltaTimeIn)
 void EditorPawn::Render()
 {
     AActor::Render();
+}
+
+void EditorPawn::AcceptGui(IGuiModelVisitor* GuiVisitor)
+{
+    GuiVisitor->Visit(this);
 }
 
 void EditorPawn::OnSerializeFromMap(FILE* FileIn)

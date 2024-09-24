@@ -24,17 +24,17 @@ public:
 	virtual void SetLODCount(const size_t& LODCountIn);
 
 public:
-	ID3D11Buffer* GetIndexBuffer(const size_t& LODLevelIn);
-	UINT GetIndexCount(const size_t& LODLevelIn);
+	ID3D11Buffer* GetIndexBuffer(const size_t& LODLevelIn = 0);
+	UINT GetIndexCount(const size_t& LODLevelIn = 0);
 	DXGI_FORMAT GetIndexFormat() { return DXGI_FORMAT_R32_UINT; }
 
 public:
-	std::vector<ID3D11Buffer*> GetPositionBuffer(const size_t& LODLevelIn);
+	std::vector<ID3D11Buffer*> GetPositionBuffer(const size_t& LODLevelIn = 0);
 	inline std::vector<UINT> GetPositionStride() { return { sizeof(XMFLOAT3)}; }
 	inline std::vector<UINT> GetPositionOffset() { return { 0 }; }
 
 public:
-	virtual std::vector<ID3D11Buffer*> GetVertexBuffers(const size_t& LODLevelIn) = 0;
+	virtual std::vector<ID3D11Buffer*> GetVertexBuffers(const size_t& LODLevelIn = 0) = 0;
 	virtual std::vector<UINT> GetStrides() = 0;
 	virtual std::vector<UINT> GetOffsets() = 0;
 

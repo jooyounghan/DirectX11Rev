@@ -4,10 +4,12 @@
 #include "HeaderHelper.h"
 #include "StaticAssertHelper.h"
 
+#include "IUpdatable.h"
+#include "IRenderable.h"
+#include "IGuiModelAcceptor.h"
+
 #include "APlaceableObject.h"
 #include "AAttachableObject.h"
-
-#include "IUpdatable.h"
 
 #include <list>
 #include <unordered_map>
@@ -17,12 +19,13 @@
 class AssetManager;
 
 class EditorPawn;
+class EnvironmentActor;
 
 class Camera;
 class StaticMeshAsset;
 class SkeletalMeshAsset;
 
-class MapAsset : public AAssetFile, public IUpdatable
+class MapAsset : public AAssetFile, public IUpdatable, public IRenderable, public IGuiModelAcceptor
 {
 public:
 	MapAsset(
@@ -38,6 +41,10 @@ protected:
 protected:
 	std::unique_ptr<EditorPawn> EditorActorInstance;
 	MakeSmartPtrGetter(EditorActorInstance);
+
+protected:
+	std::unique_ptr<EnvironmentActor> EnvironmentActorInstance;
+	MakeSmartPtrGetter(EnvironmentActorInstance);
 
 protected:
 	Camera* CurrentCamera = nullptr;
@@ -59,7 +66,10 @@ public:
 	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
-	void RenderMap();
+	virtual void Render() override ;
+
+public:
+	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
@@ -82,7 +92,7 @@ public:
 	{
 		static_assert(std::is_base_of<APlaceableObject, T>::value, DerivedCondition(APlaceableObject));
 
-		RootPlaceables.emplace_back(std::make_unique<T>(args...));
+		RootPlaceables.emplace_back(std::make_unique<T>(this, args...));
 		APlaceableObject* RootPlaceable = RootPlaceables.back().get();
 
 		IdToPlaceables[RootPlaceable->GetPickingID().GetID()] = RootPlaceable;

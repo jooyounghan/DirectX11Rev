@@ -1,7 +1,6 @@
 #include "AddAttachableObjectHelper.h"
 
 #include "EditorWorld.h"
-#include "GlobalVariable.h"
 
 // Add Attachables
 #include "APlaceableObject.h"
@@ -11,9 +10,6 @@
 #include "BoundingSphereObject.h"
 #include "OBBObject.h"
 #include "Camera.h"
-
-#include <list>
-#include <memory>
 
 using namespace std;
 using namespace ImGui;
