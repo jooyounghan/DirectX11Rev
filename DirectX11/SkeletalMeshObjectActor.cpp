@@ -18,7 +18,6 @@ SkeletalMeshObjectActor::SkeletalMeshObjectActor(
 
 	SkeletalMeshObjectInstance = make_unique<SkeletalMeshObject>(MapAssetInstance, MeshAssetInstanceIn);
 	SkeletalMeshObjectInstance->SetParent(this, PickingIDBuffer.GetBuffer());
-
 }
 
 SkeletalMeshObjectActor::~SkeletalMeshObjectActor()
