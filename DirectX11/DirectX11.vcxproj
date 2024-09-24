@@ -258,7 +258,7 @@
     <ClInclude Include="IDColor.h" />
     <ClInclude Include="IDialog.h" />
     <ClInclude Include="IGuiModelVisitor.h" />
-    <ClInclude Include="AIndexable.h" />
+    <ClInclude Include="Indexable.h" />
     <ClInclude Include="IInformationDrawer.h" />
     <ClInclude Include="IIntersectable.h" />
     <ClInclude Include="KeyEvent.h" />

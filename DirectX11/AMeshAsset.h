@@ -1,30 +1,40 @@
 #pragma once
 #include "AAssetFile.h"
 #include "Vertexable.h"
-#include "AIndexable.h"
+#include "Indexable.h"
 #include "DefineType.h"
 
-class AMeshAsset : public AAssetFile, public AIndexable<uint32_t>
+class AMeshAsset : public AAssetFile
 {
 public:
 	AMeshAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn);
 	virtual ~AMeshAsset();
 
 public:
-	Vertexable<XMFLOAT3> Positions;
-	Vertexable<XMFLOAT2> UVTextures;
-	Vertexable<XMFLOAT3> Normals;
+	std::vector<Vertexable<XMFLOAT3>> PositionsPerLOD;
+	std::vector<Vertexable<XMFLOAT2>> UVTexturesPerLOD;
+	std::vector<Vertexable<XMFLOAT3>> NormalsPerLOD;
+	std::vector<Indexable<uint32_t>> IndicesPerLOD;
+
+protected:
+	size_t LODCount = 0;
+	MakeGetter(LODCount);
 
 public:
-	virtual DXGI_FORMAT GetIndexFormat() override { return DXGI_FORMAT_R32_UINT; }
+	virtual void SetLODCount(const size_t& LODCountIn);
 
 public:
-	inline std::vector<ID3D11Buffer*> GetPositionBuffer() { return { Positions.GetVertexBuffer() }; }
+	ID3D11Buffer* GetIndexBuffer(const size_t& LODLevelIn);
+	UINT GetIndexCount(const size_t& LODLevelIn);
+	DXGI_FORMAT GetIndexFormat() { return DXGI_FORMAT_R32_UINT; }
+
+public:
+	std::vector<ID3D11Buffer*> GetPositionBuffer(const size_t& LODLevelIn);
 	inline std::vector<UINT> GetPositionStride() { return { sizeof(XMFLOAT3)}; }
 	inline std::vector<UINT> GetPositionOffset() { return { 0 }; }
 
 public:
-	virtual std::vector<ID3D11Buffer*> GetVertexBuffers() = 0;
+	virtual std::vector<ID3D11Buffer*> GetVertexBuffers(const size_t& LODLevelIn) = 0;
 	virtual std::vector<UINT> GetStrides() = 0;
 	virtual std::vector<UINT> GetOffsets() = 0;
 

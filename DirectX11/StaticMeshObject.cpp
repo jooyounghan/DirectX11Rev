@@ -50,8 +50,10 @@ void StaticMeshObject::Render()
 	Camera* CurrentCamera = MapAssetCached->GetCurrentCamera();
 	if (CurrentCamera != nullptr && StaticMeshAssetInstance != nullptr)
 	{
+		const size_t LODLevel = 0;
+
 		ID3D11RenderTargetView* RTVs[]{ CurrentCamera->GetSDRSceneRTV() };
-		const std::vector<ID3D11Buffer*> VertexBuffers = StaticMeshAssetInstance->GetVertexBuffers();
+		const std::vector<ID3D11Buffer*> VertexBuffers = StaticMeshAssetInstance->GetVertexBuffers(LODLevel);
 		const std::vector<UINT> Strides = StaticMeshAssetInstance->GetStrides();
 		const std::vector<UINT> Offsets = StaticMeshAssetInstance->GetOffsets();
 		ID3D11Buffer* VSConstBuffers[] = { CurrentCamera->ViewProjBuffer.GetBuffer(), TransformationBuffer.GetBuffer() };
@@ -66,13 +68,13 @@ void StaticMeshObject::Render()
 			Strides.data(),
 			Offsets.data()
 		);
-		DeviceContextCached->IASetIndexBuffer(StaticMeshAssetInstance->GetIndexBuffer(), StaticMeshAssetInstance->GetIndexFormat(), 0);
+		DeviceContextCached->IASetIndexBuffer(StaticMeshAssetInstance->GetIndexBuffer(LODLevel), StaticMeshAssetInstance->GetIndexFormat(), 0);
 
 #ifdef _DEBUG
 		StaticMeshObjectPSOCached->CheckPipelineValidation();
 #endif // DEBUG
 
-		DeviceContextCached->DrawIndexed(static_cast<UINT>(StaticMeshAssetInstance->GetIndexCount()), 0, 0);
+		DeviceContextCached->DrawIndexed(static_cast<UINT>(StaticMeshAssetInstance->GetIndexCount(LODLevel)), 0, 0);
 
 		StaticMeshObjectPSOCached->ResetVSConstantBuffers(0, 2);
 #pragma endregion
@@ -90,14 +92,14 @@ void StaticMeshObject::Render()
 			Strides.data(),
 			Offsets.data()
 		);
-		DeviceContextCached->IASetIndexBuffer(StaticMeshAssetInstance->GetIndexBuffer(), StaticMeshAssetInstance->GetIndexFormat(), 0);
+		DeviceContextCached->IASetIndexBuffer(StaticMeshAssetInstance->GetIndexBuffer(LODLevel), StaticMeshAssetInstance->GetIndexFormat(), 0);
 
 
 #ifdef _DEBUG
 		PickingIDSolidStaticPSOCached->CheckPipelineValidation();
 #endif // DEBUG
 
-		DeviceContextCached->DrawIndexed(static_cast<UINT>(StaticMeshAssetInstance->GetIndexCount()), 0, 0);
+		DeviceContextCached->DrawIndexed(static_cast<UINT>(StaticMeshAssetInstance->GetIndexCount(LODLevel)), 0, 0);
 
 		PickingIDSolidStaticPSOCached->ResetVSConstantBuffers(0, 2);
 #pragma endregion

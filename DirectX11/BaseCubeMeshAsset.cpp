@@ -6,11 +6,13 @@ using namespace std;
 BaseCubeMeshAsset::BaseCubeMeshAsset()
 	: BaseMeshAsset("BaseCube")
 {
+	SetLODCount(1);
+
 	ModelHelper::CreateCube<uint32_t>(
-		&Positions.Vertices,
-		&UVTextures.Vertices,
-		&Normals.Vertices,
-		&Indices
+		&PositionsPerLOD[0].Vertices,
+		&UVTexturesPerLOD[0].Vertices,
+		&NormalsPerLOD[0].Vertices,
+		&IndicesPerLOD[0].Indices
 	);
 	Initialize();
 }

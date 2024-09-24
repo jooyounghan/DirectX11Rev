@@ -1,6 +1,8 @@
 #include "BaseMeshAsset.h"
 
-BaseMeshAsset::BaseMeshAsset(const std::string& AssetNameIn) 
+using namespace std;
+
+BaseMeshAsset::BaseMeshAsset(const string& AssetNameIn) 
 	: AMeshAsset(AssetNameIn, EAssetType::BaseMesh)
 {
 
@@ -10,19 +12,20 @@ BaseMeshAsset::~BaseMeshAsset()
 {
 }
 
-std::vector<ID3D11Buffer*> BaseMeshAsset::GetVertexBuffers()
+vector<ID3D11Buffer*> BaseMeshAsset::GetVertexBuffers(const size_t& LODLevelIn)
 {
-	return std::vector<ID3D11Buffer*>
+	const size_t LODIndex = min(LODLevelIn, PositionsPerLOD.size() - 1);
+	return vector<ID3D11Buffer*>
 	{
-		Positions.GetVertexBuffer(),
-		UVTextures.GetVertexBuffer(),
-		Normals.GetVertexBuffer()
+		PositionsPerLOD[LODIndex].GetVertexBuffer(),
+		UVTexturesPerLOD[LODIndex].GetVertexBuffer(),
+		NormalsPerLOD[LODIndex].GetVertexBuffer()
 	};
 }
 
-std::vector<UINT> BaseMeshAsset::GetStrides()
+vector<UINT> BaseMeshAsset::GetStrides()
 {
-	return std::vector<UINT>
+	return vector<UINT>
 	{
 		sizeof(XMFLOAT3),
 		sizeof(XMFLOAT2),
@@ -30,9 +33,9 @@ std::vector<UINT> BaseMeshAsset::GetStrides()
 	};
 }
 
-std::vector<UINT> BaseMeshAsset::GetOffsets()
+vector<UINT> BaseMeshAsset::GetOffsets()
 {
-	return std::vector<UINT>
+	return vector<UINT>
 	{
 		0, 0, 0
 	};

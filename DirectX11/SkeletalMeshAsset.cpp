@@ -15,17 +15,25 @@ SkeletalMeshAsset::~SkeletalMeshAsset()
 {
 }
 
-std::vector<ID3D11Buffer*> SkeletalMeshAsset::GetVertexBuffers()
+void SkeletalMeshAsset::SetLODCount(const size_t& LODCountIn)
 {
+	ANBTMeshAsset::SetLODCount(LODCountIn);
+	BlendWeightPerLOD.resize(LODCountIn);
+	BlendIndexPerLOD.resize(LODCountIn);
+}
+
+std::vector<ID3D11Buffer*> SkeletalMeshAsset::GetVertexBuffers(const size_t& LODLevelIn)
+{
+	const size_t LODIndex = min(LODLevelIn, PositionsPerLOD.size() - 1);
 	return std::vector<ID3D11Buffer*>
 	{
-		Positions.GetVertexBuffer(),
-		UVTextures.GetVertexBuffer(),
-		Normals.GetVertexBuffer(),
-		Tangents.GetVertexBuffer(),
-		Bitangents.GetVertexBuffer(),
-		BlendWeight.GetVertexBuffer(),
-		BlendIndex.GetVertexBuffer()
+		PositionsPerLOD[LODIndex].GetVertexBuffer(),
+		UVTexturesPerLOD[LODIndex].GetVertexBuffer(),
+		NormalsPerLOD[LODIndex].GetVertexBuffer(),
+		TangentsPerLOD[LODIndex].GetVertexBuffer(),
+		BitangentsPerLOD[LODIndex].GetVertexBuffer(),
+		BlendWeightPerLOD[LODIndex].GetVertexBuffer(),
+		BlendIndexPerLOD[LODIndex].GetVertexBuffer()
 	};
 }
 
@@ -53,9 +61,15 @@ std::vector<UINT> SkeletalMeshAsset::GetOffsets()
 
 void SkeletalMeshAsset::Initialize()
 {
-	AMeshAsset::Initialize();
-	BlendWeight.VerticesBuffer.InitializeForGPU(BlendWeight.GetVertexCount(), BlendWeight.Vertices.data());
-	BlendIndex.VerticesBuffer.InitializeForGPU(BlendIndex.GetVertexCount(), BlendIndex.Vertices.data());
+	ANBTMeshAsset::Initialize();
+	for (auto& BlendWeight : BlendWeightPerLOD)
+	{
+		BlendWeight.VerticesBuffer.InitializeForGPU(BlendWeight.GetVertexCount(), BlendWeight.Vertices.data());
+	}
+	for (auto& BlendIndex : BlendIndexPerLOD)
+	{
+		BlendIndex.VerticesBuffer.InitializeForGPU(BlendIndex.GetVertexCount(), BlendIndex.Vertices.data());
+	}	
 }
 
 void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
@@ -78,16 +92,6 @@ void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 
 		SerializeBaseMeshData(OutputAssetFile);
 
-		// BlendWeight
-		size_t BlendWeightCount = BlendWeight.Vertices.size();
-		fwrite(&BlendWeightCount, sizeof(size_t), 1, OutputAssetFile);
-		fwrite(BlendWeight.Vertices.data(), sizeof(XMFLOAT4), BlendWeightCount, OutputAssetFile);
-
-		// BlendIndex
-		size_t BlendIndexCount = BlendIndex.Vertices.size();
-		fwrite(&BlendIndexCount, sizeof(size_t), 1, OutputAssetFile);
-		fwrite(BlendIndex.Vertices.data(), sizeof(XMINT4), BlendIndexCount, OutputAssetFile);
-
 		fclose(OutputAssetFile);
 	}
 }
@@ -106,17 +110,51 @@ void SkeletalMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 
 	DeserializeBaseMeshData(FileIn);
 
+	Initialize();
+}
+
+void SkeletalMeshAsset::SerializeBaseMeshData(FILE* FileIn)
+{
+	ANBTMeshAsset::SerializeBaseMeshData(FileIn);
+
 	// BlendWeight
-	size_t BlendWeightCount;
-	fread(&BlendWeightCount, sizeof(size_t), 1, FileIn);
-	BlendWeight.Vertices.resize(BlendWeightCount);
-	fread(BlendWeight.Vertices.data(), sizeof(XMFLOAT4), BlendWeightCount, FileIn);
+	for (auto& BlendWeight : BlendWeightPerLOD)
+	{
+		size_t BlendWeightCount = BlendWeight.Vertices.size();
+		fwrite(&BlendWeightCount, sizeof(size_t), 1, FileIn);
+		fwrite(BlendWeight.Vertices.data(), sizeof(XMFLOAT4), BlendWeightCount, FileIn);
+	}
 
 	// BlendIndex
-	size_t BlendIndexCount;
-	fread(&BlendIndexCount, sizeof(size_t), 1, FileIn);
-	BlendIndex.Vertices.resize(BlendIndexCount);
-	fread(BlendIndex.Vertices.data(), sizeof(XMINT4), BlendIndexCount, FileIn);
+	for (auto& BlendIndex : BlendIndexPerLOD)
+	{
+		size_t BlendIndexCount = BlendIndex.Vertices.size();
+		fwrite(&BlendIndexCount, sizeof(size_t), 1, FileIn);
+		fwrite(BlendIndex.Vertices.data(), sizeof(XMINT4), BlendIndexCount, FileIn);
+	}
+}
 
-	Initialize();
+void SkeletalMeshAsset::DeserializeBaseMeshData(FILE* FileIn)
+{
+	ANBTMeshAsset::DeserializeBaseMeshData(FileIn);
+	BlendWeightPerLOD.resize(LODCount);
+	BlendIndexPerLOD.resize(LODCount);
+
+	// BlendWeight
+	for (auto& BlendWeight : BlendWeightPerLOD)
+	{
+		size_t BlendWeightCount;
+		fread(&BlendWeightCount, sizeof(size_t), 1, FileIn);
+		BlendWeight.Vertices.resize(BlendWeightCount);
+		fread(BlendWeight.Vertices.data(), sizeof(XMFLOAT4), BlendWeightCount, FileIn);
+	}
+
+	// BlendIndex
+	for (auto& BlendIndex : BlendIndexPerLOD)
+	{
+		size_t BlendIndexCount;
+		fread(&BlendIndexCount, sizeof(size_t), 1, FileIn);
+		BlendIndex.Vertices.resize(BlendIndexCount);
+		fread(BlendIndex.Vertices.data(), sizeof(XMINT4), BlendIndexCount, FileIn);
+	}
 }

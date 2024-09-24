@@ -5,8 +5,6 @@
 #include <memory>
 #include <unordered_map>
 
-//#define DIRECT_RENDER
-
 enum class EPSOType
 {
 	// Environment
@@ -60,13 +58,6 @@ protected:
 	
 public:
 	PSOObject* GetPSOObject(EPSOType PsoTypeIn);
-
-protected:
-	std::unordered_map<PSOObject*, std::vector<SPSOArgument>> PSORenderCommandSet;
-
-public:
-	inline void AddRenderCommand(PSOObject* PSOObjectIn, const SPSOArgument& PSOArgument) { PSORenderCommandSet[PSOObjectIn].push_back(PSOArgument); }
-	void ProcessRender();
 
 private:
 	void CreateVertexShader(

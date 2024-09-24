@@ -29,9 +29,11 @@
 #include "MathematicalHelper.h"
 #include "StringHelper.h"
 
-#include <filesystem>
-
 #include "DirectXTexEXR.h"
+
+#include <filesystem>
+#include <regex>
+#include <set>
 
 using namespace std;
 using namespace DirectX;
@@ -253,18 +255,20 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
     XMMATRIX RootTransform = DirectX::XMMatrixIdentity();
     aiNode* RootNode = Scene->mRootNode;
 
+    size_t LODCount = GetTotalLODCountFromScene(Scene);
+
     if (HasBone(Scene))
     {
-        shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetLoaded = make_shared<SkeletalMeshAsset>(AssetName, true);
-        shared_ptr<BoneAsset> BoneAssetLoaded = make_shared<BoneAsset>(AssetName, true);
+        shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetLoaded = make_shared<SkeletalMeshAsset>(AssetName, false);
+        shared_ptr<BoneAsset> BoneAssetLoaded = make_shared<BoneAsset>(AssetName, false);
+        SkeletalMeshAssetLoaded->SetLODCount(LODCount);
 
         SkeletalMeshAssetLoaded->SetLinkedBoneAsset(BoneAssetLoaded);
+        BoneAsset* BoneAPtr = BoneAssetLoaded.get();
+        LoadBone(Scene, BoneAPtr);
 
         SkeletalMeshAsset* SkeletalMeshAPtr = SkeletalMeshAssetLoaded.get();
-        BoneAsset* BoneAPtr = BoneAssetLoaded.get();
         ProcessNodeForMesh(IsGltf, Scene, RootNode, SkeletalMeshAPtr, BoneAPtr, RootTransform);
-
-        LoadBone(Scene, SkeletalMeshAPtr, BoneAPtr);
 
         // Serialize Bone Asset
         AddToManagingContainer(ManagingBones, BoneAssetLoaded);
@@ -274,8 +278,9 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
     }
     else
     {
-        shared_ptr<StaticMeshAsset> StaticMeshLoaded = make_shared<StaticMeshAsset>(AssetName, true);
-        
+        shared_ptr<StaticMeshAsset> StaticMeshLoaded = make_shared<StaticMeshAsset>(AssetName, false);
+        StaticMeshLoaded->SetLODCount(LODCount);
+
         ProcessNodeForMesh(IsGltf, Scene, RootNode, (StaticMeshAsset*)StaticMeshLoaded.get(), RootTransform);
 
         StaticMeshLoaded->Initialize();
@@ -425,7 +430,8 @@ void AssetManager::ProcessNodeForMesh(
     for (UINT MeshIdx = 0; MeshIdx < Node->mNumMeshes; ++MeshIdx)
     {
         const aiMesh* const CurrentMesh = Scene->mMeshes[Node->mMeshes[MeshIdx]];
-        LoadMeshElement(IsGltf, CurrentMesh, StaticMesh, CurrentMatrix);
+        const size_t LODLevel = GetLODLevelFromMeshName(CurrentMesh->mName);
+        LoadMeshElement(IsGltf, CurrentMesh, StaticMesh, LODLevel, CurrentMatrix);
     }
 
     for (size_t ChildIdx = 0; ChildIdx < Node->mNumChildren; ++ChildIdx)
@@ -449,7 +455,8 @@ void AssetManager::ProcessNodeForMesh(
     for (size_t MeshIdx = 0; MeshIdx < Node->mNumMeshes; ++MeshIdx)
     {
         const aiMesh* const CurrentMesh = Scene->mMeshes[Node->mMeshes[MeshIdx]];
-        LoadMeshElement(IsGltf, CurrentMesh, SkeletalMesh, BoneA, CurrentMatrix);
+        const size_t LODLevel = GetLODLevelFromMeshName(CurrentMesh->mName);
+        LoadMeshElement(IsGltf, CurrentMesh, SkeletalMesh, LODLevel, BoneA, CurrentMatrix);
     }
 
     for (size_t ChildIdx = 0; ChildIdx < Node->mNumChildren; ++ChildIdx)
@@ -480,7 +487,7 @@ void AssetManager::ProcessNodeForBone(
     if (IsNodeValid) BoneA->TraverseUpBone();
 }
 
-void AssetManager::RestructBaseVertices(const unsigned int& NumVertices, ANBTMeshAsset* MeshAssetIn)
+void AssetManager::RestructBaseVertices(const unsigned int& NumVertices, ANBTMeshAsset* MeshAssetIn, const size_t LodLevel)
 {
     vector<XMFLOAT3> TempPositions;
     vector<XMFLOAT2> TempUVTextures;
@@ -494,52 +501,82 @@ void AssetManager::RestructBaseVertices(const unsigned int& NumVertices, ANBTMes
     TempTangents.resize(NumVertices);
     TempBitangents.resize(NumVertices);
 
-    MeshAssetIn->Positions.Vertices.insert(MeshAssetIn->Positions.Vertices.end(), TempPositions.begin(), TempPositions.end());
-    MeshAssetIn->UVTextures.Vertices.insert(MeshAssetIn->UVTextures.Vertices.end(), TempUVTextures.begin(), TempUVTextures.end());
-    MeshAssetIn->Normals.Vertices.insert(MeshAssetIn->Normals.Vertices.end(), TempNormals.begin(), TempNormals.end());
-    MeshAssetIn->Tangents.Vertices.insert(MeshAssetIn->Tangents.Vertices.end(), TempTangents.begin(), TempTangents.end());
-    MeshAssetIn->Bitangents.Vertices.insert(MeshAssetIn->Bitangents.Vertices.end(), TempBitangents.begin(), TempBitangents.end());
+    MeshAssetIn->PositionsPerLOD[LodLevel].Vertices.insert(MeshAssetIn->PositionsPerLOD[LodLevel].Vertices.end(), TempPositions.begin(), TempPositions.end());
+    MeshAssetIn->UVTexturesPerLOD[LodLevel].Vertices.insert(MeshAssetIn->UVTexturesPerLOD[LodLevel].Vertices.end(), TempUVTextures.begin(), TempUVTextures.end());
+    MeshAssetIn->NormalsPerLOD[LodLevel].Vertices.insert(MeshAssetIn->NormalsPerLOD[LodLevel].Vertices.end(), TempNormals.begin(), TempNormals.end());
+    MeshAssetIn->TangentsPerLOD[LodLevel].Vertices.insert(MeshAssetIn->TangentsPerLOD[LodLevel].Vertices.end(), TempTangents.begin(), TempTangents.end());
+    MeshAssetIn->BitangentsPerLOD[LodLevel].Vertices.insert(MeshAssetIn->BitangentsPerLOD[LodLevel].Vertices.end(), TempBitangents.begin(), TempBitangents.end());
+}
+
+size_t AssetManager::GetTotalLODCountFromScene(const aiScene* const Scene)
+{
+    size_t Lodlevel = 0;
+
+    for (UINT meshIdx = 0; meshIdx < Scene->mNumMeshes; ++meshIdx)
+    {
+        aiMesh* CurrentMesh = Scene->mMeshes[meshIdx];
+        Lodlevel = max(Lodlevel, GetLODLevelFromMeshName(CurrentMesh->mName));
+    }
+    return Lodlevel + 1;
+}
+
+size_t AssetManager::GetLODLevelFromMeshName(const aiString& MeshName)
+{
+    size_t Lodlevel = 0;
+    regex LODMeshNamePatter("_LOD(\\d+)");
+    smatch Match;
+
+    const string MeshNameStr = string(MeshName.C_Str());
+    if (regex_search(MeshNameStr, Match, LODMeshNamePatter))
+    {
+        std::string lod_number = Match[1];
+        Lodlevel = max(Lodlevel, static_cast<size_t>(stoul(lod_number)));
+    }
+
+    return Lodlevel;
 }
 
 void AssetManager::LoadMeshElement(
     bool IsGltf,
     const aiMesh* const Mesh,
-    StaticMeshAsset* StaticMesh, 
+    StaticMeshAsset* StaticMesh,
+    const size_t LodLevel,
     const DirectX::XMMATRIX& ParentMatrix
 )
 {
-    size_t VertexStartIdx = StaticMesh->Positions.Vertices.size();
-    size_t IndicesStartIdx = StaticMesh->Indices.size();
+    size_t VertexStartIdx = StaticMesh->PositionsPerLOD[LodLevel].Vertices.size();
+    size_t IndicesStartIdx = StaticMesh->IndicesPerLOD[LodLevel].Indices.size();
 
-    RestructBaseVertices(Mesh->mNumVertices, StaticMesh);
+    RestructBaseVertices(Mesh->mNumVertices, StaticMesh, LodLevel);
 
     // Load Position
-    LoadPosition(Mesh, VertexStartIdx, StaticMesh, ParentMatrix);
+    LoadPosition(Mesh, VertexStartIdx, StaticMesh->PositionsPerLOD[LodLevel].Vertices, ParentMatrix);
 
     // Load Texture Coordinate
-    LoadTextureCoord(Mesh, VertexStartIdx, StaticMesh);
+    LoadTextureCoord(Mesh, VertexStartIdx, StaticMesh->UVTexturesPerLOD[LodLevel].Vertices);
 
     // Load TBN
-    IsGltf ? LoadTBNAsGltf(Mesh, VertexStartIdx, StaticMesh) : LoadTBN(Mesh, VertexStartIdx, StaticMesh);
+    IsGltf ? LoadTBNAsGltf(Mesh, VertexStartIdx, StaticMesh, LodLevel) : LoadTBN(Mesh, VertexStartIdx, StaticMesh, LodLevel);
  
     // Load Index;
-    LoadIndices(StaticMesh->Indices, VertexStartIdx, Mesh);
+    LoadIndices(Mesh, VertexStartIdx, StaticMesh->IndicesPerLOD[LodLevel].Indices);
 
-    CalculateTB(Mesh, IndicesStartIdx, StaticMesh);
+    CalculateTB(Mesh, IndicesStartIdx, StaticMesh, LodLevel);
 }
 
 void AssetManager::LoadMeshElement(
     bool IsGltf,
     const aiMesh* const Mesh,
     SkeletalMeshAsset* SkeletalMesh,
+    const size_t LodLevel,
     BoneAsset* BoneA,
     const DirectX::XMMATRIX& ParentMatrix
 )
 {
-    size_t VertexStartIdx = SkeletalMesh->Positions.Vertices.size();
-    size_t IndicesStartIdx = SkeletalMesh->Indices.size();
+    size_t VertexStartIdx = SkeletalMesh->PositionsPerLOD[LodLevel].Vertices.size();
+    size_t IndicesStartIdx = SkeletalMesh->IndicesPerLOD[LodLevel].Indices.size();
 
-    RestructBaseVertices(Mesh->mNumVertices, SkeletalMesh);
+    RestructBaseVertices(Mesh->mNumVertices, SkeletalMesh, LodLevel);
 
     vector<XMFLOAT4> TempBlendWeight;
     vector<XMINT4> TempBlendIndex;
@@ -547,32 +584,32 @@ void AssetManager::LoadMeshElement(
     TempBlendWeight.resize(Mesh->mNumVertices);
     TempBlendIndex.resize(Mesh->mNumVertices, XMINT4(-1, -1, -1, -1));
 
-    SkeletalMesh->BlendWeight.Vertices.insert(SkeletalMesh->BlendWeight.Vertices.end(), TempBlendWeight.begin(), TempBlendWeight.end());
-    SkeletalMesh->BlendIndex.Vertices.insert(SkeletalMesh->BlendIndex.Vertices.end(), TempBlendIndex.begin(), TempBlendIndex.end());
+    SkeletalMesh->BlendWeightPerLOD[LodLevel].Vertices.insert(SkeletalMesh->BlendWeightPerLOD[LodLevel].Vertices.end(), TempBlendWeight.begin(), TempBlendWeight.end());
+    SkeletalMesh->BlendIndexPerLOD[LodLevel].Vertices.insert(SkeletalMesh->BlendIndexPerLOD[LodLevel].Vertices.end(), TempBlendIndex.begin(), TempBlendIndex.end());
 
 
     // Load Position
-    LoadPosition(Mesh, VertexStartIdx, SkeletalMesh, ParentMatrix);
+    LoadPosition(Mesh, VertexStartIdx, SkeletalMesh->PositionsPerLOD[LodLevel].Vertices, ParentMatrix);
 
     // Load Texture Coordinate
-    LoadTextureCoord(Mesh, VertexStartIdx, SkeletalMesh);
+    LoadTextureCoord(Mesh, VertexStartIdx, SkeletalMesh->UVTexturesPerLOD[LodLevel].Vertices);
 
     // Load TBN
-    IsGltf ? LoadTBNAsGltf(Mesh, VertexStartIdx, SkeletalMesh) : LoadTBN(Mesh, VertexStartIdx, SkeletalMesh);
+    IsGltf ? LoadTBNAsGltf(Mesh, VertexStartIdx, SkeletalMesh, LodLevel) : LoadTBN(Mesh, VertexStartIdx, SkeletalMesh, LodLevel);
     
     // Load Index;
-    LoadIndices(SkeletalMesh->Indices, VertexStartIdx, Mesh);
+    LoadIndices(Mesh, VertexStartIdx, SkeletalMesh->IndicesPerLOD[LodLevel].Indices);
 
-    CalculateTB(Mesh, IndicesStartIdx, SkeletalMesh);
+    // Load BlendWeight
+    LoadBlendWeightAndIndex(Mesh, SkeletalMesh->BlendWeightPerLOD[LodLevel].Vertices, SkeletalMesh->BlendIndexPerLOD[LodLevel].Vertices);
+
+    CalculateTB(Mesh, IndicesStartIdx, SkeletalMesh, LodLevel);
 }
 
-
-
-template<typename T>
 void AssetManager::LoadPosition(
     const aiMesh* const Mesh,
     size_t VertexStartIdx,
-    T* MeshObjectInstance,
+    std::vector<XMFLOAT3>& Postions,
     const DirectX::XMMATRIX& ParentMatrix
 )
 {
@@ -584,14 +621,13 @@ void AssetManager::LoadPosition(
             aiVector3D CurrentVertex = Mesh->mVertices[VertexIdx];
             DirectX::XMVECTOR TransformedVertex = DirectX::XMVectorSet(CurrentVertex.x, CurrentVertex.y, CurrentVertex.z, 0.f);
             TransformedVertex = DirectX::XMVector3TransformCoord(TransformedVertex, ParentMatrix);
-            memcpy(&MeshObjectInstance->Positions.Vertices[AccessIdx], &TransformedVertex, sizeof(aiVector3D));
+            memcpy(&/*MeshObjectInstance->Positions.Vertices*/Postions[AccessIdx], &TransformedVertex, sizeof(aiVector3D));
         }
     }
 }
 
 void AssetManager::LoadBone(
     const aiScene* const Scene,
-    SkeletalMeshAsset* SkeletalMesh,
     BoneAsset* BoneAsset
 )
 {
@@ -607,49 +643,17 @@ void AssetManager::LoadBone(
                 XMFLOAT4X4 TempMatrix;
                 memcpy(&TempMatrix, &CurrentBone->mOffsetMatrix, sizeof(XMFLOAT4X4));
                 BoneAsset->AddBone(CurrentBone->mName.C_Str(), BoneIdx, DirectX::XMLoadFloat4x4(&TempMatrix));
-
-                for (UINT WeightIdx = 0; WeightIdx < CurrentBone->mNumWeights; ++WeightIdx)
-                {
-                    aiVertexWeight& VertexWeight = CurrentBone->mWeights[WeightIdx];
-
-                    XMFLOAT4& CurrentBlendWeight = SkeletalMesh->BlendWeight.Vertices[VertexWeight.mVertexId];
-                    XMINT4& CurrentBlendIndex = SkeletalMesh->BlendIndex.Vertices[VertexWeight.mVertexId];
-
-                    int InsertedIndex = -1;
-                    if (CurrentBlendIndex.x == -1)
-                    {
-                        CurrentBlendIndex.x = BoneIdx; CurrentBlendWeight.x = VertexWeight.mWeight;
-                    }
-                    else if (CurrentBlendIndex.y == -1)
-                    {
-                        CurrentBlendIndex.y = BoneIdx; CurrentBlendWeight.y = VertexWeight.mWeight;
-                    }
-                    else if (CurrentBlendIndex.z == -1)
-                    {
-                        CurrentBlendIndex.z = BoneIdx; CurrentBlendWeight.z = VertexWeight.mWeight;
-                    }
-                    else if (CurrentBlendIndex.w == -1)
-                    {
-                        CurrentBlendIndex.w = BoneIdx; CurrentBlendWeight.w = VertexWeight.mWeight;
-                    }
-                    else
-                    {
-
-                    }
-                }
             }
-
             // Load Bone Hierachy
             ProcessNodeForBone(Scene, Scene->mRootNode, BoneAsset);
         }
     }
 }
 
-template<typename T>
 void AssetManager::LoadTextureCoord(
     const aiMesh* const Mesh, 
     size_t VertexStartIdx, 
-    T* MeshObjectInstance
+    vector<XMFLOAT2>& UVTextures
 )
 {
     if (Mesh->HasTextureCoords(0))
@@ -658,15 +662,57 @@ void AssetManager::LoadTextureCoord(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTextureCoord = Mesh->mTextureCoords[0][VertexIdx];
-            memcpy(&MeshObjectInstance->UVTextures.Vertices[AccessIdx], &CurrentTextureCoord, sizeof(aiVector2D));
+            memcpy(&UVTextures[AccessIdx], &CurrentTextureCoord, sizeof(aiVector2D));
+        }
+    }
+}
+
+void AssetManager::LoadBlendWeightAndIndex(
+    const aiMesh* const Mesh, 
+    vector<XMFLOAT4>& BlendWeight, 
+    vector<XMINT4>& BlendIndex
+)
+{
+    // Load Bone Table And Weight
+    for (UINT BoneIdx = 0; BoneIdx < Mesh->mNumBones; ++BoneIdx)
+    {
+        aiBone* CurrentBone = Mesh->mBones[BoneIdx];
+        for (UINT WeightIdx = 0; WeightIdx < CurrentBone->mNumWeights; ++WeightIdx)
+        {
+            aiVertexWeight& VertexWeight = CurrentBone->mWeights[WeightIdx];
+
+            XMFLOAT4& CurrentBlendWeight = BlendWeight[VertexWeight.mVertexId];
+            XMINT4& CurrentBlendIndex = BlendIndex[VertexWeight.mVertexId];
+
+            int InsertedIndex = -1;
+            if (CurrentBlendIndex.x == -1)
+            {
+                CurrentBlendIndex.x = BoneIdx; CurrentBlendWeight.x = VertexWeight.mWeight;
+            }
+            else if (CurrentBlendIndex.y == -1)
+            {
+                CurrentBlendIndex.y = BoneIdx; CurrentBlendWeight.y = VertexWeight.mWeight;
+            }
+            else if (CurrentBlendIndex.z == -1)
+            {
+                CurrentBlendIndex.z = BoneIdx; CurrentBlendWeight.z = VertexWeight.mWeight;
+            }
+            else if (CurrentBlendIndex.w == -1)
+            {
+                CurrentBlendIndex.w = BoneIdx; CurrentBlendWeight.w = VertexWeight.mWeight;
+            }
+            else
+            {
+
+            }
         }
     }
 }
 
 void AssetManager::LoadIndices(
-    std::vector<uint32_t>& IndicesIn,
+    const aiMesh* const Mesh,
     size_t VertexStartIdx,
-    const aiMesh* const Mesh
+    std::vector<uint32_t>& IndicesIn
 )
 {
     if (Mesh->HasFaces())
@@ -731,7 +777,8 @@ template<typename T>
 void AssetManager::LoadTBN(
     const aiMesh* const Mesh, 
     size_t VertexStartIdx, 
-    T* MeshObjectInstance
+    T* MeshObjectInstance,
+    const size_t& LodLevel
 )
 {
     if (Mesh->HasNormals())
@@ -740,7 +787,7 @@ void AssetManager::LoadTBN(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentNormal = Mesh->mNormals[VertexIdx];
-            memcpy(&MeshObjectInstance->Normals.Vertices[AccessIdx], &CurrentNormal, sizeof(aiVector3D));
+            memcpy(&MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[AccessIdx], &CurrentNormal, sizeof(aiVector3D));
         }
     }
 
@@ -751,8 +798,8 @@ void AssetManager::LoadTBN(
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTangent = Mesh->mTangents[VertexIdx];
             aiVector3D& CurrentBiTangent = Mesh->mBitangents[VertexIdx];
-            memcpy(&MeshObjectInstance->Tangents.Vertices[AccessIdx], &CurrentTangent, sizeof(aiVector3D));
-            memcpy(&MeshObjectInstance->Bitangents.Vertices[AccessIdx], &CurrentBiTangent, sizeof(aiVector3D));
+            memcpy(&MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx], &CurrentTangent, sizeof(aiVector3D));
+            memcpy(&MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx], &CurrentBiTangent, sizeof(aiVector3D));
         }
     }
 }
@@ -761,7 +808,8 @@ template<typename T>
 void AssetManager::LoadTBNAsGltf(
     const aiMesh* const Mesh,
     size_t VertexStartIdx, 
-    T* MeshObjectInstance
+    T* MeshObjectInstance,
+    const size_t& LodLevel
 )
 {
     if (Mesh->HasNormals())
@@ -770,9 +818,9 @@ void AssetManager::LoadTBNAsGltf(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentNormal = Mesh->mNormals[VertexIdx];
-            MeshObjectInstance->Normals.Vertices[AccessIdx].x = CurrentNormal.x;
-            MeshObjectInstance->Normals.Vertices[AccessIdx].y = -CurrentNormal.z;
-            MeshObjectInstance->Normals.Vertices[AccessIdx].z = CurrentNormal.x;
+            MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[AccessIdx].x = CurrentNormal.x;
+            MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[AccessIdx].y = -CurrentNormal.z;
+            MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentNormal.x;
         }
     }
 
@@ -784,18 +832,18 @@ void AssetManager::LoadTBNAsGltf(
             aiVector3D& CurrentTangent = Mesh->mTangents[VertexIdx];
             aiVector3D& CurrentBiTangent = Mesh->mBitangents[VertexIdx];
 
-            MeshObjectInstance->Tangents.Vertices[AccessIdx].x = CurrentTangent.x;
-            MeshObjectInstance->Tangents.Vertices[AccessIdx].y = -CurrentTangent.z;
-            MeshObjectInstance->Tangents.Vertices[AccessIdx].z = CurrentTangent.x;
-            MeshObjectInstance->Bitangents.Vertices[AccessIdx].x = CurrentBiTangent.x;
-            MeshObjectInstance->Bitangents.Vertices[AccessIdx].y = -CurrentBiTangent.z;
-            MeshObjectInstance->Bitangents.Vertices[AccessIdx].z = CurrentBiTangent.x;
+            MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].x = CurrentTangent.x;
+            MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].y = -CurrentTangent.z;
+            MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentTangent.x;
+            MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].x = CurrentBiTangent.x;
+            MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].y = -CurrentBiTangent.z;
+            MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentBiTangent.x;
         }
     }
 }
 
 template<typename T>
-void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T* MeshObjectInstance)
+void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T* MeshObjectInstance, const size_t& LodLevel)
 {
     if (Mesh->HasTangentsAndBitangents())
     {
@@ -803,27 +851,27 @@ void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T
     }
     else
     {
-        for (size_t IndexIdx = IndexStartIdx; IndexIdx < MeshObjectInstance->Indices.size(); IndexIdx += 3)
+        for (size_t IndexIdx = IndexStartIdx; IndexIdx < MeshObjectInstance->IndicesPerLOD[LodLevel].Indices.size(); IndexIdx += 3)
         {
-            auto& p0 = MeshObjectInstance->Positions.Vertices[MeshObjectInstance->Indices[IndexIdx]];
-            auto& p1 = MeshObjectInstance->Positions.Vertices[MeshObjectInstance->Indices[IndexIdx + 1]];
-            auto& p2 = MeshObjectInstance->Positions.Vertices[MeshObjectInstance->Indices[IndexIdx + 2]];
+            auto& p0 = MeshObjectInstance->PositionsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx]];
+            auto& p1 = MeshObjectInstance->PositionsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 1]];
+            auto& p2 = MeshObjectInstance->PositionsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 2]];
 
-            auto& uv0 = MeshObjectInstance->UVTextures.Vertices[MeshObjectInstance->Indices[IndexIdx]];
-            auto& uv1 = MeshObjectInstance->UVTextures.Vertices[MeshObjectInstance->Indices[IndexIdx + 1]];
-            auto& uv2 = MeshObjectInstance->UVTextures.Vertices[MeshObjectInstance->Indices[IndexIdx + 2]];
+            auto& uv0 = MeshObjectInstance->UVTexturesPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx]];
+            auto& uv1 = MeshObjectInstance->UVTexturesPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 1]];
+            auto& uv2 = MeshObjectInstance->UVTexturesPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 2]];
 
-            auto& n0 = MeshObjectInstance->Normals.Vertices[MeshObjectInstance->Indices[IndexIdx]];
-            auto& n1 = MeshObjectInstance->Normals.Vertices[MeshObjectInstance->Indices[IndexIdx + 1]];
-            auto& n2 = MeshObjectInstance->Normals.Vertices[MeshObjectInstance->Indices[IndexIdx + 2]];
+            auto& n0 = MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx]];
+            auto& n1 = MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 1]];
+            auto& n2 = MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 2]];
 
-            auto& t0 = MeshObjectInstance->Tangents.Vertices[MeshObjectInstance->Indices[IndexIdx]];
-            auto& t1 = MeshObjectInstance->Tangents.Vertices[MeshObjectInstance->Indices[IndexIdx + 1]];
-            auto& t2 = MeshObjectInstance->Tangents.Vertices[MeshObjectInstance->Indices[IndexIdx + 2]];
+            auto& t0 = MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx]];
+            auto& t1 = MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 1]];
+            auto& t2 = MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 2]];
 
-            auto& bt0 = MeshObjectInstance->Bitangents.Vertices[MeshObjectInstance->Indices[IndexIdx]];
-            auto& bt1 = MeshObjectInstance->Bitangents.Vertices[MeshObjectInstance->Indices[IndexIdx + 1]];
-            auto& bt2 = MeshObjectInstance->Bitangents.Vertices[MeshObjectInstance->Indices[IndexIdx + 2]];
+            auto& bt0 = MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx]];
+            auto& bt1 = MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 1]];
+            auto& bt2 = MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 2]];
 
             MathematicalHelper::GetTangentBitangent(
                 p0,

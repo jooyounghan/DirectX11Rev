@@ -11,6 +11,8 @@ GraphicsPipeline* App::GGraphicPipeline = nullptr;
 PSOManager* App::GPSOManager = nullptr;
 InputEventManager* App::GInputEventManager = nullptr;
 
+size_t Performance::GTotalIndexCount = 0;
+
 const ImVec4 UIColor::GBlack = ImVec4(0.f, 0.f, 0.f, 1.f);
 const ImVec4 UIColor::GWhite = ImVec4(1.f, 1.f, 1.f, 1.f);
 const ImVec4 UIColor::GDarkGray = ImVec4(0.3f, 0.3f, 0.3f, 1.f);

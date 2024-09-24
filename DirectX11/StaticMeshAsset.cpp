@@ -13,15 +13,16 @@ StaticMeshAsset::~StaticMeshAsset()
 {
 }
 
-std::vector<ID3D11Buffer*> StaticMeshAsset::GetVertexBuffers()
+std::vector<ID3D11Buffer*> StaticMeshAsset::GetVertexBuffers(const size_t& LODLevelIn)
 {
+	const size_t LODIndex = min(LODLevelIn, PositionsPerLOD.size() - 1);
 	return std::vector<ID3D11Buffer*>
 	 {
-		 Positions.GetVertexBuffer(),
-		 UVTextures.GetVertexBuffer(),
-		 Normals.GetVertexBuffer(),
-		 Tangents.GetVertexBuffer(),
-		 Bitangents.GetVertexBuffer()
+		 PositionsPerLOD[LODIndex].GetVertexBuffer(),
+		 UVTexturesPerLOD[LODIndex].GetVertexBuffer(),
+		 NormalsPerLOD[LODIndex].GetVertexBuffer(),
+		 TangentsPerLOD[LODIndex].GetVertexBuffer(),
+		 BitangentsPerLOD[LODIndex].GetVertexBuffer()
 	 };
 }
 

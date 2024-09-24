@@ -590,7 +590,7 @@
     <ClInclude Include="BoundingSphereObject.h">
       <Filter>헤더 파일\Object\Attachable\BoundingObject</Filter>
     </ClInclude>
-    <ClInclude Include="AIndexable.h">
+    <ClInclude Include="Indexable.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="Vertexable.h">

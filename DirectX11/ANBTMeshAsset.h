@@ -8,11 +8,14 @@ public:
 	virtual ~ANBTMeshAsset();
 
 public:
-	Vertexable<XMFLOAT3> Tangents;
-	Vertexable<XMFLOAT3> Bitangents;
+	std::vector<Vertexable<XMFLOAT3>> TangentsPerLOD;
+	std::vector<Vertexable<XMFLOAT3>> BitangentsPerLOD;
 
 public:
-	virtual std::vector<ID3D11Buffer*> GetVertexBuffers() = 0;
+	virtual void SetLODCount(const size_t& LODCountIn) override;
+
+public:
+	virtual std::vector<ID3D11Buffer*> GetVertexBuffers(const size_t& LODLevelIn) = 0;
 	virtual std::vector<UINT> GetStrides() = 0;
 	virtual std::vector<UINT> GetOffsets() = 0;
 

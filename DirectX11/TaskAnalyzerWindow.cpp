@@ -1,4 +1,5 @@
 #include "TaskAnalyzerWindow.h"
+#include "GlobalVariable.h"
 
 using namespace ImGui;
 
@@ -16,7 +17,6 @@ void TaskAnalyzerWindow::RenderWindow()
     Begin("Task Analyzer");
 
     DrawFPSLinePlotting();
-
 
     End();
 }
@@ -39,5 +39,10 @@ void TaskAnalyzerWindow::DrawFPSLinePlotting()
 
     char OverlayText[32];
     sprintf_s(OverlayText, "Average FPS : %f", average);
-    PlotLines("Lines", FrameRates, IM_ARRAYSIZE(FrameRates), values_offset, OverlayText, 0.0f, average * 2.f, GetContentRegionAvail());
+    PushID("FPSPlot");
+    PlotLines("", FrameRates, IM_ARRAYSIZE(FrameRates), values_offset, OverlayText, 0.0f, average * 2.f);
+    PopID();
+
+    Text("Total Drawn Indices Count %d", Performance::GTotalIndexCount);
+    Performance::GTotalIndexCount = 0;
 }

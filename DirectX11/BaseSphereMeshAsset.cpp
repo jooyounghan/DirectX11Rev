@@ -6,12 +6,15 @@ using namespace std;
 BaseSphereMeshAsset::BaseSphereMeshAsset()
 	: BaseMeshAsset("BaseSphere")
 {
+	SetLODCount(1);
+
 	ModelHelper::CreateSphere<uint32_t>(
-		5, &Positions.Vertices,
-		&UVTextures.Vertices,
-		&Normals.Vertices,
-		&Indices
+		5, &PositionsPerLOD[0].Vertices,
+		&UVTexturesPerLOD[0].Vertices,
+		&NormalsPerLOD[0].Vertices,
+		&IndicesPerLOD[0].Indices
 	);
+
 	Initialize();
 }
 

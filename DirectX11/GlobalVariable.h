@@ -17,6 +17,11 @@ namespace App
 	extern InputEventManager*		GInputEventManager;
 }
 
+namespace Performance
+{
+	extern size_t		GTotalIndexCount;
+}
+
 namespace Direction
 {
 	constexpr DirectX::XMVECTOR GDefaultForward = DirectX::XMVECTOR{ 0.f, 0.f, 1.f, 0.f };

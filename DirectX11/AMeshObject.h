@@ -14,6 +14,14 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
 
 public:
+	size_t GetLODLevel(
+		const DirectX::XMFLOAT3& From, 
+		const float& MaxDistance, 
+		const size_t& MaxLODCount, 
+		const size_t SteepLevel
+	);
+
+public:
 	virtual void Render() override;
 };
 

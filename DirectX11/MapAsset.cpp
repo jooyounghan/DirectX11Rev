@@ -102,8 +102,6 @@ void MapAsset::RenderMap()
 			RootPlaceable->Render();
 		}
 	}
-
-	App::GPSOManager->ProcessRender();
 }
 
 void MapAsset::Serialize(const std::string& OutputAdditionalPath)

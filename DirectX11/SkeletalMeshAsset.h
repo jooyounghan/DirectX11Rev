@@ -14,11 +14,14 @@ protected:
 	MakeSetterGetter(LinkedBoneAsset)
 
 public:
-	Vertexable<XMFLOAT4> BlendWeight;
-	Vertexable<XMINT4> BlendIndex;
+	std::vector<Vertexable<XMFLOAT4>> BlendWeightPerLOD;
+	std::vector<Vertexable<XMINT4>> BlendIndexPerLOD;
 
 public:
-	virtual std::vector<ID3D11Buffer*> GetVertexBuffers() override;
+	virtual void SetLODCount(const size_t& LODCountIn) override;
+
+public:
+	virtual std::vector<ID3D11Buffer*> GetVertexBuffers(const size_t& LODLevelIn) override;
 	virtual std::vector<UINT> GetStrides() override;
 	virtual std::vector<UINT> GetOffsets() override;
 
@@ -28,5 +31,9 @@ public:
 public:
 	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+
+protected:
+	virtual void SerializeBaseMeshData(FILE* FileIn) override;
+	virtual void DeserializeBaseMeshData(FILE* FileIn) override;
 };
 

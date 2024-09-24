@@ -7,8 +7,6 @@ class Vertexable
 {
 public:
 	std::vector<T>		Vertices;
-
-public:
 	VertexBuffer<T>		VerticesBuffer;
 
 public:

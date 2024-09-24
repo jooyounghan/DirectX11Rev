@@ -13,6 +13,7 @@ struct ID3D11Device;
 struct aiScene;
 struct aiNode;
 struct aiMesh;
+struct aiString;
 
 enum class EAssetType;
 
@@ -157,13 +158,17 @@ private:
 	);
 
 private:
-	void RestructBaseVertices(const unsigned int& NumVertices, ANBTMeshAsset* MeshAssetIn);
+	void RestructBaseVertices(const unsigned int& NumVertices, ANBTMeshAsset* MeshAssetIn, const size_t LodLevel);
+	size_t GetTotalLODCountFromScene(const aiScene* const Scene);
+	size_t GetLODLevelFromMeshName(const aiString& MeshName);
+
 
 private:
 	void LoadMeshElement(
 		bool IsGltf,
 		const aiMesh* const Mesh,
 		StaticMeshAsset* StaticMesh,
+		const size_t LodLevel,
 		const DirectX::XMMATRIX& ParentMatrix
 	);
 
@@ -171,39 +176,44 @@ private:
 		bool IsGltf,
 		const aiMesh* const Mesh,
 		SkeletalMeshAsset* SkeletalMesh,
+		const size_t LodLevel,
 		BoneAsset* Bone,
 		const DirectX::XMMATRIX& ParentMatrix
 	);
 
 private:
-	template<typename T>
 	void LoadPosition(
 		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		T* MeshObjectInstance,
+		std::vector<XMFLOAT3>& Postions,
 		const DirectX::XMMATRIX& ParentMatrix
 	);
 
 private:
 	void LoadBone(
 		const aiScene* const Scene,
-		SkeletalMeshAsset* SkeletalMesh,
 		BoneAsset* BoneAsset
 	);
 
 private:
-	template<typename T>
 	void LoadTextureCoord(
 		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		T* MeshObjectInstance
+		std::vector<XMFLOAT2>& UVTextures
+	);
+
+private:
+	void LoadBlendWeightAndIndex(
+		const aiMesh* const Mesh,
+		std::vector<XMFLOAT4>& BlendWeight,
+		std::vector<XMINT4>& BlendIndex
 	);
 
 private:
 	void LoadIndices(
-		std::vector<uint32_t>& IndicesIn,
+		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		const aiMesh* const Mesh
+		std::vector<uint32_t>& IndicesIn
 	);
 
 private:
@@ -211,14 +221,16 @@ private:
 	void LoadTBN(
 		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		T* MeshObjectInstance
+		T* MeshObjectInstance,
+		const size_t& LodLevel
 	);
 
 	template<typename T>
 	void LoadTBNAsGltf(
 		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		T* MeshObjectInstance
+		T* MeshObjectInstance,
+		const size_t& LodLevel
 	);
 
 private:
@@ -226,7 +238,8 @@ private:
 	void CalculateTB(
 		const aiMesh* const Mesh,
 		size_t IndexStartIdx,
-		T* MeshObjectInstance
+		T* MeshObjectInstance,
+		const size_t& LodLevel
 	);
 
 private:

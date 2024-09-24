@@ -12,6 +12,7 @@
 #include "MapAsset.h"
 #include "Camera.h"
 
+
 using namespace std;
 
 const char* SkeletalMeshObject::SkeletalMeshObjectIdentifier = "Skeletal Mesh Object";
@@ -50,38 +51,25 @@ void SkeletalMeshObject::Render()
 	Camera* CurrentCamera = MapAssetCached->GetCurrentCamera();
 	if (CurrentCamera != nullptr && SkeletalMeshAssetInstance != nullptr)
 	{
+		const size_t LODLevel = GetLODLevel(
+			CurrentCamera->GetAbsolutePosition(),
+			*CurrentCamera->GetPointerFarZ(),
+			SkeletalMeshAssetInstance->GetLODCount(),
+			3
+		);
+
 		ID3D11RenderTargetView* RTVs[]{ CurrentCamera->GetSDRSceneRTV() };
-		const std::vector<ID3D11Buffer*> VertexBuffers = SkeletalMeshAssetInstance->GetVertexBuffers();
+		const std::vector<ID3D11Buffer*> VertexBuffers = SkeletalMeshAssetInstance->GetVertexBuffers(LODLevel);
 		const std::vector<UINT> Strides = SkeletalMeshAssetInstance->GetStrides();
 		const std::vector<UINT> Offsets = SkeletalMeshAssetInstance->GetOffsets();
-		ID3D11Buffer* IndexBuffer = SkeletalMeshAssetInstance->GetIndexBuffer();
+		ID3D11Buffer* IndexBuffer = SkeletalMeshAssetInstance->GetIndexBuffer(LODLevel);
 		const DXGI_FORMAT IndexFormat = SkeletalMeshAssetInstance->GetIndexFormat();
-		const UINT IndexCount = SkeletalMeshAssetInstance->GetIndexCount();
+		const UINT IndexCount = SkeletalMeshAssetInstance->GetIndexCount(LODLevel);
 		ID3D11Buffer* VSConstBuffers[] = { CurrentCamera->ViewProjBuffer.GetBuffer(), TransformationBuffer.GetBuffer() };
 		ID3D11Buffer* PSConstBuffers[] = { PickingIDBufferCached };
 		const D3D11_VIEWPORT* Viewport = &CurrentCamera->GetViewport();
 		ID3D11DepthStencilView* DSV = CurrentCamera->GetSceneDSV();
 
-
-#ifdef DIRECT_RENDER
-		SPSOArgument CommonPSOArgument;
-
-		CommonPSOArgument.VertexBuffers = SkeletalMeshAssetInstance->GetVertexBuffers();
-		CommonPSOArgument.Strides = SkeletalMeshAssetInstance->GetStrides();
-		CommonPSOArgument.Offsets = SkeletalMeshAssetInstance->GetOffsets();
-		CommonPSOArgument.IndexBuffer = SkeletalMeshAssetInstance->GetIndexBuffer();
-		CommonPSOArgument.IndexFormat = SkeletalMeshAssetInstance->GetIndexFormat();
-		CommonPSOArgument.IndexCount = SkeletalMeshAssetInstance->GetIndexCount();
-		CommonPSOArgument.VSConstantBuffers = vector<ID3D11Buffer*>{ CurrentCamera->ViewProjBuffer.GetBuffer(), TransformationBuffer.GetBuffer() };
-		CommonPSOArgument.PSConstantBuffers = vector<ID3D11Buffer*>{ PickingIDBufferCached };
-		CommonPSOArgument.RTVs = vector<ID3D11RenderTargetView*>{ CurrentCamera->GetSDRSceneRTV() };
-		CommonPSOArgument.DSV = CurrentCamera->GetSceneDSV();
-		CommonPSOArgument.Viewport = &CurrentCamera->GetViewport();
-
-		App::GPSOManager->AddRenderCommand(SkeletalMeshObjectPSOCached, CommonPSOArgument);
-		App::GPSOManager->AddRenderCommand(PickingIDSolidSkeletalPSOCached, CommonPSOArgument);
-
-#else
 #pragma region SkeletalMeshObjectPSOCached
 		SkeletalMeshObjectPSOCached->SetPipelineStateObject(1, RTVs, Viewport, DSV);
 		SkeletalMeshObjectPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
@@ -97,6 +85,7 @@ void SkeletalMeshObject::Render()
 #endif // DEBUG
 
 		DeviceContextCached->DrawIndexed(static_cast<UINT>(IndexCount), 0, 0);
+		Performance::GTotalIndexCount += IndexCount;
 
 		SkeletalMeshObjectPSOCached->ResetVSConstantBuffers(0, 2);
 #pragma endregion
@@ -125,8 +114,6 @@ void SkeletalMeshObject::Render()
 
 		PickingIDSolidSkeletalPSOCached->ResetVSConstantBuffers(0, 2);
 #pragma endregion
-#endif
-
 	}
 }
 
