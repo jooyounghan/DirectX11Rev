@@ -36,16 +36,10 @@ protected:
 	MakeSmartPtrSetterGetter(EnvironmentDiffuseDDSTextureAsset);
 	MakeSmartPtrSetterGetter(EnvironmentBRDFDDSTextureAsset);
 
-protected:
-	float& Exposure;
-	MakeGetter(Exposure);
-
-protected:
-	float& Gamma;
-	MakeGetter(Gamma);
 
 protected:
 	SHDRToneMappingConstant HDRToneMappingConstant;
+	MakePointerGetter(HDRToneMappingConstant);
 
 protected:
 	UploadBuffer<SHDRToneMappingConstant> HDRToneMappingConstantBuffer;

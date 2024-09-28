@@ -54,7 +54,7 @@ shared_ptr<Debugable> BoundingSphereObject::CreateDebugSphereObject(ID3D11Device
 	std::vector<DirectX::XMFLOAT3>& VerticesIn = Result->Vertices;
 	std::vector<uint16_t>& IndicesIn = Result->Indices;
 
-	ModelHelper::CreateSphere<uint16_t>(5, &VerticesIn, nullptr, nullptr, &IndicesIn);
+	ModelHelper::CreateSphere<uint16_t>(5, &VerticesIn, nullptr, nullptr, &IndicesIn, false);
 
 	Result->Initialize();
 	return Result;

@@ -11,6 +11,8 @@
 
 #include "MapAsset.h"
 #include "Camera.h"
+#include "EnvironmentActor.h"
+#include "DDSTextureAsset.h"
 
 using namespace std;
 
@@ -48,7 +50,8 @@ void SkeletalMeshObject::Render()
 	AAttachableObject::Render();
 
 	Camera* CurrentCamera = MapAssetCached->GetCurrentCamera();
-	if (CurrentCamera != nullptr && SkeletalMeshAssetInstance != nullptr)
+	EnvironmentActor* CurrentEnvironment = MapAssetCached->GetEnvironmentActorInstance();
+	if (CurrentCamera != nullptr && SkeletalMeshAssetInstance != nullptr && CurrentEnvironment != nullptr)
 	{
 		const size_t LODLevel = GetLODLevel(
 			CurrentCamera->GetAbsolutePosition(),
@@ -57,20 +60,35 @@ void SkeletalMeshObject::Render()
 			3
 		);
 
-		ID3D11RenderTargetView* RTVs[]{ CurrentCamera->GetSDRSceneRTV() };
+		vector<ID3D11RenderTargetView*> RTVs;
+		const D3D11_VIEWPORT* Viewport = &CurrentCamera->GetViewport();
+		ID3D11DepthStencilView* DSV = CurrentCamera->GetSceneDSV();
 		const std::vector<ID3D11Buffer*> VertexBuffers = SkeletalMeshAssetInstance->GetVertexBuffers(LODLevel);
 		const std::vector<UINT> Strides = SkeletalMeshAssetInstance->GetStrides();
 		const std::vector<UINT> Offsets = SkeletalMeshAssetInstance->GetOffsets();
 		ID3D11Buffer* IndexBuffer = SkeletalMeshAssetInstance->GetIndexBuffer(LODLevel);
 		const DXGI_FORMAT IndexFormat = SkeletalMeshAssetInstance->GetIndexFormat();
 		const UINT IndexCount = SkeletalMeshAssetInstance->GetIndexCount(LODLevel);
-		ID3D11Buffer* VSConstBuffers[] = { CurrentCamera->ViewProjBuffer.GetBuffer(), TransformationBuffer.GetBuffer() };
-		ID3D11Buffer* PSConstBuffers[] = { PickingIDBufferCached };
-		const D3D11_VIEWPORT* Viewport = &CurrentCamera->GetViewport();
-		ID3D11DepthStencilView* DSV = CurrentCamera->GetSceneDSV();
+		vector<ID3D11Buffer*> VSConstBuffers;
+		vector<ID3D11Buffer*> PSConstBuffers;
+		vector<ID3D11ShaderResourceView*> PSSRVs;
+
+		RTVs.push_back(CurrentCamera->GetSDRSceneRTV());
+
+		VSConstBuffers.push_back(CurrentCamera->ViewProjBuffer.GetBuffer());
+		VSConstBuffers.push_back(TransformationBuffer.GetBuffer());
+		PSConstBuffers.push_back(PickingIDBufferCached);
+
+		DDSTextureAsset* SpecularDDS = CurrentEnvironment->GetEnvironmentSpecularDDSTextureAsset();
+		DDSTextureAsset* DiffuseDDS = CurrentEnvironment->GetEnvironmentDiffuseDDSTextureAsset();
+		DDSTextureAsset* BRDFDDS = CurrentEnvironment->GetEnvironmentBRDFDDSTextureAsset();
+		if (SpecularDDS != nullptr) PSSRVs.push_back(SpecularDDS->GetSRV());
+		if (DiffuseDDS != nullptr) PSSRVs.push_back(DiffuseDDS->GetSRV());
+		if (BRDFDDS != nullptr) PSSRVs.push_back(BRDFDDS->GetSRV());
+
 
 #pragma region SkeletalMeshObjectPSOCached
-		SkeletalMeshObjectPSOCached->SetPipelineStateObject(1, RTVs, Viewport, DSV);
+		SkeletalMeshObjectPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, DSV);
 		DeviceContextCached->IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
 		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
 			VertexBuffers.data(),
@@ -78,8 +96,8 @@ void SkeletalMeshObject::Render()
 			Offsets.data()
 		);
 
-		SkeletalMeshObjectPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
-
+		SkeletalMeshObjectPSOCached->SetVSConstantBuffers(0, VSConstBuffers.size(), VSConstBuffers.data());
+		PickingIDSolidSkeletalPSOCached->SetPSShaderResourceViews(0, PSConstBuffers.size(), PSSRVs.data());
 #ifdef _DEBUG
 		SkeletalMeshObjectPSOCached->CheckPipelineValidation();
 #endif // DEBUG
@@ -87,12 +105,13 @@ void SkeletalMeshObject::Render()
 		DeviceContextCached->DrawIndexed(static_cast<UINT>(IndexCount), 0, 0);
 		Performance::GTotalIndexCount += IndexCount;
 
-		SkeletalMeshObjectPSOCached->ResetVSConstantBuffers(0, 2);
+		SkeletalMeshObjectPSOCached->ResetVSConstantBuffers(0, VSConstBuffers.size());
+		PickingIDSolidSkeletalPSOCached->ResetPSShaderResourceViews(0, PSConstBuffers.size());
 #pragma endregion
 
 #pragma region PickingIDSolidSkeletalPSOCached
 
-		PickingIDSolidSkeletalPSOCached->SetPipelineStateObject(1, RTVs, &CurrentCamera->GetViewport(), CurrentCamera->GetSceneDSV());
+		PickingIDSolidSkeletalPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), &CurrentCamera->GetViewport(), CurrentCamera->GetSceneDSV());
 
 		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
 			VertexBuffers.data(),
@@ -101,8 +120,9 @@ void SkeletalMeshObject::Render()
 		);
 		DeviceContextCached->IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
 
-		PickingIDSolidSkeletalPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
-		PickingIDSolidSkeletalPSOCached->SetPSConstantBuffers(0, 1, PSConstBuffers);
+		PickingIDSolidSkeletalPSOCached->SetVSConstantBuffers(0, VSConstBuffers.size(), VSConstBuffers.data());
+		PickingIDSolidSkeletalPSOCached->SetPSConstantBuffers(0, PSConstBuffers.size(), PSConstBuffers.data());
+
 
 #ifdef _DEBUG
 		PickingIDSolidSkeletalPSOCached->CheckPipelineValidation();
@@ -110,7 +130,8 @@ void SkeletalMeshObject::Render()
 
 		DeviceContextCached->DrawIndexed(static_cast<UINT>(IndexCount), 0, 0);
 
-		PickingIDSolidSkeletalPSOCached->ResetVSConstantBuffers(0, 2);
+		PickingIDSolidSkeletalPSOCached->ResetVSConstantBuffers(0, VSConstBuffers.size());
+		PickingIDSolidSkeletalPSOCached->ResetPSConstantBuffers(0, PSConstBuffers.size());
 #pragma endregion
 	}
 }

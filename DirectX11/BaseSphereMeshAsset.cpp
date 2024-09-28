@@ -9,10 +9,11 @@ BaseSphereMeshAsset::BaseSphereMeshAsset()
 	SetLODCount(1);
 
 	ModelHelper::CreateSphere<uint32_t>(
-		5, &PositionsPerLOD[0].Vertices,
+		15, &PositionsPerLOD[0].Vertices,
 		&UVTexturesPerLOD[0].Vertices,
 		&NormalsPerLOD[0].Vertices,
-		&IndicesPerLOD[0].Indices
+		&IndicesPerLOD[0].Indices,
+		true
 	);
 
 	Initialize();

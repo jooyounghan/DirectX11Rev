@@ -11,7 +11,8 @@ public:
 		std::vector<DirectX::XMFLOAT3>* VerticesIn,
 		std::vector<DirectX::XMFLOAT2>* UVCoordsIn,
 		std::vector<DirectX::XMFLOAT3>* NormalsIn,
-		std::vector<IndexType>* IndicesIn
+		std::vector<IndexType>* IndicesIn,
+		const bool& IsReverse
 	);
 
 	template<typename IndexType>
@@ -19,7 +20,8 @@ public:
 		std::vector<DirectX::XMFLOAT3>* VerticesIn,
 		std::vector<DirectX::XMFLOAT2>* UVCoordsIn,
 		std::vector<DirectX::XMFLOAT3>* NormalsIn,
-		std::vector<IndexType>* IndicesIn
+		std::vector<IndexType>* IndicesIn,
+		const bool& IsReverse
 	);
 };
 
@@ -29,19 +31,20 @@ inline void ModelHelper::CreateSphere(
 	std::vector<DirectX::XMFLOAT3>* VerticesIn,
 	std::vector<DirectX::XMFLOAT2>* UVCoordsIn,
 	std::vector<DirectX::XMFLOAT3>* NormalsIn,
-	std::vector<IndexType>* IndicesIn
+	std::vector<IndexType>* IndicesIn,
+	const bool& IsReverse
 )
 {
 	for (IndexType latitudeIdx = 0; latitudeIdx < SphereLevel; ++latitudeIdx)
 	{
 		const float& fLatitudeLow = DirectX::XM_PIDIV2 / SphereLevel * latitudeIdx;
 		const float& fLatitudeHigh = DirectX::XM_PIDIV2 / SphereLevel * (latitudeIdx + 1);
-		const float& fLatitudeLowTextureCord = (latitudeIdx / SphereLevel) / 2.f;
-		const float& fLatitudeHighTextureCord = ((latitudeIdx + 1) / SphereLevel) / 2.f;
+		const float& fLatitudeLowTextureCord = (static_cast<float>(latitudeIdx) / SphereLevel) / 2.f;
+		const float& fLatitudeHighTextureCord = (static_cast<float>(latitudeIdx + 1) / SphereLevel) / 2.f;
 
 		const IndexType usLatitudeOffset = (IndexType)VerticesIn->size();
 
-		for (IndexType longitudeIdx = 0; longitudeIdx <= (IndexType)SphereLevel * 2; ++longitudeIdx)
+		for (IndexType longitudeIdx = 0; longitudeIdx <= SphereLevel * 2; ++longitudeIdx)
 		{
 			const float& fLongitudeLow = DirectX::XM_2PI / (SphereLevel * 2.f) * longitudeIdx;
 			const float& fLongitudeTextureCord = longitudeIdx / (SphereLevel * 2.f);
@@ -73,7 +76,7 @@ inline void ModelHelper::CreateSphere(
 
 		if (IndicesIn != nullptr)
 		{
-			for (IndexType longitudeIdx = 0; longitudeIdx < (IndexType)SphereLevel * 2; ++longitudeIdx)
+			for (IndexType longitudeIdx = 0; longitudeIdx < SphereLevel * 2; ++longitudeIdx)
 			{
 				const IndexType& usLongitudeOffset = 4 * longitudeIdx + usLatitudeOffset;
 				IndicesIn->push_back(usLongitudeOffset + 0);
@@ -93,6 +96,10 @@ inline void ModelHelper::CreateSphere(
 		}
 	}
 
+	if (IsReverse)
+	{
+		std::reverse(IndicesIn->begin(), IndicesIn->end());
+	}
 }
 
 template<typename IndexType>
@@ -100,7 +107,8 @@ void ModelHelper::CreateCube(
 	std::vector<DirectX::XMFLOAT3>* VerticesIn,
 	std::vector<DirectX::XMFLOAT2>* UVCoordsIn,
 	std::vector<DirectX::XMFLOAT3>* NormalsIn,
-	std::vector<IndexType>* IndicesIn
+	std::vector<IndexType>* IndicesIn,
+	const bool& IsReverse
 )
 {
 	const DirectX::XMFLOAT3 CubeVertices[] = 
@@ -196,5 +204,10 @@ void ModelHelper::CreateCube(
 	if (IndicesIn != nullptr)
 	{
 		IndicesIn->assign(CubeIndices, CubeIndices + 36);
+
+		if (IsReverse)
+		{
+			std::reverse(IndicesIn->begin(), IndicesIn->end());
+		}
 	}
 }

@@ -13,5 +13,7 @@ SamplerState WrapSampler : register(s0);
 
 float4 main(EnvironmentActorVertexOutput Input) : SV_TARGET
 {
-    return HDRTexture.Sample(WrapSampler, Input.f2TexCoord);
+    float4 Color = clamp(Exposure * HDRTexture.Sample(WrapSampler, Input.f2TexCoord), 0.f, 1.f);
+    Color = pow(Color, 1.f / Gamma);
+    return Color;
 }

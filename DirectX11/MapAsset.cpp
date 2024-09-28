@@ -40,11 +40,12 @@ MapAsset::MapAsset(
 	if (!LoadAsFile)
 	{
 		EditorActorInstance = make_unique<EditorPawn>(this);
-		CurrentCamera = EditorActorInstance->GetCameraInstance();
-
 		EnvironmentActorInstance = make_unique<EnvironmentActor>(this);
 		BaseMeshAsset* BaseMeshInstance = AssetManagerCached->GetManagingBaseMesh("BaseSphere");
 		EnvironmentActorInstance->SetEnvironmentMeshAsset(BaseMeshInstance);
+
+		CurrentCamera = EditorActorInstance->GetCameraInstance();
+		SetEnvironmentActorByCamera();
 	}
 }
 
@@ -67,6 +68,16 @@ void MapAsset::AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> Ske
 	SkeletalMeshObjectIn->RelativePosition.x = PosXIn;
 	SkeletalMeshObjectIn->RelativePosition.y = PosYIn;
 	SkeletalMeshObjectIn->RelativePosition.z = PosZIn;
+}
+
+void MapAsset::SetEnvironmentActorByCamera()
+{
+	if (CurrentCamera != nullptr)
+	{
+		EnvironmentActorInstance->RelativeScale.x = CurrentCamera->FarZ * 0.95f;
+		EnvironmentActorInstance->RelativeScale.y = CurrentCamera->FarZ * 0.95f;
+		EnvironmentActorInstance->RelativeScale.z = CurrentCamera->FarZ * 0.95f;
+	}
 }
 
 void MapAsset::Update(const float& DeltaTimeIn)
@@ -149,11 +160,12 @@ void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	EditorActorInstance = make_unique<EditorPawn>(this);
 	EnvironmentActorInstance = make_unique<EnvironmentActor>(this);
-	
+
 	EditorActorInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
 	EnvironmentActorInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
 
 	CurrentCamera = EditorActorInstance->GetCameraInstance();
+	SetEnvironmentActorByCamera();
 
 	size_t RootPlaceablesCount;
 	fread(&RootPlaceablesCount, sizeof(size_t), 1, FileIn);

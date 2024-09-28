@@ -145,6 +145,21 @@ void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& V
             case EAssetType::EXRTexture:
                 Image(AssetFile->GetThumbnailSRV(), UISize::FileSize);
                 break;
+            case EAssetType::DDSTexture:
+            {
+                ID3D11ShaderResourceView* SRV = AssetFile->GetThumbnailSRV();
+                D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+                SRV->GetDesc(&SRVDesc);
+                if (SRVDesc.ViewDimension == D3D11_SRV_DIMENSION_TEXTURE2D)
+                {
+                    Image(SRV, UISize::FileSize);
+                }
+                else
+                {
+                    Image(nullptr, UISize::FileSize);
+                }
+                break;
+            }
             default:
                 Image(nullptr, UISize::FileSize);
                 break;

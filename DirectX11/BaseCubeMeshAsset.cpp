@@ -12,7 +12,8 @@ BaseCubeMeshAsset::BaseCubeMeshAsset()
 		&PositionsPerLOD[0].Vertices,
 		&UVTexturesPerLOD[0].Vertices,
 		&NormalsPerLOD[0].Vertices,
-		&IndicesPerLOD[0].Indices
+		&IndicesPerLOD[0].Indices,
+		true
 	);
 	Initialize();
 }

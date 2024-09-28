@@ -14,31 +14,108 @@ EnvironementActorDrawer::EnvironementActorDrawer(EnvironmentActor* EnvironmentAc
 
 void EnvironementActorDrawer::DrawInformation()
 {
-    SeparatorText("Environment Actor");
+    DrawBackgroundEXRTexture();
+    DrawIBLTextures();
+    DrawToneMappingConstant();
+}
 
+void EnvironementActorDrawer::DrawBackgroundEXRTexture()
+{
+    SeparatorText("Background Texture");
     const std::unordered_map<std::string, std::shared_ptr<EXRTextureAsset>>& ManagingEXRTextures = AssetManagerCached->GetManagingEXRTextures();
     EXRTextureAsset* EXRTextureAssetInstance = ObjectCached->GetEnvironmentBackgroundEXRTextureAsset();
+    shared_ptr<EXRTextureAsset> SelectedEXRTexture = DrawAndSelectNormalTexture(
+        ManagingEXRTextures, EXRTextureAssetInstance,
+        "Background Texture Asset(EXR)", "Choose Background Texture Asset"
+    );
+    if (SelectedEXRTexture != nullptr) ObjectCached->SetEnvironmentBackgroundEXRTextureAsset(SelectedEXRTexture);
+}
 
-    if (EXRTextureAssetInstance != nullptr)
+void EnvironementActorDrawer::DrawIBLTextures()
+{
+    SeparatorText("IBL Texture");
+    const std::unordered_map<std::string, std::shared_ptr<DDSTextureAsset>>& ManagingDDSTextures = AssetManagerCached->GetManagingDDSTextures();
+
+    DDSTextureAsset* DDSSpecularTextureAssetInstance = ObjectCached->GetEnvironmentSpecularDDSTextureAsset();
+    DDSTextureAsset* DDSDiffuseTextureAssetInstance = ObjectCached->GetEnvironmentDiffuseDDSTextureAsset();
+    DDSTextureAsset* DDSBRDFTextureAssetInstance = ObjectCached->GetEnvironmentBRDFDDSTextureAsset();
+
+    shared_ptr<DDSTextureAsset> SelectedSpecularTexture = DrawAndSelectNormalTexture(
+        ManagingDDSTextures, DDSSpecularTextureAssetInstance,
+        "Specular Texture Asset(DDS)", "Choose Specular Texture Asset"
+    );
+    shared_ptr<DDSTextureAsset> SelectedDiffuseTexture = DrawAndSelectNormalTexture(
+        ManagingDDSTextures, DDSDiffuseTextureAssetInstance,
+        "Diffuse Texture Asset(DDS)", "Choose Diffuse Texture Asset"
+    );
+    shared_ptr<DDSTextureAsset> SelectedBRDFTexture = DrawAndSelectNormalTexture(
+        ManagingDDSTextures, DDSBRDFTextureAssetInstance,
+        "BRDF Texture Asset(DDS)", "Choose BRDF Texture Asset"
+    );
+
+    if (SelectedSpecularTexture != nullptr) ObjectCached->SetEnvironmentSpecularDDSTextureAsset(SelectedSpecularTexture);
+    if (SelectedDiffuseTexture != nullptr) ObjectCached->SetEnvironmentDiffuseDDSTextureAsset(SelectedDiffuseTexture);
+    if (SelectedBRDFTexture != nullptr) ObjectCached->SetEnvironmentBRDFDDSTextureAsset(SelectedBRDFTexture);
+}
+
+void EnvironementActorDrawer::DrawToneMappingConstant()
+{
+    SeparatorText("Tone Mapping");
+    SHDRToneMappingConstant* HDRToneMappingConstant = ObjectCached->GetPointerHDRToneMappingConstant();
+    DragFloat("Exposure", &HDRToneMappingConstant->Exposure, 0.01f, 0.f, 5.f);
+    DragFloat("Gamma", &HDRToneMappingConstant->Gamma, 0.01f, 0.f, 5.f);
+}
+
+
+template<typename T>
+inline shared_ptr<T> EnvironementActorDrawer::DrawAndSelectNormalTexture(
+    const unordered_map<string, shared_ptr<T>>& ManagingTexturesIn,
+    T* CurrentSelected, const char* StrId, const char* PreviewText
+)
+{
+    shared_ptr<T> result = nullptr;
+
+    if (CurrentSelected != nullptr)
     {
-        ImGui::Image(EXRTextureAssetInstance->GetSRV(), UISize::FileSize);
+        ID3D11ShaderResourceView* SRV = CurrentSelected->GetSRV();
+        D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+        SRV->GetDesc(&SRVDesc);
+        if (SRVDesc.ViewDimension == D3D11_SRV_DIMENSION_TEXTURE2D)
+        {
+            ImGui::Image(SRV, UISize::FileSize);
+        }
+        else
+        {
+            ImGui::Image(nullptr, UISize::FileSize);
+        }
     }
     else
     {
-        ColorButton("EXRTextureAseetThumbnail", UIColor::GBlack, NULL, UISize::FileSize);
+        ImGui::Image(nullptr, UISize::FileSize);
     }
+
     SameLine();
 
-    if (BeginCombo("Background Texture Asset(EXR)", EXRTextureAssetInstance != nullptr ? EXRTextureAssetInstance->GetAssetName().c_str() : "Choose Background Texture Asset"))
+    BeginGroup();
     {
-        for (auto& ManagingEXRTexture : ManagingEXRTextures)
+        Text(StrId);
+        PushID(PreviewText);
         {
-            if (Selectable(ManagingEXRTexture.first.c_str()))
+            if (BeginCombo("", CurrentSelected != nullptr ? CurrentSelected->GetAssetName().c_str() : PreviewText))
             {
-                ObjectCached->SetEnvironmentBackgroundEXRTextureAsset(ManagingEXRTexture.second);
+                for (auto& ManagingTexture : ManagingTexturesIn)
+                {
+                    if (Selectable(ManagingTexture.first.c_str()))
+                    {
+                        result = ManagingTexture.second;
+                    }
+                }
+
+                EndCombo();
             }
         }
-
-        EndCombo();
+        PopID();
     }
+    EndGroup();
+    return result;
 }

@@ -63,7 +63,7 @@ shared_ptr<Debugable> OBBObject::CreateDebugBoxObject(ID3D11Device* DeviceIn)
 	std::vector<XMFLOAT3>& VerticesIn = Result->Vertices;
 	std::vector<uint16_t>& IndicesIn = Result->Indices;
 
-	ModelHelper::CreateCube(&VerticesIn, nullptr, nullptr, &IndicesIn);
+	ModelHelper::CreateCube(&VerticesIn, nullptr, nullptr, &IndicesIn, false);
 
 	Result->Initialize();
 	return Result;

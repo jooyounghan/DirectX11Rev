@@ -19,11 +19,13 @@ using namespace std;
 const char* EnvironmentActor::EnvironmentActorIdentifier = "Environment Actor";
 
 EnvironmentActor::EnvironmentActor(MapAsset* MapAssetInstance)
-	: AActor(MapAssetInstance), Exposure(HDRToneMappingConstant.Exposure), Gamma(HDRToneMappingConstant.Gamma)
+	: AActor(MapAssetInstance)
 {
 	static size_t EnvironmentActorCount = 0;
 
 	AutoZeroMemory(HDRToneMappingConstant);
+	HDRToneMappingConstant.Exposure = 1.f;
+	HDRToneMappingConstant.Gamma = 1.f;
 
 	EnvironmentActorCount++;
 	ObjectName = EnvironmentActorIdentifier + to_string(EnvironmentActorCount);
@@ -93,9 +95,6 @@ void EnvironmentActor::Render()
 
 void EnvironmentActor::Update(const float& DeltaTimeIn)
 {
-	RelativeScale.x = 1000.f;
-	RelativeScale.y = 1000.f;
-	RelativeScale.z = 1000.f;
 	AActor::Update(DeltaTimeIn);
 	HDRToneMappingConstantBuffer.Upload(HDRToneMappingConstant);
 }
@@ -109,6 +108,9 @@ void EnvironmentActor::OnSerializeFromMap(FILE* FileIn)
 	AssetNameSerializeHelper(EnvironmentSpecularDDSTextureAsset, FileIn);
 	AssetNameSerializeHelper(EnvironmentDiffuseDDSTextureAsset, FileIn);
 	AssetNameSerializeHelper(EnvironmentBRDFDDSTextureAsset, FileIn);
+
+	fwrite(&HDRToneMappingConstant.Exposure, sizeof(float), 1, FileIn);
+	fwrite(&HDRToneMappingConstant.Gamma, sizeof(float), 1, FileIn);
 }
 
 void EnvironmentActor::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
@@ -128,10 +130,14 @@ void EnvironmentActor::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManag
 	DeserializeString(EnvironmentBRDFDDSTextureAssetName, FileIn);
 
 	EnvironmentMeshAsset = AssetManagerIn->GetManagingBaseMesh(EnvironmentMeshAssetName);
-	EnvironmentBackgroundEXRTextureAsset = AssetManagerIn->GetManagingEXRTexture(EnvironmentMeshAssetName);
-	EnvironmentSpecularDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentMeshAssetName);
-	EnvironmentDiffuseDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentMeshAssetName);
-	EnvironmentBRDFDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentMeshAssetName);
+	EnvironmentBackgroundEXRTextureAsset = AssetManagerIn->GetManagingEXRTexture(EnvironmentBackgroundEXRTextureAssetName);
+	EnvironmentSpecularDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentSpecularDDSTextureAssetName);
+	EnvironmentDiffuseDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentDiffuseDDSTextureAssetName);
+	EnvironmentBRDFDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentBRDFDDSTextureAssetName);
+
+
+	fread(&HDRToneMappingConstant.Exposure, sizeof(float), 1, FileIn);
+	fread(&HDRToneMappingConstant.Gamma, sizeof(float), 1, FileIn);
 }
 
 template<typename T>
@@ -139,4 +145,6 @@ void EnvironmentActor::AssetNameSerializeHelper(T AssetIn, FILE* FileIn)
 {
 	const string AssetName = AssetIn != nullptr ? AssetIn->GetAssetName() : "";
 	SerializeString(AssetName, FileIn);
+
+
 }

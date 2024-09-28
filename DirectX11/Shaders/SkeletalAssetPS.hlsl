@@ -1,12 +1,13 @@
 #include "SkeletalAssetHeader.hlsli"
 
-Texture2D TestTexture : register(t0);
-TextureCube CubeTexture : register(t1);
+TextureCube SpecularTexture : register(t0);
+TextureCube DiffuseTexture : register(t1);
+Texture2D BRDFTexture : register(t2);
 
 SamplerState WrapSampler : register(s0);
 SamplerState ClampSampler : register(s1);
 
 float4 main(BasicVertexOutput Input) : SV_TARGET
 {
-    return CubeTexture.Sample(WrapSampler, Input.f3ModelNormal);
+    return SpecularTexture.Sample(WrapSampler, Input.f3ModelNormal);
 }

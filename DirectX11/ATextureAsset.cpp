@@ -59,7 +59,7 @@ D3D11_SHADER_RESOURCE_VIEW_DESC ATextureAsset::CreateSRV(const D3D11_TEXTURE2D_D
 
 	if (TextureDescIn.MiscFlags & D3D11_RESOURCE_MISC_TEXTURECUBE)
 	{
-		if (TextureDescIn.ArraySize > 1)
+		if (TextureDescIn.ArraySize / 6 > 1)
 		{
 			SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
 			SRVDesc.TextureCubeArray.NumCubes = ArraySize / 6;

@@ -62,6 +62,9 @@ public:
 	void AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticMeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
 	void AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
 
+private:
+	void SetEnvironmentActorByCamera();
+
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
 
