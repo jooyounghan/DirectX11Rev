@@ -12,7 +12,10 @@ AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
 {
     RootDirectory.Name = "Assets";
     RootDirectory.Directory = ".\\Assets\\";
-    TravelAssetDirectories(RootDirectory);
+
+    OnAssetAdded = bind(&AssetManagerWindow::RefreshAssetDirectories, this);
+    AssetManagerCached->AssetAddedEvent += OnAssetAdded;
+    RefreshAssetDirectories();
 }
 
 AssetManagerWindow::~AssetManagerWindow()
@@ -21,8 +24,8 @@ AssetManagerWindow::~AssetManagerWindow()
 
 void AssetManagerWindow::RenderWindow()
 {
-
 	Begin("Asset Manager");
+
     RenderAssetDirectoryStructure();
     SameLine();
     RenderCurrentDirectoryAsset();
@@ -35,27 +38,6 @@ void AssetManagerWindow::RenderAssetDirectoryStructure()
     BeginChild("Directories", ImVec2(RegionAvail.x * 0.2f, RegionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
     RenderAssetDirectories(RootDirectory);
     EndChild();
-}
-
-void AssetManagerWindow::TravelAssetDirectories(DirectorySet& DirectorySetIn)
-{
-    path Directory = DirectorySetIn.Directory;
-    if (!exists(Directory) && create_directories(Directory)) {/* Do Nothing But Make Directory */ };
-
-    for (const auto& entry : directory_iterator(Directory))
-    {
-        if (entry.is_directory())
-        {
-            const path& EntryPath = entry.path();
-            vector<DirectorySet>& ChildDirectories = DirectorySetIn.ChildrenDirectories;
-            ChildDirectories.emplace_back(DirectorySet());
-
-            DirectorySet& CurrentDirectory = ChildDirectories[ChildDirectories.size() - 1];
-            CurrentDirectory.Name = EntryPath.filename().string();
-            CurrentDirectory.Directory = EntryPath.string();
-            TravelAssetDirectories(CurrentDirectory);
-        }
-    }
 }
 
 void AssetManagerWindow::RenderAssetDirectories(DirectorySet& DirectorySetIn)
@@ -94,11 +76,6 @@ void AssetManagerWindow::RenderAssetDirectories(DirectorySet& DirectorySetIn)
     }
 }
 
-void AssetManagerWindow::RefreshAssetDirectories()
-{
-    TravelAssetDirectories(RootDirectory);
-}
-
 void AssetManagerWindow::RenderCurrentDirectoryAsset()
 {
     ImVec2 RegionAvail = GetContentRegionAvail();
@@ -119,6 +96,33 @@ void AssetManagerWindow::RenderCurrentDirectoryAsset()
         }
     }
     EndChild();
+}
+
+void AssetManagerWindow::RefreshAssetDirectories()
+{
+    SelectedDirectory = nullptr;
+    RootDirectory.ChildrenDirectories.clear();
+    TravelAssetDirectories(RootDirectory);
+}
+
+void AssetManagerWindow::TravelAssetDirectories(DirectorySet& DirectorySetIn)
+{
+    path Directory = DirectorySetIn.Directory;
+    if (!exists(Directory) && create_directories(Directory)) {/* Do Nothing But Make Directory */ };
+
+    for (const auto& entry : directory_iterator(Directory))
+    {
+        if (entry.is_directory())
+        {
+            const path& EntryPath = entry.path();
+            vector<DirectorySet>& ChildDirectories = DirectorySetIn.ChildrenDirectories;
+            ChildDirectories.emplace_back(DirectorySet());
+            DirectorySet& CurrentDirectory = ChildDirectories[ChildDirectories.size() - 1];
+            CurrentDirectory.Name = EntryPath.filename().string();
+            CurrentDirectory.Directory = EntryPath.string();
+            TravelAssetDirectories(CurrentDirectory);
+        }
+    }
 }
 
 void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& VisibleWidthIn)

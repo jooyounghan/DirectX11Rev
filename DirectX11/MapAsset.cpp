@@ -25,19 +25,20 @@
 
 #include "Camera.h"
 
+
 using namespace std;
 using namespace DirectX;
 
 MapAsset::MapAsset(
 	const std::string& MapNameIn,
 	AssetManager* AssetManagerIn,
-	bool LoadAsFile
+	bool LoadFromAsset
 )
 	: 
 	AssetManagerCached(AssetManagerIn),
-	AAssetFile(LoadAsFile ? MapNameIn : MapNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Map)], EAssetType::Map)
+	AAssetFile(LoadFromAsset ? MapNameIn : MapNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Map)], EAssetType::Map)
 {
-	if (!LoadAsFile)
+	if (!LoadFromAsset)
 	{
 		EditorActorInstance = make_unique<EditorPawn>(this);
 		EnvironmentActorInstance = make_unique<EnvironmentActor>(this);
@@ -129,9 +130,10 @@ void MapAsset::AcceptGui(IGuiModelVisitor* GuiVisitor)
 	GuiVisitor->Visit(this);
 }
 
-void MapAsset::Serialize(const std::string& OutputAdditionalPath)
+string MapAsset::Serialize()
 {
-	FILE* OutputAssetFile = DefaultOpenFile(OutputAdditionalPath);
+	FILE* OutputAssetFile;
+	string OutputAssetFilePath = DefaultOpenFileHelper(MapAssetOutPath, OutputAssetFile);
 	if (OutputAssetFile != nullptr)
 	{
 		SerializeHeader(OutputAssetFile);
@@ -153,7 +155,9 @@ void MapAsset::Serialize(const std::string& OutputAdditionalPath)
 				SerializeChildrenObjects(RootPlaceable.get(), OutputAssetFile);
 		}
 		fclose(OutputAssetFile);
+		return OutputAssetFilePath;
 	}
+	return string();
 }
 
 void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
@@ -299,23 +303,6 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 			DeserializeParentObject(AddedMeshObject, FileIn, AssetManagerIn);
 		}
 	}
-}
-
-
-FILE* MapAsset::DefaultOpenFile(const std::string& OutputAdditionalPath)
-{
-	const string OutputPath = OutputAdditionalPath.empty() ?
-		MapAssetOutPath : MapAssetOutPath + OutputAdditionalPath;
-
-	const string OutputFullPath = OutputPath + AssetName + AssetExtension;
-
-	CreateDirectoryA(OutputPath.c_str(), NULL);
-
-	FILE* OutputAssetFile = nullptr;
-	errno_t result = fopen_s(&OutputAssetFile, OutputFullPath.c_str(), "wb");
-
-	return OutputAssetFile;
-
 }
 
 void MapAsset::PlaceableDeleteHelper(APlaceableObject* PlaceableObjectIn)

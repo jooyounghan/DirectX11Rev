@@ -57,8 +57,8 @@ void Bone::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 	fread(&(OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
 }
 
-BoneAsset::BoneAsset(const std::string& AssetNameIn, bool LoadAsFile)
-	: AAssetFile(LoadAsFile ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Bone)], EAssetType::Bone)
+BoneAsset::BoneAsset(const std::string& AssetNameIn, bool LoadFromAsset)
+	: AAssetFile(LoadFromAsset ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Bone)], EAssetType::Bone)
 {
 }
 
@@ -107,9 +107,10 @@ void BoneAsset::TraverseUpBone()
 	}
 }
 
-void BoneAsset::Serialize(const std::string& OutputAdditionalPath)
+string BoneAsset::Serialize()
 {
-	FILE* OutputAssetFile = DefaultOpenFile(OutputAdditionalPath);
+	FILE* OutputAssetFile = nullptr;
+	string OutputAssetFilePath = DefaultOpenFileHelper(BoneAssetOutPath, OutputAssetFile);
 
 	if (OutputAssetFile != nullptr)
 	{
@@ -147,7 +148,9 @@ void BoneAsset::Serialize(const std::string& OutputAdditionalPath)
 		fwrite(RootBone->BoneName.c_str(), sizeof(char), RootBoneNameCount, OutputAssetFile);
 
 		fclose(OutputAssetFile);
+		return OutputAssetFilePath;
 	}
+	return string();
 }
 
 void BoneAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)

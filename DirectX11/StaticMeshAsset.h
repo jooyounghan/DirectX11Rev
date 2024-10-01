@@ -1,10 +1,12 @@
 #pragma once
 #include "ANBTMeshAsset.h"
 
+constexpr const char* StaticMeshAssetOutPath = ".\\Assets\\StaticMesh\\";
+
 class StaticMeshAsset : public ANBTMeshAsset
 {
 public:
-	StaticMeshAsset(const std::string& AssetNameIn, bool LoadAsFile);
+	StaticMeshAsset(const std::string& AssetNameIn, bool LoadFromAsset);
 	virtual ~StaticMeshAsset();
 
 public:
@@ -16,6 +18,6 @@ public:
 	virtual void Initialize() override;
 
 public:
-	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
+	virtual std::string Serialize() override;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };

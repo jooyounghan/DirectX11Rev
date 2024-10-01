@@ -4,8 +4,8 @@
 using namespace std;
 
 
-StaticMeshAsset::StaticMeshAsset(const string& AssetNameIn, bool LoadAsFile)
-	: ANBTMeshAsset(LoadAsFile ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::StaticMesh)], EAssetType::StaticMesh)
+StaticMeshAsset::StaticMeshAsset(const string& AssetNameIn, bool LoadFromAsset)
+	: ANBTMeshAsset(LoadFromAsset ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::StaticMesh)], EAssetType::StaticMesh)
 {
 }
 
@@ -51,10 +51,10 @@ void StaticMeshAsset::Initialize()
 	AMeshAsset::Initialize();
 }
 
-
-void StaticMeshAsset::Serialize(const string& OutputAdditionalPath)
+string StaticMeshAsset::Serialize()
 {
-	FILE* OutputAssetFile = DefaultOpenFile(OutputAdditionalPath);
+	FILE* OutputAssetFile;
+	string OutputAssetFilePath = DefaultOpenFileHelper(StaticMeshAssetOutPath, OutputAssetFile);
 
 	if (OutputAssetFile != nullptr)
 	{
@@ -62,7 +62,9 @@ void StaticMeshAsset::Serialize(const string& OutputAdditionalPath)
 		SerializeBaseMeshData(OutputAssetFile);
 		
 		fclose(OutputAssetFile);
+		return OutputAssetFilePath;
 	}
+	return string();
 }
 
 void StaticMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)

@@ -55,8 +55,11 @@ void DefaultController::ChangeView(const float& NdcX, const float& NdcY)
 		const float& DeltaNdcX = NdcXRef - NdcX;
 		const float& DeltaNdcY = NdcYRef - NdcY;
 
-		PossesdPawn->RotateYaw(-DeltaNdcX * AngleSpeed);
-		PossesdPawn->RotatePitch(-DeltaNdcY * AngleSpeed);
+		if (PossesdPawn != nullptr)
+		{
+			PossesdPawn->RotateYaw(-DeltaNdcX * AngleSpeed);
+			PossesdPawn->RotatePitch(-DeltaNdcY * AngleSpeed);
+		}
 
 		NdcXRef = NdcX;
 		NdcYRef = NdcY;

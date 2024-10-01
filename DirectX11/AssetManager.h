@@ -1,11 +1,13 @@
 #pragma once
 #include "Debugable.h"
+#include "Delegation.h"
+#include "AssetPriorityManager.h"
 
 #include "DirectXMath.h"
 
-#include <string>
 #include <unordered_map>
-#include <list>
+#include <filesystem>
+#include <string>
 #include <memory>
 #include <stack>
 
@@ -40,6 +42,8 @@ enum class EFileType
 	DDSTextureFile,
 };
 
+typedef std::function<void()> AssetAddedDelegate;
+
 class AssetManager
 {
 public:
@@ -47,11 +51,14 @@ public:
 	~AssetManager();
 
 public:
-	void LoadAssetFile(const std::string& AssetPathIn);
+	Delegation<> AssetAddedEvent;
+
+public:
+	void LoadAsset(const std::string& AssetPathIn);
 
 private:
 	template<typename T, typename ...Args>
-	void LoadAssetFileHelper(
+	void LoadAssetHelper(
 		FILE* FileIn,
 		std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer,
 		const std::string& AssetName,
@@ -59,21 +66,24 @@ private:
 	);
 
 public:
-	void LoadFile(const std::string& FilePathIn);
+	void LoadAssetFromFile(const std::string& FilePathIn);
 
 private:
 	static std::unordered_map<std::string, EFileType> FileExtensionToType;
+	
+private:
+	AssetPriorityManager AssetPriorityManagerInstance;
 
 private:
-	void LoadModelFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
-	void LoadNormalTextureFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
-	void LoadEXRTextureFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
-	void LoadDDSTextureFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
+	void LoadModelAssetFromFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
+	void LoadNormalTextureAssetFromFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
+	void LoadEXRTextureAssetFromFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
+	void LoadDDSTextureAssetFromFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
 
 private:
-	void LoadMesh(bool IsGltf, const std::string AssetName, const aiScene* const Scene);
-	void LoadMaterial(const std::string AssetName, const aiScene* const Scene);
-	void LoadAnimation(const std::string AssetName, const aiScene* const Scene);
+	void LoadMeshAssetFromFile(bool IsGltf, const std::string AssetName, const aiScene* const Scene);
+	void LoadMaterialAssetFromFile(const std::string AssetName, const aiScene* const Scene);
+	void LoadAnimationAssetFromFile(const std::string AssetName, const aiScene* const Scene);
 
 private:
 	bool HasBone(const aiScene* const Scene);
@@ -102,7 +112,7 @@ private:
 
 private:
 	template<typename T>
-	void AddToManagingContainer(
+	void SerailizeAndAddToContainer(
 		std::unordered_map<std::string, T>& ManagingContainer,
 		T& AddedAsset
 	);
@@ -244,5 +254,6 @@ private:
 
 private:
 	void PreloadAssets();
+	void TraverseDirectory(const std::filesystem::path& PathIn);
 };
 

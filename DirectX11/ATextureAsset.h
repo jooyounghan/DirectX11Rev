@@ -2,6 +2,8 @@
 #include "AAssetFile.h"
 #include <vector>
 
+constexpr const char* TextureAssetOutPath = ".\\Assets\\Texture\\";
+
 class ATextureAsset : public AAssetFile
 {
 public:
@@ -58,7 +60,7 @@ public:
 	) = 0;
 
 public:
-	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
+	virtual std::string Serialize() override;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 
 };

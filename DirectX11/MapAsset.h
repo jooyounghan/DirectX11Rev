@@ -25,13 +25,15 @@ class Camera;
 class StaticMeshAsset;
 class SkeletalMeshAsset;
 
+constexpr const char* MapAssetOutPath = ".\\Assets\\Maps\\";
+
 class MapAsset : public AAssetFile, public IUpdatable, public IRenderable, public IGuiModelAcceptor
 {
 public:
 	MapAsset(
 		const std::string& MapNameIn, 
 		AssetManager* AssetManagerIn, 
-		bool LoadAsFile
+		bool LoadFromAsset
 	);
 	virtual ~MapAsset();
 
@@ -75,7 +77,7 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 
 public:
-	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
+	virtual std::string Serialize() override;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 
 private:
@@ -85,9 +87,6 @@ private:
 private:
 	template<typename T>
 	void DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, AssetManager* AssetManagerIn);
-
-public:
-	virtual FILE* DefaultOpenFile(const std::string& OutputAdditionalPath);
 
 public:
 	template<typename T, typename ...Args>

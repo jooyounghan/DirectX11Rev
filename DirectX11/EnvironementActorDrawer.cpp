@@ -73,8 +73,6 @@ inline shared_ptr<T> EnvironementActorDrawer::DrawAndSelectNormalTexture(
     T* CurrentSelected, const char* StrId, const char* PreviewText
 )
 {
-    shared_ptr<T> result = nullptr;
-
     if (CurrentSelected != nullptr)
     {
         ID3D11ShaderResourceView* SRV = CurrentSelected->GetSRV();
@@ -96,26 +94,7 @@ inline shared_ptr<T> EnvironementActorDrawer::DrawAndSelectNormalTexture(
 
     SameLine();
 
-    BeginGroup();
-    {
-        Text(StrId);
-        PushID(PreviewText);
-        {
-            if (BeginCombo("", CurrentSelected != nullptr ? CurrentSelected->GetAssetName().c_str() : PreviewText))
-            {
-                for (auto& ManagingTexture : ManagingTexturesIn)
-                {
-                    if (Selectable(ManagingTexture.first.c_str()))
-                    {
-                        result = ManagingTexture.second;
-                    }
-                }
+    shared_ptr<T> Result = SelectAsset(ManagingTexturesIn, CurrentSelected, StrId, PreviewText);
 
-                EndCombo();
-            }
-        }
-        PopID();
-    }
-    EndGroup();
-    return result;
+    return Result;
 }

@@ -1,10 +1,9 @@
 #pragma once
 #include "IWindow.h"
-#include <vector>
-#include <string>
-#include <filesystem>
+#include "AssetManager.h"
 
-class AssetManager;
+#include <vector>
+#include <filesystem>
 
 struct DirectorySet
 {
@@ -31,14 +30,17 @@ private:
 private:
 	DirectorySet RootDirectory;
 	DirectorySet* SelectedDirectory = nullptr;
-	void TravelAssetDirectories(DirectorySet& DirectorySetIn);
 	void RenderAssetDirectories(DirectorySet& DirectorySetIn);
 
-public:
-	void RefreshAssetDirectories();
+protected:
+	AssetAddedDelegate OnAssetAdded;
 
 private:
 	void RenderCurrentDirectoryAsset();
 	void RenderAssetFile(const std::filesystem::path& AssetPathIn, const float& VisibleWidthIn);
+
+private:
+	void RefreshAssetDirectories();
+	void TravelAssetDirectories(DirectorySet& DirectorySetIn);
 };
 

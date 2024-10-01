@@ -1,10 +1,6 @@
 #pragma once
 #include "IInformationDrawer.h"
 
-#include <memory>
-#include <unordered_map>
-#include <string>
-
 class EnvironmentActor;
 class AssetManager;
 

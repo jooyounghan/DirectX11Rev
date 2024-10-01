@@ -82,9 +82,10 @@ void SkeletalMeshObject::Render()
 		DDSTextureAsset* SpecularDDS = CurrentEnvironment->GetEnvironmentSpecularDDSTextureAsset();
 		DDSTextureAsset* DiffuseDDS = CurrentEnvironment->GetEnvironmentDiffuseDDSTextureAsset();
 		DDSTextureAsset* BRDFDDS = CurrentEnvironment->GetEnvironmentBRDFDDSTextureAsset();
-		if (SpecularDDS != nullptr) PSSRVs.push_back(SpecularDDS->GetSRV());
-		if (DiffuseDDS != nullptr) PSSRVs.push_back(DiffuseDDS->GetSRV());
-		if (BRDFDDS != nullptr) PSSRVs.push_back(BRDFDDS->GetSRV());
+	
+		PSSRVs.push_back(SpecularDDS != nullptr ? SpecularDDS->GetSRV() : nullptr);
+		PSSRVs.push_back(DiffuseDDS != nullptr ? DiffuseDDS->GetSRV() : nullptr);
+		PSSRVs.push_back(BRDFDDS != nullptr ? BRDFDDS->GetSRV() : nullptr);
 
 
 #pragma region SkeletalMeshObjectPSOCached

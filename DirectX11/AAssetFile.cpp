@@ -1,7 +1,8 @@
 #include "AAssetFile.h"
-#include <stdio.h>
+#include <filesystem>
 
 using namespace std;
+using namespace filesystem;
 
 unordered_map<EAssetType, string> AAssetFile::AssetTypeToSuffix
 {
@@ -64,19 +65,16 @@ AAssetFile::~AAssetFile()
 {
 }
 
-FILE* AAssetFile::DefaultOpenFile(const std::string& OutputAdditionalPath)
+string AAssetFile::DefaultOpenFileHelper(const char* AssetFilePath, FILE*& FileOut)
 {
-	const string OutputPath = OutputAdditionalPath.empty() ?
-		AssetOutPath : AssetOutPath + OutputAdditionalPath;
+	path AssetPath = path(AssetFilePath);
 
-	const string OutputFullPath = OutputPath + AssetName + AssetExtension;
+	if (!exists(AssetPath) && create_directories(AssetPath)) {/* Do Nothing But Make Directory */ };
 
-	CreateDirectoryA(OutputPath.c_str(), NULL);
+	const string OutputFullPath = AssetFilePath + AssetName + AssetExtension;
+	errno_t result = fopen_s(&FileOut, OutputFullPath.c_str(), "wb");
 
-	FILE* OutputAssetFile = nullptr;
-	errno_t result = fopen_s(&OutputAssetFile, OutputFullPath.c_str(), "wb");
-
-	return OutputAssetFile;
+	return OutputFullPath;
 }
 
 void AAssetFile::SerializeHeader(FILE* FileIn)

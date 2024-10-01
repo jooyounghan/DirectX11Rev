@@ -6,8 +6,8 @@
 
 using namespace std;
 
-SkeletalMeshAsset::SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadAsFile)
-	: ANBTMeshAsset(LoadAsFile ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::SkeletalMesh)], EAssetType::SkeletalMesh)
+SkeletalMeshAsset::SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadFromAsset)
+	: ANBTMeshAsset(LoadFromAsset ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::SkeletalMesh)], EAssetType::SkeletalMesh)
 {
 }
 
@@ -72,10 +72,10 @@ void SkeletalMeshAsset::Initialize()
 	}	
 }
 
-void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
+string SkeletalMeshAsset::Serialize()
 {
-	FILE* OutputAssetFile = DefaultOpenFile(OutputAdditionalPath);
-
+	FILE* OutputAssetFile;
+	string OutputAssetFilePath = DefaultOpenFileHelper(SkeletalMeshAssetOutPath, OutputAssetFile);
 	if (OutputAssetFile != nullptr)
 	{
 		SerializeHeader(OutputAssetFile);
@@ -93,7 +93,9 @@ void SkeletalMeshAsset::Serialize(const std::string& OutputAdditionalPath)
 		SerializeBaseMeshData(OutputAssetFile);
 
 		fclose(OutputAssetFile);
+		return OutputAssetFilePath;
 	}
+	return string();
 }
 
 void SkeletalMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)

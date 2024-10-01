@@ -147,6 +147,7 @@
     <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="APawn.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
+    <ClCompile Include="AssetPriorityManager.cpp" />
     <ClCompile Include="ATextureAsset.cpp" />
     <ClCompile Include="BaseCubeMeshAsset.cpp" />
     <ClCompile Include="BaseMeshAsset.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
     <ClInclude Include="AScratchTextureAsset.h" />
+    <ClInclude Include="AssetPriorityManager.h" />
     <ClInclude Include="ATextureAsset.h" />
     <ClInclude Include="BaseCubeMeshAsset.h" />
     <ClInclude Include="BaseMeshAsset.h" />
@@ -232,6 +234,7 @@
     <ClInclude Include="DDSTextureAsset.h" />
     <ClInclude Include="DefaultController.h" />
     <ClInclude Include="DefineInput.h" />
+    <ClInclude Include="Delegation.h" />
     <ClInclude Include="EditorPawn.h" />
     <ClInclude Include="ABoundingObject.h" />
     <ClInclude Include="AssetManagerWindow.h" />

@@ -35,7 +35,6 @@ enum class EAssetType
 };
 
 constexpr const char* AssetOutPath = ".\\Assets\\";
-constexpr const char* MapAssetOutPath = ".\\Assets\\Maps\\";
 constexpr const char* AssetExtension = ".Asset";
 
 class AAssetFile : public ISerializable
@@ -61,11 +60,11 @@ protected:
 	MakeComPtrGetter(ThumbnailSRV);
 
 public:
-	virtual void Serialize(const std::string& OutputAdditionalPath = "") = 0;
+	virtual std::string Serialize() = 0;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 
-public:
-	virtual FILE* DefaultOpenFile(const std::string& OutputAdditionalPath);
+protected:
+	std::string DefaultOpenFileHelper(const char* AssetFilePath, FILE*& FileOut);
 	void SerializeHeader(FILE* FileIn);
 };
 

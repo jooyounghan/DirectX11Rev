@@ -271,6 +271,9 @@
     <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper">
       <UniqueIdentifier>{acaedad8-b7e5-4e72-93f0-3f058931f28c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Delegation">
+      <UniqueIdentifier>{f0e008d7-fe33-433a-914b-d2849a12ead8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -506,6 +509,9 @@
     </ClCompile>
     <ClCompile Include="EnvironementActorDrawer.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetPriorityManager.cpp">
+      <Filter>소스 파일\Asset</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -820,6 +826,12 @@
     </ClInclude>
     <ClInclude Include="IRenderable.h">
       <Filter>헤더 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Delegation.h">
+      <Filter>헤더 파일\Delegation</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetPriorityManager.h">
+      <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,10 +3,12 @@
 
 class BoneAsset;
 
+constexpr const char* SkeletalMeshAssetOutPath = ".\\Assets\\SkeletalMesh\\";
+
 class SkeletalMeshAsset : public ANBTMeshAsset
 {
 public:
-	SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadAsFile);
+	SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadFromAsset);
 	virtual ~SkeletalMeshAsset();
 
 protected:
@@ -29,7 +31,7 @@ public:
 	virtual void Initialize() override;
 
 public:
-	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
+	virtual std::string Serialize() override;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 
 protected:

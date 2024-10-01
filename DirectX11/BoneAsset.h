@@ -6,6 +6,8 @@
 #include <memory>
 #include <DirectXMath.h>
 
+constexpr const char* BoneAssetOutPath = ".\\Assets\\Bone\\";
+
 class Bone : public IOnSerializableMap
 {
 	friend class BoneAsset;
@@ -45,7 +47,7 @@ public:
 class BoneAsset : public AAssetFile
 {
 public:
-	BoneAsset(const std::string& AssetNameIn, bool LoadAsFile);
+	BoneAsset(const std::string& AssetNameIn, bool LoadFromAsset);
 	virtual ~BoneAsset();
 
 protected:
@@ -68,7 +70,7 @@ public:
 	void TraverseUpBone();
 
 public:
-	virtual void Serialize(const std::string& OutputAdditionalPath = "") override;
+	virtual std::string Serialize() override;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

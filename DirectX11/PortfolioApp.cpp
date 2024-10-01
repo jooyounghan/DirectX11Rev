@@ -136,7 +136,7 @@ void PortfolioApp::Update()
 void PortfolioApp::Render()
 {
 	GameWorldInstance->Render();
-	GraphicsPipelineInstance->GetSwapChain()->Present(0, 0);
+	GraphicsPipelineInstance->GetSwapChain()->Present(1, 0);
 }
 
 void PortfolioApp::ResetCursorHotSpot(const DWORD& HotspotX, const DWORD& HotspotY)

@@ -20,22 +20,13 @@ void SkeletalMeshObjectInformationDrawer::DrawInformation()
 
     const std::unordered_map<std::string, std::shared_ptr<SkeletalMeshAsset>>& ManagingSkeletalMeshes = AssetManagerCached->GetManagingSkeletalMeshes();
 
-    const SkeletalMeshAsset* const MeshAssetInstance = ObjectCached->GetSkeletalMeshAssetInstance();
+    SkeletalMeshAsset* const MeshAssetInstance = ObjectCached->GetSkeletalMeshAssetInstance();
 
-    ColorButton("SkeletalMeshAseetThumbnail", UIColor::GBlack, NULL, UISize::FileSize);
+    Image(nullptr, UISize::FileSize);
 
     SameLine();
 
-    if (BeginCombo("Skeletal Mesh Asset", MeshAssetInstance != nullptr ? MeshAssetInstance->GetAssetName().c_str() : "Choose Skeletal Mesh Asset"))
-    {
-        for (auto& SkeletalMesh : ManagingSkeletalMeshes)
-        {
-            if (Selectable(SkeletalMesh.first.c_str()))
-            {
-                ObjectCached->SetSkeletalMeshAssetInstance(SkeletalMesh.second);
-            }
-        }
+    shared_ptr<SkeletalMeshAsset> Result = SelectAsset(ManagingSkeletalMeshes, MeshAssetInstance, "Skeletal Mesh Asset", "Choose Skeletal Mesh Asset");
+    if (Result != nullptr) ObjectCached->SetSkeletalMeshAssetInstance(Result);
 
-        EndCombo();
-    }
 }

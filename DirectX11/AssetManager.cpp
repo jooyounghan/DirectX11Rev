@@ -31,7 +31,6 @@
 
 #include "DirectXTexEXR.h"
 
-#include <filesystem>
 #include <regex>
 #include <set>
 
@@ -53,6 +52,7 @@ unordered_map<string, EFileType> AssetManager::FileExtensionToType
 
 AssetManager::AssetManager()
 {
+    unordered_map<EAssetType, size_t> AssetLoadPriorities = AssetPriorityManagerInstance.GetAssetLoadPriorities();
     PreloadAssets();
 }
 
@@ -60,7 +60,7 @@ AssetManager::~AssetManager()
 {
 }
 
-void AssetManager::LoadAssetFile(const string& AssetPathIn)
+void AssetManager::LoadAsset(const string& AssetPathIn)
 {
     FILE* InputAssetFile = nullptr;
     fopen_s(&InputAssetFile, AssetPathIn.c_str(), "rb");
@@ -83,25 +83,25 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
         case EAssetType::None:
             break;
         case EAssetType::StaticMesh:
-            LoadAssetFileHelper(InputAssetFile, ManagingStaticMeshes, AssetName, true);
+            LoadAssetHelper(InputAssetFile, ManagingStaticMeshes, AssetName, true);
             break;
         case EAssetType::SkeletalMesh:
-            LoadAssetFileHelper(InputAssetFile, ManagingSkeletalMeshes, AssetName, true);
+            LoadAssetHelper(InputAssetFile, ManagingSkeletalMeshes, AssetName, true);
             break;
         case EAssetType::Bone:
-            LoadAssetFileHelper(InputAssetFile, ManagingBones, AssetName, true);
+            LoadAssetHelper(InputAssetFile, ManagingBones, AssetName, true);
             break;
         case EAssetType::Map:
-            LoadAssetFileHelper(InputAssetFile, ManagingMaps, AssetName, this, true);
+            LoadAssetHelper(InputAssetFile, ManagingMaps, AssetName, this, true);
             break;
         case EAssetType::NormalTexture:
-            LoadAssetFileHelper(InputAssetFile, ManagingNormalTextures, AssetName);
+            LoadAssetHelper(InputAssetFile, ManagingNormalTextures, AssetName);
             break;
         case EAssetType::EXRTexture:
-            LoadAssetFileHelper(InputAssetFile, ManagingEXRTextures, AssetName);
+            LoadAssetHelper(InputAssetFile, ManagingEXRTextures, AssetName);
             break;
         case EAssetType::DDSTexture:
-            LoadAssetFileHelper(InputAssetFile, ManagingDDSTextures, AssetName);
+            LoadAssetHelper(InputAssetFile, ManagingDDSTextures, AssetName);
             break;
         case EAssetType::Animation:
             break;
@@ -117,7 +117,7 @@ void AssetManager::LoadAssetFile(const string& AssetPathIn)
 }
 
 template<typename T, typename ...Args>
-void AssetManager::LoadAssetFileHelper(
+void AssetManager::LoadAssetHelper(
     FILE* FileIn,
     std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer, 
     const std::string& AssetName,
@@ -130,7 +130,7 @@ void AssetManager::LoadAssetFileHelper(
 }
 
 
-void AssetManager::LoadFile(const std::string& FilePathIn)
+void AssetManager::LoadAssetFromFile(const std::string& FilePathIn)
 {
     path FilePath = FilePathIn;
     const string FileName = FilePath.stem().string();
@@ -141,16 +141,16 @@ void AssetManager::LoadFile(const std::string& FilePathIn)
         switch (FileExtensionToType[FileExtension])
         {
         case EFileType::ModelFile:
-            LoadModelFile(FilePathIn, FileName, FileExtension);
+            LoadModelAssetFromFile(FilePathIn, FileName, FileExtension);
             break;
         case EFileType::NormalTextureFile:
-            LoadNormalTextureFile(FilePathIn, FileName, FileExtension);
+            LoadNormalTextureAssetFromFile(FilePathIn, FileName, FileExtension);
             break;
         case EFileType::EXRTextureFile:
-            LoadEXRTextureFile(FilePathIn, FileName, FileExtension);
+            LoadEXRTextureAssetFromFile(FilePathIn, FileName, FileExtension);
             break;
         case EFileType::DDSTextureFile:
-            LoadDDSTextureFile(FilePathIn, FileName, FileExtension);
+            LoadDDSTextureAssetFromFile(FilePathIn, FileName, FileExtension);
             break;
         default:
             break;
@@ -158,7 +158,8 @@ void AssetManager::LoadFile(const std::string& FilePathIn)
     }
 }
 
-void AssetManager::LoadModelFile(const string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn)
+
+void AssetManager::LoadModelAssetFromFile(const string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn)
 {
     if (FileNameToAssetNames.find(FileNameIn) == FileNameToAssetNames.end())
     {
@@ -175,17 +176,17 @@ void AssetManager::LoadModelFile(const string& FilePathIn, const std::string& Fi
             // Load Mesh
             if (pScene->HasMeshes())
             {
-                LoadMesh(FileExtensionIn == ".gltf", FileNameIn, pScene);
+                LoadMeshAssetFromFile(FileExtensionIn == ".gltf", FileNameIn, pScene);
             }
 
             if (pScene->HasMaterials())
             {
-                LoadMaterial(FileNameIn, pScene);
+                LoadMaterialAssetFromFile(FileNameIn, pScene);
             }
 
             if (pScene->HasAnimations())
             {
-                LoadAnimation(FileNameIn, pScene);
+                LoadAnimationAssetFromFile(FileNameIn, pScene);
             }
         }
         FileNameStack.pop();
@@ -194,7 +195,7 @@ void AssetManager::LoadModelFile(const string& FilePathIn, const std::string& Fi
     }
 }
 
-void AssetManager::LoadNormalTextureFile(
+void AssetManager::LoadNormalTextureAssetFromFile(
     const string& FilePathIn, 
     const std::string& FileNameIn, 
     const std::string& FileExtensionIn
@@ -212,7 +213,7 @@ void AssetManager::LoadNormalTextureFile(
         if (ImageBuffer != nullptr)
         {
             shared_ptr<NormalTextureAsset> TextureAssetLoaded = make_shared<NormalTextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut);
-            AddToManagingContainer(ManagingNormalTextures, TextureAssetLoaded);
+            SerailizeAndAddToContainer(ManagingNormalTextures, TextureAssetLoaded);
         }
         fclose(FileHandle);
 
@@ -222,7 +223,7 @@ void AssetManager::LoadNormalTextureFile(
     }
 }
 
-void AssetManager::LoadEXRTextureFile(
+void AssetManager::LoadEXRTextureAssetFromFile(
     const std::string& FilePathIn, 
     const std::string& FileNameIn, 
     const std::string& FileExtensionIn
@@ -234,11 +235,11 @@ void AssetManager::LoadEXRTextureFile(
     if (!FAILED(hResult))
     {
         shared_ptr<EXRTextureAsset> TextureAssetLoaded = make_shared<EXRTextureAsset>(FileNameIn, scratch, metaData);
-        AddToManagingContainer(ManagingEXRTextures, TextureAssetLoaded);
+        SerailizeAndAddToContainer(ManagingEXRTextures, TextureAssetLoaded);
     }
 }
 
-void AssetManager::LoadDDSTextureFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn)
+void AssetManager::LoadDDSTextureAssetFromFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn)
 {
     ScratchImage scratch;
     TexMetadata metaData;
@@ -246,11 +247,11 @@ void AssetManager::LoadDDSTextureFile(const std::string& FilePathIn, const std::
     if (!FAILED(hResult))
     {
         shared_ptr<DDSTextureAsset> TextureAssetLoaded = make_shared<DDSTextureAsset>(FileNameIn, scratch, metaData);
-        AddToManagingContainer(ManagingDDSTextures, TextureAssetLoaded);
+        SerailizeAndAddToContainer(ManagingDDSTextures, TextureAssetLoaded);
     }
 }
 
-void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* const Scene)
+void AssetManager::LoadMeshAssetFromFile(bool IsGltf, const string AssetName, const aiScene* const Scene)
 {
     XMMATRIX RootTransform = DirectX::XMMatrixIdentity();
     aiNode* RootNode = Scene->mRootNode;
@@ -271,10 +272,10 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
         ProcessNodeForMesh(IsGltf, Scene, RootNode, SkeletalMeshAPtr, BoneAPtr, RootTransform);
 
         // Serialize Bone Asset
-        AddToManagingContainer(ManagingBones, BoneAssetLoaded);
+        SerailizeAndAddToContainer(ManagingBones, BoneAssetLoaded);
 
         SkeletalMeshAssetLoaded->Initialize();
-        AddToManagingContainer(ManagingSkeletalMeshes, SkeletalMeshAssetLoaded);
+        SerailizeAndAddToContainer(ManagingSkeletalMeshes, SkeletalMeshAssetLoaded);
     }
     else
     {
@@ -284,16 +285,16 @@ void AssetManager::LoadMesh(bool IsGltf, const string AssetName, const aiScene* 
         ProcessNodeForMesh(IsGltf, Scene, RootNode, (StaticMeshAsset*)StaticMeshLoaded.get(), RootTransform);
 
         StaticMeshLoaded->Initialize();
-        AddToManagingContainer(ManagingStaticMeshes, StaticMeshLoaded);
+        SerailizeAndAddToContainer(ManagingStaticMeshes, StaticMeshLoaded);
     }
 }
 
-void AssetManager::LoadMaterial(const string AssetName, const aiScene* const Scene)
+void AssetManager::LoadMaterialAssetFromFile(const string AssetName, const aiScene* const Scene)
 {
 
 }
 
-void AssetManager::LoadAnimation(const string AssetName, const aiScene* const Scene)
+void AssetManager::LoadAnimationAssetFromFile(const string AssetName, const aiScene* const Scene)
 {
 }
 
@@ -391,13 +392,15 @@ BaseMeshAsset* AssetManager::GetManagingBaseMesh(const std::string MapAssetName)
 }
 
 template<typename T>
-void AssetManager::AddToManagingContainer(
+void AssetManager::SerailizeAndAddToContainer(
     unordered_map<string, T>& ManagingContainer, 
     T& AddedAsset
 )
 {
-    AddedAsset->Serialize();
+    string SerializedPath = AddedAsset->Serialize();
     ManagingContainer.emplace(AddedAsset->GetAssetName(), AddedAsset);
+
+    AssetAddedEvent.Execute();
 }
 
 template<typename T>
@@ -738,40 +741,53 @@ void AssetManager::PreloadAssets()
 
     for (BaseMeshAsset* BaseMeshAssetInstance : BaseMeshAssets)
     {
-        AddToManagingContainer(ManagingBaseMeshes, BaseMeshAssetInstance);
+        SerailizeAndAddToContainer(ManagingBaseMeshes, BaseMeshAssetInstance);
     }
 
     path AssetPath = path(AssetOutPath);
-    path MapPath = path(MapAssetOutPath);
 
     if (!exists(AssetPath) && create_directories(AssetPath)) {/* Do Nothing But Make Directory */ };
-    if (!exists(MapPath) && create_directories(MapPath)) {/* Do Nothing But Make Directory */ };
 
     // TODO : 위상 정렬등을 활용하여 Asset의 로딩 순서 결정하기 
     for (const auto& entry : directory_iterator(AssetPath))
     {
+        const path filePath = entry.path();
         if (entry.is_regular_file())
         {
-            const path filePath = entry.path();
             if (filePath.extension() == AssetExtension)
             {
-                LoadAssetFile(filePath.string());
+                LoadAsset(filePath.string());
             }
         }
-    }
-
-    for (const auto& entry : directory_iterator(MapPath))
-    {
-        if (entry.is_regular_file())
+        else if (entry.is_directory())
         {
-            const path filePath = entry.path();
-            if (filePath.extension() == AssetExtension)
-            {
-                LoadAssetFile(filePath.string());
-            }
+            TraverseDirectory(filePath);
         }
+        else;
     }
 }
+
+void AssetManager::TraverseDirectory(const path& PathIn)
+{
+    for (const auto& entry : directory_iterator(PathIn))
+    {
+        const path filePath = entry.path();
+        if (entry.is_regular_file())
+        {
+            if (filePath.extension() == AssetExtension)
+            {
+                LoadAsset(filePath.string());
+            }
+        }
+        else if (entry.is_directory())
+        {
+            TraverseDirectory(filePath);
+        }
+        else;
+    }
+}
+
+
 
 template<typename T>
 void AssetManager::LoadTBN(
