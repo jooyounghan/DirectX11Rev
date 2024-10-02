@@ -315,7 +315,7 @@ void MapOutlinerWindow::DoModalAddNewMap()
         static char MapNameBuffer[128] = "";
         ImGui::InputTextWithHint("Map Name", "Enter New Map Name Here", MapNameBuffer, IM_ARRAYSIZE(MapNameBuffer));
 
-        if (Button("OK", ImVec2(120, 0))) { CloseCurrentPopup(); }
+        if (Button("OK", ImVec2(120, 0))) { /* Create Map */ CloseCurrentPopup(); }
         SetItemDefaultFocus();
         SameLine();
         if (Button("Cancel", ImVec2(120, 0))) { CloseCurrentPopup(); }

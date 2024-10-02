@@ -32,6 +32,7 @@
 #include "DirectXTexEXR.h"
 
 #include <regex>
+#include <map>
 #include <set>
 
 using namespace std;
@@ -52,83 +53,12 @@ unordered_map<string, EFileType> AssetManager::FileExtensionToType
 
 AssetManager::AssetManager()
 {
-    unordered_map<EAssetType, size_t> AssetLoadPriorities = AssetPriorityManagerInstance.GetAssetLoadPriorities();
     PreloadAssets();
 }
 
 AssetManager::~AssetManager()
 {
 }
-
-void AssetManager::LoadAsset(const string& AssetPathIn)
-{
-    FILE* InputAssetFile = nullptr;
-    fopen_s(&InputAssetFile, AssetPathIn.c_str(), "rb");
-
-    if (InputAssetFile != nullptr)
-    {
-        // Asset Name
-        size_t AssetNameSize;
-        fread(&AssetNameSize, sizeof(size_t), 1, InputAssetFile);
-        string AssetName;
-        AssetName.resize(AssetNameSize);
-        fread(AssetName.data(), sizeof(char), AssetNameSize, InputAssetFile);
-
-        // Asset Type
-        EAssetType AssetType;
-        fread(&AssetType, sizeof(AssetType), 1, InputAssetFile);
-
-        switch (AssetType)
-        {
-        case EAssetType::None:
-            break;
-        case EAssetType::StaticMesh:
-            LoadAssetHelper(InputAssetFile, ManagingStaticMeshes, AssetName, true);
-            break;
-        case EAssetType::SkeletalMesh:
-            LoadAssetHelper(InputAssetFile, ManagingSkeletalMeshes, AssetName, true);
-            break;
-        case EAssetType::Bone:
-            LoadAssetHelper(InputAssetFile, ManagingBones, AssetName, true);
-            break;
-        case EAssetType::Map:
-            LoadAssetHelper(InputAssetFile, ManagingMaps, AssetName, this, true);
-            break;
-        case EAssetType::NormalTexture:
-            LoadAssetHelper(InputAssetFile, ManagingNormalTextures, AssetName);
-            break;
-        case EAssetType::EXRTexture:
-            LoadAssetHelper(InputAssetFile, ManagingEXRTextures, AssetName);
-            break;
-        case EAssetType::DDSTexture:
-            LoadAssetHelper(InputAssetFile, ManagingDDSTextures, AssetName);
-            break;
-        case EAssetType::Animation:
-            break;
-        default:
-            break;
-        }
-        fclose(InputAssetFile);
-    }
-    else
-    {
-
-    }
-}
-
-template<typename T, typename ...Args>
-void AssetManager::LoadAssetHelper(
-    FILE* FileIn,
-    std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer, 
-    const std::string& AssetName,
-    Args... AssetConstructArgs
-)
-{
-    shared_ptr<T> AssetFile = make_shared<T>(AssetName, AssetConstructArgs...);
-    AssetFile->Deserialize(FileIn, this);
-    ManagingContainer.emplace(AssetName, AssetFile);
-}
-
 
 void AssetManager::LoadAssetFromFile(const std::string& FilePathIn)
 {
@@ -748,7 +678,8 @@ void AssetManager::PreloadAssets()
 
     if (!exists(AssetPath) && create_directories(AssetPath)) {/* Do Nothing But Make Directory */ };
 
-    // TODO : 위상 정렬등을 활용하여 Asset의 로딩 순서 결정하기 
+    vector<string> AssetFilePaths;
+
     for (const auto& entry : directory_iterator(AssetPath))
     {
         const path filePath = entry.path();
@@ -756,18 +687,20 @@ void AssetManager::PreloadAssets()
         {
             if (filePath.extension() == AssetExtension)
             {
-                LoadAsset(filePath.string());
+                AssetFilePaths.push_back(filePath.string());
             }
         }
         else if (entry.is_directory())
         {
-            TraverseDirectory(filePath);
+            TraverseDirectory(filePath, AssetFilePaths);
         }
         else;
     }
+
+    LoadAssetWithTopologySorting(AssetFilePaths);
 }
 
-void AssetManager::TraverseDirectory(const path& PathIn)
+void AssetManager::TraverseDirectory(const path& PathIn, vector<string>& AssetFilePathsIn)
 {
     for (const auto& entry : directory_iterator(PathIn))
     {
@@ -776,17 +709,118 @@ void AssetManager::TraverseDirectory(const path& PathIn)
         {
             if (filePath.extension() == AssetExtension)
             {
-                LoadAsset(filePath.string());
+                AssetFilePathsIn.push_back(filePath.string());
             }
         }
         else if (entry.is_directory())
         {
-            TraverseDirectory(filePath);
+            TraverseDirectory(filePath, AssetFilePathsIn);
         }
         else;
     }
 }
 
+void AssetManager::LoadAssetWithTopologySorting(const vector<string>& AssetPathsIn)
+{
+    // 위상 정렬을 통한 Asset Loading Priority 결정
+    unordered_map<EAssetType, size_t> AssetLoadPriorities = AssetPriorityManagerInstance.GetAssetLoadPriorities();
+    map<size_t, vector<SAssetPreloadArgs>> AssetLoadArgsWithPriorities;
+
+    for (const string& AssetPathIn : AssetPathsIn)
+    {
+        FILE* InputAssetFile = nullptr;
+        fopen_s(&InputAssetFile, AssetPathIn.c_str(), "rb");
+
+        if (InputAssetFile != nullptr)
+        {
+            // Asset Name
+            size_t AssetNameSize;
+            fread(&AssetNameSize, sizeof(size_t), 1, InputAssetFile);
+            string AssetName;
+            AssetName.resize(AssetNameSize);
+            fread(AssetName.data(), sizeof(char), AssetNameSize, InputAssetFile);
+
+            // Asset Type
+            EAssetType AssetType;
+            fread(&AssetType, sizeof(AssetType), 1, InputAssetFile);
+
+            long LastReadPoint = ftell(InputAssetFile);
+
+            fclose(InputAssetFile);
+
+            SAssetPreloadArgs AssetPreLoadArgs;
+            AssetPreLoadArgs.AssetName = AssetName;
+            AssetPreLoadArgs.AssetPath = AssetPathIn;
+            AssetPreLoadArgs.LastReadPoint = LastReadPoint;
+            AssetPreLoadArgs.AssetType = AssetType;
+
+            AssetLoadArgsWithPriorities[AssetLoadPriorities[AssetType]].push_back(AssetPreLoadArgs);
+        }
+    }
+
+    for (auto& AssetLoadArgsVector : AssetLoadArgsWithPriorities)
+    {
+        for (const SAssetPreloadArgs& AssetPreloadArgs : AssetLoadArgsVector.second)
+        {
+            FILE* InputAssetFile = nullptr;
+            fopen_s(&InputAssetFile, AssetPreloadArgs.AssetPath.c_str(), "rb");
+
+            if (InputAssetFile != nullptr)
+            {
+                fseek(InputAssetFile, AssetPreloadArgs.LastReadPoint, SEEK_SET);
+
+                switch (AssetPreloadArgs.AssetType)
+                {
+                case EAssetType::None:
+                    break;
+                case EAssetType::StaticMesh:
+                    LoadAssetHelper(InputAssetFile, ManagingStaticMeshes, AssetPreloadArgs.AssetName, true);
+                    break;
+                case EAssetType::SkeletalMesh:
+                    LoadAssetHelper(InputAssetFile, ManagingSkeletalMeshes, AssetPreloadArgs.AssetName, true);
+                    break;
+                case EAssetType::Bone:
+                    LoadAssetHelper(InputAssetFile, ManagingBones, AssetPreloadArgs.AssetName, true);
+                    break;
+                case EAssetType::Map:
+                    LoadAssetHelper(InputAssetFile, ManagingMaps, AssetPreloadArgs.AssetName, this, true);
+                    break;
+                case EAssetType::NormalTexture:
+                    LoadAssetHelper(InputAssetFile, ManagingNormalTextures, AssetPreloadArgs.AssetName);
+                    break;
+                case EAssetType::EXRTexture:
+                    LoadAssetHelper(InputAssetFile, ManagingEXRTextures, AssetPreloadArgs.AssetName);
+                    break;
+                case EAssetType::DDSTexture:
+                    LoadAssetHelper(InputAssetFile, ManagingDDSTextures, AssetPreloadArgs.AssetName);
+                    break;
+                case EAssetType::Animation:
+                    break;
+                default:
+                    break;
+                }
+
+                fclose(InputAssetFile);
+            }
+        }
+    }
+}
+
+
+
+
+template<typename T, typename ...Args>
+void AssetManager::LoadAssetHelper(
+    FILE* FileIn,
+    std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer,
+    const std::string& AssetName,
+    Args... AssetConstructArgs
+)
+{
+    shared_ptr<T> AssetFile = make_shared<T>(AssetName, AssetConstructArgs...);
+    AssetFile->Deserialize(FileIn, this);
+    ManagingContainer.emplace(AssetName, AssetFile);
+}
 
 
 template<typename T>

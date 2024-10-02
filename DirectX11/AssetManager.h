@@ -42,6 +42,14 @@ enum class EFileType
 	DDSTextureFile,
 };
 
+struct SAssetPreloadArgs
+{
+	std::string AssetName;
+	std::string AssetPath;
+	long LastReadPoint;
+	EAssetType AssetType;
+};
+
 typedef std::function<void()> AssetAddedDelegate;
 
 class AssetManager
@@ -52,18 +60,6 @@ public:
 
 public:
 	Delegation<> AssetAddedEvent;
-
-public:
-	void LoadAsset(const std::string& AssetPathIn);
-
-private:
-	template<typename T, typename ...Args>
-	void LoadAssetHelper(
-		FILE* FileIn,
-		std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer,
-		const std::string& AssetName,
-		Args... AssetConstructArgs
-	);
 
 public:
 	void LoadAssetFromFile(const std::string& FilePathIn);
@@ -254,6 +250,20 @@ private:
 
 private:
 	void PreloadAssets();
-	void TraverseDirectory(const std::filesystem::path& PathIn);
+	void TraverseDirectory(
+		const std::filesystem::path& PathIn, 
+		std::vector<std::string>& AssetFilePathsIn
+	);
+
+private:
+	void LoadAssetWithTopologySorting(const std::vector<std::string>& AssetPathsIn);
+	template<typename T, typename ...Args>
+	void LoadAssetHelper(
+		FILE* FileIn,
+		std::unordered_map<std::string, std::shared_ptr<T>>& ManagingContainer,
+		const std::string& AssetName,
+		Args... AssetConstructArgs
+	);
+
 };
 
