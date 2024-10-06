@@ -691,7 +691,7 @@ struct aiMaterialProperty {
 #ifdef __cplusplus
 struct ASSIMP_API aiMaterial
 #else
-struct aiMaterial
+//struct aiMaterial
 #endif
 {
 

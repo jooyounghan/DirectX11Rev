@@ -1,19 +1,17 @@
 #pragma once
-#include <DirectXMath.h>
-
-using namespace DirectX;
+#include "directxmath/DirectXMath.h"
 
 struct Ray
 {
-	XMVECTOR	Origin;
-	XMVECTOR	Direction;
+	DirectX::XMVECTOR	Origin;
+	DirectX::XMVECTOR	Direction;
 
 	static Ray CreateRay(
 		const float& ScreenXIn, 
 		const float& ScreenYIn, 
 		const float& ScreenWidthIn,
 		const float& ScreenHeightIn,
-		const XMMATRIX& ProjectionMatrix,
-		const XMMATRIX& ViewMatrix
+		const DirectX::XMMATRIX& ProjectionMatrix,
+		const DirectX::XMMATRIX& ViewMatrix
 	);
 };

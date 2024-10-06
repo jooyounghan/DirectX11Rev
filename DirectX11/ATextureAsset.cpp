@@ -97,7 +97,7 @@ D3D11_SHADER_RESOURCE_VIEW_DESC ATextureAsset::CreateSRV(const D3D11_TEXTURE2D_D
 	return SRVDesc;
 }
 
-string ATextureAsset::Serialize()
+void ATextureAsset::Serialize()
 {
 	FILE* OutputAssetFile;
 	string OutputAssetFilePath = DefaultOpenFileHelper(TextureAssetOutPath, OutputAssetFile);
@@ -121,9 +121,7 @@ string ATextureAsset::Serialize()
 		CompressedBufferPerArray.clear();
 
 		fclose(OutputAssetFile);
-		return OutputAssetFilePath;
 	}
-	return string();
 }
 
 void ATextureAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)

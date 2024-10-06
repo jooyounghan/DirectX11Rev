@@ -1,5 +1,7 @@
 #include "ANBTMeshAsset.h"
 
+using namespace DirectX;
+
 ANBTMeshAsset::ANBTMeshAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn)
 	: AMeshAsset(AssetNameIn, AssetTypeIn)
 {
@@ -50,9 +52,9 @@ void ANBTMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 	}
 }
 
-void ANBTMeshAsset::DeserializeBaseMeshData(FILE* FileIn)
+void ANBTMeshAsset::DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AMeshAsset::DeserializeBaseMeshData(FileIn);
+	AMeshAsset::DeserializeBaseMeshData(FileIn, AssetManagerIn);
 	TangentsPerLOD.resize(LODCount);
 	BitangentsPerLOD.resize(LODCount);
 

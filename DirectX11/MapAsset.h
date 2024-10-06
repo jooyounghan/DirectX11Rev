@@ -77,7 +77,7 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 
 public:
-	virtual std::string Serialize() override;
+	virtual void Serialize() override;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 
 private:

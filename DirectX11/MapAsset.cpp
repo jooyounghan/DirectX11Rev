@@ -130,7 +130,7 @@ void MapAsset::AcceptGui(IGuiModelVisitor* GuiVisitor)
 	GuiVisitor->Visit(this);
 }
 
-string MapAsset::Serialize()
+void MapAsset::Serialize()
 {
 	FILE* OutputAssetFile;
 	string OutputAssetFilePath = DefaultOpenFileHelper(MapAssetOutPath, OutputAssetFile);
@@ -155,9 +155,7 @@ string MapAsset::Serialize()
 				SerializeChildrenObjects(RootPlaceable.get(), OutputAssetFile);
 		}
 		fclose(OutputAssetFile);
-		return OutputAssetFilePath;
 	}
-	return string();
 }
 
 void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)

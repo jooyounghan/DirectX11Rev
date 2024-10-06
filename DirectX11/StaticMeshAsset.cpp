@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 using namespace std;
-
+using namespace DirectX;
 
 StaticMeshAsset::StaticMeshAsset(const string& AssetNameIn, bool LoadFromAsset)
 	: ANBTMeshAsset(LoadFromAsset ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::StaticMesh)], EAssetType::StaticMesh)
@@ -51,7 +51,7 @@ void StaticMeshAsset::Initialize()
 	AMeshAsset::Initialize();
 }
 
-string StaticMeshAsset::Serialize()
+void StaticMeshAsset::Serialize()
 {
 	FILE* OutputAssetFile;
 	string OutputAssetFilePath = DefaultOpenFileHelper(StaticMeshAssetOutPath, OutputAssetFile);
@@ -62,13 +62,11 @@ string StaticMeshAsset::Serialize()
 		SerializeBaseMeshData(OutputAssetFile);
 		
 		fclose(OutputAssetFile);
-		return OutputAssetFilePath;
 	}
-	return string();
 }
 
 void StaticMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	DeserializeBaseMeshData(FileIn);
+	DeserializeBaseMeshData(FileIn, AssetManagerIn);
 	Initialize();
 }

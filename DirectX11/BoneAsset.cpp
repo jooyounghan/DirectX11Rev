@@ -107,7 +107,7 @@ void BoneAsset::TraverseUpBone()
 	}
 }
 
-string BoneAsset::Serialize()
+void BoneAsset::Serialize()
 {
 	FILE* OutputAssetFile = nullptr;
 	string OutputAssetFilePath = DefaultOpenFileHelper(BoneAssetOutPath, OutputAssetFile);
@@ -148,9 +148,7 @@ string BoneAsset::Serialize()
 		fwrite(RootBone->BoneName.c_str(), sizeof(char), RootBoneNameCount, OutputAssetFile);
 
 		fclose(OutputAssetFile);
-		return OutputAssetFilePath;
 	}
-	return string();
 }
 
 void BoneAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)

@@ -7,7 +7,7 @@ class AssetManager;
 class ISerializable
 {
 public:
-	virtual std::string Serialize() = 0;
+	virtual void Serialize() = 0;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };
 

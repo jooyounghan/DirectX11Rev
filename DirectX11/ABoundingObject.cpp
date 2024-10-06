@@ -8,6 +8,8 @@
 #include "MapAsset.h"
 #include "Camera.h"
 
+using namespace DirectX;
+
 ABoundingObject::ABoundingObject(MapAsset* MapAssetInstance)
 	: AAttachableObject(MapAssetInstance), DebuggingColorBuffer()
 {

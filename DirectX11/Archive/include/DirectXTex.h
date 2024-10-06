@@ -34,7 +34,11 @@
 #include <wsl/winadapter.h>
 #endif
 
+#ifdef PORTFOLIO_APP
+#include "directxmath/DirectXMath.h"
+#else
 #include <DirectXMath.h>
+#endif
 
 #ifdef _WIN32
 #if defined(NTDDI_WIN10_FE) || defined(__MINGW32__)

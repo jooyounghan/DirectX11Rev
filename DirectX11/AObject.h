@@ -52,9 +52,5 @@ public:
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;
 	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
-
-public:
-	static void SerializeString(const std::string& String, FILE* FileIn);
-	static void DeserializeString(std::string& String, FILE* FileIn);
 };
 

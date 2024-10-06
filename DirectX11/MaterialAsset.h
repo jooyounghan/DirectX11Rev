@@ -1,5 +1,36 @@
 #pragma once
-class MaterialAsset
+#include "AAssetFile.h"
+
+class BasicTextureAsset;
+
+constexpr const char* MaterialAssetOutPath = ".\\Assets\\Material\\";
+
+class MaterialAsset : public AAssetFile
 {
+public:
+	MaterialAsset(const std::string& AssetNameIn, const bool& LoadFromAsset);
+	virtual ~MaterialAsset();
+
+protected:
+	std::shared_ptr<BasicTextureAsset> AmbientOcculusionTextureAsset;
+	std::shared_ptr<BasicTextureAsset> SpecularTextureAsset;
+	std::shared_ptr<BasicTextureAsset> DiffuseTextureAsset;
+	std::shared_ptr<BasicTextureAsset> NormalTextureAsset;
+	std::shared_ptr<BasicTextureAsset> HeightTextureAsset;
+
+
+	
+	MakeSmartPtrSetterGetter(AmbientOcculusionTextureAsset);
+	MakeSmartPtrSetterGetter(SpecularTextureAsset);
+	MakeSmartPtrSetterGetter(DiffuseTextureAsset);
+	MakeSmartPtrSetterGetter(NormalTextureAsset);
+	MakeSmartPtrSetterGetter(HeightTextureAsset);
+
+public:
+	virtual void Serialize() override;
+	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+
+private:
+	void SerializeAssetNameHelper(FILE* FileIn, std::shared_ptr<BasicTextureAsset> BasicTextureAssetIn);
 };
 

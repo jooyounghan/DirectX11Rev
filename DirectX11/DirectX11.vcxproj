@@ -105,7 +105,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;_CRT_SECURE_NO_WARNINGS;PORTFOLIO_APP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)DirectX11\Archive\include;$(SolutionDir)DirectX11\Externals\Imgui;$(SolutionDir)DirectX11\Externals\DDSTextureLoader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -189,6 +189,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapAsset.cpp" />
     <ClCompile Include="MaterialAsset.cpp" />
+    <ClCompile Include="MaterialInformationDrawer.cpp" />
     <ClCompile Include="SkeletalMeshObjectActor.cpp" />
     <ClCompile Include="SkeletalMeshObjetPSO.cpp" />
     <ClCompile Include="StaticMeshObjectActor.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="AObject.h" />
     <ClInclude Include="MaterialAsset.h" />
+    <ClInclude Include="MaterialInformationDrawer.h" />
     <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="InputEventManager.h" />
@@ -319,7 +321,7 @@
     <ClInclude Include="SkeletalMeshAsset.h" />
     <ClInclude Include="StaticMeshAsset.h" />
     <ClInclude Include="TaskAnalyzerWindow.h" />
-    <ClInclude Include="NormalTextureAsset.h" />
+    <ClInclude Include="BasicTextureAsset.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Viewable.h" />
     <ClInclude Include="ViewableInformationDrawer.h" />

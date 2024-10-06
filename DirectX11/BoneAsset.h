@@ -4,7 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
-#include <DirectXMath.h>
+#include "directxmath/DirectXMath.h"
 
 constexpr const char* BoneAssetOutPath = ".\\Assets\\Bone\\";
 
@@ -70,7 +70,7 @@ public:
 	void TraverseUpBone();
 
 public:
-	virtual std::string Serialize() override;
+	virtual void Serialize() override;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

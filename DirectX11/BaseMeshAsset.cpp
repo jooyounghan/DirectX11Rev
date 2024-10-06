@@ -1,6 +1,7 @@
 #include "BaseMeshAsset.h"
 
 using namespace std;
+using namespace DirectX;
 
 BaseMeshAsset::BaseMeshAsset(const string& AssetNameIn) 
 	: AMeshAsset(AssetNameIn, EAssetType::BaseMesh)

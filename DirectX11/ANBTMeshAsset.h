@@ -8,8 +8,8 @@ public:
 	virtual ~ANBTMeshAsset();
 
 public:
-	std::vector<Vertexable<XMFLOAT3>> TangentsPerLOD;
-	std::vector<Vertexable<XMFLOAT3>> BitangentsPerLOD;
+	std::vector<Vertexable<DirectX::XMFLOAT3>> TangentsPerLOD;
+	std::vector<Vertexable<DirectX::XMFLOAT3>> BitangentsPerLOD;
 
 public:
 	virtual void SetLODCount(const size_t& LODCountIn) override;
@@ -23,11 +23,11 @@ public:
 	virtual void Initialize() override;
 
 public:
-	virtual std::string Serialize() = 0;
+	virtual void Serialize() = 0;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 
 protected:
 	virtual void SerializeBaseMeshData(FILE* FileIn) override;
-	virtual void DeserializeBaseMeshData(FILE* FileIn) override;
+	virtual void DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

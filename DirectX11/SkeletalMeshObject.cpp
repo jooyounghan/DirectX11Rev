@@ -29,6 +29,11 @@ SkeletalMeshObject::SkeletalMeshObject(MapAsset* MapAssetInstance, std::shared_p
 
 	SkeletalMeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_Solid);
 	PickingIDSolidSkeletalPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_ID_Solid);
+
+	if (SkeletalMeshAssetInstanceIn != nullptr)
+	{
+		MaterialAssetInstances = SkeletalMeshAssetInstanceIn->GetDefaultMaterialAssets();
+	}
 }
 
 SkeletalMeshObject::~SkeletalMeshObject()
@@ -139,26 +144,18 @@ void SkeletalMeshObject::Render()
 
 void SkeletalMeshObject::OnSerializeFromMap(FILE* FileIn)
 {
-	AObject::OnSerializeFromMap(FileIn);
+	AMeshObject::OnSerializeFromMap(FileIn);
 
 	// Mesh Asset Name
-	if (SkeletalMeshAssetInstance != nullptr)
-	{
-		const string& AssetName = SkeletalMeshAssetInstance->GetAssetName();
-		SerializeString(AssetName, FileIn);
-	}
-	else
-	{
-		const string DummyAssetName = "";
-		SerializeString(DummyAssetName, FileIn);
-	}
+	AAssetFile::SerializeString(SkeletalMeshAssetInstance != nullptr ? SkeletalMeshAssetInstance->GetAssetName() : "", FileIn);
 }
 
 void SkeletalMeshObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+	AMeshObject::OnDeserializeToMap(FileIn, AssetManagerIn);
 
 	string MeshAssetName;
-	DeserializeString(MeshAssetName, FileIn);
+	AAssetFile::DeserializeString(MeshAssetName, FileIn);
+
 	SkeletalMeshAssetInstance = AssetManagerIn->GetManagingSkeletalMesh(MeshAssetName);
 }

@@ -24,7 +24,7 @@ enum class EAssetType
 
 	// Material
 	Material,
-	NormalTexture,
+	BasicTexture,
 	EXRTexture,
 	DDSTexture,
 
@@ -60,11 +60,15 @@ protected:
 	MakeComPtrGetter(ThumbnailSRV);
 
 public:
-	virtual std::string Serialize() = 0;
+	virtual void Serialize() = 0;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 
 protected:
 	std::string DefaultOpenFileHelper(const char* AssetFilePath, FILE*& FileOut);
 	void SerializeHeader(FILE* FileIn);
+
+public:
+	static void SerializeString(const std::string& String, FILE* FileIn);
+	static void DeserializeString(std::string& String, FILE* FileIn);
 };
 

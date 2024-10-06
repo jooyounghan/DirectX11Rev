@@ -18,6 +18,6 @@ public:
 	virtual void Initialize() override;
 
 public:
-	virtual std::string Serialize() override;
+	virtual void Serialize() override;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };

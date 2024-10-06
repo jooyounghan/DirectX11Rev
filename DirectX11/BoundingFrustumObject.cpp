@@ -11,6 +11,7 @@
 #include "IGuiModelVisitor.h"
 
 using namespace std;
+using namespace DirectX;
 
 const char* BoundingFrustumObject::BoundingFrustumIdentifier = "Bounding Frustum";
 

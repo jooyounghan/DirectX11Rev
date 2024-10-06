@@ -7,12 +7,15 @@ class PSOObject;
 class StaticMeshObject : public AMeshObject
 {
 public:
-	StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> SkeletalMeshAssetInstanceIn);
+	StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn);
 	virtual ~StaticMeshObject();
 
 protected:
 	std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstance = nullptr;
-	MakeSmartPtrSetterGetter(StaticMeshAssetInstance);
+	MakeSmartPtrGetter(StaticMeshAssetInstance);
+
+public:
+	void SetStaticMeshAssetInstance(std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn);
 
 public:
 	static const char* StaticMeshObjectIdentifier;

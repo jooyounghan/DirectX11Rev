@@ -15,7 +15,7 @@ public:
 	virtual std::vector<UINT> GetOffsets() override final;
 
 public:
-	virtual std::string Serialize() override final { return std::string(); };
+	virtual void Serialize() override final {  };
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override final {/* Base Mesh Does Not Deserialize*/};
 };
 

@@ -24,6 +24,7 @@
 #include "BoundingOBBInformationDrawer.h"
 #include "ViewableInformationDrawer.h"
 #include "EnvironementActorDrawer.h"
+#include "MaterialInformationDrawer.h"
 
 using namespace std;
 using namespace ImGui;
@@ -48,9 +49,15 @@ void ModelDetailedInformationVisitor::Visit(StaticMeshObjectActor* ActorInstance
     TransformationInformationDrawer TransformDrawer(ActorInstance, nullptr);
     TransformDrawer.DrawInformation();
 
-    StaticMeshObjectInformationDrawer MeshObjectDrawer(ActorInstance->GetStaticMeshObjectInstance(), AssetManagerCached);
+    StaticMeshObject* StaticMeshObjectInstance = ActorInstance->GetStaticMeshObjectInstance();
+    StaticMeshObjectInformationDrawer MeshObjectDrawer(StaticMeshObjectInstance, AssetManagerCached);
     MeshObjectDrawer.DrawInformation();
 
+    if (StaticMeshObjectInstance != nullptr)
+    {
+        MaterialInformationDrawer MaterialDrawer(StaticMeshObjectInstance, AssetManagerCached);
+        MaterialDrawer.DrawInformation();
+    }
     PopID();
 }
 
@@ -61,9 +68,15 @@ void ModelDetailedInformationVisitor::Visit(SkeletalMeshObjectActor* ActorInstan
     TransformationInformationDrawer TransformDrawer(ActorInstance, nullptr);
     TransformDrawer.DrawInformation();
 
-    SkeletalMeshObjectInformationDrawer MeshObjectDrawer(ActorInstance->GetSkeletalMeshObjectInstance(), AssetManagerCached);
+    SkeletalMeshObject* SkeletalMeshObjectInstance = ActorInstance->GetSkeletalMeshObjectInstance();
+    SkeletalMeshObjectInformationDrawer MeshObjectDrawer(SkeletalMeshObjectInstance, AssetManagerCached);
     MeshObjectDrawer.DrawInformation();
 
+    if (SkeletalMeshObjectInstance != nullptr)
+    {
+        MaterialInformationDrawer MaterialDrawer(SkeletalMeshObjectInstance, AssetManagerCached);
+        MaterialDrawer.DrawInformation();
+    }
     PopID();
 }
 

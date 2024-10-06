@@ -2,7 +2,6 @@
 #include "AObject.h"
 
 #include "GlobalVariable.h"
-#include "DefineType.h"
 
 #include <string>
 #include <format>
@@ -10,6 +9,7 @@
 
 using namespace std;
 using namespace ImGui;
+using namespace DirectX;
 
 const char* TransformationInformationDrawer::TransformationSelect[NumTransformationSelect]
 {

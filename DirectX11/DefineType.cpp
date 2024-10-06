@@ -1,6 +1,8 @@
 #include "DefineType.h"
 #include <iostream>
 
+using namespace DirectX;
+
 Ray Ray::CreateRay(
 	const float& ScreenXIn, 
 	const float& ScreenYIn, 

@@ -21,7 +21,7 @@ unordered_map<EAssetType, string> AAssetFile::AssetTypeToSuffix
 
 	// Material
 	{ EAssetType::Material,			"_Material" },
-	{ EAssetType::NormalTexture,	"_NormalTexture" },
+	{ EAssetType::BasicTexture,		"_BasicTexture" },
 	{ EAssetType::EXRTexture,		"_EXRTexture" },
 	{ EAssetType::DDSTexture,		"_DDSTexture" },
 
@@ -46,7 +46,7 @@ unordered_map<string, EAssetType> AAssetFile::AssetSuffixToType
 
 	// Material
 	{ "_Material", EAssetType::Material },
-	{ "_NormalTexture", EAssetType::NormalTexture },
+	{ "_BasicTexture", EAssetType::BasicTexture },
 	{ "_EXRTexture", EAssetType::EXRTexture },
 	{ "_DDSTexture", EAssetType::DDSTexture },
 
@@ -88,4 +88,20 @@ void AAssetFile::SerializeHeader(FILE* FileIn)
 	fwrite(&AssetType, sizeof(AssetType), 1, FileIn);
 }
 
+void AAssetFile::SerializeString(const std::string& String, FILE* FileIn)
+{
+	// Object Name
+	size_t NameCount = String.size();
+	fwrite(&NameCount, sizeof(size_t), 1, FileIn);
+	fwrite(String.c_str(), sizeof(char), NameCount, FileIn);
+}
+
+void AAssetFile::DeserializeString(std::string& String, FILE* FileIn)
+{
+	// Object Name
+	size_t NameCount;
+	fread(&NameCount, sizeof(size_t), 1, FileIn);
+	String.resize(NameCount);
+	fread(String.data(), sizeof(char), NameCount, FileIn);
+}
 

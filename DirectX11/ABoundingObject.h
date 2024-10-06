@@ -1,7 +1,7 @@
 #pragma once
 #include "IIntersectable.h"
 #include "AAttachableObject.h"
-#include <DirectXCollision.h>
+#include "directxmath/DirectXCollision.h"
 
 class GraphicsPipeline;
 class Debugable;

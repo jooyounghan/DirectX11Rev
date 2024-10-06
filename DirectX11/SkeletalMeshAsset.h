@@ -16,8 +16,8 @@ protected:
 	MakeSetterGetter(LinkedBoneAsset)
 
 public:
-	std::vector<Vertexable<XMFLOAT4>> BlendWeightPerLOD;
-	std::vector<Vertexable<XMINT4>> BlendIndexPerLOD;
+	std::vector<Vertexable<DirectX::XMFLOAT4>> BlendWeightPerLOD;
+	std::vector<Vertexable<DirectX::XMINT4>> BlendIndexPerLOD;
 
 public:
 	virtual void SetLODCount(const size_t& LODCountIn) override;
@@ -31,11 +31,11 @@ public:
 	virtual void Initialize() override;
 
 public:
-	virtual std::string Serialize() override;
+	virtual void Serialize() override;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 
 protected:
 	virtual void SerializeBaseMeshData(FILE* FileIn) override;
-	virtual void DeserializeBaseMeshData(FILE* FileIn) override;
+	virtual void DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

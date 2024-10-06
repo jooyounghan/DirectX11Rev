@@ -1,6 +1,7 @@
 #include "AObject.h"
 #include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
+#include "AAssetFile.h"
 
 #include <format>
 
@@ -30,7 +31,7 @@ void AObject::Update(const float& DeltaTimeIn)
 void AObject::OnSerializeFromMap(FILE* FileIn)
 {
 	// Object Name
-	SerializeString(ObjectName, FileIn);
+	AAssetFile::SerializeString(ObjectName, FileIn);
 
 	// Transformation
 	fwrite(&RelativePosition, sizeof(XMFLOAT3), 1, FileIn);
@@ -41,7 +42,7 @@ void AObject::OnSerializeFromMap(FILE* FileIn)
 void AObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	// Object Name
-	DeserializeString(ObjectName, FileIn);
+	AAssetFile::DeserializeString(ObjectName, FileIn);
 
 	// Transformation
 	fread(&RelativePosition, sizeof(XMFLOAT3), 1, FileIn);
@@ -49,19 +50,3 @@ void AObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 	fread(&RelativeScale, sizeof(XMFLOAT3), 1, FileIn);
 }
 
-void AObject::SerializeString(const std::string& String, FILE* FileIn)
-{
-	// Object Name
-	size_t NameCount = String.size();
-	fwrite(&NameCount, sizeof(size_t), 1, FileIn);
-	fwrite(String.c_str(), sizeof(char), NameCount, FileIn);
-}
-
-void AObject::DeserializeString(std::string& String, FILE* FileIn)
-{
-	// Object Name
-	size_t NameCount;
-	fread(&NameCount, sizeof(size_t), 1, FileIn);
-	String.resize(NameCount);
-	fread(String.data(), sizeof(char), NameCount, FileIn);
-}

@@ -1,6 +1,9 @@
 #include "AMeshAsset.h"
+#include "MaterialAsset.h"
+#include "AssetManager.h"
 
 using namespace std;
+using namespace DirectX;
 
 AMeshAsset::AMeshAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn)
 	: AAssetFile(AssetNameIn, AssetTypeIn)
@@ -80,6 +83,15 @@ void AMeshAsset::Initialize()
 
 void AMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 {
+	size_t MeshCount = DefaultMaterialAssets.size();
+	fwrite(&MeshCount, sizeof(size_t), 1, FileIn);
+	
+	for (size_t MaterialIdx = 0; MaterialIdx < MeshCount; ++MaterialIdx)
+	{
+		const shared_ptr<MaterialAsset>& CurrentMaterialAsset = DefaultMaterialAssets[MaterialIdx];
+		SerializeString(CurrentMaterialAsset != nullptr ? CurrentMaterialAsset->GetAssetName() : "", FileIn);
+	}
+
 	fwrite(&LODCount, sizeof(size_t), 1, FileIn);
 
 	// Positions
@@ -115,8 +127,19 @@ void AMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 	}
 }
 
-void AMeshAsset::DeserializeBaseMeshData(FILE* FileIn)
+void AMeshAsset::DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn)
 {
+	size_t MeshCount;
+	fread(&MeshCount, sizeof(size_t), 1, FileIn);
+
+	DefaultMaterialAssets.resize(MeshCount);
+	for (size_t MaterialIdx = 0; MaterialIdx < MeshCount; ++MaterialIdx)
+	{
+		string MaterialName;
+		DeserializeString(MaterialName, FileIn);
+		DefaultMaterialAssets[MaterialIdx] = AssetManagerIn->GetManagingMaterial(MaterialName);
+	}
+
 	fread(&LODCount, sizeof(size_t), 1, FileIn);
 
 	PositionsPerLOD.resize(LODCount);

@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 using namespace std;
+using namespace DirectX;
 
 SkeletalMeshAsset::SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadFromAsset)
 	: ANBTMeshAsset(LoadFromAsset ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::SkeletalMesh)], EAssetType::SkeletalMesh)
@@ -72,7 +73,7 @@ void SkeletalMeshAsset::Initialize()
 	}	
 }
 
-string SkeletalMeshAsset::Serialize()
+void SkeletalMeshAsset::Serialize()
 {
 	FILE* OutputAssetFile;
 	string OutputAssetFilePath = DefaultOpenFileHelper(SkeletalMeshAssetOutPath, OutputAssetFile);
@@ -93,9 +94,7 @@ string SkeletalMeshAsset::Serialize()
 		SerializeBaseMeshData(OutputAssetFile);
 
 		fclose(OutputAssetFile);
-		return OutputAssetFilePath;
 	}
-	return string();
 }
 
 void SkeletalMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
@@ -110,7 +109,7 @@ void SkeletalMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	std::shared_ptr<BoneAsset> BoneAssetFile = AssetManagerIn->GetManagingBone(BoneAssetName);
 	LinkedBoneAsset = BoneAssetFile;
 
-	DeserializeBaseMeshData(FileIn);
+	DeserializeBaseMeshData(FileIn, AssetManagerIn);
 
 	Initialize();
 }
@@ -136,9 +135,9 @@ void SkeletalMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 	}
 }
 
-void SkeletalMeshAsset::DeserializeBaseMeshData(FILE* FileIn)
+void SkeletalMeshAsset::DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	ANBTMeshAsset::DeserializeBaseMeshData(FileIn);
+	ANBTMeshAsset::DeserializeBaseMeshData(FileIn, AssetManagerIn);
 	BlendWeightPerLOD.resize(LODCount);
 	BlendIndexPerLOD.resize(LODCount);
 

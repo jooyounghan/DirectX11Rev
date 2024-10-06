@@ -27,13 +27,27 @@ StaticMeshObject::StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<S
 
 	StaticMeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_Solid);
 	PickingIDSolidStaticPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_ID_Solid);
+
+	if (StaticMeshAssetInstanceIn != nullptr)
+	{
+		MaterialAssetInstances = StaticMeshAssetInstanceIn->GetDefaultMaterialAssets();
+	}
 }
 
 StaticMeshObject::~StaticMeshObject()
 {
 }
 
-AMeshAsset* StaticMeshObject::GetMeshAssetInstance() 
+void StaticMeshObject::SetStaticMeshAssetInstance(std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn)
+{
+	if (StaticMeshAssetInstanceIn != nullptr)
+	{
+		StaticMeshAssetInstance = StaticMeshAssetInstanceIn;
+		SetMaterialAssetInstances(StaticMeshAssetInstanceIn->GetDefaultMaterialAssets());
+	}
+}
+
+AMeshAsset* StaticMeshObject::GetMeshAssetInstance()
 {
 	return StaticMeshAssetInstance.get();
 }
@@ -108,18 +122,18 @@ void StaticMeshObject::Render()
 
 void StaticMeshObject::OnSerializeFromMap(FILE* FileIn)
 {
-	AObject::OnSerializeFromMap(FileIn);
+	AMeshObject::OnSerializeFromMap(FileIn);
 
 	// Mesh Asset Name
 	if (StaticMeshAssetInstance != nullptr)
 	{
 		const string& AssetName = StaticMeshAssetInstance->GetAssetName();
-		SerializeString(AssetName, FileIn);
+		AAssetFile::SerializeString(AssetName, FileIn);
 	}
 	else
 	{
 		const string DummyAssetName = "";
-		SerializeString(DummyAssetName, FileIn);
+		AAssetFile::SerializeString(DummyAssetName, FileIn);
 	}
 }
 
@@ -128,6 +142,6 @@ void StaticMeshObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManag
 	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
 
 	string MeshAssetName;
-	DeserializeString(MeshAssetName, FileIn);
+	AAssetFile::DeserializeString(MeshAssetName, FileIn);
 	StaticMeshAssetInstance = AssetManagerIn->GetManagingStaticMesh(MeshAssetName);
 }

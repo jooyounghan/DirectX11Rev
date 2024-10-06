@@ -22,7 +22,7 @@ void StaticMeshObjectInformationDrawer::DrawInformation()
 
     const StaticMeshAsset* MeshAssetInstance = ObjectCached->GetStaticMeshAssetInstance();
 
-    ImGui::ColorButton("StaticMeshAseetThumbnail", UIColor::GBlack, NULL, UISize::FileSize);
+    Image(nullptr, UISize::FileSize);
 
     SameLine();
 

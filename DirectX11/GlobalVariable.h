@@ -1,6 +1,6 @@
 #pragma once
 #include <windows.h>
-#include <DirectXMath.h>
+#include "directxmath/DirectXMath.h"
 
 class PortfolioApp;
 class GraphicsPipeline;

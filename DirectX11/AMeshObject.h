@@ -1,13 +1,23 @@
 #pragma once
 #include "AAttachableObject.h"
+#include "MaterialAsset.h"
 
 class AMeshAsset;
+class MaterialAsset;
 
 class AMeshObject : public AAttachableObject
 {
 public:
 	AMeshObject(MapAsset* MapAssetInstance);
 	virtual ~AMeshObject();
+
+protected:
+	std::vector<std::shared_ptr<MaterialAsset>> MaterialAssetInstances;
+	MakeSetterGetter(MaterialAssetInstances);
+
+public:
+	void SetMaterialAsset(const size_t& MaterialIdx, std::shared_ptr<MaterialAsset> MaterialAssetIn);
+	MaterialAsset* GetMaterialAssetInstance(const size_t& MaterialIdx);
 
 public:
 	virtual AMeshAsset* GetMeshAssetInstance() = 0;
@@ -23,5 +33,10 @@ public:
 
 public:
 	virtual void Render() override;
+
+public:
+	virtual void OnSerializeFromMap(FILE* FileIn) override;
+	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
+
 };
 

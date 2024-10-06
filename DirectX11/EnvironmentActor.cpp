@@ -123,11 +123,11 @@ void EnvironmentActor::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManag
 	string EnvironmentDiffuseDDSTextureAssetName;
 	string EnvironmentBRDFDDSTextureAssetName;
 
-	DeserializeString(EnvironmentMeshAssetName, FileIn);
-	DeserializeString(EnvironmentBackgroundEXRTextureAssetName, FileIn);
-	DeserializeString(EnvironmentSpecularDDSTextureAssetName, FileIn);
-	DeserializeString(EnvironmentDiffuseDDSTextureAssetName, FileIn);
-	DeserializeString(EnvironmentBRDFDDSTextureAssetName, FileIn);
+	AAssetFile::DeserializeString(EnvironmentMeshAssetName, FileIn);
+	AAssetFile::DeserializeString(EnvironmentBackgroundEXRTextureAssetName, FileIn);
+	AAssetFile::DeserializeString(EnvironmentSpecularDDSTextureAssetName, FileIn);
+	AAssetFile::DeserializeString(EnvironmentDiffuseDDSTextureAssetName, FileIn);
+	AAssetFile::DeserializeString(EnvironmentBRDFDDSTextureAssetName, FileIn);
 
 	EnvironmentMeshAsset = AssetManagerIn->GetManagingBaseMesh(EnvironmentMeshAssetName);
 	EnvironmentBackgroundEXRTextureAsset = AssetManagerIn->GetManagingEXRTexture(EnvironmentBackgroundEXRTextureAssetName);
@@ -144,7 +144,7 @@ template<typename T>
 void EnvironmentActor::AssetNameSerializeHelper(T AssetIn, FILE* FileIn)
 {
 	const string AssetName = AssetIn != nullptr ? AssetIn->GetAssetName() : "";
-	SerializeString(AssetName, FileIn);
+	AAssetFile::SerializeString(AssetName, FileIn);
 
 
 }

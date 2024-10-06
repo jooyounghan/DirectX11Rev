@@ -7,7 +7,7 @@ class Viewable;
 class BoundingSphereObject;
 class OBBObject;
 
-class BoundingFrustumObject : public ABoundingObject, public BoundingFrustum
+class BoundingFrustumObject : public ABoundingObject, public DirectX::BoundingFrustum
 {
 public:
 	BoundingFrustumObject(MapAsset* MapAssetInstance, Viewable* ViewableInstance);

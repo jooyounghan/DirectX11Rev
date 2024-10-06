@@ -19,9 +19,10 @@
 #include "BaseCubeMeshAsset.h"
 #include "BaseSphereMeshAsset.h"
 
-#include "NormalTextureAsset.h"
+#include "BasicTextureAsset.h"
 #include "EXRTextureAsset.h"
 #include "DDSTextureAsset.h"
+#include "MaterialAsset.h"
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -44,9 +45,9 @@ unordered_map<string, EFileType> AssetManager::FileExtensionToType
     { ".gltf", EFileType::ModelFile },
     { ".fbx", EFileType::ModelFile },
     { ".obj", EFileType::ModelFile },
-    { ".jpg", EFileType::NormalTextureFile },
-    { ".jpeg", EFileType::NormalTextureFile},
-    { ".png", EFileType::NormalTextureFile },
+    { ".jpg", EFileType::BasicTextureFile },
+    { ".jpeg", EFileType::BasicTextureFile},
+    { ".png", EFileType::BasicTextureFile },
     { ".exr", EFileType::EXRTextureFile },
     { ".dds", EFileType::DDSTextureFile },
 };
@@ -73,8 +74,8 @@ void AssetManager::LoadAssetFromFile(const std::string& FilePathIn)
         case EFileType::ModelFile:
             LoadModelAssetFromFile(FilePathIn, FileName, FileExtension);
             break;
-        case EFileType::NormalTextureFile:
-            LoadNormalTextureAssetFromFile(FilePathIn, FileName, FileExtension);
+        case EFileType::BasicTextureFile:
+            LoadBasicTextureAssetFromFile(FilePathIn, FileName, FileExtension);
             break;
         case EFileType::EXRTextureFile:
             LoadEXRTextureAssetFromFile(FilePathIn, FileName, FileExtension);
@@ -93,8 +94,6 @@ void AssetManager::LoadModelAssetFromFile(const string& FilePathIn, const std::s
 {
     if (FileNameToAssetNames.find(FileNameIn) == FileNameToAssetNames.end())
     {
-        FileNameStack.push(FileNameIn);
-
         Assimp::Importer importer;
         const aiScene* pScene = importer.ReadFile(
             StringHelper::ConvertACPToUTF8(FilePathIn),
@@ -103,15 +102,17 @@ void AssetManager::LoadModelAssetFromFile(const string& FilePathIn, const std::s
 
         if (pScene)
         {
+            CurrentModelsMaterials.clear();
+
+            if (pScene->HasMaterials())
+            {
+                LoadMaterialAssetFromFile(FilePathIn, FileNameIn, pScene);
+            }
+
             // Load Mesh
             if (pScene->HasMeshes())
             {
                 LoadMeshAssetFromFile(FileExtensionIn == ".gltf", FileNameIn, pScene);
-            }
-
-            if (pScene->HasMaterials())
-            {
-                LoadMaterialAssetFromFile(FileNameIn, pScene);
             }
 
             if (pScene->HasAnimations())
@@ -119,13 +120,10 @@ void AssetManager::LoadModelAssetFromFile(const string& FilePathIn, const std::s
                 LoadAnimationAssetFromFile(FileNameIn, pScene);
             }
         }
-        FileNameStack.pop();
-
-        assert(FileNameStack.empty());
     }
 }
 
-void AssetManager::LoadNormalTextureAssetFromFile(
+void AssetManager::LoadBasicTextureAssetFromFile(
     const string& FilePathIn, 
     const std::string& FileNameIn, 
     const std::string& FileExtensionIn
@@ -142,8 +140,8 @@ void AssetManager::LoadNormalTextureAssetFromFile(
 
         if (ImageBuffer != nullptr)
         {
-            shared_ptr<NormalTextureAsset> TextureAssetLoaded = make_shared<NormalTextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut);
-            SerailizeAndAddToContainer(ManagingNormalTextures, TextureAssetLoaded);
+            shared_ptr<BasicTextureAsset> TextureAssetLoaded = make_shared<BasicTextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut);
+            SerailizeAndAddToContainer(ManagingBasicTextures, TextureAssetLoaded);
         }
         fclose(FileHandle);
 
@@ -181,7 +179,7 @@ void AssetManager::LoadDDSTextureAssetFromFile(const std::string& FilePathIn, co
     }
 }
 
-void AssetManager::LoadMeshAssetFromFile(bool IsGltf, const string AssetName, const aiScene* const Scene)
+void AssetManager::LoadMeshAssetFromFile(bool IsGltf, const string& AssetName, const aiScene* const Scene)
 {
     XMMATRIX RootTransform = DirectX::XMMatrixIdentity();
     aiNode* RootNode = Scene->mRootNode;
@@ -205,6 +203,7 @@ void AssetManager::LoadMeshAssetFromFile(bool IsGltf, const string AssetName, co
         SerailizeAndAddToContainer(ManagingBones, BoneAssetLoaded);
 
         SkeletalMeshAssetLoaded->Initialize();
+        SkeletalMeshAssetLoaded->SetDefaultMaterialAssets(CurrentModelsMaterials);
         SerailizeAndAddToContainer(ManagingSkeletalMeshes, SkeletalMeshAssetLoaded);
     }
     else
@@ -215,16 +214,76 @@ void AssetManager::LoadMeshAssetFromFile(bool IsGltf, const string AssetName, co
         ProcessNodeForMesh(IsGltf, Scene, RootNode, (StaticMeshAsset*)StaticMeshLoaded.get(), RootTransform);
 
         StaticMeshLoaded->Initialize();
+        StaticMeshLoaded->SetDefaultMaterialAssets(CurrentModelsMaterials);
         SerailizeAndAddToContainer(ManagingStaticMeshes, StaticMeshLoaded);
     }
 }
 
-void AssetManager::LoadMaterialAssetFromFile(const string AssetName, const aiScene* const Scene)
+void AssetManager::LoadMaterialAssetFromFile(const string& FilePath, const string& AssetName, const aiScene* const Scene)
 {
+    for (size_t material_idx = 0; material_idx < Scene->mNumMaterials; ++material_idx)
+    {
+        aiMaterial* pMaterial = Scene->mMaterials[material_idx];
+        shared_ptr<MaterialAsset> MaterialAssetLoaded = make_shared<MaterialAsset>(pMaterial->GetName().C_Str(), false);
 
+        aiString MaterialName = pMaterial->GetName();
+        if (pMaterial->GetTextureCount(aiTextureType_AMBIENT) > 0)
+        {
+            MaterialAssetLoaded->SetAmbientOcculusionTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_AMBIENT));
+        }
+        if (pMaterial->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION) > 0)
+        {
+            MaterialAssetLoaded->SetAmbientOcculusionTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_AMBIENT_OCCLUSION));
+        }
+        if (pMaterial->GetTextureCount(aiTextureType_SPECULAR) > 0)
+        {
+            MaterialAssetLoaded->SetSpecularTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_SPECULAR));
+        }
+        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+        {
+            MaterialAssetLoaded->SetDiffuseTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_DIFFUSE));
+        }
+        if (pMaterial->GetTextureCount(aiTextureType_NORMALS) > 0)
+        {
+            MaterialAssetLoaded->SetNormalTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_NORMALS));
+        }
+        if (pMaterial->GetTextureCount(aiTextureType_HEIGHT) > 0)
+        {
+            MaterialAssetLoaded->SetHeightTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_HEIGHT));
+        }
+
+        SerailizeAndAddToContainer(ManagingMaterials, MaterialAssetLoaded);
+        CurrentModelsMaterials.push_back(MaterialAssetLoaded);
+    }
 }
 
-void AssetManager::LoadAnimationAssetFromFile(const string AssetName, const aiScene* const Scene)
+shared_ptr<BasicTextureAsset> AssetManager::LoadBasicTextureFromMaterial(const aiScene* const Scene, aiMaterial* MaterialIn, aiTextureType TextureTypeIn)
+{
+    aiString aiTexturePath;
+    shared_ptr<BasicTextureAsset> TextureAssetLoaded;
+    if (MaterialIn->GetTexture(TextureTypeIn, 0, &aiTexturePath) == aiReturn_SUCCESS)
+    {
+        const string TexturePathString = aiTexturePath.C_Str();
+        path TexturePath = TexturePathString;
+        const string TextureName = TexturePath.stem().string();
+
+        const aiTexture* Texture = Scene->GetEmbeddedTexture(TexturePathString.c_str());
+        if (Texture != nullptr)
+        {
+            int WidthOut, HeightOut, ChannelOut;
+            stbi_uc* ImageBuffer = stbi_load_from_memory((const stbi_uc*)Texture->pcData, Texture->mWidth, &WidthOut, &HeightOut, &ChannelOut, 4);
+            if (ImageBuffer != nullptr)
+            {
+                TextureAssetLoaded = make_shared<BasicTextureAsset>(TextureName, ImageBuffer, WidthOut, HeightOut);
+                SerailizeAndAddToContainer(ManagingBasicTextures, TextureAssetLoaded);
+                stbi_image_free(ImageBuffer);
+            }
+        }
+    }
+    return TextureAssetLoaded;
+}
+
+void AssetManager::LoadAnimationAssetFromFile(const string& AssetName, const aiScene* const Scene)
 {
 }
 
@@ -262,9 +321,10 @@ AAssetFile* AssetManager::GetManagingAsset(const std::string& AssetNameIn)
         Result = GetManagingAssetHelper(ManagingMaps, AssetNameIn).get();
         break;
     case EAssetType::Material:
+        Result = GetManagingAssetHelper(ManagingMaterials, AssetNameIn).get();
         break;
-    case EAssetType::NormalTexture:
-        Result = GetManagingAssetHelper(ManagingNormalTextures, AssetNameIn).get();
+    case EAssetType::BasicTexture:
+        Result = GetManagingAssetHelper(ManagingBasicTextures, AssetNameIn).get();
         break;
     case EAssetType::EXRTexture:
         Result = GetManagingAssetHelper(ManagingEXRTextures, AssetNameIn).get();
@@ -281,39 +341,44 @@ AAssetFile* AssetManager::GetManagingAsset(const std::string& AssetNameIn)
     return Result;
 }
 
-std::shared_ptr<MapAsset> AssetManager::GetManagingMap(const std::string MapAssetName)
+std::shared_ptr<MapAsset> AssetManager::GetManagingMap(const std::string AssetName)
 {
-    return GetManagingAssetHelper(ManagingMaps, MapAssetName);
+    return GetManagingAssetHelper(ManagingMaps, AssetName);
 }
 
-std::shared_ptr<BoneAsset> AssetManager::GetManagingBone(const std::string MapAssetName)
+std::shared_ptr<BoneAsset> AssetManager::GetManagingBone(const std::string AssetName)
 {
-    return GetManagingAssetHelper(ManagingBones, MapAssetName);
+    return GetManagingAssetHelper(ManagingBones, AssetName);
 }
 
-std::shared_ptr<StaticMeshAsset> AssetManager::GetManagingStaticMesh(const std::string MapAssetName)
+std::shared_ptr<StaticMeshAsset> AssetManager::GetManagingStaticMesh(const std::string AssetName)
 {
-    return GetManagingAssetHelper(ManagingStaticMeshes, MapAssetName);
+    return GetManagingAssetHelper(ManagingStaticMeshes, AssetName);
 }
 
-std::shared_ptr<SkeletalMeshAsset> AssetManager::GetManagingSkeletalMesh(const std::string MapAssetName)
+std::shared_ptr<SkeletalMeshAsset> AssetManager::GetManagingSkeletalMesh(const std::string AssetName)
 {
-    return GetManagingAssetHelper(ManagingSkeletalMeshes, MapAssetName);
+    return GetManagingAssetHelper(ManagingSkeletalMeshes, AssetName);
 }
 
-std::shared_ptr<NormalTextureAsset> AssetManager::GetManagingNormalTexture(const std::string MapAssetName)
+std::shared_ptr<BasicTextureAsset> AssetManager::GetManagingBasicTexture(const std::string AssetName)
 {
-    return GetManagingAssetHelper(ManagingNormalTextures, MapAssetName);
+    return GetManagingAssetHelper(ManagingBasicTextures, AssetName);
 }
 
-std::shared_ptr<EXRTextureAsset> AssetManager::GetManagingEXRTexture(const std::string MapAssetName)
+std::shared_ptr<EXRTextureAsset> AssetManager::GetManagingEXRTexture(const std::string AssetName)
 {
-    return GetManagingAssetHelper(ManagingEXRTextures, MapAssetName);
+    return GetManagingAssetHelper(ManagingEXRTextures, AssetName);
 }
 
-std::shared_ptr<DDSTextureAsset> AssetManager::GetManagingDDSTexture(const std::string MapAssetName)
+std::shared_ptr<DDSTextureAsset> AssetManager::GetManagingDDSTexture(const std::string AssetName)
 {
-    return GetManagingAssetHelper(ManagingDDSTextures, MapAssetName);
+    return GetManagingAssetHelper(ManagingDDSTextures, AssetName);
+}
+
+std::shared_ptr<MaterialAsset> AssetManager::GetManagingMaterial(const std::string AssetName)
+{
+    return GetManagingAssetHelper(ManagingMaterials, AssetName);
 }
 
 BaseMeshAsset* AssetManager::GetManagingBaseMesh(const std::string MapAssetName)
@@ -327,7 +392,7 @@ void AssetManager::SerailizeAndAddToContainer(
     T& AddedAsset
 )
 {
-    string SerializedPath = AddedAsset->Serialize();
+    AddedAsset->Serialize();
     ManagingContainer.emplace(AddedAsset->GetAssetName(), AddedAsset);
 
     AssetAddedEvent.Execute();
@@ -554,7 +619,7 @@ void AssetManager::LoadPosition(
             aiVector3D CurrentVertex = Mesh->mVertices[VertexIdx];
             DirectX::XMVECTOR TransformedVertex = DirectX::XMVectorSet(CurrentVertex.x, CurrentVertex.y, CurrentVertex.z, 0.f);
             TransformedVertex = DirectX::XMVector3TransformCoord(TransformedVertex, ParentMatrix);
-            memcpy(&/*MeshObjectInstance->Positions.Vertices*/Postions[AccessIdx], &TransformedVertex, sizeof(aiVector3D));
+            memcpy(&Postions[AccessIdx], &TransformedVertex, sizeof(aiVector3D));
         }
     }
 }
@@ -785,14 +850,17 @@ void AssetManager::LoadAssetWithTopologySorting(const vector<string>& AssetPaths
                 case EAssetType::Map:
                     LoadAssetHelper(InputAssetFile, ManagingMaps, AssetPreloadArgs.AssetName, this, true);
                     break;
-                case EAssetType::NormalTexture:
-                    LoadAssetHelper(InputAssetFile, ManagingNormalTextures, AssetPreloadArgs.AssetName);
+                case EAssetType::BasicTexture:
+                    LoadAssetHelper(InputAssetFile, ManagingBasicTextures, AssetPreloadArgs.AssetName);
                     break;
                 case EAssetType::EXRTexture:
                     LoadAssetHelper(InputAssetFile, ManagingEXRTextures, AssetPreloadArgs.AssetName);
                     break;
                 case EAssetType::DDSTexture:
                     LoadAssetHelper(InputAssetFile, ManagingDDSTextures, AssetPreloadArgs.AssetName);
+                    break;
+                case EAssetType::Material:
+                    LoadAssetHelper(InputAssetFile, ManagingMaterials, AssetPreloadArgs.AssetName, true);
                     break;
                 case EAssetType::Animation:
                     break;

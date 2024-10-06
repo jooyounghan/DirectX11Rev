@@ -34,7 +34,7 @@ vector<vector<uint8_t>> AScratchTextureAsset::CompressDataArray(
 	for (size_t ArrayIdx = 0; ArrayIdx < ArraySize; ++ArrayIdx)
 	{
 
-		uLongf CompressedSize = compressBound(OriginalSizePerArray[ArrayIdx]);
+		uLong CompressedSize = compressBound(OriginalSizePerArray[ArrayIdx]);
 		vector<uint8_t> DecompressedData(CompressedSize);
 
 		int Result = compress2(

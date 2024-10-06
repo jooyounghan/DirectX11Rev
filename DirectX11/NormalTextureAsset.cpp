@@ -1,4 +1,4 @@
-#include "NormalTextureAsset.h"
+#include "BasicTextureAsset.h"
 
 #include "DefineUtility.h"
 
@@ -11,18 +11,18 @@
 
 using namespace std;
 
-NormalTextureAsset::NormalTextureAsset(const string& AssetNameIn)
-	: ATextureAsset(AssetNameIn, EAssetType::NormalTexture)
+BasicTextureAsset::BasicTextureAsset(const string& AssetNameIn)
+	: ATextureAsset(AssetNameIn, EAssetType::BasicTexture)
 {
 }
 
-NormalTextureAsset::NormalTextureAsset(
+BasicTextureAsset::BasicTextureAsset(
 	const string& AssetNameIn, 
 	uint8_t* ImageBufferIn, 
 	const UINT& WidthIn, 
 	const UINT& HeightIn
 )
-	: ATextureAsset(AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::NormalTexture)], EAssetType::NormalTexture)
+	: ATextureAsset(AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::BasicTexture)], EAssetType::BasicTexture)
 {
 	Width = WidthIn;
 	Height = HeightIn;
@@ -39,11 +39,11 @@ NormalTextureAsset::NormalTextureAsset(
 	CompressedBufferPerArray = CompressDataArray(ImageBufferPerArray, OriginalSizePerArray, CompressedSizePerArray);
 }
 
-NormalTextureAsset::~NormalTextureAsset()
+BasicTextureAsset::~BasicTextureAsset()
 {
 }
 
-void NormalTextureAsset::CreateTexture(
+void BasicTextureAsset::CreateTexture(
 	const std::vector<uint8_t*>& ImageBufferPerArray,
 	const std::vector<size_t>& RowPitches
 )
@@ -60,7 +60,7 @@ void NormalTextureAsset::CreateTexture(
 }
 
 
-vector<vector<uint8_t>> NormalTextureAsset::CompressDataArray(
+vector<vector<uint8_t>> BasicTextureAsset::CompressDataArray(
 	const vector<uint8_t*>& DecompressedBufferPerArrayIn,
 	const vector<size_t>& OriginalSizePerArray,
 	vector<size_t>& CompressedSizePerArrayOut
@@ -80,7 +80,7 @@ vector<vector<uint8_t>> NormalTextureAsset::CompressDataArray(
 	return vResult;
 }
 
-vector<vector<uint8_t>> NormalTextureAsset::DecompressDataArray(
+vector<vector<uint8_t>> BasicTextureAsset::DecompressDataArray(
 	const std::vector<uint8_t*>& CompressedBufferPerArrayIn,
 	const std::vector<size_t>& CompressedSizePerArray,
 	const std::vector<size_t>& OriginalSizePerArray

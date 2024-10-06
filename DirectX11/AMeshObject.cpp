@@ -5,6 +5,7 @@
 #include "MathematicalHelper.h"
 
 using namespace std;
+using namespace DirectX;
 
 AMeshObject::AMeshObject(MapAsset* MapAssetInstance)
 	: AAttachableObject(MapAssetInstance)
@@ -13,6 +14,24 @@ AMeshObject::AMeshObject(MapAsset* MapAssetInstance)
 
 AMeshObject::~AMeshObject()
 {
+}
+
+void AMeshObject::SetMaterialAsset(const size_t& MaterialIdx, std::shared_ptr<MaterialAsset> MaterialAssetIn)
+{
+	if (MaterialAssetInstances.size() > MaterialIdx)
+	{
+		MaterialAssetInstances[MaterialIdx] = MaterialAssetIn;
+	}
+}
+
+MaterialAsset* AMeshObject::GetMaterialAssetInstance(const size_t& MaterialIdx)
+{
+	MaterialAsset* Result = nullptr;
+	if (MaterialAssetInstances.size() > MaterialIdx)
+	{
+		Result = MaterialAssetInstances[MaterialIdx].get();
+	}
+	return Result;
 }
 
 size_t AMeshObject::GetLODLevel(
@@ -32,10 +51,41 @@ size_t AMeshObject::GetLODLevel(
 	const float Distance = sqrt(MathematicalHelper::InnerProduct(DeltaPosition, DeltaPosition));
 	const float x = min(MaxDistance, Distance) / MaxDistance;
 
-	return static_cast<size_t>(((log10(x + pow(10, -static_cast<double>(SteepLevel))) + SteepLevel) / SteepLevel) * MaxLODCount);
+	const float LODFloat = pow(x, 0.5f) * MaxLODCount;
+	return static_cast<size_t>(LODFloat);
 }
 
 void AMeshObject::Render()
 {
 	AAttachableObject::Render();
+}
+
+void AMeshObject::OnSerializeFromMap(FILE* FileIn)
+{
+	AObject::OnSerializeFromMap(FileIn);
+
+	size_t MaterialCount = MaterialAssetInstances.size();
+	fwrite(&MaterialCount, sizeof(size_t), 1, FileIn);
+
+	for (auto& MaterialAssetInstance : MaterialAssetInstances)
+	{
+		AAssetFile::SerializeString(MaterialAssetInstance->GetAssetName(), FileIn);
+	}
+}
+
+void AMeshObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+
+	size_t MaterialCount;
+	fread(&MaterialCount, sizeof(size_t), 1, FileIn);
+
+	MaterialAssetInstances.resize(MaterialCount);
+	for (size_t idx = 0; idx < MaterialCount; ++idx)
+	{
+		string MaterialAssetName;
+		AAssetFile::DeserializeString(MaterialAssetName, FileIn);
+		
+		MaterialAssetInstances[idx] = AssetManagerIn->GetManagingMaterial(MaterialAssetName);
+	}
 }

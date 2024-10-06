@@ -1,5 +1,6 @@
 #include "StaticMeshObjectActor.h"
 #include "StaticMeshObject.h"
+
 #include "IGuiModelVisitor.h"
 
 const char* StaticMeshObjectActor::StaticMeshObjectActorIdentifier = "Static Actor";

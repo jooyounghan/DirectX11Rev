@@ -1,6 +1,6 @@
 #pragma once
 #include "IGuiModelVisitor.h"
-#include <DirectXMath.h>
+#include "directxmath/DirectXMath.h"
 
 class ModelDetailWindow;
 class AssetManager;

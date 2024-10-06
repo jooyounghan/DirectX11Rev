@@ -3,7 +3,7 @@
 #include "Delegation.h"
 #include "AssetPriorityManager.h"
 
-#include "DirectXMath.h"
+#include "directxmath/DirectXMath.h"
 
 #include <unordered_map>
 #include <filesystem>
@@ -16,6 +16,9 @@ struct aiScene;
 struct aiNode;
 struct aiMesh;
 struct aiString;
+struct aiMaterial;
+
+enum aiTextureType;
 
 enum class EAssetType;
 
@@ -30,14 +33,15 @@ class BoneAsset;
 
 class MapAsset;
 
-class NormalTextureAsset;
+class BasicTextureAsset;
 class EXRTextureAsset;
 class DDSTextureAsset;
+class MaterialAsset;
 
 enum class EFileType
 {
 	ModelFile,
-	NormalTextureFile,
+	BasicTextureFile,
 	EXRTextureFile,
 	DDSTextureFile,
 };
@@ -72,14 +76,15 @@ private:
 
 private:
 	void LoadModelAssetFromFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
-	void LoadNormalTextureAssetFromFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
+	void LoadBasicTextureAssetFromFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
 	void LoadEXRTextureAssetFromFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
 	void LoadDDSTextureAssetFromFile(const std::string& FilePathIn, const std::string& FileNameIn, const std::string& FileExtensionIn);
 
 private:
-	void LoadMeshAssetFromFile(bool IsGltf, const std::string AssetName, const aiScene* const Scene);
-	void LoadMaterialAssetFromFile(const std::string AssetName, const aiScene* const Scene);
-	void LoadAnimationAssetFromFile(const std::string AssetName, const aiScene* const Scene);
+	void LoadMeshAssetFromFile(bool IsGltf, const std::string& AssetName, const aiScene* const Scene);
+	void LoadMaterialAssetFromFile(const std::string& FilePath, const std::string& AssetName, const aiScene* const Scene);
+	std::shared_ptr<BasicTextureAsset> LoadBasicTextureFromMaterial(const aiScene* const Scene, aiMaterial* MaterialIn, aiTextureType TextureTypeIn);
+	void LoadAnimationAssetFromFile(const std::string& AssetName, const aiScene* const Scene);
 
 private:
 	bool HasBone(const aiScene* const Scene);
@@ -89,17 +94,19 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<BoneAsset>> ManagingBones;
 	std::unordered_map<std::string, std::shared_ptr<StaticMeshAsset>> ManagingStaticMeshes;
 	std::unordered_map<std::string, std::shared_ptr<SkeletalMeshAsset>> ManagingSkeletalMeshes;
-	std::unordered_map<std::string, std::shared_ptr<NormalTextureAsset>> ManagingNormalTextures;
+	std::unordered_map<std::string, std::shared_ptr<BasicTextureAsset>> ManagingBasicTextures;
 	std::unordered_map<std::string, std::shared_ptr<EXRTextureAsset>> ManagingEXRTextures;
 	std::unordered_map<std::string, std::shared_ptr<DDSTextureAsset>> ManagingDDSTextures;
+	std::unordered_map<std::string, std::shared_ptr<MaterialAsset>> ManagingMaterials;
 
 	MakeGetter(ManagingMaps);
 	MakeGetter(ManagingBones);
 	MakeGetter(ManagingStaticMeshes);
 	MakeGetter(ManagingSkeletalMeshes);
-	MakeGetter(ManagingNormalTextures);
+	MakeGetter(ManagingBasicTextures);
 	MakeGetter(ManagingEXRTextures);
 	MakeGetter(ManagingDDSTextures);
+	MakeGetter(ManagingMaterials);
 
 private:
 	std::unordered_map<std::string, BaseMeshAsset*> ManagingBaseMeshes;
@@ -117,19 +124,21 @@ private:
 	std::unordered_map<std::string, std::list<std::string>> FileNameToAssetNames;
 
 private:
-	std::stack<std::string> FileNameStack;
+	std::vector<std::shared_ptr<MaterialAsset>> CurrentModelsMaterials;
 
 public:
 	AAssetFile* GetManagingAsset(const std::string& AssetNameIn);
 
 public:
-	std::shared_ptr<MapAsset> GetManagingMap(const std::string MapAssetName);
-	std::shared_ptr<BoneAsset> GetManagingBone(const std::string MapAssetName);
-	std::shared_ptr<StaticMeshAsset> GetManagingStaticMesh(const std::string MapAssetName);
-	std::shared_ptr<SkeletalMeshAsset> GetManagingSkeletalMesh(const std::string MapAssetName);
-	std::shared_ptr<NormalTextureAsset> GetManagingNormalTexture(const std::string MapAssetName);
-	std::shared_ptr<EXRTextureAsset> GetManagingEXRTexture(const std::string MapAssetName);
-	std::shared_ptr<DDSTextureAsset> GetManagingDDSTexture(const std::string MapAssetName);
+	std::shared_ptr<MapAsset> GetManagingMap(const std::string AssetName);
+	std::shared_ptr<BoneAsset> GetManagingBone(const std::string AssetName);
+	std::shared_ptr<StaticMeshAsset> GetManagingStaticMesh(const std::string AssetName);
+	std::shared_ptr<SkeletalMeshAsset> GetManagingSkeletalMesh(const std::string AssetName);
+	std::shared_ptr<BasicTextureAsset> GetManagingBasicTexture(const std::string AssetName);
+	std::shared_ptr<EXRTextureAsset> GetManagingEXRTexture(const std::string AssetName);
+	std::shared_ptr<DDSTextureAsset> GetManagingDDSTexture(const std::string AssetName);
+	std::shared_ptr<MaterialAsset> GetManagingMaterial(const std::string AssetName);
+
 	BaseMeshAsset* GetManagingBaseMesh(const std::string MapAssetName);
 
 private:
@@ -191,7 +200,7 @@ private:
 	void LoadPosition(
 		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		std::vector<XMFLOAT3>& Postions,
+		std::vector<DirectX::XMFLOAT3>& Postions,
 		const DirectX::XMMATRIX& ParentMatrix
 	);
 
@@ -205,14 +214,14 @@ private:
 	void LoadTextureCoord(
 		const aiMesh* const Mesh,
 		size_t VertexStartIdx,
-		std::vector<XMFLOAT2>& UVTextures
+		std::vector<DirectX::XMFLOAT2>& UVTextures
 	);
 
 private:
 	void LoadBlendWeightAndIndex(
 		const aiMesh* const Mesh,
-		std::vector<XMFLOAT4>& BlendWeight,
-		std::vector<XMINT4>& BlendIndex
+		std::vector<DirectX::XMFLOAT4>& BlendWeight,
+		std::vector<DirectX::XMINT4>& BlendIndex
 	);
 
 private:

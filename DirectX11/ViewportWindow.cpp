@@ -12,6 +12,7 @@
 
 using namespace std;
 using namespace ImGui;
+using namespace DirectX;
 
 ViewportWindow::ViewportWindow(EditorWorld* EditorWorldCached)
     : EditorWorldCached(EditorWorldCached)

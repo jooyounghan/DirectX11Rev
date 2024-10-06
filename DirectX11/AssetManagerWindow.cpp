@@ -145,7 +145,7 @@ void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& V
             EAssetType AssetType = AssetFile->GetAssetType();
             switch (AssetType)
             {
-            case EAssetType::NormalTexture:
+            case EAssetType::BasicTexture:
             case EAssetType::EXRTexture:
                 Image(AssetFile->GetThumbnailSRV(), UISize::FileSize);
                 break;

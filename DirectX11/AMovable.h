@@ -1,6 +1,6 @@
 #pragma once
 #include "HeaderHelper.h"
-#include <DirectXMath.h>
+#include "directxmath/DirectXMath.h"
 #include <string>
 
 class AMovable

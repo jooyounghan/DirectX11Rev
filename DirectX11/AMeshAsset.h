@@ -2,7 +2,10 @@
 #include "AAssetFile.h"
 #include "Vertexable.h"
 #include "Indexable.h"
-#include "DefineType.h"
+
+#include "directxmath/DirectXMath.h"
+
+class MaterialAsset;
 
 class AMeshAsset : public AAssetFile
 {
@@ -11,14 +14,18 @@ public:
 	virtual ~AMeshAsset();
 
 public:
-	std::vector<Vertexable<XMFLOAT3>> PositionsPerLOD;
-	std::vector<Vertexable<XMFLOAT2>> UVTexturesPerLOD;
-	std::vector<Vertexable<XMFLOAT3>> NormalsPerLOD;
+	std::vector<Vertexable<DirectX::XMFLOAT3>> PositionsPerLOD;
+	std::vector<Vertexable<DirectX::XMFLOAT2>> UVTexturesPerLOD;
+	std::vector<Vertexable<DirectX::XMFLOAT3>> NormalsPerLOD;
 	std::vector<Indexable<uint32_t>> IndicesPerLOD;
 
 protected:
 	size_t LODCount = 0;
 	MakeGetter(LODCount);
+
+protected:
+	std::vector<std::shared_ptr<MaterialAsset>> DefaultMaterialAssets;
+	MakeSetterGetter(DefaultMaterialAssets);
 
 public:
 	virtual void SetLODCount(const size_t& LODCountIn);
@@ -30,7 +37,7 @@ public:
 
 public:
 	std::vector<ID3D11Buffer*> GetPositionBuffer(const size_t& LODLevelIn = 0);
-	inline std::vector<UINT> GetPositionStride() { return { sizeof(XMFLOAT3)}; }
+	inline std::vector<UINT> GetPositionStride() { return { sizeof(DirectX::XMFLOAT3)}; }
 	inline std::vector<UINT> GetPositionOffset() { return { 0 }; }
 
 public:
@@ -42,11 +49,11 @@ public:
 	virtual void Initialize();
 
 public:
-	virtual std::string Serialize() = 0;
+	virtual void Serialize() = 0;
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 
 protected:
 	virtual void SerializeBaseMeshData(FILE* FileIn);
-	virtual void DeserializeBaseMeshData(FILE* FileIn);
+	virtual void DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn);
 };
 

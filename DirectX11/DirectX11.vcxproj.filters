@@ -513,6 +513,9 @@
     <ClCompile Include="AssetPriorityManager.cpp">
       <Filter>소스 파일\Asset</Filter>
     </ClCompile>
+    <ClCompile Include="MaterialInformationDrawer.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
@@ -527,7 +530,7 @@
     <ClInclude Include="AMeshAsset.h">
       <Filter>헤더 파일\Asset\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="NormalTextureAsset.h">
+    <ClInclude Include="BasicTextureAsset.h">
       <Filter>헤더 파일\Asset\Texture</Filter>
     </ClInclude>
     <ClInclude Include="GameWorld.h">
@@ -832,6 +835,9 @@
     </ClInclude>
     <ClInclude Include="AssetPriorityManager.h">
       <Filter>헤더 파일\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialInformationDrawer.h">
+      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
