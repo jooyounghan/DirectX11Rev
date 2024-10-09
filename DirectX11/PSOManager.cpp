@@ -171,7 +171,7 @@ PSOManager::PSOManager()
         DeviceContext,
         SkeletalMeshInputLayout,
         SkeletalMeshVS, 2, 0,
-        SkeletalMeshPS, 0, 0,
+        SkeletalMeshPS, 0, 11,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
         DXGI_FORMAT_D24_UNORM_S8_UINT,

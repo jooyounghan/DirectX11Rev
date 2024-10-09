@@ -12,10 +12,7 @@ public:
 
 protected:
 	std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstance = nullptr;
-	MakeSmartPtrGetter(StaticMeshAssetInstance);
-
-public:
-	void SetStaticMeshAssetInstance(std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn);
+	MakeSmartPtrSetterGetter(StaticMeshAssetInstance);
 
 public:
 	static const char* StaticMeshObjectIdentifier;

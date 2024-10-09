@@ -227,10 +227,6 @@ void AssetManager::LoadMaterialAssetFromFile(const string& FilePath, const strin
         shared_ptr<MaterialAsset> MaterialAssetLoaded = make_shared<MaterialAsset>(pMaterial->GetName().C_Str(), false);
 
         aiString MaterialName = pMaterial->GetName();
-        if (pMaterial->GetTextureCount(aiTextureType_AMBIENT) > 0)
-        {
-            MaterialAssetLoaded->SetAmbientOcculusionTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_AMBIENT));
-        }
         if (pMaterial->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION) > 0)
         {
             MaterialAssetLoaded->SetAmbientOcculusionTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_AMBIENT_OCCLUSION));
@@ -243,6 +239,14 @@ void AssetManager::LoadMaterialAssetFromFile(const string& FilePath, const strin
         {
             MaterialAssetLoaded->SetDiffuseTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_DIFFUSE));
         }
+        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS) > 0)
+        {
+            MaterialAssetLoaded->SetRoughnessTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_DIFFUSE_ROUGHNESS));
+        }
+        if (pMaterial->GetTextureCount(aiTextureType_METALNESS) > 0)
+        {
+            MaterialAssetLoaded->SetMetalicTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_METALNESS));
+        }
         if (pMaterial->GetTextureCount(aiTextureType_NORMALS) > 0)
         {
             MaterialAssetLoaded->SetNormalTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_NORMALS));
@@ -251,7 +255,10 @@ void AssetManager::LoadMaterialAssetFromFile(const string& FilePath, const strin
         {
             MaterialAssetLoaded->SetHeightTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_HEIGHT));
         }
-
+        if (pMaterial->GetTextureCount(aiTextureType_EMISSIVE) > 0)
+        {
+            MaterialAssetLoaded->SetEmissiveTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_EMISSIVE));
+        }
         SerailizeAndAddToContainer(ManagingMaterials, MaterialAssetLoaded);
         CurrentModelsMaterials.push_back(MaterialAssetLoaded);
     }
@@ -560,6 +567,10 @@ void AssetManager::LoadMeshElement(
     LoadIndices(Mesh, VertexStartIdx, StaticMesh->IndicesPerLOD[LodLevel].Indices);
 
     CalculateTB(Mesh, IndicesStartIdx, StaticMesh, LodLevel);
+
+    StaticMesh->IndexCountsForPartPerLOD[LodLevel].push_back(StaticMesh->IndicesPerLOD[LodLevel].Indices.size() - IndicesStartIdx);
+    StaticMesh->IndexOffsetsForPartPerLOD[LodLevel].push_back(IndicesStartIdx);
+    StaticMesh->MaterialIndexPerLOD[LodLevel].push_back(Mesh->mMaterialIndex);
 }
 
 void AssetManager::LoadMeshElement(
@@ -585,7 +596,6 @@ void AssetManager::LoadMeshElement(
     SkeletalMesh->BlendWeightPerLOD[LodLevel].Vertices.insert(SkeletalMesh->BlendWeightPerLOD[LodLevel].Vertices.end(), TempBlendWeight.begin(), TempBlendWeight.end());
     SkeletalMesh->BlendIndexPerLOD[LodLevel].Vertices.insert(SkeletalMesh->BlendIndexPerLOD[LodLevel].Vertices.end(), TempBlendIndex.begin(), TempBlendIndex.end());
 
-
     // Load Position
     LoadPosition(Mesh, VertexStartIdx, SkeletalMesh->PositionsPerLOD[LodLevel].Vertices, ParentMatrix);
 
@@ -602,6 +612,10 @@ void AssetManager::LoadMeshElement(
     LoadBlendWeightAndIndex(Mesh, SkeletalMesh->BlendWeightPerLOD[LodLevel].Vertices, SkeletalMesh->BlendIndexPerLOD[LodLevel].Vertices);
 
     CalculateTB(Mesh, IndicesStartIdx, SkeletalMesh, LodLevel);
+
+    SkeletalMesh->IndexCountsForPartPerLOD[LodLevel].push_back(SkeletalMesh->IndicesPerLOD[LodLevel].Indices.size() - IndicesStartIdx);
+    SkeletalMesh->IndexOffsetsForPartPerLOD[LodLevel].push_back(IndicesStartIdx);
+    SkeletalMesh->MaterialIndexPerLOD[LodLevel].push_back(Mesh->mMaterialIndex);
 }
 
 void AssetManager::LoadPosition(
@@ -656,11 +670,13 @@ void AssetManager::LoadTextureCoord(
 {
     if (Mesh->HasTextureCoords(0))
     {
+        UINT MaterialIndex = Mesh->mMaterialIndex;
         for (size_t VertexIdx = 0; VertexIdx < Mesh->mNumVertices; ++VertexIdx)
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTextureCoord = Mesh->mTextureCoords[0][VertexIdx];
             memcpy(&UVTextures[AccessIdx], &CurrentTextureCoord, sizeof(aiVector2D));
+            UVTextures[AccessIdx].x += static_cast<float>(MaterialIndex);
         }
     }
 }
@@ -723,6 +739,7 @@ void AssetManager::LoadIndices(
                 IndicesIn.emplace_back(static_cast<uint32_t>(VertexStartIdx + CurrentFace.mIndices[Index]));
             }
         }
+
     }
 }
 

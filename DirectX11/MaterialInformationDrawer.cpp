@@ -24,7 +24,15 @@ void MaterialInformationDrawer::DrawInformation()
     {
         MaterialAsset* MaterialInstance = ObjectCached->GetMaterialAssetInstance(idx);
 
-        string MaterialSlotID = MaterialInstance->GetAssetName() + to_string(idx);
+        string MaterialSlotID;
+        if (MaterialInstance != nullptr)
+        {
+            MaterialSlotID = MaterialInstance->GetAssetName() + to_string(idx);
+        }
+        else
+        {
+            MaterialSlotID = "Material" + to_string(idx);
+        }
 
         PushID(MaterialSlotID.c_str());
 

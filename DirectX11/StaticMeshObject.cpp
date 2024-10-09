@@ -38,15 +38,6 @@ StaticMeshObject::~StaticMeshObject()
 {
 }
 
-void StaticMeshObject::SetStaticMeshAssetInstance(std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn)
-{
-	if (StaticMeshAssetInstanceIn != nullptr)
-	{
-		StaticMeshAssetInstance = StaticMeshAssetInstanceIn;
-		SetMaterialAssetInstances(StaticMeshAssetInstanceIn->GetDefaultMaterialAssets());
-	}
-}
-
 AMeshAsset* StaticMeshObject::GetMeshAssetInstance()
 {
 	return StaticMeshAssetInstance.get();
@@ -75,7 +66,6 @@ void StaticMeshObject::Render()
 
 #pragma region StaticMeshObjectPSOCached
 		StaticMeshObjectPSOCached->SetPipelineStateObject(1, RTVs, &CurrentCamera->GetViewport(), CurrentCamera->GetSceneDSV());
-		StaticMeshObjectPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
 
 		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
 			VertexBuffers.data(),
@@ -84,9 +74,8 @@ void StaticMeshObject::Render()
 		);
 		DeviceContextCached->IASetIndexBuffer(StaticMeshAssetInstance->GetIndexBuffer(LODLevel), StaticMeshAssetInstance->GetIndexFormat(), 0);
 
-#ifdef _DEBUG
+		StaticMeshObjectPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
 		StaticMeshObjectPSOCached->CheckPipelineValidation();
-#endif // DEBUG
 
 		DeviceContextCached->DrawIndexed(static_cast<UINT>(StaticMeshAssetInstance->GetIndexCount(LODLevel)), 0, 0);
 
@@ -95,11 +84,7 @@ void StaticMeshObject::Render()
 
 #pragma region PickingIDSolidStaticPSOCached
 
-
 		PickingIDSolidStaticPSOCached->SetPipelineStateObject(1, RTVs, &CurrentCamera->GetViewport(), CurrentCamera->GetSceneDSV());
-
-		PickingIDSolidStaticPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
-		PickingIDSolidStaticPSOCached->SetPSConstantBuffers(0, 1, PSConstBuffers);
 
 		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
 			VertexBuffers.data(),
@@ -109,13 +94,14 @@ void StaticMeshObject::Render()
 		DeviceContextCached->IASetIndexBuffer(StaticMeshAssetInstance->GetIndexBuffer(LODLevel), StaticMeshAssetInstance->GetIndexFormat(), 0);
 
 
-#ifdef _DEBUG
+		PickingIDSolidStaticPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
+		PickingIDSolidStaticPSOCached->SetPSConstantBuffers(0, 1, PSConstBuffers);
 		PickingIDSolidStaticPSOCached->CheckPipelineValidation();
-#endif // DEBUG
 
 		DeviceContextCached->DrawIndexed(static_cast<UINT>(StaticMeshAssetInstance->GetIndexCount(LODLevel)), 0, 0);
 
 		PickingIDSolidStaticPSOCached->ResetVSConstantBuffers(0, 2);
+		PickingIDSolidStaticPSOCached->ResetPSConstantBuffers(0, 1);
 #pragma endregion
 	}
 }

@@ -51,7 +51,7 @@ size_t AMeshObject::GetLODLevel(
 	const float Distance = sqrt(MathematicalHelper::InnerProduct(DeltaPosition, DeltaPosition));
 	const float x = min(MaxDistance, Distance) / MaxDistance;
 
-	const float LODFloat = pow(x, 0.5f) * MaxLODCount;
+	const float LODFloat = pow(x, (1.f / SteepLevel)) * MaxLODCount;
 	return static_cast<size_t>(LODFloat);
 }
 

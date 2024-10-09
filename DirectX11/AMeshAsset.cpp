@@ -14,6 +14,8 @@ AMeshAsset::~AMeshAsset()
 {
 }
 
+
+
 void AMeshAsset::SetLODCount(const size_t& LODCountIn)
 {
 	LODCount = LODCountIn;
@@ -21,6 +23,37 @@ void AMeshAsset::SetLODCount(const size_t& LODCountIn)
 	UVTexturesPerLOD.resize(LODCountIn);
 	NormalsPerLOD.resize(LODCountIn);
 	IndicesPerLOD.resize(LODCountIn);
+
+	IndexCountsForPartPerLOD.resize(LODCountIn);
+	IndexOffsetsForPartPerLOD.resize(LODCountIn);
+	MaterialIndexPerLOD.resize(LODCountIn);
+}
+
+const vector<UINT> AMeshAsset::GetIndexCountsForPart(const size_t& LodCountIn)
+{
+	if (IndexCountsForPartPerLOD.size() > LodCountIn)
+	{
+		return IndexCountsForPartPerLOD[LodCountIn];
+	}
+	return std::vector<UINT>();
+}
+
+const vector<UINT> AMeshAsset::GetIndexOffsetsForPart(const size_t& LodCountIn)
+{
+	if (IndexOffsetsForPartPerLOD.size() > LodCountIn)
+	{
+		return IndexOffsetsForPartPerLOD[LodCountIn];
+	}
+	return std::vector<UINT>();
+}
+
+const vector<UINT> AMeshAsset::GetMaterialIndex(const size_t& LodCountIn)
+{
+	if (MaterialIndexPerLOD.size() > LodCountIn)
+	{
+		return MaterialIndexPerLOD[LodCountIn];
+	}
+	return std::vector<UINT>();
 }
 
 ID3D11Buffer* AMeshAsset::GetIndexBuffer(const size_t& LODLevelIn)
@@ -47,19 +80,6 @@ UINT AMeshAsset::GetIndexCount(const size_t& LODLevelIn)
 	}
 }
 
-vector<ID3D11Buffer*> AMeshAsset::GetPositionBuffer(const size_t& LODLevelIn)
-{
-	if (PositionsPerLOD.size() > LODLevelIn)
-	{
-		return { PositionsPerLOD[LODLevelIn].GetVertexBuffer() };
-	}
-	else
-	{
-		return vector<ID3D11Buffer*>();
-	}
-}
-
-
 void AMeshAsset::Initialize()
 {
 	for (auto& Positions : PositionsPerLOD)
@@ -83,15 +103,6 @@ void AMeshAsset::Initialize()
 
 void AMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 {
-	size_t MeshCount = DefaultMaterialAssets.size();
-	fwrite(&MeshCount, sizeof(size_t), 1, FileIn);
-	
-	for (size_t MaterialIdx = 0; MaterialIdx < MeshCount; ++MaterialIdx)
-	{
-		const shared_ptr<MaterialAsset>& CurrentMaterialAsset = DefaultMaterialAssets[MaterialIdx];
-		SerializeString(CurrentMaterialAsset != nullptr ? CurrentMaterialAsset->GetAssetName() : "", FileIn);
-	}
-
 	fwrite(&LODCount, sizeof(size_t), 1, FileIn);
 
 	// Positions
@@ -125,27 +136,53 @@ void AMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 		fwrite(&IndicesCount, sizeof(size_t), 1, FileIn);
 		fwrite(Indices.Indices.data(), sizeof(uint32_t), IndicesCount, FileIn);
 	}
+
+	// Index Count
+	for (const vector<UINT>& IndexCounts : IndexCountsForPartPerLOD)
+	{
+		size_t IndexCountsCount = IndexCounts.size();
+		fwrite(&IndexCountsCount, sizeof(size_t), 1, FileIn);
+		fwrite(IndexCounts.data(), sizeof(UINT), IndexCountsCount, FileIn);
+	}
+
+	// Index Offset
+	for (const vector<UINT>& IndexOffsets : IndexOffsetsForPartPerLOD)
+	{
+		size_t IndexOffsetsCount = IndexOffsets.size();
+		fwrite(&IndexOffsetsCount, sizeof(size_t), 1, FileIn);
+		fwrite(IndexOffsets.data(), sizeof(UINT), IndexOffsetsCount, FileIn);
+	}
+
+	// Material Index
+	for (const vector<UINT>& MaterialIndex : MaterialIndexPerLOD)
+	{
+		size_t MaterialIndexCount = MaterialIndex.size();
+		fwrite(&MaterialIndexCount, sizeof(size_t), 1, FileIn);
+		fwrite(MaterialIndex.data(), sizeof(UINT), MaterialIndexCount, FileIn);
+	}
+
+	size_t MeshCount = DefaultMaterialAssets.size();
+	fwrite(&MeshCount, sizeof(size_t), 1, FileIn);
+
+	for (size_t MaterialIdx = 0; MaterialIdx < MeshCount; ++MaterialIdx)
+	{
+		const shared_ptr<MaterialAsset>& CurrentMaterialAsset = DefaultMaterialAssets[MaterialIdx];
+		SerializeString(CurrentMaterialAsset != nullptr ? CurrentMaterialAsset->GetAssetName() : "", FileIn);
+	}
 }
 
 void AMeshAsset::DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	size_t MeshCount;
-	fread(&MeshCount, sizeof(size_t), 1, FileIn);
-
-	DefaultMaterialAssets.resize(MeshCount);
-	for (size_t MaterialIdx = 0; MaterialIdx < MeshCount; ++MaterialIdx)
-	{
-		string MaterialName;
-		DeserializeString(MaterialName, FileIn);
-		DefaultMaterialAssets[MaterialIdx] = AssetManagerIn->GetManagingMaterial(MaterialName);
-	}
-
 	fread(&LODCount, sizeof(size_t), 1, FileIn);
 
 	PositionsPerLOD.resize(LODCount);
 	UVTexturesPerLOD.resize(LODCount);
 	NormalsPerLOD.resize(LODCount);
 	IndicesPerLOD.resize(LODCount);
+
+	IndexCountsForPartPerLOD.resize(LODCount);
+	IndexOffsetsForPartPerLOD.resize(LODCount);
+	MaterialIndexPerLOD.resize(LODCount);
 
 	// Positions
 	for (auto& Positions : PositionsPerLOD)
@@ -181,5 +218,43 @@ void AMeshAsset::DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManage
 		fread(&IndexCount, sizeof(size_t), 1, FileIn);
 		Indices.Indices.resize(IndexCount);
 		fread(Indices.Indices.data(), sizeof(uint32_t), IndexCount, FileIn);
+	}
+
+	// Index Count
+	for (auto& IndexCounts : IndexCountsForPartPerLOD)
+	{
+		size_t IndexCountsCount;
+		fread(&IndexCountsCount, sizeof(size_t), 1, FileIn);
+		IndexCounts.resize(IndexCountsCount);
+		fread(IndexCounts.data(), sizeof(UINT), IndexCountsCount, FileIn);
+	}
+
+	// Index Offset
+	for (auto& IndexOffsets : IndexOffsetsForPartPerLOD)
+	{
+		size_t IndexOffsetsCount;
+		fread(&IndexOffsetsCount, sizeof(size_t), 1, FileIn);
+		IndexOffsets.resize(IndexOffsetsCount);
+		fread(IndexOffsets.data(), sizeof(UINT), IndexOffsetsCount, FileIn);
+	}
+
+	// Material Index
+	for (auto& MaterialIndex : MaterialIndexPerLOD)
+	{
+		size_t MaterialIndexCount;
+		fread(&MaterialIndexCount, sizeof(size_t), 1, FileIn);
+		MaterialIndex.resize(MaterialIndexCount);
+		fread(MaterialIndex.data(), sizeof(UINT), MaterialIndexCount, FileIn);
+	}
+
+	size_t MeshCount;
+	fread(&MeshCount, sizeof(size_t), 1, FileIn);
+
+	DefaultMaterialAssets.resize(MeshCount);
+	for (size_t MaterialIdx = 0; MaterialIdx < MeshCount; ++MaterialIdx)
+	{
+		string MaterialName;
+		DeserializeString(MaterialName, FileIn);
+		DefaultMaterialAssets[MaterialIdx] = AssetManagerIn->GetManagingMaterial(MaterialName);
 	}
 }

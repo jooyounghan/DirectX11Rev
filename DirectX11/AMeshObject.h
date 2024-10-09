@@ -13,7 +13,7 @@ public:
 
 protected:
 	std::vector<std::shared_ptr<MaterialAsset>> MaterialAssetInstances;
-	MakeSetterGetter(MaterialAssetInstances);
+	MakeGetter(MaterialAssetInstances);
 
 public:
 	void SetMaterialAsset(const size_t& MaterialIdx, std::shared_ptr<MaterialAsset> MaterialAssetIn);

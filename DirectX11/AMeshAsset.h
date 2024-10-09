@@ -19,26 +19,32 @@ public:
 	std::vector<Vertexable<DirectX::XMFLOAT3>> NormalsPerLOD;
 	std::vector<Indexable<uint32_t>> IndicesPerLOD;
 
-protected:
-	size_t LODCount = 0;
-	MakeGetter(LODCount);
+public:
+	std::vector<std::vector<UINT>> IndexCountsForPartPerLOD;
+	std::vector<std::vector<UINT>> IndexOffsetsForPartPerLOD;
+	std::vector<std::vector<UINT>> MaterialIndexPerLOD;
 
 protected:
 	std::vector<std::shared_ptr<MaterialAsset>> DefaultMaterialAssets;
 	MakeSetterGetter(DefaultMaterialAssets);
 
+protected:
+	size_t LODCount = 0;
+	MakeGetter(LODCount);
+
 public:
 	virtual void SetLODCount(const size_t& LODCountIn);
+
+public:
+	const std::vector<UINT> GetIndexCountsForPart(const size_t& LodCountIn);
+	const std::vector<UINT> GetIndexOffsetsForPart(const size_t& LodCountIn);
+	const std::vector<UINT> GetMaterialIndex(const size_t& LodCountIn);
 
 public:
 	ID3D11Buffer* GetIndexBuffer(const size_t& LODLevelIn = 0);
 	UINT GetIndexCount(const size_t& LODLevelIn = 0);
 	DXGI_FORMAT GetIndexFormat() { return DXGI_FORMAT_R32_UINT; }
 
-public:
-	std::vector<ID3D11Buffer*> GetPositionBuffer(const size_t& LODLevelIn = 0);
-	inline std::vector<UINT> GetPositionStride() { return { sizeof(DirectX::XMFLOAT3)}; }
-	inline std::vector<UINT> GetPositionOffset() { return { 0 }; }
 
 public:
 	virtual std::vector<ID3D11Buffer*> GetVertexBuffers(const size_t& LODLevelIn = 0) = 0;
