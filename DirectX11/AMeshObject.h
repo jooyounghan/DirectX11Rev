@@ -4,6 +4,7 @@
 
 class AMeshAsset;
 class MaterialAsset;
+class PSOObject;
 
 class AMeshObject : public AAttachableObject
 {
@@ -30,6 +31,10 @@ public:
 		const size_t& MaxLODCount, 
 		const size_t SteepLevel
 	);
+
+protected:
+	PSOObject* MeshObjectPSOCached = nullptr;
+	PSOObject* PickingIDSolidPSOCached = nullptr;
 
 public:
 	virtual void Render() override;

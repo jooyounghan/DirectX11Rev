@@ -1,16 +1,15 @@
 #include "StaticMeshObject.h"
 
 #include "GlobalVariable.h"
-
-#include "StaticMeshAsset.h"	
-#include "AssetManager.h"
 #include "IGuiModelVisitor.h"
+
+#include "AssetManager.h"
+#include "StaticMeshAsset.h"	
 
 #include "PSOManager.h"
 #include "PSOObject.h"
 
-#include "MapAsset.h"
-#include "Camera.h"
+#include "EnvironmentActor.h"
 
 using namespace std;
 
@@ -25,8 +24,8 @@ StaticMeshObject::StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<S
 	ObjectName = StaticMeshObjectIdentifier + to_string(StaticMeshObjectCount);
 	AttachableKind = EAttachableObjectKind::STATIC_MESH_KIND;
 
-	StaticMeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_Solid);
-	PickingIDSolidStaticPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_ID_Solid);
+	MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_Solid);
+	PickingIDSolidPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_ID_Solid);
 
 	if (StaticMeshAssetInstanceIn != nullptr)
 	{
@@ -50,60 +49,7 @@ void StaticMeshObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 
 void StaticMeshObject::Render()
 {
-	AAttachableObject::Render();
-
-	Camera* CurrentCamera = MapAssetCached->GetCurrentCamera();
-	if (CurrentCamera != nullptr && StaticMeshAssetInstance != nullptr)
-	{
-		const size_t LODLevel = 0;
-
-		ID3D11RenderTargetView* RTVs[]{ CurrentCamera->GetSDRSceneRTV() };
-		const std::vector<ID3D11Buffer*> VertexBuffers = StaticMeshAssetInstance->GetVertexBuffers(LODLevel);
-		const std::vector<UINT> Strides = StaticMeshAssetInstance->GetStrides();
-		const std::vector<UINT> Offsets = StaticMeshAssetInstance->GetOffsets();
-		ID3D11Buffer* VSConstBuffers[] = { CurrentCamera->ViewProjBuffer.GetBuffer(), TransformationBuffer.GetBuffer() };
-		ID3D11Buffer* PSConstBuffers[] = { PickingIDBufferCached };
-
-#pragma region StaticMeshObjectPSOCached
-		StaticMeshObjectPSOCached->SetPipelineStateObject(1, RTVs, &CurrentCamera->GetViewport(), CurrentCamera->GetSceneDSV());
-
-		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
-			VertexBuffers.data(),
-			Strides.data(),
-			Offsets.data()
-		);
-		DeviceContextCached->IASetIndexBuffer(StaticMeshAssetInstance->GetIndexBuffer(LODLevel), StaticMeshAssetInstance->GetIndexFormat(), 0);
-
-		StaticMeshObjectPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
-		StaticMeshObjectPSOCached->CheckPipelineValidation();
-
-		DeviceContextCached->DrawIndexed(static_cast<UINT>(StaticMeshAssetInstance->GetIndexCount(LODLevel)), 0, 0);
-
-		StaticMeshObjectPSOCached->ResetVSConstantBuffers(0, 2);
-#pragma endregion
-
-#pragma region PickingIDSolidStaticPSOCached
-
-		PickingIDSolidStaticPSOCached->SetPipelineStateObject(1, RTVs, &CurrentCamera->GetViewport(), CurrentCamera->GetSceneDSV());
-
-		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
-			VertexBuffers.data(),
-			Strides.data(),
-			Offsets.data()
-		);
-		DeviceContextCached->IASetIndexBuffer(StaticMeshAssetInstance->GetIndexBuffer(LODLevel), StaticMeshAssetInstance->GetIndexFormat(), 0);
-
-
-		PickingIDSolidStaticPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
-		PickingIDSolidStaticPSOCached->SetPSConstantBuffers(0, 1, PSConstBuffers);
-		PickingIDSolidStaticPSOCached->CheckPipelineValidation();
-
-		DeviceContextCached->DrawIndexed(static_cast<UINT>(StaticMeshAssetInstance->GetIndexCount(LODLevel)), 0, 0);
-
-		PickingIDSolidStaticPSOCached->ResetVSConstantBuffers(0, 2);
-		PickingIDSolidStaticPSOCached->ResetPSConstantBuffers(0, 1);
-#pragma endregion
-	}
+	AMeshObject::Render();
 }
 
 void StaticMeshObject::OnSerializeFromMap(FILE* FileIn)

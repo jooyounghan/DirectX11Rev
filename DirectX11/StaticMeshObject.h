@@ -21,10 +21,6 @@ public:
 	virtual AMeshAsset* GetMeshAssetInstance() override;
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 
-protected:
-	PSOObject* StaticMeshObjectPSOCached = nullptr;
-	PSOObject* PickingIDSolidStaticPSOCached = nullptr;
-
 public:
 	virtual void Render() override final;
 
