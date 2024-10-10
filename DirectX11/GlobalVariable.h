@@ -41,6 +41,8 @@ namespace UIColor
 	extern const ImVec4 GDarkBrown;
 	extern const ImVec4 GMediumBrown;
 	extern const ImVec4 GLightBrown;
+
+	extern const ImVec4 GHilighted;
 }
 
 namespace UISize

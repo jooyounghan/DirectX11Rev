@@ -63,7 +63,7 @@ public:
 	~AssetManager();
 
 public:
-	Delegation<> AssetAddedEvent;
+	Delegation<> AssetChangedEvent;
 
 public:
 	void LoadAssetFromFile(const std::string& FilePathIn);

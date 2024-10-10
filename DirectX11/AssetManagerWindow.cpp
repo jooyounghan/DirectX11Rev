@@ -13,8 +13,15 @@ AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
     RootDirectory.Name = "Assets";
     RootDirectory.Directory = ".\\Assets\\";
 
-    OnAssetAdded = bind(&AssetManagerWindow::RefreshAssetDirectories, this);
-    AssetManagerCached->AssetAddedEvent += OnAssetAdded;
+#pragma region Binding
+    OnAssetChanged = bind(&AssetManagerWindow::RefreshAssetDirectories, this);
+    AssetManagerCached->AssetChangedEvent += OnAssetChanged;
+
+    OnAssetControlBeginDragDrop = bind(&AssetManagerWindow::SetAssetControlDragDrop, this, placeholders::_1);
+    OnAssetControlPushHilightStyle = bind(&AssetManagerWindow::HilightItem, this, placeholders::_1);
+    OnAssetControlPopHilightStyle = bind(&AssetManagerWindow::UnhilightItem, this, placeholders::_1);
+#pragma endregion 
+
     RefreshAssetDirectories();
 }
 
@@ -125,6 +132,32 @@ void AssetManagerWindow::TravelAssetDirectories(DirectorySet& DirectorySetIn)
     }
 }
 
+void AssetManagerWindow::SetAssetControlDragDrop(AAssetFile* AssetFileCached)
+{
+    const string& AssetName = AssetFileCached->GetAssetName();
+    ImGui::SetDragDropPayload(DragDrop::GAsset, &AssetFileCached, sizeof(AAssetFile*));
+    ImGui::Text("%s", AssetName.c_str());
+    ImGui::EndDragDropSource();
+}
+
+void AssetManagerWindow::HilightItem(AAssetFile* AssetFileCached)
+{
+    const float YMargin = 5;
+    const string& AssetName = AssetFileCached->GetAssetName();
+    ImVec2 textSize = ImGui::CalcTextSize(AssetName.c_str(), nullptr, true, UISize::FileSize.x);
+    ImVec2 childSize = ImVec2(UISize::FileSize.x, UISize::FileSize.y + textSize.y + YMargin);
+
+    ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_ChildBg, UIColor::GHilighted);
+
+    ImGui::BeginChild("Hilighted Asset Control", childSize, NULL, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar);
+}
+
+void AssetManagerWindow::UnhilightItem(AAssetFile* AssetFileCached)
+{
+    ImGui::EndChild();
+    ImGui::PopStyleColor();
+}
+
 void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& VisibleWidthIn)
 {
     ImGuiStyle& Style = ImGui::GetStyle();
@@ -137,55 +170,17 @@ void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& V
     {
         AAssetFile* AssetFile = AssetManagerCached->GetManagingAsset(CurrentAssetName);
 
-        if (AssetFile != nullptr)
-        {
-            ImGui::PushID(EntryFileName.c_str());
-            ImGui::BeginGroup();
+// юс╫ц
+        AssetControl AssetControl(AssetFile);
+        AssetControl.BeginDragDropEvent += OnAssetControlBeginDragDrop;
+        AssetControl.HilightedEvent += OnAssetControlPushHilightStyle;
+        AssetControl.UnhilightedEvent += OnAssetControlPopHilightStyle;
 
-            EAssetType AssetType = AssetFile->GetAssetType();
-            switch (AssetType)
-            {
-            case EAssetType::BasicTexture:
-            case EAssetType::EXRTexture:
-                Image(AssetFile->GetThumbnailSRV(), UISize::FileSize);
-                break;
-            case EAssetType::DDSTexture:
-            {
-                ID3D11ShaderResourceView* SRV = AssetFile->GetThumbnailSRV();
-                D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
-                SRV->GetDesc(&SRVDesc);
-                if (SRVDesc.ViewDimension == D3D11_SRV_DIMENSION_TEXTURE2D)
-                {
-                    Image(SRV, UISize::FileSize);
-                }
-                else
-                {
-                    Image(nullptr, UISize::FileSize);
-                }
-                break;
-            }
-            default:
-                Image(nullptr, UISize::FileSize);
-                break;
-            }
+        AssetControl.RenderControl();
 
-            ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + UISize::FileSize.x);
-            ImGui::Text(EntryFileName.string().c_str());
-            ImGui::PopTextWrapPos();
-            ImGui::EndGroup();
-            ImGui::PopID();
-
-            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
-            {
-                ImGui::SetDragDropPayload(DragDrop::GAsset, &AssetFile, sizeof(AAssetFile*));
-                ImGui::Text("%s", CurrentAssetName.c_str());
-                ImGui::EndDragDropSource();
-            }
-
-            float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
-            float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
-            if (NextStartWidthPos < VisibleWidthIn) ImGui::SameLine();
-        }
+        float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
+        float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
+        if (NextStartWidthPos < VisibleWidthIn) ImGui::SameLine();
     }
 }
 

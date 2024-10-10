@@ -147,6 +147,7 @@
     <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="APawn.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
+    <ClCompile Include="AssetControl.cpp" />
     <ClCompile Include="AssetPriorityManager.cpp" />
     <ClCompile Include="ATextureAsset.cpp" />
     <ClCompile Include="BaseCubeMeshAsset.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
     <ClInclude Include="AScratchTextureAsset.h" />
+    <ClInclude Include="AssetControl.h" />
     <ClInclude Include="AssetPriorityManager.h" />
     <ClInclude Include="ATextureAsset.h" />
     <ClInclude Include="BaseCubeMeshAsset.h" />
@@ -263,6 +265,7 @@
     <ClInclude Include="ICollisionVisitor.h" />
     <ClInclude Include="IDColor.h" />
     <ClInclude Include="IDialog.h" />
+    <ClInclude Include="IGuiControl.h" />
     <ClInclude Include="IGuiModelAcceptor.h" />
     <ClInclude Include="IGuiModelVisitor.h" />
     <ClInclude Include="Indexable.h" />

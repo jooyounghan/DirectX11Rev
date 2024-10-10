@@ -1,9 +1,7 @@
 #pragma once
 #include "IWindow.h"
 #include "AssetManager.h"
-
-#include <vector>
-#include <filesystem>
+#include "AssetControl.h"
 
 struct DirectorySet
 {
@@ -33,7 +31,12 @@ private:
 	void RenderAssetDirectories(DirectorySet& DirectorySetIn);
 
 protected:
-	AssetAddedDelegate OnAssetAdded;
+	AssetAddedDelegate OnAssetChanged;
+
+protected:
+	AssetControlBeginDragDropDelegate OnAssetControlBeginDragDrop;
+	AssetControlStyleChangeDelegation OnAssetControlPushHilightStyle;
+	AssetControlStyleChangeDelegation OnAssetControlPopHilightStyle;
 
 private:
 	void RenderCurrentDirectoryAsset();
@@ -42,5 +45,12 @@ private:
 private:
 	void RefreshAssetDirectories();
 	void TravelAssetDirectories(DirectorySet& DirectorySetIn);
+
+private:
+	void SetAssetControlDragDrop(AAssetFile* AssetFileCached);
+
+private:
+	void HilightItem(AAssetFile* AssetFileCached);
+	void UnhilightItem(AAssetFile* AssetFileCached);
 };
 

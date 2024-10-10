@@ -402,7 +402,7 @@ void AssetManager::SerailizeAndAddToContainer(
     AddedAsset->Serialize();
     ManagingContainer.emplace(AddedAsset->GetAssetName(), AddedAsset);
 
-    AssetAddedEvent.Execute();
+    AssetChangedEvent.Invoke();
 }
 
 template<typename T>

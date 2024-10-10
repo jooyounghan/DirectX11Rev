@@ -274,6 +274,12 @@
     <Filter Include="헤더 파일\Delegation">
       <UniqueIdentifier>{f0e008d7-fe33-433a-914b-d2849a12ead8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\World\Editor\GUI\Control">
+      <UniqueIdentifier>{8b2f717e-1141-4109-ae2d-135eb9c6645e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\World\Editor\GUI\Control">
+      <UniqueIdentifier>{51258adb-a9c7-4b0d-883b-93eda45b1f25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -477,12 +483,6 @@
     <ClCompile Include="HDRCamera.cpp">
       <Filter>소스 파일\Object\View</Filter>
     </ClCompile>
-    <ClCompile Include="APawn.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="AActor.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="SkeletalMeshObjetPSO.cpp">
       <Filter>소스 파일\PSO</Filter>
     </ClCompile>
@@ -515,6 +515,15 @@
     </ClCompile>
     <ClCompile Include="MaterialInformationDrawer.cpp">
       <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="AActor.cpp">
+      <Filter>소스 파일\Object\Placeable\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="APawn.cpp">
+      <Filter>소스 파일\Object\Placeable\Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetControl.cpp">
+      <Filter>소스 파일\World\Editor\GUI\Control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -838,6 +847,12 @@
     </ClInclude>
     <ClInclude Include="MaterialInformationDrawer.h">
       <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetControl.h">
+      <Filter>헤더 파일\World\Editor\GUI\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="IGuiControl.h">
+      <Filter>헤더 파일\World\Editor\GUI\Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

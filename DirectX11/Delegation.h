@@ -23,7 +23,7 @@ public:
 		DelegatedFunctions.remove(Function);
 	}
 
-	void Execute(Args... args)
+	void Invoke(Args... args)
 	{
 		for (auto& DelegatedFunction : DelegatedFunctions)
 		{
