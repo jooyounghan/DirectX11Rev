@@ -86,6 +86,10 @@ void EditorWorld::SetSelecteObjectByID(const UINT& Id)
         {
             SelectedPlaceable = IdToPlaceables.at(Id);
         }
+        else
+        {
+            SelectedPlaceable = nullptr;
+        }
     }
 }
 

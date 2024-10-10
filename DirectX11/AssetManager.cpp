@@ -528,7 +528,7 @@ size_t AssetManager::GetTotalLODCountFromScene(const aiScene* const Scene)
 size_t AssetManager::GetLODLevelFromMeshName(const aiString& MeshName)
 {
     size_t Lodlevel = 0;
-    regex LODMeshNamePatter("_LOD(\\d+)");
+    regex LODMeshNamePatter(".(\\d+)");
     smatch Match;
 
     const string MeshNameStr = string(MeshName.C_Str());

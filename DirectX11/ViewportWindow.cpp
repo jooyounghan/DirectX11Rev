@@ -45,6 +45,7 @@ void ViewportWindow::RenderWindow()
     {
         if (CameraCached != nullptr)
         {
+            ImagePosition = ImGui::GetCursorScreenPos();
             ImageSize = GetContentRegionAvail();
             Image(CameraCached->GetSDRSceneSRV(), ImageSize);
             ManageAssetDrop();
