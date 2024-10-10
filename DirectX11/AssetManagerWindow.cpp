@@ -14,15 +14,19 @@ AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
     RootDirectory.Directory = ".\\Assets\\";
 
 #pragma region Binding
-    OnAssetChanged = bind(&AssetManagerWindow::RefreshAssetDirectories, this);
+    OnAssetChanged = bind(&AssetManagerWindow::RefreshAssetDirectoriesFromRoot, this);
     AssetManagerCached->AssetChangedEvent += OnAssetChanged;
 
     OnAssetControlBeginDragDrop = bind(&AssetManagerWindow::SetAssetControlDragDrop, this, placeholders::_1);
+
     OnAssetControlPushHilightStyle = bind(&AssetManagerWindow::HilightItem, this, placeholders::_1);
     OnAssetControlPopHilightStyle = bind(&AssetManagerWindow::UnhilightItem, this, placeholders::_1);
+
+    OnAssetLeftMouseClicked = bind(&AssetManagerWindow::FocusItem, this, placeholders::_1);
+    OnAssetLeftMouseDBClicked = bind(&AssetManagerWindow::OpenItemSetting, this, placeholders::_1);
 #pragma endregion 
 
-    RefreshAssetDirectories();
+    RefreshAssetDirectoriesFromRoot();
 }
 
 AssetManagerWindow::~AssetManagerWindow()
@@ -33,21 +37,22 @@ void AssetManagerWindow::RenderWindow()
 {
 	Begin("Asset Manager");
 
-    RenderAssetDirectoryStructure();
+    RenderAssetDirectories();
     SameLine();
-    RenderCurrentDirectoryAsset();
+    RenderAssetControls();
+
     End();
 }
 
-void AssetManagerWindow::RenderAssetDirectoryStructure()
+void AssetManagerWindow::RenderAssetDirectories()
 {
     ImVec2 RegionAvail = GetContentRegionAvail();
     BeginChild("Directories", ImVec2(RegionAvail.x * 0.2f, RegionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
-    RenderAssetDirectories(RootDirectory);
+    RenderAssetDirectoriesHelper(RootDirectory);
     EndChild();
 }
 
-void AssetManagerWindow::RenderAssetDirectories(DirectorySet& DirectorySetIn)
+void AssetManagerWindow::RenderAssetDirectoriesHelper(DirectorySet& DirectorySetIn)
 {
     ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
     if (DirectorySetIn.ChildrenDirectories.size() == 0)
@@ -76,43 +81,50 @@ void AssetManagerWindow::RenderAssetDirectories(DirectorySet& DirectorySetIn)
         Indent();
         for (auto& ChildDirectory : DirectorySetIn.ChildrenDirectories)
         {
-            RenderAssetDirectories(ChildDirectory);
+            RenderAssetDirectoriesHelper(ChildDirectory);
         }
         Unindent();
         TreePop();
     }
 }
 
-void AssetManagerWindow::RenderCurrentDirectoryAsset()
+void AssetManagerWindow::RenderAssetControls()
 {
     ImVec2 RegionAvail = GetContentRegionAvail();
+    float MaxWidthForAssetControls = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+    ImGuiStyle& Style = ImGui::GetStyle();
+
     BeginChild("Files", RegionAvail, ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
+
     if (SelectedDirectory != nullptr)
     {
-        path CurrentDirectory = SelectedDirectory->Directory;
-        
-        float VisibleWidth = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-        for (const auto& entry : directory_iterator(CurrentDirectory))
+        for (AssetControl& AssetControlInstance : SelectedDirectory->AssetControls)
         {
-            if (entry.is_regular_file())
-            {
-                const path& EntryPath = entry.path();
-                RenderAssetFile(EntryPath, VisibleWidth);
-            }
+            AssetControlInstance.RenderControl();
+
+
+            float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
+            float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
+            if (NextStartWidthPos < MaxWidthForAssetControls) ImGui::SameLine();
         }
     }
+
     EndChild();
 }
 
-void AssetManagerWindow::RefreshAssetDirectories()
+void AssetManagerWindow::RefreshAssetDirectoriesFromRoot()
 {
     SelectedDirectory = nullptr;
+    
+    FocusItem(nullptr);
+
     RootDirectory.ChildrenDirectories.clear();
-    TravelAssetDirectories(RootDirectory);
+    RootDirectory.AssetControls.clear();
+
+    BuildAssetDirectories(RootDirectory);
 }
 
-void AssetManagerWindow::TravelAssetDirectories(DirectorySet& DirectorySetIn)
+void AssetManagerWindow::BuildAssetDirectories(DirectorySet& DirectorySetIn)
 {
     path Directory = DirectorySetIn.Directory;
     if (!exists(Directory) && create_directories(Directory)) {/* Do Nothing But Make Directory */ };
@@ -121,14 +133,40 @@ void AssetManagerWindow::TravelAssetDirectories(DirectorySet& DirectorySetIn)
     {
         if (entry.is_directory())
         {
-            const path& EntryPath = entry.path();
-            vector<DirectorySet>& ChildDirectories = DirectorySetIn.ChildrenDirectories;
+            list<DirectorySet>& ChildDirectories = DirectorySetIn.ChildrenDirectories;
             ChildDirectories.emplace_back(DirectorySet());
-            DirectorySet& CurrentDirectory = ChildDirectories[ChildDirectories.size() - 1];
+
+            DirectorySet& CurrentDirectory = ChildDirectories.back();
+
+            const path& EntryPath = entry.path();
             CurrentDirectory.Name = EntryPath.filename().string();
             CurrentDirectory.Directory = EntryPath.string();
-            TravelAssetDirectories(CurrentDirectory);
+
+            BuildAssetDirectories(CurrentDirectory);
         }
+
+        if (entry.is_regular_file())
+        {
+            path FilePath = path(entry);
+            const string CurrentAssetName = FilePath.stem().string();
+            const string CurrentAssetExtension = FilePath.extension().string();
+
+            if (CurrentAssetExtension == AssetExtension)
+            {
+                AAssetFile* AssetFile = AssetManagerCached->GetManagingAsset(CurrentAssetName);
+                DirectorySetIn.AssetControls.emplace_back(AssetFile);
+                AssetControl& CurrentEmplacedControl = DirectorySetIn.AssetControls.back();
+
+                CurrentEmplacedControl.BeginDragDropEvent += OnAssetControlBeginDragDrop;
+
+                CurrentEmplacedControl.HilightedEvent += OnAssetControlPushHilightStyle;
+                CurrentEmplacedControl.UnhilightedEvent+= OnAssetControlPopHilightStyle;
+
+                CurrentEmplacedControl.LeftMouseClickedEvent += OnAssetLeftMouseClicked;
+                CurrentEmplacedControl.LeftMouseDBClickedEvent+= OnAssetLeftMouseDBClicked;
+            }
+        }
+
     }
 }
 
@@ -140,9 +178,11 @@ void AssetManagerWindow::SetAssetControlDragDrop(AAssetFile* AssetFileCached)
     ImGui::EndDragDropSource();
 }
 
-void AssetManagerWindow::HilightItem(AAssetFile* AssetFileCached)
+void AssetManagerWindow::HilightItem(AssetControl* AssetControlCached)
 {
     const float YMargin = 5;
+    AAssetFile* AssetFileCached = AssetControlCached->GetAssetFileCached();
+
     const string& AssetName = AssetFileCached->GetAssetName();
     ImVec2 textSize = ImGui::CalcTextSize(AssetName.c_str(), nullptr, true, UISize::FileSize.x);
     ImVec2 childSize = ImVec2(UISize::FileSize.x, UISize::FileSize.y + textSize.y + YMargin);
@@ -152,35 +192,27 @@ void AssetManagerWindow::HilightItem(AAssetFile* AssetFileCached)
     ImGui::BeginChild("Hilighted Asset Control", childSize, NULL, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar);
 }
 
-void AssetManagerWindow::UnhilightItem(AAssetFile* AssetFileCached)
+void AssetManagerWindow::UnhilightItem(AssetControl* AssetControlCached)
 {
     ImGui::EndChild();
     ImGui::PopStyleColor();
 }
 
-void AssetManagerWindow::RenderAssetFile(const path& AssetPathIn, const float& VisibleWidthIn)
+void AssetManagerWindow::FocusItem(AssetControl* AssetControlCached)
 {
-    ImGuiStyle& Style = ImGui::GetStyle();
-    const path& EntryFileName = AssetPathIn.filename();
-
-    const string CurrentAssetName = EntryFileName.stem().string();
-    const string CurrentAssetExtension = EntryFileName.extension().string();
-
-    if (CurrentAssetExtension == AssetExtension)
+    if (SelectedAssetControl != nullptr)
     {
-        AAssetFile* AssetFile = AssetManagerCached->GetManagingAsset(CurrentAssetName);
-
-// юс╫ц
-        AssetControl AssetControl(AssetFile);
-        AssetControl.BeginDragDropEvent += OnAssetControlBeginDragDrop;
-        AssetControl.HilightedEvent += OnAssetControlPushHilightStyle;
-        AssetControl.UnhilightedEvent += OnAssetControlPopHilightStyle;
-
-        AssetControl.RenderControl();
-
-        float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
-        float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
-        if (NextStartWidthPos < VisibleWidthIn) ImGui::SameLine();
+        SelectedAssetControl->SetFocus(false);
     }
+
+    if (AssetControlCached != nullptr)
+    {
+        AssetControlCached->SetFocus(true);
+    }
+    SelectedAssetControl = AssetControlCached;
 }
 
+void AssetManagerWindow::OpenItemSetting(AssetControl* AssetControlCached)
+{
+    bool test = true;
+}

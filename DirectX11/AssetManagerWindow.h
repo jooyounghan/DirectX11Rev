@@ -7,7 +7,8 @@ struct DirectorySet
 {
 	std::string Name;
 	std::string Directory;
-	std::vector<DirectorySet> ChildrenDirectories;
+	std::list<DirectorySet> ChildrenDirectories;
+	std::list<AssetControl> AssetControls;
 };
 
 class AssetManagerWindow : public IWindow
@@ -22,35 +23,48 @@ private:
 public:
 	virtual void RenderWindow() override;
 
-private:
-	void RenderAssetDirectoryStructure();
 
 private:
 	DirectorySet RootDirectory;
+
+private:
 	DirectorySet* SelectedDirectory = nullptr;
-	void RenderAssetDirectories(DirectorySet& DirectorySetIn);
+	AssetControl* SelectedAssetControl = nullptr;
 
 protected:
 	AssetAddedDelegate OnAssetChanged;
 
 protected:
 	AssetControlBeginDragDropDelegate OnAssetControlBeginDragDrop;
+	
+protected:
 	AssetControlStyleChangeDelegation OnAssetControlPushHilightStyle;
 	AssetControlStyleChangeDelegation OnAssetControlPopHilightStyle;
 
-private:
-	void RenderCurrentDirectoryAsset();
-	void RenderAssetFile(const std::filesystem::path& AssetPathIn, const float& VisibleWidthIn);
+protected:
+	AssetControlClickedDelegate OnAssetLeftMouseClicked;
+	AssetControlClickedDelegate OnAssetLeftMouseDBClicked;
 
 private:
-	void RefreshAssetDirectories();
-	void TravelAssetDirectories(DirectorySet& DirectorySetIn);
+	void RenderAssetDirectories();
+	void RenderAssetDirectoriesHelper(DirectorySet& DirectorySetIn);
+
+private:
+	void RenderAssetControls();
+
+private:
+	void RefreshAssetDirectoriesFromRoot();
+	void BuildAssetDirectories(DirectorySet& DirectorySetIn);
 
 private:
 	void SetAssetControlDragDrop(AAssetFile* AssetFileCached);
 
 private:
-	void HilightItem(AAssetFile* AssetFileCached);
-	void UnhilightItem(AAssetFile* AssetFileCached);
+	void HilightItem(AssetControl* AssetControlCached);
+	void UnhilightItem(AssetControl* AssetControlCached);
+
+private:
+	void FocusItem(AssetControl* AssetControlCached);
+	void OpenItemSetting(AssetControl* AssetControlCached);
 };
 

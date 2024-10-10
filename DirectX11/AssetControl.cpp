@@ -26,9 +26,9 @@ void AssetControl::RenderControl()
         ImGui::PushID(AssetName.c_str());
         ImGui::BeginGroup();
 
-        if (IsMouseHovering)
+        if (bIsMouseHovering || bIsFocused)
         {
-            HilightedEvent.Invoke(AssetFileCached);
+            HilightedEvent.Invoke(this);
         }
 
         switch (AssetType)
@@ -61,9 +61,9 @@ void AssetControl::RenderControl()
         ImGui::Text(AssetName.c_str());
         ImGui::PopTextWrapPos();
 
-        if (IsMouseHovering)
+        if (bIsMouseHovering || bIsFocused)
         {
-            UnhilightedEvent.Invoke(AssetFileCached);
+            UnhilightedEvent.Invoke(this);
         }
 
         ImGui::EndGroup();
@@ -76,11 +76,21 @@ void AssetControl::RenderControl()
 
         if (IsMouseHoveringRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax()))
         {
-            IsMouseHovering = true;
+            bIsMouseHovering = true;
+
+            if (IsMouseClicked(ImGuiMouseButton_::ImGuiMouseButton_Left))
+            {
+                LeftMouseClickedEvent.Invoke(this);
+            }
+            
+            if (IsMouseDoubleClicked(ImGuiMouseButton_::ImGuiMouseButton_Left))
+            {
+                LeftMouseDBClickedEvent.Invoke(this);
+            }
         }
         else
         {
-            IsMouseHovering = false;
+            bIsMouseHovering = false;
         }
     }
 }
