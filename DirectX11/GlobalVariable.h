@@ -48,6 +48,7 @@ namespace UIColor
 namespace UISize
 {
 	extern const ImVec2 FileSize;
+	extern const ImVec2 WindowSize;
 }
 
 namespace DragDrop

@@ -61,12 +61,6 @@
     <Filter Include="소스 파일\World">
       <UniqueIdentifier>{2d05a47b-5cb0-4bf6-bf25-d3d1222fabc0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\World\Editor">
-      <UniqueIdentifier>{c804c47d-f3de-4435-a576-363fb219fab3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\World\Editor">
-      <UniqueIdentifier>{71c9625a-f7d4-4e75-8b04-c3681430598b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Buffer">
       <UniqueIdentifier>{d8d1e9ae-dd79-4ec2-a629-1d827c9461e9}</UniqueIdentifier>
     </Filter>
@@ -91,24 +85,6 @@
     <Filter Include="Shader\SkeletalMesh">
       <UniqueIdentifier>{9da0e291-0657-4a08-baba-cf1f98165149}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\Editor\GUI">
-      <UniqueIdentifier>{5925a3b9-93a3-4dfb-a871-30e47bd73f6f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\World\Editor\GUI\DIalog">
-      <UniqueIdentifier>{9eaec59b-d61a-4cba-b1a3-890773a4493b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\World\Editor\GUI\Window">
-      <UniqueIdentifier>{81031fec-5b5d-49cd-a241-23d8ce4542a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\World\Editor\GUI">
-      <UniqueIdentifier>{45318328-d303-4f82-8e55-abda4216d6b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\World\Editor\GUI\Dialog">
-      <UniqueIdentifier>{ef408b6c-6b4d-4b80-90f7-f6804cc2cca6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\World\Editor\GUI\Window">
-      <UniqueIdentifier>{03918427-51e3-4d99-9867-b9e7f601b267}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Collision">
       <UniqueIdentifier>{bb1f6d40-ce30-43eb-b36e-9059eedd0375}</UniqueIdentifier>
     </Filter>
@@ -121,24 +97,6 @@
     <Filter Include="소스 파일\Collision">
       <UniqueIdentifier>{905256e4-f194-4f73-962b-4c7087e5de31}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\Editor\GUI\Visitor">
-      <UniqueIdentifier>{532f1608-c72d-44a5-9eda-facd94786f7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\World\Editor\GUI\Visitor">
-      <UniqueIdentifier>{cb6c6704-962e-4d59-9cc7-addab80df882}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner">
-      <UniqueIdentifier>{b3341d71-9b14-4076-a6f3-5f5a8da5d2fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner">
-      <UniqueIdentifier>{4a805e1c-82a8-46c9-bcd6-7a086a8f06fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner\Helper">
-      <UniqueIdentifier>{b95adb38-a0b8-4434-977c-cba4cca2e532}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper">
-      <UniqueIdentifier>{de4e2cbe-893c-4b54-bbee-68ed03b89a68}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader\PositionOnly">
       <UniqueIdentifier>{fa3c8c60-12b7-4660-a671-a87b670a8b12}</UniqueIdentifier>
     </Filter>
@@ -147,18 +105,6 @@
     </Filter>
     <Filter Include="헤더 파일\PSO">
       <UniqueIdentifier>{d99c8647-eebb-41b7-bf4c-d84e12e08d5c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer">
-      <UniqueIdentifier>{12dbda4d-29c3-4535-9e1c-918f64db4dde}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer">
-      <UniqueIdentifier>{dfb44125-1c96-43f9-8adb-68784322e354}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject">
-      <UniqueIdentifier>{a7601ce8-344b-4b07-ac28-14f0faf121ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject">
-      <UniqueIdentifier>{a838dca8-130d-4d1b-a812-fe45dd1d9863}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Controller">
       <UniqueIdentifier>{c7ee91dd-ca3d-4f84-8ba9-6f913322c859}</UniqueIdentifier>
@@ -265,20 +211,86 @@
     <Filter Include="Shader\Environment">
       <UniqueIdentifier>{602c7d87-9fcd-4fdb-a497-8e16d5991a0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper">
-      <UniqueIdentifier>{9fd178dd-7fbd-4839-8ee4-5a77b6963001}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper">
-      <UniqueIdentifier>{acaedad8-b7e5-4e72-93f0-3f058931f28c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Delegation">
       <UniqueIdentifier>{f0e008d7-fe33-433a-914b-d2849a12ead8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\Editor\GUI\Control">
+    <Filter Include="소스 파일\Editor">
+      <UniqueIdentifier>{71c9625a-f7d4-4e75-8b04-c3681430598b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI">
+      <UniqueIdentifier>{5925a3b9-93a3-4dfb-a871-30e47bd73f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\DIalog">
+      <UniqueIdentifier>{9eaec59b-d61a-4cba-b1a3-890773a4493b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Window">
+      <UniqueIdentifier>{81031fec-5b5d-49cd-a241-23d8ce4542a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Visitor">
+      <UniqueIdentifier>{532f1608-c72d-44a5-9eda-facd94786f7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Visitor\Outliner">
+      <UniqueIdentifier>{4a805e1c-82a8-46c9-bcd6-7a086a8f06fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Visitor\Outliner\Helper">
+      <UniqueIdentifier>{b95adb38-a0b8-4434-977c-cba4cca2e532}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer">
+      <UniqueIdentifier>{dfb44125-1c96-43f9-8adb-68784322e354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper">
+      <UniqueIdentifier>{acaedad8-b7e5-4e72-93f0-3f058931f28c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject">
+      <UniqueIdentifier>{a838dca8-130d-4d1b-a812-fe45dd1d9863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Control">
       <UniqueIdentifier>{8b2f717e-1141-4109-ae2d-135eb9c6645e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\World\Editor\GUI\Control">
+    <Filter Include="소스 파일\Editor\NodeEditor">
+      <UniqueIdentifier>{4b69b38f-68d4-4b44-a245-5117d2fe9fd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor">
+      <UniqueIdentifier>{c804c47d-f3de-4435-a576-363fb219fab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI">
+      <UniqueIdentifier>{45318328-d303-4f82-8e55-abda4216d6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Dialog">
+      <UniqueIdentifier>{ef408b6c-6b4d-4b80-90f7-f6804cc2cca6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Window">
+      <UniqueIdentifier>{03918427-51e3-4d99-9867-b9e7f601b267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Visitor">
+      <UniqueIdentifier>{cb6c6704-962e-4d59-9cc7-addab80df882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Visitor\Outliner">
+      <UniqueIdentifier>{b3341d71-9b14-4076-a6f3-5f5a8da5d2fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Visitor\Outliner\Helper">
+      <UniqueIdentifier>{de4e2cbe-893c-4b54-bbee-68ed03b89a68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer">
+      <UniqueIdentifier>{12dbda4d-29c3-4535-9e1c-918f64db4dde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper">
+      <UniqueIdentifier>{9fd178dd-7fbd-4839-8ee4-5a77b6963001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject">
+      <UniqueIdentifier>{a7601ce8-344b-4b07-ac28-14f0faf121ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Control">
       <UniqueIdentifier>{51258adb-a9c7-4b0d-883b-93eda45b1f25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor">
+      <UniqueIdentifier>{ac3befb6-3535-4406-9cc4-5993ae99bcc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement">
+      <UniqueIdentifier>{2e5e75fe-513c-4206-83e4-3dd23235dbb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\NodeEditor\DrawElement">
+      <UniqueIdentifier>{438e9452-b7be-4da9-8a25-c12015c791c9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -306,9 +318,6 @@
     <ClCompile Include="GameWorld.cpp">
       <Filter>소스 파일\World</Filter>
     </ClCompile>
-    <ClCompile Include="EditorWorld.cpp">
-      <Filter>소스 파일\World\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="DefineType.cpp">
       <Filter>소스 파일\Utility</Filter>
     </ClCompile>
@@ -319,19 +328,19 @@
       <Filter>소스 파일\Asset\Map</Filter>
     </ClCompile>
     <ClCompile Include="FileSelectDialog.cpp">
-      <Filter>소스 파일\World\Editor\GUI\DIalog</Filter>
+      <Filter>소스 파일\Editor\GUI\DIalog</Filter>
     </ClCompile>
     <ClCompile Include="MapOutlinerWindow.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+      <Filter>소스 파일\Editor\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="TaskAnalyzerWindow.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+      <Filter>소스 파일\Editor\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="ViewportWindow.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+      <Filter>소스 파일\Editor\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="AssetManagerWindow.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+      <Filter>소스 파일\Editor\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="StringHelper.cpp">
       <Filter>소스 파일\Utility</Filter>
@@ -385,16 +394,16 @@
       <Filter>소스 파일\Global</Filter>
     </ClCompile>
     <ClCompile Include="ModelDetailWindow.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Window</Filter>
+      <Filter>소스 파일\Editor\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="AddPlaceableObjectHelper.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClCompile>
     <ClCompile Include="AddAttachableObjectHelper.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClCompile>
     <ClCompile Include="AAddObjectHelper.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClCompile>
     <ClCompile Include="AController.cpp">
       <Filter>소스 파일\Controller</Filter>
@@ -487,34 +496,34 @@
       <Filter>소스 파일\PSO</Filter>
     </ClCompile>
     <ClCompile Include="BoundingOBBInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClCompile>
     <ClCompile Include="BoundingSphereInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClCompile>
     <ClCompile Include="SkeletalMeshObjectInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClCompile>
     <ClCompile Include="StaticMeshObjectInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClCompile>
     <ClCompile Include="TransformationInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClCompile>
     <ClCompile Include="ViewableInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClCompile>
     <ClCompile Include="ModelDetailedInformationVisitor.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
     </ClCompile>
     <ClCompile Include="EnvironementActorDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClCompile>
     <ClCompile Include="AssetPriorityManager.cpp">
       <Filter>소스 파일\Asset</Filter>
     </ClCompile>
     <ClCompile Include="MaterialInformationDrawer.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClCompile>
     <ClCompile Include="AActor.cpp">
       <Filter>소스 파일\Object\Placeable\Actor</Filter>
@@ -523,7 +532,22 @@
       <Filter>소스 파일\Object\Placeable\Pawn</Filter>
     </ClCompile>
     <ClCompile Include="AssetControl.cpp">
-      <Filter>소스 파일\World\Editor\GUI\Control</Filter>
+      <Filter>소스 파일\Editor\GUI\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetControlWindow.cpp">
+      <Filter>소스 파일\Editor\GUI\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorWorld.cpp">
+      <Filter>소스 파일\World</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeCanvas.cpp">
+      <Filter>소스 파일\Editor\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="RectangleDrawElement.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement</Filter>
+    </ClCompile>
+    <ClCompile Include="ADrawElement.cpp">
+      <Filter>소스 파일\Editor\NodeEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -544,9 +568,6 @@
     </ClInclude>
     <ClInclude Include="GameWorld.h">
       <Filter>헤더 파일\World</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorWorld.h">
-      <Filter>헤더 파일\World\Editor</Filter>
     </ClInclude>
     <ClInclude Include="DefineType.h">
       <Filter>헤더 파일\Utility</Filter>
@@ -588,22 +609,16 @@
       <Filter>헤더 파일\Buffer\Constant</Filter>
     </ClInclude>
     <ClInclude Include="TaskAnalyzerWindow.h">
-      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
+      <Filter>헤더 파일\Editor\GUI\Window</Filter>
     </ClInclude>
     <ClInclude Include="ViewportWindow.h">
-      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="IWindow.h">
-      <Filter>헤더 파일\World\Editor\GUI</Filter>
+      <Filter>헤더 파일\Editor\GUI\Window</Filter>
     </ClInclude>
     <ClInclude Include="FileSelectDialog.h">
-      <Filter>헤더 파일\World\Editor\GUI\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="IDialog.h">
-      <Filter>헤더 파일\World\Editor\GUI</Filter>
+      <Filter>헤더 파일\Editor\GUI\Dialog</Filter>
     </ClInclude>
     <ClInclude Include="AssetManagerWindow.h">
-      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
+      <Filter>헤더 파일\Editor\GUI\Window</Filter>
     </ClInclude>
     <ClInclude Include="StringHelper.h">
       <Filter>헤더 파일\Utility</Filter>
@@ -642,7 +657,7 @@
       <Filter>헤더 파일\Collision</Filter>
     </ClInclude>
     <ClInclude Include="MapOutlinerWindow.h">
-      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
+      <Filter>헤더 파일\Editor\GUI\Window</Filter>
     </ClInclude>
     <ClInclude Include="Viewable.h">
       <Filter>헤더 파일\Object\Attachable\View</Filter>
@@ -651,7 +666,7 @@
       <Filter>헤더 파일\Object\Attachable\View</Filter>
     </ClInclude>
     <ClInclude Include="IGuiModelVisitor.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor</Filter>
     </ClInclude>
     <ClInclude Include="IDColor.h">
       <Filter>헤더 파일\Object</Filter>
@@ -672,19 +687,19 @@
       <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
     <ClInclude Include="ModelDetailWindow.h">
-      <Filter>헤더 파일\World\Editor\GUI\Window</Filter>
+      <Filter>헤더 파일\Editor\GUI\Window</Filter>
     </ClInclude>
     <ClInclude Include="ModelDetailedInformationVisitor.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
     </ClInclude>
     <ClInclude Include="AddPlaceableObjectHelper.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClInclude>
     <ClInclude Include="AddAttachableObjectHelper.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClInclude>
     <ClInclude Include="AAddObjectHelper.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClInclude>
     <ClInclude Include="AController.h">
       <Filter>헤더 파일\Controller</Filter>
@@ -810,31 +825,31 @@
       <Filter>헤더 파일\PSO</Filter>
     </ClInclude>
     <ClInclude Include="BoundingOBBInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
     <ClInclude Include="BoundingSphereInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
     <ClInclude Include="IInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
     <ClInclude Include="SkeletalMeshObjectInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
     <ClInclude Include="StaticMeshObjectInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
     <ClInclude Include="TransformationInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
     <ClInclude Include="ViewableInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
     <ClInclude Include="EnvironementActorDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
     <ClInclude Include="IGuiModelAcceptor.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor</Filter>
     </ClInclude>
     <ClInclude Include="IRenderable.h">
       <Filter>헤더 파일\Interface</Filter>
@@ -846,13 +861,34 @@
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="MaterialInformationDrawer.h">
-      <Filter>헤더 파일\World\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
+      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
     <ClInclude Include="AssetControl.h">
-      <Filter>헤더 파일\World\Editor\GUI\Control</Filter>
+      <Filter>헤더 파일\Editor\GUI\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetControlWindow.h">
+      <Filter>헤더 파일\Editor\GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorWorld.h">
+      <Filter>헤더 파일\World</Filter>
     </ClInclude>
     <ClInclude Include="IGuiControl.h">
-      <Filter>헤더 파일\World\Editor\GUI\Control</Filter>
+      <Filter>헤더 파일\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="IDialog.h">
+      <Filter>헤더 파일\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="IWindow.h">
+      <Filter>헤더 파일\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeCanvas.h">
+      <Filter>헤더 파일\Editor\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="ADrawElement.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement</Filter>
+    </ClInclude>
+    <ClInclude Include="RectangleDrawElement.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

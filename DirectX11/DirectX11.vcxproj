@@ -142,12 +142,14 @@
     <ClCompile Include="AController.cpp" />
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
+    <ClCompile Include="ADrawElement.cpp" />
     <ClCompile Include="AMeshObject.cpp" />
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="APawn.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
     <ClCompile Include="AssetControl.cpp" />
+    <ClCompile Include="AssetControlWindow.cpp" />
     <ClCompile Include="AssetPriorityManager.cpp" />
     <ClCompile Include="ATextureAsset.cpp" />
     <ClCompile Include="BaseCubeMeshAsset.cpp" />
@@ -191,6 +193,8 @@
     <ClCompile Include="MapAsset.cpp" />
     <ClCompile Include="MaterialAsset.cpp" />
     <ClCompile Include="MaterialInformationDrawer.cpp" />
+    <ClCompile Include="NodeCanvas.cpp" />
+    <ClCompile Include="RectangleDrawElement.cpp" />
     <ClCompile Include="SkeletalMeshObjectActor.cpp" />
     <ClCompile Include="SkeletalMeshObjetPSO.cpp" />
     <ClCompile Include="StaticMeshObjectActor.cpp" />
@@ -229,6 +233,7 @@
     <ClInclude Include="ANBTMeshAsset.h" />
     <ClInclude Include="AScratchTextureAsset.h" />
     <ClInclude Include="AssetControl.h" />
+    <ClInclude Include="AssetControlWindow.h" />
     <ClInclude Include="AssetPriorityManager.h" />
     <ClInclude Include="ATextureAsset.h" />
     <ClInclude Include="BaseCubeMeshAsset.h" />
@@ -265,6 +270,7 @@
     <ClInclude Include="ICollisionVisitor.h" />
     <ClInclude Include="IDColor.h" />
     <ClInclude Include="IDialog.h" />
+    <ClInclude Include="ADrawElement.h" />
     <ClInclude Include="IGuiControl.h" />
     <ClInclude Include="IGuiModelAcceptor.h" />
     <ClInclude Include="IGuiModelVisitor.h" />
@@ -280,6 +286,8 @@
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="InputEventManager.h" />
     <ClInclude Include="IUpdatable.h" />
+    <ClInclude Include="NodeCanvas.h" />
+    <ClInclude Include="RectangleDrawElement.h" />
     <ClInclude Include="SkeletalMeshObjectActor.h" />
     <ClInclude Include="SkeletalMeshObjetPSO.h" />
     <ClInclude Include="StaticMeshObjectActor.h" />

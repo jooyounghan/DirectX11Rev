@@ -2,6 +2,7 @@
 #include "IWindow.h"
 #include "AssetManager.h"
 #include "AssetControl.h"
+#include "AssetControlWindow.h"
 
 struct DirectorySet
 {
@@ -10,6 +11,8 @@ struct DirectorySet
 	std::list<DirectorySet> ChildrenDirectories;
 	std::list<AssetControl> AssetControls;
 };
+
+class AssetControlWindow;
 
 class AssetManagerWindow : public IWindow
 {
@@ -45,12 +48,21 @@ protected:
 	AssetControlClickedDelegate OnAssetLeftMouseClicked;
 	AssetControlClickedDelegate OnAssetLeftMouseDBClicked;
 
+protected:
+	AssetControlWindowClosedDelegation OnAssetControlWindowClosed;
+
+protected:
+	std::list<AssetControlWindow> AssetControlWindows;
+
 private:
 	void RenderAssetDirectories();
 	void RenderAssetDirectoriesHelper(DirectorySet& DirectorySetIn);
 
 private:
 	void RenderAssetControls();
+
+private:
+	void RenderAssetControlWindows();
 
 private:
 	void RefreshAssetDirectoriesFromRoot();
@@ -66,5 +78,10 @@ private:
 private:
 	void FocusItem(AssetControl* AssetControlCached);
 	void OpenItemSetting(AssetControl* AssetControlCached);
+
+private:
+	std::vector<AssetControlWindow*> CloseAssetControlWindowsList;
+	void AddCloseAssetControlWindowList(AssetControlWindow* AssetControlWindowIn);
+	void CloseAssetControlWindow();
 };
 

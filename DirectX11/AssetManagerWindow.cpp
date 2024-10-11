@@ -1,6 +1,8 @@
 #include "AssetManagerWindow.h"
-#include "AssetManager.h"
+
 #include "GlobalVariable.h"
+
+#include "AssetManager.h"
 #include "AAssetFile.h"
 
 using namespace ImGui;
@@ -24,6 +26,8 @@ AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
 
     OnAssetLeftMouseClicked = bind(&AssetManagerWindow::FocusItem, this, placeholders::_1);
     OnAssetLeftMouseDBClicked = bind(&AssetManagerWindow::OpenItemSetting, this, placeholders::_1);
+
+    OnAssetControlWindowClosed = bind(&AssetManagerWindow::AddCloseAssetControlWindowList, this, placeholders::_1);
 #pragma endregion 
 
     RefreshAssetDirectoriesFromRoot();
@@ -42,6 +46,8 @@ void AssetManagerWindow::RenderWindow()
     RenderAssetControls();
 
     End();
+
+    RenderAssetControlWindows();
 }
 
 void AssetManagerWindow::RenderAssetDirectories()
@@ -110,6 +116,16 @@ void AssetManagerWindow::RenderAssetControls()
     }
 
     EndChild();
+}
+
+void AssetManagerWindow::RenderAssetControlWindows()
+{
+    CloseAssetControlWindow();
+
+    for (auto& AssetControlWindowCached : AssetControlWindows)
+    {
+        AssetControlWindowCached.RenderWindow();
+    }
 }
 
 void AssetManagerWindow::RefreshAssetDirectoriesFromRoot()
@@ -214,5 +230,25 @@ void AssetManagerWindow::FocusItem(AssetControl* AssetControlCached)
 
 void AssetManagerWindow::OpenItemSetting(AssetControl* AssetControlCached)
 {
-    bool test = true;
+    AssetControlWindows.emplace_back(AssetControlCached);
+    AssetControlWindows.back().CloseEvent += OnAssetControlWindowClosed;
+}
+
+void AssetManagerWindow::AddCloseAssetControlWindowList(AssetControlWindow* AssetControlWindowIn) 
+{ 
+    CloseAssetControlWindowsList.push_back(AssetControlWindowIn); 
+}
+
+void AssetManagerWindow::CloseAssetControlWindow()
+{
+    for (AssetControlWindow* CloseAssetControlWindow : CloseAssetControlWindowsList)
+    {
+        AssetControlWindows.remove_if(
+            [CloseAssetControlWindow](const AssetControlWindow& window)
+            {
+                return &window == CloseAssetControlWindow;
+            }
+        );
+    }
+    CloseAssetControlWindowsList.clear();
 }
