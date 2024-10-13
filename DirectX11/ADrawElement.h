@@ -6,32 +6,43 @@
 
 #include "Delegation.h"
 #include "HeaderHelper.h"
+
+
 class ADrawElement;
 
-typedef std::function<void(ADrawElement*, const ImVec2&)>	DrawElementDragDelegation;
-typedef std::function<void(ADrawElement*)>					DrawElementClickedDelegation;
+typedef std::function<void(ADrawElement*)>			ClickedElementDelegation;
+typedef std::function<void(ADrawElement*)>			MouseDownElementDelegation;
+typedef std::function<void(ADrawElement*)>			MouseUpElementDelegation;
+typedef std::function<void(ADrawElement*)>			MouseEnterElementDelegation;
+typedef std::function<void(ADrawElement*)>			MouseLeaveElementDelegation;
 
 class ADrawElement
 {
+public:
+	ADrawElement(const ImU32& BasePortColorIn, const ImU32& HilightedPortColorIn);
+	virtual ~ADrawElement();
+
 protected:
-	ImVec2 LeftTopPosition;
-	ImVec2 RightBottomPosition;
-	ImVec2 ElementSize;
-	MakeGetter(ElementSize);
-
+	ImU32 BaseColor;
+	ImU32 HilightedColor;
 
 public:
-	void SetPosition(const ImVec2& CenterPositionIn);
-	void SetPosition(const ImVec2& CenterPositionIn, const ImVec2& RectangleSizeIn);
+	Delegation<ADrawElement*>	ClickedEvent;
 
-public:
-	Delegation<ADrawElement*, const ImVec2&>	DrawElementDragEvent;
-	Delegation<ADrawElement*>					DrawElementClickedEvent;
+	Delegation<ADrawElement*>	MouseDownEvent;
+	Delegation<ADrawElement*>	MouseUpEvent;
+
+	Delegation<ADrawElement*>	MouseEnterEvent;
+	Delegation<ADrawElement*>	MouseLeaveEvent;
 
 protected:
 	bool bIsElementFocused = false;
+	bool bIsMouseEntered = false;
 
 public:
 	virtual void SetFocus(const bool& IsFocused);
+
+public:
+	virtual void SetPosition(const ImVec2& CenterPositionIn) = 0;
 	virtual void AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawListIn) = 0;
 };

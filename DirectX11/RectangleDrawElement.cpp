@@ -7,17 +7,29 @@ constexpr float HilightPadding = 5.f;
 RectangleDrawElement::RectangleDrawElement(
 	const ImVec2& CenterPositionIn, 
 	const ImVec2& RectangleSizeIn,
-	const ImU32& RectangleColorIn,
+	const ImU32& BaseColorIn,
 	const ImU32& HilightedColorIn
 )
+	: ADrawElement(BaseColorIn, HilightedColorIn)
 {
-	RectangleColor = RectangleColorIn;
-	HilightedColor = HilightedColorIn;
 	SetPosition(CenterPositionIn, RectangleSizeIn);
 }
 
 RectangleDrawElement::~RectangleDrawElement()
 {
+}
+
+void RectangleDrawElement::SetPosition(const ImVec2& CenterPositionIn)
+{
+	LeftTopPosition = ImVec2(CenterPositionIn.x - ElementSize.x / 2.f, CenterPositionIn.y - ElementSize.y / 2.f);
+	RightBottomPosition = ImVec2(LeftTopPosition.x + ElementSize.x, LeftTopPosition.y + ElementSize.y);
+}
+
+void RectangleDrawElement::SetPosition(const ImVec2& CenterPositionIn, const ImVec2& ElementSizeIn)
+{
+	LeftTopPosition = ImVec2(CenterPositionIn.x - ElementSizeIn.x / 2.f, CenterPositionIn.y - ElementSizeIn.y / 2.f);
+	ElementSize = ElementSizeIn;
+	RightBottomPosition = ImVec2(LeftTopPosition.x + ElementSize.x, LeftTopPosition.y + ElementSize.y);
 }
 
 void RectangleDrawElement::AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawListIn)
@@ -32,19 +44,41 @@ void RectangleDrawElement::AddToDrawList(const ImVec2& OriginPosition, ImDrawLis
 		DrawListIn->AddRectFilled(LeftTopPositionWithPadding, RightBottomPositionWithPadding, HilightedColor, ElementSize.x / 20.f);
 	}
 
-	DrawListIn->AddRectFilled(RecalcedLT, RecalcedRB, RectangleColor, ElementSize.x / 20.f);
-
+	DrawListIn->AddRectFilled(RecalcedLT, RecalcedRB, BaseColor, ElementSize.x / 20.f);
 
 	if (IsMouseHoveringRect(RecalcedLT, RecalcedRB))
 	{
-		if (IsMouseDragging(ImGuiMouseButton_::ImGuiMouseButton_Left))
+		if (!bIsMouseEntered)
 		{
-			DrawElementDragEvent.Invoke(this, GetMousePos());
+			bIsMouseEntered = true;
+			MouseEnterEvent.Invoke(this);
 		}
+
 		if (IsMouseClicked(ImGuiMouseButton_::ImGuiMouseButton_Left))
 		{
-			SetFocus(true);
-			DrawElementClickedEvent.Invoke(this);
+			ClickedEvent.Invoke(this);
+		}
+
+		if (IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left))
+		{
+			MouseDownEvent.Invoke(this);
+		}
+
+		if (IsMouseReleased(ImGuiMouseButton_::ImGuiMouseButton_Left))
+		{
+			MouseUpEvent.Invoke(this);
+		}
+
+		if (IsMouseReleased(ImGuiMouseButton_::ImGuiMouseButton_Left))
+		{
+			MouseUpEvent.Invoke(this);
+		}
+	}
+	else
+	{
+		if (bIsMouseEntered)
+		{
+			MouseLeaveEvent.Invoke(this);
 		}
 	}
 }

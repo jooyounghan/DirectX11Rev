@@ -13,10 +13,15 @@ public:
 	virtual ~RectangleDrawElement();
 
 protected:
-	ImU32 RectangleColor;
-	ImU32 HilightedColor;
+	ImVec2 LeftTopPosition;
+	ImVec2 RightBottomPosition;
+	ImVec2 ElementSize;
 
 public:
+	void SetPosition(const ImVec2& CenterPositionIn, const ImVec2& RectangleSizeIn);
+
+public:
+	virtual void SetPosition(const ImVec2& CenterPositionIn) override;
 	virtual void AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawListIn) override;
 };
 

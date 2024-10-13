@@ -1,6 +1,11 @@
 #include "NodeCanvas.h"
 
 #include "RectangleDrawElement.h"
+#include "PortElement.h"
+#include "OutputPort.h"
+#include "InputPort.h"
+#include <Windows.h>
+
 
 using namespace std;
 using namespace ImGui;
@@ -13,30 +18,44 @@ NodeCanvas::NodeCanvas()
     if (CanvasSize.y < 50.0f) CanvasSize.y = 50.0f;
     RightBottomPosition = ImVec2(LeftTopPositon.x + CanvasSize.x, LeftTopPositon.y + CanvasSize.y);
 
+    OnElementClicked = bind(&NodeCanvas::SelectNode, this, placeholders::_1);
 
-    OnNodeElementDrag = bind(&NodeCanvas::DragNode, this, placeholders::_1, placeholders::_2);
-    OnNodeElementClicked = bind(&NodeCanvas::ClickNode, this, placeholders::_1);
+    OnPortClicked = bind(&NodeCanvas::SelectPort, this, placeholders::_1);
+    OnPortEnter = bind(&NodeCanvas::MouseEnterPort, this, placeholders::_1);
+    OnPortLeave = bind(&NodeCanvas::MouseLeavePort, this, placeholders::_1);
 
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 3; ++i)
     {
         DrawElements.emplace_back(make_unique<RectangleDrawElement>(
             RectangleDrawElement(
-                ImVec2(LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
+                ImVec2(i * 100.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
                 ImVec2(100.f, 100.f),
-                IM_COL32(180, 100, 100, 255),
+                IM_COL32(60 * i, 100, 100, 255),
                 IM_COL32(255, 100, 100, 255)
             )
         ));
-        DrawElements.back()->DrawElementClickedEvent += OnNodeElementClicked;
-        DrawElements.back()->DrawElementDragEvent += OnNodeElementDrag;
+        DrawElements.back()->ClickedEvent += OnElementClicked;
+    }
+
+    for (int i = 0; i < 3; ++i)
+    {
+        DrawElements.emplace_back(make_unique<OutputPort>(
+            OutputPort(
+                ImVec2(100.f * i + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
+                IM_COL32(60 * i, 180, 100, 255),
+                IM_COL32(100, 255, 100, 255)
+            )
+        ));
+
+        DrawElements.back()->ClickedEvent += OnPortClicked;
+        DrawElements.back()->MouseEnterEvent += OnPortEnter;
+        DrawElements.back()->MouseLeaveEvent += OnPortLeave;
     }
 }
 
 void NodeCanvas::RenderControl()
 {
-    static ImVector<ImVec2> points;
-
-    static bool adding_line = false;
+    ImGuiIO& io = GetIO();
 
     LeftTopPositon = GetCursorScreenPos();
     CanvasSize = GetContentRegionAvail();
@@ -44,95 +63,164 @@ void NodeCanvas::RenderControl()
     if (CanvasSize.y < 50.0f) CanvasSize.y = 50.0f;
     RightBottomPosition = ImVec2(LeftTopPositon.x + CanvasSize.x, LeftTopPositon.y + CanvasSize.y);
 
-    // Draw border and background color
-    ImGuiIO& io = GetIO();
-    ImDrawList* draw_list = GetWindowDrawList();
-    draw_list->AddRectFilled(LeftTopPositon, RightBottomPosition, IM_COL32(50, 50, 50, 255));
-    draw_list->AddRect(LeftTopPositon, RightBottomPosition, IM_COL32(255, 255, 255, 255));
+    DrawCanvasRectangle(32.f);
 
-    // This will catch our interactions
-    InvisibleButton("canvas", CanvasSize, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
-    const bool is_hovered = IsItemHovered(); // Hovered
-    const bool is_active = IsItemActive();   // Held
-    const ImVec2 origin(LeftTopPositon.x + ScrollingPosition.x, LeftTopPositon.y + ScrollingPosition.y); // Lock scrolled origin
-    const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
-
-    // Add first and second point
-    if (is_hovered && !adding_line && IsMouseClicked(ImGuiMouseButton_Left))
-    {
-        points.push_back(mouse_pos_in_canvas);
-        points.push_back(mouse_pos_in_canvas);
-        adding_line = true;
-    }
-    if (adding_line)
-    {
-        points.back() = mouse_pos_in_canvas;
-        if (!IsMouseDown(ImGuiMouseButton_Left))
-            adding_line = false;
-    }
-
-    if (is_active && IsMouseDragging(ImGuiMouseButton_Right))
+    InvisibleButton("NodeCanvas", CanvasSize, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
+    if (IsItemActive() && IsMouseDragging(ImGuiMouseButton_Right))
     {
         ScrollingPosition.x += io.MouseDelta.x;
         ScrollingPosition.y += io.MouseDelta.y;
     }
 
-    // Context menu (under default mouse threshold)
-    ImVec2 drag_delta = GetMouseDragDelta(ImGuiMouseButton_Right);
-    if (drag_delta.x == 0.0f && drag_delta.y == 0.0f)
-        OpenPopupOnItemClick("context", ImGuiPopupFlags_MouseButtonRight);
-    if (BeginPopup("context"))
-    {
-        if (adding_line)
-            points.resize(points.size() - 2);
-        adding_line = false;
-        if (MenuItem("Remove one", NULL, false, points.Size > 0)) { points.resize(points.size() - 2); }
-        if (MenuItem("Remove all", NULL, false, points.Size > 0)) { points.clear(); }
-        EndPopup();
-    }
+    ImDrawList* DrawList = GetWindowDrawList();
+    const ImVec2 Origin(LeftTopPositon.x + ScrollingPosition.x, LeftTopPositon.y + ScrollingPosition.y);
+    const ImVec2 CanvasMousePos(io.MousePos.x - Origin.x, io.MousePos.y - Origin.y);
 
-    DrawGrid(32.f);
+    ResetStatus();
 
     for (unique_ptr<ADrawElement>& DrawElement : DrawElements)
     {
-        DrawElement->AddToDrawList(origin, draw_list);
+        DrawElement->AddToDrawList(Origin, DrawList);
     }
+
+    if (!bIsNodeSelectedOnTick && IsMouseClicked(ImGuiMouseButton_::ImGuiMouseButton_Left))
+    {
+        ResetSelectedNode();
+    }
+
+    if (!bIsPortSelectedOnTick && IsMouseClicked(ImGuiMouseButton_::ImGuiMouseButton_Left))
+    {
+        ResetSelectedOutputPort();
+    }
+
+    if (TargetPort == nullptr && IsMouseReleased(ImGuiMouseButton_::ImGuiMouseButton_Left))
+    {
+        ResetSelectedOutputPort();
+    }
+
+    if (SelectedOutputPort== nullptr && SelectedNodeElement != nullptr && IsMouseDragging(ImGuiMouseButton_::ImGuiMouseButton_Left))
+    {
+        SelectedNodeElement->SetPosition(CanvasMousePos);
+    }
+ 
+    ShowContextMenu();
 }
 
-void NodeCanvas::DrawGrid(const float& GridStepSize)
+/* Node Canvas가 구체화 된 곳에 구현 필요 */
+void NodeCanvas::ShowContextMenu()
+{    
+    ImVec2 DragDelta = GetMouseDragDelta(ImGuiMouseButton_Right);
+    if (DragDelta.x == 0.0f && DragDelta.y == 0.0f)
+    {
+        OpenPopupOnItemClick("CavnasContextMenu", ImGuiPopupFlags_MouseButtonRight);
+    }
+    if (BeginPopup("CavnasContextMenu"))
+    {
+        if (MenuItem("Add Node", NULL, false, true)) {  }
+        if (MenuItem("Add", NULL, false, true)) {  }
+        EndPopup();
+    }
+
+}
+
+void NodeCanvas::DrawCanvasRectangle(const float& GridStepSize)
 {
-    ImDrawList* draw_list = GetWindowDrawList();
- 
-    draw_list->PushClipRect(LeftTopPositon, RightBottomPosition, true);
+    ImDrawList* DrawList = GetWindowDrawList();
+
+    DrawList->AddRectFilled(LeftTopPositon, RightBottomPosition, IM_COL32(50, 50, 50, 255));
+    DrawList->AddRect(LeftTopPositon, RightBottomPosition, IM_COL32(255, 255, 255, 255));
+
+    DrawList->PushClipRect(LeftTopPositon, RightBottomPosition, true);
 
     for (float x = fmodf(ScrollingPosition.x, GridStepSize); x < CanvasSize.x; x += GridStepSize)
     {
-        draw_list->AddLine(ImVec2(LeftTopPositon.x + x, LeftTopPositon.y), ImVec2(LeftTopPositon.x + x, RightBottomPosition.y), IM_COL32(200, 200, 200, 40));
+        DrawList->AddLine(ImVec2(LeftTopPositon.x + x, LeftTopPositon.y), ImVec2(LeftTopPositon.x + x, RightBottomPosition.y), IM_COL32(200, 200, 200, 40));
     }
     for (float y = fmodf(ScrollingPosition.y, GridStepSize); y < CanvasSize.y; y += GridStepSize)
     {
-        draw_list->AddLine(ImVec2(LeftTopPositon.x, LeftTopPositon.y + y), ImVec2(RightBottomPosition.x, LeftTopPositon.y + y), IM_COL32(200, 200, 200, 40));
+        DrawList->AddLine(ImVec2(LeftTopPositon.x, LeftTopPositon.y + y), ImVec2(RightBottomPosition.x, LeftTopPositon.y + y), IM_COL32(200, 200, 200, 40));
     }
-    draw_list->PopClipRect();
 }
 
-void NodeCanvas::DragNode(ADrawElement* NodeDrawElement, const ImVec2& MousePos)
+void NodeCanvas::ResetStatus()
 {
-    ImGuiIO& io = GetIO();
-    const ImVec2 origin(LeftTopPositon.x + ScrollingPosition.x, LeftTopPositon.y + ScrollingPosition.y); // Lock scrolled origin
-    const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
-    NodeDrawElement->SetPosition(mouse_pos_in_canvas);
+    bIsNodeSelectedOnTick = false;
+    bIsPortSelectedOnTick = false;
 }
 
-void NodeCanvas::ClickNode(ADrawElement* NodeDrawElement)
+void NodeCanvas::SelectNode(ADrawElement* DrawElement)
+{
+    bIsNodeSelectedOnTick = true;
+    ResetSelectedNode();
+    SelectedNodeElement = (RectangleDrawElement*)DrawElement;
+    SelectedNodeElement->SetFocus(true);
+}
+
+void NodeCanvas::ResetSelectedNode()
 {
     if (SelectedNodeElement != nullptr)
     {
         SelectedNodeElement->SetFocus(false);
     }
-    if (NodeDrawElement != nullptr)
-    {
-        NodeDrawElement->SetFocus(true);
-    }
-    SelectedNodeElement = NodeDrawElement;
+    SelectedNodeElement = nullptr;
 }
+
+//void NodeCanvas::MouseDownPort(ADrawElement* DrawElement)
+//{
+//    OutputPort* outputPort = dynamic_cast<OutputPort*>(DrawElement);
+//    if (outputPort != nullptr)
+//    {
+//        outputPort->SetIsConnecting(true);
+//        SelectedOutputPort = outputPort;        
+//    }
+//    else
+//    {
+//        ResetSelectedOutputPort();
+//    }
+//}
+//
+//void NodeCanvas::MouseUpInPort(ADrawElement* DrawElement)
+//{
+//    bIsMouseUpPortOnTick = true;
+//
+//    if (TargetPort != nullptr)
+//    {
+//        SelectedOutputPort->Connect(TargetPort);
+//    }
+//    ResetSelectedOutputPort();
+//}
+
+void NodeCanvas::MouseEnterPort(ADrawElement* DrawElement)
+{
+    if (SelectedOutputPort != nullptr)
+    {
+        InputPort* inputPort = dynamic_cast<InputPort*>(DrawElement);
+        if (inputPort != nullptr)
+        {
+            TargetPort = inputPort;
+        }
+    }
+}
+
+void NodeCanvas::MouseLeavePort(ADrawElement* DrawElement)
+{
+    TargetPort = nullptr;
+}
+
+void NodeCanvas::SelectPort(ADrawElement* DrawElement)
+{
+    bIsPortSelectedOnTick = true;
+    ResetSelectedOutputPort();
+    SelectedOutputPort = (OutputPort*)DrawElement;
+    SelectedOutputPort->SetIsConnecting(true);
+}
+
+void NodeCanvas::ResetSelectedOutputPort()
+{
+    if (SelectedOutputPort != nullptr)
+    {
+        SelectedOutputPort->SetIsConnecting(false);
+        SelectedOutputPort = nullptr;
+    }
+}
+

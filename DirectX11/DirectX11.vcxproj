@@ -147,6 +147,7 @@
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="APawn.cpp" />
+    <ClCompile Include="PortElement.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
     <ClCompile Include="AssetControl.cpp" />
     <ClCompile Include="AssetControlWindow.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="EXRTextureAsset.cpp" />
     <ClCompile Include="IDColor.cpp" />
     <ClCompile Include="AMeshAsset.cpp" />
+    <ClCompile Include="InputPort.cpp" />
     <ClCompile Include="KeyEvent.cpp" />
     <ClCompile Include="InputEventManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -194,6 +196,7 @@
     <ClCompile Include="MaterialAsset.cpp" />
     <ClCompile Include="MaterialInformationDrawer.cpp" />
     <ClCompile Include="NodeCanvas.cpp" />
+    <ClCompile Include="OutputPort.cpp" />
     <ClCompile Include="RectangleDrawElement.cpp" />
     <ClCompile Include="SkeletalMeshObjectActor.cpp" />
     <ClCompile Include="SkeletalMeshObjetPSO.cpp" />
@@ -231,6 +234,7 @@
     <ClInclude Include="AMeshObject.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
+    <ClInclude Include="PortElement.h" />
     <ClInclude Include="AScratchTextureAsset.h" />
     <ClInclude Include="AssetControl.h" />
     <ClInclude Include="AssetControlWindow.h" />
@@ -277,6 +281,7 @@
     <ClInclude Include="Indexable.h" />
     <ClInclude Include="IInformationDrawer.h" />
     <ClInclude Include="IIntersectable.h" />
+    <ClInclude Include="InputPort.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="AObject.h" />
@@ -287,6 +292,7 @@
     <ClInclude Include="InputEventManager.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="NodeCanvas.h" />
+    <ClInclude Include="OutputPort.h" />
     <ClInclude Include="RectangleDrawElement.h" />
     <ClInclude Include="SkeletalMeshObjectActor.h" />
     <ClInclude Include="SkeletalMeshObjetPSO.h" />

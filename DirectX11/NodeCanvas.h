@@ -5,6 +5,12 @@
 #include <list>
 #include <memory>
 
+// Node로 변경 필요!
+class RectangleDrawElement;
+
+class OutputPort;
+class InputPort;
+
 class NodeCanvas : public IGuiControl
 {
 public:
@@ -22,20 +28,47 @@ protected:
 	ImVec2 ScrollingPosition;
 	
 protected:
-	DrawElementDragDelegation OnNodeElementDrag;
-	DrawElementClickedDelegation OnNodeElementClicked;
+	ClickedElementDelegation			OnElementClicked;
+
+protected:
+	ClickedElementDelegation			OnPortClicked;
+	MouseEnterElementDelegation			OnPortEnter;
+	MouseLeaveElementDelegation			OnPortLeave;
 
 protected:
 	std::list<std::unique_ptr<ADrawElement>> DrawElements;
 
 private:
-	void DrawGrid(const float& GridStepSize);
+	virtual void ShowContextMenu();
+	void DrawCanvasRectangle(const float& GridStepSize);
 
 protected:
-	ADrawElement* SelectedNodeElement;
+	RectangleDrawElement* SelectedNodeElement = nullptr;
 
 private:
-	void DragNode(ADrawElement* NodeDrawElement, const ImVec2& DeltaPos);
-	void ClickNode(ADrawElement* NodeDrawElement);
+	void ResetStatus();
+
+private:
+	bool bIsNodeSelectedOnTick = false;
+	void SelectNode(ADrawElement* DrawElement);
+
+private:
+	void ResetSelectedNode();
+
+protected:
+	OutputPort* SelectedOutputPort = nullptr;
+	InputPort* TargetPort = nullptr;
+
+protected:
+	bool bIsPortSelectedOnTick = false;
+	void SelectPort(ADrawElement* DrawElement);
+
+private:
+	void ResetSelectedOutputPort();
+
+private:
+	void MouseEnterPort(ADrawElement* DrawElement);
+	void MouseLeavePort(ADrawElement* DrawElement);
+
 };
 

@@ -292,6 +292,18 @@
     <Filter Include="소스 파일\Editor\NodeEditor\DrawElement">
       <UniqueIdentifier>{438e9452-b7be-4da9-8a25-c12015c791c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Extended">
+      <UniqueIdentifier>{8029ce1a-a308-4772-a2fc-16a56e306011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\NodeEditor\DrawElement\Extended">
+      <UniqueIdentifier>{85f20ca6-1069-485b-9cd5-82a6c5da1358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\NodeEditor\DrawElement\Extended\InputPort">
+      <UniqueIdentifier>{1934716a-37ec-4003-a61f-80774206215d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Extended\InputPort">
+      <UniqueIdentifier>{240a7a0b-73c1-4572-a07e-cba51dc58ec5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -548,6 +560,15 @@
     </ClCompile>
     <ClCompile Include="ADrawElement.cpp">
       <Filter>소스 파일\Editor\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="InputPort.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputPort.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
+    </ClCompile>
+    <ClCompile Include="PortElement.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -889,6 +910,15 @@
     </ClInclude>
     <ClInclude Include="RectangleDrawElement.h">
       <Filter>헤더 파일\Editor\NodeEditor\DrawElement</Filter>
+    </ClInclude>
+    <ClInclude Include="InputPort.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputPort.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
+    </ClInclude>
+    <ClInclude Include="PortElement.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
