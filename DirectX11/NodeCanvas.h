@@ -8,7 +8,7 @@
 // Node로 변경 필요!
 class RectangleDrawElement;
 
-class OutputPort;
+class AOutputPort;
 class InputPort;
 
 class NodeCanvas : public IGuiControl
@@ -56,7 +56,7 @@ private:
 	void ResetSelectedNode();
 
 protected:
-	OutputPort* SelectedOutputPort = nullptr;
+	AOutputPort* SelectedOutputPort = nullptr;
 	InputPort* TargetPort = nullptr;
 
 protected:

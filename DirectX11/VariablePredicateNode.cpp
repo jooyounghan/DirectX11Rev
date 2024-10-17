@@ -1,6 +1,6 @@
 #include "VariablePredicateNode.h"
 #include "InputPort.h"
-#include "OutputPort.h"
+#include "VariableOutputPort.h"
 #include "GlobalVariable.h"
 
 VariablePredicateNode::VariablePredicateNode(
@@ -8,7 +8,7 @@ VariablePredicateNode::VariablePredicateNode(
 	const ImVec2& RectangleSizeIn, 
 	const size_t InputVariableCountIn
 )
-	: NodeElement(
+	: VariableNode(
 		CenterPositionIn,
 		RectangleSizeIn,
 		NodeColor::VariableNodeBaseColor,
@@ -24,12 +24,7 @@ VariablePredicateNode::VariablePredicateNode(
 		);
 	}
 
-	AddOutputPort<OutputPort>(ImVec2(NULL, NULL),
-		10.f,
-		NodeColor::VariablePortBaseColor,
-		NodeColor::VariablePortHilightedColor,
-		NodeColor::VariablePortHilightedColor
-	);
+	AddOutputPort<VariableOutputPort>(ImVec2(NULL, NULL), 10.f);
 }
 
 VariablePredicateNode::~VariablePredicateNode()

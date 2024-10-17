@@ -3,17 +3,17 @@
 
 class InputPort;
 
-class OutputPort : public PortElement
+class AOutputPort : public PortElement
 {
 public:
-	OutputPort(
+	AOutputPort(
 		const ImVec2& CenterPositionIn,
 		const float& RadiusSizeIn,
 		const ImU32& BasePortColorIn,
 		const ImU32& HilightedPortColorIn,
 		const ImU32& ConnectionLineColorIn
 	);
-	virtual ~OutputPort();
+	virtual ~AOutputPort();
 
 protected:
 	ImU32 ConnectionLineColor;
@@ -26,6 +26,7 @@ protected:
 	InputPort* ConnectedPort = nullptr;
 
 public:
+	virtual bool IsConnectable(InputPort* PortIn) = 0;
 	virtual void Connect(InputPort* PortIn);
 };
 

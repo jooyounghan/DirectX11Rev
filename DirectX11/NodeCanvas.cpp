@@ -3,7 +3,7 @@
 #include "VariableInputNode.h"
 #include "VariableOutputNode.h"
 #include "VariablePredicateNode.h"
-#include "OutputPort.h"
+#include "AOutputPort.h"
 #include "InputPort.h"
 #include <Windows.h>
 
@@ -29,10 +29,8 @@ NodeCanvas::NodeCanvas()
     for (int i = 0; i < 2; ++i)
     {
         DrawElements.emplace_back(make_unique<VariableInputNode>(
-            VariableInputNode(
                 ImVec2(100.f * i + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
                 ImVec2(100.f, 100.f)
-            )
         ));
         DrawElements.back()->ClickedEvent += OnNodeClicked;
         NodeElement* NodeElementCached = ((NodeElement*)DrawElements.back().get());
@@ -51,10 +49,8 @@ NodeCanvas::NodeCanvas()
     }
 
     DrawElements.emplace_back(make_unique<VariableOutputNode>(
-        VariableOutputNode(
             ImVec2(200.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
             ImVec2(100.f, 100.f)
-        )
     ));
     DrawElements.back()->ClickedEvent += OnNodeClicked;
     NodeElement* NodeElementCached = ((NodeElement*)DrawElements.back().get());
@@ -71,11 +67,9 @@ NodeCanvas::NodeCanvas()
     }
 
     DrawElements.emplace_back(make_unique<VariablePredicateNode>(
-        VariablePredicateNode(
-            ImVec2(300.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
-            ImVec2(100.f, 100.f),
-            2
-        )
+        ImVec2(300.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
+        ImVec2(100.f, 100.f),
+        2
     ));
     DrawElements.back()->ClickedEvent += OnNodeClicked;
     NodeElementCached = ((NodeElement*)DrawElements.back().get());
@@ -231,7 +225,7 @@ void NodeCanvas::SelectPort(ADrawElement* DrawElement)
 {
     bIsPortSelectedOnTick = true;
     ResetSelectedOutputPort();
-    SelectedOutputPort = (OutputPort*)DrawElement;
+    SelectedOutputPort = (AOutputPort*)DrawElement;
     SelectedOutputPort->SetIsConnecting(true);
 }
 

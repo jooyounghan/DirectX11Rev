@@ -1,7 +1,7 @@
 #pragma once
-#include "NodeElement.h"
+#include "VariableNode.h"
 
-class VariableInputNode : public NodeElement
+class VariableInputNode : public VariableNode
 {
 public:
 	VariableInputNode(

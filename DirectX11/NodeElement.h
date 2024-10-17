@@ -6,7 +6,7 @@
 #include <memory>
 
 class InputPort;
-class OutputPort;
+class AOutputPort;
 
 class NodeElement : public RectangleDrawElement
 {
@@ -20,7 +20,7 @@ public:
 	virtual ~NodeElement();
 
 private:
-	std::list<std::shared_ptr<OutputPort>> OutputPorts;
+	std::list<std::shared_ptr<AOutputPort>> OutputPorts;
 	std::list<std::shared_ptr<InputPort>> InputPorts;
 	MakeGetter(OutputPorts);
 	MakeGetter(InputPorts)
@@ -29,9 +29,10 @@ public:
 	template<typename T, typename... Args>
 	T* AddOutputPort(Args&&... args)
 	{
-		static_assert(std::is_base_of<OutputPort, T>::value, DerivedCondition(OutputPort));
+		static_assert(std::is_base_of<AOutputPort, T>::value, DerivedCondition(AOutputPort));
 		std::shared_ptr<T> OutputPortInstance = std::make_shared<T>(args...);
-		OutputPorts.push_back(OutputPortInstance);
+		OutputPortInstance->SetParentNodeElement(this);
+		OutputPorts.emplace_back(OutputPortInstance);
 		const ImVec2 NodePosition = GetPosition();
 		SetPosition(NodePosition);
 		return OutputPortInstance.get();
@@ -40,9 +41,10 @@ public:
 	template<typename T, typename... Args>
 	T* AddInputPort(Args&&... args)
 	{
-		static_assert(std::is_base_of<InputPort, T>::value, DerivedCondition(OutputPort));
+		static_assert(std::is_base_of<InputPort, T>::value, DerivedCondition(AOutputPort));
 		std::shared_ptr<T> InputPortInstance = std::make_shared<T>(args...);
-		InputPorts.push_back(InputPortInstance);
+		InputPortInstance->SetParentNodeElement(this);
+		InputPorts.emplace_back(InputPortInstance);
 		const ImVec2 NodePosition = GetPosition();
 		SetPosition(NodePosition);
 		return InputPortInstance.get();

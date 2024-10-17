@@ -1,9 +1,9 @@
-#include "OutputPort.h"
+#include "AOutputPort.h"
 #include "InputPort.h"
 
 using namespace ImGui;
 
-OutputPort::OutputPort(
+AOutputPort::AOutputPort(
 	const ImVec2& CenterPositionIn,
 	const float& RadiusSizeIn,
 	const ImU32& BasePortColorIn,
@@ -15,11 +15,11 @@ OutputPort::OutputPort(
 {
 }
 
-OutputPort::~OutputPort()
+AOutputPort::~AOutputPort()
 {
 }
 
-void OutputPort::AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawListIn)
+void AOutputPort::AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawListIn)
 {
 	// DrawConnectionLine
 	if (bIsConnecting)
@@ -36,7 +36,7 @@ void OutputPort::AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawLis
 	PortElement::AddToDrawList(OriginPosition, DrawListIn);
 }
 
-void OutputPort::AddConnectionLine(const ImVec2& OriginPosition, const ImVec2& ToPosition, ImDrawList* DrawListIn)
+void AOutputPort::AddConnectionLine(const ImVec2& OriginPosition, const ImVec2& ToPosition, ImDrawList* DrawListIn)
 {
 	const ImVec2 Point1 = ImVec2(CenterPosition.x + OriginPosition.x, CenterPosition.y + OriginPosition.y);
 	const ImVec2 Point4 = ToPosition;
@@ -47,7 +47,14 @@ void OutputPort::AddConnectionLine(const ImVec2& OriginPosition, const ImVec2& T
 	DrawListIn->AddBezierCubic(Point1, Point2, Point3, Point4, ConnectionLineColor, 5.f);
 }
 
-void OutputPort::Connect(InputPort* PortIn)
+void AOutputPort::Connect(InputPort* PortIn)
 {
-	ConnectedPort = PortIn;
+	if (IsConnectable(PortIn))
+	{
+		ConnectedPort = PortIn;
+	}
+	else
+	{
+		ConnectedPort = nullptr;
+	}
 }

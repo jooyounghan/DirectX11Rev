@@ -149,7 +149,9 @@
     <ClCompile Include="APawn.cpp" />
     <ClCompile Include="ControlNode.cpp" />
     <ClCompile Include="FlowEndNode.cpp" />
+    <ClCompile Include="FlowMidNode.cpp" />
     <ClCompile Include="FlowNode.cpp" />
+    <ClCompile Include="FlowOutputPort.cpp" />
     <ClCompile Include="FlowStartNode.cpp" />
     <ClCompile Include="NodeElement.cpp" />
     <ClCompile Include="PortElement.cpp" />
@@ -201,7 +203,7 @@
     <ClCompile Include="MaterialAsset.cpp" />
     <ClCompile Include="MaterialInformationDrawer.cpp" />
     <ClCompile Include="NodeCanvas.cpp" />
-    <ClCompile Include="OutputPort.cpp" />
+    <ClCompile Include="AOutputPort.cpp" />
     <ClCompile Include="RectangleDrawElement.cpp" />
     <ClCompile Include="SkeletalMeshObjectActor.cpp" />
     <ClCompile Include="SkeletalMeshObjetPSO.cpp" />
@@ -228,8 +230,9 @@
     <ClCompile Include="NormalTextureAsset.cpp" />
     <ClCompile Include="TransformationInformationDrawer.cpp" />
     <ClCompile Include="VariableInputNode.cpp" />
-    <ClCompile Include="VariableNodeElement.cpp" />
+    <ClCompile Include="VariableNode.cpp" />
     <ClCompile Include="VariableOutputNode.cpp" />
+    <ClCompile Include="VariableOutputPort.cpp" />
     <ClCompile Include="VariablePredicateNode.cpp" />
     <ClCompile Include="Viewable.cpp" />
     <ClCompile Include="ViewableInformationDrawer.cpp" />
@@ -245,7 +248,9 @@
     <ClInclude Include="ANBTMeshAsset.h" />
     <ClInclude Include="ControlNode.h" />
     <ClInclude Include="FlowEndNode.h" />
+    <ClInclude Include="FlowMidNode.h" />
     <ClInclude Include="FlowNode.h" />
+    <ClInclude Include="FlowOutputPort.h" />
     <ClInclude Include="FlowStartNode.h" />
     <ClInclude Include="NodeElement.h" />
     <ClInclude Include="PortElement.h" />
@@ -306,7 +311,7 @@
     <ClInclude Include="InputEventManager.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="NodeCanvas.h" />
-    <ClInclude Include="OutputPort.h" />
+    <ClInclude Include="AOutputPort.h" />
     <ClInclude Include="RectangleDrawElement.h" />
     <ClInclude Include="SkeletalMeshObjectActor.h" />
     <ClInclude Include="SkeletalMeshObjetPSO.h" />
@@ -323,8 +328,9 @@
     <ClInclude Include="Todo.h" />
     <ClInclude Include="TransformationInformationDrawer.h" />
     <ClInclude Include="VariableInputNode.h" />
-    <ClInclude Include="VariableNodeElement.h" />
+    <ClInclude Include="VariableNode.h" />
     <ClInclude Include="VariableOutputNode.h" />
+    <ClInclude Include="VariableOutputPort.h" />
     <ClInclude Include="VariablePredicateNode.h" />
     <ClInclude Include="Vertexable.h" />
     <ClInclude Include="OBBObject.h" />

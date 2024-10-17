@@ -1,6 +1,8 @@
 #pragma once
 #include "ADrawElement.h"
 
+class NodeElement;
+
 class PortElement : public ADrawElement
 {
 public:
@@ -18,6 +20,10 @@ protected:
 
 protected:
 	bool bIsConnecting = false;
+
+protected:
+	NodeElement* ParentNodeElement;
+	MakeSetterGetter(ParentNodeElement);
 
 public:
 	inline void SetIsConnecting(const bool& IsConnecting) { bIsConnecting = IsConnecting; }

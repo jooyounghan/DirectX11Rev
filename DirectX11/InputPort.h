@@ -1,7 +1,7 @@
 #pragma once
 #include "PortElement.h"
 
-class OutputPort;
+class AOutputPort;
 
 class InputPort : public PortElement
 {

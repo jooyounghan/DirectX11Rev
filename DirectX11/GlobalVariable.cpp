@@ -27,6 +27,10 @@ const unsigned int NodeColor::VariableNodeHilightedColor = IM_COL32(30, 200, 30,
 const unsigned int NodeColor::VariablePortBaseColor = IM_COL32(180, 180, 100, 180);
 const unsigned int NodeColor::VariablePortHilightedColor = IM_COL32(200, 200, 30, 255);
 
+const unsigned int NodeColor::FlowNodeBaseColor = IM_COL32(180, 100, 100, 180);
+const unsigned int NodeColor::FlowNodeHilightedColor = IM_COL32(200, 30, 30, 180);
+const unsigned int NodeColor::FlowPortBaseColor = IM_COL32(180, 100, 180, 180);
+const unsigned int NodeColor::FlowPortHilightedColor = IM_COL32(200, 30, 200, 255);
 
 const ImVec2 UISize::FileSize = ImVec2(100.f, 100.0f);
 const ImVec2 UISize::WindowSize = ImVec2(800.f, 600.0f);

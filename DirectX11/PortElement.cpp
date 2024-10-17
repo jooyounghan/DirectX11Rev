@@ -36,10 +36,10 @@ void PortElement::AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawLi
 
 	if (bIsConnecting)
 	{
-		DrawListIn->AddCircleFilled(RecalcedCenter, RadiusSize + HilightPadding, HilightedColor, 20.f);
+		DrawListIn->AddCircleFilled(RecalcedCenter, RadiusSize + HilightPadding, HilightedColor, 20);
 	}
 
-	DrawListIn->AddCircleFilled(RecalcedCenter, RadiusSize, BaseColor, 20.f);
+	DrawListIn->AddCircleFilled(RecalcedCenter, RadiusSize, BaseColor, 20);
 
 	if (IsHoveringOnPort(OriginPosition))
 	{

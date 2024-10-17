@@ -3,7 +3,7 @@
 #include "GlobalVariable.h"
 
 VariableOutputNode::VariableOutputNode(const ImVec2& CenterPositionIn, const ImVec2& RectangleSizeIn)
-	: NodeElement(
+	: VariableNode(
 		CenterPositionIn,
 		RectangleSizeIn,
 		NodeColor::VariableNodeBaseColor,
