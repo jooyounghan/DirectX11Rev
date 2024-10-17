@@ -12,7 +12,9 @@ RectangleDrawElement::RectangleDrawElement(
 )
 	: ADrawElement(BaseColorIn, HilightedColorIn)
 {
-	SetPosition(CenterPositionIn, RectangleSizeIn);
+	ElementSize = RectangleSizeIn;
+	LeftTopPosition = ImVec2(CenterPositionIn.x - ElementSize.x / 2.f, CenterPositionIn.y - ElementSize.y / 2.f);
+	RightBottomPosition = ImVec2(LeftTopPosition.x + ElementSize.x, LeftTopPosition.y + ElementSize.y);
 }
 
 RectangleDrawElement::~RectangleDrawElement()
@@ -25,12 +27,11 @@ void RectangleDrawElement::SetPosition(const ImVec2& CenterPositionIn)
 	RightBottomPosition = ImVec2(LeftTopPosition.x + ElementSize.x, LeftTopPosition.y + ElementSize.y);
 }
 
-void RectangleDrawElement::SetPosition(const ImVec2& CenterPositionIn, const ImVec2& ElementSizeIn)
+const ImVec2& RectangleDrawElement::GetPosition()
 {
-	LeftTopPosition = ImVec2(CenterPositionIn.x - ElementSizeIn.x / 2.f, CenterPositionIn.y - ElementSizeIn.y / 2.f);
-	ElementSize = ElementSizeIn;
-	RightBottomPosition = ImVec2(LeftTopPosition.x + ElementSize.x, LeftTopPosition.y + ElementSize.y);
+	return ImVec2(LeftTopPosition.x + ElementSize.x / 2.f, LeftTopPosition.y + ElementSize.y / 2.f);
 }
+
 
 void RectangleDrawElement::AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawListIn)
 {
@@ -78,6 +79,7 @@ void RectangleDrawElement::AddToDrawList(const ImVec2& OriginPosition, ImDrawLis
 	{
 		if (bIsMouseEntered)
 		{
+			bIsMouseEntered = false;
 			MouseLeaveEvent.Invoke(this);
 		}
 	}

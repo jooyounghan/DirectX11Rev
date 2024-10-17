@@ -45,6 +45,15 @@ namespace UIColor
 	extern const ImVec4 GHilighted;
 }
 
+namespace NodeColor
+{
+	extern const unsigned int VariableNodeBaseColor;
+	extern const unsigned int VariableNodeHilightedColor;
+	extern const unsigned int VariablePortBaseColor;
+	extern const unsigned int VariablePortHilightedColor;
+
+}
+
 namespace UISize
 {
 	extern const ImVec2 FileSize;

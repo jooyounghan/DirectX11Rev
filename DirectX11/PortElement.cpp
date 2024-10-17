@@ -20,6 +20,11 @@ PortElement::~PortElement()
 {
 }
 
+const ImVec2& PortElement::GetPosition()
+{
+	return CenterPosition;
+}
+
 void PortElement::SetPosition(const ImVec2& CenterPositionIn)
 {
 	CenterPosition = CenterPositionIn;
@@ -63,6 +68,7 @@ void PortElement::AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawLi
 	{
 		if (bIsMouseEntered)
 		{
+			bIsMouseEntered = false;
 			MouseLeaveEvent.Invoke(this);
 		}
 	}
@@ -78,7 +84,6 @@ bool PortElement::IsHoveringOnPort(const ImVec2& OriginPosition)
 
 	if (Distance < RadiusSize)
 	{
-		ImGui::SetTooltip("Mouse is hovering over the circle!");
 		return true;
 	}
 	return false;

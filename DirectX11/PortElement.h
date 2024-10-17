@@ -23,6 +23,7 @@ public:
 	inline void SetIsConnecting(const bool& IsConnecting) { bIsConnecting = IsConnecting; }
 
 public:
+	virtual const ImVec2& GetPosition() override;
 	virtual void SetPosition(const ImVec2& CenterPositionIn) override;
 	virtual void AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawListIn) override;
 

@@ -1,7 +1,8 @@
 #include "NodeCanvas.h"
 
-#include "RectangleDrawElement.h"
-#include "PortElement.h"
+#include "VariableInputNode.h"
+#include "VariableOutputNode.h"
+#include "VariablePredicateNode.h"
 #include "OutputPort.h"
 #include "InputPort.h"
 #include <Windows.h>
@@ -18,39 +19,78 @@ NodeCanvas::NodeCanvas()
     if (CanvasSize.y < 50.0f) CanvasSize.y = 50.0f;
     RightBottomPosition = ImVec2(LeftTopPositon.x + CanvasSize.x, LeftTopPositon.y + CanvasSize.y);
 
-    OnElementClicked = bind(&NodeCanvas::SelectNode, this, placeholders::_1);
+    OnNodeClicked = bind(&NodeCanvas::SelectNode, this, placeholders::_1);
 
     OnPortClicked = bind(&NodeCanvas::SelectPort, this, placeholders::_1);
     OnPortEnter = bind(&NodeCanvas::MouseEnterPort, this, placeholders::_1);
     OnPortLeave = bind(&NodeCanvas::MouseLeavePort, this, placeholders::_1);
 
-    for (int i = 0; i < 3; ++i)
-    {
-        DrawElements.emplace_back(make_unique<RectangleDrawElement>(
-            RectangleDrawElement(
-                ImVec2(i * 100.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
-                ImVec2(100.f, 100.f),
-                IM_COL32(60 * i, 100, 100, 255),
-                IM_COL32(255, 100, 100, 255)
-            )
-        ));
-        DrawElements.back()->ClickedEvent += OnElementClicked;
-    }
 
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 2; ++i)
     {
-        DrawElements.emplace_back(make_unique<OutputPort>(
-            OutputPort(
+        DrawElements.emplace_back(make_unique<VariableInputNode>(
+            VariableInputNode(
                 ImVec2(100.f * i + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
-                IM_COL32(60 * i, 180, 100, 255),
-                IM_COL32(100, 255, 100, 255)
+                ImVec2(100.f, 100.f)
             )
         ));
+        DrawElements.back()->ClickedEvent += OnNodeClicked;
+        NodeElement* NodeElementCached = ((NodeElement*)DrawElements.back().get());
 
-        DrawElements.back()->ClickedEvent += OnPortClicked;
-        DrawElements.back()->MouseEnterEvent += OnPortEnter;
-        DrawElements.back()->MouseLeaveEvent += OnPortLeave;
+        for (auto& OutputPortCached : NodeElementCached->GetOutputPorts())
+        {
+            OutputPortCached->ClickedEvent += OnPortClicked;
+        }
+
+        for (auto& InputPortCached : NodeElementCached->GetInputPorts())
+        {
+            InputPortCached->MouseEnterEvent += OnPortEnter;
+            InputPortCached->MouseLeaveEvent += OnPortLeave;
+        }
+
     }
+
+    DrawElements.emplace_back(make_unique<VariableOutputNode>(
+        VariableOutputNode(
+            ImVec2(200.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
+            ImVec2(100.f, 100.f)
+        )
+    ));
+    DrawElements.back()->ClickedEvent += OnNodeClicked;
+    NodeElement* NodeElementCached = ((NodeElement*)DrawElements.back().get());
+
+    for (auto& OutputPortCached : NodeElementCached->GetOutputPorts())
+    {
+        OutputPortCached->ClickedEvent += OnPortClicked;
+    }
+
+    for (auto& InputPortCached : NodeElementCached->GetInputPorts())
+    {
+        InputPortCached->MouseEnterEvent += OnPortEnter;
+        InputPortCached->MouseLeaveEvent += OnPortLeave;
+    }
+
+    DrawElements.emplace_back(make_unique<VariablePredicateNode>(
+        VariablePredicateNode(
+            ImVec2(300.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
+            ImVec2(100.f, 100.f),
+            2
+        )
+    ));
+    DrawElements.back()->ClickedEvent += OnNodeClicked;
+    NodeElementCached = ((NodeElement*)DrawElements.back().get());
+
+    for (auto& OutputPortCached : NodeElementCached->GetOutputPorts())
+    {
+        OutputPortCached->ClickedEvent += OnPortClicked;
+    }
+
+    for (auto& InputPortCached : NodeElementCached->GetInputPorts())
+    {
+        InputPortCached->MouseEnterEvent += OnPortEnter;
+        InputPortCached->MouseLeaveEvent += OnPortLeave;
+    }
+
 }
 
 void NodeCanvas::RenderControl()
@@ -93,8 +133,12 @@ void NodeCanvas::RenderControl()
         ResetSelectedOutputPort();
     }
 
-    if (TargetPort == nullptr && IsMouseReleased(ImGuiMouseButton_::ImGuiMouseButton_Left))
+    if (IsMouseReleased(ImGuiMouseButton_::ImGuiMouseButton_Left))
     {
+        if (SelectedOutputPort != nullptr)
+        {
+            SelectedOutputPort->Connect(TargetPort);
+        }
         ResetSelectedOutputPort();
     }
 
@@ -165,33 +209,9 @@ void NodeCanvas::ResetSelectedNode()
     SelectedNodeElement = nullptr;
 }
 
-//void NodeCanvas::MouseDownPort(ADrawElement* DrawElement)
-//{
-//    OutputPort* outputPort = dynamic_cast<OutputPort*>(DrawElement);
-//    if (outputPort != nullptr)
-//    {
-//        outputPort->SetIsConnecting(true);
-//        SelectedOutputPort = outputPort;        
-//    }
-//    else
-//    {
-//        ResetSelectedOutputPort();
-//    }
-//}
-//
-//void NodeCanvas::MouseUpInPort(ADrawElement* DrawElement)
-//{
-//    bIsMouseUpPortOnTick = true;
-//
-//    if (TargetPort != nullptr)
-//    {
-//        SelectedOutputPort->Connect(TargetPort);
-//    }
-//    ResetSelectedOutputPort();
-//}
-
 void NodeCanvas::MouseEnterPort(ADrawElement* DrawElement)
 {
+    OutputDebugStringA("Enter");
     if (SelectedOutputPort != nullptr)
     {
         InputPort* inputPort = dynamic_cast<InputPort*>(DrawElement);

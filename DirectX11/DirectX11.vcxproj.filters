@@ -304,6 +304,18 @@
     <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Extended\InputPort">
       <UniqueIdentifier>{240a7a0b-73c1-4572-a07e-cba51dc58ec5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Extended\OutputPort">
+      <UniqueIdentifier>{92ecb1c3-7352-4035-a571-c92bb3ef9a7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\NodeEditor\DrawElement\Extended\OutputPort">
+      <UniqueIdentifier>{dccc27cf-c716-45b6-a656-e740a2cca3b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\NodeEditor\DrawElement\Extended\Node">
+      <UniqueIdentifier>{32507249-8391-4a0c-b815-be24354dd321}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node">
+      <UniqueIdentifier>{83e4f266-55f3-4b8a-8831-d1bd4c0cf262}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -564,11 +576,38 @@
     <ClCompile Include="InputPort.cpp">
       <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
     </ClCompile>
-    <ClCompile Include="OutputPort.cpp">
-      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
-    </ClCompile>
     <ClCompile Include="PortElement.cpp">
       <Filter>소스 파일\Editor\NodeEditor\DrawElement</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputPort.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\OutputPort</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlNode.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowEndNode.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowNode.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowStartNode.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeElement.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="VariableInputNode.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="VariableNodeElement.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="VariablePredicateNode.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="VariableOutputNode.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -911,14 +950,41 @@
     <ClInclude Include="RectangleDrawElement.h">
       <Filter>헤더 파일\Editor\NodeEditor\DrawElement</Filter>
     </ClInclude>
+    <ClInclude Include="PortElement.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended</Filter>
+    </ClInclude>
     <ClInclude Include="InputPort.h">
       <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
     </ClInclude>
     <ClInclude Include="OutputPort.h">
-      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\OutputPort</Filter>
     </ClInclude>
-    <ClInclude Include="PortElement.h">
-      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
+    <ClInclude Include="ControlNode.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowEndNode.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowNode.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowStartNode.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeElement.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableInputNode.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableNodeElement.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableOutputNode.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="VariablePredicateNode.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

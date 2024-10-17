@@ -7,7 +7,6 @@
 #include "Delegation.h"
 #include "HeaderHelper.h"
 
-
 class ADrawElement;
 
 typedef std::function<void(ADrawElement*)>			ClickedElementDelegation;
@@ -43,6 +42,7 @@ public:
 	virtual void SetFocus(const bool& IsFocused);
 
 public:
+	virtual const ImVec2& GetPosition() = 0;
 	virtual void SetPosition(const ImVec2& CenterPositionIn) = 0;
 	virtual void AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawListIn) = 0;
 };

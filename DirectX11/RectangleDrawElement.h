@@ -18,7 +18,7 @@ protected:
 	ImVec2 ElementSize;
 
 public:
-	void SetPosition(const ImVec2& CenterPositionIn, const ImVec2& RectangleSizeIn);
+	virtual const ImVec2& GetPosition() override;
 
 public:
 	virtual void SetPosition(const ImVec2& CenterPositionIn) override;

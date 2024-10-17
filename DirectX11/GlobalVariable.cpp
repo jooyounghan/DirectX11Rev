@@ -22,6 +22,12 @@ const ImVec4 UIColor::GMediumBrown = ImVec4(0.7f, 0.5f, 0.34f, 1.f);
 const ImVec4 UIColor::GLightBrown = ImVec4(1.f, 0.843f, 0.404f, 1.f);
 const ImVec4 UIColor::GHilighted = ImVec4(0.2f, 0.3f, 0.4f, 1.0f);
 
+const unsigned int NodeColor::VariableNodeBaseColor = IM_COL32(100, 180, 100, 180);
+const unsigned int NodeColor::VariableNodeHilightedColor = IM_COL32(30, 200, 30, 180);
+const unsigned int NodeColor::VariablePortBaseColor = IM_COL32(180, 180, 100, 180);
+const unsigned int NodeColor::VariablePortHilightedColor = IM_COL32(200, 200, 30, 255);
+
+
 const ImVec2 UISize::FileSize = ImVec2(100.f, 100.0f);
 const ImVec2 UISize::WindowSize = ImVec2(800.f, 600.0f);
 

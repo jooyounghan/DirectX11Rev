@@ -147,6 +147,11 @@
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="APawn.cpp" />
+    <ClCompile Include="ControlNode.cpp" />
+    <ClCompile Include="FlowEndNode.cpp" />
+    <ClCompile Include="FlowNode.cpp" />
+    <ClCompile Include="FlowStartNode.cpp" />
+    <ClCompile Include="NodeElement.cpp" />
     <ClCompile Include="PortElement.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
     <ClCompile Include="AssetControl.cpp" />
@@ -222,6 +227,10 @@
     <ClCompile Include="TaskAnalyzerWindow.cpp" />
     <ClCompile Include="NormalTextureAsset.cpp" />
     <ClCompile Include="TransformationInformationDrawer.cpp" />
+    <ClCompile Include="VariableInputNode.cpp" />
+    <ClCompile Include="VariableNodeElement.cpp" />
+    <ClCompile Include="VariableOutputNode.cpp" />
+    <ClCompile Include="VariablePredicateNode.cpp" />
     <ClCompile Include="Viewable.cpp" />
     <ClCompile Include="ViewableInformationDrawer.cpp" />
     <ClCompile Include="ViewportWindow.cpp" />
@@ -234,6 +243,11 @@
     <ClInclude Include="AMeshObject.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
+    <ClInclude Include="ControlNode.h" />
+    <ClInclude Include="FlowEndNode.h" />
+    <ClInclude Include="FlowNode.h" />
+    <ClInclude Include="FlowStartNode.h" />
+    <ClInclude Include="NodeElement.h" />
     <ClInclude Include="PortElement.h" />
     <ClInclude Include="AScratchTextureAsset.h" />
     <ClInclude Include="AssetControl.h" />
@@ -308,6 +322,10 @@
     <ClInclude Include="StaticMeshObject.h" />
     <ClInclude Include="Todo.h" />
     <ClInclude Include="TransformationInformationDrawer.h" />
+    <ClInclude Include="VariableInputNode.h" />
+    <ClInclude Include="VariableNodeElement.h" />
+    <ClInclude Include="VariableOutputNode.h" />
+    <ClInclude Include="VariablePredicateNode.h" />
     <ClInclude Include="Vertexable.h" />
     <ClInclude Include="OBBObject.h" />
     <ClInclude Include="PSOObject.h" />

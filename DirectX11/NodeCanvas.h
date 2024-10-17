@@ -28,7 +28,7 @@ protected:
 	ImVec2 ScrollingPosition;
 	
 protected:
-	ClickedElementDelegation			OnElementClicked;
+	ClickedElementDelegation			OnNodeClicked;
 
 protected:
 	ClickedElementDelegation			OnPortClicked;

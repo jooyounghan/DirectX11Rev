@@ -1,11 +1,12 @@
 #include "InputPort.h"
 
 InputPort::InputPort(
-	const ImVec2& CenterPositionIn, 
+	const ImVec2& CenterPositionIn,
+	const float& RadiusSizeIn,
 	const ImU32& BasePortColorIn,
 	const ImU32& HilightedPortColorIn
 )
-	: PortElement(CenterPositionIn, 15.f, BasePortColorIn, HilightedPortColorIn)
+	: PortElement(CenterPositionIn, RadiusSizeIn, BasePortColorIn, HilightedPortColorIn)
 {
 }
 
