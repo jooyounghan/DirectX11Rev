@@ -1,7 +1,7 @@
 #include "FlowOutputPort.h"
 #include "FlowNode.h"
-#include "InputPort.h"
-#include "GlobalVariable.h"
+#include "FlowInputPort.h"
+#include "NodeColorVariable.h"
 
 FlowOutputPort::FlowOutputPort(
 	const ImVec2& CenterPositionIn, 
@@ -9,9 +9,9 @@ FlowOutputPort::FlowOutputPort(
 )
 	: AOutputPort(
 		CenterPositionIn, RadiusSizeIn,
-		NodeColor::VariablePortBaseColor,
-		NodeColor::VariablePortHilightedColor,
-		NodeColor::VariablePortHilightedColor
+		NodeColor::FlowPortBaseColor,
+		NodeColor::FlowPortHilightedColor,
+		NodeColor::FlowPortHilightedColor
 	)
 {
 }
@@ -22,13 +22,10 @@ FlowOutputPort::~FlowOutputPort()
 
 bool FlowOutputPort::IsConnectable(InputPort* PortIn)
 {
-	if (PortIn != nullptr)
+	FlowInputPort* FlowInputNodeCached = dynamic_cast<FlowInputPort*>(PortIn);
+	if (FlowInputNodeCached != nullptr)
 	{
-		FlowNode* FlowNodeCached = dynamic_cast<FlowNode*>(PortIn->GetParentNodeElement());
-		if (FlowNodeCached != nullptr)
-		{
-			return true;
-		}
+		return true;
 	}
 	return false;
 }

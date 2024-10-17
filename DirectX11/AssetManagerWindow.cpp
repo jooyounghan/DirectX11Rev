@@ -1,9 +1,8 @@
 #include "AssetManagerWindow.h"
-
-#include "GlobalVariable.h"
-
 #include "AssetManager.h"
 #include "AAssetFile.h"
+
+#include "UIVariable.h"
 
 using namespace ImGui;
 using namespace std;

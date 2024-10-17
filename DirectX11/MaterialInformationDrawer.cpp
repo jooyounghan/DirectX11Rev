@@ -1,9 +1,9 @@
 #include "MaterialInformationDrawer.h"
-
-#include "AssetManager.h"
-
-#include "AMeshObject.h"
 #include "MaterialAsset.h"
+#include "AssetManager.h"
+#include "AMeshObject.h"
+
+#include "UIVariable.h"
 
 using namespace std;
 using namespace ImGui;

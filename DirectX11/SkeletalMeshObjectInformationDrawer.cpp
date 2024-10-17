@@ -1,10 +1,10 @@
 #include "SkeletalMeshObjectInformationDrawer.h"
 #include "SkeletalMeshObject.h"
-
-#include "GlobalVariable.h"
+#include "SkeletalMeshAsset.h"
 
 #include "AssetManager.h"
-#include "SkeletalMeshAsset.h"
+
+#include "UIVariable.h"
 
 using namespace std;
 using namespace ImGui;

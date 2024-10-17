@@ -62,7 +62,7 @@ D3D11_SHADER_RESOURCE_VIEW_DESC ATextureAsset::CreateSRV(const D3D11_TEXTURE2D_D
 		if (TextureDescIn.ArraySize / 6 > 1)
 		{
 			SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
-			SRVDesc.TextureCubeArray.NumCubes = ArraySize / 6;
+			SRVDesc.TextureCubeArray.NumCubes = static_cast<UINT>(ArraySize / 6);
 			SRVDesc.TextureCubeArray.MipLevels = TextureDescIn.MipLevels;
 			SRVDesc.TextureCubeArray.MostDetailedMip = 0;
 		}

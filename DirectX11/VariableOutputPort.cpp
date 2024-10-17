@@ -1,7 +1,7 @@
 #include "VariableOutputPort.h"
 #include "VariableNode.h"
-#include "InputPort.h"
-#include "GlobalVariable.h"
+#include "VariableInputPort.h"
+#include "NodeColorVariable.h"
 
 VariableOutputPort::VariableOutputPort(
 	const ImVec2& CenterPositionIn, 
@@ -9,9 +9,9 @@ VariableOutputPort::VariableOutputPort(
 )
 	: AOutputPort(
 		CenterPositionIn, RadiusSizeIn,
-		NodeColor::FlowPortBaseColor,
-		NodeColor::FlowPortHilightedColor,
-		NodeColor::FlowPortHilightedColor
+		NodeColor::VariablePortBaseColor,
+		NodeColor::VariablePortHilightedColor,
+		NodeColor::VariablePortHilightedColor
 	)
 {
 }
@@ -22,13 +22,10 @@ VariableOutputPort::~VariableOutputPort()
 
 bool VariableOutputPort::IsConnectable(InputPort* PortIn)
 {
-	if (PortIn != nullptr)
+	VariableInputPort* VariableInputNodeCached = dynamic_cast<VariableInputPort*>(PortIn);
+	if (VariableInputNodeCached != nullptr)
 	{
-		VariableNode* VariableNodeCached = dynamic_cast<VariableNode*>(PortIn->GetParentNodeElement());
-		if (VariableNodeCached != nullptr)
-		{
-			return true;
-		}
+		return true;
 	}
 	return false;
 }

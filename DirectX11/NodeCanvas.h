@@ -1,15 +1,13 @@
 #pragma once
 #include "IGuiControl.h"
 #include "ADrawElement.h"
+#include "StaticAssertHelper.h"
+#include "NodeElement.h"
+#include "AOutputPort.h"
+#include "InputPort.h"
 
 #include <list>
 #include <memory>
-
-// Node로 변경 필요!
-class RectangleDrawElement;
-
-class AOutputPort;
-class InputPort;
 
 class NodeCanvas : public IGuiControl
 {
@@ -42,8 +40,12 @@ private:
 	virtual void ShowContextMenu();
 	void DrawCanvasRectangle(const float& GridStepSize);
 
+public:
+	template<typename T, typename ...Args>
+	void AddNodeElement(Args... args);
+
 protected:
-	RectangleDrawElement* SelectedNodeElement = nullptr;
+	NodeElement* SelectedNodeElement = nullptr;
 
 private:
 	void ResetStatus();
@@ -72,3 +74,26 @@ private:
 
 };
 
+template<typename T, typename ...Args>
+void NodeCanvas::AddNodeElement(Args ...args)
+{
+	static_assert(std::is_base_of<NodeElement, T>::value, DerivedCondition(NodeElement));
+
+	DrawElements.emplace_back(make_unique<T>(
+		args...
+	));
+
+	DrawElements.back()->ClickedEvent += OnNodeClicked;
+	NodeElement* NodeElementCached = ((NodeElement*)DrawElements.back().get());
+
+	for (auto& OutputPortCached : NodeElementCached->GetOutputPorts())
+	{
+		OutputPortCached->ClickedEvent += OnPortClicked;
+	}
+
+	for (auto& InputPortCached : NodeElementCached->GetInputPorts())
+	{
+		InputPortCached->MouseEnterEvent += OnPortEnter;
+		InputPortCached->MouseLeaveEvent += OnPortLeave;
+	}
+}

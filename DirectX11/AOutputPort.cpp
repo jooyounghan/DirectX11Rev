@@ -1,5 +1,6 @@
 #include "AOutputPort.h"
 #include "InputPort.h"
+#include "NodeElement.h"
 
 using namespace ImGui;
 
@@ -49,7 +50,7 @@ void AOutputPort::AddConnectionLine(const ImVec2& OriginPosition, const ImVec2& 
 
 void AOutputPort::Connect(InputPort* PortIn)
 {
-	if (IsConnectable(PortIn))
+	if (IsConnectable(PortIn) && !IsCyclic(PortIn))
 	{
 		ConnectedPort = PortIn;
 	}
@@ -57,4 +58,51 @@ void AOutputPort::Connect(InputPort* PortIn)
 	{
 		ConnectedPort = nullptr;
 	}
+}
+
+bool AOutputPort::IsCyclic(InputPort* TargetPort)
+{
+	if (TargetPort == nullptr)
+	{
+		return false;
+	}
+
+	NodeElement* ParentNode = GetParentNodeElement();
+	NodeElement* CurrentParentNode = TargetPort->GetParentNodeElement();
+
+	if (ParentNode == CurrentParentNode)
+	{
+		return true;
+	}
+
+	for (auto& OutputPort : CurrentParentNode->GetOutputPorts())
+	{
+		if (OutputPort->IsCyclic(ParentNode))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool AOutputPort::IsCyclic(NodeElement* InitialCheckNode)
+{
+	if (ConnectedPort != nullptr)
+	{
+		NodeElement* CurrentParentNode = ConnectedPort->GetParentNodeElement();
+		if (CurrentParentNode == InitialCheckNode)
+		{
+			return true;
+		}
+
+		for (auto& OutputPort : CurrentParentNode->GetOutputPorts())
+		{
+			if (OutputPort->IsCyclic(InitialCheckNode))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }

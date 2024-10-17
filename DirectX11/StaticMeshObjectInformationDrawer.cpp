@@ -1,10 +1,10 @@
 #include "StaticMeshObjectInformationDrawer.h"
 #include "StaticMeshObject.h"
-
-#include "GlobalVariable.h"
+#include "StaticMeshAsset.h"
 
 #include "AssetManager.h"
-#include "StaticMeshAsset.h"
+
+#include "UIVariable.h"
 
 using namespace std;
 using namespace ImGui;

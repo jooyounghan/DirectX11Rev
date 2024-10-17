@@ -2,13 +2,15 @@
 
 #include "EditorWorld.h"
 #include "GameWorld.h"
+
 #include "MapAsset.h"
+#include "AssetManager.h"
+#include "AAssetFile.h"
 
 #include "EditorPawn.h"
 #include "Camera.h"
 
-#include "AssetManager.h"
-#include "AAssetFile.h"
+#include "UIVariable.h"
 
 using namespace std;
 using namespace ImGui;

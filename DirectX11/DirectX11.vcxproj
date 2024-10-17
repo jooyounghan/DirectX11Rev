@@ -149,10 +149,12 @@
     <ClCompile Include="APawn.cpp" />
     <ClCompile Include="ControlNode.cpp" />
     <ClCompile Include="FlowEndNode.cpp" />
+    <ClCompile Include="FlowInputPort.cpp" />
     <ClCompile Include="FlowMidNode.cpp" />
     <ClCompile Include="FlowNode.cpp" />
     <ClCompile Include="FlowOutputPort.cpp" />
     <ClCompile Include="FlowStartNode.cpp" />
+    <ClCompile Include="NodeColorVariable.cpp" />
     <ClCompile Include="NodeElement.cpp" />
     <ClCompile Include="PortElement.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
@@ -229,7 +231,9 @@
     <ClCompile Include="TaskAnalyzerWindow.cpp" />
     <ClCompile Include="NormalTextureAsset.cpp" />
     <ClCompile Include="TransformationInformationDrawer.cpp" />
+    <ClCompile Include="UIVariable.cpp" />
     <ClCompile Include="VariableInputNode.cpp" />
+    <ClCompile Include="VariableInputPort.cpp" />
     <ClCompile Include="VariableNode.cpp" />
     <ClCompile Include="VariableOutputNode.cpp" />
     <ClCompile Include="VariableOutputPort.cpp" />
@@ -248,10 +252,12 @@
     <ClInclude Include="ANBTMeshAsset.h" />
     <ClInclude Include="ControlNode.h" />
     <ClInclude Include="FlowEndNode.h" />
+    <ClInclude Include="FlowInputPort.h" />
     <ClInclude Include="FlowMidNode.h" />
     <ClInclude Include="FlowNode.h" />
     <ClInclude Include="FlowOutputPort.h" />
     <ClInclude Include="FlowStartNode.h" />
+    <ClInclude Include="NodeColorVariable.h" />
     <ClInclude Include="NodeElement.h" />
     <ClInclude Include="PortElement.h" />
     <ClInclude Include="AScratchTextureAsset.h" />
@@ -327,7 +333,9 @@
     <ClInclude Include="StaticMeshObject.h" />
     <ClInclude Include="Todo.h" />
     <ClInclude Include="TransformationInformationDrawer.h" />
+    <ClInclude Include="UIVariable.h" />
     <ClInclude Include="VariableInputNode.h" />
+    <ClInclude Include="VariableInputPort.h" />
     <ClInclude Include="VariableNode.h" />
     <ClInclude Include="VariableOutputNode.h" />
     <ClInclude Include="VariableOutputPort.h" />

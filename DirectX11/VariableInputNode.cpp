@@ -1,6 +1,6 @@
 #include "VariableInputNode.h"
 #include "VariableOutputPort.h"
-#include "GlobalVariable.h"
+#include "NodeColorVariable.h"
 
 VariableInputNode::VariableInputNode(const ImVec2& CenterPositionIn, const ImVec2& RectangleSizeIn)
 	: VariableNode(

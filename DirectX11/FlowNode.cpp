@@ -1,5 +1,5 @@
 #include "FlowNode.h"
-#include "GlobalVariable.h"
+#include "NodeColorVariable.h"
 
 FlowNode::FlowNode(
 	const ImVec2& CenterPositionIn,

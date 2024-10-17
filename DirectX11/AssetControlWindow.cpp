@@ -1,11 +1,9 @@
 #include "AssetControlWindow.h"
-
-#include "GlobalVariable.h"
-
 #include "AssetControl.h"
 #include "AAssetFile.h"
 
 #include "NodeCanvas.h"
+#include "UIVariable.h"
 
 #include <format>
 

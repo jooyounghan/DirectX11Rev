@@ -5,6 +5,8 @@
 #include "EXRTextureAsset.h"
 #include "DDSTextureAsset.h"
 
+#include "UIVariable.h"
+
 using namespace std;
 using namespace ImGui;
 

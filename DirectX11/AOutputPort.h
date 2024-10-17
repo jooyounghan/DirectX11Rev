@@ -26,7 +26,13 @@ protected:
 	InputPort* ConnectedPort = nullptr;
 
 public:
-	virtual bool IsConnectable(InputPort* PortIn) = 0;
 	virtual void Connect(InputPort* PortIn);
+
+protected:
+	virtual bool IsConnectable(InputPort* PortIn) = 0;
+
+private:
+	bool IsCyclic(InputPort* TartgetPort);
+	bool IsCyclic(NodeElement* InitialCheckNode);
 };
 
