@@ -1,7 +1,7 @@
 #pragma once
 #include "AAssetFile.h"
 
-class BasicTextureAsset;
+class BaseTextureAsset;
 
 constexpr const char* MaterialAssetOutPath = ".\\Assets\\Material\\";
 
@@ -12,14 +12,14 @@ public:
 	virtual ~MaterialAsset();
 
 protected:
-	std::shared_ptr<BasicTextureAsset> AmbientOcculusionTextureAsset;
-	std::shared_ptr<BasicTextureAsset> SpecularTextureAsset;
-	std::shared_ptr<BasicTextureAsset> DiffuseTextureAsset;
-	std::shared_ptr<BasicTextureAsset> RoughnessTextureAsset;
-	std::shared_ptr<BasicTextureAsset> MetalicTextureAsset;
-	std::shared_ptr<BasicTextureAsset> NormalTextureAsset;
-	std::shared_ptr<BasicTextureAsset> HeightTextureAsset;
-	std::shared_ptr<BasicTextureAsset> EmissiveTextureAsset;
+	std::shared_ptr<BaseTextureAsset> AmbientOcculusionTextureAsset;
+	std::shared_ptr<BaseTextureAsset> SpecularTextureAsset;
+	std::shared_ptr<BaseTextureAsset> DiffuseTextureAsset;
+	std::shared_ptr<BaseTextureAsset> RoughnessTextureAsset;
+	std::shared_ptr<BaseTextureAsset> MetalicTextureAsset;
+	std::shared_ptr<BaseTextureAsset> NormalTextureAsset;
+	std::shared_ptr<BaseTextureAsset> HeightTextureAsset;
+	std::shared_ptr<BaseTextureAsset> EmissiveTextureAsset;
 
 	
 	MakeSmartPtrSetterGetter(AmbientOcculusionTextureAsset);
@@ -36,6 +36,6 @@ public:
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 
 private:
-	void SerializeAssetNameHelper(FILE* FileIn, std::shared_ptr<BasicTextureAsset> BasicTextureAssetIn);
+	void SerializeAssetNameHelper(FILE* FileIn, std::shared_ptr<BaseTextureAsset> BasicTextureAssetIn);
 };
 

@@ -1,17 +1,17 @@
 #pragma once
 #include "ATextureAsset.h"
 
-class BasicTextureAsset : public ATextureAsset
+class BaseTextureAsset : public ATextureAsset
 {
 public:
-	BasicTextureAsset(const std::string& AssetNameIn);
-	BasicTextureAsset(
+	BaseTextureAsset(const std::string& AssetNameIn);
+	BaseTextureAsset(
 		const std::string& AssetNameIn, 
 		uint8_t* ImageBufferIn, 
 		const UINT& WidthIn, 
 		const UINT& HeightIn
 	);
-	virtual ~BasicTextureAsset();
+	virtual ~BaseTextureAsset();
 
 private:
 	virtual void CreateTexture(

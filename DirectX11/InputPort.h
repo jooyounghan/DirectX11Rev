@@ -3,6 +3,8 @@
 
 class AOutputPort;
 
+typedef std::function<void(AOutputPort*)> ConnectedDelegation;
+
 class InputPort : public PortElement
 {
 public:
@@ -13,6 +15,9 @@ public:
 		const ImU32& HilightedPortColorIn
 	);
 	virtual ~InputPort();
+
+public:
+	Delegation<AOutputPort*> ConnectEvent;
 
 public:
 	virtual void AddToDrawList(const ImVec2& OriginPosition, ImDrawList* DrawListIn) override;

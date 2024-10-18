@@ -2,7 +2,7 @@
 #include "VariableInputPort.h"
 #include "NodeColorVariable.h"
 
-VariableOutputNode::VariableOutputNode(const ImVec2& CenterPositionIn, const ImVec2& RectangleSizeIn)
+VariableOutputNode::VariableOutputNode(const ImVec2& CenterPositionIn, const ImVec2& RectangleSizeIn, const size_t& InputVariableCountIn)
 	: VariableNode(
 		CenterPositionIn,
 		RectangleSizeIn,
@@ -10,7 +10,10 @@ VariableOutputNode::VariableOutputNode(const ImVec2& CenterPositionIn, const ImV
 		NodeColor::VariableNodeHilightedColor
 	)
 {
-	AddInputPort<VariableInputPort>(ImVec2(NULL, NULL), 10.f);
+	for (size_t idx = 0; idx < InputVariableCountIn; ++idx)
+	{
+		AddInputPort<VariableInputPort>(ImVec2(NULL, NULL), 10.f);
+	}
 }
 
 VariableOutputNode::~VariableOutputNode()

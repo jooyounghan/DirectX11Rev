@@ -2,7 +2,7 @@
 
 #include "AssetManager.h"
 #include "AMeshAsset.h"
-#include "BasicTextureAsset.h"
+#include "BaseTextureAsset.h"
 #include "DDSTextureAsset.h"
 #include "MaterialAsset.h"
 
@@ -142,14 +142,14 @@ void AMeshObject::Render()
 				const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIndex[PartIdx]];
 				if (MaterialInstance != nullptr)
 				{
-					BasicTextureAsset* AO = MaterialInstance->GetAmbientOcculusionTextureAsset();
-					BasicTextureAsset* Specualr = MaterialInstance->GetSpecularTextureAsset();
-					BasicTextureAsset* Diffuse = MaterialInstance->GetDiffuseTextureAsset();
-					BasicTextureAsset* Roughness = MaterialInstance->GetRoughnessTextureAsset();
-					BasicTextureAsset* Metalic = MaterialInstance->GetMetalicTextureAsset();
-					BasicTextureAsset* Normal = MaterialInstance->GetNormalTextureAsset();
-					BasicTextureAsset* Height = MaterialInstance->GetHeightTextureAsset();
-					BasicTextureAsset* Emissive = MaterialInstance->GetEmissiveTextureAsset();
+					BaseTextureAsset* AO = MaterialInstance->GetAmbientOcculusionTextureAsset();
+					BaseTextureAsset* Specualr = MaterialInstance->GetSpecularTextureAsset();
+					BaseTextureAsset* Diffuse = MaterialInstance->GetDiffuseTextureAsset();
+					BaseTextureAsset* Roughness = MaterialInstance->GetRoughnessTextureAsset();
+					BaseTextureAsset* Metalic = MaterialInstance->GetMetalicTextureAsset();
+					BaseTextureAsset* Normal = MaterialInstance->GetNormalTextureAsset();
+					BaseTextureAsset* Height = MaterialInstance->GetHeightTextureAsset();
+					BaseTextureAsset* Emissive = MaterialInstance->GetEmissiveTextureAsset();
 
 					MaterialSRVs.push_back(AO != nullptr ? AO->GetSRV() : nullptr);
 					MaterialSRVs.push_back(Specualr != nullptr ? Specualr->GetSRV() : nullptr);

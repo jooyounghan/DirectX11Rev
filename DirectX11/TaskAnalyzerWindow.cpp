@@ -4,7 +4,7 @@
 using namespace ImGui;
 
 TaskAnalyzerWindow::TaskAnalyzerWindow()
-    : IWindow()
+    : AWindow()
 {
 }
 

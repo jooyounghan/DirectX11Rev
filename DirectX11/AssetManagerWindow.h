@@ -1,8 +1,7 @@
 #pragma once
-#include "IWindow.h"
+#include "AWindow.h"
 #include "AssetManager.h"
 #include "AssetControl.h"
-#include "AssetControlWindow.h"
 
 struct DirectorySet
 {
@@ -12,9 +11,7 @@ struct DirectorySet
 	std::list<AssetControl> AssetControls;
 };
 
-class AssetControlWindow;
-
-class AssetManagerWindow : public IWindow
+class AssetManagerWindow : public AWindow
 {
 public:
 	AssetManagerWindow(AssetManager* AssetManagerIn);
@@ -49,10 +46,10 @@ protected:
 	AssetControlClickedDelegate OnAssetLeftMouseDBClicked;
 
 protected:
-	AssetControlWindowClosedDelegation OnAssetControlWindowClosed;
+	WindowClosedDelegation OnAssetControlWindowClosed;
 
 protected:
-	std::list<AssetControlWindow> AssetControlWindows;
+	std::list<std::unique_ptr<AWindow>> AssetControlWindows;
 
 private:
 	void RenderAssetDirectories();
@@ -80,8 +77,8 @@ private:
 	void OpenItemSetting(AssetControl* AssetControlCached);
 
 private:
-	std::vector<AssetControlWindow*> CloseAssetControlWindowsList;
-	void AddCloseAssetControlWindowList(AssetControlWindow* AssetControlWindowIn);
+	std::vector<AWindow*> CloseAssetControlWindowsList;
+	void AddCloseAssetControlWindowList(AWindow* AssetControlWindowIn);
 	void CloseAssetControlWindow();
 };
 

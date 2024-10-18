@@ -2,6 +2,9 @@
 #include "AssetManager.h"
 #include "AAssetFile.h"
 
+#include "AssetControlWindow.h"
+#include "MaterialAssetNodeCanvas.h"
+
 #include "UIVariable.h"
 
 using namespace ImGui;
@@ -123,7 +126,7 @@ void AssetManagerWindow::RenderAssetControlWindows()
 
     for (auto& AssetControlWindowCached : AssetControlWindows)
     {
-        AssetControlWindowCached.RenderWindow();
+        AssetControlWindowCached->RenderWindow();
     }
 }
 
@@ -229,23 +232,42 @@ void AssetManagerWindow::FocusItem(AssetControl* AssetControlCached)
 
 void AssetManagerWindow::OpenItemSetting(AssetControl* AssetControlCached)
 {
-    AssetControlWindows.emplace_back(AssetControlCached);
-    AssetControlWindows.back().CloseEvent += OnAssetControlWindowClosed;
+    bool AssetControlWindowAdded = false;
+    if (AssetControlCached != nullptr)
+    {
+        AAssetFile* AssetFile = AssetControlCached->GetAssetFileCached();
+        if (AssetFile != nullptr)
+        {
+            EAssetType AssetType = AssetFile->GetAssetType();
+            switch (AssetType)
+            {
+            case EAssetType::Material:
+                AssetControlWindows.emplace_back(make_unique<AssetControlWindow<MaterialAssetNodeCanvas>>(AssetManagerCached, AssetFile));
+                AssetControlWindowAdded = true;
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    if (AssetControlWindowAdded)
+        AssetControlWindows.back()->CloseEvent += OnAssetControlWindowClosed;
 }
 
-void AssetManagerWindow::AddCloseAssetControlWindowList(AssetControlWindow* AssetControlWindowIn) 
+void AssetManagerWindow::AddCloseAssetControlWindowList(AWindow* AssetControlWindowIn)
 { 
     CloseAssetControlWindowsList.push_back(AssetControlWindowIn); 
 }
 
 void AssetManagerWindow::CloseAssetControlWindow()
 {
-    for (AssetControlWindow* CloseAssetControlWindow : CloseAssetControlWindowsList)
+    for (AWindow* CloseAssetControlWindow : CloseAssetControlWindowsList)
     {
         AssetControlWindows.remove_if(
-            [CloseAssetControlWindow](const AssetControlWindow& window)
+            [CloseAssetControlWindow](const unique_ptr<AWindow>& window)
             {
-                return &window == CloseAssetControlWindow;
+                return window.get() == CloseAssetControlWindow;
             }
         );
     }

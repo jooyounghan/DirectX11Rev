@@ -12,7 +12,7 @@ class MapAsset;
 class APlaceableObject;
 class AAttachableObject;
 class GameWorld;
-class IWindow;
+class AWindow;
 
 class EditorWorld : public IWorld
 {
@@ -29,7 +29,7 @@ protected:
 	MakeGetter(FontSrvHandleID);
 
 protected:
-	std::vector<std::unique_ptr<IWindow>> Dialogs;
+	std::vector<std::unique_ptr<AWindow>> Dialogs;
 
 protected:
 	MapAsset* SelectedMapAsset = nullptr;

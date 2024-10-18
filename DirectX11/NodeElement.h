@@ -19,7 +19,7 @@ public:
 	);
 	virtual ~NodeElement();
 
-private:
+protected:
 	std::list<std::shared_ptr<AOutputPort>> OutputPorts;
 	std::list<std::shared_ptr<InputPort>> InputPorts;
 	MakeGetter(OutputPorts);

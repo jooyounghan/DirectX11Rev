@@ -1,7 +1,7 @@
 #pragma once
-#include "IWindow.h"
+#include "AWindow.h"
 
-class TaskAnalyzerWindow : public IWindow
+class TaskAnalyzerWindow : public AWindow
 {
 public:
 	TaskAnalyzerWindow();

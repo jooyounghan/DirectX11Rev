@@ -1,10 +1,10 @@
 #pragma once
-#include "IWindow.h"
+#include "AWindow.h"
 
 class EditorWorld;
 class AssetManager;
 
-class ModelDetailWindow : public IWindow
+class ModelDetailWindow : public AWindow
 {
 public:
 	ModelDetailWindow(EditorWorld* EditorWorldIn);

@@ -5,9 +5,17 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_internal.h"
 
-class IWindow
+#include "Delegation.h"
+class AWindow;
+
+typedef std::function<void(AWindow*)> WindowClosedDelegation;
+
+class AWindow
 {
 public:
 	virtual void RenderWindow() = 0;
+
+public:
+	Delegation<AWindow*> CloseEvent;
 };
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "IWindow.h"
+#include "AWindow.h"
 
 class EditorWorld;
 class EditorPawn;
@@ -9,7 +9,7 @@ class GameWorld;
 class AssetManager;
 class MapAsset;
 
-class ViewportWindow : public IWindow
+class ViewportWindow : public AWindow
 {
 public: 
 	ViewportWindow(EditorWorld* EditorWorldCached);

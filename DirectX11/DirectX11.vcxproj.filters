@@ -334,6 +334,36 @@
     <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node\Flow">
       <UniqueIdentifier>{6c7492db-1251-494e-b3ce-85ac616ed1ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Window\AssetControl">
+      <UniqueIdentifier>{af2a8b65-e76c-4577-989c-7f10c5522015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\NodeEditor\Canvas">
+      <UniqueIdentifier>{6ff430c4-f692-4cf9-8f19-0dfc78b45532}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor\Canvas">
+      <UniqueIdentifier>{78cf043b-40de-4f93-8f86-59b8d5d14427}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\NodeEditor\DrawElement\Extended\Node\Variable\Texture">
+      <UniqueIdentifier>{efa2f40b-bc41-4cfd-b06c-34f1af8f6a27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\NodeEditor\DrawElement\Extended\Node\Variable\Material">
+      <UniqueIdentifier>{50c458f9-2d52-4d0a-8d39-f9073abfc85b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node\Variable\Material">
+      <UniqueIdentifier>{ad7689ef-6308-4d81-a34b-931455ba310b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node\Variable\Texture">
+      <UniqueIdentifier>{6941736c-772b-4fb6-ab3f-456cdf8b1511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\NodeEditor\DrawElement\Extended\Node\Variable\BaseTexture">
+      <UniqueIdentifier>{bb235c69-7222-4bf8-b12b-0a76bf99fde2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Extended\OutputPort\Texture">
+      <UniqueIdentifier>{4ab87d41-74dd-4bbc-a870-8558791560bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Extended\InputPort\Material">
+      <UniqueIdentifier>{0d40c973-cc1a-45c0-a012-4437f6d86c3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -354,7 +384,7 @@
     <ClCompile Include="AMeshAsset.cpp">
       <Filter>소스 파일\Asset\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="NormalTextureAsset.cpp">
+    <ClCompile Include="BaseTextureAsset.cpp">
       <Filter>소스 파일\Asset\Texture</Filter>
     </ClCompile>
     <ClCompile Include="GameWorld.cpp">
@@ -576,14 +606,8 @@
     <ClCompile Include="AssetControl.cpp">
       <Filter>소스 파일\Editor\GUI\Control</Filter>
     </ClCompile>
-    <ClCompile Include="AssetControlWindow.cpp">
-      <Filter>소스 파일\Editor\GUI\Window</Filter>
-    </ClCompile>
     <ClCompile Include="EditorWorld.cpp">
       <Filter>소스 파일\World</Filter>
-    </ClCompile>
-    <ClCompile Include="NodeCanvas.cpp">
-      <Filter>소스 파일\Editor\NodeEditor</Filter>
     </ClCompile>
     <ClCompile Include="RectangleDrawElement.cpp">
       <Filter>소스 파일\Editor\NodeEditor\DrawElement</Filter>
@@ -648,6 +672,27 @@
     <ClCompile Include="FlowInputPort.cpp">
       <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
     </ClCompile>
+    <ClCompile Include="ANodeCanvas.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialAssetNodeCanvas.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="AAssetNodeCanvas.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialOutputNode.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node\Variable\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTextureInputNode.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Extended\Node\Variable\BaseTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialInputPort.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTextureOutputPort.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
@@ -662,7 +707,7 @@
     <ClInclude Include="AMeshAsset.h">
       <Filter>헤더 파일\Asset\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="BasicTextureAsset.h">
+    <ClInclude Include="BaseTextureAsset.h">
       <Filter>헤더 파일\Asset\Texture</Filter>
     </ClInclude>
     <ClInclude Include="GameWorld.h">
@@ -977,11 +1022,8 @@
     <ClInclude Include="IDialog.h">
       <Filter>헤더 파일\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="IWindow.h">
+    <ClInclude Include="AWindow.h">
       <Filter>헤더 파일\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="NodeCanvas.h">
-      <Filter>헤더 파일\Editor\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="ADrawElement.h">
       <Filter>헤더 파일\Editor\NodeEditor\DrawElement</Filter>
@@ -1045,6 +1087,27 @@
     </ClInclude>
     <ClInclude Include="FlowInputPort.h">
       <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\InputPort</Filter>
+    </ClInclude>
+    <ClInclude Include="ANodeCanvas.h">
+      <Filter>헤더 파일\Editor\NodeEditor\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialAssetNodeCanvas.h">
+      <Filter>헤더 파일\Editor\NodeEditor\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="AAssetNodeCanvas.h">
+      <Filter>헤더 파일\Editor\NodeEditor\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialOutputNode.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node\Variable\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTextureInputNode.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Extended\Node\Variable\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialInputPort.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTextureOutputPort.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

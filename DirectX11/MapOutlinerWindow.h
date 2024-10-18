@@ -1,5 +1,5 @@
 #pragma once
-#include "IWindow.h"
+#include "AWindow.h"
 
 class EditorWorld;
 class GameWorld;
@@ -10,7 +10,7 @@ class AObject;
 class APlaceableObject;
 class AAttachableObject;
 
-class MapOutlinerWindow : public IWindow
+class MapOutlinerWindow : public AWindow
 {
 public:
 	MapOutlinerWindow(EditorWorld* EditorWorldIn);

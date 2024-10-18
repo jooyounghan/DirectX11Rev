@@ -19,7 +19,7 @@
 #include "BaseCubeMeshAsset.h"
 #include "BaseSphereMeshAsset.h"
 
-#include "BasicTextureAsset.h"
+#include "BaseTextureAsset.h"
 #include "EXRTextureAsset.h"
 #include "DDSTextureAsset.h"
 #include "MaterialAsset.h"
@@ -140,7 +140,7 @@ void AssetManager::LoadBasicTextureAssetFromFile(
 
         if (ImageBuffer != nullptr)
         {
-            shared_ptr<BasicTextureAsset> TextureAssetLoaded = make_shared<BasicTextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut);
+            shared_ptr<BaseTextureAsset> TextureAssetLoaded = make_shared<BaseTextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut);
             SerailizeAndAddToContainer(ManagingBasicTextures, TextureAssetLoaded);
         }
         fclose(FileHandle);
@@ -264,10 +264,10 @@ void AssetManager::LoadMaterialAssetFromFile(const string& FilePath, const strin
     }
 }
 
-shared_ptr<BasicTextureAsset> AssetManager::LoadBasicTextureFromMaterial(const aiScene* const Scene, aiMaterial* MaterialIn, aiTextureType TextureTypeIn)
+shared_ptr<BaseTextureAsset> AssetManager::LoadBasicTextureFromMaterial(const aiScene* const Scene, aiMaterial* MaterialIn, aiTextureType TextureTypeIn)
 {
     aiString aiTexturePath;
-    shared_ptr<BasicTextureAsset> TextureAssetLoaded;
+    shared_ptr<BaseTextureAsset> TextureAssetLoaded;
     if (MaterialIn->GetTexture(TextureTypeIn, 0, &aiTexturePath) == aiReturn_SUCCESS)
     {
         const string TexturePathString = aiTexturePath.C_Str();
@@ -281,7 +281,7 @@ shared_ptr<BasicTextureAsset> AssetManager::LoadBasicTextureFromMaterial(const a
             stbi_uc* ImageBuffer = stbi_load_from_memory((const stbi_uc*)Texture->pcData, Texture->mWidth, &WidthOut, &HeightOut, &ChannelOut, 4);
             if (ImageBuffer != nullptr)
             {
-                TextureAssetLoaded = make_shared<BasicTextureAsset>(TextureName, ImageBuffer, WidthOut, HeightOut);
+                TextureAssetLoaded = make_shared<BaseTextureAsset>(TextureName, ImageBuffer, WidthOut, HeightOut);
                 SerailizeAndAddToContainer(ManagingBasicTextures, TextureAssetLoaded);
                 stbi_image_free(ImageBuffer);
             }
@@ -368,7 +368,7 @@ std::shared_ptr<SkeletalMeshAsset> AssetManager::GetManagingSkeletalMesh(const s
     return GetManagingAssetHelper(ManagingSkeletalMeshes, AssetName);
 }
 
-std::shared_ptr<BasicTextureAsset> AssetManager::GetManagingBasicTexture(const std::string AssetName)
+std::shared_ptr<BaseTextureAsset> AssetManager::GetManagingBasicTexture(const std::string AssetName)
 {
     return GetManagingAssetHelper(ManagingBasicTextures, AssetName);
 }

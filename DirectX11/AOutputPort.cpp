@@ -53,6 +53,7 @@ void AOutputPort::Connect(InputPort* PortIn)
 	if (IsConnectable(PortIn) && !IsCyclic(PortIn))
 	{
 		ConnectedPort = PortIn;
+		PortIn->ConnectEvent.Invoke(this);
 	}
 	else
 	{

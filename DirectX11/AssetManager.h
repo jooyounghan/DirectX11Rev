@@ -33,7 +33,7 @@ class BoneAsset;
 
 class MapAsset;
 
-class BasicTextureAsset;
+class BaseTextureAsset;
 class EXRTextureAsset;
 class DDSTextureAsset;
 class MaterialAsset;
@@ -83,7 +83,7 @@ private:
 private:
 	void LoadMeshAssetFromFile(bool IsGltf, const std::string& AssetName, const aiScene* const Scene);
 	void LoadMaterialAssetFromFile(const std::string& FilePath, const std::string& AssetName, const aiScene* const Scene);
-	std::shared_ptr<BasicTextureAsset> LoadBasicTextureFromMaterial(const aiScene* const Scene, aiMaterial* MaterialIn, aiTextureType TextureTypeIn);
+	std::shared_ptr<BaseTextureAsset> LoadBasicTextureFromMaterial(const aiScene* const Scene, aiMaterial* MaterialIn, aiTextureType TextureTypeIn);
 	void LoadAnimationAssetFromFile(const std::string& AssetName, const aiScene* const Scene);
 
 private:
@@ -94,7 +94,7 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<BoneAsset>> ManagingBones;
 	std::unordered_map<std::string, std::shared_ptr<StaticMeshAsset>> ManagingStaticMeshes;
 	std::unordered_map<std::string, std::shared_ptr<SkeletalMeshAsset>> ManagingSkeletalMeshes;
-	std::unordered_map<std::string, std::shared_ptr<BasicTextureAsset>> ManagingBasicTextures;
+	std::unordered_map<std::string, std::shared_ptr<BaseTextureAsset>> ManagingBasicTextures;
 	std::unordered_map<std::string, std::shared_ptr<EXRTextureAsset>> ManagingEXRTextures;
 	std::unordered_map<std::string, std::shared_ptr<DDSTextureAsset>> ManagingDDSTextures;
 	std::unordered_map<std::string, std::shared_ptr<MaterialAsset>> ManagingMaterials;
@@ -134,7 +134,7 @@ public:
 	std::shared_ptr<BoneAsset> GetManagingBone(const std::string AssetName);
 	std::shared_ptr<StaticMeshAsset> GetManagingStaticMesh(const std::string AssetName);
 	std::shared_ptr<SkeletalMeshAsset> GetManagingSkeletalMesh(const std::string AssetName);
-	std::shared_ptr<BasicTextureAsset> GetManagingBasicTexture(const std::string AssetName);
+	std::shared_ptr<BaseTextureAsset> GetManagingBasicTexture(const std::string AssetName);
 	std::shared_ptr<EXRTextureAsset> GetManagingEXRTexture(const std::string AssetName);
 	std::shared_ptr<DDSTextureAsset> GetManagingDDSTexture(const std::string AssetName);
 	std::shared_ptr<MaterialAsset> GetManagingMaterial(const std::string AssetName);

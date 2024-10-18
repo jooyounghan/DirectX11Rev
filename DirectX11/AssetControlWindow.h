@@ -1,23 +1,23 @@
 #pragma once
-#include "IWindow.h"
-#include "Delegation.h"
+#include "AWindow.h"
+#include "AAssetFile.h"
+#include "StaticAssertHelper.h"
+#include "UIVariable.h"
+#include "AAssetNodeCanvas.h"
 
 #include <string>
+#include <memory>
+#include <format>
 
-class AssetControl;
-class AssetControlWindow;
-
-typedef std::function<void(AssetControlWindow*)> AssetControlWindowClosedDelegation;
-
-
-class AssetControlWindow : public IWindow
+template<typename T, typename ...Args>
+class AssetControlWindow : public AWindow
 {
 public:
-	AssetControlWindow(AssetControl* AssetControlCachedIn);
+	AssetControlWindow(AssetManager* AssetManagerIn, AAssetFile* AssetFileIn, Args... args);
 
 protected:
-	AssetControl* AssetControlCached = nullptr;
 	std::string WindowDescription;
+	std::unique_ptr<AAssetNodeCanvas> NodeCanvasInstance;
 
 protected:
 	ImVec2 WindowSize;
@@ -26,9 +26,37 @@ protected:
 	bool bIsOpen = true;
 
 public:
-	Delegation<AssetControlWindow*> CloseEvent;
-
-public:
 	virtual void RenderWindow() override;
 };
 
+template<typename T, typename ...Args>
+inline AssetControlWindow<T, Args...>::AssetControlWindow(AssetManager* AssetManagerIn, AAssetFile* AssetFileIn, Args... args)
+	: WindowSize(UISize::WindowSize)
+{
+	static_assert(std::is_base_of<AAssetNodeCanvas, T>::value, DerivedCondition(AAssetNodeCanvas));
+
+	NodeCanvasInstance = std::make_unique<T>(AssetManagerIn, AssetFileIn, args...);
+	if (AssetFileIn != nullptr)
+	{
+		WindowDescription = "Asset Control Window For " + AssetFileIn->GetAssetName();
+	}
+	else
+	{
+		WindowDescription = std::string(std::format("Asset Control Window For {}", (uint64_t)AssetFileIn));
+	}
+}
+
+template<typename T, typename ...Args>
+inline void AssetControlWindow<T, Args...>::RenderWindow()
+{
+	ImGui::SetNextWindowSizeConstraints(UISize::WindowSize, ImVec2(FLT_MAX, FLT_MAX));
+
+	ImGui::Begin(WindowDescription.c_str(), &bIsOpen, ImGuiWindowFlags_::ImGuiWindowFlags_NoSavedSettings);
+	NodeCanvasInstance->RenderControl();
+	ImGui::End();
+
+	if (!bIsOpen)
+	{
+		return CloseEvent.Invoke(this);
+	}
+}

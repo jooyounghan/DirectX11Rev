@@ -9,10 +9,11 @@
 #include <list>
 #include <memory>
 
-class NodeCanvas : public IGuiControl
+class ANodeCanvas : public IGuiControl
 {
 public:
-	NodeCanvas();
+	ANodeCanvas();
+	virtual ~ANodeCanvas();
 
 public:
 	virtual void RenderControl() override;
@@ -36,8 +37,10 @@ protected:
 protected:
 	std::list<std::unique_ptr<ADrawElement>> DrawElements;
 
-private:
-	virtual void ShowContextMenu();
+protected:
+	virtual void ShowContextMenu() = 0;
+
+protected:
 	void DrawCanvasRectangle(const float& GridStepSize);
 
 public:
@@ -75,7 +78,7 @@ private:
 };
 
 template<typename T, typename ...Args>
-void NodeCanvas::AddNodeElement(Args ...args)
+void ANodeCanvas::AddNodeElement(Args ...args)
 {
 	static_assert(std::is_base_of<NodeElement, T>::value, DerivedCondition(NodeElement));
 

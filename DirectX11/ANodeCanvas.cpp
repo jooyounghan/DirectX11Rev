@@ -1,18 +1,9 @@
-#include "NodeCanvas.h"
-
-#include "VariableInputNode.h"
-#include "VariableOutputNode.h"
-#include "VariablePredicateNode.h"
-#include "FlowStartNode.h"
-#include "FlowMidNode.h"
-#include "FlowEndNode.h"
-
-#include <Windows.h>
+#include "ANodeCanvas.h"
 
 using namespace std;
 using namespace ImGui;
 
-NodeCanvas::NodeCanvas()
+ANodeCanvas::ANodeCanvas()
 {
     LeftTopPositon = GetCursorScreenPos();
     CanvasSize = GetContentRegionAvail();
@@ -20,65 +11,18 @@ NodeCanvas::NodeCanvas()
     if (CanvasSize.y < 50.0f) CanvasSize.y = 50.0f;
     RightBottomPosition = ImVec2(LeftTopPositon.x + CanvasSize.x, LeftTopPositon.y + CanvasSize.y);
 
-    OnNodeClicked = bind(&NodeCanvas::SelectNode, this, placeholders::_1);
+    OnNodeClicked = bind(&ANodeCanvas::SelectNode, this, placeholders::_1);
 
-    OnPortClicked = bind(&NodeCanvas::SelectPort, this, placeholders::_1);
-    OnPortEnter = bind(&NodeCanvas::MouseEnterPort, this, placeholders::_1);
-    OnPortLeave = bind(&NodeCanvas::MouseLeavePort, this, placeholders::_1);
-
-
-    AddNodeElement<VariableInputNode>(
-        ImVec2(100.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
-        ImVec2(100.f, 100.f)
-    );
-
-    AddNodeElement<VariableInputNode>(
-        ImVec2(LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
-        ImVec2(100.f, 100.f)
-    );
-
-
-    AddNodeElement<VariableInputNode>(
-        ImVec2(200.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
-        ImVec2(100.f, 100.f)
-    );
-
-    AddNodeElement<VariableOutputNode>(
-        ImVec2(250.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
-        ImVec2(100.f, 100.f)
-    );
-
-    AddNodeElement<VariablePredicateNode>(
-        ImVec2(400.f + LeftTopPositon.x + CanvasSize.x / 2.f, LeftTopPositon.y + CanvasSize.y / 2.f),
-        ImVec2(100.f, 100.f), 3
-    );
-
-    AddNodeElement<FlowStartNode>(
-        ImVec2(LeftTopPositon.x + CanvasSize.x / 2.f, 200.f + LeftTopPositon.y + CanvasSize.y / 2.f),
-        ImVec2(100.f, 100.f)
-    );
-
-    AddNodeElement<FlowMidNode>(
-        ImVec2(100.f + LeftTopPositon.x + CanvasSize.x / 2.f, 200.f + LeftTopPositon.y + CanvasSize.y / 2.f),
-        ImVec2(100.f, 100.f), 1
-    );
-    AddNodeElement<FlowMidNode>(
-        ImVec2(250.f + LeftTopPositon.x + CanvasSize.x / 2.f, 200.f + LeftTopPositon.y + CanvasSize.y / 2.f),
-        ImVec2(100.f, 100.f), 2
-    );
-
-    AddNodeElement<FlowMidNode>(
-        ImVec2(400.f + LeftTopPositon.x + CanvasSize.x / 2.f, 200.f + LeftTopPositon.y + CanvasSize.y / 2.f),
-        ImVec2(100.f, 100.f), 3
-    );
-
-    AddNodeElement<FlowEndNode>(
-        ImVec2(550.f + LeftTopPositon.x + CanvasSize.x / 2.f, 200.f + LeftTopPositon.y + CanvasSize.y / 2.f),
-        ImVec2(100.f, 100.f)
-    );
+    OnPortClicked = bind(&ANodeCanvas::SelectPort, this, placeholders::_1);
+    OnPortEnter = bind(&ANodeCanvas::MouseEnterPort, this, placeholders::_1);
+    OnPortLeave = bind(&ANodeCanvas::MouseLeavePort, this, placeholders::_1);
 }
 
-void NodeCanvas::RenderControl()
+ANodeCanvas::~ANodeCanvas()
+{
+}
+
+void ANodeCanvas::RenderControl()
 {
     ImGuiIO& io = GetIO();
 
@@ -135,24 +79,7 @@ void NodeCanvas::RenderControl()
     ShowContextMenu();
 }
 
-/* Node Canvas가 구체화 된 곳에 구현 필요 */
-void NodeCanvas::ShowContextMenu()
-{    
-    ImVec2 DragDelta = GetMouseDragDelta(ImGuiMouseButton_Right);
-    if (DragDelta.x == 0.0f && DragDelta.y == 0.0f)
-    {
-        OpenPopupOnItemClick("CavnasContextMenu", ImGuiPopupFlags_MouseButtonRight);
-    }
-    if (BeginPopup("CavnasContextMenu"))
-    {
-        if (MenuItem("Add Node", NULL, false, true)) {  }
-        if (MenuItem("Add", NULL, false, true)) {  }
-        EndPopup();
-    }
-
-}
-
-void NodeCanvas::DrawCanvasRectangle(const float& GridStepSize)
+void ANodeCanvas::DrawCanvasRectangle(const float& GridStepSize)
 {
     ImDrawList* DrawList = GetWindowDrawList();
 
@@ -171,13 +98,13 @@ void NodeCanvas::DrawCanvasRectangle(const float& GridStepSize)
     }
 }
 
-void NodeCanvas::ResetStatus()
+void ANodeCanvas::ResetStatus()
 {
     bIsNodeSelectedOnTick = false;
     bIsPortSelectedOnTick = false;
 }
 
-void NodeCanvas::SelectNode(ADrawElement* DrawElement)
+void ANodeCanvas::SelectNode(ADrawElement* DrawElement)
 {
     bIsNodeSelectedOnTick = true;
     ResetSelectedNode();
@@ -185,7 +112,7 @@ void NodeCanvas::SelectNode(ADrawElement* DrawElement)
     SelectedNodeElement->SetFocus(true);
 }
 
-void NodeCanvas::ResetSelectedNode()
+void ANodeCanvas::ResetSelectedNode()
 {
     if (SelectedNodeElement != nullptr)
     {
@@ -194,7 +121,7 @@ void NodeCanvas::ResetSelectedNode()
     SelectedNodeElement = nullptr;
 }
 
-void NodeCanvas::MouseEnterPort(ADrawElement* DrawElement)
+void ANodeCanvas::MouseEnterPort(ADrawElement* DrawElement)
 {
     if (SelectedOutputPort != nullptr)
     {
@@ -202,12 +129,12 @@ void NodeCanvas::MouseEnterPort(ADrawElement* DrawElement)
     }
 }
 
-void NodeCanvas::MouseLeavePort(ADrawElement* DrawElement)
+void ANodeCanvas::MouseLeavePort(ADrawElement* DrawElement)
 {
     TargetPort = nullptr;
 }
 
-void NodeCanvas::SelectPort(ADrawElement* DrawElement)
+void ANodeCanvas::SelectPort(ADrawElement* DrawElement)
 {
     bIsPortSelectedOnTick = true;
     ResetSelectedOutputPort();
@@ -215,7 +142,7 @@ void NodeCanvas::SelectPort(ADrawElement* DrawElement)
     SelectedOutputPort->SetIsConnecting(true);
 }
 
-void NodeCanvas::ResetSelectedOutputPort()
+void ANodeCanvas::ResetSelectedOutputPort()
 {
     if (SelectedOutputPort != nullptr)
     {

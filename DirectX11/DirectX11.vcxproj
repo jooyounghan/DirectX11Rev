@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="AActor.cpp" />
     <ClCompile Include="AAddObjectHelper.cpp" />
+    <ClCompile Include="AAssetNodeCanvas.cpp" />
     <ClCompile Include="AController.cpp" />
     <ClCompile Include="AddAttachableObjectHelper.cpp" />
     <ClCompile Include="AddPlaceableObjectHelper.cpp" />
@@ -147,6 +148,8 @@
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="APawn.cpp" />
+    <ClCompile Include="BaseTextureInputNode.cpp" />
+    <ClCompile Include="BaseTextureOutputPort.cpp" />
     <ClCompile Include="ControlNode.cpp" />
     <ClCompile Include="FlowEndNode.cpp" />
     <ClCompile Include="FlowInputPort.cpp" />
@@ -154,12 +157,14 @@
     <ClCompile Include="FlowNode.cpp" />
     <ClCompile Include="FlowOutputPort.cpp" />
     <ClCompile Include="FlowStartNode.cpp" />
+    <ClCompile Include="MaterialAssetNodeCanvas.cpp" />
+    <ClCompile Include="MaterialInputPort.cpp" />
+    <ClCompile Include="MaterialOutputNode.cpp" />
     <ClCompile Include="NodeColorVariable.cpp" />
     <ClCompile Include="NodeElement.cpp" />
     <ClCompile Include="PortElement.cpp" />
     <ClCompile Include="AScratchTextureAsset.cpp" />
     <ClCompile Include="AssetControl.cpp" />
-    <ClCompile Include="AssetControlWindow.cpp" />
     <ClCompile Include="AssetPriorityManager.cpp" />
     <ClCompile Include="ATextureAsset.cpp" />
     <ClCompile Include="BaseCubeMeshAsset.cpp" />
@@ -204,7 +209,7 @@
     <ClCompile Include="MapAsset.cpp" />
     <ClCompile Include="MaterialAsset.cpp" />
     <ClCompile Include="MaterialInformationDrawer.cpp" />
-    <ClCompile Include="NodeCanvas.cpp" />
+    <ClCompile Include="ANodeCanvas.cpp" />
     <ClCompile Include="AOutputPort.cpp" />
     <ClCompile Include="RectangleDrawElement.cpp" />
     <ClCompile Include="SkeletalMeshObjectActor.cpp" />
@@ -229,7 +234,7 @@
     <ClCompile Include="StaticMeshObject.cpp" />
     <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TaskAnalyzerWindow.cpp" />
-    <ClCompile Include="NormalTextureAsset.cpp" />
+    <ClCompile Include="BaseTextureAsset.cpp" />
     <ClCompile Include="TransformationInformationDrawer.cpp" />
     <ClCompile Include="UIVariable.cpp" />
     <ClCompile Include="VariableInputNode.cpp" />
@@ -243,6 +248,7 @@
     <ClCompile Include="ViewportWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AAssetNodeCanvas.h" />
     <ClInclude Include="AController.h" />
     <ClInclude Include="AActor.h" />
     <ClInclude Include="AddAttachableObjectHelper.h" />
@@ -250,6 +256,8 @@
     <ClInclude Include="AMeshObject.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
+    <ClInclude Include="BaseTextureInputNode.h" />
+    <ClInclude Include="BaseTextureOutputPort.h" />
     <ClInclude Include="ControlNode.h" />
     <ClInclude Include="FlowEndNode.h" />
     <ClInclude Include="FlowInputPort.h" />
@@ -257,6 +265,9 @@
     <ClInclude Include="FlowNode.h" />
     <ClInclude Include="FlowOutputPort.h" />
     <ClInclude Include="FlowStartNode.h" />
+    <ClInclude Include="MaterialAssetNodeCanvas.h" />
+    <ClInclude Include="MaterialInputPort.h" />
+    <ClInclude Include="MaterialOutputNode.h" />
     <ClInclude Include="NodeColorVariable.h" />
     <ClInclude Include="NodeElement.h" />
     <ClInclude Include="PortElement.h" />
@@ -316,7 +327,7 @@
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="InputEventManager.h" />
     <ClInclude Include="IUpdatable.h" />
-    <ClInclude Include="NodeCanvas.h" />
+    <ClInclude Include="ANodeCanvas.h" />
     <ClInclude Include="AOutputPort.h" />
     <ClInclude Include="RectangleDrawElement.h" />
     <ClInclude Include="SkeletalMeshObjectActor.h" />
@@ -354,7 +365,7 @@
     <ClInclude Include="HeaderHelper.h" />
     <ClInclude Include="AAssetFile.h" />
     <ClInclude Include="Buffer.h" />
-    <ClInclude Include="IWindow.h" />
+    <ClInclude Include="AWindow.h" />
     <ClInclude Include="IDownloadableBuffer.h" />
     <ClInclude Include="AMeshAsset.h" />
     <ClInclude Include="ConstantBuffer.h" />
@@ -370,7 +381,7 @@
     <ClInclude Include="SkeletalMeshAsset.h" />
     <ClInclude Include="StaticMeshAsset.h" />
     <ClInclude Include="TaskAnalyzerWindow.h" />
-    <ClInclude Include="BasicTextureAsset.h" />
+    <ClInclude Include="BaseTextureAsset.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Viewable.h" />
     <ClInclude Include="ViewableInformationDrawer.h" />

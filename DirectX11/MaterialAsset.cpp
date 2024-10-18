@@ -1,5 +1,5 @@
 #include "MaterialAsset.h"
-#include "BasicTextureAsset.h"
+#include "BaseTextureAsset.h"
 #include "AssetManager.h"
 
 using namespace std;
@@ -67,7 +67,7 @@ void MaterialAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	EmissiveTextureAsset = AssetManagerIn->GetManagingBasicTexture(EmissiveTextureAssetName);
 }
 
-void MaterialAsset::SerializeAssetNameHelper(FILE* FileIn, std::shared_ptr<BasicTextureAsset> BasicTextureAssetIn)
+void MaterialAsset::SerializeAssetNameHelper(FILE* FileIn, std::shared_ptr<BaseTextureAsset> BasicTextureAssetIn)
 {
 	if (BasicTextureAssetIn != nullptr)
 	{

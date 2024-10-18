@@ -1,4 +1,4 @@
-#include "BasicTextureAsset.h"
+#include "BaseTextureAsset.h"
 
 #include "DefineUtility.h"
 
@@ -11,12 +11,12 @@
 
 using namespace std;
 
-BasicTextureAsset::BasicTextureAsset(const string& AssetNameIn)
+BaseTextureAsset::BaseTextureAsset(const string& AssetNameIn)
 	: ATextureAsset(AssetNameIn, EAssetType::BasicTexture)
 {
 }
 
-BasicTextureAsset::BasicTextureAsset(
+BaseTextureAsset::BaseTextureAsset(
 	const string& AssetNameIn, 
 	uint8_t* ImageBufferIn, 
 	const UINT& WidthIn, 
@@ -39,11 +39,11 @@ BasicTextureAsset::BasicTextureAsset(
 	CompressedBufferPerArray = CompressDataArray(ImageBufferPerArray, OriginalSizePerArray, CompressedSizePerArray);
 }
 
-BasicTextureAsset::~BasicTextureAsset()
+BaseTextureAsset::~BaseTextureAsset()
 {
 }
 
-void BasicTextureAsset::CreateTexture(
+void BaseTextureAsset::CreateTexture(
 	const std::vector<uint8_t*>& ImageBufferPerArray,
 	const std::vector<size_t>& RowPitches
 )
@@ -60,7 +60,7 @@ void BasicTextureAsset::CreateTexture(
 }
 
 
-vector<vector<uint8_t>> BasicTextureAsset::CompressDataArray(
+vector<vector<uint8_t>> BaseTextureAsset::CompressDataArray(
 	const vector<uint8_t*>& DecompressedBufferPerArrayIn,
 	const vector<size_t>& OriginalSizePerArray,
 	vector<size_t>& CompressedSizePerArrayOut
@@ -80,7 +80,7 @@ vector<vector<uint8_t>> BasicTextureAsset::CompressDataArray(
 	return vResult;
 }
 
-vector<vector<uint8_t>> BasicTextureAsset::DecompressDataArray(
+vector<vector<uint8_t>> BaseTextureAsset::DecompressDataArray(
 	const std::vector<uint8_t*>& CompressedBufferPerArrayIn,
 	const std::vector<size_t>& CompressedSizePerArray,
 	const std::vector<size_t>& OriginalSizePerArray
