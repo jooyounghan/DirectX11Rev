@@ -21,7 +21,7 @@ unordered_map<EAssetType, string> AAssetFile::AssetTypeToSuffix
 
 	// Material
 	{ EAssetType::Material,			"_Material" },
-	{ EAssetType::BasicTexture,		"_BasicTexture" },
+	{ EAssetType::BaseTexture,		"_BasicTexture" },
 	{ EAssetType::EXRTexture,		"_EXRTexture" },
 	{ EAssetType::DDSTexture,		"_DDSTexture" },
 
@@ -46,7 +46,7 @@ unordered_map<string, EAssetType> AAssetFile::AssetSuffixToType
 
 	// Material
 	{ "_Material", EAssetType::Material },
-	{ "_BasicTexture", EAssetType::BasicTexture },
+	{ "_BasicTexture", EAssetType::BaseTexture },
 	{ "_EXRTexture", EAssetType::EXRTexture },
 	{ "_DDSTexture", EAssetType::DDSTexture },
 

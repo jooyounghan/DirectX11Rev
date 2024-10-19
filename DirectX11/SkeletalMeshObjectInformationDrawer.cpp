@@ -6,6 +6,8 @@
 
 #include "UIVariable.h"
 
+#include "AssetSelectHelper.h"
+
 using namespace std;
 using namespace ImGui;
 
@@ -26,7 +28,7 @@ void SkeletalMeshObjectInformationDrawer::DrawInformation()
 
     SameLine();
 
-    shared_ptr<SkeletalMeshAsset> Result = SelectAsset(ManagingSkeletalMeshes, MeshAssetInstance, "Skeletal Mesh Asset", "Choose Skeletal Mesh Asset");
+    shared_ptr<SkeletalMeshAsset> Result = AssetSelectHelper::SelectAsset(ManagingSkeletalMeshes, MeshAssetInstance, ObjectCached->GetObjectID(), "Skeletal Mesh Asset", "Choose Skeletal Mesh Asset");
     if (Result != nullptr) ObjectCached->SetSkeletalMeshAssetInstance(Result);
 
 }

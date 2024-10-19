@@ -24,7 +24,7 @@ enum class EAssetType
 
 	// Material
 	Material,
-	BasicTexture,
+	BaseTexture,
 	EXRTexture,
 	DDSTexture,
 

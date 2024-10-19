@@ -22,14 +22,14 @@ protected:
 	std::shared_ptr<BaseTextureAsset> EmissiveTextureAsset;
 
 	
-	MakeSmartPtrSetterGetter(AmbientOcculusionTextureAsset);
-	MakeSmartPtrSetterGetter(SpecularTextureAsset);
-	MakeSmartPtrSetterGetter(DiffuseTextureAsset);
-	MakeSmartPtrSetterGetter(RoughnessTextureAsset);
-	MakeSmartPtrSetterGetter(MetalicTextureAsset);
-	MakeSmartPtrSetterGetter(NormalTextureAsset);
-	MakeSmartPtrSetterGetter(HeightTextureAsset);
-	MakeSmartPtrSetterGetter(EmissiveTextureAsset);
+	MakeSetterGetter(AmbientOcculusionTextureAsset);
+	MakeSetterGetter(SpecularTextureAsset);
+	MakeSetterGetter(DiffuseTextureAsset);
+	MakeSetterGetter(RoughnessTextureAsset);
+	MakeSetterGetter(MetalicTextureAsset);
+	MakeSetterGetter(NormalTextureAsset);
+	MakeSetterGetter(HeightTextureAsset);
+	MakeSetterGetter(EmissiveTextureAsset);
 
 public:
 	virtual void Serialize() override;

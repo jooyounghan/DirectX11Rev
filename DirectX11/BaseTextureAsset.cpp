@@ -12,7 +12,7 @@
 using namespace std;
 
 BaseTextureAsset::BaseTextureAsset(const string& AssetNameIn)
-	: ATextureAsset(AssetNameIn, EAssetType::BasicTexture)
+	: ATextureAsset(AssetNameIn, EAssetType::BaseTexture)
 {
 }
 
@@ -22,7 +22,7 @@ BaseTextureAsset::BaseTextureAsset(
 	const UINT& WidthIn, 
 	const UINT& HeightIn
 )
-	: ATextureAsset(AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::BasicTexture)], EAssetType::BasicTexture)
+	: ATextureAsset(AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::BaseTexture)], EAssetType::BaseTexture)
 {
 	Width = WidthIn;
 	Height = HeightIn;

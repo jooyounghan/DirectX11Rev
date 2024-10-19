@@ -1,12 +1,16 @@
 #pragma once
 #include "IInformationDrawer.h"
 
+#include <memory>
+#include <unordered_map>
+#include <string>
+
 class EnvironmentActor;
 class AssetManager;
 
 class EnvironementActorDrawer : AInformationDrawer<EnvironmentActor>
 {
-public: EnvironementActorDrawer(EnvironmentActor* EnvironmentActorIn, AssetManager* AssetManagerIn);;
+public: EnvironementActorDrawer(EnvironmentActor* EnvironmentActorIn, AssetManager* AssetManagerIn);
 
 protected:
 	AssetManager* AssetManagerCached = nullptr;

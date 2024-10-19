@@ -2,9 +2,10 @@
 
 AAssetNodeCanvas::AAssetNodeCanvas(
 	AssetManager* AssetManagerIn, 
-	AAssetFile* AssetFileIn
+	AAssetFile* AssetFileIn, 
+	const ImVec2& CanvasSizeIn
 )
-	: AssetManagerCached(AssetManagerIn), AssetFileCached(AssetFileIn)
+	: ANodeCanvas(CanvasSizeIn), AssetManagerCached(AssetManagerIn), AssetFileCached(AssetFileIn)
 {
 }
 

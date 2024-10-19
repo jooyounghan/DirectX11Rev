@@ -10,7 +10,6 @@ VariableInputNode::VariableInputNode(const ImVec2& CenterPositionIn, const ImVec
 		NodeColor::VariableNodeHilightedColor
 	)
 {
-	AddOutputPort<VariableOutputPort>(ImVec2(NULL, NULL), 10.f);
 }
 
 VariableInputNode::~VariableInputNode()

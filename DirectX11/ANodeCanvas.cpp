@@ -3,10 +3,10 @@
 using namespace std;
 using namespace ImGui;
 
-ANodeCanvas::ANodeCanvas()
+ANodeCanvas::ANodeCanvas(const ImVec2& CanvasSizeIn)
+    : CanvasSize(CanvasSizeIn)
 {
     LeftTopPositon = GetCursorScreenPos();
-    CanvasSize = GetContentRegionAvail();
     if (CanvasSize.x < 50.0f) CanvasSize.x = 50.0f;
     if (CanvasSize.y < 50.0f) CanvasSize.y = 50.0f;
     RightBottomPosition = ImVec2(LeftTopPositon.x + CanvasSize.x, LeftTopPositon.y + CanvasSize.y);
@@ -34,6 +34,7 @@ void ANodeCanvas::RenderControl()
 
     DrawCanvasRectangle(32.f);
 
+    ImGui::SetNextItemAllowOverlap();
     InvisibleButton("NodeCanvas", CanvasSize, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
     if (IsItemActive() && IsMouseDragging(ImGuiMouseButton_Right))
     {
@@ -44,6 +45,8 @@ void ANodeCanvas::RenderControl()
     ImDrawList* DrawList = GetWindowDrawList();
     const ImVec2 Origin(LeftTopPositon.x + ScrollingPosition.x, LeftTopPositon.y + ScrollingPosition.y);
     const ImVec2 CanvasMousePos(io.MousePos.x - Origin.x, io.MousePos.y - Origin.y);
+
+    ShowContextMenu(Origin);
 
     ResetStatus();
 
@@ -76,7 +79,15 @@ void ANodeCanvas::RenderControl()
         SelectedNodeElement->SetPosition(CanvasMousePos);
     }
  
-    ShowContextMenu();
+}
+
+void ANodeCanvas::ShowContextMenu(const ImVec2& OriginPosition)
+{
+    ImVec2 DragDelta = GetMouseDragDelta(ImGuiMouseButton_Right);
+    if (DragDelta.x == 0.0f && DragDelta.y == 0.0f)
+    {
+        OpenPopupOnItemClick(ContextPopUpID, ImGuiPopupFlags_MouseButtonRight);
+    }
 }
 
 void ANodeCanvas::DrawCanvasRectangle(const float& GridStepSize)

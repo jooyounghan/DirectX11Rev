@@ -1,6 +1,5 @@
 #include "NodeElement.h"
-#include "AOutputPort.h"
-#include "InputPort.h"
+#include <format>
 
 using namespace std;
 
@@ -10,7 +9,8 @@ NodeElement::NodeElement(
 	const ImU32& RectangleColorIn, 
 	const ImU32& HilightedColorIn
 )
-	: RectangleDrawElement(CenterPositionIn, RectangleSizeIn, RectangleColorIn, HilightedColorIn)
+	: RectangleDrawElement(CenterPositionIn, RectangleSizeIn, RectangleColorIn, HilightedColorIn),
+	NodeID(string{ format("{}", (uint64_t)this) })
 {
 }
 

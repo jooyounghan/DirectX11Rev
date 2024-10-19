@@ -17,6 +17,10 @@ public:
 	virtual ~InputPort();
 
 public:
+	void Connect(AOutputPort* OutputPortIn);
+	AOutputPort* ConnectedOutputPort = nullptr;
+
+public:
 	Delegation<AOutputPort*> ConnectEvent;
 
 public:

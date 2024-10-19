@@ -24,6 +24,7 @@ public:
 
 protected:
 	InputPort* ConnectedPort = nullptr;
+	MakeGetter(ConnectedPort);
 
 public:
 	virtual void Connect(InputPort* PortIn);

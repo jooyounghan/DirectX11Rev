@@ -20,9 +20,6 @@ protected:
 	std::unique_ptr<AAssetNodeCanvas> NodeCanvasInstance;
 
 protected:
-	ImVec2 WindowSize;
-
-protected:
 	bool bIsOpen = true;
 
 public:
@@ -31,7 +28,6 @@ public:
 
 template<typename T, typename ...Args>
 inline AssetControlWindow<T, Args...>::AssetControlWindow(AssetManager* AssetManagerIn, AAssetFile* AssetFileIn, Args... args)
-	: WindowSize(UISize::WindowSize)
 {
 	static_assert(std::is_base_of<AAssetNodeCanvas, T>::value, DerivedCondition(AAssetNodeCanvas));
 
@@ -49,7 +45,7 @@ inline AssetControlWindow<T, Args...>::AssetControlWindow(AssetManager* AssetMan
 template<typename T, typename ...Args>
 inline void AssetControlWindow<T, Args...>::RenderWindow()
 {
-	ImGui::SetNextWindowSizeConstraints(UISize::WindowSize, ImVec2(FLT_MAX, FLT_MAX));
+	ImGui::SetNextWindowSizeConstraints(NodeCanvasInstance->GetCanvasSize(), ImVec2(FLT_MAX, FLT_MAX));
 
 	ImGui::Begin(WindowDescription.c_str(), &bIsOpen, ImGuiWindowFlags_::ImGuiWindowFlags_NoSavedSettings);
 	NodeCanvasInstance->RenderControl();

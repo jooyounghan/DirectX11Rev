@@ -7,6 +7,8 @@
 
 #include "UIVariable.h"
 
+#include "AssetSelectHelper.h"
+
 using namespace std;
 using namespace ImGui;
 
@@ -96,7 +98,7 @@ inline shared_ptr<T> EnvironementActorDrawer::DrawAndSelectNormalTexture(
 
     SameLine();
 
-    shared_ptr<T> Result = SelectAsset(ManagingTexturesIn, CurrentSelected, StrId, PreviewText);
+    shared_ptr<T> Result = AssetSelectHelper::SelectAsset(ManagingTexturesIn, CurrentSelected, StrId, StrId, PreviewText);
 
     return Result;
 }

@@ -6,8 +6,7 @@ class VariableOutputNode : public VariableNode
 public:
 	VariableOutputNode(
 		const ImVec2& CenterPositionIn,
-		const ImVec2& RectangleSizeIn,
-		const size_t& InputVariableCountIn
+		const ImVec2& RectangleSizeIn
 	);
 	virtual ~VariableOutputNode();
 };

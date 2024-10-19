@@ -5,6 +5,8 @@
 
 #include "UIVariable.h"
 
+#include "AssetSelectHelper.h"
+
 using namespace std;
 using namespace ImGui;
 
@@ -40,7 +42,7 @@ void MaterialInformationDrawer::DrawInformation()
 
         SameLine();
 
-        shared_ptr<MaterialAsset> Result = SelectAsset(ManagingMaterials, MaterialInstance, "Material Asset", "Choose Material Asset");
+        shared_ptr<MaterialAsset> Result = AssetSelectHelper::SelectAsset(ManagingMaterials, MaterialInstance, MaterialSlotID, "Material Asset", "Choose Material Asset");
         if (Result != nullptr) ObjectCached->SetMaterialAsset(idx, Result);
         PopID();
     }

@@ -11,6 +11,6 @@ const ImVec4 UIColor::GLightBrown = ImVec4(1.f, 0.843f, 0.404f, 1.f);
 const ImVec4 UIColor::GHilighted = ImVec4(0.2f, 0.3f, 0.4f, 1.0f);
 
 const ImVec2 UISize::FileSize = ImVec2(100.f, 100.0f);
-const ImVec2 UISize::WindowSize = ImVec2(800.f, 600.0f);
+const ImVec2 UISize::WindowSize = ImVec2(800.f, 1200.f);
 
 const char* DragDrop::GAsset = "DND_ASSET";

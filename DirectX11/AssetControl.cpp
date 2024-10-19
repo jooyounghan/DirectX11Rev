@@ -32,7 +32,7 @@ void AssetControl::RenderControl()
 
         switch (AssetType)
         {
-        case EAssetType::BasicTexture:
+        case EAssetType::BaseTexture:
         case EAssetType::EXRTexture:
             Image(AssetFileCached->GetThumbnailSRV(), UISize::FileSize);
             break;

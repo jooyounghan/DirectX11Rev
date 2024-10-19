@@ -330,7 +330,7 @@ AAssetFile* AssetManager::GetManagingAsset(const std::string& AssetNameIn)
     case EAssetType::Material:
         Result = GetManagingAssetHelper(ManagingMaterials, AssetNameIn).get();
         break;
-    case EAssetType::BasicTexture:
+    case EAssetType::BaseTexture:
         Result = GetManagingAssetHelper(ManagingBasicTextures, AssetNameIn).get();
         break;
     case EAssetType::EXRTexture:
@@ -867,7 +867,7 @@ void AssetManager::LoadAssetWithTopologySorting(const vector<string>& AssetPaths
                 case EAssetType::Map:
                     LoadAssetHelper(InputAssetFile, ManagingMaps, AssetPreloadArgs.AssetName, this, true);
                     break;
-                case EAssetType::BasicTexture:
+                case EAssetType::BaseTexture:
                     LoadAssetHelper(InputAssetFile, ManagingBasicTextures, AssetPreloadArgs.AssetName);
                     break;
                 case EAssetType::EXRTexture:

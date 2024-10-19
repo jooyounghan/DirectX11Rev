@@ -7,14 +7,11 @@ class AAssetFile;
 class AAssetNodeCanvas : public ANodeCanvas
 {
 public:
-	AAssetNodeCanvas(AssetManager* AssetManagerIn, AAssetFile* AssetFileIn);
+	AAssetNodeCanvas(AssetManager* AssetManagerIn, AAssetFile* AssetFileIn, const ImVec2& CanvasSizeIn);
 	virtual ~AAssetNodeCanvas();
 
 protected:
 	AssetManager* AssetManagerCached = nullptr;
 	AAssetFile* AssetFileCached = nullptr;
-
-protected:
-	virtual void ShowContextMenu() = 0;
 };
 

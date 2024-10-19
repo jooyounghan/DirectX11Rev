@@ -1,12 +1,13 @@
 #pragma once
 #include "RectangleDrawElement.h"
 #include "StaticAssertHelper.h"
+#include "InputPort.h"
+#include "AOutputPort.h"
 
 #include <list>
+#include <string>
 #include <memory>
-
-class InputPort;
-class AOutputPort;
+#include <format>
 
 class NodeElement : public RectangleDrawElement
 {
@@ -24,6 +25,9 @@ protected:
 	std::list<std::shared_ptr<InputPort>> InputPorts;
 	MakeGetter(OutputPorts);
 	MakeGetter(InputPorts)
+
+protected:
+	std::string NodeID;
 
 public:
 	template<typename T, typename... Args>

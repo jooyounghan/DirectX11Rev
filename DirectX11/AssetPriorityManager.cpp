@@ -19,7 +19,7 @@ AssetPriorityManager::AssetPriorityManager()
 	shared_ptr<PriorityNode> Bone = make_shared<PriorityNode>(EAssetType::Bone);
 	shared_ptr<PriorityNode> Map = make_shared<PriorityNode>(EAssetType::Map);
 	shared_ptr<PriorityNode> Material = make_shared<PriorityNode>(EAssetType::Material);
-	shared_ptr<PriorityNode> BasicTexture = make_shared<PriorityNode>(EAssetType::BasicTexture);
+	shared_ptr<PriorityNode> BaseTexture = make_shared<PriorityNode>(EAssetType::BaseTexture);
 	shared_ptr<PriorityNode> EXRTexture = make_shared<PriorityNode>(EAssetType::EXRTexture);
 	shared_ptr<PriorityNode> DDSTexture = make_shared<PriorityNode>(EAssetType::DDSTexture);
 	shared_ptr<PriorityNode> Animation = make_shared<PriorityNode>(EAssetType::Animation);
@@ -30,12 +30,12 @@ AssetPriorityManager::AssetPriorityManager()
 	PriorityNodes.emplace_back(Bone);
 	PriorityNodes.emplace_back(Map);
 	PriorityNodes.emplace_back(Material);
-	PriorityNodes.emplace_back(BasicTexture);
+	PriorityNodes.emplace_back(BaseTexture);
 	PriorityNodes.emplace_back(EXRTexture);
 	PriorityNodes.emplace_back(DDSTexture);
 	PriorityNodes.emplace_back(Animation);
 
-	Material->AddPrerequisite(BasicTexture);
+	Material->AddPrerequisite(BaseTexture);
 	Material->AddPrerequisite(EXRTexture);
 	Material->AddPrerequisite(DDSTexture);
 

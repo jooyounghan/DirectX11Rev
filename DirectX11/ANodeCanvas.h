@@ -12,7 +12,7 @@
 class ANodeCanvas : public IGuiControl
 {
 public:
-	ANodeCanvas();
+	ANodeCanvas(const ImVec2& CanvasSizeIn);
 	virtual ~ANodeCanvas();
 
 public:
@@ -20,8 +20,11 @@ public:
 
 protected:
 	ImVec2 LeftTopPositon;
-	ImVec2 CanvasSize;
 	ImVec2 RightBottomPosition;
+
+protected:
+	ImVec2 CanvasSize;
+	MakeGetter(CanvasSize);
 
 protected:
 	ImVec2 ScrollingPosition;
@@ -38,14 +41,15 @@ protected:
 	std::list<std::unique_ptr<ADrawElement>> DrawElements;
 
 protected:
-	virtual void ShowContextMenu() = 0;
+	const char* ContextPopUpID = "CanvasContextMenu";
+	virtual void ShowContextMenu(const ImVec2& OriginPosition);
 
 protected:
 	void DrawCanvasRectangle(const float& GridStepSize);
 
 public:
 	template<typename T, typename ...Args>
-	void AddNodeElement(Args... args);
+	T* AddNodeElement(Args... args);
 
 protected:
 	NodeElement* SelectedNodeElement = nullptr;
@@ -78,7 +82,7 @@ private:
 };
 
 template<typename T, typename ...Args>
-void ANodeCanvas::AddNodeElement(Args ...args)
+T* ANodeCanvas::AddNodeElement(Args ...args)
 {
 	static_assert(std::is_base_of<NodeElement, T>::value, DerivedCondition(NodeElement));
 
@@ -86,8 +90,9 @@ void ANodeCanvas::AddNodeElement(Args ...args)
 		args...
 	));
 
-	DrawElements.back()->ClickedEvent += OnNodeClicked;
+
 	NodeElement* NodeElementCached = ((NodeElement*)DrawElements.back().get());
+	NodeElementCached->ClickedEvent += OnNodeClicked;
 
 	for (auto& OutputPortCached : NodeElementCached->GetOutputPorts())
 	{
@@ -99,4 +104,6 @@ void ANodeCanvas::AddNodeElement(Args ...args)
 		InputPortCached->MouseEnterEvent += OnPortEnter;
 		InputPortCached->MouseLeaveEvent += OnPortLeave;
 	}
+
+	return (T*)NodeElementCached;
 }

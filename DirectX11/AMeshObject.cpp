@@ -142,14 +142,14 @@ void AMeshObject::Render()
 				const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIndex[PartIdx]];
 				if (MaterialInstance != nullptr)
 				{
-					BaseTextureAsset* AO = MaterialInstance->GetAmbientOcculusionTextureAsset();
-					BaseTextureAsset* Specualr = MaterialInstance->GetSpecularTextureAsset();
-					BaseTextureAsset* Diffuse = MaterialInstance->GetDiffuseTextureAsset();
-					BaseTextureAsset* Roughness = MaterialInstance->GetRoughnessTextureAsset();
-					BaseTextureAsset* Metalic = MaterialInstance->GetMetalicTextureAsset();
-					BaseTextureAsset* Normal = MaterialInstance->GetNormalTextureAsset();
-					BaseTextureAsset* Height = MaterialInstance->GetHeightTextureAsset();
-					BaseTextureAsset* Emissive = MaterialInstance->GetEmissiveTextureAsset();
+					const shared_ptr<BaseTextureAsset> AO = MaterialInstance->GetAmbientOcculusionTextureAsset();
+					const shared_ptr<BaseTextureAsset> Specualr = MaterialInstance->GetSpecularTextureAsset();
+					const shared_ptr<BaseTextureAsset> Diffuse = MaterialInstance->GetDiffuseTextureAsset();
+					const shared_ptr<BaseTextureAsset> Roughness = MaterialInstance->GetRoughnessTextureAsset();
+					const shared_ptr<BaseTextureAsset> Metalic = MaterialInstance->GetMetalicTextureAsset();
+					const shared_ptr<BaseTextureAsset> Normal = MaterialInstance->GetNormalTextureAsset();
+					const shared_ptr<BaseTextureAsset> Height = MaterialInstance->GetHeightTextureAsset();
+					const shared_ptr<BaseTextureAsset> Emissive = MaterialInstance->GetEmissiveTextureAsset();
 
 					MaterialSRVs.push_back(AO != nullptr ? AO->GetSRV() : nullptr);
 					MaterialSRVs.push_back(Specualr != nullptr ? Specualr->GetSRV() : nullptr);

@@ -148,6 +148,8 @@
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="APawn.cpp" />
+    <ClCompile Include="AssetSelectHelper.cpp" />
+    <ClCompile Include="AssetVariableInputPort.cpp" />
     <ClCompile Include="BaseTextureInputNode.cpp" />
     <ClCompile Include="BaseTextureOutputPort.cpp" />
     <ClCompile Include="ControlNode.cpp" />
@@ -158,7 +160,6 @@
     <ClCompile Include="FlowOutputPort.cpp" />
     <ClCompile Include="FlowStartNode.cpp" />
     <ClCompile Include="MaterialAssetNodeCanvas.cpp" />
-    <ClCompile Include="MaterialInputPort.cpp" />
     <ClCompile Include="MaterialOutputNode.cpp" />
     <ClCompile Include="NodeColorVariable.cpp" />
     <ClCompile Include="NodeElement.cpp" />
@@ -256,6 +257,8 @@
     <ClInclude Include="AMeshObject.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
+    <ClInclude Include="AssetSelectHelper.h" />
+    <ClInclude Include="AssetVariableInputPort.h" />
     <ClInclude Include="BaseTextureInputNode.h" />
     <ClInclude Include="BaseTextureOutputPort.h" />
     <ClInclude Include="ControlNode.h" />
@@ -266,7 +269,6 @@
     <ClInclude Include="FlowOutputPort.h" />
     <ClInclude Include="FlowStartNode.h" />
     <ClInclude Include="MaterialAssetNodeCanvas.h" />
-    <ClInclude Include="MaterialInputPort.h" />
     <ClInclude Include="MaterialOutputNode.h" />
     <ClInclude Include="NodeColorVariable.h" />
     <ClInclude Include="NodeElement.h" />
