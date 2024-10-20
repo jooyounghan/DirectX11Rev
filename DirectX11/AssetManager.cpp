@@ -29,6 +29,7 @@
 
 #include "MathematicalHelper.h"
 #include "StringHelper.h"
+#include "StaticAssertHelper.h"
 
 #include "DirectXTexEXR.h"
 
@@ -59,6 +60,13 @@ AssetManager::AssetManager()
 
 AssetManager::~AssetManager()
 {
+    SerializeModifiedAsset(ManagingBones);
+    SerializeModifiedAsset(ManagingStaticMeshes);
+    SerializeModifiedAsset(ManagingSkeletalMeshes);
+    SerializeModifiedAsset(ManagingBasicTextures);
+    SerializeModifiedAsset(ManagingEXRTextures);
+    SerializeModifiedAsset(ManagingDDSTextures);
+    SerializeModifiedAsset(ManagingMaterials);
 }
 
 void AssetManager::LoadAssetFromFile(const std::string& FilePathIn)
@@ -304,6 +312,7 @@ bool AssetManager::HasBone(const aiScene* const Scene)
     return false;
 }
 
+
 AAssetFile* AssetManager::GetManagingAsset(const std::string& AssetNameIn)
 {
     AAssetFile* Result = nullptr;
@@ -403,6 +412,19 @@ void AssetManager::SerailizeAndAddToContainer(
     ManagingContainer.emplace(AddedAsset->GetAssetName(), AddedAsset);
 
     AssetChangedEvent.Invoke();
+}
+
+template<typename T>
+void AssetManager::SerializeModifiedAsset(unordered_map<string, T>& ManagingContainer)
+{
+    for (auto& ManagingAsset : ManagingContainer)
+    {
+        const T& ManagingAssetCached = ManagingAsset.second;
+        if (ManagingAssetCached->GetIsModified())
+        {
+            ManagingAssetCached->Serialize();
+        }
+    }
 }
 
 template<typename T>

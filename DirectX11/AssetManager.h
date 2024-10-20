@@ -119,6 +119,8 @@ private:
 		std::unordered_map<std::string, T>& ManagingContainer,
 		T& AddedAsset
 	);
+	template<typename T>
+	void SerializeModifiedAsset(std::unordered_map<std::string, T>& ManagingContainer);
 
 private:
 	std::unordered_map<std::string, std::list<std::string>> FileNameToAssetNames;

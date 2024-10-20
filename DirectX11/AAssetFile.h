@@ -54,6 +54,13 @@ public:
 	static std::unordered_map<std::string, EAssetType> AssetSuffixToType;
 
 protected:
+	bool IsModified = false;
+	MakeGetter(IsModified);
+
+public:
+	inline void SetModified() { IsModified = true; }
+
+protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> ThumbnailTexture2D;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> ThumbnailSRV;
 	MakeComPtrGetter(ThumbnailTexture2D);

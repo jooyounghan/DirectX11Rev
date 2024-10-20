@@ -56,6 +56,7 @@ void MaterialOutputNode::SetAmbientOcculusionTextureAssetWithConnect(AOutputPort
 	if (MaterialAssetCached)
 	{
 		MaterialAssetCached->SetAmbientOcculusionTextureAsset(GetBaseTextureAssetFromOutputPort(OutputPortIn));
+		MaterialAssetCached->SetModified();
 	}
 }
 
@@ -64,6 +65,7 @@ void MaterialOutputNode::SetSpecularTextureAssetWithConnect(AOutputPort* OutputP
 	if (MaterialAssetCached)
 	{
 		MaterialAssetCached->SetSpecularTextureAsset(GetBaseTextureAssetFromOutputPort(OutputPortIn));
+		MaterialAssetCached->SetModified();
 	}
 }
 
@@ -72,6 +74,7 @@ void MaterialOutputNode::SetDiffuseTextureAssetWithConnect(AOutputPort* OutputPo
 	if (MaterialAssetCached)
 	{
 		MaterialAssetCached->SetDiffuseTextureAsset(GetBaseTextureAssetFromOutputPort(OutputPortIn));
+		MaterialAssetCached->SetModified();
 	}
 }
 
@@ -80,6 +83,7 @@ void MaterialOutputNode::SetRoughnessTextureAssetWithConnect(AOutputPort* Output
 	if (MaterialAssetCached)
 	{
 		MaterialAssetCached->SetRoughnessTextureAsset(GetBaseTextureAssetFromOutputPort(OutputPortIn));
+		MaterialAssetCached->SetModified();
 	}
 }
 
@@ -88,6 +92,7 @@ void MaterialOutputNode::SetMetalicTextureAssetWithConnect(AOutputPort* OutputPo
 	if (MaterialAssetCached)
 	{
 		MaterialAssetCached->SetMetalicTextureAsset(GetBaseTextureAssetFromOutputPort(OutputPortIn));
+		MaterialAssetCached->SetModified();
 	}
 }
 
@@ -96,6 +101,7 @@ void MaterialOutputNode::SetNormalTextureAssetWithConnect(AOutputPort* OutputPor
 	if (MaterialAssetCached)
 	{
 		MaterialAssetCached->SetNormalTextureAsset(GetBaseTextureAssetFromOutputPort(OutputPortIn));
+		MaterialAssetCached->SetModified();
 	}
 }
 
@@ -104,6 +110,7 @@ void MaterialOutputNode::SetHeightTextureAssetWithConnect(AOutputPort* OutputPor
 	if (MaterialAssetCached)
 	{
 		MaterialAssetCached->SetHeightTextureAsset(GetBaseTextureAssetFromOutputPort(OutputPortIn));
+		MaterialAssetCached->SetModified();
 	}
 }
 
@@ -112,6 +119,7 @@ void MaterialOutputNode::SetEmissiveTextureAssetWithConnect(AOutputPort* OutputP
 	if (MaterialAssetCached)
 	{
 		MaterialAssetCached->SetEmissiveTextureAsset(GetBaseTextureAssetFromOutputPort(OutputPortIn));
+		MaterialAssetCached->SetModified();
 	}
 }
 
