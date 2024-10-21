@@ -241,9 +241,6 @@
     <Filter Include="소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper">
       <UniqueIdentifier>{acaedad8-b7e5-4e72-93f0-3f058931f28c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject">
-      <UniqueIdentifier>{a838dca8-130d-4d1b-a812-fe45dd1d9863}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Editor\GUI\Control">
       <UniqueIdentifier>{8b2f717e-1141-4109-ae2d-135eb9c6645e}</UniqueIdentifier>
     </Filter>
@@ -400,6 +397,45 @@
     <Filter Include="소스 파일\Editor\NodeEditor\DrawElement\Extended\Node\Variable\Asset\Material">
       <UniqueIdentifier>{70d99a20-48dd-41aa-ae39-813dee98522a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Popup">
+      <UniqueIdentifier>{0d7f8d7a-538e-4f87-83a6-87772295a318}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Popup">
+      <UniqueIdentifier>{a7171025-7aa6-403d-bc87-c6222110e2b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Popup\Extended">
+      <UniqueIdentifier>{86758d94-623b-44f6-8b02-f8c69acfa7cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Popup\Extended">
+      <UniqueIdentifier>{cebd2008-9f05-4413-a3b5-da45fe4a5d45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Modal">
+      <UniqueIdentifier>{6daf88ff-0d0a-4ba9-ac9c-199049d795d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Modal">
+      <UniqueIdentifier>{0ceff1bd-4b33-484e-9318-93db5c5d7c5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Modal\Extended">
+      <UniqueIdentifier>{8e42cada-7824-42a9-9aa8-fa9514756787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Modal\Extended">
+      <UniqueIdentifier>{6f224377-ca5a-4a5e-b37b-045b7fbf8963}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObjectModal">
+      <UniqueIdentifier>{a838dca8-130d-4d1b-a812-fe45dd1d9863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Modal\Extended\AssetFileModal">
+      <UniqueIdentifier>{c6a711b1-8e43-4e76-bc96-c1f946c8a219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Editor\GUI\Modal\Extended\ObjectModal">
+      <UniqueIdentifier>{aa48ce84-71f6-42d5-a62e-14e63317f9c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Modal\Extended\ObjectModal">
+      <UniqueIdentifier>{6bed47b8-fd1b-41f8-be4c-10e8244e056c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Editor\GUI\Modal\Extended\AssetFile">
+      <UniqueIdentifier>{0f406e0c-7585-4baa-b861-fedfcfb38b20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PortfolioApp.cpp">
@@ -501,14 +537,8 @@
     <ClCompile Include="ModelDetailWindow.cpp">
       <Filter>소스 파일\Editor\GUI\Window</Filter>
     </ClCompile>
-    <ClCompile Include="AddPlaceableObjectHelper.cpp">
-      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
-    </ClCompile>
-    <ClCompile Include="AddAttachableObjectHelper.cpp">
-      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
-    </ClCompile>
     <ClCompile Include="AAddObjectHelper.cpp">
-      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
+      <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObjectModal</Filter>
     </ClCompile>
     <ClCompile Include="AController.cpp">
       <Filter>소스 파일\Controller</Filter>
@@ -732,6 +762,36 @@
     <ClCompile Include="AssetSelectHelper.cpp">
       <Filter>소스 파일\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="APopup.cpp">
+      <Filter>소스 파일\Editor\GUI\Popup</Filter>
+    </ClCompile>
+    <ClCompile Include="AddBaseTexturePopup.cpp">
+      <Filter>소스 파일\Editor\GUI\Popup\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="AddAssetFilePopup.cpp">
+      <Filter>소스 파일\Editor\GUI\Popup\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="AModal.cpp">
+      <Filter>소스 파일\Editor\GUI\Modal</Filter>
+    </ClCompile>
+    <ClCompile Include="AObjectManageModal.cpp">
+      <Filter>소스 파일\Editor\GUI\Modal\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="AddAttachableModal.cpp">
+      <Filter>소스 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
+    </ClCompile>
+    <ClCompile Include="AddPlaceableModal.cpp">
+      <Filter>소스 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
+    </ClCompile>
+    <ClCompile Include="DeleteAttachableModal.cpp">
+      <Filter>소스 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
+    </ClCompile>
+    <ClCompile Include="DeletePlaceableModal.cpp">
+      <Filter>소스 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateAssetFileModal.cpp">
+      <Filter>소스 파일\Editor\GUI\Modal\Extended\AssetFileModal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
@@ -874,12 +934,6 @@
     </ClInclude>
     <ClInclude Include="ModelDetailedInformationVisitor.h">
       <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
-    </ClInclude>
-    <ClInclude Include="AddPlaceableObjectHelper.h">
-      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
-    </ClInclude>
-    <ClInclude Include="AddAttachableObjectHelper.h">
-      <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
     </ClInclude>
     <ClInclude Include="AAddObjectHelper.h">
       <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\AddObject</Filter>
@@ -1150,6 +1204,36 @@
     </ClInclude>
     <ClInclude Include="AssetSelectHelper.h">
       <Filter>헤더 파일\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="APopup.h">
+      <Filter>헤더 파일\Editor\GUI\Popup</Filter>
+    </ClInclude>
+    <ClInclude Include="AddBaseTexturePopup.h">
+      <Filter>헤더 파일\Editor\GUI\Popup\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="AddAssetFilePopup.h">
+      <Filter>헤더 파일\Editor\GUI\Popup\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="AModal.h">
+      <Filter>헤더 파일\Editor\GUI\Modal</Filter>
+    </ClInclude>
+    <ClInclude Include="AddAttachableModal.h">
+      <Filter>헤더 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
+    </ClInclude>
+    <ClInclude Include="AddPlaceableModal.h">
+      <Filter>헤더 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
+    </ClInclude>
+    <ClInclude Include="AObjectManageModal.h">
+      <Filter>헤더 파일\Editor\GUI\Modal\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="DeleteAttachableModal.h">
+      <Filter>헤더 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
+    </ClInclude>
+    <ClInclude Include="DeletePlaceableModal.h">
+      <Filter>헤더 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateAssetFileModal.h">
+      <Filter>헤더 파일\Editor\GUI\Modal\Extended\AssetFile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

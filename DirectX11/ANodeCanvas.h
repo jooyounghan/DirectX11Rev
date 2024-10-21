@@ -27,6 +27,9 @@ protected:
 	MakeGetter(CanvasSize);
 
 protected:
+	ImVec2 OriginPosition;
+
+protected:
 	ImVec2 ScrollingPosition;
 	
 protected:
@@ -39,10 +42,6 @@ protected:
 
 protected:
 	std::list<std::unique_ptr<ADrawElement>> DrawElements;
-
-protected:
-	const char* ContextPopUpID = "CanvasContextMenu";
-	virtual void ShowContextMenu(const ImVec2& OriginPosition);
 
 protected:
 	void DrawCanvasRectangle(const float& GridStepSize);

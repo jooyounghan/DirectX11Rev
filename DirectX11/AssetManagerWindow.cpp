@@ -7,12 +7,14 @@
 
 #include "UIVariable.h"
 
-using namespace ImGui;
 using namespace std;
+using namespace ImGui;
 using namespace filesystem;
 
 AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
-	: AssetManagerCached(AssetManagerIn)
+	: AssetManagerCached(AssetManagerIn),
+    AddAssetFilePopupInstance(format("AddAssetFilePopupInstance{}", (uint64_t)this)),
+    CreateAssetFileModalInstance("Create Asset File", AssetManagerIn)
 {
     RootDirectory.Name = "Assets";
     RootDirectory.Directory = ".\\Assets\\";
@@ -30,6 +32,9 @@ AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
     OnAssetLeftMouseDBClicked = bind(&AssetManagerWindow::OpenItemSetting, this, placeholders::_1);
 
     OnAssetControlWindowClosed = bind(&AssetManagerWindow::AddCloseAssetControlWindowList, this, placeholders::_1);
+
+    OnCreateAsset = bind(&AssetManagerWindow::StartCreateAsset, this);
+    AddAssetFilePopupInstance.AssetCreated += OnCreateAsset;
 #pragma endregion 
 
     RefreshAssetDirectoriesFromRoot();
@@ -42,11 +47,9 @@ AssetManagerWindow::~AssetManagerWindow()
 void AssetManagerWindow::RenderWindow()
 {
 	Begin("Asset Manager");
-
     RenderAssetDirectories();
     SameLine();
     RenderAssetControls();
-
     End();
 
     RenderAssetControlWindows();
@@ -99,25 +102,34 @@ void AssetManagerWindow::RenderAssetDirectoriesHelper(DirectorySet& DirectorySet
 void AssetManagerWindow::RenderAssetControls()
 {
     ImVec2 RegionAvail = GetContentRegionAvail();
-    float MaxWidthForAssetControls = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-    ImGuiStyle& Style = ImGui::GetStyle();
 
-    BeginChild("Files", RegionAvail, ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
-
-    if (SelectedDirectory != nullptr)
+    if (RegionAvail.x > 0 && RegionAvail.y > 0)
     {
-        for (AssetControl& AssetControlInstance : SelectedDirectory->AssetControls)
+        ImVec2 CurrentCursorPos = GetCursorScreenPos();
+        AddAssetFilePopupInstance.PopUp(CurrentCursorPos, ImVec2(CurrentCursorPos.x + RegionAvail.x, CurrentCursorPos.y + RegionAvail.y));
+        CreateAssetFileModalInstance.DoModal();
+
+        float MaxWidthForAssetControls = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+        ImGuiStyle& Style = ImGui::GetStyle();
+
+        BeginChild("Files", RegionAvail, ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
+
+        if (SelectedDirectory != nullptr)
         {
-            AssetControlInstance.RenderControl();
+            for (AssetControl& AssetControlInstance : SelectedDirectory->AssetControls)
+            {
+                AssetControlInstance.RenderControl();
 
 
-            float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
-            float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
-            if (NextStartWidthPos < MaxWidthForAssetControls) ImGui::SameLine();
+                float LastFinishedWidthPos = ImGui::GetItemRectMax().x;
+                float NextStartWidthPos = LastFinishedWidthPos + Style.ItemSpacing.x + ImGui::GetItemRectSize().x;
+                if (NextStartWidthPos < MaxWidthForAssetControls) ImGui::SameLine();
+            }
         }
-    }
 
-    EndChild();
+        EndChild();
+
+    }
 }
 
 void AssetManagerWindow::RenderAssetControlWindows()
@@ -272,4 +284,9 @@ void AssetManagerWindow::CloseAssetControlWindow()
         );
     }
     CloseAssetControlWindowsList.clear();
+}
+
+void AssetManagerWindow::StartCreateAsset()
+{
+    CreateAssetFileModalInstance.SetModalFlag(true);
 }

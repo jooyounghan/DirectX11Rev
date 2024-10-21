@@ -13,5 +13,8 @@ public:
 protected:
 	AssetManager* AssetManagerCached = nullptr;
 	AAssetFile* AssetFileCached = nullptr;
+
+public:
+	virtual void RenderControl() override;
 };
 

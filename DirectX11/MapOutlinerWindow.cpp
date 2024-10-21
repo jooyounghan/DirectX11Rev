@@ -1,8 +1,5 @@
 #include "MapOutlinerWindow.h"
 
-#include "AddPlaceableObjectHelper.h"
-#include "AddAttachableObjectHelper.h"
-
 #include "EditorWorld.h"
 #include "GameWorld.h"
 #include "MapAsset.h"
@@ -13,20 +10,13 @@
 using namespace std;
 using namespace ImGui;
 
-const char* MapOutlinerWindow::AddMapButtonID = "Add Map +";
-const char* MapOutlinerWindow::AddPlaceableButtonID = "Add Placeable +";
-const char* MapOutlinerWindow::AddAttachableButtonID = "Add Attacheable +";
-
-const char* MapOutlinerWindow::DeleteMapModalID = "Delete Map";
-const char* MapOutlinerWindow::DeletePlaceableModalID = "Delete Placeable Object";
-const char* MapOutlinerWindow::DeleteAttachableModalID = "Delete Attachable Object";
-
-const char* MapOutlinerWindow::AddMapModalID = "Add Map";
-const char* MapOutlinerWindow::AddPlaceableModalID = "Add Placeable Object";
-const char* MapOutlinerWindow::AddAttachableModalID = "Add Attachable Object";
-
 MapOutlinerWindow::MapOutlinerWindow(EditorWorld* EditorWorldIn)
-	: EditorWorldCached(EditorWorldIn)
+	: 
+    EditorWorldCached(EditorWorldIn), 
+    AddAttachableModalInstance("Add Attachable Object", EditorWorldIn),
+    AddPlaceableModalInstance("Add Placeable Object", EditorWorldIn),
+    DeleteAttachableModalInstance("Delete Attachable Object", EditorWorldCached),
+    DeletePlaceableModalInstance("Delete Placeable Object", EditorWorldCached)
 {
     if (EditorWorldCached != nullptr)
     {
@@ -44,6 +34,11 @@ void MapOutlinerWindow::RenderWindow()
 
     CurrentMap = GameWorldCached->GetCurrentMap();
 
+    AddAttachableModalInstance.SetCurrentMapAssetCached(CurrentMap);
+    AddPlaceableModalInstance.SetCurrentMapAssetCached(CurrentMap);
+    DeleteAttachableModalInstance.SetCurrentMapAssetCached(CurrentMap);
+    DeletePlaceableModalInstance.SetCurrentMapAssetCached(CurrentMap);
+
     RenderMapAssetOverview();
     RenderPlaceablesOutline();
     RenderSelectedPlaceableOutline();
@@ -54,110 +49,28 @@ void MapOutlinerWindow::RenderWindow()
 void MapOutlinerWindow::RenderMapAssetOverview()
 {
     Text("Map Asset Overview");
-    SameLine();
-    DoModalAddNewMap();
-
     RenderMapInformation();
-    DoModalDeleteMap();
+
 }
 
 void MapOutlinerWindow::RenderPlaceablesOutline()
 {
     Text("Placed Object List:");
-    SameLine();
-    DoModalAddPlaceableObject();
+    AddPlaceableModalInstance.DoModal();
 
     RenderPlacedListBox();
-    DoModalDeletePlaceableObject();
+
+    DeletePlaceableModalInstance.DoModal();
 }
 
 void MapOutlinerWindow::RenderSelectedPlaceableOutline()
 {
     Text("Attached Object List:\t");
-    SameLine();
-    DoModalAddAttachableObject();
+    AddAttachableModalInstance.DoModal();
     
     RenderAttachedTree();
-    DoModalDeleteAttachableObject();
-}
 
-void MapOutlinerWindow::DoModalDeleteMap()
-{
-}
-
-void MapOutlinerWindow::DoModalDeletePlaceableObject()
-{
-    if (IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsWindowFocused())
-    {
-        OpenPopup(DeletePlaceableModalID);
-    }
-
-    SetWindowPosToCenter();
-    APlaceableObject* SelectedPlaceable = EditorWorldCached->GetSelectedPlaceable();
-    if (SelectedPlaceable != nullptr)
-    {
-        if (BeginPopupModal(DeletePlaceableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
-        {
-            Text("Are you sure for deleting %s ?", SelectedPlaceable->GetObjectName().c_str());
-            Separator();
-
-            if (Button("OK", ImVec2(120, 0))) 
-            { 
-                if (CurrentMap != nullptr)
-                {
-                    CurrentMap->PlaceableDeleteHelper(SelectedPlaceable);
-                    EditorWorldCached->SetSelectedPlaceable(nullptr);
-                }
-                CloseCurrentPopup(); 
-            }
-            SetItemDefaultFocus();
-            SameLine();
-            if (Button("Cancel", ImVec2(120, 0))) 
-            { 
-                CloseCurrentPopup(); 
-            }
-            EndPopup();
-        }
-    }
-    ResetWindowPosToPrevious();
-}
-
-void MapOutlinerWindow::DoModalDeleteAttachableObject()
-{
-    if (IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsWindowFocused())
-    {
-        OpenPopup(DeleteAttachableModalID);
-    }
-
-    SetWindowPosToCenter();
-    AAttachableObject* SelectedAttached = EditorWorldCached->GetSelectedAttached();
-    if (SelectedAttached != nullptr)
-    {
-        if (BeginPopupModal(DeleteAttachableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
-        {
-            Text("Are you sure for Deleting %s ?", SelectedAttached->GetObjectName().c_str());
-            Separator();
-
-            if (Button("OK", ImVec2(120, 0))) 
-            { 
-                APlaceableObject* SelectedPlaceableObject = EditorWorldCached->GetSelectedPlaceable();
-                if (SelectedPlaceableObject != nullptr)
-                {
-                    SelectedPlaceableObject->RemoveAttachedObject(SelectedAttached);
-                    EditorWorldCached->SetSelectedAttached(nullptr);
-                }
-                CloseCurrentPopup(); 
-            }
-            SetItemDefaultFocus();
-            SameLine();
-            if (Button("Cancel", ImVec2(120, 0))) 
-            { 
-                CloseCurrentPopup(); 
-            }
-            EndPopup();
-        }
-    }
-    ResetWindowPosToPrevious();
+    DeleteAttachableModalInstance.DoModal();
 }
 
 void MapOutlinerWindow::RenderMapInformation()
@@ -287,79 +200,3 @@ void MapOutlinerWindow::RenderAttachedOutline(AAttachableObject* Attachment)
         TreePop();
     }
 }
-
-void MapOutlinerWindow::SetWindowPosToCenter()
-{
-    PreviousWindowPos = GetWindowPos();
-    ImVec2 Center = GetMainViewport()->GetCenter();
-    SetWindowPos(Center, ImGuiCond_Appearing);
-}
-
-void MapOutlinerWindow::ResetWindowPosToPrevious()
-{
-    SetWindowPos(PreviousWindowPos, ImGuiCond_Appearing);
-}
-
-void MapOutlinerWindow::DoModalAddNewMap()
-{
-    float ButtonWidth = CalcTextSize(AddMapButtonID).x;
-    SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
-    if (SmallButton(AddMapButtonID))
-    {
-        OpenPopup(AddMapModalID);
-    }
-
-    SetWindowPosToCenter();
-    if (BeginPopupModal(AddMapModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
-    {
-        static char MapNameBuffer[128] = "";
-        ImGui::InputTextWithHint("Map Name", "Enter New Map Name Here", MapNameBuffer, IM_ARRAYSIZE(MapNameBuffer));
-
-        if (Button("OK", ImVec2(120, 0))) { /* Create Map */ CloseCurrentPopup(); }
-        SetItemDefaultFocus();
-        SameLine();
-        if (Button("Cancel", ImVec2(120, 0))) { CloseCurrentPopup(); }
-        EndPopup();
-    }
-    ResetWindowPosToPrevious();
-}
-
-void MapOutlinerWindow::DoModalAddPlaceableObject()
-{
-    float ButtonWidth = CalcTextSize(AddPlaceableButtonID).x;
-    SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
-    if (SmallButton(AddPlaceableButtonID))
-    {
-        OpenPopup(AddPlaceableModalID);
-    }
-
-    SetWindowPosToCenter();
-    if (BeginPopupModal(AddPlaceableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
-    {
-        AddPlaceableObjectDrawer PlaceableAddPopupDrawer(EditorWorldCached, CurrentMap);
-        PlaceableAddPopupDrawer.DrawAddObjectPopup();
-        EndPopup();
-    }
-    ResetWindowPosToPrevious();
-}
-
-void MapOutlinerWindow::DoModalAddAttachableObject()
-{
-    float ButtonWidth = CalcTextSize(AddAttachableButtonID).x;
-    SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
-    if (SmallButton(AddAttachableButtonID))
-    {
-        OpenPopup(AddAttachableModalID);
-    }
-
-    SetWindowPosToCenter();
-    if (BeginPopupModal(AddAttachableModalID, NULL, ImGuiWindowFlags_AlwaysAutoResize))
-    {
-        AddAttachableObjectDrawer AttachableAddPopupDrawer(EditorWorldCached, CurrentMap);
-        AttachableAddPopupDrawer.DrawAddObjectPopup();
-        EndPopup();
-    }
-    ResetWindowPosToPrevious();
-}
-
-

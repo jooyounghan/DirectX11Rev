@@ -1,5 +1,6 @@
 #pragma once
 #include "AAssetNodeCanvas.h"
+#include "AddBaseTexturePopup.h"
 
 class BaseTextureAsset;
 class MaterialAsset;
@@ -17,6 +18,9 @@ protected:
 	MaterialAsset* MaterialAssetCached = nullptr;
 
 protected:
+	AddBaseTexturePopup AddBaseTexturePopupInstance;
+
+protected:
 	const float& NodeOffset = 25.f;
 	const float& BaseTextureNodeWidth = 300.f;
 	const float& BaseTextureNodeHeight = 100.f;
@@ -27,12 +31,15 @@ protected:
 	const float& MaterialNodeWidth = 200.f;
 	const float& MaterialNodeHeight = 400.f;
 
-protected:
-	virtual void ShowContextMenu(const ImVec2& OriginPosition) override;
+public:
+	virtual void RenderControl() override;
 
 private:
 	BaseTextureInputNode* AddBaseTextureInputNodeHelper(float& NodeHeightPos, const std::shared_ptr<BaseTextureAsset>& BaseTextureAssetIn);
 	BaseTextureInputNode* AddBaseTextureInputNodeHelper(const ImVec2& NodePos, const std::shared_ptr<BaseTextureAsset>& BaseTextureAssetIn);
 	void ConnectBaseTextureToMaterial(BaseTextureInputNode* BaseTextureInputNodeIn, AssetVariableInputPort* MaterialTextureInputNodeIn);
+	
+	BaseTextureAddedHandler OnBaseTextureAdded;
+	void AddBaseTextureNode();
 };
 

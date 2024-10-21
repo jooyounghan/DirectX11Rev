@@ -34,6 +34,8 @@ enum class EAssetType
 	NumAssetType
 };
 
+
+
 constexpr const char* AssetOutPath = ".\\Assets\\";
 constexpr const char* AssetExtension = ".Asset";
 

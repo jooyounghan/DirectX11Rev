@@ -12,3 +12,8 @@ AAssetNodeCanvas::AAssetNodeCanvas(
 AAssetNodeCanvas::~AAssetNodeCanvas()
 {
 }
+
+void AAssetNodeCanvas::RenderControl()
+{
+	ANodeCanvas::RenderControl();
+}

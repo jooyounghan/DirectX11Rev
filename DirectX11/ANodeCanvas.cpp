@@ -35,24 +35,24 @@ void ANodeCanvas::RenderControl()
     DrawCanvasRectangle(32.f);
 
     ImGui::SetNextItemAllowOverlap();
-    InvisibleButton("NodeCanvas", CanvasSize, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
-    if (IsItemActive() && IsMouseDragging(ImGuiMouseButton_Right))
+    if (IsMouseHoveringRect(LeftTopPositon, RightBottomPosition))
     {
-        ScrollingPosition.x += io.MouseDelta.x;
-        ScrollingPosition.y += io.MouseDelta.y;
+        if (IsMouseDragging(ImGuiMouseButton_Middle))
+        {
+            ScrollingPosition.x += io.MouseDelta.x;
+            ScrollingPosition.y += io.MouseDelta.y;
+        }
     }
 
     ImDrawList* DrawList = GetWindowDrawList();
-    const ImVec2 Origin(LeftTopPositon.x + ScrollingPosition.x, LeftTopPositon.y + ScrollingPosition.y);
-    const ImVec2 CanvasMousePos(io.MousePos.x - Origin.x, io.MousePos.y - Origin.y);
-
-    ShowContextMenu(Origin);
+    OriginPosition = ImVec2(LeftTopPositon.x + ScrollingPosition.x, LeftTopPositon.y + ScrollingPosition.y);
+    const ImVec2 CanvasMousePos(io.MousePos.x - OriginPosition.x, io.MousePos.y - OriginPosition.y);
 
     ResetStatus();
 
     for (unique_ptr<ADrawElement>& DrawElement : DrawElements)
     {
-        DrawElement->AddToDrawList(Origin, DrawList);
+        DrawElement->AddToDrawList(OriginPosition, DrawList);
     }
 
     if (!bIsNodeSelectedOnTick && IsMouseClicked(ImGuiMouseButton_::ImGuiMouseButton_Left))
@@ -77,18 +77,9 @@ void ANodeCanvas::RenderControl()
     if (SelectedOutputPort== nullptr && SelectedNodeElement != nullptr && IsMouseDragging(ImGuiMouseButton_::ImGuiMouseButton_Left))
     {
         SelectedNodeElement->SetPosition(CanvasMousePos);
-    }
- 
+    } 
 }
 
-void ANodeCanvas::ShowContextMenu(const ImVec2& OriginPosition)
-{
-    ImVec2 DragDelta = GetMouseDragDelta(ImGuiMouseButton_Right);
-    if (DragDelta.x == 0.0f && DragDelta.y == 0.0f)
-    {
-        OpenPopupOnItemClick(ContextPopUpID, ImGuiPopupFlags_MouseButtonRight);
-    }
-}
 
 void ANodeCanvas::DrawCanvasRectangle(const float& GridStepSize)
 {

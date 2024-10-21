@@ -1,13 +1,14 @@
 #pragma once
 #include "AWindow.h"
+#include "AddAttachableModal.h"
+#include "AddPlaceableModal.h"
+#include "DeleteAttachableModal.h"
+#include "DeletePlaceableModal.h"
 
 class EditorWorld;
 class GameWorld;
-
 class MapAsset;
 
-class AObject;
-class APlaceableObject;
 class AAttachableObject;
 
 class MapOutlinerWindow : public AWindow
@@ -24,6 +25,12 @@ private:
 	GameWorld* GameWorldCached = nullptr;
 	MapAsset* CurrentMap = nullptr;
 
+protected:
+	AddAttachableModal AddAttachableModalInstance;
+	AddPlaceableModal AddPlaceableModalInstance;
+	DeleteAttachableModal DeleteAttachableModalInstance;
+	DeletePlaceableModal DeletePlaceableModalInstance;
+
 private:
 	ImVec2 RegionAvail = ImVec2();
 
@@ -33,21 +40,12 @@ private:
 	void RenderSelectedPlaceableOutline();
 
 private:
-	void DoModalDeleteMap();
-	void DoModalDeletePlaceableObject();
-	void DoModalDeleteAttachableObject();
-
-private:
 	void RenderMapInformation();
 	void RenderPlacedListBox();
 	void RenderAttachedTree();
 
 private:
 	void RenderAttachedOutline(AAttachableObject* Attachment);
-
-private:
-	void SetWindowPosToCenter();
-	void ResetWindowPosToPrevious();
 
 private:
 	ImVec2 PreviousWindowPos = ImVec2();
@@ -66,11 +64,6 @@ private:
 	static const char* AddMapModalID;
 	static const char* AddPlaceableModalID;
 	static const char* AddAttachableModalID;
-
-private:
-	void DoModalAddNewMap();
-	void DoModalAddPlaceableObject();
-	void DoModalAddAttachableObject();
 
 };
 

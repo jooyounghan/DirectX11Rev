@@ -7,13 +7,15 @@
 #include "AssetVariableInputPort.h"
 #include "BaseTextureOutputPort.h"
 
+
 using namespace std;
 using namespace ImGui;
 
 
 MaterialAssetNodeCanvas::MaterialAssetNodeCanvas(AssetManager* AssetMangerIn, AAssetFile* AssetFileIn)
     : AAssetNodeCanvas(AssetMangerIn, AssetFileIn, ImVec2(700.f, 1200.f)), MaterialAssetCached(dynamic_cast<MaterialAsset*>(AssetFileIn)),
-    BaseTextureNodeXPos(BaseTextureNodeWidth / 2.f + NodeOffset)
+    BaseTextureNodeXPos(BaseTextureNodeWidth / 2.f + NodeOffset),
+    AddBaseTexturePopupInstance(format("AddBaseTextureForMaterial{}", (uint64_t)this))
 {
     float NodeHeightInitialPosY = BaseTextureNodeHeight / 2.f + NodeOffset;
     LastInsertedNodePosY = NodeHeightInitialPosY;
@@ -53,25 +55,19 @@ MaterialAssetNodeCanvas::MaterialAssetNodeCanvas(AssetManager* AssetMangerIn, AA
     ConnectBaseTextureToMaterial(NormalInputNode, MaterialAssetOutputNode->GetNormalTexturePort());
     ConnectBaseTextureToMaterial(HeightInputNode, MaterialAssetOutputNode->GetHeightTexturePort());
     ConnectBaseTextureToMaterial(EmissiveInputNode, MaterialAssetOutputNode->GetEmissiveTexturePort());
+
+    OnBaseTextureAdded = bind(&MaterialAssetNodeCanvas::AddBaseTextureNode, this);
+    AddBaseTexturePopupInstance.BaseTextureAdded += OnBaseTextureAdded;
 }
 
 MaterialAssetNodeCanvas::~MaterialAssetNodeCanvas()
 {
 }
 
-void MaterialAssetNodeCanvas::ShowContextMenu(const ImVec2& OriginPosition)
+void MaterialAssetNodeCanvas::RenderControl()
 {
-    ANodeCanvas::ShowContextMenu(OriginPosition);
-    if (BeginPopup(ContextPopUpID))
-    {
-        if (MenuItem("Add BaseTexture Asset", NULL, false, true)) 
-        { 
-            const ImVec2 MousePos = GetMousePos();
-            const ImVec2 CanvasPos = ImVec2(MousePos.x - OriginPosition.x, MousePos.y - OriginPosition.y);
-            AddBaseTextureInputNodeHelper(CanvasPos, nullptr);
-        }
-        EndPopup();
-    }
+    AAssetNodeCanvas::RenderControl();
+    AddBaseTexturePopupInstance.PopUp(LeftTopPositon, RightBottomPosition);
 }
 
 BaseTextureInputNode* MaterialAssetNodeCanvas::AddBaseTextureInputNodeHelper(float& NodeHeightPos, const shared_ptr<BaseTextureAsset>& BaseTextureAssetIn)
@@ -98,4 +94,12 @@ void MaterialAssetNodeCanvas::ConnectBaseTextureToMaterial(BaseTextureInputNode*
             BaseTextureOutputPortCached->Connect(MaterialTextureInputNodeIn);
         }
     }
+}
+
+void MaterialAssetNodeCanvas::AddBaseTextureNode()
+{
+    const ImVec2 MousePos = GetMousePos();
+    const ImVec2 CanvasPos = ImVec2(MousePos.x - OriginPosition.x, MousePos.y - OriginPosition.y);
+    AddBaseTextureInputNodeHelper(CanvasPos, nullptr);
+
 }

@@ -1,24 +1,36 @@
-#include "AddPlaceableObjectHelper.h"
+#include "AddPlaceableModal.h"
 
-#include "EditorWorld.h"
+#include "EnvironmentActor.h"
+#include "SkeletalMeshObjectActor.h"
+#include "StaticMeshObjectActor.h"
+
 #include "MapAsset.h"
 
-// Add Placeables
-#include "EnvironmentActor.h"
-#include "StaticMeshObjectActor.h"
-#include "SkeletalMeshObjectActor.h"
-
+using namespace std;
 using namespace ImGui;
 
-AddPlaceableObjectDrawer::AddPlaceableObjectDrawer(
-    EditorWorld* EditorWorldIn, 
-    MapAsset* CurrentMap
+AddPlaceableModal::AddPlaceableModal(
+    const string& ModalHeaderNameIn,
+    EditorWorld* EditorWorldIn
 )
-    : AAddObjectHelper(EditorWorldIn, CurrentMap)
+    : AObjectManageModal(ModalHeaderNameIn, EditorWorldIn)
 {
 }
 
-void AddPlaceableObjectDrawer::DrawAddObjectPopup()
+AddPlaceableModal::~AddPlaceableModal()
+{
+}
+
+bool AddPlaceableModal::ModalCondition()
+{
+    SameLine();
+	const char* SmallButtonText = "Add Placeable +";
+	float ButtonWidth = CalcTextSize(SmallButtonText).x;
+	SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
+	return SmallButton(SmallButtonText);
+}
+
+void AddPlaceableModal::RenderModal()
 {
     const char* ItemIdentifiers[] = {
         StaticMeshObjectActor::StaticMeshObjectActorIdentifier,
@@ -38,17 +50,17 @@ void AddPlaceableObjectDrawer::DrawAddObjectPopup()
         {
         case EPlaceableObjectKind::STATIC_MESH_ACTOR_KIND:
         {
-            CurrentMapCached->PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
+            CurrentMapAssetCached->PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
             break;
         }
         case EPlaceableObjectKind::SKELETAL_MESH_ACTOR_KIND:
         {
-            CurrentMapCached->PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
+            CurrentMapAssetCached->PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
             break;
         }
         case EPlaceableObjectKind::ENVIORNMENT_ACTOR_KIND:
         {
-            CurrentMapCached->PlaceableAddHelper<EnvironmentActor>();
+            CurrentMapAssetCached->PlaceableAddHelper<EnvironmentActor>();
             break;
         }
         }

@@ -3,6 +3,9 @@
 #include "AssetManager.h"
 #include "AssetControl.h"
 
+#include "AddAssetFilePopup.h"
+#include "CreateAssetFileModal.h"
+
 struct DirectorySet
 {
 	std::string Name;
@@ -23,6 +26,9 @@ private:
 public:
 	virtual void RenderWindow() override;
 
+private:
+	AddAssetFilePopup AddAssetFilePopupInstance;
+	CreateAssetFileModal CreateAssetFileModalInstance;
 
 private:
 	DirectorySet RootDirectory;
@@ -80,5 +86,9 @@ private:
 	std::vector<AWindow*> CloseAssetControlWindowsList;
 	void AddCloseAssetControlWindowList(AWindow* AssetControlWindowIn);
 	void CloseAssetControlWindow();
+
+private:
+	AssetCreatedHandler OnCreateAsset;
+	void StartCreateAsset();
 };
 
