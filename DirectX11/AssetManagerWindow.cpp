@@ -25,8 +25,8 @@ AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
 
     OnAssetControlBeginDragDrop = bind(&AssetManagerWindow::SetAssetControlDragDrop, this, placeholders::_1);
 
-    OnAssetControlPushHilightStyle = bind(&AssetManagerWindow::HilightItem, this, placeholders::_1);
-    OnAssetControlPopHilightStyle = bind(&AssetManagerWindow::UnhilightItem, this, placeholders::_1);
+    OnAssetControlPushHilightStyle = bind(&AssetManagerWindow::StartHilightItem, this, placeholders::_1);
+    OnAssetControlPopHilightStyle = bind(&AssetManagerWindow::EndHilightItem, this, placeholders::_1);
 
     OnAssetLeftMouseClicked = bind(&AssetManagerWindow::FocusItem, this, placeholders::_1);
     OnAssetLeftMouseDBClicked = bind(&AssetManagerWindow::OpenItemSetting, this, placeholders::_1);
@@ -189,8 +189,8 @@ void AssetManagerWindow::BuildAssetDirectories(DirectorySet& DirectorySetIn)
 
                 CurrentEmplacedControl.BeginDragDropEvent += OnAssetControlBeginDragDrop;
 
-                CurrentEmplacedControl.HilightedEvent += OnAssetControlPushHilightStyle;
-                CurrentEmplacedControl.UnhilightedEvent+= OnAssetControlPopHilightStyle;
+                CurrentEmplacedControl.StartHilightedEvent += OnAssetControlPushHilightStyle;
+                CurrentEmplacedControl.EndHilightedEvent+= OnAssetControlPopHilightStyle;
 
                 CurrentEmplacedControl.LeftMouseClickedEvent += OnAssetLeftMouseClicked;
                 CurrentEmplacedControl.LeftMouseDBClickedEvent+= OnAssetLeftMouseDBClicked;
@@ -208,7 +208,7 @@ void AssetManagerWindow::SetAssetControlDragDrop(AAssetFile* AssetFileCached)
     ImGui::EndDragDropSource();
 }
 
-void AssetManagerWindow::HilightItem(AssetControl* AssetControlCached)
+void AssetManagerWindow::StartHilightItem(AssetControl* AssetControlCached)
 {
     const float YMargin = 5;
     AAssetFile* AssetFileCached = AssetControlCached->GetAssetFileCached();
@@ -222,7 +222,7 @@ void AssetManagerWindow::HilightItem(AssetControl* AssetControlCached)
     ImGui::BeginChild("Hilighted Asset Control", childSize, NULL, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar);
 }
 
-void AssetManagerWindow::UnhilightItem(AssetControl* AssetControlCached)
+void AssetManagerWindow::EndHilightItem(AssetControl* AssetControlCached)
 {
     ImGui::EndChild();
     ImGui::PopStyleColor();

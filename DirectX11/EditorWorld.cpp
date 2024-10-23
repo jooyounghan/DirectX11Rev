@@ -37,7 +37,6 @@ EditorWorld::EditorWorld(GameWorld* GameWorldIn, HWND WindowHandle)
 
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
     ImGui_ImplWin32_Init(WindowHandle);
     ImGui_ImplDX11_Init(

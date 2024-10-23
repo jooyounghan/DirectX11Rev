@@ -47,7 +47,12 @@ inline void AssetControlWindow<T, Args...>::RenderWindow()
 {
 	ImGui::SetNextWindowSizeConstraints(NodeCanvasInstance->GetCanvasSize(), ImVec2(FLT_MAX, FLT_MAX));
 
-	ImGui::Begin(WindowDescription.c_str(), &bIsOpen, ImGuiWindowFlags_::ImGuiWindowFlags_NoSavedSettings);
+	ImGui::Begin(
+		WindowDescription.c_str(), &bIsOpen,
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoSavedSettings
+	);
+
+
 	NodeCanvasInstance->RenderControl();
 	ImGui::End();
 

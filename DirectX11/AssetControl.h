@@ -24,8 +24,8 @@ public:
 	Delegation<AAssetFile*>		BeginDragDropEvent;
 
 public:
-	Delegation<AssetControl*>		HilightedEvent;
-	Delegation<AssetControl*>		UnhilightedEvent;
+	Delegation<AssetControl*>		StartHilightedEvent;
+	Delegation<AssetControl*>		EndHilightedEvent;
 
 public:
 	Delegation<AssetControl*>	LeftMouseClickedEvent;

@@ -75,8 +75,8 @@ private:
 	void SetAssetControlDragDrop(AAssetFile* AssetFileCached);
 
 private:
-	void HilightItem(AssetControl* AssetControlCached);
-	void UnhilightItem(AssetControl* AssetControlCached);
+	void StartHilightItem(AssetControl* AssetControlCached);
+	void EndHilightItem(AssetControl* AssetControlCached);
 
 private:
 	void FocusItem(AssetControl* AssetControlCached);

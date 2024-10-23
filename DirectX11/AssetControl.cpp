@@ -23,13 +23,13 @@ void AssetControl::RenderControl()
         EAssetType AssetType = AssetFileCached->GetAssetType();
 
         ImGui::PushID(AssetName.c_str());
-        ImGui::BeginGroup();
 
         if (bIsMouseHovering || bIsFocused)
         {
-            HilightedEvent.Invoke(this);
+            StartHilightedEvent.Invoke(this);
         }
 
+        ImGui::BeginGroup();
         switch (AssetType)
         {
         case EAssetType::BaseTexture:
@@ -59,22 +59,22 @@ void AssetControl::RenderControl()
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + UISize::FileSize.x);
         ImGui::Text(AssetName.c_str());
         ImGui::PopTextWrapPos();
+        ImGui::EndGroup();
+
+        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceAllowNullID))
+        {
+            BeginDragDropEvent.Invoke(AssetFileCached);
+        }
 
         if (bIsMouseHovering || bIsFocused)
         {
-            UnhilightedEvent.Invoke(this);
+            EndHilightedEvent.Invoke(this);
         }
 
-        ImGui::EndGroup();
         ImGui::PopID();
-
 
         if (IsMouseHoveringRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax()))
         {
-            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceAllowNullID))
-            {
-                BeginDragDropEvent.Invoke(AssetFileCached);
-            }
 
             bIsMouseHovering = true;
 
