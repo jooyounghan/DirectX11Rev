@@ -10,12 +10,12 @@ public:
 	StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn);
 	virtual ~StaticMeshObject();
 
+public:
+	static std::string StaticMeshObjectKind;
+
 protected:
 	std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstance = nullptr;
 	MakeSmartPtrSetterGetter(StaticMeshAssetInstance);
-
-public:
-	static const char* StaticMeshObjectIdentifier;
 
 public:
 	virtual AMeshAsset* GetMeshAssetInstance() override;

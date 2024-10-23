@@ -15,10 +15,10 @@
 using namespace std;
 using namespace DirectX;
 
-const char* OBBObject::BoundingOBBIdentifier = "Bounding OBB";
+string OBBObject::BoundingOBBKind = "Bounding OBB";
 
 OBBObject::OBBObject(MapAsset* MapAssetInstance)
-	: ABoundingObject(MapAssetInstance)
+	: ABoundingObject(MapAssetInstance, OBBObject::BoundingOBBKind)
 {
 	InitOBB(App::GGraphicPipeline->GetDevice());
 
@@ -33,7 +33,7 @@ OBBObject::OBBObject(
 	const float& HalfYIn,
 	const float& HalfZIn
 )
-	: ABoundingObject(MapAssetInstance)
+	: ABoundingObject(MapAssetInstance, OBBObject::BoundingOBBKind)
 {
 	InitOBB(App::GGraphicPipeline->GetDevice());
 	DescaledExtents.x = HalfXIn;
@@ -50,8 +50,7 @@ void OBBObject::InitOBB(ID3D11Device* DeviceIn)
 	static size_t BoundingOBBCount = 0;
 	BoundingOBBCount++;
 
-	ObjectName = BoundingOBBIdentifier + to_string(BoundingOBBCount);
-	AttachableKind = EAttachableObjectKind::OBB_KIND;
+	ObjectName = OBBObject::BoundingOBBKind + to_string(BoundingOBBCount);
 
 	DebugObject = OBBDebugObject.get();
 }

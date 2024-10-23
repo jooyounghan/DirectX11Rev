@@ -1,14 +1,14 @@
 #pragma once
-#include "Camera.h"
+#include "ACamera.h"
 
-class HDRCamera : public Camera
+class HDRCamera : public ACamera
 {
 public:
 	HDRCamera(MapAsset* MapAssetInstance, const UINT& WidthIn, const UINT& HeightIn);
-	virtual ~HDRCamera();;
+	virtual ~HDRCamera();
 
 public:
-	static const char* HDRCameraIdentifier;
+	static std::string HDRCameraKind;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				HDRSceneTexture2D;

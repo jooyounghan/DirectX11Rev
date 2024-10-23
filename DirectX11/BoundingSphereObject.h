@@ -10,11 +10,11 @@ public:
 	BoundingSphereObject(MapAsset* MapAssetInstance, const float& RadiusIn);
 	virtual ~BoundingSphereObject();
 
+public:
+	static std::string BoundingSphereKind;
+
 private:
 	void InitBoundingSphere(ID3D11Device* DeviceIn);
-
-public:
-	static const char* BoundingSphereIdentifier;
 
 private:
 	static std::shared_ptr<Debugable> CreateDebugSphereObject(ID3D11Device* DeviceIn);

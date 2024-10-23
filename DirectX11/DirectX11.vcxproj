@@ -190,7 +190,7 @@
     <ClCompile Include="BoundingOBBInformationDrawer.cpp" />
     <ClCompile Include="BoundingSphereObject.cpp" />
     <ClCompile Include="BoundingSphereInformationDrawer.cpp" />
-    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ACamera.cpp" />
     <ClCompile Include="BoneAsset.cpp" />
     <ClCompile Include="CollisionVisitor.cpp" />
     <ClCompile Include="Debugable.cpp" />
@@ -221,6 +221,7 @@
     <ClCompile Include="ANodeCanvas.cpp" />
     <ClCompile Include="AOutputPort.cpp" />
     <ClCompile Include="RectangleDrawElement.cpp" />
+    <ClCompile Include="SDRCamera.cpp" />
     <ClCompile Include="SkeletalMeshObjectActor.cpp" />
     <ClCompile Include="SkeletalMeshObjetPSO.cpp" />
     <ClCompile Include="StaticMeshObjectActor.cpp" />
@@ -309,7 +310,7 @@
     <ClInclude Include="BoundingOBBInformationDrawer.h" />
     <ClInclude Include="BoundingSphereObject.h" />
     <ClInclude Include="BoundingSphereInformationDrawer.h" />
-    <ClInclude Include="Camera.h" />
+    <ClInclude Include="ACamera.h" />
     <ClInclude Include="BoneAsset.h" />
     <ClInclude Include="CollisionVisitor.h" />
     <ClInclude Include="ConstantArrayBuffer.h" />
@@ -348,6 +349,7 @@
     <ClInclude Include="ANodeCanvas.h" />
     <ClInclude Include="AOutputPort.h" />
     <ClInclude Include="RectangleDrawElement.h" />
+    <ClInclude Include="SDRCamera.h" />
     <ClInclude Include="SkeletalMeshObjectActor.h" />
     <ClInclude Include="SkeletalMeshObjetPSO.h" />
     <ClInclude Include="StaticMeshObjectActor.h" />

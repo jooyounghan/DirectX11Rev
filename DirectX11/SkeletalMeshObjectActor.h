@@ -12,7 +12,7 @@ public:
 	~SkeletalMeshObjectActor();
 
 public:
-	static const char* SkeletalMeshObjectActorIdentifier;
+	static std::string SkeletalMeshObjectActorKind;
 
 protected:
 	std::unique_ptr<SkeletalMeshObject> SkeletalMeshObjectInstance;

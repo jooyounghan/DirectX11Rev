@@ -7,6 +7,9 @@ public:
 	AddPlaceableModal(const std::string& ModalHeaderNameIn, EditorWorld* EditorWorldIn);
 	virtual ~AddPlaceableModal();
 
+private:
+	static const char* PlaceableItemIdentifiers[];
+
 protected:
 	virtual bool ModalCondition() override;
 	virtual void RenderModal() override;

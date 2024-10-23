@@ -18,11 +18,12 @@ public:
 	);
 	virtual ~OBBObject();
 
+public:
+	static std::string BoundingOBBKind;
+
 private:
 	void InitOBB(ID3D11Device* DeviceIn);
 
-public:
-	static const char* BoundingOBBIdentifier;
 
 public:
 	DirectX::XMFLOAT3 DescaledExtents;

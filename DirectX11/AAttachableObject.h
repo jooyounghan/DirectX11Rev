@@ -8,26 +8,18 @@
 
 class APlaceableObject;
 
-enum EAttachableObjectKind : int
-{
-	ATTACHABLE_NONE,
-	STATIC_MESH_KIND,
-	SKELETAL_MESH_KIND,
-	BOUNDING_SPHERE_KIND,
-	OBB_KIND,
-	SDR_CAMERA_KIND,
-	HDR_CAMERA_KIND
-};
-
 class AAttachableObject : public AObject
 {
 public:
-	AAttachableObject(MapAsset* MapAssetInstance);
+	AAttachableObject(
+		MapAsset* MapAssetInstance, 
+		const std::string& AttachableKindIn
+	);
 	virtual~AAttachableObject();
 
 protected:
-	EAttachableObjectKind AttachableKind = EAttachableObjectKind::ATTACHABLE_NONE;
-	MakeSetterGetter(AttachableKind);
+	std::string AttachableKind;
+	MakeGetter(AttachableKind);
 
 protected:
 	AObject* ParentObject = nullptr;

@@ -3,7 +3,7 @@
 
 class EditorWorld;
 class EditorPawn;
-class Camera; 
+class ACamera; 
 
 class GameWorld;
 class AssetManager;
@@ -25,7 +25,7 @@ private:
 	MapAsset* CurrentMap = nullptr;
 
 private:
-	Camera* CameraCached = nullptr;
+	ACamera* CameraCached = nullptr;
 
 private:
 	ImVec2 ImagePosition = ImVec2();

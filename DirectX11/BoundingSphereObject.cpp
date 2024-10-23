@@ -14,16 +14,16 @@
 using namespace std;
 using namespace DirectX;
 
-const char* BoundingSphereObject::BoundingSphereIdentifier = "Bounding Sphere";
+string BoundingSphereObject::BoundingSphereKind = "Bounding Sphere";
 
 BoundingSphereObject::BoundingSphereObject(MapAsset* MapAssetInstance)
-	: ABoundingObject(MapAssetInstance), DescaledRadius(100.f)
+	: ABoundingObject(MapAssetInstance, BoundingSphereObject::BoundingSphereKind), DescaledRadius(100.f)
 {
 	InitBoundingSphere(App::GGraphicPipeline->GetDevice());
 }
 
 BoundingSphereObject::BoundingSphereObject(MapAsset* MapAssetInstance, const float& RadiusIn)
-	: ABoundingObject(MapAssetInstance), DescaledRadius(RadiusIn)
+	: ABoundingObject(MapAssetInstance, BoundingSphereObject::BoundingSphereKind), DescaledRadius(RadiusIn)
 {
 	InitBoundingSphere(App::GGraphicPipeline->GetDevice());
 }
@@ -39,8 +39,7 @@ void BoundingSphereObject::InitBoundingSphere(ID3D11Device* DeviceIn)
 
 	static size_t BoundingSphereCount = 0;
 	BoundingSphereCount++;
-	ObjectName = BoundingSphereIdentifier + to_string(BoundingSphereCount);
-	AttachableKind = EAttachableObjectKind::BOUNDING_SPHERE_KIND;
+	ObjectName = BoundingSphereObject::BoundingSphereKind + to_string(BoundingSphereCount);
 
 	AutoZeroMemory(Center);
 

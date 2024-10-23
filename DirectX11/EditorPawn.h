@@ -3,7 +3,7 @@
 #include "HeaderHelper.h"
 #include "imgui.h"
 
-class Camera;
+class ACamera;
 
 class EditorPawn : public APawn
 {
@@ -11,8 +11,11 @@ public:
 	EditorPawn(MapAsset* MapAssetInstance);
 	virtual ~EditorPawn();
 
+public:
+	static std::string EditorPawnKind;
+
 protected:
-	std::unique_ptr<Camera> CameraInstance = nullptr;
+	std::unique_ptr<ACamera> CameraInstance = nullptr;
 	MakeSmartPtrGetter(CameraInstance);
 
 public:

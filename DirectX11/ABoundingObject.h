@@ -10,7 +10,10 @@ class PSOObject;
 class ABoundingObject : public IIntersectable, public AAttachableObject
 {	
 public:
-	ABoundingObject(MapAsset* MapAssetInstance);
+	ABoundingObject(
+		MapAsset* MapAssetInstance,
+		const std::string& AttachableKindIn
+	);
 	virtual ~ABoundingObject();
 
 protected:

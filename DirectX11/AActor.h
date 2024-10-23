@@ -7,7 +7,10 @@ class AMeshAsset;
 class AActor : public APlaceableObject
 {
 public:
-	AActor(MapAsset* MapAssetInstance) : APlaceableObject(MapAssetInstance) {};
+	AActor(
+		MapAsset* MapAssetInstance, 
+		const std::string& PlaceableKindIn
+	) : APlaceableObject(MapAssetInstance, PlaceableKindIn) {};
 	virtual ~AActor() {};
 
 public:

@@ -513,7 +513,7 @@
     <ClCompile Include="Viewable.cpp">
       <Filter>소스 파일\Object\View</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="ACamera.cpp">
       <Filter>소스 파일\Object\View</Filter>
     </ClCompile>
     <ClCompile Include="IDColor.cpp">
@@ -792,6 +792,9 @@
     <ClCompile Include="CreateAssetFileModal.cpp">
       <Filter>소스 파일\Editor\GUI\Modal\Extended\AssetFileModal</Filter>
     </ClCompile>
+    <ClCompile Include="SDRCamera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
@@ -905,7 +908,7 @@
     <ClInclude Include="Viewable.h">
       <Filter>헤더 파일\Object\Attachable\View</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="ACamera.h">
       <Filter>헤더 파일\Object\Attachable\View</Filter>
     </ClInclude>
     <ClInclude Include="IGuiModelVisitor.h">
@@ -1234,6 +1237,9 @@
     </ClInclude>
     <ClInclude Include="CreateAssetFileModal.h">
       <Filter>헤더 파일\Editor\GUI\Modal\Extended\AssetFile</Filter>
+    </ClInclude>
+    <ClInclude Include="SDRCamera.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

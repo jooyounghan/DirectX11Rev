@@ -8,7 +8,7 @@
 #include "AAssetFile.h"
 
 #include "EditorPawn.h"
-#include "Camera.h"
+#include "ACamera.h"
 
 #include "UIVariable.h"
 

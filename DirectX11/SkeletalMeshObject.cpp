@@ -10,23 +10,22 @@
 #include "PSOObject.h"
 
 #include "MapAsset.h"
-#include "Camera.h"
+#include "ACamera.h"
 
 #include "EnvironmentActor.h"
 
 
 using namespace std;
 
-const char* SkeletalMeshObject::SkeletalMeshObjectIdentifier = "Skeletal Mesh Object";
+string SkeletalMeshObject::SkeletalMeshObjectKind = "Skeletal Mesh Object";
 
 SkeletalMeshObject::SkeletalMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstanceIn)
-	: AMeshObject(MapAssetInstance), SkeletalMeshAssetInstance(SkeletalMeshAssetInstanceIn)
+	: AMeshObject(MapAssetInstance, SkeletalMeshObject::SkeletalMeshObjectKind), SkeletalMeshAssetInstance(SkeletalMeshAssetInstanceIn)
 {
 	static size_t SkeletalMeshObjectCount = 0;
 
 	SkeletalMeshObjectCount++;
-	ObjectName = SkeletalMeshObjectIdentifier + to_string(SkeletalMeshObjectCount);
-	AttachableKind = EAttachableObjectKind::SKELETAL_MESH_KIND;
+	ObjectName = SkeletalMeshObject::SkeletalMeshObjectKind + to_string(SkeletalMeshObjectCount);
 
 	MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_Solid);
 	PickingIDSolidPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_ID_Solid);

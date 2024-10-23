@@ -1,7 +1,12 @@
 #include "APawn.h"
 #include "AController.h"
 
-APawn::APawn(MapAsset* MapAssetInstance) : AActor(MapAssetInstance) {}
+using namespace std;
+
+APawn::APawn(
+	MapAsset* MapAssetInstance,
+	const string& PlaceableKindIn
+) : AActor(MapAssetInstance, PlaceableKindIn) {}
 
 APawn::~APawn() {}
 

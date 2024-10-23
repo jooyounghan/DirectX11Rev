@@ -12,14 +12,14 @@
 #include "PSOObject.h"
 
 #include "MapAsset.h"
-#include "Camera.h"
+#include "ACamera.h"
 
 using namespace std;
 
-const char* EnvironmentActor::EnvironmentActorIdentifier = "Environment Actor";
+string EnvironmentActor::EnvironmentActorKind = "Environment Actor";
 
 EnvironmentActor::EnvironmentActor(MapAsset* MapAssetInstance)
-	: AActor(MapAssetInstance)
+	: AActor(MapAssetInstance, EnvironmentActor::EnvironmentActorKind)
 {
 	static size_t EnvironmentActorCount = 0;
 
@@ -28,8 +28,7 @@ EnvironmentActor::EnvironmentActor(MapAsset* MapAssetInstance)
 	HDRToneMappingConstant.Gamma = 1.f;
 
 	EnvironmentActorCount++;
-	ObjectName = EnvironmentActorIdentifier + to_string(EnvironmentActorCount);
-	PlaceableKind = EPlaceableObjectKind::ENVIORNMENT_ACTOR_KIND;
+	ObjectName = EnvironmentActor::EnvironmentActorKind + to_string(EnvironmentActorCount);
 
 	EnvironmentActorPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Environment_Solid);
 }
@@ -48,7 +47,7 @@ void EnvironmentActor::Render()
 {
 	AActor::Render();
 
-	Camera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
 	if (CurrentCamera != nullptr && EnvironmentMeshAsset != nullptr)
 	{
 		ID3D11RenderTargetView* RTVs[]{ CurrentCamera->GetSDRSceneRTV() };

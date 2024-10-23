@@ -7,7 +7,7 @@
 #include "MaterialAsset.h"
 
 #include "MapAsset.h"
-#include "Camera.h"
+#include "ACamera.h"
 
 #include "EnvironmentActor.h"
 
@@ -19,8 +19,11 @@
 using namespace std;
 using namespace DirectX;
 
-AMeshObject::AMeshObject(MapAsset* MapAssetInstance)
-	: AAttachableObject(MapAssetInstance)
+AMeshObject::AMeshObject(
+	MapAsset* MapAssetInstance,
+	const string& AttachableKindIn
+)
+	: AAttachableObject(MapAssetInstance, AttachableKindIn)
 {
 }
 
@@ -73,7 +76,7 @@ void AMeshObject::Render()
 
 	AMeshAsset* MeshAssetInstance = GetMeshAssetInstance();
 
-	Camera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
 	EnvironmentActor* CurrentEnvironment = MapAssetCached->GetEnvironmentActorInstance();
 
 	if (CurrentCamera != nullptr && MeshAssetInstance != nullptr && CurrentEnvironment != nullptr)

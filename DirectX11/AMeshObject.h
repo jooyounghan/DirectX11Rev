@@ -9,7 +9,10 @@ class PSOObject;
 class AMeshObject : public AAttachableObject
 {
 public:
-	AMeshObject(MapAsset* MapAssetInstance);
+	AMeshObject(
+		MapAsset* MapAssetInstance,
+		const std::string& AttachableKindIn
+	);
 	virtual ~AMeshObject();
 
 protected:

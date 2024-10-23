@@ -10,7 +10,11 @@ struct ViewProjBufferData
 class Viewable : public AAttachableObject
 {
 public:
-	Viewable(MapAsset* MapAssetInstance, const UINT& WidthIn, const UINT& HeightIn);
+	Viewable(
+		MapAsset* MapAssetInstance, 
+		const UINT& WidthIn, const UINT& HeightIn,
+		const std::string& AttachableKindIn
+	);
 	virtual ~Viewable();
 
 protected:

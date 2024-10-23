@@ -8,27 +8,17 @@
 #include <list>
 #include <memory>
 
-enum EPlaceableObjectKind : int
-{
-	PLACABLE_NONE,
-	STATIC_MESH_ACTOR_KIND,
-	SKELETAL_MESH_ACTOR_KIND,
-	ENVIORNMENT_ACTOR_KIND,
-	EDITOR_PAWN_KIND,
-	CHARACTER_KIND,
-};
-
 class APlaceableObject : public AObject
 {
 	friend AAttachableObject;
 
 public:
-	APlaceableObject(MapAsset* MapAssetInstance);
+	APlaceableObject(MapAsset* MapAssetInstance, const std::string& PlaceableKindIn);
 	virtual ~APlaceableObject();
 
 protected:
-	EPlaceableObjectKind PlaceableKind = EPlaceableObjectKind::PLACABLE_NONE;
-	MakeSetterGetter(PlaceableKind);
+	std::string PlaceableKind;
+	MakeGetter(PlaceableKind);
 
 protected:
 	static uint32_t PickingIDIssued;

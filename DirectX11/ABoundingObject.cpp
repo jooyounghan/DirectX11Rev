@@ -6,12 +6,15 @@
 #include "PSOObject.h"
 
 #include "MapAsset.h"
-#include "Camera.h"
+#include "ACamera.h"
 
 using namespace DirectX;
 
-ABoundingObject::ABoundingObject(MapAsset* MapAssetInstance)
-	: AAttachableObject(MapAssetInstance), DebuggingColorBuffer()
+ABoundingObject::ABoundingObject(
+	MapAsset* MapAssetInstance,
+	const std::string& AttachableKindIn
+)
+	: AAttachableObject(MapAssetInstance, AttachableKindIn), DebuggingColorBuffer()
 {
 	BoundingObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::BoundingObject_Wireframe);
 	PickingIDWireframePSOCached = App::GPSOManager->GetPSOObject(EPSOType::BoundingObject_ID_Wireframe);
@@ -40,7 +43,7 @@ void ABoundingObject::Render()
 {
 	AAttachableObject::Render();
 
-	Camera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
 	if (CurrentCamera != nullptr && DebugObject != nullptr)
 	{
 		ID3D11Buffer* VertexBuffers[] = { DebugObject->GetVertexBuffer() };

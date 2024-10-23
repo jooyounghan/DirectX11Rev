@@ -20,7 +20,8 @@ public:
 	EnvironmentActor(MapAsset* MapAssetInstance);
 	virtual ~EnvironmentActor();
 
-	static const char* EnvironmentActorIdentifier;
+public:
+	static std::string EnvironmentActorKind;
 
 protected:
 	BaseMeshAsset* EnvironmentMeshAsset = nullptr;

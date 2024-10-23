@@ -13,16 +13,16 @@
 using namespace std;
 using namespace DirectX;
 
-const char* BoundingFrustumObject::BoundingFrustumIdentifier = "Bounding Frustum";
+string BoundingFrustumObject::BoundingFrustumKind = "Bounding Frustum";
 
 BoundingFrustumObject::BoundingFrustumObject(MapAsset* MapAssetInstance, Viewable* ViewableInstance)
-	: ABoundingObject(MapAssetInstance), ViewableCached(ViewableInstance)
+	: ABoundingObject(MapAssetInstance, BoundingFrustumObject::BoundingFrustumKind), ViewableCached(ViewableInstance)
 {
     static shared_ptr<Debugable> FrustumDebugObject = CreateDebugFrustumObject(App::GGraphicPipeline->GetDevice());
 
     static size_t BoundingFrustumCount = 0;
     BoundingFrustumCount++;
-    ObjectName = BoundingFrustumIdentifier + to_string(BoundingFrustumCount);
+    ObjectName = BoundingFrustumObject::BoundingFrustumKind + to_string(BoundingFrustumCount);
 
     DebugObject = FrustumDebugObject.get();
 }

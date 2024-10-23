@@ -3,16 +3,29 @@
 #include "EditorWorld.h"
 #include "MapAsset.h"
 
-#include "Camera.h"
 #include "SkeletalMeshObject.h"
 #include "StaticMeshObject.h"
 #include "BoundingSphereObject.h"
 #include "OBBObject.h"
 
+#include "SDRCamera.h"
+#include "HDRCamera.h"
+
 #include "GlobalVariable.h"
 
 using namespace std;
 using namespace ImGui;
+
+const char* AddAttachableModal::AttachableItemIdentifiers[] = 
+{
+    StaticMeshObject::StaticMeshObjectKind.c_str(),
+    SkeletalMeshObject::SkeletalMeshObjectKind.c_str(),
+    BoundingSphereObject::BoundingSphereKind.c_str(),
+    OBBObject::BoundingOBBKind.c_str(),
+    SDRCamera::SDRCameraKind.c_str(),
+    HDRCamera::HDRCameraKind.c_str()
+};
+
 
 AddAttachableModal::AddAttachableModal(
     const string& ModalHeaderNameIn,
@@ -42,59 +55,54 @@ void AddAttachableModal::RenderModal()
 
     if (SelectedPlaced != nullptr || SelectedAttached != nullptr)
     {
-        const char* ItemIdentifiers[] = {
-            StaticMeshObject::StaticMeshObjectIdentifier,
-            SkeletalMeshObject::SkeletalMeshObjectIdentifier,
-            BoundingSphereObject::BoundingSphereIdentifier,
-            OBBObject::BoundingOBBIdentifier,
-            Camera::CameraIdentifier
-        };
-
         static int ItemCurrentSelectedIdx = 0;
-        ImGui::Combo("Select Class", &ItemCurrentSelectedIdx, ItemIdentifiers, IM_ARRAYSIZE(ItemIdentifiers));
+        ImGui::Combo("Select Class", &ItemCurrentSelectedIdx, AttachableItemIdentifiers, IM_ARRAYSIZE(AttachableItemIdentifiers));
 
         Separator();
 
-        EAttachableObjectKind ObjectKind = (EAttachableObjectKind)(ItemCurrentSelectedIdx + 1);
+        const char* SelectedObjectKind = AttachableItemIdentifiers[ItemCurrentSelectedIdx];
+
         if (Button("OK", ImVec2(120, 0)))
         {
-            switch (ObjectKind)
-            {
-            case EAttachableObjectKind::STATIC_MESH_KIND:
+            if (SelectedObjectKind == StaticMeshObject::StaticMeshObjectKind)
             {
                 SelectedAttached != nullptr ?
                     SelectedAttached->AddAttachedObject<StaticMeshObject>(CurrentMapAssetCached, nullptr) :
                     SelectedPlaced->AddAttachedObject<StaticMeshObject>(CurrentMapAssetCached, nullptr);
-                break;
             }
-            case EAttachableObjectKind::SKELETAL_MESH_KIND:
+            else if (SelectedObjectKind == SkeletalMeshObject::SkeletalMeshObjectKind)
             {
                 SelectedAttached != nullptr ?
                     SelectedAttached->AddAttachedObject<SkeletalMeshObject>(CurrentMapAssetCached, nullptr) :
                     SelectedPlaced->AddAttachedObject<SkeletalMeshObject>(CurrentMapAssetCached, nullptr);
-                break;
-            }
-            case EAttachableObjectKind::BOUNDING_SPHERE_KIND:
+            }                              
+            else if (SelectedObjectKind == BoundingSphereObject::BoundingSphereKind)
             {
                 SelectedAttached != nullptr ?
                     SelectedAttached->AddAttachedObject<BoundingSphereObject>(CurrentMapAssetCached) :
                     SelectedPlaced->AddAttachedObject<BoundingSphereObject>(CurrentMapAssetCached);
-                break;
             }
-            case EAttachableObjectKind::OBB_KIND:
+            else if (SelectedObjectKind == OBBObject::BoundingOBBKind)
             {
                 SelectedAttached != nullptr ?
                     SelectedAttached->AddAttachedObject<OBBObject>(CurrentMapAssetCached) :
                     SelectedPlaced->AddAttachedObject<OBBObject>(CurrentMapAssetCached);
-                break;
             }
-            case EAttachableObjectKind::SDR_CAMERA_KIND:
+            else if (SelectedObjectKind == SDRCamera::SDRCameraKind)
             {
                 SelectedAttached != nullptr ?
-                    SelectedAttached->AddAttachedObject<Camera>(CurrentMapAssetCached, App::GWidth, App::GHeight) :
-                    SelectedPlaced->AddAttachedObject<Camera>(CurrentMapAssetCached, App::GWidth, App::GHeight);
-                break;
+                    SelectedAttached->AddAttachedObject<SDRCamera>(CurrentMapAssetCached, App::GWidth, App::GHeight) :
+                    SelectedPlaced->AddAttachedObject<SDRCamera>(CurrentMapAssetCached, App::GWidth, App::GHeight);
             }
+            else if (SelectedObjectKind == HDRCamera::HDRCameraKind)
+            {
+                SelectedAttached != nullptr ?
+                    SelectedAttached->AddAttachedObject<HDRCamera>(CurrentMapAssetCached, App::GWidth, App::GHeight) :
+                    SelectedPlaced->AddAttachedObject<HDRCamera>(CurrentMapAssetCached, App::GWidth, App::GHeight);
+            }
+            else
+            {
+
             }
             CloseCurrentPopup();
         }

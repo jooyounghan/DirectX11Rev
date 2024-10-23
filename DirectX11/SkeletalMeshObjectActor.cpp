@@ -2,21 +2,19 @@
 #include "SkeletalMeshObject.h"
 #include "IGuiModelVisitor.h"
 
-const char* SkeletalMeshObjectActor::SkeletalMeshObjectActorIdentifier = "Skeletal Actor";
-
 using namespace std;
+
+string SkeletalMeshObjectActor::SkeletalMeshObjectActorKind = "Skeletal Actor";
 
 SkeletalMeshObjectActor::SkeletalMeshObjectActor(
 	MapAsset* MapAssetInstance, 
 	std::shared_ptr<SkeletalMeshAsset> MeshAssetInstanceIn
 )
-	: AActor(MapAssetInstance)
+	: AActor(MapAssetInstance, SkeletalMeshObjectActor::SkeletalMeshObjectActorKind)
 {
 	static size_t SkeletalActorCount = 0;
 	SkeletalActorCount++;
-	ObjectName = SkeletalMeshObjectActorIdentifier + to_string(SkeletalActorCount);
-
-	PlaceableKind = EPlaceableObjectKind::SKELETAL_MESH_ACTOR_KIND;
+	ObjectName = SkeletalMeshObjectActor::SkeletalMeshObjectActorKind + to_string(SkeletalActorCount);
 
 	SkeletalMeshObjectInstance = make_unique<SkeletalMeshObject>(MapAssetInstance, MeshAssetInstanceIn);
 	SkeletalMeshObjectInstance->SetParent(this, PickingIDBuffer.GetBuffer());

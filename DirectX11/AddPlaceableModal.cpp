@@ -9,6 +9,14 @@
 using namespace std;
 using namespace ImGui;
 
+const char* AddPlaceableModal::PlaceableItemIdentifiers[] =
+{
+    StaticMeshObjectActor::StaticMeshObjectActorKind.c_str(),
+    SkeletalMeshObjectActor::SkeletalMeshObjectActorKind.c_str(),
+    EnvironmentActor::EnvironmentActorKind.c_str(),
+};
+
+
 AddPlaceableModal::AddPlaceableModal(
     const string& ModalHeaderNameIn,
     EditorWorld* EditorWorldIn
@@ -32,37 +40,26 @@ bool AddPlaceableModal::ModalCondition()
 
 void AddPlaceableModal::RenderModal()
 {
-    const char* ItemIdentifiers[] = {
-        StaticMeshObjectActor::StaticMeshObjectActorIdentifier,
-        SkeletalMeshObjectActor::SkeletalMeshObjectActorIdentifier,
-        EnvironmentActor::EnvironmentActorIdentifier,
-    };
-
     static int ItemCurrentSelectedIdx = 0;
-    ImGui::Combo("Select Class", &ItemCurrentSelectedIdx, ItemIdentifiers, IM_ARRAYSIZE(ItemIdentifiers));
+    ImGui::Combo("Select Class", &ItemCurrentSelectedIdx, PlaceableItemIdentifiers, IM_ARRAYSIZE(PlaceableItemIdentifiers));
 
     Separator();
 
-    EPlaceableObjectKind ObjectKind = (EPlaceableObjectKind)(ItemCurrentSelectedIdx + 1);
+    const char* SelectedObjectKind = PlaceableItemIdentifiers[ItemCurrentSelectedIdx];
+
     if (Button("OK", ImVec2(120, 0)))
     {
-        switch (ObjectKind)
-        {
-        case EPlaceableObjectKind::STATIC_MESH_ACTOR_KIND:
+        if (SelectedObjectKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
         {
             CurrentMapAssetCached->PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
-            break;
         }
-        case EPlaceableObjectKind::SKELETAL_MESH_ACTOR_KIND:
+        else if (SelectedObjectKind == SkeletalMeshObjectActor::SkeletalMeshObjectActorKind)
         {
             CurrentMapAssetCached->PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
-            break;
         }
-        case EPlaceableObjectKind::ENVIORNMENT_ACTOR_KIND:
+        else if (SelectedObjectKind == EnvironmentActor::EnvironmentActorKind)
         {
             CurrentMapAssetCached->PlaceableAddHelper<EnvironmentActor>();
-            break;
-        }
         }
         CloseCurrentPopup();
     }

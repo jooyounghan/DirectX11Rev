@@ -21,7 +21,7 @@ class AssetManager;
 class EditorPawn;
 class EnvironmentActor;
 
-class Camera;
+class ACamera;
 class StaticMeshAsset;
 class SkeletalMeshAsset;
 
@@ -49,7 +49,7 @@ protected:
 	MakeSmartPtrGetter(EnvironmentActorInstance);
 
 protected:
-	Camera* CurrentCamera = nullptr;
+	ACamera* CurrentCamera = nullptr;
 	MakeGetter(CurrentCamera);
 
 protected:

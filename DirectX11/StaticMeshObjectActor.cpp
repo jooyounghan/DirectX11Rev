@@ -3,21 +3,19 @@
 
 #include "IGuiModelVisitor.h"
 
-const char* StaticMeshObjectActor::StaticMeshObjectActorIdentifier = "Static Actor";
-
 using namespace std;
+
+string StaticMeshObjectActor::StaticMeshObjectActorKind = "Static Actor";
 
 StaticMeshObjectActor::StaticMeshObjectActor(
 	MapAsset* MapAssetInstance, 
 	std::shared_ptr<StaticMeshAsset> MeshAssetInstanceIn
 )
-	: AActor(MapAssetInstance)
+	: AActor(MapAssetInstance, StaticMeshObjectActor::StaticMeshObjectActorKind)
 {
 	static size_t StaticActorCount = 0;
 	StaticActorCount++;
-	ObjectName = StaticMeshObjectActorIdentifier + to_string(StaticActorCount);
-
-	PlaceableKind = EPlaceableObjectKind::STATIC_MESH_ACTOR_KIND;
+	ObjectName = StaticMeshObjectActorKind + to_string(StaticActorCount);
 
 	StaticMeshObjectInstance = make_unique<StaticMeshObject>(MapAssetInstance, MeshAssetInstanceIn);
 	StaticMeshObjectInstance->SetParent(this, PickingIDBuffer.GetBuffer());

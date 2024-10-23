@@ -12,7 +12,7 @@ public:
 	~StaticMeshObjectActor();
 
 public:
-	static const char* StaticMeshObjectActorIdentifier;
+	static std::string StaticMeshObjectActorKind;
 
 protected:
 	std::unique_ptr<StaticMeshObject> StaticMeshObjectInstance;

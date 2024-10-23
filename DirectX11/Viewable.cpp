@@ -10,8 +10,12 @@
 using namespace std;
 using namespace DirectX;
 
-Viewable::Viewable(MapAsset* MapAssetInstance, const UINT& WidthIn, const UINT& HeightIn)
-	: AAttachableObject(MapAssetInstance), ViewProjBuffer()
+Viewable::Viewable(
+	MapAsset* MapAssetInstance, 
+	const UINT& WidthIn, const UINT& HeightIn,
+	const string& AttachableKindIn
+)
+	: AAttachableObject(MapAssetInstance, AttachableKindIn), ViewProjBuffer()
 {
 	Resize(WidthIn, HeightIn);
 }

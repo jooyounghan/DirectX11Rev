@@ -10,12 +10,12 @@ public:
 	SkeletalMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstanceIn);
 	virtual ~SkeletalMeshObject();
 
+public:
+	static std::string SkeletalMeshObjectKind;
+
 protected:
 	std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstance = nullptr;
 	MakeSmartPtrSetterGetter(SkeletalMeshAssetInstance);
-
-public:
-	static const char* SkeletalMeshObjectIdentifier;
 	
 public:
 	virtual AMeshAsset* GetMeshAssetInstance() override;

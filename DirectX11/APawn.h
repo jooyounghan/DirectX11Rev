@@ -7,7 +7,10 @@ class InputEventManager;
 class APawn : public AActor
 {
 public:
-	APawn(MapAsset* MapAssetInstance);
+	APawn(
+		MapAsset* MapAssetInstance,
+		const std::string& PlaceableKindIn
+	);
 	virtual ~APawn();
 
 protected:

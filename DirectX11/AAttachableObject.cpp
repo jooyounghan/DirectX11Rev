@@ -5,8 +5,11 @@
 using namespace std;
 using namespace DirectX;
 
-AAttachableObject::AAttachableObject(MapAsset* MapAssetInstance)
-	: AObject(MapAssetInstance)
+AAttachableObject::AAttachableObject(
+	MapAsset* MapAssetInstance,
+	const string& AttachableKindIn
+)
+	: AObject(MapAssetInstance), AttachableKind(AttachableKindIn)
 {
 }
 

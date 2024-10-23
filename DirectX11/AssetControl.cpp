@@ -68,13 +68,14 @@ void AssetControl::RenderControl()
         ImGui::EndGroup();
         ImGui::PopID();
 
-        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
-        {
-            BeginDragDropEvent.Invoke(AssetFileCached);
-        }
 
         if (IsMouseHoveringRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax()))
         {
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                BeginDragDropEvent.Invoke(AssetFileCached);
+            }
+
             bIsMouseHovering = true;
 
             if (IsMouseClicked(ImGuiMouseButton_::ImGuiMouseButton_Left))

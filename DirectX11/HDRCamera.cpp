@@ -2,10 +2,10 @@
 
 using namespace std;
 
-const char* HDRCamera::HDRCameraIdentifier = "HDR Camera";
+string HDRCamera::HDRCameraKind = "HDR Camera";
 
 HDRCamera::HDRCamera(MapAsset* MapAssetInstance, const UINT& WidthIn, const UINT& HeightIn)
-	: Camera(MapAssetInstance, WidthIn, HeightIn)
+	: ACamera(MapAssetInstance, WidthIn, HeightIn, HDRCamera::HDRCameraKind)
 {
 	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
 
@@ -34,6 +34,11 @@ HDRCamera::~HDRCamera() {}
 
 void HDRCamera::CleanupLens()
 {
-	Camera::CleanupLens();
+	DeviceContextCached->ClearRenderTargetView(SDRSceneRTV.Get(), ClearColor);
+	DeviceContextCached->ClearDepthStencilView(SceneDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
+	DeviceContextCached->ClearRenderTargetView(IdSelectRTV.Get(), IDClearColor);
+	DeviceContextCached->ClearDepthStencilView(IdSelectDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
 	DeviceContextCached->ClearRenderTargetView(HDRSceneRTV.Get(), ClearColor);
 }

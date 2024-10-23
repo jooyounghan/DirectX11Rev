@@ -13,16 +13,15 @@
 
 using namespace std;
 
-const char* StaticMeshObject::StaticMeshObjectIdentifier = "Static Mesh Object";
+string StaticMeshObject::StaticMeshObjectKind = "Static Mesh Object";
 
 StaticMeshObject::StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn)
-	: AMeshObject(MapAssetInstance), StaticMeshAssetInstance(StaticMeshAssetInstanceIn)
+	: AMeshObject(MapAssetInstance, StaticMeshObject::StaticMeshObjectKind), StaticMeshAssetInstance(StaticMeshAssetInstanceIn)
 {
 	static size_t StaticMeshObjectCount = 0;
 
 	StaticMeshObjectCount++;
-	ObjectName = StaticMeshObjectIdentifier + to_string(StaticMeshObjectCount);
-	AttachableKind = EAttachableObjectKind::STATIC_MESH_KIND;
+	ObjectName = StaticMeshObject::StaticMeshObjectKind + to_string(StaticMeshObjectCount);
 
 	MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_Solid);
 	PickingIDSolidPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_ID_Solid);

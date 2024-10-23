@@ -20,10 +20,10 @@
 #include "StaticMeshObject.h"
 #include "SkeletalMeshObject.h"
 #include "BoundingSphereObject.h"
-#include "OBBObject.h"
 #include "BoundingFrustumObject.h"
-
-#include "Camera.h"
+#include "OBBObject.h"
+#include "SDRCamera.h"
+#include "HDRCamera.h"
 
 
 using namespace std;
@@ -147,8 +147,8 @@ void MapAsset::Serialize()
 		for (auto& RootPlaceable : RootPlaceables)
 		{
 				// Object Kind
-				const EPlaceableObjectKind& PlaceableObjectKind = RootPlaceable->GetPlaceableKind();
-				fwrite(&PlaceableObjectKind, sizeof(EPlaceableObjectKind), 1, OutputAssetFile);
+				const string& PlaceableObjectKind = RootPlaceable->GetPlaceableKind();
+				SerializeString(PlaceableObjectKind, OutputAssetFile);
 
 				RootPlaceable->OnSerializeFromMap(OutputAssetFile);
 
@@ -175,46 +175,38 @@ void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	for (size_t idx = 0; idx < RootPlaceablesCount; ++idx)
 	{
 		// Object Kind
-		EPlaceableObjectKind PlaceableObjectKind;
-		fread(&PlaceableObjectKind, sizeof(EPlaceableObjectKind), 1, FileIn);
+		string PlaceableObjectKind;
+		DeserializeString(PlaceableObjectKind, FileIn);
 
-		switch (PlaceableObjectKind)
-		{
-		case PLACABLE_NONE:
-			break;
-		case STATIC_MESH_ACTOR_KIND:
+		if (PlaceableObjectKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
 		{
 			StaticMeshObjectActor* AddedActor = PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
 			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
-			break;
 		}
-		case SKELETAL_MESH_ACTOR_KIND:
+		else if (PlaceableObjectKind == SkeletalMeshObjectActor::SkeletalMeshObjectActorKind)
 		{
 			SkeletalMeshObjectActor* AddedActor = PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
 			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
-			break;
 		}
-		case ENVIORNMENT_ACTOR_KIND:
+		else if (PlaceableObjectKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
 		{
 			//EnvironmentActor* AddedEnvironment = PlaceableAddHelper<EnvironmentActor>();
 			//AddedEnvironment->OnDeserializeToMap(FileIn, AssetManagerIn);
 			//DeserializeParentObject(AddedEnvironment, FileIn, AssetManagerIn);
 			//break;
 		}
-		case EDITOR_PAWN_KIND:
+		else if (PlaceableObjectKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
 		{
 			//APawn* AddedPawn = PlaceableAddHelper<APawn>();
 			//AddedPawn->OnDeserializeToMap(FileIn, AssetManagerIn);
 			//DeserializeParentObject(AddedPawn, FileIn, AssetManagerIn);
 			//break;
 		}
-			break;
-		case CHARACTER_KIND:
-			break;
-		default:
-			break;
+		else
+		{
+
 		}
 	}
 }
@@ -228,8 +220,8 @@ void MapAsset::SerializeChildrenObjects(APlaceableObject* ChildPlaceableObjectIn
 	for (auto& AttachedChild : ChildPlaceableObjectIn->GetAttachedChildrenObjects())
 	{
 		// Object Kind
-		const EAttachableObjectKind& AttachedObjectKind = AttachedChild->GetAttachableKind();
-		fwrite(&AttachedObjectKind, sizeof(EAttachableObjectKind), 1, FileIn);
+		const string& AttachedObjectKind = AttachedChild->GetAttachableKind();
+		SerializeString(AttachedObjectKind, FileIn);
 
 		AttachedChild->OnSerializeFromMap(FileIn);
 
@@ -246,8 +238,8 @@ void MapAsset::SerializeChildrenObjects(AAttachableObject* ChildAttachableObject
 	for (auto& AttachedChild : ChildAttachableObjectIn->GetAttachedChildrenObjects())
 	{
 		// Object Kind
-		const EAttachableObjectKind& AttachedObjectKind = AttachedChild->GetAttachableKind();
-		fwrite(&AttachedObjectKind, sizeof(EAttachableObjectKind), 1, FileIn);
+		const string& AttachedObjectKind = AttachedChild->GetAttachableKind();
+		SerializeString(AttachedObjectKind, FileIn);
 
 		AttachedChild->OnSerializeFromMap(FileIn);
 
@@ -269,32 +261,39 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 	for (size_t idx = 0; idx < ChildrenAttachedCount; ++idx)
 	{
 		// Object Kind
-		EAttachableObjectKind AttachedObjectKind;
-		fread(&AttachedObjectKind, sizeof(EAttachableObjectKind), 1, FileIn);
+		string AttachableObjectKind;
+		DeserializeString(AttachableObjectKind, FileIn);
 
 		AAttachableObject* AddedMeshObject = nullptr;
-		switch (AttachedObjectKind)
+		if (AttachableObjectKind == StaticMeshObject::StaticMeshObjectKind)
 		{
-		case ATTACHABLE_NONE:
-			break;
-		case STATIC_MESH_KIND:
 			AddedMeshObject = ParentObjectIn->AddAttachedObject<StaticMeshObject>(this, nullptr);
-			break;
-		case SKELETAL_MESH_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<SkeletalMeshObject>(this, nullptr);
-			break;
-		case BOUNDING_SPHERE_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>(this);
-			break;
-		case OBB_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>(this);
-			break;
-		case SDR_CAMERA_KIND:
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<Camera>(this, App::GWidth, App::GHeight);
-			break;
-		default:
-			break;
 		}
+		else if (AttachableObjectKind == SkeletalMeshObject::SkeletalMeshObjectKind)
+		{
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<SkeletalMeshObject>(this, nullptr);
+		}
+		else if (AttachableObjectKind == BoundingSphereObject::BoundingSphereKind)
+		{
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>(this);
+		}
+		//else if (AttachableObjectKind == BoundingFrustumObject::BoundingFrustumKind)
+		//{
+		//	AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingFrustumObject>(this);
+		//}
+		else if (AttachableObjectKind == OBBObject::BoundingOBBKind)
+		{
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>(this);
+		}
+		else if (AttachableObjectKind == SDRCamera::SDRCameraKind)
+		{
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<SDRCamera>(this, App::GWidth, App::GHeight);
+		}
+		else if (AttachableObjectKind == HDRCamera::HDRCameraKind)
+		{
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<HDRCamera>(this, App::GWidth, App::GHeight);
+		}
+
 		if (AddedMeshObject != nullptr)
 		{
 			AddedMeshObject->OnDeserializeToMap(FileIn, AssetManagerIn);

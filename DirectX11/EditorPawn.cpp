@@ -7,17 +7,20 @@
 
 #include "GraphicsPipeline.h"
 #include "DefaultController.h"
-#include "Camera.h"
+
+#include "SDRCamera.h"
 
 using namespace std;
 
+string EditorPawn::EditorPawnKind = "Editor Pawn";
+
 EditorPawn::EditorPawn(MapAsset* MapAssetInstance)
-	: APawn(MapAssetInstance)
+	: APawn(MapAssetInstance, EditorPawn::EditorPawnKind)
 {
     Controller = make_unique<DefaultController>();
     Controller->SetPossesdPawn(this);
 
-    CameraInstance = make_unique<Camera>(MapAssetInstance, App::GWidth, App::GHeight);
+    CameraInstance = make_unique<SDRCamera>(MapAssetInstance, App::GWidth, App::GHeight);
     CameraInstance->SetParent(this, PickingIDBuffer.GetBuffer());
 }
 
