@@ -1,6 +1,10 @@
 #include "AssetControl.h"
 #include "AAssetFile.h"
 
+#include "BaseTextureAsset.h"
+#include "DDSTextureAsset.h"
+#include "EXRTextureAsset.h"
+
 #include "UIVariable.h"
 
 using namespace ImGui;
@@ -20,7 +24,7 @@ void AssetControl::RenderControl()
     if (AssetFileCached != nullptr)
     {
         const string& AssetName = AssetFileCached->GetAssetName();
-        EAssetType AssetType = AssetFileCached->GetAssetType();
+        const string& AssetType = AssetFileCached->GetAssetType();
 
         ImGui::PushID(AssetName.c_str());
 
@@ -30,13 +34,11 @@ void AssetControl::RenderControl()
         }
 
         ImGui::BeginGroup();
-        switch (AssetType)
+        if (AssetType == BaseTextureAsset::BaseTextureAssetKind || AssetType == EXRTextureAsset::EXRTextureAssetKind)
         {
-        case EAssetType::BaseTexture:
-        case EAssetType::EXRTexture:
             Image(AssetFileCached->GetThumbnailSRV(), UISize::FileSize);
-            break;
-        case EAssetType::DDSTexture:
+        }
+        else if (AssetType == DDSTextureAsset::DDSTextureAssetKind)
         {
             ID3D11ShaderResourceView* SRV = AssetFileCached->GetThumbnailSRV();
             D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
@@ -49,11 +51,10 @@ void AssetControl::RenderControl()
             {
                 Image(nullptr, UISize::FileSize);
             }
-            break;
         }
-        default:
+        else
+        {
             Image(nullptr, UISize::FileSize);
-            break;
         }
 
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + UISize::FileSize.x);

@@ -4,6 +4,8 @@
 
 class AssetManager;
 
+constexpr size_t AssetFileNameBufferSize = 254;
+
 class CreateAssetFileModal : public AModal
 {
 public:
@@ -13,6 +15,11 @@ public:
 protected:
 	AssetManager* AssetManagerCached = nullptr;
 
+private:
+	std::vector<std::string> AssetItemIdentifiers;
+	char AssetFileNameBuffer[AssetFileNameBufferSize];
+    const char* InvalidChars = "\\/:*?\"<>|";
+
 protected:
 	bool ModalFlag = false;
 	MakeSetterGetter(ModalFlag);
@@ -20,5 +27,9 @@ protected:
 protected:
 	virtual bool ModalCondition() override;
 	virtual void RenderModal() override;
+
+private:
+    bool IsValidFileNameChar(char c);
+    bool ValidateFileName(const char* fileName);
 };
 

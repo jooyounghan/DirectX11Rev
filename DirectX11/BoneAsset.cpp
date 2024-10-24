@@ -4,6 +4,8 @@
 using namespace std;
 using namespace DirectX;
 
+string BoneAsset::BoneAssetKind = "Bone";
+
 Bone::Bone()
 	: BoneName(""), BoneIdx(NULL), OffsetMatrix(XMMatrixIdentity())
 {
@@ -58,7 +60,7 @@ void Bone::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 }
 
 BoneAsset::BoneAsset(const std::string& AssetNameIn, bool LoadFromAsset)
-	: AAssetFile(LoadFromAsset ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Bone)], EAssetType::Bone)
+	: AAssetFile(LoadFromAsset ? AssetNameIn : AssetNameIn + "_" + BoneAsset::BoneAssetKind, BoneAsset::BoneAssetKind)
 {
 }
 

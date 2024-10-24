@@ -50,6 +50,9 @@ public:
 	BoneAsset(const std::string& AssetNameIn, bool LoadFromAsset);
 	virtual ~BoneAsset();
 
+public:
+	static std::string BoneAssetKind;
+
 protected:
 	Bone* RootBone = nullptr;
 	MakeSetterGetter(RootBone);

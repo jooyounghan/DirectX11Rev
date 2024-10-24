@@ -10,8 +10,10 @@
 using namespace std;
 using namespace DirectX;
 
+string DDSTextureAsset::DDSTextureAssetKind = "DDSTexture";
+
 DDSTextureAsset::DDSTextureAsset(const string& AssetNameIn)
-	: AScratchTextureAsset(AssetNameIn, EAssetType::DDSTexture)
+	: AScratchTextureAsset(AssetNameIn, DDSTextureAsset::DDSTextureAssetKind)
 {
 }
 
@@ -21,8 +23,8 @@ DDSTextureAsset::DDSTextureAsset(
 	const DirectX::TexMetadata& metaData
 )
 	: AScratchTextureAsset(
-		AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::DDSTexture)], 
-		EAssetType::DDSTexture, scratch, metaData
+		AssetNameIn + "_" + DDSTextureAsset::DDSTextureAssetKind,
+		DDSTextureAsset::DDSTextureAssetKind, scratch, metaData
 	)
 {
 	Width = static_cast<UINT>(metaData.width);

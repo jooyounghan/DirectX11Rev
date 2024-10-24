@@ -11,8 +11,10 @@
 
 using namespace std;
 
+string BaseTextureAsset::BaseTextureAssetKind = "BaseTexture";
+
 BaseTextureAsset::BaseTextureAsset(const string& AssetNameIn)
-	: ATextureAsset(AssetNameIn, EAssetType::BaseTexture)
+	: ATextureAsset(AssetNameIn, BaseTextureAssetKind)
 {
 }
 
@@ -22,7 +24,7 @@ BaseTextureAsset::BaseTextureAsset(
 	const UINT& WidthIn, 
 	const UINT& HeightIn
 )
-	: ATextureAsset(AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::BaseTexture)], EAssetType::BaseTexture)
+	: ATextureAsset(AssetNameIn + "_" + BaseTextureAssetKind, BaseTextureAssetKind)
 {
 	Width = WidthIn;
 	Height = HeightIn;

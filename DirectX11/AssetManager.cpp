@@ -149,7 +149,7 @@ void AssetManager::LoadBasicTextureAssetFromFile(
         if (ImageBuffer != nullptr)
         {
             shared_ptr<BaseTextureAsset> TextureAssetLoaded = make_shared<BaseTextureAsset>(FileNameIn, ImageBuffer, WidthOut, HeightOut);
-            SerailizeAndAddToContainer(ManagingBasicTextures, TextureAssetLoaded);
+            SerailizeAndAddToContainer(TextureAssetLoaded);
         }
         fclose(FileHandle);
 
@@ -171,7 +171,7 @@ void AssetManager::LoadEXRTextureAssetFromFile(
     if (!FAILED(hResult))
     {
         shared_ptr<EXRTextureAsset> TextureAssetLoaded = make_shared<EXRTextureAsset>(FileNameIn, scratch, metaData);
-        SerailizeAndAddToContainer(ManagingEXRTextures, TextureAssetLoaded);
+        SerailizeAndAddToContainer(TextureAssetLoaded);
     }
 }
 
@@ -183,7 +183,7 @@ void AssetManager::LoadDDSTextureAssetFromFile(const std::string& FilePathIn, co
     if (!FAILED(hResult))
     {
         shared_ptr<DDSTextureAsset> TextureAssetLoaded = make_shared<DDSTextureAsset>(FileNameIn, scratch, metaData);
-        SerailizeAndAddToContainer(ManagingDDSTextures, TextureAssetLoaded);
+        SerailizeAndAddToContainer(TextureAssetLoaded);
     }
 }
 
@@ -208,11 +208,11 @@ void AssetManager::LoadMeshAssetFromFile(bool IsGltf, const string& AssetName, c
         ProcessNodeForMesh(IsGltf, Scene, RootNode, SkeletalMeshAPtr, BoneAPtr, RootTransform);
 
         // Serialize Bone Asset
-        SerailizeAndAddToContainer(ManagingBones, BoneAssetLoaded);
+        SerailizeAndAddToContainer(BoneAssetLoaded);
 
         SkeletalMeshAssetLoaded->Initialize();
         SkeletalMeshAssetLoaded->SetDefaultMaterialAssets(CurrentModelsMaterials);
-        SerailizeAndAddToContainer(ManagingSkeletalMeshes, SkeletalMeshAssetLoaded);
+        SerailizeAndAddToContainer(SkeletalMeshAssetLoaded);
     }
     else
     {
@@ -223,7 +223,7 @@ void AssetManager::LoadMeshAssetFromFile(bool IsGltf, const string& AssetName, c
 
         StaticMeshLoaded->Initialize();
         StaticMeshLoaded->SetDefaultMaterialAssets(CurrentModelsMaterials);
-        SerailizeAndAddToContainer(ManagingStaticMeshes, StaticMeshLoaded);
+        SerailizeAndAddToContainer(StaticMeshLoaded);
     }
 }
 
@@ -267,7 +267,7 @@ void AssetManager::LoadMaterialAssetFromFile(const string& FilePath, const strin
         {
             MaterialAssetLoaded->SetEmissiveTextureAsset(LoadBasicTextureFromMaterial(Scene, pMaterial, aiTextureType_EMISSIVE));
         }
-        SerailizeAndAddToContainer(ManagingMaterials, MaterialAssetLoaded);
+        SerailizeAndAddToContainer(MaterialAssetLoaded);
         CurrentModelsMaterials.push_back(MaterialAssetLoaded);
     }
 }
@@ -290,7 +290,7 @@ shared_ptr<BaseTextureAsset> AssetManager::LoadBasicTextureFromMaterial(const ai
             if (ImageBuffer != nullptr)
             {
                 TextureAssetLoaded = make_shared<BaseTextureAsset>(TextureName, ImageBuffer, WidthOut, HeightOut);
-                SerailizeAndAddToContainer(ManagingBasicTextures, TextureAssetLoaded);
+                SerailizeAndAddToContainer(TextureAssetLoaded);
                 stbi_image_free(ImageBuffer);
             }
         }
@@ -316,44 +316,48 @@ bool AssetManager::HasBone(const aiScene* const Scene)
 AAssetFile* AssetManager::GetManagingAsset(const std::string& AssetNameIn)
 {
     AAssetFile* Result = nullptr;
-    const string AssetSuffix = AssetNameIn.substr(AssetNameIn.find_last_of("_"));
-    EAssetType AssetType = AAssetFile::AssetSuffixToType[AssetSuffix];
+    const string AssetType = AssetNameIn.substr(AssetNameIn.find_last_of("_") + 1);
 
-    switch (AssetType)
+    if (AssetType == BaseMeshAsset::BaseMeshAssetKind)
     {
-    case EAssetType::BaseMesh:
         Result = GetManagingAssetHelper(ManagingBaseMeshes, AssetNameIn);
-        break;
-    case EAssetType::StaticMesh:
-        Result = GetManagingAssetHelper(ManagingStaticMeshes, AssetNameIn).get();
-        break;
-    case EAssetType::SkeletalMesh:
-        Result = GetManagingAssetHelper(ManagingSkeletalMeshes, AssetNameIn).get();
-        break;
-    case EAssetType::Bone:
-        Result = GetManagingAssetHelper(ManagingBones, AssetNameIn).get();
-        break;
-    case EAssetType::Map:
-        Result = GetManagingAssetHelper(ManagingMaps, AssetNameIn).get();
-        break;
-    case EAssetType::Material:
-        Result = GetManagingAssetHelper(ManagingMaterials, AssetNameIn).get();
-        break;
-    case EAssetType::BaseTexture:
-        Result = GetManagingAssetHelper(ManagingBasicTextures, AssetNameIn).get();
-        break;
-    case EAssetType::EXRTexture:
-        Result = GetManagingAssetHelper(ManagingEXRTextures, AssetNameIn).get();
-        break;
-    case EAssetType::DDSTexture:
-        Result = GetManagingAssetHelper(ManagingDDSTextures, AssetNameIn).get();
-        break;
-    case EAssetType::Animation:
-        break;
-    default:
-        break;
     }
+    else if (AssetType == StaticMeshAsset::StaticMeshAssetKind)
+    {
+        Result = GetManagingAssetHelper(ManagingStaticMeshes, AssetNameIn).get();
+    }
+    else if (AssetType == SkeletalMeshAsset::SkeletalMeshAssetKind)
+    {
+        Result = GetManagingAssetHelper(ManagingSkeletalMeshes, AssetNameIn).get();
+    }
+    else if (AssetType == BoneAsset::BoneAssetKind)
+    {
+        Result = GetManagingAssetHelper(ManagingBones, AssetNameIn).get();
+    }
+    else if (AssetType == MapAsset::MapAssetKind)
+    {
+        Result = GetManagingAssetHelper(ManagingMaps, AssetNameIn).get();
+    }
+    else if (AssetType == MaterialAsset::MaterialAssetKind)
+    {
+        Result = GetManagingAssetHelper(ManagingMaterials, AssetNameIn).get();
+    }
+    else if (AssetType == BaseTextureAsset::BaseTextureAssetKind)
+    {
+        Result = GetManagingAssetHelper(ManagingBasicTextures, AssetNameIn).get();
+    }
+    else if (AssetType == EXRTextureAsset::EXRTextureAssetKind)
+    {
+        Result = GetManagingAssetHelper(ManagingEXRTextures, AssetNameIn).get();
+    }
+    else if (AssetType == DDSTextureAsset::DDSTextureAssetKind)
+    {
+        Result = GetManagingAssetHelper(ManagingDDSTextures, AssetNameIn).get();
+    }
+    else
+    {
 
+    }
     return Result;
 }
 
@@ -403,10 +407,7 @@ BaseMeshAsset* AssetManager::GetManagingBaseMesh(const std::string MapAssetName)
 }
 
 template<typename T>
-void AssetManager::SerailizeAndAddToContainer(
-    unordered_map<string, T>& ManagingContainer, 
-    T& AddedAsset
-)
+void AssetManager::SerailizeAndAddToContainer(std::unordered_map<std::string, T>& ManagingContainer, T& AddedAsset)
 {
     AddedAsset->Serialize();
     ManagingContainer.emplace(AddedAsset->GetAssetName(), AddedAsset);
@@ -550,7 +551,7 @@ size_t AssetManager::GetTotalLODCountFromScene(const aiScene* const Scene)
 size_t AssetManager::GetLODLevelFromMeshName(const aiString& MeshName)
 {
     size_t Lodlevel = 0;
-    regex LODMeshNamePatter(".(\\d+)");
+    regex LODMeshNamePatter("\\.(\\d+)");
     smatch Match;
 
     const string MeshNameStr = string(MeshName.C_Str());
@@ -692,13 +693,11 @@ void AssetManager::LoadTextureCoord(
 {
     if (Mesh->HasTextureCoords(0))
     {
-        UINT MaterialIndex = Mesh->mMaterialIndex;
         for (size_t VertexIdx = 0; VertexIdx < Mesh->mNumVertices; ++VertexIdx)
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTextureCoord = Mesh->mTextureCoords[0][VertexIdx];
             memcpy(&UVTextures[AccessIdx], &CurrentTextureCoord, sizeof(aiVector2D));
-            UVTextures[AccessIdx].x += static_cast<float>(MaterialIndex);
         }
     }
 }
@@ -827,7 +826,7 @@ void AssetManager::TraverseDirectory(const path& PathIn, vector<string>& AssetFi
 void AssetManager::LoadAssetWithTopologySorting(const vector<string>& AssetPathsIn)
 {
     // 위상 정렬을 통한 Asset Loading Priority 결정
-    unordered_map<EAssetType, size_t> AssetLoadPriorities = AssetPriorityManagerInstance.GetAssetLoadPriorities();
+    unordered_map<string, size_t> AssetLoadPriorities = AssetPriorityManagerInstance.GetAssetLoadPriorities();
     map<size_t, vector<SAssetPreloadArgs>> AssetLoadArgsWithPriorities;
 
     for (const string& AssetPathIn : AssetPathsIn)
@@ -845,8 +844,8 @@ void AssetManager::LoadAssetWithTopologySorting(const vector<string>& AssetPaths
             fread(AssetName.data(), sizeof(char), AssetNameSize, InputAssetFile);
 
             // Asset Type
-            EAssetType AssetType;
-            fread(&AssetType, sizeof(AssetType), 1, InputAssetFile);
+            string AssetType;
+            AAssetFile::DeserializeString(AssetType, InputAssetFile);
 
             long LastReadPoint = ftell(InputAssetFile);
 
@@ -873,38 +872,47 @@ void AssetManager::LoadAssetWithTopologySorting(const vector<string>& AssetPaths
             {
                 fseek(InputAssetFile, AssetPreloadArgs.LastReadPoint, SEEK_SET);
 
-                switch (AssetPreloadArgs.AssetType)
+                const string& AssetType = AssetPreloadArgs.AssetType;
+
+                if (AssetType == BaseMeshAsset::BaseMeshAssetKind)
                 {
-                case EAssetType::None:
-                    break;
-                case EAssetType::StaticMesh:
+
+                }
+                else if (AssetType == StaticMeshAsset::StaticMeshAssetKind)
+                {
                     LoadAssetHelper(InputAssetFile, ManagingStaticMeshes, AssetPreloadArgs.AssetName, true);
-                    break;
-                case EAssetType::SkeletalMesh:
+                }
+                else if (AssetType == SkeletalMeshAsset::SkeletalMeshAssetKind)
+                {
                     LoadAssetHelper(InputAssetFile, ManagingSkeletalMeshes, AssetPreloadArgs.AssetName, true);
-                    break;
-                case EAssetType::Bone:
+                }
+                else if (AssetType == BoneAsset::BoneAssetKind)
+                {
                     LoadAssetHelper(InputAssetFile, ManagingBones, AssetPreloadArgs.AssetName, true);
-                    break;
-                case EAssetType::Map:
+                }
+                else if (AssetType == MapAsset::MapAssetKind)
+                {
                     LoadAssetHelper(InputAssetFile, ManagingMaps, AssetPreloadArgs.AssetName, this, true);
-                    break;
-                case EAssetType::BaseTexture:
+                }
+                else if (AssetType == BaseTextureAsset::BaseTextureAssetKind)
+                {
                     LoadAssetHelper(InputAssetFile, ManagingBasicTextures, AssetPreloadArgs.AssetName);
-                    break;
-                case EAssetType::EXRTexture:
+                }
+                else if (AssetType == EXRTextureAsset::EXRTextureAssetKind)
+                {
                     LoadAssetHelper(InputAssetFile, ManagingEXRTextures, AssetPreloadArgs.AssetName);
-                    break;
-                case EAssetType::DDSTexture:
+                }
+                else if (AssetType == DDSTextureAsset::DDSTextureAssetKind)
+                {
                     LoadAssetHelper(InputAssetFile, ManagingDDSTextures, AssetPreloadArgs.AssetName);
-                    break;
-                case EAssetType::Material:
+                }
+                else if (AssetType == MaterialAsset::MaterialAssetKind)
+                {
                     LoadAssetHelper(InputAssetFile, ManagingMaterials, AssetPreloadArgs.AssetName, true);
-                    break;
-                case EAssetType::Animation:
-                    break;
-                default:
-                    break;
+                }
+                else
+                {
+
                 }
 
                 fclose(InputAssetFile);

@@ -10,6 +10,9 @@ public:
 	virtual ~StaticMeshAsset();
 
 public:
+	static std::string StaticMeshAssetKind;
+
+public:
 	virtual std::vector<ID3D11Buffer*> GetVertexBuffers(const size_t& LODLevelIn) override;
 	virtual std::vector<UINT> GetStrides() override;
 	virtual std::vector<UINT> GetOffsets() override;

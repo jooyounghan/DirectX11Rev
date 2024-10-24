@@ -1,16 +1,17 @@
 #include "StaticAssetHeader.hlsli"
 
-cbuffer ModelMatrix : register(b0)
+cbuffer CameraViewProj : register(b0)
+{
+    matrix ViewProjMatrix;
+    matrix ViewProjInvMatrix;
+};
+
+cbuffer ModelMatrix : register(b1)
 {
     matrix ModelMatrix;
     matrix ModelInvMatrix;
 };
 
-cbuffer CameraViewProj : register(b1)
-{
-    matrix ViewProjMatrix;
-    matrix ViewProjInvMatrix;
-};
 
 BasicVertexOutput main(BasicVertexInput Input)
 {

@@ -7,34 +7,6 @@
 #include <unordered_map>
 #include <memory>
 
-enum class EAssetType
-{
-	None,
-
-	// Mesh
-	BaseMesh,
-	StaticMesh,
-	SkeletalMesh,
-
-	// Bone
-	Bone,
-
-	// Map
-	Map,
-
-	// Material
-	Material,
-	BaseTexture,
-	EXRTexture,
-	DDSTexture,
-
-	// Animation
-	Animation,
-
-	NumAssetType
-};
-
-
 
 constexpr const char* AssetOutPath = ".\\Assets\\";
 constexpr const char* AssetExtension = ".Asset";
@@ -42,18 +14,14 @@ constexpr const char* AssetExtension = ".Asset";
 class AAssetFile : public ISerializable
 {
 public:
-	AAssetFile(const std::string& AssetNameIn, EAssetType AssetTypeIn);
+	AAssetFile(const std::string& AssetNameIn, const std::string& AssetTypeIn);
 	virtual ~AAssetFile();
 
 protected:
 	std::string AssetName;
-	EAssetType AssetType;
+	std::string AssetType;
 	MakeGetter(AssetName);
 	MakeGetter(AssetType);
-
-public:
-	static std::unordered_map<EAssetType, std::string> AssetTypeToSuffix;
-	static std::unordered_map<std::string, EAssetType> AssetSuffixToType;
 
 protected:
 	bool IsModified = false;

@@ -8,7 +8,7 @@ public:
 	virtual ~AddPlaceableModal();
 
 private:
-	static const char* PlaceableItemIdentifiers[];
+	std::vector<std::string> PlaceableItemIdentifiers;
 
 protected:
 	virtual bool ModalCondition() override;

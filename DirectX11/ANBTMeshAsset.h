@@ -4,7 +4,7 @@
 class ANBTMeshAsset : public AMeshAsset
 {
 public:
-	ANBTMeshAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn);
+	ANBTMeshAsset(const std::string& AssetNameIn, const std::string& AssetTypeIn);
 	virtual ~ANBTMeshAsset();
 
 public:

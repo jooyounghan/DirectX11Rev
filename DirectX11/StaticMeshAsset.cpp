@@ -4,8 +4,10 @@
 using namespace std;
 using namespace DirectX;
 
+string StaticMeshAsset::StaticMeshAssetKind = "StaticMesh";
+
 StaticMeshAsset::StaticMeshAsset(const string& AssetNameIn, bool LoadFromAsset)
-	: ANBTMeshAsset(LoadFromAsset ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::StaticMesh)], EAssetType::StaticMesh)
+	: ANBTMeshAsset(LoadFromAsset ? AssetNameIn : AssetNameIn + "_" + StaticMeshAsset::StaticMeshAssetKind, StaticMeshAsset::StaticMeshAssetKind)
 {
 }
 

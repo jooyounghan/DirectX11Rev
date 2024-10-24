@@ -7,8 +7,10 @@
 using namespace std;
 using namespace DirectX;
 
+string SkeletalMeshAsset::SkeletalMeshAssetKind = "SkeletalMesh";
+
 SkeletalMeshAsset::SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadFromAsset)
-	: ANBTMeshAsset(LoadFromAsset ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::SkeletalMesh)], EAssetType::SkeletalMesh)
+	: ANBTMeshAsset(LoadFromAsset ? AssetNameIn : AssetNameIn + "_" + SkeletalMeshAsset::SkeletalMeshAssetKind, SkeletalMeshAsset::SkeletalMeshAssetKind)
 {
 }
 

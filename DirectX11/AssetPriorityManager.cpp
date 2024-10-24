@@ -1,9 +1,18 @@
 #include "AssetPriorityManager.h"
 #include "AAssetFile.h"
+#include "BaseMeshAsset.h"
+#include "StaticMeshAsset.h"
+#include "SkeletalMeshAsset.h"
+#include "BoneAsset.h"
+#include "MapAsset.h"
+#include "MaterialAsset.h"
+#include "BaseTextureAsset.h"
+#include "EXRTextureAsset.h"
+#include "DDSTextureAsset.h"
 
 using namespace std;
 
-PriorityNode::PriorityNode(EAssetType AssetTypeIn) : AssetType(AssetTypeIn) {}
+PriorityNode::PriorityNode(const string& AssetTypeIn) : AssetType(AssetTypeIn) {}
 
 void PriorityNode::AddPrerequisite(shared_ptr<PriorityNode> NodeIn) 
 { 
@@ -13,16 +22,15 @@ void PriorityNode::AddPrerequisite(shared_ptr<PriorityNode> NodeIn)
 AssetPriorityManager::AssetPriorityManager()
 {
 	// Mesh
-	shared_ptr<PriorityNode> BaseMesh = make_shared<PriorityNode>(EAssetType::BaseMesh);
-	shared_ptr<PriorityNode> StaticMesh = make_shared<PriorityNode>(EAssetType::StaticMesh);
-	shared_ptr<PriorityNode> SkeletalMesh = make_shared<PriorityNode>(EAssetType::SkeletalMesh);
-	shared_ptr<PriorityNode> Bone = make_shared<PriorityNode>(EAssetType::Bone);
-	shared_ptr<PriorityNode> Map = make_shared<PriorityNode>(EAssetType::Map);
-	shared_ptr<PriorityNode> Material = make_shared<PriorityNode>(EAssetType::Material);
-	shared_ptr<PriorityNode> BaseTexture = make_shared<PriorityNode>(EAssetType::BaseTexture);
-	shared_ptr<PriorityNode> EXRTexture = make_shared<PriorityNode>(EAssetType::EXRTexture);
-	shared_ptr<PriorityNode> DDSTexture = make_shared<PriorityNode>(EAssetType::DDSTexture);
-	shared_ptr<PriorityNode> Animation = make_shared<PriorityNode>(EAssetType::Animation);
+	shared_ptr<PriorityNode> BaseMesh = make_shared<PriorityNode>(BaseMeshAsset::BaseMeshAssetKind);
+	shared_ptr<PriorityNode> StaticMesh = make_shared<PriorityNode>(StaticMeshAsset::StaticMeshAssetKind);
+	shared_ptr<PriorityNode> SkeletalMesh = make_shared<PriorityNode>(SkeletalMeshAsset::SkeletalMeshAssetKind);
+	shared_ptr<PriorityNode> Bone = make_shared<PriorityNode>(BoneAsset::BoneAssetKind);
+	shared_ptr<PriorityNode> Map = make_shared<PriorityNode>(MapAsset::MapAssetKind);
+	shared_ptr<PriorityNode> Material = make_shared<PriorityNode>(MaterialAsset::MaterialAssetKind);
+	shared_ptr<PriorityNode> BaseTexture = make_shared<PriorityNode>(BaseTextureAsset::BaseTextureAssetKind);
+	shared_ptr<PriorityNode> EXRTexture = make_shared<PriorityNode>(EXRTextureAsset::EXRTextureAssetKind);
+	shared_ptr<PriorityNode> DDSTexture = make_shared<PriorityNode>(DDSTextureAsset::DDSTextureAssetKind);
 
 	PriorityNodes.emplace_back(BaseMesh);
 	PriorityNodes.emplace_back(StaticMesh);
@@ -33,7 +41,6 @@ AssetPriorityManager::AssetPriorityManager()
 	PriorityNodes.emplace_back(BaseTexture);
 	PriorityNodes.emplace_back(EXRTexture);
 	PriorityNodes.emplace_back(DDSTexture);
-	PriorityNodes.emplace_back(Animation);
 
 	Material->AddPrerequisite(BaseTexture);
 	Material->AddPrerequisite(EXRTexture);
@@ -43,19 +50,16 @@ AssetPriorityManager::AssetPriorityManager()
 
 	SkeletalMesh->AddPrerequisite(Bone);
 	SkeletalMesh->AddPrerequisite(Material);
-
-	Animation->AddPrerequisite(SkeletalMesh);
-
+	StaticMesh->AddPrerequisite(Material);
 
 	Map->AddPrerequisite(BaseMesh);
 	Map->AddPrerequisite(StaticMesh);
 	Map->AddPrerequisite(SkeletalMesh);
-	Map->AddPrerequisite(Animation);
 }
 
-unordered_map<EAssetType, size_t> AssetPriorityManager::GetAssetLoadPriorities()
+unordered_map<string, size_t> AssetPriorityManager::GetAssetLoadPriorities()
 {
-	unordered_map<EAssetType, size_t> PriorityResults;
+	unordered_map<string, size_t> PriorityResults;
 	ReadyTopologySort();
 	TopologySort(PriorityResults);
 	return PriorityResults;
@@ -71,7 +75,7 @@ void AssetPriorityManager::ReadyTopologySort()
 }
 
 void AssetPriorityManager::TopologySort(
-	unordered_map<EAssetType, size_t>& Result
+	unordered_map<string, size_t>& Result
 )
 {
 	static size_t priority = 0;

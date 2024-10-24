@@ -5,16 +5,15 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
-
-enum class EAssetType;
+#include <string>
 
 class PriorityNode
 {
 public:
-	PriorityNode(EAssetType AssetTypeIn);
+	PriorityNode(const std::string& AssetTypeIn);
 
 protected:
-	EAssetType AssetType;
+	std::string AssetType;
 	std::vector<std::shared_ptr<PriorityNode>> Prerequisites;
 	size_t PrerequisitiesCount = 0;
 	bool IsSorted = false;
@@ -38,8 +37,8 @@ private:
 	std::list<std::shared_ptr<PriorityNode>> PriorityNodes;
 
 public:
-	std::unordered_map<EAssetType, size_t> GetAssetLoadPriorities();
+	std::unordered_map<std::string, size_t> GetAssetLoadPriorities();
 	void ReadyTopologySort();
-	void TopologySort(std::unordered_map<EAssetType, size_t>& Result);
+	void TopologySort(std::unordered_map<std::string, size_t>& Result);
 };
 

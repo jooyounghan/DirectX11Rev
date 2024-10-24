@@ -5,7 +5,7 @@
 using namespace std;
 using namespace DirectX;
 
-AMeshAsset::AMeshAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn)
+AMeshAsset::AMeshAsset(const std::string& AssetNameIn, const string& AssetTypeIn)
 	: AAssetFile(AssetNameIn, AssetTypeIn)
 {
 }

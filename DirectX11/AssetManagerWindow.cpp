@@ -4,6 +4,7 @@
 
 #include "AssetControlWindow.h"
 #include "MaterialAssetNodeCanvas.h"
+#include "MaterialAsset.h"
 
 #include "UIVariable.h"
 
@@ -250,15 +251,11 @@ void AssetManagerWindow::OpenItemSetting(AssetControl* AssetControlCached)
         AAssetFile* AssetFile = AssetControlCached->GetAssetFileCached();
         if (AssetFile != nullptr)
         {
-            EAssetType AssetType = AssetFile->GetAssetType();
-            switch (AssetType)
+            const string& AssetType = AssetFile->GetAssetType();
+            if (AssetType == MaterialAsset::MaterialAssetKind)
             {
-            case EAssetType::Material:
                 AssetControlWindows.emplace_back(make_unique<AssetControlWindow<MaterialAssetNodeCanvas>>(AssetManagerCached, AssetFile));
                 AssetControlWindowAdded = true;
-                break;
-            default:
-                break;
             }
         }
     }

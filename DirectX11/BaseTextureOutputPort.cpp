@@ -1,5 +1,6 @@
 #include "BaseTextureOutputPort.h"
 #include "AssetVariableInputPort.h"
+#include "BaseTextureAsset.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ bool BaseTextureOutputPort::IsConnectable(InputPort* PortIn)
 	AssetVariableInputPort* AssetVariableInputNodeCached = dynamic_cast<AssetVariableInputPort*>(PortIn);
 	if (AssetVariableInputNodeCached != nullptr)
 	{
-		if (AssetVariableInputNodeCached->GetPortAssetType() == EAssetType::BaseTexture)
+		if (AssetVariableInputNodeCached->GetPortAssetType() == BaseTextureAsset::BaseTextureAssetKind)
 		{
 			return true;
 		}

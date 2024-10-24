@@ -35,14 +35,13 @@ void ANodeCanvas::RenderControl()
     DrawCanvasRectangle(32.f);
 
     ImGui::SetNextItemAllowOverlap();
-    if (IsMouseHoveringRect(LeftTopPositon, RightBottomPosition))
+    InvisibleButton("NodeCanvasInVisibleButton", CanvasSize, ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonMiddle);
+    if (IsItemActive() && IsMouseDragging(ImGuiMouseButton_Middle))
     {
-        if (IsMouseDragging(ImGuiMouseButton_Middle))
-        {
-            ScrollingPosition.x += io.MouseDelta.x;
-            ScrollingPosition.y += io.MouseDelta.y;
-        }
+        ScrollingPosition.x += io.MouseDelta.x;
+        ScrollingPosition.y += io.MouseDelta.y;
     }
+
 
     ImDrawList* DrawList = GetWindowDrawList();
     OriginPosition = ImVec2(LeftTopPositon.x + ScrollingPosition.x, LeftTopPositon.y + ScrollingPosition.y);

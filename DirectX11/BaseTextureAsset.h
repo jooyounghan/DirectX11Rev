@@ -13,6 +13,9 @@ public:
 	);
 	virtual ~BaseTextureAsset();
 
+public:
+	static std::string BaseTextureAssetKind;
+
 private:
 	virtual void CreateTexture(
 		const std::vector<uint8_t*>& ImageBufferPerArray,

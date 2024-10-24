@@ -11,6 +11,9 @@ public:
 	SkeletalMeshAsset(const std::string& AssetNameIn, bool LoadFromAsset);
 	virtual ~SkeletalMeshAsset();
 
+public:
+	static std::string SkeletalMeshAssetKind;
+
 protected:
 	std::shared_ptr<BoneAsset> LinkedBoneAsset = nullptr;
 	MakeSetterGetter(LinkedBoneAsset)

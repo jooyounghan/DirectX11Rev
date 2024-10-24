@@ -37,6 +37,9 @@ public:
 	);
 	virtual ~MapAsset();
 
+public:
+	static std::string MapAssetKind;
+
 protected:
 	AssetManager* AssetManagerCached = nullptr;
 

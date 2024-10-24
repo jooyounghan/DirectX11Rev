@@ -7,7 +7,7 @@ constexpr const char* TextureAssetOutPath = ".\\Assets\\Texture\\";
 class ATextureAsset : public AAssetFile
 {
 public:
-	ATextureAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn) : AAssetFile(AssetNameIn, AssetTypeIn) {};
+	ATextureAsset(const std::string& AssetNameIn, const std::string& AssetTypeIn) : AAssetFile(AssetNameIn, AssetTypeIn) {};
 	~ATextureAsset() {};
 
 public:

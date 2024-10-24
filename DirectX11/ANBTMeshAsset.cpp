@@ -1,8 +1,9 @@
 #include "ANBTMeshAsset.h"
 
+using namespace std;
 using namespace DirectX;
 
-ANBTMeshAsset::ANBTMeshAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn)
+ANBTMeshAsset::ANBTMeshAsset(const string& AssetNameIn, const string& AssetTypeIn)
 	: AMeshAsset(AssetNameIn, AssetTypeIn)
 {
 }

@@ -11,6 +11,9 @@ public:
 		const DirectX::TexMetadata& metaData
 	);
 
+public:
+	static std::string EXRTextureAssetKind;
+
 private:
 	virtual void CreateTexture(
 		const std::vector<uint8_t*>& ImageBufferPerArray,

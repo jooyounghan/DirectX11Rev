@@ -8,7 +8,7 @@ public:
 	virtual ~AddAttachableModal();
 
 private:
-	static const char* AttachableItemIdentifiers[];
+	std::vector<std::string> AttachableItemIdentifiers;
 
 protected:
 	virtual bool ModalCondition() override;

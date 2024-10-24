@@ -29,6 +29,8 @@
 using namespace std;
 using namespace DirectX;
 
+string MapAsset::MapAssetKind = "Map";
+
 MapAsset::MapAsset(
 	const std::string& MapNameIn,
 	AssetManager* AssetManagerIn,
@@ -36,7 +38,7 @@ MapAsset::MapAsset(
 )
 	: 
 	AssetManagerCached(AssetManagerIn),
-	AAssetFile(LoadFromAsset ? MapNameIn : MapNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Map)], EAssetType::Map)
+	AAssetFile(LoadFromAsset ? MapNameIn : MapNameIn + "_" + MapAsset::MapAssetKind, MapAsset::MapAssetKind)
 {
 	if (!LoadFromAsset)
 	{
@@ -146,13 +148,13 @@ void MapAsset::Serialize()
 
 		for (auto& RootPlaceable : RootPlaceables)
 		{
-				// Object Kind
-				const string& PlaceableObjectKind = RootPlaceable->GetPlaceableKind();
-				SerializeString(PlaceableObjectKind, OutputAssetFile);
+			// Object Kind
+			const string& PlaceableObjectKind = RootPlaceable->GetPlaceableKind();
+			SerializeString(PlaceableObjectKind, OutputAssetFile);
 
-				RootPlaceable->OnSerializeFromMap(OutputAssetFile);
+			RootPlaceable->OnSerializeFromMap(OutputAssetFile);
 
-				SerializeChildrenObjects(RootPlaceable.get(), OutputAssetFile);
+			SerializeChildrenObjects(RootPlaceable.get(), OutputAssetFile);
 		}
 		fclose(OutputAssetFile);
 	}

@@ -22,28 +22,28 @@ MaterialOutputNode::MaterialOutputNode(
 	OnHeightTextureAssetSet = bind(&MaterialOutputNode::SetHeightTextureAssetWithConnect, this, placeholders::_1);
 	OnEmissiveTextureAssetSet = bind(&MaterialOutputNode::SetEmissiveTextureAssetWithConnect, this, placeholders::_1);
 
-	AmbientOcculusionTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, EAssetType::BaseTexture);
+	AmbientOcculusionTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	AmbientOcculusionTexturePort->ConnectEvent += OnAmbientOcculusionTextureAssetSet;
 
-	SpecularTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, EAssetType::BaseTexture);
+	SpecularTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	SpecularTexturePort->ConnectEvent += OnSpecularTextureAssetSet;
 	
-	DiffuseTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, EAssetType::BaseTexture);
+	DiffuseTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	DiffuseTexturePort->ConnectEvent += OnDiffuseTextureAssetSet;
 	
-	RoughnessTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, EAssetType::BaseTexture);
+	RoughnessTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	RoughnessTexturePort->ConnectEvent += OnRoughnessTextureAssetSet;
 	
-	MetalicTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, EAssetType::BaseTexture);
+	MetalicTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	MetalicTexturePort->ConnectEvent += OnMetalicTextureAssetSet;
 	
-	NormalTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, EAssetType::BaseTexture);
+	NormalTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	NormalTexturePort->ConnectEvent += OnNormalTextureAssetSet;
 	
-	HeightTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, EAssetType::BaseTexture);
+	HeightTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	HeightTexturePort->ConnectEvent += OnHeightTextureAssetSet;
 	
-	EmissiveTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, EAssetType::BaseTexture);
+	EmissiveTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	EmissiveTexturePort->ConnectEvent += OnEmissiveTextureAssetSet;
 }
 

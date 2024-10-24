@@ -9,12 +9,12 @@ public:
 	AssetVariableInputPort(
 		const ImVec2& CenterPositionIn,
 		const float& RadiusSizeIn,
-		const EAssetType& AssetTypeIn
+		const std::string& AssetTypeIn
 	);
 	virtual ~AssetVariableInputPort();
 
 protected:
-	EAssetType PortAssetType;
+	std::string PortAssetType;
 	MakeGetter(PortAssetType);
 };
 

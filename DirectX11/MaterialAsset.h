@@ -11,6 +11,9 @@ public:
 	MaterialAsset(const std::string& AssetNameIn, const bool& LoadFromAsset);
 	virtual ~MaterialAsset();
 
+public:
+	static std::string MaterialAssetKind;
+
 protected:
 	std::shared_ptr<BaseTextureAsset> AmbientOcculusionTextureAsset;
 	std::shared_ptr<BaseTextureAsset> SpecularTextureAsset;

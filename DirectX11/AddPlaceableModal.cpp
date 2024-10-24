@@ -9,20 +9,18 @@
 using namespace std;
 using namespace ImGui;
 
-const char* AddPlaceableModal::PlaceableItemIdentifiers[] =
-{
-    StaticMeshObjectActor::StaticMeshObjectActorKind.c_str(),
-    SkeletalMeshObjectActor::SkeletalMeshObjectActorKind.c_str(),
-    EnvironmentActor::EnvironmentActorKind.c_str(),
-};
-
-
 AddPlaceableModal::AddPlaceableModal(
     const string& ModalHeaderNameIn,
     EditorWorld* EditorWorldIn
 )
     : AObjectManageModal(ModalHeaderNameIn, EditorWorldIn)
 {
+    PlaceableItemIdentifiers =
+    {
+        StaticMeshObjectActor::StaticMeshObjectActorKind,
+        SkeletalMeshObjectActor::SkeletalMeshObjectActorKind,
+        EnvironmentActor::EnvironmentActorKind,
+    };
 }
 
 AddPlaceableModal::~AddPlaceableModal()
@@ -40,24 +38,32 @@ bool AddPlaceableModal::ModalCondition()
 
 void AddPlaceableModal::RenderModal()
 {
-    static int ItemCurrentSelectedIdx = 0;
-    ImGui::Combo("Select Class", &ItemCurrentSelectedIdx, PlaceableItemIdentifiers, IM_ARRAYSIZE(PlaceableItemIdentifiers));
+    static string SelectedPlaceableKind;
+    if (ImGui::BeginCombo("Select Placeable Object", SelectedPlaceableKind.empty() ? "Select Placeable Object" : SelectedPlaceableKind.c_str()))
+    {
+        for (const string& PlaceableItemIdentifier : PlaceableItemIdentifiers)
+        {
+            if (ImGui::Selectable(PlaceableItemIdentifier.c_str()))
+            {
+                SelectedPlaceableKind = PlaceableItemIdentifier;
+            }
+        }
+        ImGui::EndCombo();
+    }
 
     Separator();
 
-    const char* SelectedObjectKind = PlaceableItemIdentifiers[ItemCurrentSelectedIdx];
-
     if (Button("OK", ImVec2(120, 0)))
     {
-        if (SelectedObjectKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
+        if (SelectedPlaceableKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
         {
             CurrentMapAssetCached->PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
         }
-        else if (SelectedObjectKind == SkeletalMeshObjectActor::SkeletalMeshObjectActorKind)
+        else if (SelectedPlaceableKind == SkeletalMeshObjectActor::SkeletalMeshObjectActorKind)
         {
             CurrentMapAssetCached->PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
         }
-        else if (SelectedObjectKind == EnvironmentActor::EnvironmentActorKind)
+        else if (SelectedPlaceableKind == EnvironmentActor::EnvironmentActorKind)
         {
             CurrentMapAssetCached->PlaceableAddHelper<EnvironmentActor>();
         }

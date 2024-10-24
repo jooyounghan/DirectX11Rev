@@ -6,8 +6,8 @@ using namespace std;
 using namespace DirectX;
 
 AScratchTextureAsset::AScratchTextureAsset(
-	const string& AssetNameIn, 
-	const EAssetType& AssetTypeIn
+	const string& AssetNameIn,
+	const string& AssetTypeIn
 )
 	: ATextureAsset(AssetNameIn, AssetTypeIn)
 {
@@ -16,7 +16,7 @@ AScratchTextureAsset::AScratchTextureAsset(
 
 AScratchTextureAsset::AScratchTextureAsset(
 	const string& AssetNameIn,
-	const EAssetType& AssetTypeIn,
+	const string& AssetTypeIn,
 	const ScratchImage& scratch, 
 	const TexMetadata& metaData
 )

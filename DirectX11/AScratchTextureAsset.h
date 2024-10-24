@@ -8,11 +8,11 @@ class AScratchTextureAsset : public ATextureAsset
 public:
 	AScratchTextureAsset(
 		const std::string& AssetNameIn,
-		const EAssetType& AssetTypeIn
+		const std::string& AssetTypeIn
 	);
 	AScratchTextureAsset(
 		const std::string& AssetNameIn,
-		const EAssetType& AssetTypeIn,
+		const std::string& AssetTypeIn,
 		const DirectX::ScratchImage& scratch,
 		const DirectX::TexMetadata& metaData
 	);

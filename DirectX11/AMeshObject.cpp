@@ -125,7 +125,7 @@ void AMeshObject::Render()
 		);
 
 
-#pragma region StaticMeshObjectPSOCached
+#pragma region MeshObjectPSOCached
 		{
 			vector<ID3D11RenderTargetView*> RTVs;
 			RTVs.push_back(CurrentCamera->GetSDRSceneRTV());

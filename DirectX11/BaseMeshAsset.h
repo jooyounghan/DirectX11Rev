@@ -10,6 +10,9 @@ protected:
 	MakeSingleton(BaseMeshAsset);
 
 public:
+	static std::string BaseMeshAssetKind;
+
+public:
 	virtual std::vector<ID3D11Buffer*> GetVertexBuffers(const size_t& LODLevelIn = 0) override final;
 	virtual std::vector<UINT> GetStrides() override final;
 	virtual std::vector<UINT> GetOffsets() override final;

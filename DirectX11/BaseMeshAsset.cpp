@@ -3,8 +3,10 @@
 using namespace std;
 using namespace DirectX;
 
+string BaseMeshAsset::BaseMeshAssetKind = "BaseMesh";
+
 BaseMeshAsset::BaseMeshAsset(const string& AssetNameIn) 
-	: AMeshAsset(AssetNameIn, EAssetType::BaseMesh)
+	: AMeshAsset(AssetNameIn, BaseMeshAsset::BaseMeshAssetKind)
 {
 
 }

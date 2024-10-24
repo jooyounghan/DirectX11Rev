@@ -20,8 +20,6 @@ struct aiMaterial;
 
 enum aiTextureType;
 
-enum class EAssetType;
-
 class AAssetFile;
 
 class AMeshAsset;
@@ -51,7 +49,7 @@ struct SAssetPreloadArgs
 	std::string AssetName;
 	std::string AssetPath;
 	long LastReadPoint;
-	EAssetType AssetType;
+	std::string AssetType;
 };
 
 typedef std::function<void()> AssetAddedDelegate;
@@ -119,6 +117,18 @@ private:
 		std::unordered_map<std::string, T>& ManagingContainer,
 		T& AddedAsset
 	);
+
+public:
+	void SerailizeAndAddToContainer(std::shared_ptr<MapAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingMaps, AssetIn); }
+	void SerailizeAndAddToContainer(std::shared_ptr<BoneAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingBones, AssetIn); };
+	void SerailizeAndAddToContainer(std::shared_ptr<StaticMeshAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingStaticMeshes, AssetIn); };
+	void SerailizeAndAddToContainer(std::shared_ptr<SkeletalMeshAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingSkeletalMeshes, AssetIn); };
+	void SerailizeAndAddToContainer(std::shared_ptr<BaseTextureAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingBasicTextures, AssetIn); };
+	void SerailizeAndAddToContainer(std::shared_ptr<EXRTextureAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingEXRTextures, AssetIn); };
+	void SerailizeAndAddToContainer(std::shared_ptr<DDSTextureAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingDDSTextures, AssetIn); };
+	void SerailizeAndAddToContainer(std::shared_ptr<MaterialAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingMaterials, AssetIn); };
+	
+private:
 	template<typename T>
 	void SerializeModifiedAsset(std::unordered_map<std::string, T>& ManagingContainer);
 

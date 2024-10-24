@@ -12,6 +12,9 @@ public:
 		const DirectX::TexMetadata& metaData
 	);
 
+public:
+	static std::string DDSTextureAssetKind;
+
 private:
 	virtual void CreateTexture(
 		const std::vector<uint8_t*>& ImageBufferPerArray,

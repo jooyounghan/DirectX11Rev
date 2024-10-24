@@ -18,7 +18,7 @@ InputPort::~InputPort()
 void InputPort::Connect(AOutputPort* OutputPortIn)
 {
 	AOutputPort* LastConnectedOutputPort = ConnectedOutputPort;
-	if (LastConnectedOutputPort != nullptr)
+	if (LastConnectedOutputPort != nullptr && LastConnectedOutputPort != OutputPortIn)
 	{
 		ConnectedOutputPort = nullptr;
 		LastConnectedOutputPort->Connect(nullptr);

@@ -4,8 +4,10 @@
 
 using namespace std;
 
+string MaterialAsset::MaterialAssetKind = "Material";
+
 MaterialAsset::MaterialAsset(const std::string& AssetNameIn, const bool& LoadFromAsset)
-	: AAssetFile(LoadFromAsset ? AssetNameIn : AssetNameIn + AAssetFile::AssetTypeToSuffix[(EAssetType::Material)], EAssetType::Material)
+	: AAssetFile(LoadFromAsset ? AssetNameIn : AssetNameIn + "_" + MaterialAsset::MaterialAssetKind, MaterialAsset::MaterialAssetKind)
 {
 }
 

@@ -56,23 +56,16 @@ void StaticMeshObject::OnSerializeFromMap(FILE* FileIn)
 	AMeshObject::OnSerializeFromMap(FileIn);
 
 	// Mesh Asset Name
-	if (StaticMeshAssetInstance != nullptr)
-	{
-		const string& AssetName = StaticMeshAssetInstance->GetAssetName();
-		AAssetFile::SerializeString(AssetName, FileIn);
-	}
-	else
-	{
-		const string DummyAssetName = "";
-		AAssetFile::SerializeString(DummyAssetName, FileIn);
-	}
+	AAssetFile::SerializeString(StaticMeshAssetInstance != nullptr ? StaticMeshAssetInstance->GetAssetName() : "", FileIn);
+
 }
 
 void StaticMeshObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+	AMeshObject::OnDeserializeToMap(FileIn, AssetManagerIn);
 
 	string MeshAssetName;
 	AAssetFile::DeserializeString(MeshAssetName, FileIn);
+
 	StaticMeshAssetInstance = AssetManagerIn->GetManagingStaticMesh(MeshAssetName);
 }

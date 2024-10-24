@@ -50,18 +50,17 @@ void AOutputPort::AddConnectionLine(const ImVec2& OriginPosition, const ImVec2& 
 
 void AOutputPort::Connect(InputPort* PortIn)
 {
+	if (ConnectedPort != nullptr)
+	{
+		ConnectedPort->Connect(nullptr);
+	}
+	ConnectedPort = nullptr;
+
 	if (IsConnectable(PortIn) && !IsCyclic(PortIn))
 	{
+		// 연결 가능할 경우
 		ConnectedPort = PortIn;
 		ConnectedPort->Connect(this);
-	}
-	else
-	{
-		if (ConnectedPort != nullptr)
-		{
-			ConnectedPort->Connect(nullptr);
-		}
-		ConnectedPort = nullptr;
 	}
 }
 

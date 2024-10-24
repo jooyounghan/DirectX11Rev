@@ -9,8 +9,10 @@
 using namespace std;
 using namespace DirectX;
 
+string EXRTextureAsset::EXRTextureAssetKind = "EXRTexture";
+
 EXRTextureAsset::EXRTextureAsset(const string& AssetNameIn)
-	: AScratchTextureAsset(AssetNameIn, EAssetType::EXRTexture)
+	: AScratchTextureAsset(AssetNameIn, EXRTextureAsset::EXRTextureAssetKind)
 {
 }
 
@@ -20,8 +22,8 @@ EXRTextureAsset::EXRTextureAsset(
 	const TexMetadata& metaData
 )
 	: AScratchTextureAsset(
-		AssetNameIn + AAssetFile::AssetTypeToSuffix[EAssetType::EXRTexture], 
-		EAssetType::EXRTexture, scratch, metaData
+		AssetNameIn + "_" + EXRTextureAsset::EXRTextureAssetKind,
+		EXRTextureAsset::EXRTextureAssetKind, scratch, metaData
 	)
 {	
 	Width = static_cast<UINT>(metaData.width);

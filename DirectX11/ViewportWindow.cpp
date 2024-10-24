@@ -5,7 +5,9 @@
 
 #include "MapAsset.h"
 #include "AssetManager.h"
-#include "AAssetFile.h"
+
+#include "StaticMeshAsset.h"
+#include "SkeletalMeshAsset.h"
 
 #include "EditorPawn.h"
 #include "ACamera.h"
@@ -84,9 +86,8 @@ void ViewportWindow::ManageAssetDrop()
                 );
                 const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
                 
-                switch (AssetFile->GetAssetType())
-                {
-                case EAssetType::StaticMesh:
+                const string& AssetType = AssetFile->GetAssetType();
+                if (AssetType == StaticMeshAsset::StaticMeshAssetKind)
                 {
                     CurrentMap->AddStaticMeshObjectActor(
                         AssetManagerCached->GetManagingStaticMesh(AssetFile->GetAssetName()),
@@ -94,20 +95,15 @@ void ViewportWindow::ManageAssetDrop()
                         PlacePositon.m128_f32[1],
                         PlacePositon.m128_f32[2]
                     );
-                    break;
                 }
-                case EAssetType::SkeletalMesh:
+                else if (AssetType == SkeletalMeshAsset::SkeletalMeshAssetKind)
                 {
-                        CurrentMap->AddSkeletalMeshObjectActor(
-                            AssetManagerCached->GetManagingSkeletalMesh(AssetFile->GetAssetName()),
-                            PlacePositon.m128_f32[0],
-                            PlacePositon.m128_f32[1],
-                            PlacePositon.m128_f32[2]
-                        );
-                    break;
-                }
-                default:
-                    break;
+                    CurrentMap->AddSkeletalMeshObjectActor(
+                        AssetManagerCached->GetManagingSkeletalMesh(AssetFile->GetAssetName()),
+                        PlacePositon.m128_f32[0],
+                        PlacePositon.m128_f32[1],
+                        PlacePositon.m128_f32[2]
+                    );
                 }
             }
         }

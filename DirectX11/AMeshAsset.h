@@ -10,7 +10,7 @@ class MaterialAsset;
 class AMeshAsset : public AAssetFile
 {
 public:
-	AMeshAsset(const std::string& AssetNameIn, EAssetType AssetTypeIn);
+	AMeshAsset(const std::string& AssetNameIn, const std::string& AssetTypeIn);
 	virtual ~AMeshAsset();
 
 public:
