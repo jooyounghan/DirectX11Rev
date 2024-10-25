@@ -14,4 +14,6 @@ struct BasicVertexOutput
     float4 f4ProjPos : SV_Position;
     float2 f2TexCoord : TEXCOORD;
     float3 f3ModelNormal : NORMAL;
+    float3 f3ModelTangent : TANGENT;
+    float3 f3ModelBitangent : BINORMAL;
 };

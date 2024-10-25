@@ -50,7 +50,7 @@ std::vector<UINT> StaticMeshAsset::GetOffsets()
 
 void StaticMeshAsset::Initialize()
 {
-	AMeshAsset::Initialize();
+	ANBTMeshAsset::Initialize();
 }
 
 void StaticMeshAsset::Serialize()

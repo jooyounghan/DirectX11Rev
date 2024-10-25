@@ -5,6 +5,8 @@ struct ViewProjBufferData
 {
 	DirectX::XMMATRIX ViewProjMatrix;
 	DirectX::XMMATRIX InvViewProjMatrix;
+	DirectX::XMFLOAT3 ViewPosition;
+	float Dummy;
 };
 
 class Viewable : public AAttachableObject

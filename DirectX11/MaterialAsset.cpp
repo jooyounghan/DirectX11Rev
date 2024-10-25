@@ -9,6 +9,7 @@ string MaterialAsset::MaterialAssetKind = "Material";
 MaterialAsset::MaterialAsset(const std::string& AssetNameIn, const bool& LoadFromAsset)
 	: AAssetFile(LoadFromAsset ? AssetNameIn : AssetNameIn + "_" + MaterialAsset::MaterialAssetKind, MaterialAsset::MaterialAssetKind)
 {
+	AutoZeroMemory(MaterialData);
 }
 
 MaterialAsset::~MaterialAsset()
@@ -35,8 +36,6 @@ void MaterialAsset::Serialize()
 
 		fclose(OutputAssetFile);
 	}
-
-	
 }
 
 void MaterialAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
@@ -59,14 +58,14 @@ void MaterialAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	AAssetFile::DeserializeString(HeightTextureAssetName, FileIn);
 	AAssetFile::DeserializeString(EmissiveTextureAssetName, FileIn);
 
-	AmbientOcculusionTextureAsset = AssetManagerIn->GetManagingBasicTexture(AmbientOcculusionTextureAssetName);
-	SpecularTextureAsset = AssetManagerIn->GetManagingBasicTexture(SpecularTextureAssetName);
-	DiffuseTextureAsset = AssetManagerIn->GetManagingBasicTexture(DiffuseTextureAssetName);
-	RoughnessTextureAsset = AssetManagerIn->GetManagingBasicTexture(RoughnessTextureAssetName);
-	MetalicTextureAsset = AssetManagerIn->GetManagingBasicTexture(MetalicTextureAssetName);
-	NormalTextureAsset = AssetManagerIn->GetManagingBasicTexture(NormalTextureAssetName);
-	HeightTextureAsset = AssetManagerIn->GetManagingBasicTexture(HeightTextureAssetName);
-	EmissiveTextureAsset = AssetManagerIn->GetManagingBasicTexture(EmissiveTextureAssetName);
+	SetAmbientOcculusionTextureAsset(AssetManagerIn->GetManagingBasicTexture(AmbientOcculusionTextureAssetName));
+	SetSpecularTextureAsset(AssetManagerIn->GetManagingBasicTexture(SpecularTextureAssetName));
+	SetDiffuseTextureAsset(AssetManagerIn->GetManagingBasicTexture(DiffuseTextureAssetName));
+	SetRoughnessTextureAsset(AssetManagerIn->GetManagingBasicTexture(RoughnessTextureAssetName));
+	SetMetalicTextureAsset(AssetManagerIn->GetManagingBasicTexture(MetalicTextureAssetName));
+	SetNormalTextureAsset(AssetManagerIn->GetManagingBasicTexture(NormalTextureAssetName));
+	SetHeightTextureAsset(AssetManagerIn->GetManagingBasicTexture(HeightTextureAssetName));
+	SetEmissiveTextureAsset(AssetManagerIn->GetManagingBasicTexture(EmissiveTextureAssetName));
 }
 
 void MaterialAsset::SerializeAssetNameHelper(FILE* FileIn, std::shared_ptr<BaseTextureAsset> BasicTextureAssetIn)
@@ -79,4 +78,60 @@ void MaterialAsset::SerializeAssetNameHelper(FILE* FileIn, std::shared_ptr<BaseT
 	{
 		SerializeString(string(), FileIn);
 	}
+}
+
+void MaterialAsset::SetAmbientOcculusionTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
+{
+	AmbientOcculusionTextureAsset = AssetIn;
+	MaterialData.IsAmbientOcculusionSet = (AssetIn != nullptr);
+	MaterialDataBuffer.Upload(MaterialData);
+}
+
+void MaterialAsset::SetSpecularTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
+{
+	SpecularTextureAsset = AssetIn;
+	MaterialData.IsSpecularSet = (AssetIn != nullptr);
+	MaterialDataBuffer.Upload(MaterialData);
+}
+
+void MaterialAsset::SetDiffuseTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
+{
+	DiffuseTextureAsset = AssetIn;
+	MaterialData.IsDiffuseSet = (AssetIn != nullptr);
+	MaterialDataBuffer.Upload(MaterialData);
+}
+
+void MaterialAsset::SetRoughnessTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
+{
+	RoughnessTextureAsset = AssetIn;
+	MaterialData.IsRoughnessSet = (AssetIn != nullptr);
+	MaterialDataBuffer.Upload(MaterialData);
+}
+
+void MaterialAsset::SetMetalicTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
+{
+	MetalicTextureAsset = AssetIn;
+	MaterialData.IsMetalicSet = (AssetIn != nullptr);
+	MaterialDataBuffer.Upload(MaterialData);
+}
+
+void MaterialAsset::SetNormalTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
+{
+	NormalTextureAsset = AssetIn;
+	MaterialData.IsNormalSet = (AssetIn != nullptr);
+	MaterialDataBuffer.Upload(MaterialData);
+}
+
+void MaterialAsset::SetHeightTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
+{
+	HeightTextureAsset = AssetIn;
+	MaterialData.IsHeightSet = (AssetIn != nullptr);
+	MaterialDataBuffer.Upload(MaterialData);
+}
+
+void MaterialAsset::SetEmissiveTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
+{
+	EmissiveTextureAsset = AssetIn;
+	MaterialData.IsEmissiveSet = (AssetIn != nullptr);
+	MaterialDataBuffer.Upload(MaterialData);
 }

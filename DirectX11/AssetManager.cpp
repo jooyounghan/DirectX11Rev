@@ -984,8 +984,8 @@ void AssetManager::LoadTBNAsGltf(
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentNormal = Mesh->mNormals[VertexIdx];
             MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[AccessIdx].x = CurrentNormal.x;
-            MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[AccessIdx].y = -CurrentNormal.z;
-            MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentNormal.x;
+            MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[AccessIdx].y = CurrentNormal.y;
+            MeshObjectInstance->NormalsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentNormal.z;
         }
     }
 
@@ -998,11 +998,11 @@ void AssetManager::LoadTBNAsGltf(
             aiVector3D& CurrentBiTangent = Mesh->mBitangents[VertexIdx];
 
             MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].x = CurrentTangent.x;
-            MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].y = -CurrentTangent.z;
-            MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentTangent.x;
+            MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].y = CurrentTangent.y;
+            MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentTangent.z;
             MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].x = CurrentBiTangent.x;
-            MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].y = -CurrentBiTangent.z;
-            MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentBiTangent.x;
+            MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].y = CurrentBiTangent.y;
+            MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentBiTangent.z;
         }
     }
 }

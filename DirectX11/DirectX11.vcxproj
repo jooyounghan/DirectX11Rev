@@ -462,6 +462,7 @@
   <ItemGroup>
     <None Include="Shaders\EnvironmentActorHeader.hlsli" />
     <None Include="Shaders\MaterialHeader.hlsli" />
+    <None Include="Shaders\PBRHeader.hlsli" />
     <None Include="Shaders\PositionOnlyPathHeader.hlsli" />
     <None Include="Shaders\StaticAssetHeader.hlsli" />
     <None Include="Shaders\SkeletalAssetHeader.hlsli" />

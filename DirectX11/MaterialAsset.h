@@ -1,7 +1,22 @@
 #pragma once
 #include "AAssetFile.h"
+#include "UploadBuffer.h"
 
 class BaseTextureAsset;
+
+struct SMaterialData
+{
+	int IsAmbientOcculusionSet;
+	int IsSpecularSet;
+	int IsDiffuseSet;
+	int IsRoughnessSet;
+	int IsMetalicSet;
+	int IsNormalSet;
+	int IsHeightSet;
+	int IsEmissiveSet;
+	DirectX::XMFLOAT3 F0;
+	int Dummy;
+};
 
 constexpr const char* MaterialAssetOutPath = ".\\Assets\\Material\\";
 
@@ -15,6 +30,10 @@ public:
 	static std::string MaterialAssetKind;
 
 protected:
+	SMaterialData MaterialData;
+	UploadBuffer<SMaterialData> MaterialDataBuffer;
+
+protected:
 	std::shared_ptr<BaseTextureAsset> AmbientOcculusionTextureAsset;
 	std::shared_ptr<BaseTextureAsset> SpecularTextureAsset;
 	std::shared_ptr<BaseTextureAsset> DiffuseTextureAsset;
@@ -23,16 +42,24 @@ protected:
 	std::shared_ptr<BaseTextureAsset> NormalTextureAsset;
 	std::shared_ptr<BaseTextureAsset> HeightTextureAsset;
 	std::shared_ptr<BaseTextureAsset> EmissiveTextureAsset;
+	MakeGetter(AmbientOcculusionTextureAsset);
+	MakeGetter(SpecularTextureAsset);
+	MakeGetter(DiffuseTextureAsset);
+	MakeGetter(RoughnessTextureAsset);
+	MakeGetter(MetalicTextureAsset);
+	MakeGetter(NormalTextureAsset);
+	MakeGetter(HeightTextureAsset);
+	MakeGetter(EmissiveTextureAsset);
 
-	
-	MakeSetterGetter(AmbientOcculusionTextureAsset);
-	MakeSetterGetter(SpecularTextureAsset);
-	MakeSetterGetter(DiffuseTextureAsset);
-	MakeSetterGetter(RoughnessTextureAsset);
-	MakeSetterGetter(MetalicTextureAsset);
-	MakeSetterGetter(NormalTextureAsset);
-	MakeSetterGetter(HeightTextureAsset);
-	MakeSetterGetter(EmissiveTextureAsset);
+public:
+	void SetAmbientOcculusionTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
+	void SetSpecularTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
+	void SetDiffuseTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
+	void SetRoughnessTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
+	void SetMetalicTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
+	void SetNormalTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
+	void SetHeightTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
+	void SetEmissiveTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
 
 public:
 	virtual void Serialize() override;

@@ -63,7 +63,7 @@ void Viewable::Update(const float& DeltaTimeIn)
 	TempViewProj.ViewProjMatrix = GetPerspectiveViewMatrix();
 	TempViewProj.InvViewProjMatrix = XMMatrixInverse(nullptr, TempViewProj.ViewProjMatrix);
 	TempViewProj.ViewProjMatrix = XMMatrixTranspose(TempViewProj.ViewProjMatrix);
-
+	TempViewProj.ViewPosition = GetAbsolutePosition();
 	ViewProjBuffer.Upload(TempViewProj);
 }
 

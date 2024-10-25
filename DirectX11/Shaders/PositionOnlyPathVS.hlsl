@@ -4,6 +4,8 @@ cbuffer CameraViewProj : register(b0)
 {
     matrix ViewProjMatrix;
     matrix ViewProjInvMatrix;
+    float3 ViewPosition;
+    float Dummy;
 };
 
 cbuffer ModelMatrix : register(b1)

@@ -436,6 +436,9 @@
     <Filter Include="헤더 파일\Editor\GUI\Modal\Extended\AssetFile">
       <UniqueIdentifier>{0f406e0c-7585-4baa-b861-fedfcfb38b20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\PBR">
+      <UniqueIdentifier>{ac4ac663-8a84-46a2-9ad2-c872138b509c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PortfolioApp.cpp">
@@ -1283,6 +1286,9 @@
     </None>
     <None Include="Shaders\EnvironmentActorHeader.hlsli">
       <Filter>Shader\Environment</Filter>
+    </None>
+    <None Include="Shaders\PBRHeader.hlsli">
+      <Filter>Shader\PBR</Filter>
     </None>
     <None Include="Shaders\MaterialHeader.hlsli">
       <Filter>Shader</Filter>

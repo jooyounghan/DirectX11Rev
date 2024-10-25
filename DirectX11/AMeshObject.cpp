@@ -103,9 +103,12 @@ void AMeshObject::Render()
 		const vector<UINT> MaterialIndex = MeshAssetInstance->GetMaterialIndex(LODLevel);
 
 		vector<ID3D11Buffer*> VSConstBuffers;
+		vector<ID3D11Buffer*> PSConstBuffers;
 
 		VSConstBuffers.push_back(CurrentCamera->ViewProjBuffer.GetBuffer());
 		VSConstBuffers.push_back(TransformationBuffer.GetBuffer());
+
+		PSConstBuffers.push_back(CurrentCamera->ViewProjBuffer.GetBuffer());
 
 		vector<ID3D11ShaderResourceView*> EnvironmentSRVs;
 
@@ -136,6 +139,7 @@ void AMeshObject::Render()
 
 
 			MeshObjectPSOCached->SetVSConstantBuffers(0, static_cast<UINT>(VSConstBuffers.size()), VSConstBuffers.data());
+			MeshObjectPSOCached->SetPSConstantBuffers(0, static_cast<UINT>(PSConstBuffers.size()), PSConstBuffers.data());
 			MeshObjectPSOCached->SetPSShaderResourceViews(0, static_cast<UINT>(EnvironmentSRVs.size()), EnvironmentSRVs.data());
 
 			for (size_t PartIdx = 0; PartIdx < MaterialIndex.size(); ++PartIdx)
@@ -179,6 +183,7 @@ void AMeshObject::Render()
 				MeshObjectPSOCached->ResetPSShaderResourceViews(static_cast<UINT>(EnvironmentSRVs.size()), static_cast<UINT>(MaterialSRVs.size()));
 			}
 			MeshObjectPSOCached->ResetVSConstantBuffers(0, static_cast<UINT>(VSConstBuffers.size()));
+			MeshObjectPSOCached->ResetPSConstantBuffers(0, static_cast<UINT>(PSConstBuffers.size()));
 			MeshObjectPSOCached->ResetPSShaderResourceViews(0, static_cast<UINT>(EnvironmentSRVs.size()));
 		}
 #pragma endregion
