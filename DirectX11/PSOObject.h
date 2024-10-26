@@ -22,6 +22,14 @@ protected:
 	UINT											NumVSConstBuffers;
 	UINT											NumVSSRVs;
 
+	Microsoft::WRL::ComPtr<ID3D11HullShader>		HullShader;
+	UINT											NumHSConstBuffers;
+	UINT											NumHSSRVs;
+
+	Microsoft::WRL::ComPtr<ID3D11DomainShader>		DomainShader;
+	UINT											NumDSConstBuffers;
+	UINT											NumDSSRVs;
+
 	Microsoft::WRL::ComPtr<ID3D11PixelShader>		PixelShader;
 	UINT											NumPSConstBuffers;
 	UINT											NumPSSRVs;
@@ -30,6 +38,13 @@ protected:
 private:
 	bool											IsVSConstBufferSet[CONST_BUFFER_MAX_COUNT];
 	bool											IsVSSRVSet[SRV_MAX_COUNT];
+
+	bool											IsHSConstBufferSet[CONST_BUFFER_MAX_COUNT];
+	bool											IsHSSRVSet[SRV_MAX_COUNT];
+
+	bool											IsDSConstBufferSet[CONST_BUFFER_MAX_COUNT];
+	bool											IsDSSRVSet[SRV_MAX_COUNT];
+
 	bool											IsPSConstBufferSet[CONST_BUFFER_MAX_COUNT];
 	bool											IsPSSRVSet[SRV_MAX_COUNT];
 
@@ -40,7 +55,7 @@ private:
 
 
 	D3D11_PRIMITIVE_TOPOLOGY						PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
-	UINT											NumRenderTargets = 0;
+	size_t											NumRenderTargets = 0;
 	DXGI_FORMAT										RTVFormats[8]{ DXGI_FORMAT_UNKNOWN };
 	DXGI_FORMAT										DSVFormat = DXGI_FORMAT_UNKNOWN;
 	DXGI_SAMPLE_DESC								SampleDesc;
@@ -57,7 +72,7 @@ private:
 
 public:
 	void SetPipelineStateObject(
-		const UINT&						RTVCountIn,
+		const size_t&						RTVCountIn,
 		ID3D11RenderTargetView* const*		RTVsIn,
 		const D3D11_VIEWPORT*			ViewportIn,
 		ID3D11DepthStencilView*	DSVIn
@@ -68,6 +83,18 @@ public:
 	CONSTANT_BUFFER_RESETTER(VS);
 	SRV_SETTER(VS);
 	SRV_RESETTER(VS);
+
+public:
+	CONSTANT_BUFFER_SETTER(HS);
+	CONSTANT_BUFFER_RESETTER(HS);
+	SRV_SETTER(HS);
+	SRV_RESETTER(HS);
+
+public:
+	CONSTANT_BUFFER_SETTER(DS);
+	CONSTANT_BUFFER_RESETTER(DS);
+	SRV_SETTER(DS);
+	SRV_RESETTER(DS);
 
 public:
 	CONSTANT_BUFFER_SETTER(PS);

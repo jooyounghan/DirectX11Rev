@@ -20,7 +20,7 @@ using namespace std;
 string SkeletalMeshObject::SkeletalMeshObjectKind = "Skeletal Mesh Object";
 
 SkeletalMeshObject::SkeletalMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstanceIn)
-	: AMeshObject(MapAssetInstance, SkeletalMeshObject::SkeletalMeshObjectKind), SkeletalMeshAssetInstance(SkeletalMeshAssetInstanceIn)
+	: AMeshObject(MapAssetInstance, SkeletalMeshObject::SkeletalMeshObjectKind)
 {
 	static size_t SkeletalMeshObjectCount = 0;
 
@@ -30,14 +30,20 @@ SkeletalMeshObject::SkeletalMeshObject(MapAsset* MapAssetInstance, std::shared_p
 	MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_Solid);
 	PickingIDSolidPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_ID_Solid);
 
-	if (SkeletalMeshAssetInstanceIn != nullptr)
-	{
-		MaterialAssetInstances = SkeletalMeshAssetInstanceIn->GetDefaultMaterialAssets();
-	}
+
 }
 
 SkeletalMeshObject::~SkeletalMeshObject()
 {
+}
+
+void SkeletalMeshObject::SetSkeletalMeshAssetInstance(const std::shared_ptr<SkeletalMeshAsset>& SkeletalMeshAssetInstanceIn)
+{
+	SkeletalMeshAssetInstance = SkeletalMeshAssetInstanceIn;
+	if (SkeletalMeshAssetInstanceIn != nullptr)
+	{
+		MaterialAssetInstances = SkeletalMeshAssetInstanceIn->GetDefaultMaterialAssets();
+	}
 }
 
 AMeshAsset* SkeletalMeshObject::GetMeshAssetInstance()

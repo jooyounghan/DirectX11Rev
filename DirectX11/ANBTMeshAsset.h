@@ -9,7 +9,6 @@ public:
 
 public:
 	std::vector<Vertexable<DirectX::XMFLOAT3>> TangentsPerLOD;
-	std::vector<Vertexable<DirectX::XMFLOAT3>> BitangentsPerLOD;
 
 public:
 	virtual void SetLODCount(const size_t& LODCountIn) override;

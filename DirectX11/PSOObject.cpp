@@ -8,6 +8,10 @@ PSOObject::PSOObject(PSOArgsIn)
 	: DeviceContextCached(DeviceContextIn), VertexShader(VertexShaderIn),
 	InputLayout(InputLayoutIn),  NumVSConstBuffers(NumVSConstBuffersIn), 
 	NumVSSRVs(NumVSSRVsIn), PixelShader(PixelShaderIn), 
+	HullShader(HullShaderIn),
+	NumHSConstBuffers(NumHSConstBuffersIn), NumHSSRVs(NumHSSRVsIn),
+	DomainShader(DomainShaderIn),
+	NumDSConstBuffers(NumDSConstBuffersIn), NumDSSRVs(NumPSSRVsIn),
 	NumPSConstBuffers(NumPSConstBuffersIn), NumPSSRVs(NumPSSRVsIn),
 	PrimitiveTopology(PrimitiveTopologyIn), NumRenderTargets(NumRenderTargetsIn), 
 	DSVFormat(DSVFormatIn), SampleDesc(SampleDescIn), RasterizerState(RasterizerStateIn),
@@ -27,19 +31,16 @@ PSOObject::~PSOObject()
 {
 }
 
-#ifdef _DEBUG
 void PSOObject::ResetResourceFlag()
 {
-	memset(IsVSConstBufferSet, false, CONST_BUFFER_MAX_COUNT);
-	memset(IsVSSRVSet, false, SRV_MAX_COUNT);
-	memset(IsPSConstBufferSet, false, CONST_BUFFER_MAX_COUNT);
-	memset(IsPSSRVSet, false, SRV_MAX_COUNT);
+	RESET_RESOURCE_FLAG(VS);
+	RESET_RESOURCE_FLAG(HS);
+	RESET_RESOURCE_FLAG(DS);
+	RESET_RESOURCE_FLAG(PS);
 }
-#endif // _DEBUG
-
 
 void PSOObject::SetPipelineStateObject(
-	const UINT& RTVCountIn, 
+	const size_t& RTVCountIn, 
 	ID3D11RenderTargetView* const* RTVsIn, 
 	const D3D11_VIEWPORT* ViewportIn, 
 	ID3D11DepthStencilView* DSVIn
@@ -47,7 +48,6 @@ void PSOObject::SetPipelineStateObject(
 {
 	assert(RTVCountIn == NumRenderTargets);
 
-#ifdef _DEBUG
 	ResetResourceFlag();
 	D3D11_RENDER_TARGET_VIEW_DESC RenderTargetViewDesc;
 	for (size_t RtvIndex = 0; RtvIndex < NumRenderTargets; ++RtvIndex)
@@ -71,15 +71,17 @@ void PSOObject::SetPipelineStateObject(
 	DSVIn->GetDesc(&DepthStencilViewDesc);
 	assert(DepthStencilViewDesc.Format == DSVFormat);
 
-#endif // _DEBUG
-
 	DeviceContextCached->IASetInputLayout(InputLayout.Get());
 	DeviceContextCached->IASetPrimitiveTopology(PrimitiveTopology);
 
 	DeviceContextCached->VSSetShader(VertexShader.Get(), NULL, NULL);
+	DeviceContextCached->HSSetShader(HullShader.Get(), NULL, NULL);
+	DeviceContextCached->DSSetShader(DomainShader.Get(), NULL, NULL);
 	DeviceContextCached->PSSetShader(PixelShader.Get(), NULL, NULL);
 
 	DeviceContextCached->VSSetSamplers(0, static_cast<UINT>(SamplerStates.size()), SamplerStatesCached.data());
+	DeviceContextCached->HSSetSamplers(0, static_cast<UINT>(SamplerStates.size()), SamplerStatesCached.data());
+	DeviceContextCached->DSSetSamplers(0, static_cast<UINT>(SamplerStates.size()), SamplerStatesCached.data());
 	DeviceContextCached->PSSetSamplers(0, static_cast<UINT>(SamplerStates.size()), SamplerStatesCached.data());
 
 	DeviceContextCached->RSSetState(RasterizerState.Get());
@@ -89,45 +91,14 @@ void PSOObject::SetPipelineStateObject(
 
 	const FLOAT BlendFactor[4] = { 1.f, 1.f, 1.f, 1.f };
 	DeviceContextCached->OMSetBlendState(BlendState.Get(), BlendFactor, 0xFFFFFFFF);
-	DeviceContextCached->OMSetRenderTargets(NumRenderTargets, RTVsIn, DSVIn);
+	DeviceContextCached->OMSetRenderTargets(static_cast<UINT>(NumRenderTargets), RTVsIn, DSVIn);
 }
 
 
 void PSOObject::CheckPipelineValidation()
 {
-	for (UINT VsCBIdx = 0; VsCBIdx < NumVSConstBuffers; ++VsCBIdx)
-	{
-		assert(IsVSConstBufferSet[VsCBIdx] == true);
-	}
-	for (UINT VsCBIdx = NumVSConstBuffers; VsCBIdx < CONST_BUFFER_MAX_COUNT; ++VsCBIdx)
-	{
-		assert(IsVSConstBufferSet[VsCBIdx] == false);
-	}
-
-	for (UINT VsSRVIdx = 0; VsSRVIdx < NumVSSRVs; ++VsSRVIdx)
-	{
-		assert(IsVSSRVSet[VsSRVIdx] == true);
-	}
-	for (UINT VsSRVIdx = NumVSSRVs; VsSRVIdx < SRV_MAX_COUNT; ++VsSRVIdx)
-	{
-		assert(IsVSSRVSet[VsSRVIdx] == false);
-	}
-
-	for (UINT PsCBIdx = 0; PsCBIdx < NumPSConstBuffers; ++PsCBIdx)
-	{
-		assert(IsPSConstBufferSet[PsCBIdx] == true);
-	}
-	for (UINT PsCBIdx = NumPSConstBuffers; PsCBIdx < CONST_BUFFER_MAX_COUNT; ++PsCBIdx)
-	{
-		assert(IsPSConstBufferSet[PsCBIdx] == false);
-	}
-
-	for (UINT PsSRVIdx = 0; PsSRVIdx < NumPSSRVs; ++PsSRVIdx)
-	{
-		assert(IsPSSRVSet[PsSRVIdx] == true);
-	}
-	for (UINT PsSRVIdx = NumPSSRVs; PsSRVIdx < SRV_MAX_COUNT; ++PsSRVIdx)
-	{
-		assert(IsPSSRVSet[PsSRVIdx] == false);
-	}
+	CHECK_VALIDATION(VS);
+	CHECK_VALIDATION(HS);
+	CHECK_VALIDATION(DS);
+	CHECK_VALIDATION(PS);
 }

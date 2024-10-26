@@ -15,7 +15,10 @@ public:
 
 protected:
 	std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstance = nullptr;
-	MakeSmartPtrSetterGetter(StaticMeshAssetInstance);
+	MakeSmartPtrGetter(StaticMeshAssetInstance);
+
+public:
+	void SetStaticMeshAssetInstance(const std::shared_ptr<StaticMeshAsset>& StaticMeshAssetInstanceIn);
 
 public:
 	virtual AMeshAsset* GetMeshAssetInstance() override;

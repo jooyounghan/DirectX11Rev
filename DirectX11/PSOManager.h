@@ -30,23 +30,6 @@ enum class EPSOType
 
 class PSOObject;
 
-struct SPSOArgument
-{
-	std::vector<ID3D11Buffer*>				VertexBuffers;
-	std::vector<UINT>						Strides;
-	std::vector<UINT>						Offsets;
-	ID3D11Buffer*							IndexBuffer;
-	DXGI_FORMAT								IndexFormat;
-	UINT									IndexCount;
-	std::vector<ID3D11Buffer*>				VSConstantBuffers;
-	std::vector<ID3D11ShaderResourceView*>	VSSRVs;
-	std::vector<ID3D11Buffer*>				PSConstantBuffers;
-	std::vector<ID3D11ShaderResourceView*>	PSSRVs;
-	std::vector<ID3D11RenderTargetView*>	RTVs;
-	ID3D11DepthStencilView*					DSV;
-	const D3D11_VIEWPORT*					Viewport;
-};
-
 class PSOManager
 {
 public:
@@ -60,14 +43,22 @@ public:
 	PSOObject* GetPSOObject(EPSOType PsoTypeIn);
 
 private:
-	void CreateVertexShader(
+	static void CreateVertexShader(
 		const wchar_t* HlslFileName,
 		const D3D11_INPUT_ELEMENT_DESC* InputElementDescs,
 		const UINT& NumElements,
 		Microsoft::WRL::ComPtr<ID3D11VertexShader>& VertexShader,
 		Microsoft::WRL::ComPtr<ID3D11InputLayout>& InputLayout
 	);
-	void CreatePixelShader(
+	static void CreateHullShader(
+		const wchar_t* HlslFileName,
+		Microsoft::WRL::ComPtr<ID3D11HullShader>& HullShader
+	);
+	static void CreateDomainShader(
+		const wchar_t* HlslFileName,
+		Microsoft::WRL::ComPtr<ID3D11DomainShader>& DomainShader
+	);
+	static void CreatePixelShader(
 		const wchar_t* HlslFileName,
 		Microsoft::WRL::ComPtr<ID3D11PixelShader>& PixelShader
 	);

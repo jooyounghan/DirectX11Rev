@@ -2,7 +2,7 @@
 #include "MaterialHeader.hlsli"
 #include "PBRHeader.hlsli"
 
-cbuffer CameraViewProj : register(b0)
+cbuffer CameraViewConstantBuffer : register(b0)
 {
     matrix ViewProjMatrix;
     matrix ViewProjInvMatrix;
@@ -28,37 +28,40 @@ TextureCube SpecularTexture : register(t0);
 TextureCube DiffuseTexture : register(t1);
 Texture2D BRDFTexture : register(t2);
 
-Texture2D MaterialTexture[6] : register(t3);
+Texture2D MaterialTexture[7] : register(t3);
 
 SamplerState WrapSampler : register(s0);
 SamplerState ClampSampler : register(s1);
 
-float4 main(MeshObjectVertexOutput Input) : SV_TARGET
-{    
-    float LODLevel = 2.f;
-    
+float4 main(MeshObjectDomainOutput Input) : SV_TARGET
+{        
     float3 ToEye = normalize(ViewPosition - Input.f4ProjPos.xyz);
     
-    float3 BaseColor = MaterialTexture[DIFFUSE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, LODLevel).rgb;
-    
+    float3 BaseColor = MaterialTexture[DIFFUSE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb;
     float AmbientOcculusion = 1.f;
     float Metallic = 0.f;
     float Roughness = 1.f;
-
+    float3 Normal = Input.f3ModelNormal;
+    
     if (IsAmbientOcculusionSet)
     {
-        AmbientOcculusion = MaterialTexture[AO_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, LODLevel).r;
+        AmbientOcculusion = MaterialTexture[AO_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r;
     }
     if (IsMetalicSet)
     {
-        Metallic = MaterialTexture[METALIC_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, LODLevel).r;
+        Metallic = MaterialTexture[METALIC_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r;
     }
     if (IsRoughnessSet)
     {
-        Roughness = MaterialTexture[ROUGHNESS_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, LODLevel).r;
+        Roughness = MaterialTexture[ROUGHNESS_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r;
     }
-
-    float3 Emissive = MaterialTexture[EMISSIVE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, LODLevel).rgb;
+    if (IsNormalSet)
+    {
+        float3 Bitangent = normalize(cross(Input.f3ModelNormal, Input.f3ModelTangent));
+        Normal = GetNormalFromMap(Input.f3ModelNormal, Bitangent, Input.f3ModelTangent, Input.fLODLevel, Input.f2TexCoord, MaterialTexture[NORMAL_IDX], WrapSampler);
+    }
+ 
+    float3 Emissive = MaterialTexture[EMISSIVE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb;
     
-    return float4(CalculateIBL(0.02, BaseColor, AmbientOcculusion, Metallic, Roughness, Input.f3ModelNormal, ToEye, SpecularTexture, DiffuseTexture, BRDFTexture, WrapSampler) + Emissive, 1.f);
+    return float4(CalculateIBL(0.02, BaseColor, AmbientOcculusion, Metallic, Roughness, Normal, ToEye, SpecularTexture, DiffuseTexture, BRDFTexture, WrapSampler) + Emissive, 1.f);
 }

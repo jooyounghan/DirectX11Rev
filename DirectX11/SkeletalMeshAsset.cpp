@@ -34,7 +34,6 @@ std::vector<ID3D11Buffer*> SkeletalMeshAsset::GetVertexBuffers(const size_t& LOD
 		UVTexturesPerLOD[LODIndex].GetVertexBuffer(),
 		NormalsPerLOD[LODIndex].GetVertexBuffer(),
 		TangentsPerLOD[LODIndex].GetVertexBuffer(),
-		BitangentsPerLOD[LODIndex].GetVertexBuffer(),
 		BlendWeightPerLOD[LODIndex].GetVertexBuffer(),
 		BlendIndexPerLOD[LODIndex].GetVertexBuffer()
 	};
@@ -48,7 +47,6 @@ std::vector<UINT> SkeletalMeshAsset::GetStrides()
 		sizeof(XMFLOAT2),
 		sizeof(XMFLOAT3),
 		sizeof(XMFLOAT3),
-		sizeof(XMFLOAT3),
 		sizeof(XMFLOAT4),
 		sizeof(XMINT4)
 	};
@@ -58,7 +56,7 @@ std::vector<UINT> SkeletalMeshAsset::GetOffsets()
 {
 	return std::vector<UINT>
 	{
-		0, 0, 0, 0, 0, 0, 0
+		0, 0, 0, 0, 0, 0
 	};
 }
 

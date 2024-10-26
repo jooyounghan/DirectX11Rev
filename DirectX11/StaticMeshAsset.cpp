@@ -24,7 +24,6 @@ std::vector<ID3D11Buffer*> StaticMeshAsset::GetVertexBuffers(const size_t& LODLe
 		 UVTexturesPerLOD[LODIndex].GetVertexBuffer(),
 		 NormalsPerLOD[LODIndex].GetVertexBuffer(),
 		 TangentsPerLOD[LODIndex].GetVertexBuffer(),
-		 BitangentsPerLOD[LODIndex].GetVertexBuffer()
 	 };
 }
 
@@ -35,7 +34,6 @@ std::vector<UINT> StaticMeshAsset::GetStrides()
 		sizeof(XMFLOAT3),
 		sizeof(XMFLOAT2),
 		sizeof(XMFLOAT3),
-		sizeof(XMFLOAT3),
 		sizeof(XMFLOAT3)
 	};
 }
@@ -44,7 +42,7 @@ std::vector<UINT> StaticMeshAsset::GetOffsets()
 {
 	return std::vector<UINT>
 	{
-		0, 0, 0, 0, 0
+		0, 0, 0, 0
 	};
 }
 

@@ -1279,6 +1279,12 @@
     <FxCompile Include="Shaders\MeshObjectPS.hlsl">
       <Filter>Shader\MeshObject</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\MeshObjectDS.hlsl">
+      <Filter>Shader\MeshObject</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\MeshObjectHS.hlsl">
+      <Filter>Shader\MeshObject</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\PositionOnlyPathHeader.hlsli">

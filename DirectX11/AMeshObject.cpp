@@ -100,7 +100,7 @@ void AMeshObject::Render()
 
 		const vector<UINT> IndexCounts = MeshAssetInstance->GetIndexCountsForPart(LODLevel);
 		const vector<UINT> IndexOffsets = MeshAssetInstance->GetIndexOffsetsForPart(LODLevel);
-		const vector<UINT> MaterialIndex = MeshAssetInstance->GetMaterialIndex(LODLevel);
+		const vector<UINT> MaterialIndexes = MeshAssetInstance->GetMaterialIndex(LODLevel);
 
 		vector<ID3D11Buffer*> VSConstBuffers;
 		vector<ID3D11Buffer*> PSConstBuffers;
@@ -122,7 +122,7 @@ void AMeshObject::Render()
 		EnvironmentSRVs.push_back(BRDFDDS != nullptr ? BRDFDDS->GetSRV() : nullptr);
 
 		DeviceContextCached->IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
-		DeviceContextCached->IASetVertexBuffers(0, VertexBuffers.size(),
+		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
 			VertexBuffers.data(),
 			Strides.data(),
 			Offsets.data()
@@ -138,22 +138,23 @@ void AMeshObject::Render()
 
 			MeshObjectPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, DSV);
 
+
 			MeshObjectPSOCached->SetVSConstantBuffers(0, VSConstBuffers.size(), VSConstBuffers.data());
 			MeshObjectPSOCached->SetPSConstantBuffers(0, PSConstBuffers.size(), PSConstBuffers.data());
 			MeshObjectPSOCached->SetPSShaderResourceViews(0, EnvironmentSRVs.size(), EnvironmentSRVs.data());
 
-			for (size_t PartIdx = 0; PartIdx < MaterialIndex.size(); ++PartIdx)
+			for (size_t PartIdx = 0; PartIdx < MaterialIndexes.size(); ++PartIdx)
 			{
-				vector<ID3D11Buffer*> VSConstBuffersPerPart;
+				vector<ID3D11Buffer*> DSConstBuffersPerPart;
 				vector<ID3D11Buffer*> PSConstBuffersPerPart;
 
-				vector<ID3D11ShaderResourceView*> VSMaterialSRVs;
 				vector<ID3D11ShaderResourceView*> PSMaterialSRVs;
+				vector<ID3D11ShaderResourceView*> DSMaterialSRVs;
 
-				const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIndex[PartIdx]];
+				const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIndexes[PartIdx]];
 				if (MaterialInstance != nullptr)
 				{
-					VSConstBuffersPerPart.push_back(MaterialInstance->GetMaterialDataBuffer()->GetBuffer());
+					DSConstBuffersPerPart.push_back(MaterialInstance->GetMaterialDataBuffer()->GetBuffer());
 					PSConstBuffersPerPart.push_back(MaterialInstance->GetMaterialDataBuffer()->GetBuffer());
 
 					const shared_ptr<BaseTextureAsset> AO = MaterialInstance->GetAmbientOcculusionTextureAsset();
@@ -165,26 +166,25 @@ void AMeshObject::Render()
 					const shared_ptr<BaseTextureAsset> Height = MaterialInstance->GetHeightTextureAsset();
 					const shared_ptr<BaseTextureAsset> Emissive = MaterialInstance->GetEmissiveTextureAsset();
 
-					VSMaterialSRVs.push_back(Normal != nullptr ? Normal->GetSRV() : nullptr);
-					VSMaterialSRVs.push_back(Height != nullptr ? Height->GetSRV() : nullptr);
+					DSMaterialSRVs.push_back(Height != nullptr ? Height->GetSRV() : nullptr);
 
 					PSMaterialSRVs.push_back(AO != nullptr ? AO->GetSRV() : nullptr);
 					PSMaterialSRVs.push_back(Specualr != nullptr ? Specualr->GetSRV() : nullptr);
 					PSMaterialSRVs.push_back(Diffuse != nullptr ? Diffuse->GetSRV() : nullptr);
 					PSMaterialSRVs.push_back(Roughness != nullptr ? Roughness->GetSRV() : nullptr);
 					PSMaterialSRVs.push_back(Metalic != nullptr ? Metalic->GetSRV() : nullptr);
-					PSMaterialSRVs.push_back(Emissive != nullptr ? Emissive->GetSRV() : nullptr);
+					PSMaterialSRVs.push_back(Normal != nullptr ? Normal->GetSRV() : nullptr);
+					PSMaterialSRVs.push_back(Emissive != nullptr ? Emissive->GetSRV() : nullptr);					
 				}
 				else
 				{
-					VSMaterialSRVs.insert(VSMaterialSRVs.end(), { nullptr, nullptr });
-					PSMaterialSRVs.insert(PSMaterialSRVs.end(), { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
+					DSMaterialSRVs.insert(DSMaterialSRVs.end(), { nullptr });
+					PSMaterialSRVs.insert(PSMaterialSRVs.end(), { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
 				}
 
-				MeshObjectPSOCached->SetVSConstantBuffers(VSConstBuffers.size(), VSConstBuffersPerPart.size(), VSConstBuffersPerPart.data());
+				MeshObjectPSOCached->SetDSConstantBuffers(0, DSConstBuffersPerPart.size(), DSConstBuffersPerPart.data());
 				MeshObjectPSOCached->SetPSConstantBuffers(PSConstBuffers.size(), PSConstBuffersPerPart.size(), PSConstBuffersPerPart.data());
-
-				MeshObjectPSOCached->SetVSShaderResourceViews(0, VSMaterialSRVs.size(), VSMaterialSRVs.data());
+				MeshObjectPSOCached->SetDSShaderResourceViews(0, DSMaterialSRVs.size(), DSMaterialSRVs.data());
 				MeshObjectPSOCached->SetPSShaderResourceViews(EnvironmentSRVs.size(), PSMaterialSRVs.size(), PSMaterialSRVs.data());
 
 				MeshObjectPSOCached->CheckPipelineValidation();
@@ -192,13 +192,11 @@ void AMeshObject::Render()
 				DeviceContextCached->DrawIndexed(IndexCounts[PartIdx], IndexOffsets[PartIdx], 0);
 				Performance::GTotalIndexCount += IndexTotalCount;
 
-				MeshObjectPSOCached->ResetVSConstantBuffers(VSConstBuffers.size(), VSConstBuffersPerPart.size());
+				MeshObjectPSOCached->ResetDSConstantBuffers(0, DSConstBuffersPerPart.size());
 				MeshObjectPSOCached->ResetPSConstantBuffers(PSConstBuffers.size(), PSConstBuffersPerPart.size());
-
-				MeshObjectPSOCached->ResetVSShaderResourceViews(0, VSMaterialSRVs.size());
+				MeshObjectPSOCached->ResetDSConstantBuffers(0, DSMaterialSRVs.size());
 				MeshObjectPSOCached->ResetPSShaderResourceViews(EnvironmentSRVs.size(), PSMaterialSRVs.size());
 			}
-
 			MeshObjectPSOCached->ResetVSConstantBuffers(0, VSConstBuffers.size());
 			MeshObjectPSOCached->ResetPSConstantBuffers(0, PSConstBuffers.size());
 			MeshObjectPSOCached->ResetPSShaderResourceViews(0, EnvironmentSRVs.size());

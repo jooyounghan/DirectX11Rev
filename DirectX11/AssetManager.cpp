@@ -533,7 +533,6 @@ void AssetManager::RestructBaseVertices(const unsigned int& NumVertices, ANBTMes
     MeshAssetIn->UVTexturesPerLOD[LodLevel].Vertices.insert(MeshAssetIn->UVTexturesPerLOD[LodLevel].Vertices.end(), TempUVTextures.begin(), TempUVTextures.end());
     MeshAssetIn->NormalsPerLOD[LodLevel].Vertices.insert(MeshAssetIn->NormalsPerLOD[LodLevel].Vertices.end(), TempNormals.begin(), TempNormals.end());
     MeshAssetIn->TangentsPerLOD[LodLevel].Vertices.insert(MeshAssetIn->TangentsPerLOD[LodLevel].Vertices.end(), TempTangents.begin(), TempTangents.end());
-    MeshAssetIn->BitangentsPerLOD[LodLevel].Vertices.insert(MeshAssetIn->BitangentsPerLOD[LodLevel].Vertices.end(), TempBitangents.begin(), TempBitangents.end());
 }
 
 size_t AssetManager::GetTotalLODCountFromScene(const aiScene* const Scene)
@@ -962,9 +961,7 @@ void AssetManager::LoadTBN(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTangent = Mesh->mTangents[VertexIdx];
-            aiVector3D& CurrentBiTangent = Mesh->mBitangents[VertexIdx];
             memcpy(&MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx], &CurrentTangent, sizeof(aiVector3D));
-            memcpy(&MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx], &CurrentBiTangent, sizeof(aiVector3D));
         }
     }
 }
@@ -995,14 +992,10 @@ void AssetManager::LoadTBNAsGltf(
         {
             const size_t AccessIdx = VertexStartIdx + VertexIdx;
             aiVector3D& CurrentTangent = Mesh->mTangents[VertexIdx];
-            aiVector3D& CurrentBiTangent = Mesh->mBitangents[VertexIdx];
 
             MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].x = CurrentTangent.x;
             MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].y = CurrentTangent.y;
             MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentTangent.z;
-            MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].x = CurrentBiTangent.x;
-            MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].y = CurrentBiTangent.y;
-            MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[AccessIdx].z = CurrentBiTangent.z;
         }
     }
 }
@@ -1016,6 +1009,10 @@ void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T
     }
     else
     {
+        XMFLOAT3 bt0;
+        XMFLOAT3 bt1;
+        XMFLOAT3 bt2;
+
         for (size_t IndexIdx = IndexStartIdx; IndexIdx < MeshObjectInstance->IndicesPerLOD[LodLevel].Indices.size(); IndexIdx += 3)
         {
             auto& p0 = MeshObjectInstance->PositionsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx]];
@@ -1033,10 +1030,6 @@ void AssetManager::CalculateTB(const aiMesh* const Mesh, size_t IndexStartIdx, T
             auto& t0 = MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx]];
             auto& t1 = MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 1]];
             auto& t2 = MeshObjectInstance->TangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 2]];
-
-            auto& bt0 = MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx]];
-            auto& bt1 = MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 1]];
-            auto& bt2 = MeshObjectInstance->BitangentsPerLOD[LodLevel].Vertices[MeshObjectInstance->IndicesPerLOD[LodLevel].Indices[IndexIdx + 2]];
 
             MathematicalHelper::GetTangentBitangent(
                 p0,

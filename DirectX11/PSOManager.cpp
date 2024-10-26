@@ -76,6 +76,8 @@ PSOManager::PSOManager()
         DeviceContext,
         EnvironmentActorInputLayout,
         EnvironmentActorVS, 2, 0,
+        nullptr, 0, 0,
+        nullptr, 0, 0,
         EnvironmentActorPS, 1, 1,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
@@ -104,6 +106,8 @@ PSOManager::PSOManager()
         DeviceContext,
         PostionOnlyInputLayout,
         PositionOnlyPathVS, 2, 0,
+        nullptr, 0, 0,
+        nullptr, 0, 0,
         BoundingComponentPS, 1, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
@@ -124,10 +128,15 @@ PSOManager::PSOManager()
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 4, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
-    CreateVertexShader(L"./Shaders/StaticMeshObjectVS.hlsl", StaticMeshElementDescs, 5, StaticMeshVS, StaticMeshInputLayout);
+    CreateVertexShader(L"./Shaders/StaticMeshObjectVS.hlsl", StaticMeshElementDescs, 4, StaticMeshVS, StaticMeshInputLayout);
+
+    ComPtr<ID3D11HullShader> MeshObjectHS;
+    CreateHullShader(L"./Shaders/MeshObjectHS.hlsl", MeshObjectHS);
+
+    ComPtr<ID3D11DomainShader> MeshObjectDS;
+    CreateDomainShader(L"./Shaders/MeshObjectDS.hlsl", MeshObjectDS);
 
     ComPtr<ID3D11PixelShader> MeshObjectPS;
     CreatePixelShader(L"./Shaders/MeshObjectPS.hlsl", MeshObjectPS);
@@ -135,9 +144,11 @@ PSOManager::PSOManager()
     PSOObjects.emplace(EPSOType::Static_Solid, make_unique<PSOObject>(
         DeviceContext,
         StaticMeshInputLayout,
-        StaticMeshVS, 3, 2,
-        MeshObjectPS, 2, 9,
-        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+        StaticMeshVS, 2, 0,
+        MeshObjectHS, 0, 0,
+        MeshObjectDS, 1, 1,
+        MeshObjectPS, 2, 10,
+        D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
@@ -157,20 +168,21 @@ PSOManager::PSOManager()
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 4, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 5, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 6, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        { "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 4, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 5, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
-    CreateVertexShader(L"./Shaders/SkeletalMeshObjectVS.hlsl", SkeletalMeshInputElementDescs, 7, SkeletalMeshVS, SkeletalMeshInputLayout);
+    CreateVertexShader(L"./Shaders/SkeletalMeshObjectVS.hlsl", SkeletalMeshInputElementDescs, 6, SkeletalMeshVS, SkeletalMeshInputLayout);
 
 
     PSOObjects.emplace(EPSOType::Skeletal_Solid, make_unique<PSOObject>(
         DeviceContext,
         SkeletalMeshInputLayout,
-        SkeletalMeshVS, 3, 2,
-        MeshObjectPS, 2, 9,
-        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+        SkeletalMeshVS, 2, 0,
+        MeshObjectHS, 0, 0,
+        MeshObjectDS, 1, 1,
+        MeshObjectPS, 2, 10,
+        D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
@@ -187,6 +199,8 @@ PSOManager::PSOManager()
         DeviceContext,
         PostionOnlyInputLayout,
         PositionOnlyPathVS, 2, 0,
+        nullptr, 0, 0,
+        nullptr, 0, 0,
         PickingIDPS, 1, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
@@ -203,6 +217,8 @@ PSOManager::PSOManager()
         DeviceContext,
         PostionOnlyInputLayout,
         PositionOnlyPathVS, 2, 0,
+        nullptr, 0, 0,
+        nullptr, 0, 0,
         PickingIDPS, 1, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
@@ -219,6 +235,8 @@ PSOManager::PSOManager()
         DeviceContext,
         PostionOnlyInputLayout,
         PositionOnlyPathVS, 2, 0,
+        nullptr, 0, 0,
+        nullptr, 0, 0,
         PickingIDPS, 1, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
@@ -281,6 +299,56 @@ void PSOManager::CreateVertexShader(
         VertexShaderByteCode->GetBufferPointer(), 
         VertexShaderByteCode->GetBufferSize(),
         InputLayout.GetAddressOf()
+    );
+}
+
+void PSOManager::CreateHullShader(const wchar_t* HlslFileName, Microsoft::WRL::ComPtr<ID3D11HullShader>& HullShader)
+{
+    ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
+
+    ComPtr<ID3DBlob> HullShaderByteCode;
+    ComPtr<ID3DBlob> ErrorByteCode;
+
+    UINT CompileFlags = NULL;
+#if defined(_DEBUG)
+    CompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    AssertIfFailed(D3DCompileFromFile(
+        HlslFileName, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        "main", "hs_5_0", CompileFlags, 0,
+        HullShaderByteCode.GetAddressOf(), ErrorByteCode.GetAddressOf())
+    );
+
+    Device->CreateHullShader(
+        HullShaderByteCode->GetBufferPointer(),
+        HullShaderByteCode->GetBufferSize(),
+        NULL, HullShader.GetAddressOf()
+    );
+}
+
+void PSOManager::CreateDomainShader(const wchar_t* HlslFileName, Microsoft::WRL::ComPtr<ID3D11DomainShader>& DomainShader)
+{
+    ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
+
+    ComPtr<ID3DBlob> DomainShaderByteCode;
+    ComPtr<ID3DBlob> ErrorByteCode;
+
+    UINT CompileFlags = NULL;
+#if defined(_DEBUG)
+    CompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    AssertIfFailed(D3DCompileFromFile(
+        HlslFileName, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        "main", "ds_5_0", CompileFlags, 0,
+        DomainShaderByteCode.GetAddressOf(), ErrorByteCode.GetAddressOf())
+    );
+
+    Device->CreateDomainShader(
+        DomainShaderByteCode->GetBufferPointer(),
+        DomainShaderByteCode->GetBufferSize(),
+        NULL, DomainShader.GetAddressOf()
     );
 }
 

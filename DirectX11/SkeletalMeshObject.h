@@ -15,8 +15,11 @@ public:
 
 protected:
 	std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstance = nullptr;
-	MakeSmartPtrSetterGetter(SkeletalMeshAssetInstance);
+	MakeSmartPtrGetter(SkeletalMeshAssetInstance);
 	
+public:
+	void SetSkeletalMeshAssetInstance(const std::shared_ptr<SkeletalMeshAsset>& SkeletalMeshAssetInstanceIn);
+
 public:
 	virtual AMeshAsset* GetMeshAssetInstance() override;
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

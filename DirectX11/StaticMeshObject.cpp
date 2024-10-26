@@ -16,7 +16,7 @@ using namespace std;
 string StaticMeshObject::StaticMeshObjectKind = "Static Mesh Object";
 
 StaticMeshObject::StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn)
-	: AMeshObject(MapAssetInstance, StaticMeshObject::StaticMeshObjectKind), StaticMeshAssetInstance(StaticMeshAssetInstanceIn)
+	: AMeshObject(MapAssetInstance, StaticMeshObject::StaticMeshObjectKind)
 {
 	static size_t StaticMeshObjectCount = 0;
 
@@ -26,14 +26,20 @@ StaticMeshObject::StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<S
 	MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_Solid);
 	PickingIDSolidPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_ID_Solid);
 
-	if (StaticMeshAssetInstanceIn != nullptr)
-	{
-		MaterialAssetInstances = StaticMeshAssetInstanceIn->GetDefaultMaterialAssets();
-	}
+	SetStaticMeshAssetInstance(StaticMeshAssetInstanceIn);
 }
 
 StaticMeshObject::~StaticMeshObject()
 {
+}
+
+void StaticMeshObject::SetStaticMeshAssetInstance(const std::shared_ptr<StaticMeshAsset>& StaticMeshAssetInstanceIn)
+{
+	StaticMeshAssetInstance = StaticMeshAssetInstanceIn;
+	if (StaticMeshAssetInstanceIn != nullptr)
+	{
+		MaterialAssetInstances = StaticMeshAssetInstanceIn->GetDefaultMaterialAssets();
+	}
 }
 
 AMeshAsset* StaticMeshObject::GetMeshAssetInstance()
