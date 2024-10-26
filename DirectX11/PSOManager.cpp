@@ -76,7 +76,7 @@ PSOManager::PSOManager()
         DeviceContext,
         EnvironmentActorInputLayout,
         EnvironmentActorVS, 2, 0,
-        EnvironmentActorPS, 0, 1,
+        EnvironmentActorPS, 1, 1,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
@@ -127,16 +127,16 @@ PSOManager::PSOManager()
         { "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 4, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
-    CreateVertexShader(L"./Shaders/StaticAssetVS.hlsl", StaticMeshElementDescs, 5, StaticMeshVS, StaticMeshInputLayout);
+    CreateVertexShader(L"./Shaders/StaticMeshObjectVS.hlsl", StaticMeshElementDescs, 5, StaticMeshVS, StaticMeshInputLayout);
 
-    ComPtr<ID3D11PixelShader> StaticMeshPS;
-    CreatePixelShader(L"./Shaders/StaticAssetPS.hlsl", StaticMeshPS);
+    ComPtr<ID3D11PixelShader> MeshObjectPS;
+    CreatePixelShader(L"./Shaders/MeshObjectPS.hlsl", MeshObjectPS);
 
     PSOObjects.emplace(EPSOType::Static_Solid, make_unique<PSOObject>(
         DeviceContext,
         StaticMeshInputLayout,
-        StaticMeshVS, 2, 0,
-        StaticMeshPS, 1, 11,
+        StaticMeshVS, 3, 2,
+        MeshObjectPS, 2, 9,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
@@ -162,16 +162,14 @@ PSOManager::PSOManager()
         { "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 6, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
-    CreateVertexShader(L"./Shaders/SkeletalAssetVS.hlsl", SkeletalMeshInputElementDescs, 7, SkeletalMeshVS, SkeletalMeshInputLayout);
+    CreateVertexShader(L"./Shaders/SkeletalMeshObjectVS.hlsl", SkeletalMeshInputElementDescs, 7, SkeletalMeshVS, SkeletalMeshInputLayout);
 
-    ComPtr<ID3D11PixelShader> SkeletalMeshPS;
-    CreatePixelShader(L"./Shaders/SkeletalAssetPS.hlsl", SkeletalMeshPS);
 
     PSOObjects.emplace(EPSOType::Skeletal_Solid, make_unique<PSOObject>(
         DeviceContext,
         SkeletalMeshInputLayout,
-        SkeletalMeshVS, 2, 0,
-        SkeletalMeshPS, 1, 11,
+        SkeletalMeshVS, 3, 2,
+        MeshObjectPS, 2, 9,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
         DXGI_FORMAT_D24_UNORM_S8_UINT,

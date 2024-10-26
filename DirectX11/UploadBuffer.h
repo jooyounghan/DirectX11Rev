@@ -1,6 +1,6 @@
 #pragma once
 #include "Buffer.h"
-#include "IUploadableBuffer.h"
+#include "AUploadableBuffer.h"
 
 #include "HeaderHelper.h"
 #include "DefineUtility.h"
@@ -8,11 +8,18 @@
 #include "GraphicsPipeline.h"
 
 template<typename T>
-class UploadBuffer : public Buffer, public IUploadableBuffer<T>
+class UploadBuffer : public Buffer, public AUploadableBuffer
 {
 public:
 	UploadBuffer();
 	~UploadBuffer();
+
+protected:
+	T StagedData;
+	MakeGetter(StagedData);
+
+public:
+	void SetStagedData(const T& StagedDataIn);
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> StagingBuffer;
@@ -21,7 +28,7 @@ protected:
 	ID3D11DeviceContext* DeviceContextCached;
 
 public:
-	virtual void Upload(const T& CpuDataIn) override;
+	virtual void Upload() override;
 };
 
 template<typename T>
@@ -61,12 +68,19 @@ inline UploadBuffer<T>::~UploadBuffer()
 }
 
 template<typename T>
-inline void UploadBuffer<T>::Upload(const T& CpuDataIn)
+inline void UploadBuffer<T>::SetStagedData(const T& StagedDataIn)
+{
+	StagedData = StagedDataIn;
+	UpdateReadyEvent.Invoke(this);
+}
+
+template<typename T>
+inline void UploadBuffer<T>::Upload()
 {
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
 	AutoZeroMemory(MappedResource);
 	AssertIfFailed(DeviceContextCached->Map(StagingBuffer.Get(), 0, D3D11_MAP_WRITE, 0, &MappedResource));
-	memcpy(MappedResource.pData, &CpuDataIn, sizeof(T));
+	memcpy(MappedResource.pData, &StagedData, sizeof(T));
 	DeviceContextCached->Unmap(StagingBuffer.Get(), 0);
 	DeviceContextCached->CopyResource(Buffer.Get(), StagingBuffer.Get());
 }

@@ -8,6 +8,7 @@
 class GraphicsPipeline;
 class PSOManager;
 class InputEventManager;
+class UploadableBufferManager;
 class GameWorld;
 
 class PortfolioApp
@@ -28,10 +29,11 @@ protected:
 	LARGE_INTEGER PrevTime = LARGE_INTEGER();
 
 protected:
-	std::unique_ptr<GraphicsPipeline>	GraphicsPipelineInstance;
-	std::unique_ptr<PSOManager>			PSOManagerInstance;
-	std::unique_ptr<InputEventManager>	InputEventManagerInstance;
-	std::unique_ptr<GameWorld>			GameWorldInstance;
+	std::unique_ptr<GraphicsPipeline>			GraphicsPipelineInstance;
+	std::unique_ptr<PSOManager>					PSOManagerInstance;
+	std::unique_ptr<InputEventManager>			InputEventManagerInstance;
+	std::unique_ptr<UploadableBufferManager>	UploadableBufferManagerInstance;
+	std::unique_ptr<GameWorld>					GameWorldInstance;
 
 private:
 	void LoadMonitorInfo();

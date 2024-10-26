@@ -79,12 +79,6 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{a165de11-1e64-4997-8b05-848a47a39820}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader\StaticMesh">
-      <UniqueIdentifier>{c2c93896-f7e9-4c4d-8518-4c6dcd129e7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader\SkeletalMesh">
-      <UniqueIdentifier>{9da0e291-0657-4a08-baba-cf1f98165149}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Collision">
       <UniqueIdentifier>{bb1f6d40-ce30-43eb-b36e-9059eedd0375}</UniqueIdentifier>
     </Filter>
@@ -438,6 +432,15 @@
     </Filter>
     <Filter Include="Shader\PBR">
       <UniqueIdentifier>{ac4ac663-8a84-46a2-9ad2-c872138b509c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\MeshObject">
+      <UniqueIdentifier>{1d300dd2-0a08-496e-a835-b955df6a2cb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\MeshObject\SkeletalMesh">
+      <UniqueIdentifier>{9da0e291-0657-4a08-baba-cf1f98165149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\MeshObject\StaticMesh">
+      <UniqueIdentifier>{c2c93896-f7e9-4c4d-8518-4c6dcd129e7e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -798,6 +801,9 @@
     <ClCompile Include="SDRCamera.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="UploadableBufferManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
@@ -968,7 +974,7 @@
     <ClInclude Include="IDownloadableBuffer.h">
       <Filter>헤더 파일\Interface</Filter>
     </ClInclude>
-    <ClInclude Include="IUploadableBuffer.h">
+    <ClInclude Include="AUploadableBuffer.h">
       <Filter>헤더 파일\Interface</Filter>
     </ClInclude>
     <ClInclude Include="IUpdatable.h">
@@ -1244,19 +1250,16 @@
     <ClInclude Include="SDRCamera.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="UploadableBufferManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\SkeletalAssetPS.hlsl">
-      <Filter>Shader\SkeletalMesh</Filter>
+    <FxCompile Include="Shaders\SkeletalMeshObjectVS.hlsl">
+      <Filter>Shader\MeshObject\SkeletalMesh</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SkeletalAssetVS.hlsl">
-      <Filter>Shader\SkeletalMesh</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\StaticAssetPS.hlsl">
-      <Filter>Shader\StaticMesh</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\StaticAssetVS.hlsl">
-      <Filter>Shader\StaticMesh</Filter>
+    <FxCompile Include="Shaders\StaticMeshObjectVS.hlsl">
+      <Filter>Shader\MeshObject\StaticMesh</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\BoundingObjectPS.hlsl">
       <Filter>Shader\PositionOnly</Filter>
@@ -1273,14 +1276,11 @@
     <FxCompile Include="Shaders\EnvironmentActorVS.hlsl">
       <Filter>Shader\Environment</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\MeshObjectPS.hlsl">
+      <Filter>Shader\MeshObject</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\SkeletalAssetHeader.hlsli">
-      <Filter>Shader\SkeletalMesh</Filter>
-    </None>
-    <None Include="Shaders\StaticAssetHeader.hlsli">
-      <Filter>Shader\StaticMesh</Filter>
-    </None>
     <None Include="Shaders\PositionOnlyPathHeader.hlsli">
       <Filter>Shader\PositionOnly</Filter>
     </None>
@@ -1292,6 +1292,9 @@
     </None>
     <None Include="Shaders\MaterialHeader.hlsli">
       <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\MeshObjectHeader.hlsli">
+      <Filter>Shader\MeshObject</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@ class PortfolioApp;
 class GraphicsPipeline;
 class PSOManager;
 class InputEventManager;
+class UploadableBufferManager;
 
 namespace App
 {
@@ -15,6 +16,7 @@ namespace App
 	extern GraphicsPipeline*		GGraphicPipeline;
 	extern PSOManager*				GPSOManager;
 	extern InputEventManager*		GInputEventManager;
+	extern UploadableBufferManager*	GUploadableBufferManager;
 }
 
 namespace Performance

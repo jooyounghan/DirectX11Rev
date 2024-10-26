@@ -9,5 +9,6 @@ PortfolioApp* App::GApp = nullptr;
 GraphicsPipeline* App::GGraphicPipeline = nullptr;
 PSOManager* App::GPSOManager = nullptr;
 InputEventManager* App::GInputEventManager = nullptr;
+UploadableBufferManager* App::GUploadableBufferManager = nullptr;
 
 size_t Performance::GTotalIndexCount = 0;

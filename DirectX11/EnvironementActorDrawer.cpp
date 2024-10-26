@@ -64,10 +64,19 @@ void EnvironementActorDrawer::DrawIBLTextures()
 
 void EnvironementActorDrawer::DrawToneMappingConstant()
 {
+    static float Exposure = 1.f;
+    static float Gamma = 1.f;
+
     SeparatorText("Tone Mapping");
-    SHDRToneMappingConstant* HDRToneMappingConstant = ObjectCached->GetPointerHDRToneMappingConstant();
-    DragFloat("Exposure", &HDRToneMappingConstant->Exposure, 0.01f, 0.f, 5.f);
-    DragFloat("Gamma", &HDRToneMappingConstant->Gamma, 0.01f, 0.f, 5.f);
+
+    bool UpdateFlag = false;
+    UpdateFlag |= DragFloat("Exposure", &Exposure, 0.01f, 0.f, 5.f);
+    UpdateFlag |= DragFloat("Gamma", &Gamma, 0.01f, 0.f, 5.f);
+
+    if (UpdateFlag)
+    {
+        ObjectCached->SetToneMappingConstant(Exposure, Gamma);
+    }
 }
 
 

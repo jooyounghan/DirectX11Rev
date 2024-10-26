@@ -8,14 +8,17 @@
 #include "MapAsset.h"
 #include "ACamera.h"
 
+#include "UploadableBufferManager.h"
+
 using namespace DirectX;
 
 ABoundingObject::ABoundingObject(
 	MapAsset* MapAssetInstance,
 	const std::string& AttachableKindIn
 )
-	: AAttachableObject(MapAssetInstance, AttachableKindIn), DebuggingColorBuffer()
+	: AAttachableObject(MapAssetInstance, AttachableKindIn)
 {
+	DebuggingColorBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<UploadBuffer<XMVECTOR>>();
 	BoundingObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::BoundingObject_Wireframe);
 	PickingIDWireframePSOCached = App::GPSOManager->GetPSOObject(EPSOType::BoundingObject_ID_Wireframe);
 }
@@ -30,11 +33,11 @@ void ABoundingObject::SetCollisionColor()
 	{
 		if (IsCollided)
 		{
-			DebuggingColorBuffer.Upload(XMVectorSet(0.f, 1.f, 0.f, 1.f));
+			DebuggingColorBuffer->SetStagedData(XMVectorSet(0.f, 1.f, 0.f, 1.f));
 		}
 		else
 		{
-			DebuggingColorBuffer.Upload(XMVectorSet(1.f, 0.f, 0.f, 1.f));
+			DebuggingColorBuffer->SetStagedData(XMVectorSet(1.f, 0.f, 0.f, 1.f));
 		}
 	}
 }
@@ -49,8 +52,8 @@ void ABoundingObject::Render()
 		ID3D11Buffer* VertexBuffers[] = { DebugObject->GetVertexBuffer() };
 		UINT Strides[] = { DebugObject->GetVertexTypeSize() };
 		UINT Offsets[] = { 0 };
-		ID3D11Buffer* VSConstBuffers[] = { CurrentCamera->ViewProjBuffer.GetBuffer(), TransformationBuffer.GetBuffer() };
-		ID3D11Buffer* PSConstBuffers[] = { GetDebuggingColorBuffer().GetBuffer() };
+		ID3D11Buffer* VSConstBuffers[] = { CurrentCamera->GetViewProjBuffer()->GetBuffer(), TransformationBuffer->GetBuffer()};
+		ID3D11Buffer* PSConstBuffers[] = { DebuggingColorBuffer->GetBuffer() };
 
 #pragma region BoundingObjectPSOCached
 		ID3D11RenderTargetView* SDRRTVs[]{ CurrentCamera->GetSDRSceneRTV() };

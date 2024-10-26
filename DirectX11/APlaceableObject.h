@@ -5,6 +5,9 @@
 #include "IIntersectable.h"
 #include "StaticAssertHelper.h"
 
+#include "ConstantBuffer.h"
+#include "IDColor.h"
+
 #include <list>
 #include <memory>
 

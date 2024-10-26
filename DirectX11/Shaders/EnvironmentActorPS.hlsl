@@ -1,13 +1,13 @@
 #include "EnvironmentActorHeader.hlsli"
 
-Texture2D HDRTexture : register(t0);
-
 cbuffer ToneMapping : register(b0)
 {
     float Exposure;
     float Gamma;
     float2 Dummy;
 };
+
+Texture2D HDRTexture : register(t0);
 
 SamplerState WrapSampler : register(s0);
 

@@ -2,6 +2,7 @@
 #include "APlaceableObject.h"
 #include "GlobalVariable.h"
 
+
 using namespace std;
 using namespace DirectX;
 

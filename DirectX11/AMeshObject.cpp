@@ -105,10 +105,11 @@ void AMeshObject::Render()
 		vector<ID3D11Buffer*> VSConstBuffers;
 		vector<ID3D11Buffer*> PSConstBuffers;
 
-		VSConstBuffers.push_back(CurrentCamera->ViewProjBuffer.GetBuffer());
-		VSConstBuffers.push_back(TransformationBuffer.GetBuffer());
+		ID3D11Buffer* ViewProjGPUBuffer = CurrentCamera->GetViewProjBuffer()->GetBuffer();
+		VSConstBuffers.push_back(ViewProjGPUBuffer);
+		VSConstBuffers.push_back(TransformationBuffer->GetBuffer());
 
-		PSConstBuffers.push_back(CurrentCamera->ViewProjBuffer.GetBuffer());
+		PSConstBuffers.push_back(ViewProjGPUBuffer);
 
 		vector<ID3D11ShaderResourceView*> EnvironmentSRVs;
 
@@ -121,7 +122,7 @@ void AMeshObject::Render()
 		EnvironmentSRVs.push_back(BRDFDDS != nullptr ? BRDFDDS->GetSRV() : nullptr);
 
 		DeviceContextCached->IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
-		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
+		DeviceContextCached->IASetVertexBuffers(0, VertexBuffers.size(),
 			VertexBuffers.data(),
 			Strides.data(),
 			Offsets.data()
@@ -135,20 +136,26 @@ void AMeshObject::Render()
 
 			ID3D11DepthStencilView* DSV = CurrentCamera->GetSceneDSV();
 
-			MeshObjectPSOCached->SetPipelineStateObject(static_cast<UINT>(RTVs.size()), RTVs.data(), Viewport, DSV);
+			MeshObjectPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, DSV);
 
-
-			MeshObjectPSOCached->SetVSConstantBuffers(0, static_cast<UINT>(VSConstBuffers.size()), VSConstBuffers.data());
-			MeshObjectPSOCached->SetPSConstantBuffers(0, static_cast<UINT>(PSConstBuffers.size()), PSConstBuffers.data());
-			MeshObjectPSOCached->SetPSShaderResourceViews(0, static_cast<UINT>(EnvironmentSRVs.size()), EnvironmentSRVs.data());
+			MeshObjectPSOCached->SetVSConstantBuffers(0, VSConstBuffers.size(), VSConstBuffers.data());
+			MeshObjectPSOCached->SetPSConstantBuffers(0, PSConstBuffers.size(), PSConstBuffers.data());
+			MeshObjectPSOCached->SetPSShaderResourceViews(0, EnvironmentSRVs.size(), EnvironmentSRVs.data());
 
 			for (size_t PartIdx = 0; PartIdx < MaterialIndex.size(); ++PartIdx)
 			{
-				vector<ID3D11ShaderResourceView*> MaterialSRVs;
+				vector<ID3D11Buffer*> VSConstBuffersPerPart;
+				vector<ID3D11Buffer*> PSConstBuffersPerPart;
+
+				vector<ID3D11ShaderResourceView*> VSMaterialSRVs;
+				vector<ID3D11ShaderResourceView*> PSMaterialSRVs;
 
 				const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIndex[PartIdx]];
 				if (MaterialInstance != nullptr)
 				{
+					VSConstBuffersPerPart.push_back(MaterialInstance->GetMaterialDataBuffer()->GetBuffer());
+					PSConstBuffersPerPart.push_back(MaterialInstance->GetMaterialDataBuffer()->GetBuffer());
+
 					const shared_ptr<BaseTextureAsset> AO = MaterialInstance->GetAmbientOcculusionTextureAsset();
 					const shared_ptr<BaseTextureAsset> Specualr = MaterialInstance->GetSpecularTextureAsset();
 					const shared_ptr<BaseTextureAsset> Diffuse = MaterialInstance->GetDiffuseTextureAsset();
@@ -158,33 +165,43 @@ void AMeshObject::Render()
 					const shared_ptr<BaseTextureAsset> Height = MaterialInstance->GetHeightTextureAsset();
 					const shared_ptr<BaseTextureAsset> Emissive = MaterialInstance->GetEmissiveTextureAsset();
 
-					MaterialSRVs.push_back(AO != nullptr ? AO->GetSRV() : nullptr);
-					MaterialSRVs.push_back(Specualr != nullptr ? Specualr->GetSRV() : nullptr);
-					MaterialSRVs.push_back(Diffuse != nullptr ? Diffuse->GetSRV() : nullptr);
-					MaterialSRVs.push_back(Roughness != nullptr ? Roughness->GetSRV() : nullptr);
-					MaterialSRVs.push_back(Metalic != nullptr ? Metalic->GetSRV() : nullptr);
-					MaterialSRVs.push_back(Normal != nullptr ? Normal->GetSRV() : nullptr);
-					MaterialSRVs.push_back(Height != nullptr ? Height->GetSRV() : nullptr);
-					MaterialSRVs.push_back(Emissive != nullptr ? Emissive->GetSRV() : nullptr);
+					VSMaterialSRVs.push_back(Normal != nullptr ? Normal->GetSRV() : nullptr);
+					VSMaterialSRVs.push_back(Height != nullptr ? Height->GetSRV() : nullptr);
+
+					PSMaterialSRVs.push_back(AO != nullptr ? AO->GetSRV() : nullptr);
+					PSMaterialSRVs.push_back(Specualr != nullptr ? Specualr->GetSRV() : nullptr);
+					PSMaterialSRVs.push_back(Diffuse != nullptr ? Diffuse->GetSRV() : nullptr);
+					PSMaterialSRVs.push_back(Roughness != nullptr ? Roughness->GetSRV() : nullptr);
+					PSMaterialSRVs.push_back(Metalic != nullptr ? Metalic->GetSRV() : nullptr);
+					PSMaterialSRVs.push_back(Emissive != nullptr ? Emissive->GetSRV() : nullptr);
 				}
 				else
 				{
-					MaterialSRVs.insert(MaterialSRVs.end(), { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
+					VSMaterialSRVs.insert(VSMaterialSRVs.end(), { nullptr, nullptr });
+					PSMaterialSRVs.insert(PSMaterialSRVs.end(), { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
 				}
 
+				MeshObjectPSOCached->SetVSConstantBuffers(VSConstBuffers.size(), VSConstBuffersPerPart.size(), VSConstBuffersPerPart.data());
+				MeshObjectPSOCached->SetPSConstantBuffers(PSConstBuffers.size(), PSConstBuffersPerPart.size(), PSConstBuffersPerPart.data());
 
-				MeshObjectPSOCached->SetPSShaderResourceViews(static_cast<UINT>(EnvironmentSRVs.size()), static_cast<UINT>(MaterialSRVs.size()), MaterialSRVs.data());
+				MeshObjectPSOCached->SetVSShaderResourceViews(0, VSMaterialSRVs.size(), VSMaterialSRVs.data());
+				MeshObjectPSOCached->SetPSShaderResourceViews(EnvironmentSRVs.size(), PSMaterialSRVs.size(), PSMaterialSRVs.data());
 
 				MeshObjectPSOCached->CheckPipelineValidation();
 
 				DeviceContextCached->DrawIndexed(IndexCounts[PartIdx], IndexOffsets[PartIdx], 0);
 				Performance::GTotalIndexCount += IndexTotalCount;
 
-				MeshObjectPSOCached->ResetPSShaderResourceViews(static_cast<UINT>(EnvironmentSRVs.size()), static_cast<UINT>(MaterialSRVs.size()));
+				MeshObjectPSOCached->ResetVSConstantBuffers(VSConstBuffers.size(), VSConstBuffersPerPart.size());
+				MeshObjectPSOCached->ResetPSConstantBuffers(PSConstBuffers.size(), PSConstBuffersPerPart.size());
+
+				MeshObjectPSOCached->ResetVSShaderResourceViews(0, VSMaterialSRVs.size());
+				MeshObjectPSOCached->ResetPSShaderResourceViews(EnvironmentSRVs.size(), PSMaterialSRVs.size());
 			}
-			MeshObjectPSOCached->ResetVSConstantBuffers(0, static_cast<UINT>(VSConstBuffers.size()));
-			MeshObjectPSOCached->ResetPSConstantBuffers(0, static_cast<UINT>(PSConstBuffers.size()));
-			MeshObjectPSOCached->ResetPSShaderResourceViews(0, static_cast<UINT>(EnvironmentSRVs.size()));
+
+			MeshObjectPSOCached->ResetVSConstantBuffers(0, VSConstBuffers.size());
+			MeshObjectPSOCached->ResetPSConstantBuffers(0, PSConstBuffers.size());
+			MeshObjectPSOCached->ResetPSShaderResourceViews(0, EnvironmentSRVs.size());
 		}
 #pragma endregion
 
@@ -199,17 +216,17 @@ void AMeshObject::Render()
 			vector<ID3D11Buffer*> PSConstBuffers;
 			PSConstBuffers.push_back(PickingIDBufferCached);
 
-			PickingIDSolidPSOCached->SetPipelineStateObject(static_cast<UINT>(RTVs.size()), RTVs.data(), Viewport, DSV);
+			PickingIDSolidPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, DSV);
 
-			PickingIDSolidPSOCached->SetVSConstantBuffers(0, static_cast<UINT>(VSConstBuffers.size()), VSConstBuffers.data());
-			PickingIDSolidPSOCached->SetPSConstantBuffers(0, static_cast<UINT>(PSConstBuffers.size()), PSConstBuffers.data());
+			PickingIDSolidPSOCached->SetVSConstantBuffers(0, VSConstBuffers.size(), VSConstBuffers.data());
+			PickingIDSolidPSOCached->SetPSConstantBuffers(0, PSConstBuffers.size(), PSConstBuffers.data());
 
 			PickingIDSolidPSOCached->CheckPipelineValidation();
 
 			DeviceContextCached->DrawIndexed(static_cast<UINT>(IndexTotalCount), 0, 0);
 
-			PickingIDSolidPSOCached->ResetVSConstantBuffers(0, static_cast<UINT>(VSConstBuffers.size()));
-			PickingIDSolidPSOCached->ResetPSConstantBuffers(0, static_cast<UINT>(PSConstBuffers.size()));
+			PickingIDSolidPSOCached->ResetVSConstantBuffers(0, VSConstBuffers.size());
+			PickingIDSolidPSOCached->ResetPSConstantBuffers(0, PSConstBuffers.size());
 		}
 #pragma endregion
 	}

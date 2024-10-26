@@ -2,6 +2,9 @@
 #include "BaseTextureAsset.h"
 #include "AssetManager.h"
 
+#include "GlobalVariable.h"
+#include "UploadableBufferManager.h"
+
 using namespace std;
 
 string MaterialAsset::MaterialAssetKind = "Material";
@@ -9,7 +12,10 @@ string MaterialAsset::MaterialAssetKind = "Material";
 MaterialAsset::MaterialAsset(const std::string& AssetNameIn, const bool& LoadFromAsset)
 	: AAssetFile(LoadFromAsset ? AssetNameIn : AssetNameIn + "_" + MaterialAsset::MaterialAssetKind, MaterialAsset::MaterialAssetKind)
 {
+	MaterialDataBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<UploadBuffer<SMaterialData>>();
+
 	AutoZeroMemory(MaterialData);
+	MaterialDataBuffer->SetStagedData(MaterialData);
 }
 
 MaterialAsset::~MaterialAsset()
@@ -84,54 +90,54 @@ void MaterialAsset::SetAmbientOcculusionTextureAsset(const std::shared_ptr<BaseT
 {
 	AmbientOcculusionTextureAsset = AssetIn;
 	MaterialData.IsAmbientOcculusionSet = (AssetIn != nullptr);
-	MaterialDataBuffer.Upload(MaterialData);
+	MaterialDataBuffer->SetStagedData(MaterialData);
 }
 
 void MaterialAsset::SetSpecularTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
 {
 	SpecularTextureAsset = AssetIn;
 	MaterialData.IsSpecularSet = (AssetIn != nullptr);
-	MaterialDataBuffer.Upload(MaterialData);
+	MaterialDataBuffer->SetStagedData(MaterialData);
 }
 
 void MaterialAsset::SetDiffuseTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
 {
 	DiffuseTextureAsset = AssetIn;
 	MaterialData.IsDiffuseSet = (AssetIn != nullptr);
-	MaterialDataBuffer.Upload(MaterialData);
+	MaterialDataBuffer->SetStagedData(MaterialData);
 }
 
 void MaterialAsset::SetRoughnessTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
 {
 	RoughnessTextureAsset = AssetIn;
 	MaterialData.IsRoughnessSet = (AssetIn != nullptr);
-	MaterialDataBuffer.Upload(MaterialData);
+	MaterialDataBuffer->SetStagedData(MaterialData);
 }
 
 void MaterialAsset::SetMetalicTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
 {
 	MetalicTextureAsset = AssetIn;
 	MaterialData.IsMetalicSet = (AssetIn != nullptr);
-	MaterialDataBuffer.Upload(MaterialData);
+	MaterialDataBuffer->SetStagedData(MaterialData);
 }
 
 void MaterialAsset::SetNormalTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
 {
 	NormalTextureAsset = AssetIn;
 	MaterialData.IsNormalSet = (AssetIn != nullptr);
-	MaterialDataBuffer.Upload(MaterialData);
+	MaterialDataBuffer->SetStagedData(MaterialData);
 }
 
 void MaterialAsset::SetHeightTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
 {
 	HeightTextureAsset = AssetIn;
 	MaterialData.IsHeightSet = (AssetIn != nullptr);
-	MaterialDataBuffer.Upload(MaterialData);
+	MaterialDataBuffer->SetStagedData(MaterialData);
 }
 
 void MaterialAsset::SetEmissiveTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn)
 {
 	EmissiveTextureAsset = AssetIn;
 	MaterialData.IsEmissiveSet = (AssetIn != nullptr);
-	MaterialDataBuffer.Upload(MaterialData);
+	MaterialDataBuffer->SetStagedData(MaterialData);
 }

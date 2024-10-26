@@ -31,7 +31,8 @@ public:
 
 protected:
 	SMaterialData MaterialData;
-	UploadBuffer<SMaterialData> MaterialDataBuffer;
+	UploadBuffer<SMaterialData>* MaterialDataBuffer;
+	MakeGetter(MaterialDataBuffer);
 
 protected:
 	std::shared_ptr<BaseTextureAsset> AmbientOcculusionTextureAsset;

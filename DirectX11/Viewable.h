@@ -38,8 +38,9 @@ public:
 protected:
 	const DirectX::XMMATRIX GetPerspectiveViewMatrix();
 
-public:
-	UploadBuffer<ViewProjBufferData> ViewProjBuffer;
+protected:
+	UploadBuffer<ViewProjBufferData>* ViewProjBuffer;
+	MakeGetter(ViewProjBuffer);
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

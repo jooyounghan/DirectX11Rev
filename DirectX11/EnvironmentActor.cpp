@@ -14,6 +14,8 @@
 #include "MapAsset.h"
 #include "ACamera.h"
 
+#include "GlobalVariable.h"
+#include "UploadableBufferManager.h"
 using namespace std;
 
 string EnvironmentActor::EnvironmentActorKind = "Environment Actor";
@@ -23,9 +25,8 @@ EnvironmentActor::EnvironmentActor(MapAsset* MapAssetInstance)
 {
 	static size_t EnvironmentActorCount = 0;
 
-	AutoZeroMemory(HDRToneMappingConstant);
-	HDRToneMappingConstant.Exposure = 1.f;
-	HDRToneMappingConstant.Gamma = 1.f;
+	HDRToneMappingConstantBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<UploadBuffer<SHDRToneMappingConstant>>();
+	SetToneMappingConstant(1.f, 1.f);
 
 	EnvironmentActorCount++;
 	ObjectName = EnvironmentActor::EnvironmentActorKind + to_string(EnvironmentActorCount);
@@ -36,6 +37,14 @@ EnvironmentActor::EnvironmentActor(MapAsset* MapAssetInstance)
 EnvironmentActor::~EnvironmentActor()
 {
 
+}
+
+void EnvironmentActor::SetToneMappingConstant(const float& ExposureIn, const float& GammaIn)
+{
+	SHDRToneMappingConstant ToneMappingConstant;
+	ToneMappingConstant.Exposure = ExposureIn;
+	ToneMappingConstant.Gamma = GammaIn;
+	HDRToneMappingConstantBuffer->SetStagedData(ToneMappingConstant);
 }
 
 void EnvironmentActor::AcceptGui(IGuiModelVisitor* GuiVisitor)
@@ -57,8 +66,8 @@ void EnvironmentActor::Render()
 		ID3D11Buffer* IndexBuffer = EnvironmentMeshAsset->GetIndexBuffer();
 		const DXGI_FORMAT IndexFormat = EnvironmentMeshAsset->GetIndexFormat();
 		const UINT IndexCount = EnvironmentMeshAsset->GetIndexCount();
-		ID3D11Buffer* VSConstBuffers[] = { CurrentCamera->ViewProjBuffer.GetBuffer(), TransformationBuffer.GetBuffer() };
-		ID3D11Buffer* PSConstBuffers[] = { HDRToneMappingConstantBuffer.GetBuffer(), };
+		ID3D11Buffer* VSConstBuffers[] = { CurrentCamera->GetViewProjBuffer()->GetBuffer(), TransformationBuffer->GetBuffer()};
+		ID3D11Buffer* PSConstBuffers[] = { HDRToneMappingConstantBuffer->GetBuffer(), };
 		ID3D11ShaderResourceView* PSSRVs[] = { EnvironmentBackgroundEXRTextureAsset != nullptr ? EnvironmentBackgroundEXRTextureAsset->GetSRV() : nullptr };
 
 		const D3D11_VIEWPORT* Viewport = &CurrentCamera->GetViewport();
@@ -92,12 +101,6 @@ void EnvironmentActor::Render()
 	}
 }
 
-void EnvironmentActor::Update(const float& DeltaTimeIn)
-{
-	AActor::Update(DeltaTimeIn);
-	HDRToneMappingConstantBuffer.Upload(HDRToneMappingConstant);
-}
-
 void EnvironmentActor::OnSerializeFromMap(FILE* FileIn)
 {
 	AObject::OnSerializeFromMap(FileIn);
@@ -108,8 +111,10 @@ void EnvironmentActor::OnSerializeFromMap(FILE* FileIn)
 	AssetNameSerializeHelper(EnvironmentDiffuseDDSTextureAsset, FileIn);
 	AssetNameSerializeHelper(EnvironmentBRDFDDSTextureAsset, FileIn);
 
-	fwrite(&HDRToneMappingConstant.Exposure, sizeof(float), 1, FileIn);
-	fwrite(&HDRToneMappingConstant.Gamma, sizeof(float), 1, FileIn);
+	SHDRToneMappingConstant StagedData = HDRToneMappingConstantBuffer->GetStagedData();
+	
+	fwrite(&StagedData.Exposure, sizeof(float), 1, FileIn);
+	fwrite(&StagedData.Gamma, sizeof(float), 1, FileIn);
 }
 
 void EnvironmentActor::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
@@ -134,9 +139,11 @@ void EnvironmentActor::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManag
 	EnvironmentDiffuseDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentDiffuseDDSTextureAssetName);
 	EnvironmentBRDFDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentBRDFDDSTextureAssetName);
 
+	float Exposure, Gamma;
+	fread(&Exposure, sizeof(float), 1, FileIn);
+	fread(&Gamma, sizeof(float), 1, FileIn);
 
-	fread(&HDRToneMappingConstant.Exposure, sizeof(float), 1, FileIn);
-	fread(&HDRToneMappingConstant.Gamma, sizeof(float), 1, FileIn);
+	SetToneMappingConstant(Exposure, Gamma);
 }
 
 template<typename T>

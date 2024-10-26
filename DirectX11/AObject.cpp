@@ -2,6 +2,8 @@
 #include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
 #include "AAssetFile.h"
+#include "UploadBuffer.h"
+#include "UploadableBufferManager.h"
 
 #include <format>
 
@@ -9,12 +11,11 @@ using namespace std;
 using namespace DirectX;
 
 AObject::AObject(MapAsset* MapAssetInstance)
-	: AMovable(), MapAssetCached(MapAssetInstance), 
+	: AMovable(), MapAssetCached(MapAssetInstance),
 	DeviceContextCached(App::GGraphicPipeline->GetDeviceContext()),
-	ObjectID(string{ format("{}", (uint64_t)this) }),
-	TransformationBuffer()
+	ObjectID(string{ format("{}", (uint64_t)this) })
 {
-
+	TransformationBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<UploadBuffer<TransformationMatrix>>();
 }
 
 void AObject::Update(const float& DeltaTimeIn)
@@ -25,7 +26,7 @@ void AObject::Update(const float& DeltaTimeIn)
 	TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
 	TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
 
-	TransformationBuffer.Upload(TempTransformation);
+	TransformationBuffer->SetStagedData(TempTransformation);
 }
 
 void AObject::OnSerializeFromMap(FILE* FileIn)

@@ -95,7 +95,7 @@ void BoundingFrustumObject::Update(const float& DeltaTimeIn)
         TempTransformation.InvTransfomationMat = XMMatrixInverse(nullptr, TempTransformation.TransfomationMat);
         TempTransformation.TransfomationMat = XMMatrixTranspose(TempTransformation.TransfomationMat);
 
-        TransformationBuffer.Upload(TempTransformation);
+        TransformationBuffer->SetStagedData(TempTransformation);
 
         const D3D11_VIEWPORT& Viewport = ViewableCached->GetViewport();
         const float AspectRatio = Viewport.Width / Viewport.Height;

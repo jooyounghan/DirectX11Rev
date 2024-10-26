@@ -99,19 +99,35 @@ void PSOObject::CheckPipelineValidation()
 	{
 		assert(IsVSConstBufferSet[VsCBIdx] == true);
 	}
+	for (UINT VsCBIdx = NumVSConstBuffers; VsCBIdx < CONST_BUFFER_MAX_COUNT; ++VsCBIdx)
+	{
+		assert(IsVSConstBufferSet[VsCBIdx] == false);
+	}
 
 	for (UINT VsSRVIdx = 0; VsSRVIdx < NumVSSRVs; ++VsSRVIdx)
 	{
 		assert(IsVSSRVSet[VsSRVIdx] == true);
+	}
+	for (UINT VsSRVIdx = NumVSSRVs; VsSRVIdx < SRV_MAX_COUNT; ++VsSRVIdx)
+	{
+		assert(IsVSSRVSet[VsSRVIdx] == false);
 	}
 
 	for (UINT PsCBIdx = 0; PsCBIdx < NumPSConstBuffers; ++PsCBIdx)
 	{
 		assert(IsPSConstBufferSet[PsCBIdx] == true);
 	}
+	for (UINT PsCBIdx = NumPSConstBuffers; PsCBIdx < CONST_BUFFER_MAX_COUNT; ++PsCBIdx)
+	{
+		assert(IsPSConstBufferSet[PsCBIdx] == false);
+	}
 
 	for (UINT PsSRVIdx = 0; PsSRVIdx < NumPSSRVs; ++PsSRVIdx)
 	{
 		assert(IsPSSRVSet[PsSRVIdx] == true);
+	}
+	for (UINT PsSRVIdx = NumPSSRVs; PsSRVIdx < SRV_MAX_COUNT; ++PsSRVIdx)
+	{
+		assert(IsPSSRVSet[PsSRVIdx] == false);
 	}
 }

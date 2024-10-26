@@ -1,11 +1,12 @@
 #include "Viewable.h"
 
-
 #include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
 #include "DefineUtility.h"
 
 #include "IGuiModelVisitor.h"
+
+#include "UploadableBufferManager.h"
 
 using namespace std;
 using namespace DirectX;
@@ -15,8 +16,9 @@ Viewable::Viewable(
 	const UINT& WidthIn, const UINT& HeightIn,
 	const string& AttachableKindIn
 )
-	: AAttachableObject(MapAssetInstance, AttachableKindIn), ViewProjBuffer()
+	: AAttachableObject(MapAssetInstance, AttachableKindIn)
 {
+	ViewProjBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<UploadBuffer<ViewProjBufferData>>();
 	Resize(WidthIn, HeightIn);
 }
 
@@ -64,7 +66,8 @@ void Viewable::Update(const float& DeltaTimeIn)
 	TempViewProj.InvViewProjMatrix = XMMatrixInverse(nullptr, TempViewProj.ViewProjMatrix);
 	TempViewProj.ViewProjMatrix = XMMatrixTranspose(TempViewProj.ViewProjMatrix);
 	TempViewProj.ViewPosition = GetAbsolutePosition();
-	ViewProjBuffer.Upload(TempViewProj);
+
+	ViewProjBuffer->SetStagedData(TempViewProj);
 }
 
 

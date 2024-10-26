@@ -37,13 +37,11 @@ protected:
 	MakeSmartPtrSetterGetter(EnvironmentDiffuseDDSTextureAsset);
 	MakeSmartPtrSetterGetter(EnvironmentBRDFDDSTextureAsset);
 
+public:
+	void SetToneMappingConstant(const float& ExposureIn, const float& GammaIn);
 
 protected:
-	SHDRToneMappingConstant HDRToneMappingConstant;
-	MakePointerGetter(HDRToneMappingConstant);
-
-protected:
-	UploadBuffer<SHDRToneMappingConstant> HDRToneMappingConstantBuffer;
+	UploadBuffer<SHDRToneMappingConstant>* HDRToneMappingConstantBuffer;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
@@ -53,9 +51,6 @@ protected:
 
 public:
 	virtual void Render() override final;
-
-public:
-	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;

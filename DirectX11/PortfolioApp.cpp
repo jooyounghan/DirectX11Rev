@@ -5,6 +5,7 @@
 #include "GraphicsPipeline.h"
 #include "PSOManager.h"
 #include "InputEventManager.h"
+#include "UploadableBufferManager.h"
 #include "GameWorld.h"
 
 using namespace std;
@@ -55,6 +56,9 @@ PortfolioApp::PortfolioApp()
 
 	InputEventManagerInstance = make_unique<InputEventManager>();
 	App::GInputEventManager = InputEventManagerInstance.get();
+
+	UploadableBufferManagerInstance = make_unique<UploadableBufferManager>();
+	App::GUploadableBufferManager = UploadableBufferManagerInstance.get();
 
 #ifdef _DEBUG
 	GameWorldInstance = make_unique<GameWorld>(MainWindow);
@@ -130,6 +134,7 @@ void PortfolioApp::Update()
 	const float& DeltaTime = GetDeltaTimeFromLastCall();
 
 	InputEventManagerInstance->Update(DeltaTime);
+	UploadableBufferManagerInstance->Update(DeltaTime);
 	GameWorldInstance->Update(DeltaTime);
 }
 
