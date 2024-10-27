@@ -15,5 +15,6 @@ float4 main(EnvironmentActorVertexOutput Input) : SV_TARGET
 {
     float4 Color = clamp(Exposure * HDRTexture.Sample(WrapSampler, Input.f2TexCoord), 0.f, 1.f);
     Color = pow(Color, 1.f / Gamma);
+
     return Color;
 }

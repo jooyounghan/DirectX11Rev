@@ -11,7 +11,7 @@ PSOObject::PSOObject(PSOArgsIn)
 	HullShader(HullShaderIn),
 	NumHSConstBuffers(NumHSConstBuffersIn), NumHSSRVs(NumHSSRVsIn),
 	DomainShader(DomainShaderIn),
-	NumDSConstBuffers(NumDSConstBuffersIn), NumDSSRVs(NumPSSRVsIn),
+	NumDSConstBuffers(NumDSConstBuffersIn), NumDSSRVs(NumDSSRVsIn),
 	NumPSConstBuffers(NumPSConstBuffersIn), NumPSSRVs(NumPSSRVsIn),
 	PrimitiveTopology(PrimitiveTopologyIn), NumRenderTargets(NumRenderTargetsIn), 
 	DSVFormat(DSVFormatIn), SampleDesc(SampleDescIn), RasterizerState(RasterizerStateIn),

@@ -48,7 +48,7 @@ float3 DiffuseIBL(float3 F0, float3 BaseColor, float3 Normal, float Metallic, fl
 float3 SpecularIBL(float3 F0, float3 BaseColor, float3 Normal, float Metallic, float Roughness, float3 ToEye, TextureCube SpecularTexture, Texture2D BRDFTextrure, SamplerState WrapSampler)
 {
     float2 specularBRDF = BRDFTextrure.SampleLevel(WrapSampler, float2(dot(Normal, ToEye), 1.0 - Roughness), 0.0f).rg;
-    float3 specularIrradiance = SpecularTexture.SampleLevel(WrapSampler, reflect(-ToEye, Normal), Roughness * 5.0f).rgb;
+    float3 specularIrradiance = SpecularTexture.SampleLevel(WrapSampler, Normal, Roughness * 5.0f).rgb;
     
     return (F0 * specularBRDF.x + specularBRDF.y) * specularIrradiance;
 }

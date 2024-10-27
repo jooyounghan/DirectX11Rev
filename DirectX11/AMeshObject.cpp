@@ -174,10 +174,13 @@ void AMeshObject::Render()
 					PSMaterialSRVs.push_back(Roughness != nullptr ? Roughness->GetSRV() : nullptr);
 					PSMaterialSRVs.push_back(Metalic != nullptr ? Metalic->GetSRV() : nullptr);
 					PSMaterialSRVs.push_back(Normal != nullptr ? Normal->GetSRV() : nullptr);
-					PSMaterialSRVs.push_back(Emissive != nullptr ? Emissive->GetSRV() : nullptr);					
+					PSMaterialSRVs.push_back(Emissive != nullptr ? Emissive->GetSRV() : nullptr);
 				}
 				else
 				{
+					DSConstBuffersPerPart.push_back(nullptr);
+					PSConstBuffersPerPart.push_back(nullptr);
+
 					DSMaterialSRVs.insert(DSMaterialSRVs.end(), { nullptr });
 					PSMaterialSRVs.insert(PSMaterialSRVs.end(), { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
 				}
@@ -239,7 +242,14 @@ void AMeshObject::OnSerializeFromMap(FILE* FileIn)
 
 	for (auto& MaterialAssetInstance : MaterialAssetInstances)
 	{
-		AAssetFile::SerializeString(MaterialAssetInstance->GetAssetName(), FileIn);
+		if (MaterialAssetInstance != nullptr)
+		{
+			AAssetFile::SerializeString(MaterialAssetInstance->GetAssetName(), FileIn);
+		}
+		else
+		{
+			AAssetFile::SerializeString("", FileIn);
+		}
 	}
 }
 
