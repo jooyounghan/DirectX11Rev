@@ -34,6 +34,9 @@ protected:
 	UploadBuffer<SMaterialData>* MaterialDataBuffer;
 	MakeGetter(MaterialDataBuffer);
 
+public:
+	inline const DirectX::XMFLOAT3& GetF0() { return MaterialData.F0; }
+
 protected:
 	std::shared_ptr<BaseTextureAsset> AmbientOcculusionTextureAsset;
 	std::shared_ptr<BaseTextureAsset> SpecularTextureAsset;
@@ -61,6 +64,7 @@ public:
 	void SetNormalTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
 	void SetHeightTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
 	void SetEmissiveTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
+	void SetF0(const DirectX::XMFLOAT3& F0In);
 
 public:
 	virtual void Serialize() override;

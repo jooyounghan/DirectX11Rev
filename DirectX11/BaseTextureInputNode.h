@@ -6,8 +6,6 @@ class BaseTextureAsset;
 class AssetVariableInputPort;
 class BaseTextureOutputPort;
 
-constexpr float NodePaddingSize = 10.f;
-
 class BaseTextureInputNode : public VariableInputNode
 {
 public:

@@ -9,6 +9,8 @@
 #include <memory>
 #include <format>
 
+constexpr float NodePaddingSize = 10.f;
+
 class NodeElement : public RectangleDrawElement
 {
 public:

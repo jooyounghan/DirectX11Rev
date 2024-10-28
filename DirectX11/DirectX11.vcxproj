@@ -143,7 +143,7 @@
     <ClCompile Include="AController.cpp" />
     <ClCompile Include="AddAssetFilePopup.cpp" />
     <ClCompile Include="AddAttachableModal.cpp" />
-    <ClCompile Include="AddBaseTexturePopup.cpp" />
+    <ClCompile Include="AddMaterialElementPopup.cpp" />
     <ClCompile Include="AddPlaceableModal.cpp" />
     <ClCompile Include="ADrawElement.cpp" />
     <ClCompile Include="AMeshObject.cpp" />
@@ -161,6 +161,8 @@
     <ClCompile Include="CreateAssetFileModal.cpp" />
     <ClCompile Include="DeleteAttachableModal.cpp" />
     <ClCompile Include="DeletePlaceableModal.cpp" />
+    <ClCompile Include="Float3InputNode.cpp" />
+    <ClCompile Include="Float3VariableOutputPort.cpp" />
     <ClCompile Include="FlowEndNode.cpp" />
     <ClCompile Include="FlowInputPort.cpp" />
     <ClCompile Include="FlowMidNode.cpp" />
@@ -264,7 +266,7 @@
     <ClInclude Include="AActor.h" />
     <ClInclude Include="AddAssetFilePopup.h" />
     <ClInclude Include="AddAttachableModal.h" />
-    <ClInclude Include="AddBaseTexturePopup.h" />
+    <ClInclude Include="AddMaterialElementPopup.h" />
     <ClInclude Include="AddPlaceableModal.h" />
     <ClInclude Include="AMeshObject.h" />
     <ClInclude Include="AModal.h" />
@@ -280,6 +282,8 @@
     <ClInclude Include="CreateAssetFileModal.h" />
     <ClInclude Include="DeleteAttachableModal.h" />
     <ClInclude Include="DeletePlaceableModal.h" />
+    <ClInclude Include="Float3InputNode.h" />
+    <ClInclude Include="Float3VariableOutputPort.h" />
     <ClInclude Include="FlowEndNode.h" />
     <ClInclude Include="FlowInputPort.h" />
     <ClInclude Include="FlowMidNode.h" />

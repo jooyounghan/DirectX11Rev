@@ -1,11 +1,14 @@
 #pragma once
 #include "AAssetNodeCanvas.h"
-#include "AddBaseTexturePopup.h"
+#include "AddMaterialElementPopup.h"
+#include "directxmath/DirectXMath.h"
 
 class BaseTextureAsset;
 class MaterialAsset;
 
 class BaseTextureInputNode;
+class Float3InputNode;
+
 class AssetVariableInputPort;
 
 class MaterialAssetNodeCanvas : public AAssetNodeCanvas
@@ -18,13 +21,13 @@ protected:
 	MaterialAsset* MaterialAssetCached = nullptr;
 
 protected:
-	AddBaseTexturePopup AddBaseTexturePopupInstance;
+	AddMaterialElementPopup AddMaterialElementPopupInstance;
 
 protected:
 	const float& NodeOffset = 25.f;
-	const float& BaseTextureNodeWidth = 300.f;
-	const float& BaseTextureNodeHeight = 100.f;
-	const float& BaseTextureNodeXPos;
+	const float& MaterialElementNodeWidth = 300.f;
+	const float& MaterialElementNodeHeight = 100.f;
+	const float& MaterialElementNodeXPos;
 	float LastInsertedNodePosY;
 
 protected:
@@ -39,7 +42,17 @@ private:
 	BaseTextureInputNode* AddBaseTextureInputNodeHelper(const ImVec2& NodePos, const std::shared_ptr<BaseTextureAsset>& BaseTextureAssetIn);
 	void ConnectBaseTextureToMaterial(BaseTextureInputNode* BaseTextureInputNodeIn, AssetVariableInputPort* MaterialTextureInputNodeIn);
 	
+private:
+	Float3InputNode* AddF0InputNodeHelper(float& NodeHeightPos, const DirectX::XMFLOAT3& F0In);
+	Float3InputNode* AddF0InputNodeHelper(const ImVec2& NodePos, const DirectX::XMFLOAT3& F0In);
+	void ConnectF0ToMaterial(Float3InputNode* F0InputNodeIn, AssetVariableInputPort* MaterialTextureInputNodeIn);
+
+private:
 	BaseTextureAddedHandler OnBaseTextureAdded;
 	void AddBaseTextureNode();
+
+private:
+	Float3AddedHandler OnFloat3Added;
+	void AddF0ConstantNode();
 };
 

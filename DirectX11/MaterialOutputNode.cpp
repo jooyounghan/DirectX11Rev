@@ -1,10 +1,13 @@
 #include "MaterialOutputNode.h"
-#include "BaseTextureOutputPort.h"
 #include "MaterialAsset.h"
+
+#include "BaseTextureOutputPort.h"
+#include "Float3VariableOutputPort.h"
 #include "AssetVariableInputPort.h"
 
 using namespace std;
 using namespace ImGui;
+using namespace DirectX;
 
 MaterialOutputNode::MaterialOutputNode(
 	const ImVec2& CenterPositionIn, 
@@ -21,6 +24,7 @@ MaterialOutputNode::MaterialOutputNode(
 	OnNormalTextureAssetSet = bind(&MaterialOutputNode::SetNormalTextureAssetWithConnect, this, placeholders::_1);
 	OnHeightTextureAssetSet = bind(&MaterialOutputNode::SetHeightTextureAssetWithConnect, this, placeholders::_1);
 	OnEmissiveTextureAssetSet = bind(&MaterialOutputNode::SetEmissiveTextureAssetWithConnect, this, placeholders::_1);
+	OnF0Set = bind(&MaterialOutputNode::SetF0WithConnect, this, placeholders::_1);
 
 	AmbientOcculusionTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	AmbientOcculusionTexturePort->ConnectEvent += OnAmbientOcculusionTextureAssetSet;
@@ -45,6 +49,9 @@ MaterialOutputNode::MaterialOutputNode(
 	
 	EmissiveTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	EmissiveTexturePort->ConnectEvent += OnEmissiveTextureAssetSet;
+
+	F0Port = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, Float3VariableOutputPort::Float3VariableKind);
+	F0Port->ConnectEvent += OnF0Set;
 }
 
 MaterialOutputNode::~MaterialOutputNode()
@@ -123,6 +130,23 @@ void MaterialOutputNode::SetEmissiveTextureAssetWithConnect(AOutputPort* OutputP
 	}
 }
 
+void MaterialOutputNode::SetF0WithConnect(AOutputPort* OutputPortIn)
+{
+	if (MaterialAssetCached)
+	{
+		Float3VariableOutputPort* Float3OutputIn = dynamic_cast<Float3VariableOutputPort*>(OutputPortIn);
+		if (Float3OutputIn != nullptr)
+		{
+			MaterialAssetCached->SetF0(Float3OutputIn->GetFloat3Data());
+		}
+		else
+		{
+			MaterialAssetCached->SetF0(XMFLOAT3(0.f, 0.f, 0.f));
+		}
+		MaterialAssetCached->SetModified();
+	}
+}
+
 shared_ptr<BaseTextureAsset> MaterialOutputNode::GetBaseTextureAssetFromOutputPort(AOutputPort* OutputPortIn)
 {
 	BaseTextureOutputPort* BaseTextureOutputIn = dynamic_cast<BaseTextureOutputPort*>(OutputPortIn);
@@ -144,6 +168,7 @@ void MaterialOutputNode::AddToDrawList(const ImVec2& OriginPosition, ImDrawList*
 	SetAssetDescription(OriginPosition, NormalTexturePort, "Normal Texture");
 	SetAssetDescription(OriginPosition, HeightTexturePort, "Height Texture");
 	SetAssetDescription(OriginPosition, EmissiveTexturePort, "Emissive Texture");
+	SetAssetDescription(OriginPosition, F0Port, "F0 Constant");
 }
 
 void MaterialOutputNode::SetAssetDescription(

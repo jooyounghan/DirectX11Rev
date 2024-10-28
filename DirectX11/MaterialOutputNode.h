@@ -27,6 +27,7 @@ public:
 	ConnectedDelegation OnNormalTextureAssetSet;
 	ConnectedDelegation OnHeightTextureAssetSet;
 	ConnectedDelegation OnEmissiveTextureAssetSet;
+	ConnectedDelegation OnF0Set;
 
 protected:
 	const float PortToTextOffset = 10.f;
@@ -41,6 +42,7 @@ protected:
 	AssetVariableInputPort* NormalTexturePort = nullptr;
 	AssetVariableInputPort* HeightTexturePort = nullptr;
 	AssetVariableInputPort* EmissiveTexturePort = nullptr;
+	AssetVariableInputPort* F0Port = nullptr;
 	MakeGetter(AmbientOcculusionTexturePort);
 	MakeGetter(SpecularTexturePort);
 	MakeGetter(DiffuseTexturePort);
@@ -49,6 +51,7 @@ protected:
 	MakeGetter(NormalTexturePort);
 	MakeGetter(HeightTexturePort);
 	MakeGetter(EmissiveTexturePort);
+	MakeGetter(F0Port);
 
 private:
 	void SetAmbientOcculusionTextureAssetWithConnect(AOutputPort* OutputPortIn);
@@ -59,6 +62,7 @@ private:
 	void SetNormalTextureAssetWithConnect(AOutputPort* OutputPortIn);
 	void SetHeightTextureAssetWithConnect(AOutputPort* OutputPortIn);
 	void SetEmissiveTextureAssetWithConnect(AOutputPort* OutputPortIn);
+	void SetF0WithConnect(AOutputPort* OutputPortIn);
 
 private:
 	std::shared_ptr<BaseTextureAsset> GetBaseTextureAssetFromOutputPort(AOutputPort* OutputPortIn);

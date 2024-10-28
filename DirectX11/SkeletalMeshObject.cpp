@@ -30,7 +30,7 @@ SkeletalMeshObject::SkeletalMeshObject(MapAsset* MapAssetInstance, std::shared_p
 	MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_Solid);
 	PickingIDSolidPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_ID_Solid);
 
-
+	SetSkeletalMeshAssetInstance(SkeletalMeshAssetInstanceIn);
 }
 
 SkeletalMeshObject::~SkeletalMeshObject()

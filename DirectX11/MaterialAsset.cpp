@@ -6,6 +6,7 @@
 #include "UploadableBufferManager.h"
 
 using namespace std;
+using namespace DirectX;
 
 string MaterialAsset::MaterialAssetKind = "Material";
 
@@ -40,6 +41,8 @@ void MaterialAsset::Serialize()
 		SerializeAssetNameHelper(OutputAssetFile, HeightTextureAsset);
 		SerializeAssetNameHelper(OutputAssetFile, EmissiveTextureAsset);
 
+		fwrite(&MaterialData.F0, sizeof(XMFLOAT3), 1, OutputAssetFile);
+
 		fclose(OutputAssetFile);
 	}
 }
@@ -64,6 +67,9 @@ void MaterialAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	AAssetFile::DeserializeString(HeightTextureAssetName, FileIn);
 	AAssetFile::DeserializeString(EmissiveTextureAssetName, FileIn);
 
+	XMFLOAT3 F0In;
+	fread(&F0In, sizeof(XMFLOAT3), 1, FileIn);
+
 	SetAmbientOcculusionTextureAsset(AssetManagerIn->GetManagingBasicTexture(AmbientOcculusionTextureAssetName));
 	SetSpecularTextureAsset(AssetManagerIn->GetManagingBasicTexture(SpecularTextureAssetName));
 	SetDiffuseTextureAsset(AssetManagerIn->GetManagingBasicTexture(DiffuseTextureAssetName));
@@ -72,6 +78,7 @@ void MaterialAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	SetNormalTextureAsset(AssetManagerIn->GetManagingBasicTexture(NormalTextureAssetName));
 	SetHeightTextureAsset(AssetManagerIn->GetManagingBasicTexture(HeightTextureAssetName));
 	SetEmissiveTextureAsset(AssetManagerIn->GetManagingBasicTexture(EmissiveTextureAssetName));
+	SetF0(F0In);
 }
 
 void MaterialAsset::SerializeAssetNameHelper(FILE* FileIn, std::shared_ptr<BaseTextureAsset> BasicTextureAssetIn)
@@ -139,5 +146,11 @@ void MaterialAsset::SetEmissiveTextureAsset(const std::shared_ptr<BaseTextureAss
 {
 	EmissiveTextureAsset = AssetIn;
 	MaterialData.IsEmissiveSet = (AssetIn != nullptr);
+	MaterialDataBuffer->SetStagedData(MaterialData);
+}
+
+void MaterialAsset::SetF0(const XMFLOAT3& F0In)
+{
+	MaterialData.F0 = F0In;
 	MaterialDataBuffer->SetStagedData(MaterialData);
 }
