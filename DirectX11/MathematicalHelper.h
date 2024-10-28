@@ -34,6 +34,4 @@ public:
 		DirectX::XMFLOAT3& Bitangent1Out,
 		DirectX::XMFLOAT3& Bitangent2Out
 	);
-
 };
-

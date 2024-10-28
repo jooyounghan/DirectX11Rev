@@ -150,6 +150,8 @@
     <ClCompile Include="AModal.cpp" />
     <ClCompile Include="AMovable.cpp" />
     <ClCompile Include="ANBTMeshAsset.cpp" />
+    <ClCompile Include="AnimationAsset.cpp" />
+    <ClCompile Include="AnimationPlayer.cpp" />
     <ClCompile Include="AObjectManageModal.cpp" />
     <ClCompile Include="APawn.cpp" />
     <ClCompile Include="APopup.cpp" />
@@ -245,6 +247,7 @@
     <ClCompile Include="StaticMeshAsset.cpp" />
     <ClCompile Include="StaticMeshObject.cpp" />
     <ClCompile Include="StringHelper.cpp" />
+    <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="TaskAnalyzerWindow.cpp" />
     <ClCompile Include="BaseTextureAsset.cpp" />
     <ClCompile Include="TransformationInformationDrawer.cpp" />
@@ -272,6 +275,8 @@
     <ClInclude Include="AModal.h" />
     <ClInclude Include="AMovable.h" />
     <ClInclude Include="ANBTMeshAsset.h" />
+    <ClInclude Include="AnimationAsset.h" />
+    <ClInclude Include="AnimationPlayer.h" />
     <ClInclude Include="AObjectManageModal.h" />
     <ClInclude Include="APopup.h" />
     <ClInclude Include="AssetSelectHelper.h" />
@@ -367,6 +372,7 @@
     <ClInclude Include="SkeletalMeshObjectInformationDrawer.h" />
     <ClInclude Include="StaticAssertHelper.h" />
     <ClInclude Include="StaticMeshObject.h" />
+    <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Todo.h" />
     <ClInclude Include="TransformationInformationDrawer.h" />
     <ClInclude Include="UIVariable.h" />

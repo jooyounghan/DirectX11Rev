@@ -17,9 +17,10 @@ struct aiNode;
 struct aiMesh;
 struct aiString;
 struct aiMaterial;
+struct aiAnimation;
+struct aiNodeAnim;
 
 enum aiTextureType;
-
 class AAssetFile;
 
 class AMeshAsset;
@@ -28,6 +29,8 @@ class ANBTMeshAsset;
 class StaticMeshAsset;
 class SkeletalMeshAsset;
 class BoneAsset;
+class AnimationAsset;
+class AnimationChannel;
 
 class MapAsset;
 
@@ -82,6 +85,8 @@ private:
 	void LoadMeshAssetFromFile(bool IsGltf, const std::string& AssetName, const aiScene* const Scene);
 	void LoadMaterialAssetFromFile(const std::string& FilePath, const std::string& AssetName, const aiScene* const Scene);
 	std::shared_ptr<BaseTextureAsset> LoadBasicTextureFromMaterial(const aiScene* const Scene, aiMaterial* MaterialIn, aiTextureType TextureTypeIn);
+
+private:
 	void LoadAnimationAssetFromFile(const std::string& AssetName, const aiScene* const Scene);
 
 private:
@@ -96,6 +101,7 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<EXRTextureAsset>> ManagingEXRTextures;
 	std::unordered_map<std::string, std::shared_ptr<DDSTextureAsset>> ManagingDDSTextures;
 	std::unordered_map<std::string, std::shared_ptr<MaterialAsset>> ManagingMaterials;
+	std::unordered_map<std::string, std::shared_ptr<AnimationAsset>> ManagingAnimations;
 
 	MakeGetter(ManagingMaps);
 	MakeGetter(ManagingBones);
@@ -105,6 +111,7 @@ private:
 	MakeGetter(ManagingEXRTextures);
 	MakeGetter(ManagingDDSTextures);
 	MakeGetter(ManagingMaterials);
+	MakeGetter(ManagingAnimations);
 
 private:
 	std::unordered_map<std::string, BaseMeshAsset*> ManagingBaseMeshes;
@@ -127,7 +134,8 @@ public:
 	void SerailizeAndAddToContainer(std::shared_ptr<EXRTextureAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingEXRTextures, AssetIn); };
 	void SerailizeAndAddToContainer(std::shared_ptr<DDSTextureAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingDDSTextures, AssetIn); };
 	void SerailizeAndAddToContainer(std::shared_ptr<MaterialAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingMaterials, AssetIn); };
-	
+	void SerailizeAndAddToContainer(std::shared_ptr<AnimationAsset>& AssetIn) { SerailizeAndAddToContainer(ManagingAnimations, AssetIn); };
+
 private:
 	template<typename T>
 	void SerializeModifiedAsset(std::unordered_map<std::string, T>& ManagingContainer);
@@ -150,6 +158,7 @@ public:
 	std::shared_ptr<EXRTextureAsset> GetManagingEXRTexture(const std::string AssetName);
 	std::shared_ptr<DDSTextureAsset> GetManagingDDSTexture(const std::string AssetName);
 	std::shared_ptr<MaterialAsset> GetManagingMaterial(const std::string AssetName);
+	std::shared_ptr<AnimationAsset> GetManagingAnimation(const std::string AssetName);
 
 	BaseMeshAsset* GetManagingBaseMesh(const std::string MapAssetName);
 
@@ -221,6 +230,12 @@ private:
 		const aiScene* const Scene,
 		BoneAsset* BoneAsset
 	);
+
+private:
+	void LoadAnimationChannels(const aiAnimation* const Animation, AnimationAsset* AnimAsset);
+	void LoadPositionKeys(const aiNodeAnim* const NodeChannel, AnimationChannel& AnimChannel);
+	void LoadQuaternionKeys(const aiNodeAnim* const NodeChannel, AnimationChannel& AnimChannel);
+	void LoadScaleKeys(const aiNodeAnim* const NodeChannel, AnimationChannel& AnimChannel);
 
 private:
 	void LoadTextureCoord(

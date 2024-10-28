@@ -59,7 +59,7 @@ void Bone::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 	fread(&(OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
 }
 
-BoneAsset::BoneAsset(const std::string& AssetNameIn, bool LoadFromAsset)
+BoneAsset::BoneAsset(const std::string& AssetNameIn, const bool& LoadFromAsset)
 	: AAssetFile(LoadFromAsset ? AssetNameIn : AssetNameIn + "_" + BoneAsset::BoneAssetKind, BoneAsset::BoneAssetKind)
 {
 }

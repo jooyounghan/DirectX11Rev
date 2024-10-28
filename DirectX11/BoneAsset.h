@@ -47,7 +47,7 @@ public:
 class BoneAsset : public AAssetFile
 {
 public:
-	BoneAsset(const std::string& AssetNameIn, bool LoadFromAsset);
+	BoneAsset(const std::string& AssetNameIn, const bool& LoadFromAsset);
 	virtual ~BoneAsset();
 
 public:
@@ -63,6 +63,7 @@ protected:
 
 protected:
 	std::unordered_map<std::string, Bone> NameToBones;
+	MakeGetter(NameToBones);
 
 public:
 	Bone* FindBone(const std::string& BoneName);

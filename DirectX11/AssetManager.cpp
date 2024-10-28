@@ -23,6 +23,7 @@
 #include "EXRTextureAsset.h"
 #include "DDSTextureAsset.h"
 #include "MaterialAsset.h"
+#include "AnimationAsset.h"
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -300,6 +301,16 @@ shared_ptr<BaseTextureAsset> AssetManager::LoadBasicTextureFromMaterial(const ai
 
 void AssetManager::LoadAnimationAssetFromFile(const string& AssetName, const aiScene* const Scene)
 {
+    for (UINT AnimIdx = 0; AnimIdx < Scene->mNumAnimations; AnimIdx++)
+    {
+        aiAnimation* Animation = Scene->mAnimations[AnimIdx];
+
+        const string AnimName = Animation->mName.C_Str();
+        shared_ptr<AnimationAsset> AnimAsset = make_shared<AnimationAsset>(AnimName, true, Animation->mDuration, Animation->mTicksPerSecond);
+
+        LoadAnimationChannels(Animation, AnimAsset.get());
+        SerailizeAndAddToContainer(AnimAsset);
+    }
 }
 
 bool AssetManager::HasBone(const aiScene* const Scene)
@@ -399,6 +410,11 @@ std::shared_ptr<DDSTextureAsset> AssetManager::GetManagingDDSTexture(const std::
 std::shared_ptr<MaterialAsset> AssetManager::GetManagingMaterial(const std::string AssetName)
 {
     return GetManagingAssetHelper(ManagingMaterials, AssetName);
+}
+
+std::shared_ptr<AnimationAsset> AssetManager::GetManagingAnimation(const std::string AssetName)
+{
+    return GetManagingAssetHelper(ManagingAnimations, AssetName);
 }
 
 BaseMeshAsset* AssetManager::GetManagingBaseMesh(const std::string MapAssetName)
@@ -681,6 +697,59 @@ void AssetManager::LoadBone(
             // Load Bone Hierachy
             ProcessNodeForBone(Scene, Scene->mRootNode, BoneAsset);
         }
+    }
+}
+
+void AssetManager::LoadAnimationChannels(const aiAnimation* const Animation, AnimationAsset* AnimAsset)
+{
+    for (UINT ChannelIdx = 0; ChannelIdx < Animation->mNumChannels; ++ChannelIdx)
+    {
+        aiNodeAnim* NodeChannel = Animation->mChannels[ChannelIdx];
+
+        const string& ChannelName = NodeChannel->mNodeName.C_Str();
+
+        AnimationChannel AnimChannel;
+        LoadPositionKeys(NodeChannel, AnimChannel);
+        LoadQuaternionKeys(NodeChannel, AnimChannel);
+        LoadScaleKeys(NodeChannel, AnimChannel);
+
+        AnimAsset->AddAnimationChannel(ChannelName, move(AnimChannel));
+    }
+}
+
+void AssetManager::LoadPositionKeys(const aiNodeAnim* const NodeChannel, AnimationChannel& AnimChannel)
+{
+    for (UINT PositionIdx = 0; PositionIdx < NodeChannel->mNumPositionKeys; ++PositionIdx)
+    {
+        const aiVectorKey& PositionKey = NodeChannel->mPositionKeys[PositionIdx];
+        AnimChannel.AddPositionKey(
+            static_cast<float>(PositionKey.mTime), 
+            XMVectorSet(PositionKey.mValue.x, PositionKey.mValue.y, PositionKey.mValue.z, 1.f)
+        );
+    }
+}
+
+void AssetManager::LoadQuaternionKeys(const aiNodeAnim* const NodeChannel, AnimationChannel& AnimChannel)
+{
+    for (UINT QuaternionIdx = 0; QuaternionIdx < NodeChannel->mNumRotationKeys; ++QuaternionIdx)
+    {
+        const aiQuatKey& QuaternionKey = NodeChannel->mRotationKeys[QuaternionIdx];
+        AnimChannel.AddQuaternionKey(
+            static_cast<float>(QuaternionKey.mTime),
+            XMVectorSet(QuaternionKey.mValue.x, QuaternionKey.mValue.y, QuaternionKey.mValue.z, QuaternionKey.mValue.w)
+        );
+    }
+}
+
+void AssetManager::LoadScaleKeys(const aiNodeAnim* const NodeChannel, AnimationChannel& AnimChannel)
+{
+    for (UINT ScaleIdx = 0; ScaleIdx < NodeChannel->mNumScalingKeys; ++ScaleIdx)
+    {
+        const aiVectorKey& ScaleKey = NodeChannel->mScalingKeys[ScaleIdx];
+        AnimChannel.AddScaleKey(
+            static_cast<float>(ScaleKey.mTime),
+            XMVectorSet(ScaleKey.mValue.x, ScaleKey.mValue.y, ScaleKey.mValue.z, 0.f)
+        );
     }
 }
 

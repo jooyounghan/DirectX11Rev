@@ -4,8 +4,6 @@
 
 #include "HeaderHelper.h"
 #include "DefineUtility.h"
-#include "GlobalVariable.h"
-#include "GraphicsPipeline.h"
 
 template<typename T>
 class UploadBuffer : public Buffer, public AUploadableBuffer
@@ -21,19 +19,13 @@ protected:
 public:
 	void SetStagedData(const T& StagedDataIn);
 
-protected:
-	Microsoft::WRL::ComPtr<ID3D11Buffer> StagingBuffer;
-
-protected:
-	ID3D11DeviceContext* DeviceContextCached;
-
 public:
 	virtual void Upload() override;
 };
 
 template<typename T>
 inline UploadBuffer<T>::UploadBuffer()
-	: DeviceContextCached(App::GGraphicPipeline->GetDeviceContext())
+	: AUploadableBuffer()
 {
 	BUFFER_ALIGN_CHECK(sizeof(T));
 

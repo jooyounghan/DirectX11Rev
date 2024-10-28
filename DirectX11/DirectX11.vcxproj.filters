@@ -448,6 +448,18 @@
     <Filter Include="헤더 파일\Editor\NodeEditor\DrawElement\Node\Variable\Constant">
       <UniqueIdentifier>{c672daa0-3de3-4195-90cc-530b8ffe517f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Asset\Animation">
+      <UniqueIdentifier>{9d8e4019-eef2-4894-a80f-cf560f33e3a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Asset\Animation">
+      <UniqueIdentifier>{c9ec4a87-5e9e-4e23-91ae-8fbb7509a77f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Animation">
+      <UniqueIdentifier>{d3635ac0-2c4c-49ff-a522-a50b046f5d7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Animation">
+      <UniqueIdentifier>{34bca4d5-39ce-431f-9dcb-28cf64589661}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PortfolioApp.cpp">
@@ -804,9 +816,6 @@
     <ClCompile Include="CreateAssetFileModal.cpp">
       <Filter>소스 파일\Editor\GUI\Modal\Extended\AssetFileModal</Filter>
     </ClCompile>
-    <ClCompile Include="SDRCamera.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="UploadableBufferManager.cpp">
       <Filter>소스 파일\Buffer\Dynamic</Filter>
     </ClCompile>
@@ -815,6 +824,18 @@
     </ClCompile>
     <ClCompile Include="Float3InputNode.cpp">
       <Filter>소스 파일\Editor\NodeEditor\DrawElement\Node\Variable\Constant</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationAsset.cpp">
+      <Filter>소스 파일\Asset\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="SDRCamera.cpp">
+      <Filter>소스 파일\Object\View</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationPlayer.cpp">
+      <Filter>소스 파일\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="StructuredBuffer.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1259,9 +1280,6 @@
     <ClInclude Include="CreateAssetFileModal.h">
       <Filter>헤더 파일\Editor\GUI\Modal\Extended\AssetFile</Filter>
     </ClInclude>
-    <ClInclude Include="SDRCamera.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="UploadableBufferManager.h">
       <Filter>헤더 파일\Buffer\Dynamic</Filter>
     </ClInclude>
@@ -1270,6 +1288,18 @@
     </ClInclude>
     <ClInclude Include="Float3InputNode.h">
       <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Node\Variable\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationAsset.h">
+      <Filter>헤더 파일\Asset\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="SDRCamera.h">
+      <Filter>헤더 파일\Object\Attachable\View</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationPlayer.h">
+      <Filter>헤더 파일\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="StructuredBuffer.h">
+      <Filter>헤더 파일\Buffer\Dynamic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
