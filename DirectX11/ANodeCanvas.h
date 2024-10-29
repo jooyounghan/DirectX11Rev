@@ -33,12 +33,12 @@ protected:
 	ImVec2 ScrollingPosition;
 	
 protected:
-	ClickedElementDelegation			OnNodeClicked;
+	ClickedElementHandler			OnNodeClicked;
 
 protected:
-	ClickedElementDelegation			OnPortClicked;
-	MouseEnterElementDelegation			OnPortEnter;
-	MouseLeaveElementDelegation			OnPortLeave;
+	ClickedElementHandler			OnPortClicked;
+	MouseEnterElementHandler			OnPortEnter;
+	MouseLeaveElementHandler			OnPortLeave;
 
 protected:
 	std::list<std::unique_ptr<ADrawElement>> DrawElements;

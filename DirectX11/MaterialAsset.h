@@ -31,7 +31,7 @@ public:
 
 protected:
 	SMaterialData MaterialData;
-	UploadBuffer<SMaterialData>* MaterialDataBuffer;
+	std::shared_ptr<UploadBuffer<SMaterialData>> MaterialDataBuffer;
 	MakeGetter(MaterialDataBuffer);
 
 public:

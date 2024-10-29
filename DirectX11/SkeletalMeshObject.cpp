@@ -40,9 +40,10 @@ SkeletalMeshObject::~SkeletalMeshObject()
 void SkeletalMeshObject::SetSkeletalMeshAssetInstance(const std::shared_ptr<SkeletalMeshAsset>& SkeletalMeshAssetInstanceIn)
 {
 	SkeletalMeshAssetInstance = SkeletalMeshAssetInstanceIn;
-	if (SkeletalMeshAssetInstanceIn != nullptr)
+	if (SkeletalMeshAssetInstance != nullptr)
 	{
-		MaterialAssetInstances = SkeletalMeshAssetInstanceIn->GetDefaultMaterialAssets();
+		MaterialAssetInstances = SkeletalMeshAssetInstance->GetDefaultMaterialAssets();
+		AnimationPlayerInstance.SetBoneAsset(SkeletalMeshAssetInstance->GetLinkedBoneAsset());
 	}
 }
 
@@ -77,4 +78,8 @@ void SkeletalMeshObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetMan
 	AAssetFile::DeserializeString(MeshAssetName, FileIn);
 
 	SkeletalMeshAssetInstance = AssetManagerIn->GetManagingSkeletalMesh(MeshAssetName);
+	if (SkeletalMeshAssetInstance != nullptr)
+	{
+		AnimationPlayerInstance.SetBoneAsset(SkeletalMeshAssetInstance->GetLinkedBoneAsset());
+	}
 }

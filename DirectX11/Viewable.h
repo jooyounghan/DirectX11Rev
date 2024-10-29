@@ -39,7 +39,7 @@ protected:
 	const DirectX::XMMATRIX GetPerspectiveViewMatrix();
 
 protected:
-	UploadBuffer<ViewProjBufferData>* ViewProjBuffer;
+	std::shared_ptr<UploadBuffer<ViewProjBufferData>> ViewProjBuffer;
 	MakeGetter(ViewProjBuffer);
 
 public:

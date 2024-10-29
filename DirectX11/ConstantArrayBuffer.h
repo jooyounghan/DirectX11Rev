@@ -7,7 +7,7 @@
 #include "DefineUtility.h"
 
 template<typename T>
-class ConstantArrayBuffer : public Buffer
+class ConstantArrayBuffer : public BaseBuffer
 {
 public:
 	ConstantArrayBuffer();

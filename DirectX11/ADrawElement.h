@@ -9,11 +9,11 @@
 
 class ADrawElement;
 
-typedef std::function<void(ADrawElement*)>			ClickedElementDelegation;
-typedef std::function<void(ADrawElement*)>			MouseDownElementDelegation;
-typedef std::function<void(ADrawElement*)>			MouseUpElementDelegation;
-typedef std::function<void(ADrawElement*)>			MouseEnterElementDelegation;
-typedef std::function<void(ADrawElement*)>			MouseLeaveElementDelegation;
+typedef std::function<void(ADrawElement*)>			ClickedElementHandler;
+typedef std::function<void(ADrawElement*)>			MouseDownElementHandler;
+typedef std::function<void(ADrawElement*)>			MouseUpElementHandler;
+typedef std::function<void(ADrawElement*)>			MouseEnterElementHandler;
+typedef std::function<void(ADrawElement*)>			MouseLeaveElementHandler;
 
 class ADrawElement
 {

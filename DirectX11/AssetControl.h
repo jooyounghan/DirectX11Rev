@@ -6,9 +6,9 @@
 class AAssetFile;
 class AssetControl;
 
-typedef std::function<void(AAssetFile*)>	AssetControlBeginDragDropDelegate;
-typedef std::function<void(AssetControl*)>	AssetControlStyleChangeDelegation;
-typedef std::function<void(AssetControl*)>	AssetControlClickedDelegate;
+typedef std::function<void(AAssetFile*)>	AssetControlBeginDragDropHandler;
+typedef std::function<void(AssetControl*)>	AssetControlStyleChangeHandler;
+typedef std::function<void(AssetControl*)>	AssetControlClickedHandler;
 
 class AssetControl : public IGuiControl
 {

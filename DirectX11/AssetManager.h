@@ -55,7 +55,7 @@ struct SAssetPreloadArgs
 	std::string AssetType;
 };
 
-typedef std::function<void()> AssetAddedDelegate;
+typedef std::function<void()> AssetAddedHandler;
 
 class AssetManager
 {

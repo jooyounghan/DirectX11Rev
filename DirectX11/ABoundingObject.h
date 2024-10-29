@@ -24,7 +24,7 @@ protected:
 	bool IsCollided = false;
 
 protected:
-	UploadBuffer<DirectX::XMVECTOR>* DebuggingColorBuffer;
+	std::shared_ptr<UploadBuffer<DirectX::XMVECTOR>> DebuggingColorBuffer;
 	MakeGetter(DebuggingColorBuffer);
 
 public:

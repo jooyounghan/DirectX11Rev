@@ -271,6 +271,7 @@
     <ClInclude Include="AddAttachableModal.h" />
     <ClInclude Include="AddMaterialElementPopup.h" />
     <ClInclude Include="AddPlaceableModal.h" />
+    <ClInclude Include="AManagedByConatainer.h" />
     <ClInclude Include="AMeshObject.h" />
     <ClInclude Include="AModal.h" />
     <ClInclude Include="AMovable.h" />

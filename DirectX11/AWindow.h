@@ -8,7 +8,7 @@
 #include "Delegation.h"
 class AWindow;
 
-typedef std::function<void(AWindow*)> WindowClosedDelegation;
+typedef std::function<void(AWindow*)> WindowClosedHandler;
 
 class AWindow
 {

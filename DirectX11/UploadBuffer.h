@@ -1,12 +1,11 @@
 #pragma once
-#include "Buffer.h"
 #include "AUploadableBuffer.h"
 
 #include "HeaderHelper.h"
 #include "DefineUtility.h"
 
 template<typename T>
-class UploadBuffer : public Buffer, public AUploadableBuffer
+class UploadBuffer : public AUploadableBuffer
 {
 public:
 	UploadBuffer();

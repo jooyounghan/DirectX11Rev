@@ -49,5 +49,5 @@ inline void VertexBuffer<T>::InitializeForGPU(
 	SubresourceData.SysMemSlicePitch = SubresourceData.SysMemPitch;
 
 	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
-	Device->CreateBuffer(&BufferDesc, &SubresourceData, Buffer::Buffer.GetAddressOf());
+	Device->CreateBuffer(&BufferDesc, &SubresourceData, BaseBuffer::Buffer.GetAddressOf());
 }

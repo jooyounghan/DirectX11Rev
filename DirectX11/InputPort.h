@@ -3,7 +3,7 @@
 
 class AOutputPort;
 
-typedef std::function<void(AOutputPort*)> ConnectedDelegation;
+typedef std::function<void(AOutputPort*)> ConnectedHandler;
 
 class InputPort : public PortElement
 {

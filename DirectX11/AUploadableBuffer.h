@@ -1,5 +1,8 @@
 #pragma once
+#include "Buffer.h"
 #include "Delegation.h"
+#include "AManagedByConatainer.h"
+
 #include "GlobalVariable.h"
 #include "GraphicsPipeline.h"
 
@@ -7,7 +10,7 @@ class AUploadableBuffer;
 
 typedef std::function<void(AUploadableBuffer*)> UpdateReadyHandler;
 
-class AUploadableBuffer
+class AUploadableBuffer : public BaseBuffer, public AManagedByContainer
 {
 public:
 	AUploadableBuffer() : DeviceContextCached(App::GGraphicPipeline->GetDeviceContext()) {}

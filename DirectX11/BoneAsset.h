@@ -18,7 +18,8 @@ public:
 	~Bone();
 
 private:
-	size_t BoneIdx = NULL;
+	size_t BoneIndex = NULL;
+	MakeGetter(BoneIndex);
 
 private:
 	Bone* ParentBone = nullptr;

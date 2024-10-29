@@ -5,6 +5,7 @@ using namespace std;
 UploadableBufferManager::UploadableBufferManager()
 {
 	OnUploadFlagUpdated = bind(&UploadableBufferManager::SetUploadFlag, this, placeholders::_1);
+	OnUploadableBufferRemoved = bind(&UploadableBufferManager::RemoveUploadableBuffer, this, placeholders::_1);
 }
 
 UploadableBufferManager::~UploadableBufferManager()
@@ -24,6 +25,20 @@ void UploadableBufferManager::SetUploadFlag(AUploadableBuffer* UploadBufferIn)
 	if (it != UploadableBufferToUploadFlags.end())
 	{
 		it->second = true;
+	}
+}
+
+void UploadableBufferManager::RemoveUploadableBuffer(AManagedByContainer* RemovedBuffer)
+{
+	AUploadableBuffer* RemovedUploadBuffer = (AUploadableBuffer*)RemovedBuffer;
+
+	for (auto it = UploadableBufferToUploadFlags.begin(); it != UploadableBufferToUploadFlags.end(); ++it)
+	{
+		if (it->first.get() == RemovedUploadBuffer)
+		{
+			UploadableBufferToUploadFlags.erase(it);
+			break;
+		}
 	}
 }
 

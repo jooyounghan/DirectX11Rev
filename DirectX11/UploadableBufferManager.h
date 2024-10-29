@@ -19,22 +19,27 @@ protected:
 
 public:
 	template<typename T, typename ...Args>
-	T* CreateUploadableBuffer(const Args&... args);
+	std::shared_ptr<T> CreateUploadableBuffer(const Args&... args);
 
 protected:
 	UpdateReadyHandler OnUploadFlagUpdated;
 	void SetUploadFlag(AUploadableBuffer* UploadBufferIn);
 
 public:
+	BeginRemoveHandler OnUploadableBufferRemoved;
+	void RemoveUploadableBuffer(AManagedByContainer* RemovedBuffer);
+
+public:
 	virtual void Update(const float& DeltaTimeIn) override;
 };
 
 template<typename T, typename ...Args>
-inline T* UploadableBufferManager::CreateUploadableBuffer(const Args & ...args)
+inline std::shared_ptr<T> UploadableBufferManager::CreateUploadableBuffer(const Args & ...args)
 {
 	static_assert(std::is_base_of<AUploadableBuffer, T>::value, DerivedCondition(AUploadableBuffer));
 	std::shared_ptr<T> UploadableBuffer = std::make_shared<T>(args...);
 	UploadableBufferToUploadFlags.emplace(UploadableBuffer, false);
+	UploadableBuffer->BeginRemoveEvent += OnUploadableBufferRemoved;
 	UploadableBuffer->UpdateReadyEvent += OnUploadFlagUpdated;
-	return UploadableBuffer.get();
+	return UploadableBuffer;
 }

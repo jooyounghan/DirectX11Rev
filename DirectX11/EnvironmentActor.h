@@ -41,7 +41,7 @@ public:
 	void SetToneMappingConstant(const float& ExposureIn, const float& GammaIn);
 
 protected:
-	UploadBuffer<SHDRToneMappingConstant>* HDRToneMappingConstantBuffer;
+	std::shared_ptr<UploadBuffer<SHDRToneMappingConstant>> HDRToneMappingConstantBuffer;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

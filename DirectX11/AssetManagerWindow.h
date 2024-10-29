@@ -38,21 +38,21 @@ private:
 	AssetControl* SelectedAssetControl = nullptr;
 
 protected:
-	AssetAddedDelegate OnAssetChanged;
+	AssetAddedHandler OnAssetChanged;
 
 protected:
-	AssetControlBeginDragDropDelegate OnAssetControlBeginDragDrop;
+	AssetControlBeginDragDropHandler OnAssetControlBeginDragDrop;
 	
 protected:
-	AssetControlStyleChangeDelegation OnAssetControlPushHilightStyle;
-	AssetControlStyleChangeDelegation OnAssetControlPopHilightStyle;
+	AssetControlStyleChangeHandler OnAssetControlPushHilightStyle;
+	AssetControlStyleChangeHandler OnAssetControlPopHilightStyle;
 
 protected:
-	AssetControlClickedDelegate OnAssetLeftMouseClicked;
-	AssetControlClickedDelegate OnAssetLeftMouseDBClicked;
+	AssetControlClickedHandler OnAssetLeftMouseClicked;
+	AssetControlClickedHandler OnAssetLeftMouseDBClicked;
 
 protected:
-	WindowClosedDelegation OnAssetControlWindowClosed;
+	WindowClosedHandler OnAssetControlWindowClosed;
 
 protected:
 	std::list<std::unique_ptr<AWindow>> AssetControlWindows;

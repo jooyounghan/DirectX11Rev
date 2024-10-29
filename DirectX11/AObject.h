@@ -43,7 +43,7 @@ protected:
 	MakeGetter(ObjectID);
 
 protected:
-	UploadBuffer<TransformationMatrix>* TransformationBuffer;
+	std::shared_ptr<UploadBuffer<TransformationMatrix>> TransformationBuffer;
 	MakeGetter(TransformationBuffer);
 
 public:

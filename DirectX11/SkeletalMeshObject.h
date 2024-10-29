@@ -1,8 +1,10 @@
 #pragma once
 #include "AMeshObject.h"
+#include "AnimationPlayer.h"
 
 class SkeletalMeshAsset;
 class PSOObject;
+class AnimationPlayer;
 
 class SkeletalMeshObject : public AMeshObject
 {
@@ -16,7 +18,11 @@ public:
 protected:
 	std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstance = nullptr;
 	MakeSmartPtrGetter(SkeletalMeshAssetInstance);
-	
+
+protected:
+	AnimationPlayer AnimationPlayerInstance;
+	MakeGetter(AnimationPlayerInstance);
+
 public:
 	void SetSkeletalMeshAssetInstance(const std::shared_ptr<SkeletalMeshAsset>& SkeletalMeshAssetInstanceIn);
 

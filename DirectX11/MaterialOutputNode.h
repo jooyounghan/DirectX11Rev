@@ -19,15 +19,15 @@ protected:
 	MaterialAsset* MaterialAssetCached;
 
 public:
-	ConnectedDelegation OnAmbientOcculusionTextureAssetSet;
-	ConnectedDelegation OnSpecularTextureAssetSet;
-	ConnectedDelegation OnDiffuseTextureAssetSet;
-	ConnectedDelegation OnRoughnessTextureAssetSet;
-	ConnectedDelegation OnMetalicTextureAssetSet;
-	ConnectedDelegation OnNormalTextureAssetSet;
-	ConnectedDelegation OnHeightTextureAssetSet;
-	ConnectedDelegation OnEmissiveTextureAssetSet;
-	ConnectedDelegation OnF0Set;
+	ConnectedHandler OnAmbientOcculusionTextureAssetSet;
+	ConnectedHandler OnSpecularTextureAssetSet;
+	ConnectedHandler OnDiffuseTextureAssetSet;
+	ConnectedHandler OnRoughnessTextureAssetSet;
+	ConnectedHandler OnMetalicTextureAssetSet;
+	ConnectedHandler OnNormalTextureAssetSet;
+	ConnectedHandler OnHeightTextureAssetSet;
+	ConnectedHandler OnEmissiveTextureAssetSet;
+	ConnectedHandler OnF0Set;
 
 protected:
 	const float PortToTextOffset = 10.f;

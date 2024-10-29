@@ -160,9 +160,6 @@
     <Filter Include="헤더 파일\Object\Placeable\Character">
       <UniqueIdentifier>{ae6f6187-3759-415e-af54-fc963a672703}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Interface">
-      <UniqueIdentifier>{6fddc017-1621-4933-8376-8c8fa86dba4b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Controller\UserController">
       <UniqueIdentifier>{f9c49dc6-0341-40a6-b982-843c605dcc4a}</UniqueIdentifier>
     </Filter>
@@ -459,6 +456,9 @@
     </Filter>
     <Filter Include="헤더 파일\Animation">
       <UniqueIdentifier>{34bca4d5-39ce-431f-9dcb-28cf64589661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Interface / Abstract">
+      <UniqueIdentifier>{6fddc017-1621-4933-8376-8c8fa86dba4b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -835,7 +835,7 @@
       <Filter>소스 파일\Animation</Filter>
     </ClCompile>
     <ClCompile Include="StructuredBuffer.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Buffer\Dynamic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -993,25 +993,22 @@
       <Filter>헤더 파일\Object\Placeable\Pawn</Filter>
     </ClInclude>
     <ClInclude Include="ISerializable.h">
-      <Filter>헤더 파일\Interface</Filter>
+      <Filter>헤더 파일\Interface / Abstract</Filter>
     </ClInclude>
     <ClInclude Include="IWorld.h">
-      <Filter>헤더 파일\Interface</Filter>
+      <Filter>헤더 파일\Interface / Abstract</Filter>
     </ClInclude>
     <ClInclude Include="IIntersectable.h">
-      <Filter>헤더 파일\Interface</Filter>
+      <Filter>헤더 파일\Interface / Abstract</Filter>
     </ClInclude>
     <ClInclude Include="ICollisionVisitor.h">
-      <Filter>헤더 파일\Interface</Filter>
+      <Filter>헤더 파일\Interface / Abstract</Filter>
     </ClInclude>
     <ClInclude Include="IDownloadableBuffer.h">
-      <Filter>헤더 파일\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="AUploadableBuffer.h">
-      <Filter>헤더 파일\Interface</Filter>
+      <Filter>헤더 파일\Interface / Abstract</Filter>
     </ClInclude>
     <ClInclude Include="IUpdatable.h">
-      <Filter>헤더 파일\Interface</Filter>
+      <Filter>헤더 파일\Interface / Abstract</Filter>
     </ClInclude>
     <ClInclude Include="DefaultController.h">
       <Filter>헤더 파일\Controller\UserController</Filter>
@@ -1134,7 +1131,7 @@
       <Filter>헤더 파일\Editor\GUI\Visitor</Filter>
     </ClInclude>
     <ClInclude Include="IRenderable.h">
-      <Filter>헤더 파일\Interface</Filter>
+      <Filter>헤더 파일\Interface / Abstract</Filter>
     </ClInclude>
     <ClInclude Include="Delegation.h">
       <Filter>헤더 파일\Delegation</Filter>
@@ -1300,6 +1297,12 @@
     </ClInclude>
     <ClInclude Include="StructuredBuffer.h">
       <Filter>헤더 파일\Buffer\Dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="AUploadableBuffer.h">
+      <Filter>헤더 파일\Buffer\Dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="AManagedByConatainer.h">
+      <Filter>헤더 파일\Interface / Abstract</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@ using namespace DirectX;
 string BoneAsset::BoneAssetKind = "Bone";
 
 Bone::Bone()
-	: BoneName(""), BoneIdx(NULL), OffsetMatrix(XMMatrixIdentity())
+	: BoneName(""), BoneIndex(NULL), OffsetMatrix(XMMatrixIdentity())
 {
 }
 
@@ -16,7 +16,7 @@ Bone::Bone(
 	const size_t& BoneIdxIn, 
 	const DirectX::XMMATRIX& OffsetMatrixIn
 )
-	: BoneName(NameIn), BoneIdx(BoneIdxIn), OffsetMatrix(OffsetMatrixIn)
+	: BoneName(NameIn), BoneIndex(BoneIdxIn), OffsetMatrix(OffsetMatrixIn)
 {
 }
 
@@ -38,7 +38,7 @@ void Bone::OnSerializeFromMap(FILE* FileIn)
 	fwrite(BoneName.c_str(), sizeof(char), BoneNameCount, FileIn);
 
 	// Bone Idx
-	fwrite(&(BoneIdx), sizeof(size_t), 1, FileIn);
+	fwrite(&(BoneIndex), sizeof(size_t), 1, FileIn);
 
 	// Offset Matrix
 	fwrite(&(OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
@@ -53,7 +53,7 @@ void Bone::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 	fread(BoneName.data(), sizeof(char), BoneNameCount, FileIn);
 
 	// Bone Idx
-	fread(&BoneIdx, sizeof(size_t), 1, FileIn);
+	fread(&BoneIndex, sizeof(size_t), 1, FileIn);
 
 	// Offset Matrix
 	fread(&(OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
