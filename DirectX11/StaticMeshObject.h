@@ -27,6 +27,16 @@ public:
 public:
 	virtual void Render() override final;
 
+protected:
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectVSConstants(const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectHSConstants(const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectDSConstants(const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectPSConstants(const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectVSSRVs(const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectHSSRVs(const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectDSSRVs(const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectPSSRVs(const size_t& MaterialIdx) override;
+
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;
 	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;

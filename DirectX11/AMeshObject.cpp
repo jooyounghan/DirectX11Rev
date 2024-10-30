@@ -56,11 +56,11 @@ size_t AMeshObject::GetLODLevel(
 	const size_t SteepLevel
 )
 {
-	const XMFLOAT3 SkeletalMeshObjectPosition = GetAbsolutePosition();
+	const XMFLOAT3 MeshObjectPosition = GetAbsolutePosition();
 	const XMFLOAT3 DeltaPosition = XMFLOAT3(
-		From.x - SkeletalMeshObjectPosition.x,
-		From.y - SkeletalMeshObjectPosition.y,
-		From.z - SkeletalMeshObjectPosition.z
+		From.x - MeshObjectPosition.x,
+		From.y - MeshObjectPosition.y,
+		From.z - MeshObjectPosition.z
 	);
 
 	const float Distance = sqrt(MathematicalHelper::InnerProduct(DeltaPosition, DeltaPosition));
@@ -75,11 +75,9 @@ void AMeshObject::Render()
 	AAttachableObject::Render();
 
 	AMeshAsset* MeshAssetInstance = GetMeshAssetInstance();
-
 	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
-	EnvironmentActor* CurrentEnvironment = MapAssetCached->GetEnvironmentActorInstance();
 
-	if (CurrentCamera != nullptr && MeshAssetInstance != nullptr && CurrentEnvironment != nullptr)
+	if (CurrentCamera != nullptr && MeshAssetInstance != nullptr)
 	{
 		const size_t LODLevel = GetLODLevel(
 			CurrentCamera->GetAbsolutePosition(),
@@ -102,120 +100,68 @@ void AMeshObject::Render()
 		const vector<UINT> IndexOffsets = MeshAssetInstance->GetIndexOffsetsForPart(LODLevel);
 		const vector<UINT> MaterialIndexes = MeshAssetInstance->GetMaterialIndex(LODLevel);
 
-		vector<ID3D11Buffer*> VSConstBuffers;
-		vector<ID3D11Buffer*> PSConstBuffers;
-
-		ID3D11Buffer* ViewProjGPUBuffer = CurrentCamera->GetViewProjBuffer()->GetBuffer();
-		VSConstBuffers.push_back(ViewProjGPUBuffer);
-		VSConstBuffers.push_back(TransformationBuffer->GetBuffer());
-
-		PSConstBuffers.push_back(ViewProjGPUBuffer);
-
-		vector<ID3D11ShaderResourceView*> EnvironmentSRVs;
-
-		DDSTextureAsset* SpecularDDS = CurrentEnvironment->GetEnvironmentSpecularDDSTextureAsset();
-		DDSTextureAsset* DiffuseDDS = CurrentEnvironment->GetEnvironmentDiffuseDDSTextureAsset();
-		DDSTextureAsset* BRDFDDS = CurrentEnvironment->GetEnvironmentBRDFDDSTextureAsset();
-
-		EnvironmentSRVs.push_back(SpecularDDS != nullptr ? SpecularDDS->GetSRV() : nullptr);
-		EnvironmentSRVs.push_back(DiffuseDDS != nullptr ? DiffuseDDS->GetSRV() : nullptr);
-		EnvironmentSRVs.push_back(BRDFDDS != nullptr ? BRDFDDS->GetSRV() : nullptr);
-
 		DeviceContextCached->IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
-		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
-			VertexBuffers.data(),
-			Strides.data(),
-			Offsets.data()
-		);
 
 
 #pragma region MeshObjectPSOCached
 		{
-			vector<ID3D11RenderTargetView*> RTVs;
-			RTVs.push_back(CurrentCamera->GetSDRSceneRTV());
+			DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
+				VertexBuffers.data(),
+				Strides.data(),
+				Offsets.data()
+			);
 
+			vector<ID3D11RenderTargetView*> RTVs = { CurrentCamera->GetSDRSceneRTV() };
 			ID3D11DepthStencilView* DSV = CurrentCamera->GetSceneDSV();
 
 			MeshObjectPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, DSV);
 
-
-			MeshObjectPSOCached->SetVSConstantBuffers(0, VSConstBuffers.size(), VSConstBuffers.data());
-			MeshObjectPSOCached->SetPSConstantBuffers(0, PSConstBuffers.size(), PSConstBuffers.data());
-			MeshObjectPSOCached->SetPSShaderResourceViews(0, EnvironmentSRVs.size(), EnvironmentSRVs.data());
-
 			for (size_t PartIdx = 0; PartIdx < MaterialIndexes.size(); ++PartIdx)
 			{
-				vector<ID3D11Buffer*> DSConstBuffersPerPart;
-				vector<ID3D11Buffer*> PSConstBuffersPerPart;
+				vector<ID3D11Buffer*> MeshObjectVSConstants = GetMeshObjectVSConstants(PartIdx);
+				vector<ID3D11Buffer*> MeshObjectHSConstants = GetMeshObjectHSConstants(PartIdx);
+				vector<ID3D11Buffer*> MeshObjectDSConstants = GetMeshObjectDSConstants(PartIdx);
+				vector<ID3D11Buffer*> MeshObjectPSConstants = GetMeshObjectPSConstants(PartIdx);
+				vector<ID3D11ShaderResourceView*> MeshObjectVSSRVs = GetMeshObjectVSSRVs(PartIdx);
+				vector<ID3D11ShaderResourceView*> MeshObjectHSSRVs = GetMeshObjectHSSRVs(PartIdx);
+				vector<ID3D11ShaderResourceView*> MeshObjectDSSRVs = GetMeshObjectDSSRVs(PartIdx);
+				vector<ID3D11ShaderResourceView*> MeshObjectPSSRVs = GetMeshObjectPSSRVs(PartIdx);
 
-				vector<ID3D11ShaderResourceView*> PSMaterialSRVs;
-				vector<ID3D11ShaderResourceView*> DSMaterialSRVs;
-
-				const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIndexes[PartIdx]];
-				if (MaterialInstance != nullptr)
-				{
-					DSConstBuffersPerPart.push_back(MaterialInstance->GetMaterialDataBuffer()->GetBuffer());
-					PSConstBuffersPerPart.push_back(MaterialInstance->GetMaterialDataBuffer()->GetBuffer());
-
-					const shared_ptr<BaseTextureAsset> AO = MaterialInstance->GetAmbientOcculusionTextureAsset();
-					const shared_ptr<BaseTextureAsset> Specualr = MaterialInstance->GetSpecularTextureAsset();
-					const shared_ptr<BaseTextureAsset> Diffuse = MaterialInstance->GetDiffuseTextureAsset();
-					const shared_ptr<BaseTextureAsset> Roughness = MaterialInstance->GetRoughnessTextureAsset();
-					const shared_ptr<BaseTextureAsset> Metalic = MaterialInstance->GetMetalicTextureAsset();
-					const shared_ptr<BaseTextureAsset> Normal = MaterialInstance->GetNormalTextureAsset();
-					const shared_ptr<BaseTextureAsset> Height = MaterialInstance->GetHeightTextureAsset();
-					const shared_ptr<BaseTextureAsset> Emissive = MaterialInstance->GetEmissiveTextureAsset();
-
-					DSMaterialSRVs.push_back(Height != nullptr ? Height->GetSRV() : nullptr);
-
-					PSMaterialSRVs.push_back(AO != nullptr ? AO->GetSRV() : nullptr);
-					PSMaterialSRVs.push_back(Specualr != nullptr ? Specualr->GetSRV() : nullptr);
-					PSMaterialSRVs.push_back(Diffuse != nullptr ? Diffuse->GetSRV() : nullptr);
-					PSMaterialSRVs.push_back(Roughness != nullptr ? Roughness->GetSRV() : nullptr);
-					PSMaterialSRVs.push_back(Metalic != nullptr ? Metalic->GetSRV() : nullptr);
-					PSMaterialSRVs.push_back(Normal != nullptr ? Normal->GetSRV() : nullptr);
-					PSMaterialSRVs.push_back(Emissive != nullptr ? Emissive->GetSRV() : nullptr);
-				}
-				else
-				{
-					DSConstBuffersPerPart.push_back(nullptr);
-					PSConstBuffersPerPart.push_back(nullptr);
-
-					DSMaterialSRVs.insert(DSMaterialSRVs.end(), { nullptr });
-					PSMaterialSRVs.insert(PSMaterialSRVs.end(), { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
-				}
-
-				MeshObjectPSOCached->SetDSConstantBuffers(0, DSConstBuffersPerPart.size(), DSConstBuffersPerPart.data());
-				MeshObjectPSOCached->SetPSConstantBuffers(PSConstBuffers.size(), PSConstBuffersPerPart.size(), PSConstBuffersPerPart.data());
-				MeshObjectPSOCached->SetDSShaderResourceViews(0, DSMaterialSRVs.size(), DSMaterialSRVs.data());
-				MeshObjectPSOCached->SetPSShaderResourceViews(EnvironmentSRVs.size(), PSMaterialSRVs.size(), PSMaterialSRVs.data());
+				MeshObjectPSOCached->SetVSConstantBuffers(0, MeshObjectVSConstants.size(), MeshObjectVSConstants.data());
+				MeshObjectPSOCached->SetHSConstantBuffers(0, MeshObjectHSConstants.size(), MeshObjectHSConstants.data());
+				MeshObjectPSOCached->SetDSConstantBuffers(0, MeshObjectDSConstants.size(), MeshObjectDSConstants.data());
+				MeshObjectPSOCached->SetPSConstantBuffers(0, MeshObjectPSConstants.size(), MeshObjectPSConstants.data());
+				MeshObjectPSOCached->SetVSShaderResourceViews(0, MeshObjectVSSRVs.size(), MeshObjectVSSRVs.data());
+				MeshObjectPSOCached->SetHSShaderResourceViews(0, MeshObjectHSSRVs.size(), MeshObjectHSSRVs.data());
+				MeshObjectPSOCached->SetDSShaderResourceViews(0, MeshObjectDSSRVs.size(), MeshObjectDSSRVs.data());
+				MeshObjectPSOCached->SetPSShaderResourceViews(0, MeshObjectPSSRVs.size(), MeshObjectPSSRVs.data());
 
 				MeshObjectPSOCached->CheckPipelineValidation();
 
 				DeviceContextCached->DrawIndexed(IndexCounts[PartIdx], IndexOffsets[PartIdx], 0);
 				Performance::GTotalIndexCount += IndexTotalCount;
 
-				MeshObjectPSOCached->ResetDSConstantBuffers(0, DSConstBuffersPerPart.size());
-				MeshObjectPSOCached->ResetPSConstantBuffers(PSConstBuffers.size(), PSConstBuffersPerPart.size());
-				MeshObjectPSOCached->ResetDSConstantBuffers(0, DSMaterialSRVs.size());
-				MeshObjectPSOCached->ResetPSShaderResourceViews(EnvironmentSRVs.size(), PSMaterialSRVs.size());
+				MeshObjectPSOCached->ResetVSConstantBuffers(0, MeshObjectVSConstants.size());
+				MeshObjectPSOCached->ResetHSConstantBuffers(0, MeshObjectHSConstants.size());
+				MeshObjectPSOCached->ResetDSConstantBuffers(0, MeshObjectDSConstants.size());
+				MeshObjectPSOCached->ResetPSConstantBuffers(0, MeshObjectPSConstants.size());
+				MeshObjectPSOCached->ResetVSShaderResourceViews(0, MeshObjectVSSRVs.size());
+				MeshObjectPSOCached->ResetHSShaderResourceViews(0, MeshObjectHSSRVs.size());
+				MeshObjectPSOCached->ResetDSShaderResourceViews(0, MeshObjectDSSRVs.size());
+				MeshObjectPSOCached->ResetPSShaderResourceViews(0, MeshObjectPSSRVs.size());
 			}
-			MeshObjectPSOCached->ResetVSConstantBuffers(0, VSConstBuffers.size());
-			MeshObjectPSOCached->ResetPSConstantBuffers(0, PSConstBuffers.size());
-			MeshObjectPSOCached->ResetPSShaderResourceViews(0, EnvironmentSRVs.size());
 		}
 #pragma endregion
 
-
 #pragma region PickingIDSolidStaticPSOCached
 		{
-			vector<ID3D11RenderTargetView*> RTVs;
-			RTVs.push_back(CurrentCamera->GetIdSelectRTV());
+			DeviceContextCached->IASetVertexBuffers(0, 1, VertexBuffers.data(), Strides.data(), Offsets.data());
 
+			vector<ID3D11RenderTargetView*> RTVs = { CurrentCamera->GetIdSelectRTV() };
 			ID3D11DepthStencilView* DSV = CurrentCamera->GetIdSelectDSV();
 
-			vector<ID3D11Buffer*> PSConstBuffers;
-			PSConstBuffers.push_back(PickingIDBufferCached);
+			vector<ID3D11Buffer*> VSConstBuffers = { CurrentCamera->GetViewProjBuffer()->GetBuffer(), TransformationBuffer->GetBuffer() };
+			vector<ID3D11Buffer*> PSConstBuffers = { PickingIDBufferCached };
 
 			PickingIDSolidPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, DSV);
 
@@ -231,6 +177,11 @@ void AMeshObject::Render()
 		}
 #pragma endregion
 	}
+}
+
+void AMeshObject::Update(const float& DeltaTimeIn)
+{
+	AAttachableObject::Update(DeltaTimeIn);
 }
 
 void AMeshObject::OnSerializeFromMap(FILE* FileIn)

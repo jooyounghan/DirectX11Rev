@@ -21,6 +21,12 @@ protected:
 	std::vector<T> StagedStructuredData;
 	MakeGetter(StagedStructuredData);
 
+protected:
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> StructuredSRV;
+
+public:
+	ID3D11ShaderResourceView* GetStructuredBufferSRV() const { return StructuredSRV.Get(); }
+
 public:
 	void SetStagedData(const size_t& Index, const T& StagedDataIn);
 
@@ -41,7 +47,7 @@ inline StructuredBuffer<T>::StructuredBuffer(const size_t& DataCountIn)
 
 	BufferDesc.ByteWidth = TotalBufferSize;
 	BufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	BufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+	BufferDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	BufferDesc.CPUAccessFlags = NULL;
 	BufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 	BufferDesc.StructureByteStride = sizeof(T);
@@ -59,6 +65,16 @@ inline StructuredBuffer<T>::StructuredBuffer(const size_t& DataCountIn)
 	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
 	Device->CreateBuffer(&BufferDesc, NULL, Buffer.GetAddressOf());
 	Device->CreateBuffer(&StagingBufferDesc, NULL, StagingBuffer.GetAddressOf());
+
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+	AutoZeroMemory(SRVDesc);
+	SRVDesc.Format = DXGI_FORMAT_UNKNOWN;
+	SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+	SRVDesc.BufferEx.NumElements = DataCountIn;
+	Device->CreateShaderResourceView(Buffer.Get(), &SRVDesc, StructuredSRV.GetAddressOf());
+
+
 }
 
 template<typename T>

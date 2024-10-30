@@ -83,4 +83,12 @@ for (UINT Shader##CBIdx = 0; Shader##CBIdx < Num##Shader##ConstBuffers; ++Shader
 for (UINT Shader##CBIdx = Num##Shader##ConstBuffers; Shader##CBIdx < CONST_BUFFER_MAX_COUNT; ++Shader##CBIdx)				\
 {																												            \
 	assert(Is##Shader##ConstBufferSet[Shader##CBIdx] == false);																\
-}																							
+}																															\
+for (UINT Shader##SRVsIdx = 0; Shader##SRVsIdx < Num##Shader##SRVs; ++Shader##SRVsIdx)										\
+{																															\
+	assert(Is##Shader##SRVSet[Shader##SRVsIdx] == true);																		\
+}																												            \
+for (UINT Shader##SRVsIdx = Num##Shader##SRVs; Shader##SRVsIdx < SRV_MAX_COUNT; ++Shader##SRVsIdx)							\
+{																												            \
+	assert(Is##Shader##SRVSet[Shader##SRVsIdx] == false);																		\
+}

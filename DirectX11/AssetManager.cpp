@@ -787,7 +787,6 @@ void AssetManager::LoadBlendWeightAndIndex(
             XMFLOAT4& CurrentBlendWeight = BlendWeight[VertexWeight.mVertexId];
             XMINT4& CurrentBlendIndex = BlendIndex[VertexWeight.mVertexId];
 
-            int InsertedIndex = -1;
             if (CurrentBlendIndex.x == -1)
             {
                 CurrentBlendIndex.x = BoneIdx; CurrentBlendWeight.x = VertexWeight.mWeight;

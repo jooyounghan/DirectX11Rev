@@ -178,7 +178,7 @@ PSOManager::PSOManager()
     PSOObjects.emplace(EPSOType::Skeletal_Solid, make_unique<PSOObject>(
         DeviceContext,
         SkeletalMeshInputLayout,
-        SkeletalMeshVS, 2, 0,
+        SkeletalMeshVS, 2, 1,
         MeshObjectHS, 0, 0,
         MeshObjectDS, 1, 1,
         MeshObjectPS, 2, 10,

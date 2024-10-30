@@ -247,7 +247,6 @@
     <ClCompile Include="StaticMeshAsset.cpp" />
     <ClCompile Include="StaticMeshObject.cpp" />
     <ClCompile Include="StringHelper.cpp" />
-    <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="TaskAnalyzerWindow.cpp" />
     <ClCompile Include="BaseTextureAsset.cpp" />
     <ClCompile Include="TransformationInformationDrawer.cpp" />

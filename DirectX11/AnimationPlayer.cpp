@@ -28,7 +28,9 @@ void AnimationPlayer::SetBoneAsset(const std::shared_ptr<BoneAsset>& BoneAssetIn
 	}
 
 	BoneAssetCached = BoneAssetIn;
-	AnimationTransformationBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<StructuredBuffer<XMMATRIX>>(BoneAssetCached->GetNameToBones().size());
+
+	const size_t BoneCounts = BoneAssetCached->GetNameToBones().size();
+	AnimationTransformationBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<StructuredBuffer<XMMATRIX>>(BoneCounts);
 }
 
 void AnimationPlayer::PlayAnimation(const shared_ptr<AnimationAsset>& AnimationAssetIn, const size_t& PlayCountIn)
@@ -76,20 +78,50 @@ void AnimationPlayer::Update(const float& DeltaTimeIn)
 		{
 			StopAnimation();
 		}
+	}
 
-		unordered_map<string, Bone> NameToBones = BoneAssetCached->GetNameToBones();
-		for (const auto& NameToBone : NameToBones)
+	Bone* RootBone = BoneAssetCached->GetRootBone();
+	UpdateBoneFromParent(nullptr, RootBone);
+
+	unordered_map<string, Bone> NameToBones = BoneAssetCached->GetNameToBones();
+	const vector<XMMATRIX>& StagedAnimationTransformation = AnimationTransformationBuffer->GetStagedStructuredData();
+
+	for (const auto& NameToBone : NameToBones)
+	{
+		const Bone& BoneData = NameToBone.second;
+		const size_t BoneIndex = BoneData.GetBoneIndex();
+
+		AnimationTransformationBuffer->SetStagedData(BoneIndex, XMMatrixTranspose(BoneData.GetOffsetMatrix() * StagedAnimationTransformation[BoneIndex]));
+	}
+
+}
+
+void AnimationPlayer::UpdateBoneFromParent(Bone* Parent, Bone* Child)
+{
+	const vector<XMMATRIX>& StagedAnimationTransformation = AnimationTransformationBuffer->GetStagedStructuredData();
+
+	if (Child != nullptr)
+	{
+		const XMMATRIX& ChildTranformation = StagedAnimationTransformation[Child->GetBoneIndex()];
+		const XMMATRIX ChildAnimationTransformation =
+			AnimationAssetCached != nullptr ?
+			AnimationAssetCached->GetAnimationTransformation(Child->GetBoneName(), PlayTime) :
+			XMMatrixIdentity();
+
+		if (Parent != nullptr)
 		{
-			const string& BoneName = NameToBone.first;
-			const Bone& BoneData = NameToBone.second;
-
-			const XMMATRIX AnimationTransformation =
-				AnimationAssetCached != nullptr ? 
-				AnimationAssetCached->GetAnimationTransformation(BoneName, PlayTime) * BoneData.GetOffsetMatrix() :
-				XMMatrixIdentity() * BoneData.GetOffsetMatrix();
-
-			AnimationTransformationBuffer->SetStagedData(BoneData.GetBoneIndex(), AnimationTransformation);
+			const XMMATRIX& ParentTranformation = StagedAnimationTransformation[Parent->GetBoneIndex()];
+			AnimationTransformationBuffer->SetStagedData(Child->GetBoneIndex(), ChildAnimationTransformation * ParentTranformation);
+		}
+		else
+		{
+			AnimationTransformationBuffer->SetStagedData(Child->GetBoneIndex(), ChildAnimationTransformation);
 		}
 
+		vector<Bone*> GrandChildren = Child->GetChildrenBones();
+		for (Bone* GrandChild : GrandChildren)
+		{
+			UpdateBoneFromParent(Child, GrandChild);
+		}
 	}
 }

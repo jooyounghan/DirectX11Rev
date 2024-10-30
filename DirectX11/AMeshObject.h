@@ -40,7 +40,20 @@ protected:
 	PSOObject* PickingIDSolidPSOCached = nullptr;
 
 public:
+	virtual void Update(const float& DeltaTimeIn) override;
+
+public:
 	virtual void Render() override;
+
+protected:
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectVSConstants(const size_t& MaterialIdx) = 0;
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectHSConstants(const size_t& MaterialIdx) = 0;
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectDSConstants(const size_t& MaterialIdx) = 0;
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectPSConstants(const size_t& MaterialIdx) = 0;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectVSSRVs(const size_t& MaterialIdx) = 0;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectHSSRVs(const size_t& MaterialIdx) = 0;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectDSSRVs(const size_t& MaterialIdx) = 0;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectPSSRVs(const size_t& MaterialIdx) = 0;
 
 public:
 	virtual void OnSerializeFromMap(FILE* FileIn) override;

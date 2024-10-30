@@ -1,12 +1,13 @@
 #pragma once
 #include "IUpdatable.h"
 #include "Delegation.h"
-
+#include "HeaderHelper.h"
 #include "directxmath/DirectXMath.h"
 
 #include <unordered_map>
 #include <memory>
 
+class Bone;
 class BoneAsset;
 class AnimationAsset;
 
@@ -37,6 +38,7 @@ public:
 
 protected:
 	std::shared_ptr<StructuredBuffer<DirectX::XMMATRIX>> AnimationTransformationBuffer;
+	MakeSmartPtrGetter(AnimationTransformationBuffer);
 
 public:
 	void PlayAnimation(const std::shared_ptr<AnimationAsset>& AnimationAssetIn, const size_t& PlayCountIn);
@@ -55,5 +57,8 @@ private:
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;
+
+private:
+	void UpdateBoneFromParent(Bone* Parent, Bone* Child);
 };
 

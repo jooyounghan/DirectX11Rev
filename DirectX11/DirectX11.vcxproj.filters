@@ -834,9 +834,6 @@
     <ClCompile Include="AnimationPlayer.cpp">
       <Filter>소스 파일\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="StructuredBuffer.cpp">
-      <Filter>소스 파일\Buffer\Dynamic</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
