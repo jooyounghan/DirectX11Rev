@@ -63,7 +63,7 @@ void SkeletalMeshObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 void SkeletalMeshObject::Update(const float& DeltaTimeIn)
 {
 	AMeshObject::Update(DeltaTimeIn);
-	AnimationPlayerInstance.Update(DeltaTimeIn);
+	//AnimationPlayerInstance.Update(DeltaTimeIn);
 }
 
 void SkeletalMeshObject::Render()
