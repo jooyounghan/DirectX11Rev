@@ -834,6 +834,12 @@
     <ClCompile Include="AnimationPlayer.cpp">
       <Filter>소스 파일\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="FloatInputNode.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Node\Variable\Constant</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatVariableOutputPort.cpp">
+      <Filter>소스 파일\Editor\NodeEditor\DrawElement\Port\OutputPort\Variable\Constant</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoneAsset.h">
@@ -1300,6 +1306,12 @@
     </ClInclude>
     <ClInclude Include="AManagedByConatainer.h">
       <Filter>헤더 파일\Interface / Abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatInputNode.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Node\Variable\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatVariableOutputPort.h">
+      <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Port\OutputPort\Variable\Constant</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -35,7 +35,7 @@ SamplerState ClampSampler : register(s1);
 
 float4 main(MeshObjectDomainOutput Input) : SV_TARGET
 {        
-    float3 ToEye = normalize(ViewPosition - Input.f4ProjPos.xyz);
+    float3 ToEye = normalize(ViewPosition - Input.f3ModelPos);
     
     float3 BaseColor = MaterialTexture[DIFFUSE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb;
     float AmbientOcculusion = 1.f;

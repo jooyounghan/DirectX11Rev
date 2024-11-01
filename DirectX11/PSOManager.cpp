@@ -122,7 +122,9 @@ PSOManager::PSOManager()
 #pragma region Static_Solid
     ComPtr<ID3D11VertexShader> StaticMeshVS;
     ComPtr<ID3D11InputLayout> StaticMeshInputLayout;
-    D3D11_INPUT_ELEMENT_DESC StaticMeshElementDescs[5] =
+
+    const size_t StaticMeshElementDescsCount = 4;
+    D3D11_INPUT_ELEMENT_DESC StaticMeshElementDescs[StaticMeshElementDescsCount] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -130,7 +132,7 @@ PSOManager::PSOManager()
         { "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-    CreateVertexShader(L"./Shaders/StaticMeshObjectVS.hlsl", StaticMeshElementDescs, 4, StaticMeshVS, StaticMeshInputLayout);
+    CreateVertexShader(L"./Shaders/StaticMeshObjectVS.hlsl", StaticMeshElementDescs, StaticMeshElementDescsCount, StaticMeshVS, StaticMeshInputLayout);
 
     ComPtr<ID3D11HullShader> MeshObjectHS;
     CreateHullShader(L"./Shaders/MeshObjectHS.hlsl", MeshObjectHS);
@@ -146,7 +148,7 @@ PSOManager::PSOManager()
         StaticMeshInputLayout,
         StaticMeshVS, 2, 0,
         MeshObjectHS, 0, 0,
-        MeshObjectDS, 1, 1,
+        MeshObjectDS, 3, 1,
         MeshObjectPS, 2, 10,
         D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,
@@ -162,7 +164,8 @@ PSOManager::PSOManager()
     ComPtr<ID3D11VertexShader> SkeletalMeshVS;
     ComPtr<ID3D11InputLayout> SkeletalMeshInputLayout;
 
-    D3D11_INPUT_ELEMENT_DESC SkeletalMeshInputElementDescs[7] =
+    const size_t SkeletalMeshInputElementDescsCount = 6;
+    D3D11_INPUT_ELEMENT_DESC SkeletalMeshInputElementDescs[SkeletalMeshInputElementDescsCount] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -172,7 +175,7 @@ PSOManager::PSOManager()
         { "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 5, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
-    CreateVertexShader(L"./Shaders/SkeletalMeshObjectVS.hlsl", SkeletalMeshInputElementDescs, 6, SkeletalMeshVS, SkeletalMeshInputLayout);
+    CreateVertexShader(L"./Shaders/SkeletalMeshObjectVS.hlsl", SkeletalMeshInputElementDescs, SkeletalMeshInputElementDescsCount, SkeletalMeshVS, SkeletalMeshInputLayout);
 
 
     PSOObjects.emplace(EPSOType::Skeletal_Solid, make_unique<PSOObject>(
@@ -180,7 +183,7 @@ PSOManager::PSOManager()
         SkeletalMeshInputLayout,
         SkeletalMeshVS, 2, 1,
         MeshObjectHS, 0, 0,
-        MeshObjectDS, 1, 1,
+        MeshObjectDS, 3, 1,
         MeshObjectPS, 2, 10,
         D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST,
         SingleR8G8B8A8Count, SingleR8G8B8A8Format,

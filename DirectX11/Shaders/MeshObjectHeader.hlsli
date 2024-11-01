@@ -18,9 +18,9 @@ struct StaticVertexInput
 
 struct MeshObjectVertexOutput
 {
-    float4 f4ProjPos : POSITION;
+    float4 f4WorldjPos : POSITION;
     float2 f2TexCoord : TEXCOORD;
-    float3 f3ModelNormal : NORMAL;
+    float3 f3WorldNormal : NORMAL;
     float3 f3ModelTangent : TANGENT;
     float fTessFactor : TESSFACTOR;
     float fLODLevel : LOD_LEVEL;
@@ -36,9 +36,9 @@ struct PatchTess
 
 struct MeshObjectHullOutput
 {
-    float4 f4ProjPos : POSITION;
+    float4 f4WorldPos : POSITION;
     float2 f2TexCoord : TEXCOORD;
-    float3 f3ModelNormal : NORMAL;
+    float3 f3WorldNormal : NORMAL;
     float3 f3ModelTangent : TANGENT;
     float fLODLevel : LOD_LEVEL;
 };
@@ -46,6 +46,7 @@ struct MeshObjectHullOutput
 struct MeshObjectDomainOutput
 {
     float4 f4ProjPos : SV_Position;
+    float4 f3ModelPos : POSITIONT;
     float2 f2TexCoord : TEXCOORD;
     float3 f3ModelNormal : NORMAL;
     float3 f3ModelTangent : TANGENT;

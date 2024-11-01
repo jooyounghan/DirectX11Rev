@@ -62,12 +62,10 @@ MeshObjectVertexOutput main(SkeletalVertexInput Input)
     }
     
     
-    Result.f3ModelNormal = normalize(mul(f4WorldNormalOut, ModelInvMatrix).xyz);
+    Result.f3WorldNormal = f4WorldNormalOut;
     Result.f3ModelTangent = normalize(mul(f4WorldTangentOut, ModelMatrix).xyz);
     Result.f2TexCoord = Input.f2TexCoord;
-    
-    Result.f4ProjPos = mul(f4WorldPosOut, ModelMatrix);
-    Result.f4ProjPos = mul(Result.f4ProjPos, ViewProjMatrix);
-    
+    Result.f4WorldjPos = f4WorldPosOut;
+
     return Result;
 }

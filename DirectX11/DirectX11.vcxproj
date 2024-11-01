@@ -165,6 +165,8 @@
     <ClCompile Include="DeletePlaceableModal.cpp" />
     <ClCompile Include="Float3InputNode.cpp" />
     <ClCompile Include="Float3VariableOutputPort.cpp" />
+    <ClCompile Include="FloatInputNode.cpp" />
+    <ClCompile Include="FloatVariableOutputPort.cpp" />
     <ClCompile Include="FlowEndNode.cpp" />
     <ClCompile Include="FlowInputPort.cpp" />
     <ClCompile Include="FlowMidNode.cpp" />
@@ -289,6 +291,8 @@
     <ClInclude Include="DeletePlaceableModal.h" />
     <ClInclude Include="Float3InputNode.h" />
     <ClInclude Include="Float3VariableOutputPort.h" />
+    <ClInclude Include="FloatInputNode.h" />
+    <ClInclude Include="FloatVariableOutputPort.h" />
     <ClInclude Include="FlowEndNode.h" />
     <ClInclude Include="FlowInputPort.h" />
     <ClInclude Include="FlowMidNode.h" />

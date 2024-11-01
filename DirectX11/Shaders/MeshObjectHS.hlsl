@@ -28,9 +28,9 @@ MeshObjectHullOutput main(
 {
     MeshObjectHullOutput Output;
     
-    Output.f4ProjPos = Patch[i].f4ProjPos;
+    Output.f4WorldPos = Patch[i].f4WorldjPos;
     Output.f2TexCoord = Patch[i].f2TexCoord;
-    Output.f3ModelNormal = Patch[i].f3ModelNormal;
+    Output.f3WorldNormal = Patch[i].f3WorldNormal;
     Output.f3ModelTangent = Patch[i].f3ModelTangent;
     Output.fLODLevel = Patch[i].fLODLevel;
 

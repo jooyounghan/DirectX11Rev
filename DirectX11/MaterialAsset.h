@@ -15,7 +15,7 @@ struct SMaterialData
 	int IsHeightSet;
 	int IsEmissiveSet;
 	DirectX::XMFLOAT3 F0;
-	int Dummy;
+	float HeightScale;
 };
 
 constexpr const char* MaterialAssetOutPath = ".\\Assets\\Material\\";
@@ -36,6 +36,7 @@ protected:
 
 public:
 	inline const DirectX::XMFLOAT3& GetF0() { return MaterialData.F0; }
+	inline const float& GetHeightScale() { return MaterialData.HeightScale; }
 
 protected:
 	std::shared_ptr<BaseTextureAsset> AmbientOcculusionTextureAsset;
@@ -65,6 +66,7 @@ public:
 	void SetHeightTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
 	void SetEmissiveTextureAsset(const std::shared_ptr<BaseTextureAsset>& AssetIn);
 	void SetF0(const DirectX::XMFLOAT3& F0In);
+	void SetHeightScale(const float& HeightScaleIn);
 
 public:
 	virtual void Serialize() override;

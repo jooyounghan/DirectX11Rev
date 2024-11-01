@@ -42,6 +42,7 @@ void MaterialAsset::Serialize()
 		SerializeAssetNameHelper(OutputAssetFile, EmissiveTextureAsset);
 
 		fwrite(&MaterialData.F0, sizeof(XMFLOAT3), 1, OutputAssetFile);
+		fwrite(&MaterialData.HeightScale, sizeof(float), 1, OutputAssetFile);
 
 		fclose(OutputAssetFile);
 	}
@@ -68,7 +69,10 @@ void MaterialAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	AAssetFile::DeserializeString(EmissiveTextureAssetName, FileIn);
 
 	XMFLOAT3 F0In;
+	float HeightScaleIn;
+
 	fread(&F0In, sizeof(XMFLOAT3), 1, FileIn);
+	fread(&HeightScaleIn, sizeof(float), 1, FileIn);
 
 	SetAmbientOcculusionTextureAsset(AssetManagerIn->GetManagingBasicTexture(AmbientOcculusionTextureAssetName));
 	SetSpecularTextureAsset(AssetManagerIn->GetManagingBasicTexture(SpecularTextureAssetName));
@@ -79,6 +83,7 @@ void MaterialAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	SetHeightTextureAsset(AssetManagerIn->GetManagingBasicTexture(HeightTextureAssetName));
 	SetEmissiveTextureAsset(AssetManagerIn->GetManagingBasicTexture(EmissiveTextureAssetName));
 	SetF0(F0In);
+	SetHeightScale(HeightScaleIn);
 }
 
 void MaterialAsset::SerializeAssetNameHelper(FILE* FileIn, std::shared_ptr<BaseTextureAsset> BasicTextureAssetIn)
@@ -152,5 +157,11 @@ void MaterialAsset::SetEmissiveTextureAsset(const std::shared_ptr<BaseTextureAss
 void MaterialAsset::SetF0(const XMFLOAT3& F0In)
 {
 	MaterialData.F0 = F0In;
+	MaterialDataBuffer->SetStagedData(MaterialData);
+}
+
+void MaterialAsset::SetHeightScale(const float& HeightScaleIn)
+{
+	MaterialData.HeightScale = HeightScaleIn;
 	MaterialDataBuffer->SetStagedData(MaterialData);
 }

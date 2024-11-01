@@ -28,6 +28,7 @@ public:
 	ConnectedHandler OnHeightTextureAssetSet;
 	ConnectedHandler OnEmissiveTextureAssetSet;
 	ConnectedHandler OnF0Set;
+	ConnectedHandler OnHeightScaleSet;
 
 protected:
 	const float PortToTextOffset = 10.f;
@@ -43,6 +44,7 @@ protected:
 	AssetVariableInputPort* HeightTexturePort = nullptr;
 	AssetVariableInputPort* EmissiveTexturePort = nullptr;
 	AssetVariableInputPort* F0Port = nullptr;
+	AssetVariableInputPort* HeightScalePort = nullptr;
 	MakeGetter(AmbientOcculusionTexturePort);
 	MakeGetter(SpecularTexturePort);
 	MakeGetter(DiffuseTexturePort);
@@ -52,6 +54,7 @@ protected:
 	MakeGetter(HeightTexturePort);
 	MakeGetter(EmissiveTexturePort);
 	MakeGetter(F0Port);
+	MakeGetter(HeightScalePort);
 
 private:
 	void SetAmbientOcculusionTextureAssetWithConnect(AOutputPort* OutputPortIn);
@@ -63,6 +66,7 @@ private:
 	void SetHeightTextureAssetWithConnect(AOutputPort* OutputPortIn);
 	void SetEmissiveTextureAssetWithConnect(AOutputPort* OutputPortIn);
 	void SetF0WithConnect(AOutputPort* OutputPortIn);
+	void SetHeightSclaeWithConnect(AOutputPort* OutputPortIn);
 
 private:
 	std::shared_ptr<BaseTextureAsset> GetBaseTextureAssetFromOutputPort(AOutputPort* OutputPortIn);

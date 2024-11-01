@@ -30,12 +30,10 @@ MeshObjectVertexOutput main(StaticVertexInput Input)
     Result.fTessFactor = 2.f;
     Result.fLODLevel = 2.f;
     
-    Result.f3ModelNormal = normalize(mul(float4(Input.f3WorldNormal, 0.f), ModelInvMatrix).xyz);
+    Result.f3WorldNormal = Input.f3WorldNormal;
     Result.f3ModelTangent = normalize(mul(float4(Input.f3WorldTangent, 0.f), ModelMatrix).xyz);
     Result.f2TexCoord = Input.f2TexCoord;
-    
-    Result.f4ProjPos = mul(float4(Input.f3WorldPos, 1.f), ModelMatrix);
-    Result.f4ProjPos = mul(Result.f4ProjPos, ViewProjMatrix);
+    Result.f4WorldjPos = float4(Input.f3WorldPos, 1.f);
 
     return Result;
 }

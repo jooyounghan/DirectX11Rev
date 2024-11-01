@@ -2,6 +2,7 @@
 #include "MaterialAsset.h"
 
 #include "BaseTextureOutputPort.h"
+#include "FloatVariableOutputPort.h"
 #include "Float3VariableOutputPort.h"
 #include "AssetVariableInputPort.h"
 
@@ -25,6 +26,7 @@ MaterialOutputNode::MaterialOutputNode(
 	OnHeightTextureAssetSet = bind(&MaterialOutputNode::SetHeightTextureAssetWithConnect, this, placeholders::_1);
 	OnEmissiveTextureAssetSet = bind(&MaterialOutputNode::SetEmissiveTextureAssetWithConnect, this, placeholders::_1);
 	OnF0Set = bind(&MaterialOutputNode::SetF0WithConnect, this, placeholders::_1);
+	OnHeightScaleSet = bind(&MaterialOutputNode::SetHeightSclaeWithConnect, this, placeholders::_1);
 
 	AmbientOcculusionTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	AmbientOcculusionTexturePort->ConnectEvent += OnAmbientOcculusionTextureAssetSet;
@@ -43,15 +45,18 @@ MaterialOutputNode::MaterialOutputNode(
 	
 	NormalTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	NormalTexturePort->ConnectEvent += OnNormalTextureAssetSet;
-	
-	HeightTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
-	HeightTexturePort->ConnectEvent += OnHeightTextureAssetSet;
-	
+		
 	EmissiveTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
 	EmissiveTexturePort->ConnectEvent += OnEmissiveTextureAssetSet;
 
 	F0Port = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, Float3VariableOutputPort::Float3VariableKind);
 	F0Port->ConnectEvent += OnF0Set;
+
+	HeightTexturePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, BaseTextureAsset::BaseTextureAssetKind);
+	HeightTexturePort->ConnectEvent += OnHeightTextureAssetSet;
+
+	HeightScalePort = AddInputPort<AssetVariableInputPort>(ImVec2(NULL, NULL), PortRadius, FloatVariableOutputPort::FloatVariableKind);
+	HeightScalePort->ConnectEvent += OnHeightScaleSet;
 }
 
 MaterialOutputNode::~MaterialOutputNode()
@@ -147,6 +152,23 @@ void MaterialOutputNode::SetF0WithConnect(AOutputPort* OutputPortIn)
 	}
 }
 
+void MaterialOutputNode::SetHeightSclaeWithConnect(AOutputPort* OutputPortIn)
+{
+	if (MaterialAssetCached)
+	{
+		FloatVariableOutputPort* FloatOutputIn = dynamic_cast<FloatVariableOutputPort*>(OutputPortIn);
+		if (FloatOutputIn != nullptr)
+		{
+			MaterialAssetCached->SetHeightScale(FloatOutputIn->GetFloatData());
+		}
+		else
+		{
+			MaterialAssetCached->SetHeightScale(0.f);
+		}
+		MaterialAssetCached->SetModified();
+	}
+}
+
 shared_ptr<BaseTextureAsset> MaterialOutputNode::GetBaseTextureAssetFromOutputPort(AOutputPort* OutputPortIn)
 {
 	BaseTextureOutputPort* BaseTextureOutputIn = dynamic_cast<BaseTextureOutputPort*>(OutputPortIn);
@@ -166,9 +188,10 @@ void MaterialOutputNode::AddToDrawList(const ImVec2& OriginPosition, ImDrawList*
 	SetAssetDescription(OriginPosition, RoughnessTexturePort, "Roughness Texture");
 	SetAssetDescription(OriginPosition, MetalicTexturePort, "Metalic Texture");
 	SetAssetDescription(OriginPosition, NormalTexturePort, "Normal Texture");
-	SetAssetDescription(OriginPosition, HeightTexturePort, "Height Texture");
 	SetAssetDescription(OriginPosition, EmissiveTexturePort, "Emissive Texture");
 	SetAssetDescription(OriginPosition, F0Port, "F0 Constant");
+	SetAssetDescription(OriginPosition, HeightTexturePort, "Height Texture");
+	SetAssetDescription(OriginPosition, HeightScalePort, "Height Scale");
 }
 
 void MaterialOutputNode::SetAssetDescription(

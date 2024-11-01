@@ -1,6 +1,20 @@
 #include "MeshObjectHeader.hlsli"
 
-cbuffer MaterialAssetData : register(b0)
+cbuffer CameraViewConstantBuffer : register(b0)
+{
+    matrix ViewProjMatrix;
+    matrix ViewProjInvMatrix;
+    float3 ViewPosition;
+    float Dummy;
+};
+
+cbuffer ModelConstantBuffer : register(b1)
+{
+    matrix ModelMatrix;
+    matrix ModelInvMatrix;
+};
+
+cbuffer MaterialAssetData : register(b2)
 {
     bool IsAmbientOcculusionSet;
     bool IsSpecularSet;
@@ -11,7 +25,7 @@ cbuffer MaterialAssetData : register(b0)
     bool IsHeightSet;
     bool IsEmissiveSet;
     float3 F0;
-    bool Dummy1;
+    float HeightScale;
 };
 
 Texture2D HeightMap : register(t0);
@@ -24,23 +38,25 @@ MeshObjectDomainOutput main(
 	PatchTess input,
 	float3 domain : SV_DomainLocation,	const OutputPatch<MeshObjectHullOutput, NUM_CONTROL_POINTS> tri)
 {
+    MeshObjectDomainOutput Result;
 
-    MeshObjectDomainOutput Output;
-
-    Output.f2TexCoord = tri[0].f2TexCoord * domain.x + tri[1].f2TexCoord * domain.y + tri[2].f2TexCoord * domain.z;
-    Output.f3ModelNormal = normalize(tri[0].f3ModelNormal * domain.x + tri[1].f3ModelNormal * domain.y + tri[2].f3ModelNormal * domain.z);
-    Output.f3ModelTangent = normalize(tri[0].f3ModelTangent * domain.x + tri[1].f3ModelTangent * domain.y + tri[2].f3ModelTangent * domain.z);
-    Output.fLODLevel = tri[0].fLODLevel * domain.x + tri[1].fLODLevel * domain.y + tri[2].fLODLevel * domain.z;
+    Result.f2TexCoord = tri[0].f2TexCoord * domain.x + tri[1].f2TexCoord * domain.y + tri[2].f2TexCoord * domain.z;
+    Result.f3ModelTangent = normalize(tri[0].f3ModelTangent * domain.x + tri[1].f3ModelTangent * domain.y + tri[2].f3ModelTangent * domain.z);
+    Result.fLODLevel = tri[0].fLODLevel * domain.x + tri[1].fLODLevel * domain.y + tri[2].fLODLevel * domain.z;
 	
-    float4 OutputProjPos = tri[0].f4ProjPos * domain.x + tri[1].f4ProjPos * domain.y + tri[2].f4ProjPos * domain.z;
+    float3 f3WorldNormal = normalize(tri[0].f3WorldNormal * domain.x + tri[1].f3WorldNormal * domain.y + tri[2].f3WorldNormal * domain.z);
+    float4 f4WorldPos = tri[0].f4WorldPos * domain.x + tri[1].f4WorldPos * domain.y + tri[2].f4WorldPos * domain.z;
 
     if (IsHeightSet)
     {
-        float Height = HeightMap.SampleLevel(WrapSampler, Output.f2TexCoord, Output.fLODLevel);
-        Height = 2.f * Height - 1.f;
-        OutputProjPos += float4(Height * Output.f3ModelNormal, 1.f);
+        float Height = 2.f * HeightMap.SampleLevel(WrapSampler, Result.f2TexCoord, Result.fLODLevel).x - 1.f;
+        Height = Height * HeightScale;
+        f4WorldPos += float4(Height * f3WorldNormal, 1.f);
     }
-    Output.f4ProjPos = OutputProjPos;
 
-	return Output;
+    Result.f3ModelNormal = normalize(mul(float4(f3WorldNormal, 0.f), ModelInvMatrix).xyz);
+    Result.f3ModelPos = mul(f4WorldPos, ModelMatrix);
+    Result.f4ProjPos = mul(Result.f3ModelPos, ViewProjMatrix);
+    
+    return Result;
 }

@@ -118,7 +118,7 @@ void AMeshObject::Render()
 
 			for (size_t PartIdx = 0; PartIdx < MaterialIndexes.size(); ++PartIdx)
 			{
-				vector<ID3D11Buffer*> MeshObjectVSConstants = GetMeshObjectVSConstants(PartIdx);
+				vector<ID3D11Buffer*> MeshObjectVSConstants = { CurrentCamera->GetViewProjBuffer()->GetBuffer(), TransformationBuffer->GetBuffer() };
 				vector<ID3D11Buffer*> MeshObjectHSConstants = GetMeshObjectHSConstants(PartIdx);
 				vector<ID3D11Buffer*> MeshObjectDSConstants = GetMeshObjectDSConstants(PartIdx);
 				vector<ID3D11Buffer*> MeshObjectPSConstants = GetMeshObjectPSConstants(PartIdx);

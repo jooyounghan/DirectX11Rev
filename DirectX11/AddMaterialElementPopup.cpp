@@ -22,4 +22,8 @@ void AddMaterialElementPopup::RenderPopupMenu()
     {
         Float3Added.Invoke();
     }
+    if (MenuItem("Add Float", NULL, false, true))
+    {
+        FloatAdded.Invoke();
+    }
 }

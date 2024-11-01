@@ -2,12 +2,14 @@
 #include "MaterialAsset.h"
 
 #include "BaseTextureInputNode.h"
+#include "FloatInputNode.h"
 #include "Float3InputNode.h"
 #include "MaterialOutputNode.h"
 
 #include "AssetVariableInputPort.h"
 #include "BaseTextureOutputPort.h"
 #include "Float3VariableOutputPort.h"
+#include "FloatVariableOutputPort.h"
 
 using namespace std;
 using namespace ImGui;
@@ -30,6 +32,7 @@ MaterialAssetNodeCanvas::MaterialAssetNodeCanvas(AssetManager* AssetMangerIn, AA
     const shared_ptr<BaseTextureAsset>& Height = MaterialAssetCached->GetHeightTextureAsset();
     const shared_ptr<BaseTextureAsset>& Emissive = MaterialAssetCached->GetEmissiveTextureAsset();
     const XMFLOAT3& F0 = MaterialAssetCached->GetF0();
+    const float& HeightScale = MaterialAssetCached->GetHeightScale();
 
     BaseTextureInputNode* AmbientOcculusionInputNode = AmbientOcculusion != nullptr ? AddBaseTextureInputNodeHelper(LastInsertedNodePosY, AmbientOcculusion) : nullptr;
     BaseTextureInputNode* SpecularInputNode = Specular != nullptr ? AddBaseTextureInputNodeHelper(LastInsertedNodePosY, Specular) : nullptr;
@@ -37,9 +40,10 @@ MaterialAssetNodeCanvas::MaterialAssetNodeCanvas(AssetManager* AssetMangerIn, AA
     BaseTextureInputNode* RoughnessInputNode = Roughness != nullptr ? AddBaseTextureInputNodeHelper(LastInsertedNodePosY, Roughness) : nullptr;
     BaseTextureInputNode* MetalicInputNode = Metalic != nullptr ? AddBaseTextureInputNodeHelper(LastInsertedNodePosY, Metalic) : nullptr;
     BaseTextureInputNode* NormalInputNode = Normal != nullptr ? AddBaseTextureInputNodeHelper(LastInsertedNodePosY, Normal) : nullptr;
-    BaseTextureInputNode* HeightInputNode = Height != nullptr ? AddBaseTextureInputNodeHelper(LastInsertedNodePosY, Height) : nullptr;
     BaseTextureInputNode* EmissiveInputNode = Emissive != nullptr ? AddBaseTextureInputNodeHelper(LastInsertedNodePosY, Emissive) : nullptr;
     Float3InputNode* F0InputNode = AddF0InputNodeHelper(LastInsertedNodePosY, F0);
+    BaseTextureInputNode* HeightInputNode = Height != nullptr ? AddBaseTextureInputNodeHelper(LastInsertedNodePosY, Height) : nullptr;
+    FloatInputNode* HeightScaleInputNode = AddHeightScaleInputNodeHelper(LastInsertedNodePosY, HeightScale);
 
     const float MaterialNodePosX = MaterialElementNodeXPos + MaterialElementNodeWidth + NodeOffset * 2.f;
     const float MaterialNodePosY = NodeHeightInitialPosY + (LastInsertedNodePosY - (MaterialElementNodeHeight + NodeOffset) - NodeHeightInitialPosY) / 2.f;
@@ -59,12 +63,15 @@ MaterialAssetNodeCanvas::MaterialAssetNodeCanvas(AssetManager* AssetMangerIn, AA
     ConnectBaseTextureToMaterial(HeightInputNode, MaterialAssetOutputNode->GetHeightTexturePort());
     ConnectBaseTextureToMaterial(EmissiveInputNode, MaterialAssetOutputNode->GetEmissiveTexturePort());
     ConnectF0ToMaterial(F0InputNode, MaterialAssetOutputNode->GetF0Port());
+    ConnectHeightScaleToMaterial(HeightScaleInputNode, MaterialAssetOutputNode->GetHeightScalePort());
 
     OnBaseTextureAdded = bind(&MaterialAssetNodeCanvas::AddBaseTextureNode, this);
     OnFloat3Added = bind(&MaterialAssetNodeCanvas::AddF0ConstantNode, this);
+    OnFloatAdded = bind(&MaterialAssetNodeCanvas::AddHeightScaleConstantNode, this);
 
     AddMaterialElementPopupInstance.BaseTextureAdded += OnBaseTextureAdded;
     AddMaterialElementPopupInstance.Float3Added += OnFloat3Added;
+    AddMaterialElementPopupInstance.FloatAdded += OnFloatAdded;
 }
 
 MaterialAssetNodeCanvas::~MaterialAssetNodeCanvas()
@@ -129,6 +136,32 @@ void MaterialAssetNodeCanvas::ConnectF0ToMaterial(Float3InputNode* F0InputNodeIn
     }
 }
 
+FloatInputNode* MaterialAssetNodeCanvas::AddHeightScaleInputNodeHelper(float& NodeHeightPos, const float& HeightIn)
+{
+    FloatInputNode* AddedInputNode = AddNodeElement<FloatInputNode>(ImVec2(MaterialElementNodeXPos, NodeHeightPos), ImVec2(MaterialElementNodeWidth, MaterialElementNodeHeight), HeightIn);
+    NodeHeightPos += (MaterialElementNodeHeight + NodeOffset);
+    return AddedInputNode;
+}
+
+FloatInputNode* MaterialAssetNodeCanvas::AddHeightScaleInputNodeHelper(const ImVec2& NodePos, const float& HeightIn)
+{
+    FloatInputNode* AddedInputNode = AddNodeElement<FloatInputNode>(NodePos, ImVec2(MaterialElementNodeWidth, MaterialElementNodeHeight), HeightIn);
+    return AddedInputNode;
+}
+
+void MaterialAssetNodeCanvas::ConnectHeightScaleToMaterial(FloatInputNode* HeightScaleInputNodeIn, AssetVariableInputPort* MaterialTextureInputNodeIn)
+{
+    if (HeightScaleInputNodeIn != nullptr && MaterialTextureInputNodeIn != nullptr)
+    {
+        FloatVariableOutputPort* Float3OutputPortCached = HeightScaleInputNodeIn->GetFloatVariableOutputPortCached();
+
+        if (Float3OutputPortCached != nullptr)
+        {
+            Float3OutputPortCached->Connect(MaterialTextureInputNodeIn);
+        }
+    }
+}
+
 void MaterialAssetNodeCanvas::AddBaseTextureNode()
 {
     const ImVec2 MousePos = GetMousePos();
@@ -142,4 +175,11 @@ void MaterialAssetNodeCanvas::AddF0ConstantNode()
     const ImVec2 MousePos = GetMousePos();
     const ImVec2 CanvasPos = ImVec2(MousePos.x - OriginPosition.x, MousePos.y - OriginPosition.y);
     AddF0InputNodeHelper(CanvasPos, XMFLOAT3(0.f, 0.f, 0.f));
+}
+
+void MaterialAssetNodeCanvas::AddHeightScaleConstantNode()
+{
+    const ImVec2 MousePos = GetMousePos();
+    const ImVec2 CanvasPos = ImVec2(MousePos.x - OriginPosition.x, MousePos.y - OriginPosition.y);
+    AddHeightScaleInputNodeHelper(CanvasPos, 0.f);
 }

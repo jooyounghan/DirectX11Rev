@@ -8,6 +8,7 @@ class MaterialAsset;
 
 class BaseTextureInputNode;
 class Float3InputNode;
+class FloatInputNode;
 
 class AssetVariableInputPort;
 
@@ -48,11 +49,20 @@ private:
 	void ConnectF0ToMaterial(Float3InputNode* F0InputNodeIn, AssetVariableInputPort* MaterialTextureInputNodeIn);
 
 private:
+	FloatInputNode* AddHeightScaleInputNodeHelper(float& NodeHeightPos, const float& HeightIn);
+	FloatInputNode* AddHeightScaleInputNodeHelper(const ImVec2& NodePos, const float& HeightIn);
+	void ConnectHeightScaleToMaterial(FloatInputNode* HeightScaleInputNodeIn, AssetVariableInputPort* MaterialTextureInputNodeIn);
+
+private:
 	BaseTextureAddedHandler OnBaseTextureAdded;
 	void AddBaseTextureNode();
 
 private:
 	Float3AddedHandler OnFloat3Added;
 	void AddF0ConstantNode();
+
+private:
+	FloatAddedHandler OnFloatAdded;
+	void AddHeightScaleConstantNode();
 };
 
