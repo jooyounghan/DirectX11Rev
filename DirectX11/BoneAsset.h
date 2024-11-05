@@ -8,7 +8,7 @@
 
 constexpr const char* BoneAssetOutPath = ".\\Assets\\Bone\\";
 
-class Bone : public IOnSerializableMap
+class Bone : public IOnSerializableElement
 {
 	friend class BoneAsset;
 
@@ -41,8 +41,8 @@ public:
 	void AddChildBone(Bone* ChildBone);
 
 public:
-	virtual void OnSerializeFromMap(FILE* FileIn) override;
-	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void OnSerialize(FILE* FileIn) override;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 
 class BoneAsset : public AAssetFile

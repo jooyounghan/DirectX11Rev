@@ -11,11 +11,11 @@ public:																								\
 
 #define MakeSmartPtrGetter(Variable)																\
 public:																								\
-	inline const auto Get##Variable() { return Variable.get(); };				
+	inline const auto Get##Variable() const { return Variable.get(); };				
 
 #define MakeComPtrGetter(Variable)																	\
 public:																								\
-	inline const auto Get##Variable() { return Variable.Get(); };				
+	inline const auto Get##Variable() const { return Variable.Get(); };				
 
 
 #define MakeSetter(Variable)																		\

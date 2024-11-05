@@ -30,7 +30,7 @@ void Bone::AddChildBone(Bone* ChildBone)
 	ChildrenBones.push_back(ChildBone);
 }
 
-void Bone::OnSerializeFromMap(FILE* FileIn)
+void Bone::OnSerialize(FILE* FileIn)
 {
 	// Bone Name
 	AAssetFile::SerializeString(BoneName, FileIn);
@@ -42,7 +42,7 @@ void Bone::OnSerializeFromMap(FILE* FileIn)
 	fwrite(&(OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
 }
 
-void Bone::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void Bone::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	// Bone Name
 	AAssetFile::DeserializeString(BoneName, FileIn);
@@ -121,7 +121,7 @@ void BoneAsset::Serialize()
 		for (auto& NameToBone : NameToBones)
 		{
 			AAssetFile::SerializeString(NameToBone.first.c_str(), OutputAssetFile);
-			NameToBone.second.OnSerializeFromMap(OutputAssetFile);
+			NameToBone.second.OnSerialize(OutputAssetFile);
 		}
 
 		// Child - Parent Relation
@@ -154,7 +154,7 @@ void BoneAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 		// Bone Name
 		string BoneName;
 		AAssetFile::DeserializeString(BoneName, FileIn);
-		NameToBones[BoneName].OnDeserializeToMap(FileIn, AssetManagerIn);
+		NameToBones[BoneName].OnDeserialize(FileIn, AssetManagerIn);
 	}
 
 	for (auto& NameToBone : NameToBones)

@@ -23,7 +23,7 @@ class MapAsset;
 class IGuiModelVisitor;
 
 
-class AObject : public IOnSerializableMap, public IUpdatable, public IRenderable, public IGuiModelAcceptor, public AMovable
+class AObject : public IOnSerializableElement, public IUpdatable, public IRenderable, public IGuiModelAcceptor, public AMovable
 {
 public:
 	AObject(MapAsset* MapAssetInstance);
@@ -50,7 +50,7 @@ public:
 	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
-	virtual void OnSerializeFromMap(FILE* FileIn) override;
-	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void OnSerialize(FILE* FileIn) override;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

@@ -76,9 +76,9 @@ void Viewable::AcceptGui(IGuiModelVisitor* GuiVisitor)
 	GuiVisitor->Visit(this);
 }
 
-void Viewable::OnSerializeFromMap(FILE* FileIn)
+void Viewable::OnSerialize(FILE* FileIn)
 {
-	AObject::OnSerializeFromMap(FileIn);
+	AObject::OnSerialize(FileIn);
 
 	fwrite(&Viewport, sizeof(D3D11_VIEWPORT), 1, FileIn);
 	fwrite(&FovAngle, sizeof(float), 1, FileIn);
@@ -86,9 +86,9 @@ void Viewable::OnSerializeFromMap(FILE* FileIn)
 	fwrite(&FarZ, sizeof(float), 1, FileIn);
 }
 
-void Viewable::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void Viewable::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
 	fread(&Viewport, sizeof(D3D11_VIEWPORT), 1, FileIn);
 	fread(&FovAngle, sizeof(float), 1, FileIn);
 	fread(&NearZ, sizeof(float), 1, FileIn);

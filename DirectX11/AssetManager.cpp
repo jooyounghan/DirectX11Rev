@@ -304,9 +304,8 @@ void AssetManager::LoadAnimationAssetFromFile(const string& AssetName, const aiS
     for (UINT AnimIdx = 0; AnimIdx < Scene->mNumAnimations; AnimIdx++)
     {
         aiAnimation* Animation = Scene->mAnimations[AnimIdx];
-
-        const string AnimName = Animation->mName.C_Str();
-        shared_ptr<AnimationAsset> AnimAsset = make_shared<AnimationAsset>(AnimName, true, Animation->mDuration, Animation->mTicksPerSecond);
+        const string AnimName = Scene->mNumAnimations > 1 ? format("{}_{}", AssetName, AnimIdx) : AssetName;
+        shared_ptr<AnimationAsset> AnimAsset = make_shared<AnimationAsset>(AnimName, false, Animation->mDuration, Animation->mTicksPerSecond);
 
         LoadAnimationChannels(Animation, AnimAsset.get());
         SerailizeAndAddToContainer(AnimAsset);
@@ -364,6 +363,10 @@ AAssetFile* AssetManager::GetManagingAsset(const std::string& AssetNameIn)
     else if (AssetType == DDSTextureAsset::DDSTextureAssetKind)
     {
         Result = GetManagingAssetHelper(ManagingDDSTextures, AssetNameIn).get();
+    }
+    else if (AssetType == AnimationAsset::AnimationKind)
+    {
+        Result = GetManagingAssetHelper(ManagingAnimations, AssetNameIn).get();
     }
     else
     {
@@ -979,6 +982,10 @@ void AssetManager::LoadAssetWithTopologySorting(const vector<string>& AssetPaths
                 else if (AssetType == MaterialAsset::MaterialAssetKind)
                 {
                     LoadAssetHelper(InputAssetFile, ManagingMaterials, AssetPreloadArgs.AssetName, true);
+                }
+                else if (AssetType == AnimationAsset::AnimationKind)
+                {
+                    LoadAssetHelper(InputAssetFile, ManagingAnimations, AssetPreloadArgs.AssetName, true);
                 }
                 else
                 {

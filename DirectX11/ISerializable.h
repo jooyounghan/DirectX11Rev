@@ -11,9 +11,9 @@ public:
 	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };
 
-class IOnSerializableMap
+class IOnSerializableElement
 {
 public:
-	virtual void OnSerializeFromMap(FILE* FileIn) = 0;
-	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
+	virtual void OnSerialize(FILE* FileIn) = 0;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
 };

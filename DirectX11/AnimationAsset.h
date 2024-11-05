@@ -3,10 +3,12 @@
 #include "directxmath/DirectXMath.h"
 
 constexpr float AnimationTimeErr = 1E-3f;
+constexpr const char* AnimationAssetOutPath = ".\\Assets\\Animation\\";
 
-class AnimationKey
+class AnimationKey : public IOnSerializableElement
 {
 public:
+	AnimationKey();
 	AnimationKey(const float& TimeIn, const DirectX::XMVECTOR& AnimationDataIn);
 
 protected:
@@ -14,9 +16,13 @@ protected:
 	DirectX::XMVECTOR AnimationData;
 	MakeGetter(Time);
 	MakeGetter(AnimationData);	
+
+public:
+	virtual void OnSerialize(FILE* FileIn) override;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 
-class AnimationChannel
+class AnimationChannel : public IOnSerializableElement
 {
 public:
 	AnimationChannel();
@@ -39,6 +45,10 @@ public:
 
 private:
 	static DirectX::XMVECTOR GetLerpedVectorKey(const float& TimeIn, const std::vector<AnimationKey>& Keys);
+
+public:
+	virtual void OnSerialize(FILE* FileIn) override;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 
 class AnimationAsset : public AAssetFile

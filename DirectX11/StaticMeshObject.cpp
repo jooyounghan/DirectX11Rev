@@ -156,18 +156,18 @@ std::vector<ID3D11ShaderResourceView*> StaticMeshObject::GetMeshObjectPSSRVs(con
 	return Result;
 }
 
-void StaticMeshObject::OnSerializeFromMap(FILE* FileIn)
+void StaticMeshObject::OnSerialize(FILE* FileIn)
 {
-	AMeshObject::OnSerializeFromMap(FileIn);
+	AMeshObject::OnSerialize(FileIn);
 
 	// Mesh Asset Name
 	AAssetFile::SerializeString(StaticMeshAssetInstance != nullptr ? StaticMeshAssetInstance->GetAssetName() : "", FileIn);
 
 }
 
-void StaticMeshObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void StaticMeshObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AMeshObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+	AMeshObject::OnDeserialize(FileIn, AssetManagerIn);
 
 	string MeshAssetName;
 	AAssetFile::DeserializeString(MeshAssetName, FileIn);

@@ -28,7 +28,7 @@ public:
 	virtual void Render() override final;
 
 public:
-	virtual void OnSerializeFromMap(FILE* FileIn) override;
-	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void OnSerialize(FILE* FileIn) override;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

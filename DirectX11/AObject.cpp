@@ -29,7 +29,7 @@ void AObject::Update(const float& DeltaTimeIn)
 	TransformationBuffer->SetStagedData(TempTransformation);
 }
 
-void AObject::OnSerializeFromMap(FILE* FileIn)
+void AObject::OnSerialize(FILE* FileIn)
 {
 	// Object Name
 	AAssetFile::SerializeString(ObjectName, FileIn);
@@ -40,7 +40,7 @@ void AObject::OnSerializeFromMap(FILE* FileIn)
 	fwrite(&RelativeScale, sizeof(XMFLOAT3), 1, FileIn);
 }
 
-void AObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void AObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	// Object Name
 	AAssetFile::DeserializeString(ObjectName, FileIn);

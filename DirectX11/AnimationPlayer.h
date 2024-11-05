@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <memory>
 
+#define INFINITE_PLAY 0xFFFFFFFFFFFFFFFF
+
 class Bone;
 class BoneAsset;
 class AnimationAsset;
@@ -30,6 +32,10 @@ public:
 protected:
 	std::shared_ptr<AnimationAsset> AnimationAssetCached;
 	std::shared_ptr<BoneAsset>		BoneAssetCached;
+	MakeSmartPtrGetter(AnimationAssetCached);
+	MakeSmartPtrGetter(BoneAssetCached);
+
+protected:
 	size_t PlayCount = false;
 	float PlayTime = 0.f;
 

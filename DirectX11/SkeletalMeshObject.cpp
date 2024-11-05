@@ -50,6 +50,11 @@ void SkeletalMeshObject::SetSkeletalMeshAssetInstance(const std::shared_ptr<Skel
 	}
 }
 
+void SkeletalMeshObject::SetAnimationAssetInstance(const std::shared_ptr<AnimationAsset>& AnimationAssetInstanceIn)
+{
+	AnimationPlayerInstance.PlayAnimation(AnimationAssetInstanceIn, INFINITE_PLAY);
+}
+
 AMeshAsset* SkeletalMeshObject::GetMeshAssetInstance()
 {
 	return SkeletalMeshAssetInstance.get();
@@ -168,17 +173,17 @@ std::vector<ID3D11ShaderResourceView*> SkeletalMeshObject::GetMeshObjectPSSRVs(c
 
 
 
-void SkeletalMeshObject::OnSerializeFromMap(FILE* FileIn)
+void SkeletalMeshObject::OnSerialize(FILE* FileIn)
 {
-	AMeshObject::OnSerializeFromMap(FileIn);
+	AMeshObject::OnSerialize(FileIn);
 
 	// Mesh Asset Name
 	AAssetFile::SerializeString(SkeletalMeshAssetInstance != nullptr ? SkeletalMeshAssetInstance->GetAssetName() : "", FileIn);
 }
 
-void SkeletalMeshObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void SkeletalMeshObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AMeshObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+	AMeshObject::OnDeserialize(FileIn, AssetManagerIn);
 
 	string MeshAssetName;
 	AAssetFile::DeserializeString(MeshAssetName, FileIn);

@@ -44,14 +44,14 @@ void StaticMeshObjectActor::Render()
 	StaticMeshObjectInstance->Render();
 }
 
-void StaticMeshObjectActor::OnSerializeFromMap(FILE* FileIn)
+void StaticMeshObjectActor::OnSerialize(FILE* FileIn)
 {
-	AObject::OnSerializeFromMap(FileIn);
-	StaticMeshObjectInstance->OnSerializeFromMap(FileIn);
+	AObject::OnSerialize(FileIn);
+	StaticMeshObjectInstance->OnSerialize(FileIn);
 }
 
-void StaticMeshObjectActor::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void StaticMeshObjectActor::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
-	StaticMeshObjectInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	StaticMeshObjectInstance->OnDeserialize(FileIn, AssetManagerIn);
 }

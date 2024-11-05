@@ -113,14 +113,14 @@ void OBBObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 	GuiVisitor->Visit(this);
 }
 
-void OBBObject::OnSerializeFromMap(FILE* FileIn)
+void OBBObject::OnSerialize(FILE* FileIn)
 {
-	AObject::OnSerializeFromMap(FileIn);
+	AObject::OnSerialize(FileIn);
 	fwrite(&DescaledExtents, sizeof(XMFLOAT3), 1, FileIn);
 }
 
-void OBBObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void OBBObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
 	fread(&DescaledExtents, sizeof(XMFLOAT3), 1, FileIn);
 }

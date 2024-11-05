@@ -140,8 +140,8 @@ void MapAsset::Serialize()
 	{
 		SerializeHeader(OutputAssetFile);
 
-		EditorActorInstance->OnSerializeFromMap(OutputAssetFile);
-		EnvironmentActorInstance->OnSerializeFromMap(OutputAssetFile);
+		EditorActorInstance->OnSerialize(OutputAssetFile);
+		EnvironmentActorInstance->OnSerialize(OutputAssetFile);
 
 		size_t RootPlaceablesCount = RootPlaceables.size();
 		fwrite(&RootPlaceablesCount, sizeof(size_t), 1, OutputAssetFile);
@@ -152,7 +152,7 @@ void MapAsset::Serialize()
 			const string& PlaceableObjectKind = RootPlaceable->GetPlaceableKind();
 			SerializeString(PlaceableObjectKind, OutputAssetFile);
 
-			RootPlaceable->OnSerializeFromMap(OutputAssetFile);
+			RootPlaceable->OnSerialize(OutputAssetFile);
 
 			SerializeChildrenObjects(RootPlaceable.get(), OutputAssetFile);
 		}
@@ -165,8 +165,8 @@ void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	EditorActorInstance = make_unique<EditorPawn>(this);
 	EnvironmentActorInstance = make_unique<EnvironmentActor>(this);
 
-	EditorActorInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
-	EnvironmentActorInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
+	EditorActorInstance->OnDeserialize(FileIn, AssetManagerIn);
+	EnvironmentActorInstance->OnDeserialize(FileIn, AssetManagerIn);
 
 	CurrentCamera = EditorActorInstance->GetCameraInstance();
 	SetEnvironmentActorByCamera();
@@ -183,26 +183,26 @@ void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 		if (PlaceableObjectKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
 		{
 			StaticMeshObjectActor* AddedActor = PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
-			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
+			AddedActor->OnDeserialize(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 		}
 		else if (PlaceableObjectKind == SkeletalMeshObjectActor::SkeletalMeshObjectActorKind)
 		{
 			SkeletalMeshObjectActor* AddedActor = PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
-			AddedActor->OnDeserializeToMap(FileIn, AssetManagerIn);
+			AddedActor->OnDeserialize(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
 		}
 		else if (PlaceableObjectKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
 		{
 			//EnvironmentActor* AddedEnvironment = PlaceableAddHelper<EnvironmentActor>();
-			//AddedEnvironment->OnDeserializeToMap(FileIn, AssetManagerIn);
+			//AddedEnvironment->OnDeserialize(FileIn, AssetManagerIn);
 			//DeserializeParentObject(AddedEnvironment, FileIn, AssetManagerIn);
 			//break;
 		}
 		else if (PlaceableObjectKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
 		{
 			//APawn* AddedPawn = PlaceableAddHelper<APawn>();
-			//AddedPawn->OnDeserializeToMap(FileIn, AssetManagerIn);
+			//AddedPawn->OnDeserialize(FileIn, AssetManagerIn);
 			//DeserializeParentObject(AddedPawn, FileIn, AssetManagerIn);
 			//break;
 		}
@@ -225,7 +225,7 @@ void MapAsset::SerializeChildrenObjects(APlaceableObject* ChildPlaceableObjectIn
 		const string& AttachedObjectKind = AttachedChild->GetAttachableKind();
 		SerializeString(AttachedObjectKind, FileIn);
 
-		AttachedChild->OnSerializeFromMap(FileIn);
+		AttachedChild->OnSerialize(FileIn);
 
 		SerializeChildrenObjects(AttachedChild.get(), FileIn);
 	}
@@ -243,7 +243,7 @@ void MapAsset::SerializeChildrenObjects(AAttachableObject* ChildAttachableObject
 		const string& AttachedObjectKind = AttachedChild->GetAttachableKind();
 		SerializeString(AttachedObjectKind, FileIn);
 
-		AttachedChild->OnSerializeFromMap(FileIn);
+		AttachedChild->OnSerialize(FileIn);
 
 		SerializeChildrenObjects(AttachedChild.get(), FileIn);
 	}
@@ -298,7 +298,7 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 
 		if (AddedMeshObject != nullptr)
 		{
-			AddedMeshObject->OnDeserializeToMap(FileIn, AssetManagerIn);
+			AddedMeshObject->OnDeserialize(FileIn, AssetManagerIn);
 			DeserializeParentObject(AddedMeshObject, FileIn, AssetManagerIn);
 		}
 	}

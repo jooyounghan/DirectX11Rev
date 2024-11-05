@@ -46,14 +46,14 @@ void SkeletalMeshObjectActor::Render()
 	SkeletalMeshObjectInstance->Render();
 }
 
-void SkeletalMeshObjectActor::OnSerializeFromMap(FILE* FileIn)
+void SkeletalMeshObjectActor::OnSerialize(FILE* FileIn)
 {
-	AObject::OnSerializeFromMap(FileIn);
-	SkeletalMeshObjectInstance->OnSerializeFromMap(FileIn);
+	AObject::OnSerialize(FileIn);
+	SkeletalMeshObjectInstance->OnSerialize(FileIn);
 }
 
-void SkeletalMeshObjectActor::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void SkeletalMeshObjectActor::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
-	SkeletalMeshObjectInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	SkeletalMeshObjectInstance->OnDeserialize(FileIn, AssetManagerIn);
 }

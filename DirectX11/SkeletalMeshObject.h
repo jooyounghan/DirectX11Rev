@@ -25,6 +25,7 @@ protected:
 
 public:
 	void SetSkeletalMeshAssetInstance(const std::shared_ptr<SkeletalMeshAsset>& SkeletalMeshAssetInstanceIn);
+	void SetAnimationAssetInstance(const std::shared_ptr<AnimationAsset>& AnimationAssetInstanceIn);
 
 public:
 	virtual AMeshAsset* GetMeshAssetInstance() override;
@@ -47,7 +48,7 @@ protected:
 	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectPSSRVs(const size_t& MaterialIdx) override;
 
 public:
-	virtual void OnSerializeFromMap(FILE* FileIn) override;
-	virtual void OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void OnSerialize(FILE* FileIn) override;
+	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 

@@ -45,14 +45,14 @@ void EditorPawn::AcceptGui(IGuiModelVisitor* GuiVisitor)
     GuiVisitor->Visit(this);
 }
 
-void EditorPawn::OnSerializeFromMap(FILE* FileIn)
+void EditorPawn::OnSerialize(FILE* FileIn)
 {
-    AObject::OnSerializeFromMap(FileIn);
-    CameraInstance->OnSerializeFromMap(FileIn);
+    AObject::OnSerialize(FileIn);
+    CameraInstance->OnSerialize(FileIn);
 }
 
-void EditorPawn::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void EditorPawn::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-    AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
-    CameraInstance->OnDeserializeToMap(FileIn, AssetManagerIn);
+    AObject::OnDeserialize(FileIn, AssetManagerIn);
+    CameraInstance->OnDeserialize(FileIn, AssetManagerIn);
 }

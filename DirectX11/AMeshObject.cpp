@@ -79,12 +79,12 @@ void AMeshObject::Render()
 
 	if (CurrentCamera != nullptr && MeshAssetInstance != nullptr)
 	{
-		const size_t LODLevel = 0/*GetLODLevel(
+		const size_t LODLevel = GetLODLevel(
 			CurrentCamera->GetAbsolutePosition(),
 			*CurrentCamera->GetPointerFarZ(),
 			MeshAssetInstance->GetLODCount(),
 			3
-		)*/;
+		);
 
 		const D3D11_VIEWPORT* Viewport = &CurrentCamera->GetViewport();
 
@@ -98,7 +98,7 @@ void AMeshObject::Render()
 
 		const vector<UINT> IndexCounts = MeshAssetInstance->GetIndexCountsForPart(LODLevel);
 		const vector<UINT> IndexOffsets = MeshAssetInstance->GetIndexOffsetsForPart(LODLevel);
-		const vector<UINT> MaterialIndexes = MeshAssetInstance->GetMaterialIndex(LODLevel);
+		const vector<UINT> MaterialIndexesPerPart = MeshAssetInstance->GetMaterialIndex(LODLevel);
 
 		DeviceContextCached->IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
 
@@ -116,16 +116,16 @@ void AMeshObject::Render()
 
 			MeshObjectPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, DSV);
 
-			for (size_t PartIdx = 0; PartIdx < MaterialIndexes.size(); ++PartIdx)
+			for (size_t PartIdx = 0; PartIdx < MaterialIndexesPerPart.size(); ++PartIdx)
 			{
-				vector<ID3D11Buffer*> MeshObjectVSConstants = { CurrentCamera->GetViewProjBuffer()->GetBuffer(), TransformationBuffer->GetBuffer() };
-				vector<ID3D11Buffer*> MeshObjectHSConstants = GetMeshObjectHSConstants(PartIdx);
-				vector<ID3D11Buffer*> MeshObjectDSConstants = GetMeshObjectDSConstants(PartIdx);
-				vector<ID3D11Buffer*> MeshObjectPSConstants = GetMeshObjectPSConstants(PartIdx);
-				vector<ID3D11ShaderResourceView*> MeshObjectVSSRVs = GetMeshObjectVSSRVs(PartIdx);
-				vector<ID3D11ShaderResourceView*> MeshObjectHSSRVs = GetMeshObjectHSSRVs(PartIdx);
-				vector<ID3D11ShaderResourceView*> MeshObjectDSSRVs = GetMeshObjectDSSRVs(PartIdx);
-				vector<ID3D11ShaderResourceView*> MeshObjectPSSRVs = GetMeshObjectPSSRVs(PartIdx);
+				vector<ID3D11Buffer*> MeshObjectVSConstants = GetMeshObjectVSConstants(MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11Buffer*> MeshObjectHSConstants = GetMeshObjectHSConstants(MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11Buffer*> MeshObjectDSConstants = GetMeshObjectDSConstants(MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11Buffer*> MeshObjectPSConstants = GetMeshObjectPSConstants(MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11ShaderResourceView*> MeshObjectVSSRVs = GetMeshObjectVSSRVs(MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11ShaderResourceView*> MeshObjectHSSRVs = GetMeshObjectHSSRVs(MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11ShaderResourceView*> MeshObjectDSSRVs = GetMeshObjectDSSRVs(MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11ShaderResourceView*> MeshObjectPSSRVs = GetMeshObjectPSSRVs(MaterialIndexesPerPart[PartIdx]);
 
 				MeshObjectPSOCached->SetVSConstantBuffers(0, MeshObjectVSConstants.size(), MeshObjectVSConstants.data());
 				MeshObjectPSOCached->SetHSConstantBuffers(0, MeshObjectHSConstants.size(), MeshObjectHSConstants.data());
@@ -184,9 +184,9 @@ void AMeshObject::Update(const float& DeltaTimeIn)
 	AAttachableObject::Update(DeltaTimeIn);
 }
 
-void AMeshObject::OnSerializeFromMap(FILE* FileIn)
+void AMeshObject::OnSerialize(FILE* FileIn)
 {
-	AObject::OnSerializeFromMap(FileIn);
+	AObject::OnSerialize(FileIn);
 
 	size_t MaterialCount = MaterialAssetInstances.size();
 	fwrite(&MaterialCount, sizeof(size_t), 1, FileIn);
@@ -204,9 +204,9 @@ void AMeshObject::OnSerializeFromMap(FILE* FileIn)
 	}
 }
 
-void AMeshObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void AMeshObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
 
 	size_t MaterialCount;
 	fread(&MaterialCount, sizeof(size_t), 1, FileIn);

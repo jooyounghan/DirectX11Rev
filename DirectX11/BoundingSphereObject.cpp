@@ -97,14 +97,14 @@ void BoundingSphereObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 	GuiVisitor->Visit(this);
 }
 
-void BoundingSphereObject::OnSerializeFromMap(FILE* FileIn)
+void BoundingSphereObject::OnSerialize(FILE* FileIn)
 {
-	AObject::OnSerializeFromMap(FileIn);
+	AObject::OnSerialize(FileIn);
 	fwrite(&Radius, sizeof(float), 1, FileIn);
 }
 
-void BoundingSphereObject::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void BoundingSphereObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
 	fread(&Radius, sizeof(float), 1, FileIn);
 }

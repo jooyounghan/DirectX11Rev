@@ -101,9 +101,9 @@ void EnvironmentActor::Render()
 	}
 }
 
-void EnvironmentActor::OnSerializeFromMap(FILE* FileIn)
+void EnvironmentActor::OnSerialize(FILE* FileIn)
 {
-	AObject::OnSerializeFromMap(FileIn);
+	AObject::OnSerialize(FileIn);
 
 	AssetNameSerializeHelper(EnvironmentMeshAsset, FileIn);
 	AssetNameSerializeHelper(EnvironmentBackgroundEXRTextureAsset, FileIn);
@@ -117,9 +117,9 @@ void EnvironmentActor::OnSerializeFromMap(FILE* FileIn)
 	fwrite(&StagedData.Gamma, sizeof(float), 1, FileIn);
 }
 
-void EnvironmentActor::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
+void EnvironmentActor::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	AObject::OnDeserializeToMap(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn, AssetManagerIn);
 
 	string EnvironmentMeshAssetName;
 	string EnvironmentBackgroundEXRTextureAssetName;

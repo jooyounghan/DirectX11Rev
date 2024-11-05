@@ -5,9 +5,25 @@ using namespace DirectX;
 
 string AnimationAsset::AnimationKind = "Animation";
 
+AnimationKey::AnimationKey() : Time(0.f), AnimationData(XMVectorZero())
+{
+}
+
 AnimationKey::AnimationKey(const float& TimeIn, const XMVECTOR& AnimationDataIn)
 	: Time(TimeIn), AnimationData(AnimationDataIn)
 {
+}
+
+void AnimationKey::OnSerialize(FILE* FileIn)
+{
+	fwrite(&Time, sizeof(float), 1, FileIn);
+	fwrite(&AnimationData, sizeof(XMVECTOR), 1, FileIn);
+}
+
+void AnimationKey::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+	fread(&Time, sizeof(float), 1, FileIn);
+	fread(&AnimationData, sizeof(XMVECTOR), 1, FileIn);
 }
 
 
@@ -40,6 +56,64 @@ XMVECTOR AnimationChannel::GetLerpedVectorKey(const float& TimeIn, const std::ve
 	}
 
 	return Keys[0].GetAnimationData();
+}
+
+void AnimationChannel::OnSerialize(FILE* FileIn)
+{
+	size_t PositionCounts = PositionKeys.size();
+	size_t QuaternionCounts = QuaternionKeys.size();
+	size_t ScaleCounts = ScaleKeys.size();
+
+	fwrite(&PositionCounts, sizeof(size_t), 1, FileIn);
+	for (AnimationKey& PositionKey : PositionKeys)
+	{
+		PositionKey.OnSerialize(FileIn);
+	}
+		
+	fwrite(&QuaternionCounts, sizeof(size_t), 1, FileIn);
+	for (AnimationKey& QuaternionKey : QuaternionKeys)
+	{
+		QuaternionKey.OnSerialize(FileIn);
+	}
+
+	fwrite(&ScaleCounts, sizeof(size_t), 1, FileIn);
+	for (AnimationKey& ScaleKey : ScaleKeys)
+	{
+		ScaleKey.OnSerialize(FileIn);
+	}
+}
+
+void AnimationChannel::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+{
+	size_t PositionCounts;
+	size_t QuaternionCounts;
+	size_t ScaleCounts;
+
+	fread(&PositionCounts, sizeof(size_t), 1, FileIn);
+	for (size_t idx = 0; idx < PositionCounts; ++idx)
+	{
+		AnimationKey PositionKey;
+		PositionKey.OnDeserialize(FileIn, AssetManagerIn);
+		PositionKeys.push_back(std::move(PositionKey));
+	}
+
+	fread(&QuaternionCounts, sizeof(size_t), 1, FileIn);
+	for (size_t idx = 0; idx < QuaternionCounts; ++idx)
+	{
+		AnimationKey QuaternionKey;
+		QuaternionKey.OnDeserialize(FileIn, AssetManagerIn);
+		QuaternionKeys.push_back(std::move(QuaternionKey));
+	}
+
+
+	fread(&ScaleCounts, sizeof(size_t), 1, FileIn);
+	for (size_t idx = 0; idx < ScaleCounts; ++idx)
+	{
+		AnimationKey ScaleKey;
+		ScaleKey.OnDeserialize(FileIn, AssetManagerIn);
+		ScaleKeys.push_back(std::move(ScaleKey));
+	}
+
 }
 
 void AnimationChannel::AddPositionKey(float TimeIn, DirectX::XMVECTOR PositionIn)
@@ -133,9 +207,43 @@ XMMATRIX AnimationAsset::GetAnimationTransformation(const std::string& ChannelNa
 
 void AnimationAsset::Serialize()
 {
+	FILE* OutputAssetFile = nullptr;
+	string OutputAssetFilePath = DefaultOpenFileHelper(AnimationAssetOutPath, OutputAssetFile);
+
+	if (OutputAssetFile != nullptr)
+	{
+		SerializeHeader(OutputAssetFile);
+
+		fwrite(&Duration, sizeof(float), 1, OutputAssetFile);
+		fwrite(&TicksPerSecond, sizeof(float), 1, OutputAssetFile);
+
+		size_t ChannelNameToAnimationChannelsCount = ChannelNameToAnimationChannels.size();
+		fwrite(&ChannelNameToAnimationChannelsCount, sizeof(size_t), 1, OutputAssetFile);
+
+		for (auto& ChannelNameToAnimationChannel : ChannelNameToAnimationChannels)
+		{
+			AAssetFile::SerializeString(ChannelNameToAnimationChannel.first, OutputAssetFile);
+			ChannelNameToAnimationChannel.second.OnSerialize(OutputAssetFile);
+		}
+
+		fclose(OutputAssetFile);
+	}
 }
 
 void AnimationAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
+	fread(&Duration, sizeof(float), 1, FileIn);
+	fread(&TicksPerSecond, sizeof(float), 1, FileIn);
+
+	size_t ChannelNameToAnimationChannelsCount;
+	fread(&ChannelNameToAnimationChannelsCount, sizeof(size_t), 1, FileIn);
+
+	for (size_t AnimationChannelIdx = 0; AnimationChannelIdx < ChannelNameToAnimationChannelsCount; ++AnimationChannelIdx)
+	{
+		string ChannelName;
+		AAssetFile::DeserializeString(ChannelName, FileIn);
+		ChannelNameToAnimationChannels[ChannelName].OnDeserialize(FileIn, AssetManagerIn);
+	}
+
 }
 
