@@ -33,9 +33,7 @@ void Bone::AddChildBone(Bone* ChildBone)
 void Bone::OnSerializeFromMap(FILE* FileIn)
 {
 	// Bone Name
-	size_t BoneNameCount = BoneName.size();
-	fwrite(&BoneNameCount, sizeof(size_t), 1, FileIn);
-	fwrite(BoneName.c_str(), sizeof(char), BoneNameCount, FileIn);
+	AAssetFile::SerializeString(BoneName, FileIn);
 
 	// Bone Idx
 	fwrite(&(BoneIndex), sizeof(size_t), 1, FileIn);
@@ -47,16 +45,14 @@ void Bone::OnSerializeFromMap(FILE* FileIn)
 void Bone::OnDeserializeToMap(FILE* FileIn, AssetManager* AssetManagerIn)
 {
 	// Bone Name
-	size_t BoneNameCount;
-	fread(&BoneNameCount, sizeof(size_t), 1, FileIn);
-	BoneName.resize(BoneNameCount);
-	fread(BoneName.data(), sizeof(char), BoneNameCount, FileIn);
+	AAssetFile::DeserializeString(BoneName, FileIn);
 
 	// Bone Idx
 	fread(&BoneIndex, sizeof(size_t), 1, FileIn);
 
 	// Offset Matrix
 	fread(&(OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
+	
 }
 
 BoneAsset::BoneAsset(const std::string& AssetNameIn, const bool& LoadFromAsset)
@@ -124,9 +120,7 @@ void BoneAsset::Serialize()
 
 		for (auto& NameToBone : NameToBones)
 		{
-			size_t BoneNameCount = NameToBone.first.size();
-			fwrite(&BoneNameCount, sizeof(size_t), 1, OutputAssetFile);
-			fwrite(NameToBone.first.c_str(), sizeof(char), BoneNameCount, OutputAssetFile);
+			AAssetFile::SerializeString(NameToBone.first.c_str(), OutputAssetFile);
 			NameToBone.second.OnSerializeFromMap(OutputAssetFile);
 		}
 
@@ -138,16 +132,12 @@ void BoneAsset::Serialize()
 
 			for (auto& ChildBone : NameToBone.second.ChildrenBones)
 			{
-				size_t ChildBoneNameCount = ChildBone->BoneName.size();
-				fwrite(&ChildBoneNameCount, sizeof(size_t), 1, OutputAssetFile);
-				fwrite(ChildBone->BoneName.c_str(), sizeof(char), ChildBoneNameCount, OutputAssetFile);
+				AAssetFile::SerializeString(ChildBone->BoneName.c_str(), OutputAssetFile);
 			}
 		}
 
 		// Root Bone Name
-		size_t RootBoneNameCount = RootBone->BoneName.size();
-		fwrite(&RootBoneNameCount, sizeof(size_t), 1, OutputAssetFile);
-		fwrite(RootBone->BoneName.c_str(), sizeof(char), RootBoneNameCount, OutputAssetFile);
+		AAssetFile::SerializeString(RootBone->BoneName.c_str(), OutputAssetFile);
 
 		fclose(OutputAssetFile);
 	}
@@ -163,12 +153,7 @@ void BoneAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	{
 		// Bone Name
 		string BoneName;
-		size_t BoneNameCount;
-		fread(&BoneNameCount, sizeof(size_t), 1, FileIn);
-		BoneName.resize(BoneNameCount);
-		fread(BoneName.data(), sizeof(char), BoneNameCount, FileIn);
-		NameToBones.emplace(BoneName, Bone());
-
+		AAssetFile::DeserializeString(BoneName, FileIn);
 		NameToBones[BoneName].OnDeserializeToMap(FileIn, AssetManagerIn);
 	}
 
@@ -180,20 +165,12 @@ void BoneAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 		for (size_t idx = 0; idx < ChildBoneCount; ++idx)
 		{
 			string ChildBoneName;
-			size_t ChildBoneNameCount;
-			fread(&ChildBoneNameCount, sizeof(size_t), 1, FileIn);
-			ChildBoneName.resize(ChildBoneNameCount);
-			fread(ChildBoneName.data(), sizeof(char), ChildBoneNameCount, FileIn);
-
+			AAssetFile::DeserializeString(ChildBoneName, FileIn);
 			NameToBone.second.AddChildBone(&NameToBones[ChildBoneName]);
 		}
 	}
 
 	string RootBoneName;
-	size_t RootBoneNameCount;
-	fread(&RootBoneNameCount, sizeof(size_t), 1, FileIn);
-	RootBoneName.resize(RootBoneNameCount);
-	fread(RootBoneName.data(), sizeof(char), RootBoneNameCount, FileIn);
-
+	AAssetFile::DeserializeString(RootBoneName, FileIn);
 	RootBone = &NameToBones[RootBoneName];
 }

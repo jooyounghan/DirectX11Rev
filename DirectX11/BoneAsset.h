@@ -2,7 +2,7 @@
 #include "AAssetFile.h"
 
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <memory>
 #include "directxmath/DirectXMath.h"
 
@@ -63,7 +63,7 @@ protected:
 	MakeSetterGetter(CurrentBone);
 
 protected:
-	std::unordered_map<std::string, Bone> NameToBones;
+	std::map<std::string, Bone> NameToBones;
 	MakeGetter(NameToBones);
 
 public:

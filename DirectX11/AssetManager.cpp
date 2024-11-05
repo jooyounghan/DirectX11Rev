@@ -628,7 +628,7 @@ void AssetManager::LoadMeshElement(
     vector<XMFLOAT4> TempBlendWeight;
     vector<XMINT4> TempBlendIndex;
 
-    TempBlendWeight.resize(Mesh->mNumVertices);
+    TempBlendWeight.resize(Mesh->mNumVertices/*, XMFLOAT4(0.f, 0.f, 0.f, 0.f)*/);
     TempBlendIndex.resize(Mesh->mNumVertices, XMINT4(-1, -1, -1, -1));
 
     SkeletalMesh->BlendWeightPerLOD[LodLevel].Vertices.insert(SkeletalMesh->BlendWeightPerLOD[LodLevel].Vertices.end(), TempBlendWeight.begin(), TempBlendWeight.end());
@@ -647,7 +647,7 @@ void AssetManager::LoadMeshElement(
     LoadIndices(Mesh, VertexStartIdx, SkeletalMesh->IndicesPerLOD[LodLevel].Indices);
 
     // Load BlendWeight
-    LoadBlendWeightAndIndex(Mesh, SkeletalMesh->BlendWeightPerLOD[LodLevel].Vertices, SkeletalMesh->BlendIndexPerLOD[LodLevel].Vertices);
+    LoadBlendWeightAndIndex(Mesh, VertexStartIdx, SkeletalMesh->BlendWeightPerLOD[LodLevel].Vertices, SkeletalMesh->BlendIndexPerLOD[LodLevel].Vertices);
 
     CalculateTB(Mesh, IndicesStartIdx, SkeletalMesh, LodLevel);
 
@@ -658,7 +658,7 @@ void AssetManager::LoadMeshElement(
 
 void AssetManager::LoadPosition(
     const aiMesh* const Mesh,
-    size_t VertexStartIdx,
+    const size_t& VertexStartIdx,
     std::vector<XMFLOAT3>& Postions,
     const DirectX::XMMATRIX& ParentMatrix
 )
@@ -692,7 +692,7 @@ void AssetManager::LoadBone(
                 aiBone* CurrentBone = RefMesh->mBones[BoneIdx];
                 XMFLOAT4X4 TempMatrix;
                 memcpy(&TempMatrix, &CurrentBone->mOffsetMatrix, sizeof(XMFLOAT4X4));
-                BoneAsset->AddBone(CurrentBone->mName.C_Str(), BoneIdx, DirectX::XMLoadFloat4x4(&TempMatrix));
+                BoneAsset->AddBone(CurrentBone->mName.C_Str(), BoneIdx, XMMatrixTranspose(DirectX::XMLoadFloat4x4(&TempMatrix)));
             }
             // Load Bone Hierachy
             ProcessNodeForBone(Scene, Scene->mRootNode, BoneAsset);
@@ -755,7 +755,7 @@ void AssetManager::LoadScaleKeys(const aiNodeAnim* const NodeChannel, AnimationC
 
 void AssetManager::LoadTextureCoord(
     const aiMesh* const Mesh, 
-    size_t VertexStartIdx, 
+    const size_t& VertexStartIdx,
     vector<XMFLOAT2>& UVTextures
 )
 {
@@ -772,6 +772,7 @@ void AssetManager::LoadTextureCoord(
 
 void AssetManager::LoadBlendWeightAndIndex(
     const aiMesh* const Mesh, 
+    const size_t& VertexStartIdx,
     vector<XMFLOAT4>& BlendWeight, 
     vector<XMINT4>& BlendIndex
 )
@@ -784,8 +785,10 @@ void AssetManager::LoadBlendWeightAndIndex(
         {
             aiVertexWeight& VertexWeight = CurrentBone->mWeights[WeightIdx];
 
-            XMFLOAT4& CurrentBlendWeight = BlendWeight[VertexWeight.mVertexId];
-            XMINT4& CurrentBlendIndex = BlendIndex[VertexWeight.mVertexId];
+            const size_t AccessIdx = VertexStartIdx + VertexWeight.mVertexId;
+
+            XMFLOAT4& CurrentBlendWeight = BlendWeight[AccessIdx];
+            XMINT4& CurrentBlendIndex = BlendIndex[AccessIdx];
 
             if (CurrentBlendIndex.x == -1)
             {
@@ -813,7 +816,7 @@ void AssetManager::LoadBlendWeightAndIndex(
 
 void AssetManager::LoadIndices(
     const aiMesh* const Mesh,
-    size_t VertexStartIdx,
+    const size_t& VertexStartIdx,
     std::vector<uint32_t>& IndicesIn
 )
 {
@@ -1008,7 +1011,7 @@ void AssetManager::LoadAssetHelper(
 template<typename T>
 void AssetManager::LoadTBN(
     const aiMesh* const Mesh, 
-    size_t VertexStartIdx, 
+    const size_t& VertexStartIdx,
     T* MeshObjectInstance,
     const size_t& LodLevel
 )
@@ -1037,7 +1040,7 @@ void AssetManager::LoadTBN(
 template<typename T>
 void AssetManager::LoadTBNAsGltf(
     const aiMesh* const Mesh,
-    size_t VertexStartIdx, 
+    const size_t& VertexStartIdx,
     T* MeshObjectInstance,
     const size_t& LodLevel
 )

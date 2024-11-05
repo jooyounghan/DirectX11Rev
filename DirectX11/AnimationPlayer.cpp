@@ -6,6 +6,8 @@
 #include "UploadableBufferManager.h"
 #include "StructuredBuffer.h"
 
+#include <iostream>
+
 using namespace std;
 using namespace DirectX;
 
@@ -80,20 +82,24 @@ void AnimationPlayer::Update(const float& DeltaTimeIn)
 		}
 	}
 
-	Bone* RootBone = BoneAssetCached->GetRootBone();
-	UpdateBoneFromParent(nullptr, RootBone);
-
-	unordered_map<string, Bone> NameToBones = BoneAssetCached->GetNameToBones();
-	const vector<XMMATRIX>& StagedAnimationTransformation = AnimationTransformationBuffer->GetStagedStructuredData();
-
-	for (const auto& NameToBone : NameToBones)
+	if (BoneAssetCached)
 	{
-		const Bone& BoneData = NameToBone.second;
-		const size_t BoneIndex = BoneData.GetBoneIndex();
+		Bone* RootBone = BoneAssetCached->GetRootBone();
 
-		AnimationTransformationBuffer->SetStagedData(BoneIndex, XMMatrixTranspose(BoneData.GetOffsetMatrix() * StagedAnimationTransformation[BoneIndex]));
+		// Initialize Bone Transformation From Root To Ends;
+		UpdateBoneFromParent(nullptr, RootBone);
+
+		const map<string, Bone>& NameToBones = BoneAssetCached->GetNameToBones();
+		const vector<XMMATRIX>& StagedAnimationTransformations = AnimationTransformationBuffer->GetStagedStructuredData();
+
+		for (const auto& NameToBone : NameToBones)
+		{
+			const Bone& BoneData = NameToBone.second;
+			const size_t BoneIndex = BoneData.GetBoneIndex();
+
+			AnimationTransformationBuffer->SetStagedData(BoneIndex, XMMatrixTranspose(BoneData.GetOffsetMatrix() * StagedAnimationTransformations[BoneIndex]));
+		}
 	}
-
 }
 
 void AnimationPlayer::UpdateBoneFromParent(Bone* Parent, Bone* Child)
@@ -102,12 +108,12 @@ void AnimationPlayer::UpdateBoneFromParent(Bone* Parent, Bone* Child)
 
 	if (Child != nullptr)
 	{
-		const XMMATRIX& ChildTranformation = StagedAnimationTransformation[Child->GetBoneIndex()];
 		const XMMATRIX ChildAnimationTransformation =
 			AnimationAssetCached != nullptr ?
 			AnimationAssetCached->GetAnimationTransformation(Child->GetBoneName(), PlayTime) :
 			XMMatrixIdentity();
 
+		
 		if (Parent != nullptr)
 		{
 			const XMMATRIX& ParentTranformation = StagedAnimationTransformation[Parent->GetBoneIndex()];

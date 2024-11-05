@@ -79,12 +79,12 @@ void AMeshObject::Render()
 
 	if (CurrentCamera != nullptr && MeshAssetInstance != nullptr)
 	{
-		const size_t LODLevel = GetLODLevel(
+		const size_t LODLevel = 0/*GetLODLevel(
 			CurrentCamera->GetAbsolutePosition(),
 			*CurrentCamera->GetPointerFarZ(),
 			MeshAssetInstance->GetLODCount(),
 			3
-		);
+		)*/;
 
 		const D3D11_VIEWPORT* Viewport = &CurrentCamera->GetViewport();
 
