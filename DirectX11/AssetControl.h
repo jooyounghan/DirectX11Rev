@@ -6,6 +6,8 @@
 class AAssetFile;
 class AssetControl;
 
+struct ID3D11ShaderResourceView;
+
 typedef std::function<void(AAssetFile*)>	AssetControlBeginDragDropHandler;
 typedef std::function<void(AssetControl*)>	AssetControlStyleChangeHandler;
 typedef std::function<void(AssetControl*)>	AssetControlClickedHandler;
@@ -13,12 +15,15 @@ typedef std::function<void(AssetControl*)>	AssetControlClickedHandler;
 class AssetControl : public IGuiControl
 {
 public:
-	AssetControl(AAssetFile* AssetFileIn);
+	AssetControl(AAssetFile* AssetFileIn, ID3D11ShaderResourceView* ThumbnailSRVIn);
 	~AssetControl();
 
 protected:
 	AAssetFile* AssetFileCached = nullptr;
 	MakeGetter(AssetFileCached);
+
+protected:
+	ID3D11ShaderResourceView* ThumbnailSRV = nullptr;
 
 public:
 	Delegation<AAssetFile*>		BeginDragDropEvent;

@@ -42,7 +42,7 @@ void MaterialInformationDrawer::DrawInformation()
 
         SameLine();
 
-        shared_ptr<MaterialAsset> Result = AssetSelectHelper::SelectAsset(ManagingMaterials, MaterialInstance, MaterialSlotID, "Material Asset", "Choose Material Asset");
+        shared_ptr<MaterialAsset> Result = AssetSelectHelper::SelectAsset(ManagingMaterials, MaterialInstance, MaterialSlotID, "Material Asset", "Select Material Asset");
         if (Result != nullptr) ObjectCached->SetMaterialAsset(idx, Result);
         PopID();
     }

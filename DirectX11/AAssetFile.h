@@ -9,6 +9,7 @@
 
 
 constexpr const char* AssetOutPath = ".\\Assets\\";
+constexpr const char* BaseAssetOutPath = ".\\Assets\\Base\\";
 constexpr const char* AssetExtension = ".Asset";
 
 class AAssetFile : public ISerializable

@@ -1,17 +1,12 @@
 #include "AssetControl.h"
 #include "AAssetFile.h"
-
-#include "BaseTextureAsset.h"
-#include "DDSTextureAsset.h"
-#include "EXRTextureAsset.h"
-
 #include "UIVariable.h"
 
 using namespace ImGui;
 using namespace std;
 
-AssetControl::AssetControl(AAssetFile* AssetFileIn)
-	: AssetFileCached(AssetFileIn)
+AssetControl::AssetControl(AAssetFile* AssetFileIn, ID3D11ShaderResourceView* ThumbnailSRVIn)
+	: AssetFileCached(AssetFileIn), ThumbnailSRV(ThumbnailSRVIn)
 {
 }
 
@@ -34,28 +29,7 @@ void AssetControl::RenderControl()
         }
 
         ImGui::BeginGroup();
-        if (AssetType == BaseTextureAsset::BaseTextureAssetKind || AssetType == EXRTextureAsset::EXRTextureAssetKind)
-        {
-            Image(AssetFileCached->GetThumbnailSRV(), UISize::FileSize);
-        }
-        else if (AssetType == DDSTextureAsset::DDSTextureAssetKind)
-        {
-            ID3D11ShaderResourceView* SRV = AssetFileCached->GetThumbnailSRV();
-            D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
-            SRV->GetDesc(&SRVDesc);
-            if (SRVDesc.ViewDimension == D3D11_SRV_DIMENSION_TEXTURE2D)
-            {
-                Image(SRV, UISize::FileSize);
-            }
-            else
-            {
-                Image(nullptr, UISize::FileSize);
-            }
-        }
-        else
-        {
-            Image(nullptr, UISize::FileSize);
-        }
+        Image(ThumbnailSRV, UISize::FileSize);
 
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + UISize::FileSize.x);
         ImGui::Text(AssetName.c_str());

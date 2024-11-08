@@ -152,6 +152,7 @@
     <ClCompile Include="ANBTMeshAsset.cpp" />
     <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationPlayer.cpp" />
+    <ClCompile Include="AnimationRetargeter.cpp" />
     <ClCompile Include="AObjectManageModal.cpp" />
     <ClCompile Include="APawn.cpp" />
     <ClCompile Include="APopup.cpp" />
@@ -160,7 +161,9 @@
     <ClCompile Include="BaseTextureInputNode.cpp" />
     <ClCompile Include="BaseTextureOutputPort.cpp" />
     <ClCompile Include="ControlNode.cpp" />
-    <ClCompile Include="CreateAssetFileModal.cpp" />
+    <ClCompile Include="CreateAssetModal.cpp" />
+    <ClCompile Include="CreateMaterialAssetModal.cpp" />
+    <ClCompile Include="CreateRetargetedAnimationAssetModal.cpp" />
     <ClCompile Include="DeleteAttachableModal.cpp" />
     <ClCompile Include="DeletePlaceableModal.cpp" />
     <ClCompile Include="Float3InputNode.cpp" />
@@ -279,6 +282,7 @@
     <ClInclude Include="ANBTMeshAsset.h" />
     <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationPlayer.h" />
+    <ClInclude Include="AnimationRetargeter.h" />
     <ClInclude Include="AObjectManageModal.h" />
     <ClInclude Include="APopup.h" />
     <ClInclude Include="AssetSelectHelper.h" />
@@ -286,7 +290,9 @@
     <ClInclude Include="BaseTextureInputNode.h" />
     <ClInclude Include="BaseTextureOutputPort.h" />
     <ClInclude Include="ControlNode.h" />
-    <ClInclude Include="CreateAssetFileModal.h" />
+    <ClInclude Include="CreateAssetModal.h" />
+    <ClInclude Include="CreateMaterialAssetModal.h" />
+    <ClInclude Include="CreateRetargetedAnimationAssetModal.h" />
     <ClInclude Include="DeleteAttachableModal.h" />
     <ClInclude Include="DeletePlaceableModal.h" />
     <ClInclude Include="Float3InputNode.h" />

@@ -4,7 +4,20 @@
 
 #include "AssetControlWindow.h"
 #include "MaterialAssetNodeCanvas.h"
+
+#include "CreateMaterialAssetModal.h"
+#include "CreateRetargetedAnimationAssetModal.h"
+
+#include "MapAsset.h"
+#include "BaseTextureAsset.h"
+#include "DDSTextureAsset.h"
+#include "EXRTextureAsset.h"
+#include "StaticMeshAsset.h"
+#include "SkeletalMeshAsset.h"
+#include "BoneAsset.h"
+#include "AnimationAsset.h"
 #include "MaterialAsset.h"
+
 
 #include "UIVariable.h"
 
@@ -14,11 +27,13 @@ using namespace filesystem;
 
 AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
 	: AssetManagerCached(AssetManagerIn),
-    AddAssetFilePopupInstance(format("AddAssetFilePopupInstance{}", (uint64_t)this)),
-    CreateAssetFileModalInstance("Create Asset File", AssetManagerIn)
+    AddAssetFilePopupInstance(format("AddAssetFilePopupInstance{}", (uint64_t)this))    
 {
     RootDirectory.Name = "Assets";
     RootDirectory.Directory = ".\\Assets\\";
+
+    CreateAssetModalInstances.emplace("CreateMaterialAssetModalInstance", make_unique<CreateMaterialAssetModal>("Create Material Asset", AssetManagerIn));
+    CreateAssetModalInstances.emplace("CreateRTAnimationAssetModalInstance", make_unique<CreateRetargetedAnimationAssetModal>("Create Retargeted Animation Asset", AssetManagerIn));
 
 #pragma region Binding
     OnAssetChanged = bind(&AssetManagerWindow::RefreshAssetDirectoriesFromRoot, this);
@@ -34,8 +49,11 @@ AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
 
     OnAssetControlWindowClosed = bind(&AssetManagerWindow::AddCloseAssetControlWindowList, this, placeholders::_1);
 
-    OnCreateAsset = bind(&AssetManagerWindow::StartCreateAsset, this);
-    AddAssetFilePopupInstance.AssetCreated += OnCreateAsset;
+    OnCreateMaterialAsset = bind(&AssetManagerWindow::StartCreateMaterialAsset, this);
+    OnCreateRetargetedAnimationAsset = bind(&AssetManagerWindow::StartCreateRetargetedAnimationAsset, this);
+
+    AddAssetFilePopupInstance.MaterialAssetCreated += OnCreateMaterialAsset;
+    AddAssetFilePopupInstance.RetargetedAnimationCreated += OnCreateRetargetedAnimationAsset;
 #pragma endregion 
 
     RefreshAssetDirectoriesFromRoot();
@@ -108,7 +126,11 @@ void AssetManagerWindow::RenderAssetControls()
     {
         ImVec2 CurrentCursorPos = GetCursorScreenPos();
         AddAssetFilePopupInstance.PopUp(CurrentCursorPos, ImVec2(CurrentCursorPos.x + RegionAvail.x, CurrentCursorPos.y + RegionAvail.y));
-        CreateAssetFileModalInstance.DoModal();
+
+        for (auto& CreateAssetModalInstance : CreateAssetModalInstances)
+        {
+            CreateAssetModalInstance.second->DoModal();
+        }
 
         float MaxWidthForAssetControls = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
         ImGuiStyle& Style = ImGui::GetStyle();
@@ -160,6 +182,16 @@ void AssetManagerWindow::BuildAssetDirectories(DirectorySet& DirectorySetIn)
     path Directory = DirectorySetIn.Directory;
     if (!exists(Directory) && create_directories(Directory)) {/* Do Nothing But Make Directory */ };
 
+    // TODO : 하드코딩 수정
+    const shared_ptr<BaseTextureAsset>& BaseTextureThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseTextureThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseStaticThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseStaticMeshThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseSkeletalThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseSkeletalMeshThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseBoneThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseBoneThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseAnimationThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseAnimationThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseMapThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseMapThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseMaterialThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseMaterialThumbnail_BaseTexture");
+
+
     for (const auto& entry : directory_iterator(Directory))
     {
         if (entry.is_directory())
@@ -185,16 +217,69 @@ void AssetManagerWindow::BuildAssetDirectories(DirectorySet& DirectorySetIn)
             if (CurrentAssetExtension == AssetExtension)
             {
                 AAssetFile* AssetFile = AssetManagerCached->GetManagingAsset(CurrentAssetName);
-                DirectorySetIn.AssetControls.emplace_back(AssetFile);
-                AssetControl& CurrentEmplacedControl = DirectorySetIn.AssetControls.back();
 
-                CurrentEmplacedControl.BeginDragDropEvent += OnAssetControlBeginDragDrop;
+                if (AssetFile != nullptr)
+                {
+                    const string& AssetType = AssetFile->GetAssetType();
 
-                CurrentEmplacedControl.StartHilightedEvent += OnAssetControlPushHilightStyle;
-                CurrentEmplacedControl.EndHilightedEvent+= OnAssetControlPopHilightStyle;
+                    ID3D11ShaderResourceView* ThumbnailSRV = nullptr;
+                    if (AssetType == BaseTextureAsset::BaseTextureAssetKind || AssetType == EXRTextureAsset::EXRTextureAssetKind)
+                    {
+                        ThumbnailSRV = AssetFile->GetThumbnailSRV();
+                    }
+                    else if (AssetType == DDSTextureAsset::DDSTextureAssetKind)
+                    {
+                        ID3D11ShaderResourceView* SRV = AssetFile->GetThumbnailSRV();
+                        D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+                        SRV->GetDesc(&SRVDesc);
+                        if (SRVDesc.ViewDimension == D3D11_SRV_DIMENSION_TEXTURE2D)
+                        {
+                            ThumbnailSRV = SRV;
+                        }
+                        else
+                        {
+                            ThumbnailSRV = BaseTextureThumbnail != nullptr ? BaseTextureThumbnail->GetThumbnailSRV() : nullptr;
+                        }
+                    }
+                    else if (AssetType == StaticMeshAsset::StaticMeshAssetKind)
+                    {
+                        ThumbnailSRV = BaseStaticThumbnail != nullptr ? BaseStaticThumbnail->GetThumbnailSRV() : nullptr;
+                    }
+                    else if (AssetType == SkeletalMeshAsset::SkeletalMeshAssetKind)
+                    {
+                        ThumbnailSRV = BaseSkeletalThumbnail != nullptr ? BaseSkeletalThumbnail->GetThumbnailSRV() : nullptr;
+                    }
+                    else if (AssetType == BoneAsset::BoneAssetKind)
+                    {
+                        ThumbnailSRV = BaseBoneThumbnail != nullptr ? BaseBoneThumbnail->GetThumbnailSRV() : nullptr;
+                    }
+                    else if (AssetType == AnimationAsset::AnimationKind)
+                    {
+                        ThumbnailSRV = BaseAnimationThumbnail != nullptr ? BaseAnimationThumbnail->GetThumbnailSRV() : nullptr;
+                    }
+                    else if (AssetType == MapAsset::MapAssetKind)
+                    {
+                        ThumbnailSRV = BaseMapThumbnail != nullptr ? BaseMapThumbnail->GetThumbnailSRV() : nullptr;
+                    }
+                    else if (AssetType == MaterialAsset::MaterialAssetKind)
+                    {
+                        ThumbnailSRV = BaseMaterialThumbnail != nullptr ? BaseMaterialThumbnail->GetThumbnailSRV() : nullptr;
+                    }
+                    else;
 
-                CurrentEmplacedControl.LeftMouseClickedEvent += OnAssetLeftMouseClicked;
-                CurrentEmplacedControl.LeftMouseDBClickedEvent+= OnAssetLeftMouseDBClicked;
+                    DirectorySetIn.AssetControls.emplace_back(AssetFile, ThumbnailSRV);
+
+
+                    AssetControl& CurrentEmplacedControl = DirectorySetIn.AssetControls.back();
+
+                    CurrentEmplacedControl.BeginDragDropEvent += OnAssetControlBeginDragDrop;
+
+                    CurrentEmplacedControl.StartHilightedEvent += OnAssetControlPushHilightStyle;
+                    CurrentEmplacedControl.EndHilightedEvent += OnAssetControlPopHilightStyle;
+
+                    CurrentEmplacedControl.LeftMouseClickedEvent += OnAssetLeftMouseClicked;
+                    CurrentEmplacedControl.LeftMouseDBClickedEvent += OnAssetLeftMouseDBClicked;
+                }
             }
         }
 
@@ -283,7 +368,18 @@ void AssetManagerWindow::CloseAssetControlWindow()
     CloseAssetControlWindowsList.clear();
 }
 
-void AssetManagerWindow::StartCreateAsset()
+void AssetManagerWindow::StartCreateMaterialAsset()
 {
-    CreateAssetFileModalInstance.SetModalFlag(true);
+    if (CreateAssetModalInstances.find("CreateMaterialAssetModalInstance") != CreateAssetModalInstances.end())
+    {
+        CreateAssetModalInstances["CreateMaterialAssetModalInstance"]->SetModalFlag(true);
+    }
+}
+
+void AssetManagerWindow::StartCreateRetargetedAnimationAsset()
+{
+    if (CreateAssetModalInstances.find("CreateRTAnimationAssetModalInstance") != CreateAssetModalInstances.end())
+    {
+        CreateAssetModalInstances["CreateRTAnimationAssetModalInstance"]->SetModalFlag(true);
+    }
 }

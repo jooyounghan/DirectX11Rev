@@ -851,24 +851,22 @@ void AssetManager::PreloadAssets()
     }
 
     path AssetPath = path(AssetOutPath);
-
     if (!exists(AssetPath) && create_directories(AssetPath)) {/* Do Nothing But Make Directory */ };
 
+    // Load Asset File
     vector<string> AssetFilePaths;
+    TraverseDirectory(AssetPath, AssetFilePaths);
 
-    for (const auto& entry : directory_iterator(AssetPath))
+    path BaseAssetFilePath = path(BaseAssetOutPath);
+    if (!exists(BaseAssetFilePath) && create_directories(BaseAssetFilePath)) {/* Do Nothing But Make Directory */ };
+
+    // Load Base Asset File
+    for (const auto& entry : directory_iterator(BaseAssetFilePath))
     {
-        const path filePath = entry.path();
+        const path BaseFilePath = entry.path();
         if (entry.is_regular_file())
         {
-            if (filePath.extension() == AssetExtension)
-            {
-                AssetFilePaths.push_back(filePath.string());
-            }
-        }
-        else if (entry.is_directory())
-        {
-            TraverseDirectory(filePath, AssetFilePaths);
+            LoadAssetFromFile(entry.path().string());
         }
         else;
     }

@@ -181,19 +181,19 @@ AnimationAsset::~AnimationAsset()
 
 void AnimationAsset::AddAnimationChannel(const std::string& ChannelName, const AnimationChannel& AnimChannel)
 {
-	ChannelNameToAnimationChannels.emplace(ChannelName, AnimChannel);
+	BoneNameToAnimationChannels.emplace(ChannelName, AnimChannel);
 }
 
 void AnimationAsset::AddAnimationChannel(const std::string& ChannelName, AnimationChannel&& AnimChannel)
 {
-	ChannelNameToAnimationChannels.emplace(ChannelName, AnimChannel);
+	BoneNameToAnimationChannels.emplace(ChannelName, AnimChannel);
 }
 
 XMMATRIX AnimationAsset::GetAnimationTransformation(const std::string& ChannelName, const float& TimeIn)
 {
-	if (ChannelNameToAnimationChannels.find(ChannelName) != ChannelNameToAnimationChannels.end())
+	if (BoneNameToAnimationChannels.find(ChannelName) != BoneNameToAnimationChannels.end())
 	{
-		const AnimationChannel& CurrentAnimationChannel = ChannelNameToAnimationChannels[ChannelName];
+		const AnimationChannel& CurrentAnimationChannel = BoneNameToAnimationChannels[ChannelName];
 
 		return XMMatrixAffineTransformation(
 			CurrentAnimationChannel.GetLerpedScaleKey(TimeIn),
@@ -217,10 +217,10 @@ void AnimationAsset::Serialize()
 		fwrite(&Duration, sizeof(float), 1, OutputAssetFile);
 		fwrite(&TicksPerSecond, sizeof(float), 1, OutputAssetFile);
 
-		size_t ChannelNameToAnimationChannelsCount = ChannelNameToAnimationChannels.size();
-		fwrite(&ChannelNameToAnimationChannelsCount, sizeof(size_t), 1, OutputAssetFile);
+		size_t BoneNameToAnimationChannelsCount = BoneNameToAnimationChannels.size();
+		fwrite(&BoneNameToAnimationChannelsCount, sizeof(size_t), 1, OutputAssetFile);
 
-		for (auto& ChannelNameToAnimationChannel : ChannelNameToAnimationChannels)
+		for (auto& ChannelNameToAnimationChannel : BoneNameToAnimationChannels)
 		{
 			AAssetFile::SerializeString(ChannelNameToAnimationChannel.first, OutputAssetFile);
 			ChannelNameToAnimationChannel.second.OnSerialize(OutputAssetFile);
@@ -235,14 +235,14 @@ void AnimationAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	fread(&Duration, sizeof(float), 1, FileIn);
 	fread(&TicksPerSecond, sizeof(float), 1, FileIn);
 
-	size_t ChannelNameToAnimationChannelsCount;
-	fread(&ChannelNameToAnimationChannelsCount, sizeof(size_t), 1, FileIn);
+	size_t BoneNameToAnimationChannelsCount;
+	fread(&BoneNameToAnimationChannelsCount, sizeof(size_t), 1, FileIn);
 
-	for (size_t AnimationChannelIdx = 0; AnimationChannelIdx < ChannelNameToAnimationChannelsCount; ++AnimationChannelIdx)
+	for (size_t AnimationChannelIdx = 0; AnimationChannelIdx < BoneNameToAnimationChannelsCount; ++AnimationChannelIdx)
 	{
 		string ChannelName;
 		AAssetFile::DeserializeString(ChannelName, FileIn);
-		ChannelNameToAnimationChannels[ChannelName].OnDeserialize(FileIn, AssetManagerIn);
+		BoneNameToAnimationChannels[ChannelName].OnDeserialize(FileIn, AssetManagerIn);
 	}
 
 }

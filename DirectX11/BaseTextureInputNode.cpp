@@ -47,7 +47,7 @@ void BaseTextureInputNode::AddToDrawList(const ImVec2& OriginPosition, ImDrawLis
 	SetCursorScreenPos(TextBoxPosition);
 	const unordered_map<string, shared_ptr<BaseTextureAsset>>& BaseTextures = AssetManagerCached->GetManagingBasicTextures();
 	shared_ptr<BaseTextureAsset> Result = AssetSelectHelper::SelectAsset(
-		BaseTextures, BaseTextureAssetCached.get(), NodeID.c_str(), "Base Texture", "Choose BaseTexuture Asset", NULL, ComboWidth);
+		BaseTextures, BaseTextureAssetCached.get(), NodeID.c_str(), "Base Texture", "Select BaseTexuture Asset", NULL, ComboWidth);
 
 	if (Result != nullptr)
 	{

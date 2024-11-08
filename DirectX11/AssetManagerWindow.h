@@ -4,7 +4,6 @@
 #include "AssetControl.h"
 
 #include "AddAssetFilePopup.h"
-#include "CreateAssetFileModal.h"
 
 struct DirectorySet
 {
@@ -13,6 +12,8 @@ struct DirectorySet
 	std::list<DirectorySet> ChildrenDirectories;
 	std::list<AssetControl> AssetControls;
 };
+
+class CreateAssetModal;
 
 class AssetManagerWindow : public AWindow
 {
@@ -28,7 +29,9 @@ public:
 
 private:
 	AddAssetFilePopup AddAssetFilePopupInstance;
-	CreateAssetFileModal CreateAssetFileModalInstance;
+
+private:
+	std::unordered_map<std::string, std::unique_ptr<CreateAssetModal>> CreateAssetModalInstances;
 
 private:
 	DirectorySet RootDirectory;
@@ -88,7 +91,9 @@ private:
 	void CloseAssetControlWindow();
 
 private:
-	AssetCreatedHandler OnCreateAsset;
-	void StartCreateAsset();
+	AssetCreatedHandler OnCreateMaterialAsset;
+	AssetCreatedHandler OnCreateRetargetedAnimationAsset;
+	void StartCreateMaterialAsset();
+	void StartCreateRetargetedAnimationAsset();
 };
 

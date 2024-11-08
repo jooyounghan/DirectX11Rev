@@ -29,7 +29,6 @@ ModelDetailWindow::~ModelDetailWindow()
 
 void ModelDetailWindow::RenderWindow()
 {
-
     Begin("Model Detailed");
     DrawDetailProperties();
     End();

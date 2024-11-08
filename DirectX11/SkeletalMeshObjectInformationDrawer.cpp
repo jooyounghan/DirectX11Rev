@@ -36,7 +36,7 @@ void SkeletalMeshObjectInformationDrawer::DrawInformation()
     shared_ptr<SkeletalMeshAsset> SkeletalMeshResult = AssetSelectHelper::SelectAsset(
         ManagingSkeletalMeshes, MeshAssetInstance, 
         "SelectSkeletalMeshAssetFromSkeletalMesh",
-        "Skeletal Mesh Asset", "Choose Skeletal Mesh Asset"
+        "Skeletal Mesh Asset", "Select Skeletal Mesh Asset"
     );
     if (SkeletalMeshResult != nullptr) ObjectCached->SetSkeletalMeshAssetInstance(SkeletalMeshResult);
 
@@ -49,7 +49,7 @@ void SkeletalMeshObjectInformationDrawer::DrawInformation()
     shared_ptr<AnimationAsset> AnimResult = AssetSelectHelper::SelectAsset(
         ManagingAnimations, AnimAssetCached,
         "SelectAnimationAssetFromSkeletalMesh",
-        "Animation Asset", "Choose Animation Asset"
+        "Animation Asset", "Select Animation Asset"
     );
     if (AnimResult != nullptr) ObjectCached->SetAnimationAssetInstance(AnimResult);
 }

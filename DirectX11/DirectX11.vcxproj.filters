@@ -813,7 +813,7 @@
     <ClCompile Include="DeletePlaceableModal.cpp">
       <Filter>소스 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
     </ClCompile>
-    <ClCompile Include="CreateAssetFileModal.cpp">
+    <ClCompile Include="CreateMaterialAssetModal.cpp">
       <Filter>소스 파일\Editor\GUI\Modal\Extended\AssetFileModal</Filter>
     </ClCompile>
     <ClCompile Include="UploadableBufferManager.cpp">
@@ -839,6 +839,15 @@
     </ClCompile>
     <ClCompile Include="FloatVariableOutputPort.cpp">
       <Filter>소스 파일\Editor\NodeEditor\DrawElement\Port\OutputPort\Variable\Constant</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationRetargeter.cpp">
+      <Filter>소스 파일\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateRetargetedAnimationAssetModal.cpp">
+      <Filter>소스 파일\Editor\GUI\Modal\Extended\AssetFileModal</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateAssetModal.cpp">
+      <Filter>소스 파일\Editor\GUI\Modal\Extended\AssetFileModal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1277,7 +1286,7 @@
     <ClInclude Include="DeletePlaceableModal.h">
       <Filter>헤더 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
     </ClInclude>
-    <ClInclude Include="CreateAssetFileModal.h">
+    <ClInclude Include="CreateMaterialAssetModal.h">
       <Filter>헤더 파일\Editor\GUI\Modal\Extended\AssetFile</Filter>
     </ClInclude>
     <ClInclude Include="UploadableBufferManager.h">
@@ -1312,6 +1321,15 @@
     </ClInclude>
     <ClInclude Include="FloatVariableOutputPort.h">
       <Filter>헤더 파일\Editor\NodeEditor\DrawElement\Port\OutputPort\Variable\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationRetargeter.h">
+      <Filter>헤더 파일\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateRetargetedAnimationAssetModal.h">
+      <Filter>헤더 파일\Editor\GUI\Modal\Extended\AssetFile</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateAssetModal.h">
+      <Filter>헤더 파일\Editor\GUI\Modal\Extended\AssetFile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

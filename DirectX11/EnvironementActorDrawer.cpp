@@ -30,7 +30,7 @@ void EnvironementActorDrawer::DrawBackgroundEXRTexture()
     EXRTextureAsset* EXRTextureAssetInstance = ObjectCached->GetEnvironmentBackgroundEXRTextureAsset();
     shared_ptr<EXRTextureAsset> SelectedEXRTexture = DrawAndSelectNormalTexture(
         ManagingEXRTextures, EXRTextureAssetInstance,
-        "Background Texture Asset(EXR)", "Choose Background Texture Asset"
+        "Background Texture Asset(EXR)", "Select Background Texture Asset"
     );
     if (SelectedEXRTexture != nullptr) ObjectCached->SetEnvironmentBackgroundEXRTextureAsset(SelectedEXRTexture);
 }
@@ -46,15 +46,15 @@ void EnvironementActorDrawer::DrawIBLTextures()
 
     shared_ptr<DDSTextureAsset> SelectedSpecularTexture = DrawAndSelectNormalTexture(
         ManagingDDSTextures, DDSSpecularTextureAssetInstance,
-        "Specular Texture Asset(DDS)", "Choose Specular Texture Asset"
+        "Specular Texture Asset(DDS)", "Select Specular Texture Asset"
     );
     shared_ptr<DDSTextureAsset> SelectedDiffuseTexture = DrawAndSelectNormalTexture(
         ManagingDDSTextures, DDSDiffuseTextureAssetInstance,
-        "Diffuse Texture Asset(DDS)", "Choose Diffuse Texture Asset"
+        "Diffuse Texture Asset(DDS)", "Select Diffuse Texture Asset"
     );
     shared_ptr<DDSTextureAsset> SelectedBRDFTexture = DrawAndSelectNormalTexture(
         ManagingDDSTextures, DDSBRDFTextureAssetInstance,
-        "BRDF Texture Asset(DDS)", "Choose BRDF Texture Asset"
+        "BRDF Texture Asset(DDS)", "Select BRDF Texture Asset"
     );
 
     if (SelectedSpecularTexture != nullptr) ObjectCached->SetEnvironmentSpecularDDSTextureAsset(SelectedSpecularTexture);

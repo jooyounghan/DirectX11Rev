@@ -14,8 +14,13 @@ AddAssetFilePopup::~AddAssetFilePopup()
 
 void AddAssetFilePopup::RenderPopupMenu()
 {
-    if (MenuItem("Create New Asset", NULL, false, true))
+    if (ImGui::BeginMenu("Create New Asset"))
     {
-        AssetCreated.Invoke();
+        if (MenuItem("Material", NULL, false, true)) MaterialAssetCreated.Invoke();
+        if (MenuItem("Retargeted Animation", NULL, false, true)) RetargetedAnimationCreated.Invoke();
+        ImGui::EndMenu();
     }
+
+
+
 }

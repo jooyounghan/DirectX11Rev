@@ -32,6 +32,9 @@ protected:
 	std::vector<AnimationKey> PositionKeys;
 	std::vector<AnimationKey> QuaternionKeys;
 	std::vector<AnimationKey> ScaleKeys;
+	MakeGetter(PositionKeys);
+	MakeGetter(QuaternionKeys);
+	MakeGetter(ScaleKeys);
 
 public:
 	void AddPositionKey(float TimeIn, DirectX::XMVECTOR PositionIn);
@@ -72,7 +75,8 @@ protected:
 	MakeGetter(TicksPerSecond);
 
 protected:
-	std::unordered_map<std::string, AnimationChannel> ChannelNameToAnimationChannels;
+	std::unordered_map<std::string, AnimationChannel> BoneNameToAnimationChannels;
+	MakeGetter(BoneNameToAnimationChannels);
 
 public:
 	void AddAnimationChannel(const std::string& ChannelName, const AnimationChannel& AnimChannel);

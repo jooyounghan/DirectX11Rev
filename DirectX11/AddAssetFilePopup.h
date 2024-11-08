@@ -13,6 +13,7 @@ protected:
 	virtual void RenderPopupMenu() override;
 
 public:
-	Delegation<> AssetCreated;
+	Delegation<> MaterialAssetCreated;
+	Delegation<> RetargetedAnimationCreated;
 };
 
