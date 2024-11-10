@@ -110,10 +110,9 @@ void AnimationPlayer::UpdateBoneFromParent(Bone* Parent, Bone* Child)
 	{
 		const XMMATRIX ChildAnimationTransformation =
 			AnimationAssetCached != nullptr ?
-			AnimationAssetCached->GetAnimationTransformation(Child->GetBoneName(), PlayTime) :
+			AnimationAssetCached->GetAnimationLocalTransformation(Child->GetBoneName(), PlayTime) :
 			XMMatrixIdentity();
 
-		
 		if (Parent != nullptr)
 		{
 			const XMMATRIX& ParentTranformation = StagedAnimationTransformation[Parent->GetBoneIndex()];

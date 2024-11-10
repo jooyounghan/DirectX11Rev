@@ -14,19 +14,6 @@ AnimationKey::AnimationKey(const float& TimeIn, const XMVECTOR& AnimationDataIn)
 {
 }
 
-void AnimationKey::OnSerialize(FILE* FileIn)
-{
-	fwrite(&Time, sizeof(float), 1, FileIn);
-	fwrite(&AnimationData, sizeof(XMVECTOR), 1, FileIn);
-}
-
-void AnimationKey::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
-{
-	fread(&Time, sizeof(float), 1, FileIn);
-	fread(&AnimationData, sizeof(XMVECTOR), 1, FileIn);
-}
-
-
 AnimationChannel::AnimationChannel()
 {
 }
@@ -67,19 +54,24 @@ void AnimationChannel::OnSerialize(FILE* FileIn)
 	fwrite(&PositionCounts, sizeof(size_t), 1, FileIn);
 	for (AnimationKey& PositionKey : PositionKeys)
 	{
-		PositionKey.OnSerialize(FileIn);
+		fwrite(&PositionKey.GetTime(), sizeof(float), 1, FileIn);
+		fwrite(&PositionKey.GetAnimationData(), sizeof(XMVECTOR), 1, FileIn);
 	}
 		
 	fwrite(&QuaternionCounts, sizeof(size_t), 1, FileIn);
 	for (AnimationKey& QuaternionKey : QuaternionKeys)
 	{
-		QuaternionKey.OnSerialize(FileIn);
+		fwrite(&QuaternionKey.GetTime(), sizeof(float), 1, FileIn);
+		fwrite(&QuaternionKey.GetAnimationData(), sizeof(XMVECTOR), 1, FileIn);
+
 	}
 
 	fwrite(&ScaleCounts, sizeof(size_t), 1, FileIn);
 	for (AnimationKey& ScaleKey : ScaleKeys)
 	{
-		ScaleKey.OnSerialize(FileIn);
+		fwrite(&ScaleKey.GetTime(), sizeof(float), 1, FileIn);
+		fwrite(&ScaleKey.GetAnimationData(), sizeof(XMVECTOR), 1, FileIn);
+
 	}
 }
 
@@ -90,44 +82,50 @@ void AnimationChannel::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	size_t ScaleCounts;
 
 	fread(&PositionCounts, sizeof(size_t), 1, FileIn);
+
+	float Time;
+	XMVECTOR AnimationData;
+
 	for (size_t idx = 0; idx < PositionCounts; ++idx)
 	{
-		AnimationKey PositionKey;
-		PositionKey.OnDeserialize(FileIn, AssetManagerIn);
-		PositionKeys.push_back(std::move(PositionKey));
+		fread(&Time, sizeof(float), 1, FileIn);
+		fread(&AnimationData, sizeof(XMVECTOR), 1, FileIn);
+		AddPositionKey(Time, AnimationData);
 	}
 
 	fread(&QuaternionCounts, sizeof(size_t), 1, FileIn);
 	for (size_t idx = 0; idx < QuaternionCounts; ++idx)
 	{
-		AnimationKey QuaternionKey;
-		QuaternionKey.OnDeserialize(FileIn, AssetManagerIn);
-		QuaternionKeys.push_back(std::move(QuaternionKey));
+		fread(&Time, sizeof(float), 1, FileIn);
+		fread(&AnimationData, sizeof(XMVECTOR), 1, FileIn);
+		AddQuaternionKey(Time, AnimationData);
 	}
-
 
 	fread(&ScaleCounts, sizeof(size_t), 1, FileIn);
 	for (size_t idx = 0; idx < ScaleCounts; ++idx)
 	{
-		AnimationKey ScaleKey;
-		ScaleKey.OnDeserialize(FileIn, AssetManagerIn);
-		ScaleKeys.push_back(std::move(ScaleKey));
+		fread(&Time, sizeof(float), 1, FileIn);
+		fread(&AnimationData, sizeof(XMVECTOR), 1, FileIn);
+		AddScaleKey(Time, AnimationData);
 	}
 
 }
 
 void AnimationChannel::AddPositionKey(float TimeIn, DirectX::XMVECTOR PositionIn)
 {
+	TimeTable.insert(TimeIn);
 	PositionKeys.emplace_back(TimeIn, PositionIn);
 }
 
 void AnimationChannel::AddQuaternionKey(float TimeIn, DirectX::XMVECTOR QuaternionIn)
 {
+	TimeTable.insert(TimeIn);
 	QuaternionKeys.emplace_back(TimeIn, QuaternionIn);
 }
 
 void AnimationChannel::AddScaleKey(float TimeIn, DirectX::XMVECTOR ScaleIn)
 {
+	TimeTable.insert(TimeIn);
 	ScaleKeys.emplace_back(TimeIn, ScaleIn);
 }
 
@@ -189,7 +187,7 @@ void AnimationAsset::AddAnimationChannel(const std::string& ChannelName, Animati
 	BoneNameToAnimationChannels.emplace(ChannelName, AnimChannel);
 }
 
-XMMATRIX AnimationAsset::GetAnimationTransformation(const std::string& ChannelName, const float& TimeIn)
+XMMATRIX AnimationAsset::GetAnimationLocalTransformation(const std::string& ChannelName, const float& TimeIn)
 {
 	if (BoneNameToAnimationChannels.find(ChannelName) != BoneNameToAnimationChannels.end())
 	{

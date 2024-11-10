@@ -2,10 +2,12 @@
 #include "AAssetFile.h"
 #include "directxmath/DirectXMath.h"
 
+#include <set>
+
 constexpr float AnimationTimeErr = 1E-3f;
 constexpr const char* AnimationAssetOutPath = ".\\Assets\\Animation\\";
 
-class AnimationKey : public IOnSerializableElement
+class AnimationKey
 {
 public:
 	AnimationKey();
@@ -16,10 +18,6 @@ protected:
 	DirectX::XMVECTOR AnimationData;
 	MakeGetter(Time);
 	MakeGetter(AnimationData);	
-
-public:
-	virtual void OnSerialize(FILE* FileIn) override;
-	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 };
 
 class AnimationChannel : public IOnSerializableElement
@@ -35,6 +33,10 @@ protected:
 	MakeGetter(PositionKeys);
 	MakeGetter(QuaternionKeys);
 	MakeGetter(ScaleKeys);
+
+protected:
+	std::set<float> TimeTable;
+	MakeGetter(TimeTable);
 
 public:
 	void AddPositionKey(float TimeIn, DirectX::XMVECTOR PositionIn);
@@ -83,7 +85,7 @@ public:
 	void AddAnimationChannel(const std::string& ChannelName, AnimationChannel&& AnimChannel);
 
 public:
-	DirectX::XMMATRIX GetAnimationTransformation(const std::string& ChannelName, const float& TimeIn);
+	DirectX::XMMATRIX GetAnimationLocalTransformation(const std::string& ChannelName, const float& TimeIn);
 
 public:
 	virtual void Serialize() override;

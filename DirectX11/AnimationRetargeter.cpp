@@ -4,6 +4,7 @@
 #include "AnimationAsset.h"
 
 #include <format>
+#include <set>
 
 using namespace std;
 using namespace DirectX;
@@ -22,72 +23,56 @@ shared_ptr<AnimationAsset> AnimationRetargeter::GetRetargetedAnimation(const str
 	{
 		RetargetedFailedEvent.Invoke("Bone Targeting Is Not Genereated");
 	}
-	else if (FromBoneAsset == nullptr || ToBoneAsset == nullptr || TargetAnimationAsset == nullptr)
+	else if (SourceBoneAsset == nullptr || DestBoneAsset == nullptr)
 	{
-		RetargetedFailedEvent.Invoke("Bone And Animation Profile Are Not Properly Set");
-
+		RetargetedFailedEvent.Invoke("Bone Profile Are Not Properly Set");
+	}
+	else if (SourceAnimationAsset == nullptr)
+	{
+		RetargetedFailedEvent.Invoke("Animation Profile Are Not Properly Set");
 	}
 	else
 	{
-		const float& Duration = TargetAnimationAsset->GetDuration();
-		const float& TicksPerSecond = TargetAnimationAsset->GetTicksPerSecond();
+		const float& Duration = SourceAnimationAsset->GetDuration();
+		const float& TicksPerSecond = SourceAnimationAsset->GetTicksPerSecond();
+		
+		const unordered_map<string, AnimationChannel>& BoneNameToAnimChannels = SourceAnimationAsset->GetBoneNameToAnimationChannels();
 
 		std::shared_ptr<AnimationAsset> RetargetedAnimation = make_shared<AnimationAsset>(AssetNameIn, false, Duration, TicksPerSecond);
-		
-		const unordered_map<string, AnimationChannel>& FromBoneNameToAnimationChannels = TargetAnimationAsset->GetBoneNameToAnimationChannels();
-		const map<string, Bone>& NameToFromBones = FromBoneAsset->GetNameToBones();
-		const map<string, Bone>& NameToToBones = ToBoneAsset->GetNameToBones();
 
-		AnimationChannel IdentityChannel;
-		IdentityChannel.AddPositionKey(0.f, XMVectorZero());
-		IdentityChannel.AddPositionKey(Duration, XMVectorZero());
-		IdentityChannel.AddQuaternionKey(0.f, XMQuaternionIdentity());
-		IdentityChannel.AddQuaternionKey(Duration, XMQuaternionIdentity());
-		IdentityChannel.AddScaleKey(0.f, XMVectorSet(1.f, 1.f, 1.f, 0.f));
-		IdentityChannel.AddScaleKey(Duration, XMVectorSet(1.f, 1.f, 1.f, 0.f));
+		const map<string, XMMATRIX> TPoseLocalSourceTransformations = GetTPoseLocalTransformations(SourceBoneAsset);
+		const map<string, XMMATRIX> TPoseLocalDestTransformations = GetTPoseLocalTransformations(DestBoneAsset);
 
-		for (auto& BoneTargeting : BoneTargetings)
+		for (const auto& BoneTargeting : BoneTargetings)
 		{
-			const string& ToBoneName = BoneTargeting.first;
-			const string& FromBoneName = BoneTargeting.second;
+			const string& DestBoneName = BoneTargeting.first;
+			const string& SourceBoneName = BoneTargeting.second;
 
-			if (FromBoneNameToAnimationChannels.find(FromBoneName) != FromBoneNameToAnimationChannels.end())
+			AnimationChannel NewChannel;
+
+			if (BoneNameToAnimChannels.find(SourceBoneName) != BoneNameToAnimChannels.end())
 			{
-				const AnimationChannel& TargetAnimationChannel = FromBoneNameToAnimationChannels.at(FromBoneName);
-				const vector<AnimationKey>& TargetPositionKeys = TargetAnimationChannel.GetPositionKeys();
-				const vector<AnimationKey>& TargetQuaternionKeys = TargetAnimationChannel.GetQuaternionKeys();
-				const vector<AnimationKey>& TargetScaleKeys = TargetAnimationChannel.GetScaleKeys();
+				const AnimationChannel& SourceBoneChannel = BoneNameToAnimChannels.at(SourceBoneName);
 
-				XMMATRIX RetargetingMatrix = NameToFromBones.at(FromBoneName).GetOffsetMatrix() * XMMatrixInverse(nullptr, NameToToBones.at(ToBoneName).GetOffsetMatrix());
-				
-				XMVECTOR RetargetingPosition;
-				XMVECTOR RetargetingQuaterion;
-				XMVECTOR RetargetingScale;
-
-				XMMatrixDecompose(&RetargetingScale, &RetargetingQuaterion, &RetargetingPosition, RetargetingMatrix);
-
-				AnimationChannel RetargetedAnimationChannel;
-
-				for (auto& TargetPositionKey : TargetPositionKeys)
+				set<float> TimeTable = SourceBoneChannel.GetTimeTable();
+				for (const float& Time : TimeTable)
 				{
-					RetargetedAnimationChannel.AddPositionKey(TargetPositionKey.GetTime(), TargetPositionKey.GetAnimationData() + RetargetingPosition);
-				}
-				for (auto& TargetQuaternionKey : TargetQuaternionKeys)
-				{
-					RetargetedAnimationChannel.AddQuaternionKey(TargetQuaternionKey.GetTime(), XMQuaternionDot(TargetQuaternionKey.GetAnimationData(), RetargetingQuaterion));
-				}
-				for (auto& TargetScaleKey : TargetScaleKeys)
-				{
-					RetargetedAnimationChannel.AddScaleKey(TargetScaleKey.GetTime(), XMVectorMultiply(TargetScaleKey.GetAnimationData(), RetargetingScale));
-				}
+					XMMATRIX SourceLocalAnimation = SourceAnimationAsset->GetAnimationLocalTransformation(SourceBoneName, Time);
+					const XMMATRIX InvSourceTPose = XMMatrixInverse(nullptr, TPoseLocalSourceTransformations.at(SourceBoneName));
+					const XMMATRIX DestTPose = TPoseLocalDestTransformations.at(DestBoneName);
 
-				RetargetedAnimation->AddAnimationChannel(ToBoneName, RetargetedAnimationChannel);
+					XMVECTOR Position;
+					XMVECTOR Quaternion;
+					XMVECTOR Scale;
+
+					XMMatrixDecompose(&Scale, &Quaternion, &Position, SourceLocalAnimation * InvSourceTPose * DestTPose);
+
+					NewChannel.AddPositionKey(Time, Position);
+					NewChannel.AddQuaternionKey(Time, Quaternion);
+					NewChannel.AddScaleKey(Time, Scale);
+				}
 			}
-			else
-			{
-				RetargetedAnimation->AddAnimationChannel(ToBoneName, IdentityChannel);
-			}
-
+			RetargetedAnimation->AddAnimationChannel(DestBoneName, NewChannel);
 		}
 
 		return RetargetedAnimation;
@@ -99,10 +84,10 @@ void AnimationRetargeter::GenerateBoneTargetings()
 {
 	BoneTargetings.clear();
 
-	if (FromBoneAsset != nullptr && ToBoneAsset != nullptr)
+	if (SourceBoneAsset != nullptr && DestBoneAsset != nullptr)
 	{
-		const map<string, Bone>& NameToFromBones = FromBoneAsset->GetNameToBones();
-		const map<string, Bone>& NameToToBones = ToBoneAsset->GetNameToBones();
+		const map<string, Bone>& NameToFromBones = SourceBoneAsset->GetNameToBones();
+		const map<string, Bone>& NameToToBones = DestBoneAsset->GetNameToBones();
 
 		for (auto& NameToToBone : NameToToBones)
 		{
@@ -116,36 +101,13 @@ void AnimationRetargeter::GenerateBoneTargetings()
 			}
 		}
 	}
-
-
-	//const unordered_map<string, AnimationChannel>& BoneNameToAnimationChannels = TargetAnimationAssetIn->GetBoneNameToAnimationChannels();
-
-	//const float& Duration = TargetAnimationAsset->GetDuration();
-	//const float& TicksPerSecond = TargetAnimationAsset->GetTicksPerSecond();
-
-	//RetrargetedBoneNameToAnimationChannels.clear();
-
-
-
-	//for (auto& NameToBone : NameToBones)
-	//{
-	//	const string& BoneName = NameToBone.first;
-	//	if (BoneNameToAnimationChannels.find(BoneName) != BoneNameToAnimationChannels.end())
-	//	{
-	//		RetrargetedBoneNameToAnimationChannels.emplace(NameToBone.first, BoneNameToAnimationChannels.at(BoneName));
-	//	}
-	//	else
-	//	{
-	//		RetrargetedBoneNameToAnimationChannels.emplace(NameToBone.first, IdentityChannel);
-	//	}
-	//}
 }
 
-void AnimationRetargeter::ReplaceTargetedFromBone(const std::string& ToBoneName, const std::string NewFromBoneName)
+void AnimationRetargeter::ReplaceTargetedSourceBone(const std::string& DestBoneName, const std::string NewSourceBoneName)
 {
-	if (BoneTargetings.find(ToBoneName) != BoneTargetings.end())
+	if (BoneTargetings.find(DestBoneName) != BoneTargetings.end())
 	{
-		BoneTargetings[ToBoneName] = NewFromBoneName;
+		BoneTargetings[DestBoneName] = NewSourceBoneName;
 	}
 }
 
@@ -178,4 +140,68 @@ bool AnimationRetargeter::IsSameProfile(
 	}
 
 	return true;
+}
+
+map<string, XMMATRIX> AnimationRetargeter::GetTPoseLocalTransformations(const shared_ptr<BoneAsset>& BoneAssetIn)
+{
+	map<string, XMMATRIX> TPoseLocalTransformation;
+	
+	Bone* RootBone = BoneAssetIn->GetRootBone();
+	const map<string, Bone>& NameToBones = BoneAssetIn->GetNameToBones();
+
+	for (auto& NameToBone : NameToBones)
+	{
+		TPoseLocalTransformation[NameToBone.first] = XMMatrixIdentity();
+	}
+
+	Bone* CurrentBone = RootBone;
+	UpdateTPoseLocalTransformation(TPoseLocalTransformation, CurrentBone);
+
+	return TPoseLocalTransformation;
+}
+
+void AnimationRetargeter::UpdateTPoseLocalTransformation(map<string, XMMATRIX>& Transformations, Bone* CurrentBoneIn)
+{
+	if (CurrentBoneIn != nullptr)
+	{
+		const string& BoneName = CurrentBoneIn->GetBoneName();
+		XMMATRIX Result = XMMatrixIdentity();
+
+		Bone* ParentBone = CurrentBoneIn->GetParentBone();
+		while (ParentBone != nullptr)
+		{
+			Result = XMMatrixMultiply(GetTPoseParentFactor(Transformations, ParentBone), Result);
+			ParentBone = ParentBone->GetParentBone();
+		}
+
+		Transformations[BoneName] = XMMatrixMultiply(XMMatrixInverse(nullptr, CurrentBoneIn->GetOffsetMatrix()), Result);
+
+
+		const vector<Bone*> ChildrenBones = CurrentBoneIn->GetChildrenBones();
+		for (Bone* ChildBone : ChildrenBones)
+		{
+			UpdateTPoseLocalTransformation(Transformations, ChildBone);
+		}
+	}
+}
+
+XMMATRIX AnimationRetargeter::GetTPoseParentFactor(map<string, XMMATRIX>& Transformations, Bone* BoneIn)
+{
+	XMMATRIX BoneOffset = BoneIn->GetOffsetMatrix();
+	XMMATRIX Result = XMMatrixIdentity();
+
+	Bone* ParentBone = BoneIn->GetParentBone();
+	while (ParentBone != nullptr)
+	{
+		const string& ParentName = ParentBone->GetBoneName();
+		if (Transformations.find(ParentName) != Transformations.end())
+		{
+			Result = XMMatrixMultiply(Result, Transformations.at(ParentName));
+		}
+
+		ParentBone = ParentBone->GetParentBone();
+	}
+	Result = XMMatrixMultiply(Result, BoneOffset);
+
+	return Result;
 }

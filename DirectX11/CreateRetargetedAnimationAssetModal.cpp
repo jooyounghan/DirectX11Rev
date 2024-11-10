@@ -25,21 +25,24 @@ void CreateRetargetedAnimationAssetModal::RenderModal()
     const unordered_map<string, shared_ptr<BoneAsset>>& ManagingBones = AssetManagerCached->GetManagingBones();
     const unordered_map<string, shared_ptr<AnimationAsset>>& ManagingAnimations = AssetManagerCached->GetManagingAnimations();
 
-    BoneAsset* const FromBoneAsset = AnimationRetargeterInstance.GetFromBoneAsset();
-    BoneAsset* const ToBoneAsset = AnimationRetargeterInstance.GetToBoneAsset();
-    const map<string, Bone>& NameToFromBones = FromBoneAsset->GetNameToBones();
+    BoneAsset* const SourceBoneAsset = AnimationRetargeterInstance.GetSourceBoneAsset();
+    BoneAsset* const ToBoneAsset = AnimationRetargeterInstance.GetDestBoneAsset();
+    const map<string, Bone>& NameToSourceBones = SourceBoneAsset->GetNameToBones();
     const unordered_map<string, string>& BoneTargetings =  AnimationRetargeterInstance.GetBoneTargetings();
-    AnimationAsset* const TargetAnimationAsset = AnimationRetargeterInstance.GetTargetAnimationAsset();
 
-    shared_ptr<AnimationAsset> TargetAnimationSelected = AssetSelectHelper::SelectAsset(
-        ManagingAnimations, TargetAnimationAsset,
-        "SelectTargetAnimationAsset",
-        "Target Animation Asset", "Select Target Animation Asset"
+    AnimationAsset* const SourceAnimationAsset = AnimationRetargeterInstance.GetSourceAnimationAsset();
+
+    shared_ptr<AnimationAsset> SourceAnimationSelected = AssetSelectHelper::SelectAsset(
+        ManagingAnimations, SourceAnimationAsset,
+        "SelectSourceAnimationAsset",
+        "Source Animation Asset", "Select Source Animation Asset"
     );
-    shared_ptr<BoneAsset> FromBoneSelected = AssetSelectHelper::SelectAsset(
-        ManagingBones, FromBoneAsset,
-        "SelectFromBoneAsset",
-        "From Bone Asset", "Select From Bone Asset"
+
+    // Bone 
+    shared_ptr<BoneAsset> SourceBoneSelected = AssetSelectHelper::SelectAsset(
+        ManagingBones, SourceBoneAsset,
+        "SelectSourceBoneAsset",
+        "Source Bone Asset", "Select Source Bone Asset"
     );
     SameLine();
     shared_ptr<BoneAsset> ToBoneSelected = AssetSelectHelper::SelectAsset(
@@ -48,6 +51,7 @@ void CreateRetargetedAnimationAssetModal::RenderModal()
         "To Bone Asset", "Select To Bone Asset"
     );
 
+
     if (BeginTable(
         "Retarget Bone Asset", 2, 
         ImGuiTableFlags_::ImGuiTableFlags_HighlightHoveredColumn | ImGuiTableFlags_::ImGuiTableFlags_ScrollY | 
@@ -55,31 +59,31 @@ void CreateRetargetedAnimationAssetModal::RenderModal()
     ))
     {
         TableSetupColumn("To Bone");
-        TableSetupColumn("From Bone");
+        TableSetupColumn("Source Bone");
         ImGui::TableHeadersRow();
 
         for (auto& BoneTargeting : BoneTargetings)
         {
             ImGui::TableNextRow();
             const string& ToBoneName = BoneTargeting.first;
-            const string& FromBoneName = BoneTargeting.second;
+            const string& SourceBoneName = BoneTargeting.second;
 
             ImGui::TableSetColumnIndex(0);
             Text(ToBoneName.c_str());
 
             ImGui::TableSetColumnIndex(1);
             PushID(ToBoneName.c_str());
-            if (ImGui::BeginCombo("", FromBoneName.c_str()))
+            if (ImGui::BeginCombo("", SourceBoneName.c_str()))
             {
                 if (ImGui::Selectable("Empty"))
                 {
-                    AnimationRetargeterInstance.ReplaceTargetedFromBone(ToBoneName, "");
+                    AnimationRetargeterInstance.ReplaceTargetedSourceBone(ToBoneName, "");
                 }
-                for (auto& NameToFromBone : NameToFromBones)
+                for (auto& NameToSourceBone : NameToSourceBones)
                 {
-                    if (ImGui::Selectable(NameToFromBone.first.c_str()))
+                    if (ImGui::Selectable(NameToSourceBone.first.c_str()))
                     {
-                        AnimationRetargeterInstance.ReplaceTargetedFromBone(ToBoneName, NameToFromBone.first);
+                        AnimationRetargeterInstance.ReplaceTargetedSourceBone(ToBoneName, NameToSourceBone.first);
                     }
                 }
 
@@ -93,9 +97,10 @@ void CreateRetargetedAnimationAssetModal::RenderModal()
 
     bool NeedRegenerateTargeting = false;
 
-    if (FromBoneSelected != nullptr) { AnimationRetargeterInstance.SetFromBoneAsset(FromBoneSelected); NeedRegenerateTargeting = true; }
-    if (ToBoneSelected != nullptr) { AnimationRetargeterInstance.SetToBoneAsset(ToBoneSelected); NeedRegenerateTargeting = true; }
-    if (TargetAnimationSelected != nullptr) { AnimationRetargeterInstance.SetTargetAnimationAsset(TargetAnimationSelected); NeedRegenerateTargeting = true; }
+    if (SourceBoneSelected != nullptr) { AnimationRetargeterInstance.SetSourceBoneAsset(SourceBoneSelected); NeedRegenerateTargeting = true; }
+    if (ToBoneSelected != nullptr) { AnimationRetargeterInstance.SetDestBoneAsset(ToBoneSelected); NeedRegenerateTargeting = true; }
+    
+    if (SourceAnimationSelected != nullptr) { AnimationRetargeterInstance.SetSourceAnimationAsset(SourceAnimationSelected); }
 
     if (NeedRegenerateTargeting) AnimationRetargeterInstance.GenerateBoneTargetings();
 
