@@ -12,7 +12,7 @@ public:
 	AController();
 
 protected:
-	float MovingSpeed = 100.f;
+	float MovingSpeed = 500.f;
 	float AngleSpeed = 360.f;
 	MakeGetter(MovingSpeed);
 	MakePointerGetter(MovingSpeed);

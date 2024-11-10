@@ -36,12 +36,13 @@ shared_ptr<AnimationAsset> AnimationRetargeter::GetRetargetedAnimation(const str
 		const float& Duration = SourceAnimationAsset->GetDuration();
 		const float& TicksPerSecond = SourceAnimationAsset->GetTicksPerSecond();
 		
-		const unordered_map<string, AnimationChannel>& BoneNameToAnimChannels = SourceAnimationAsset->GetBoneNameToAnimationChannels();
+		const unordered_map<string, AnimationChannel>& SourceBoneNameToAnimChannels = SourceAnimationAsset->GetBoneNameToAnimationChannels();
 
 		std::shared_ptr<AnimationAsset> RetargetedAnimation = make_shared<AnimationAsset>(AssetNameIn, false, Duration, TicksPerSecond);
 
 		const map<string, XMMATRIX> TPoseLocalSourceTransformations = GetTPoseLocalTransformations(SourceBoneAsset);
 		const map<string, XMMATRIX> TPoseLocalDestTransformations = GetTPoseLocalTransformations(DestBoneAsset);
+
 
 		for (const auto& BoneTargeting : BoneTargetings)
 		{
@@ -49,10 +50,13 @@ shared_ptr<AnimationAsset> AnimationRetargeter::GetRetargetedAnimation(const str
 			const string& SourceBoneName = BoneTargeting.second;
 
 			AnimationChannel NewChannel;
+			XMVECTOR Position;
+			XMVECTOR Quaternion;
+			XMVECTOR Scale;
 
-			if (BoneNameToAnimChannels.find(SourceBoneName) != BoneNameToAnimChannels.end())
+			if (SourceBoneNameToAnimChannels.find(SourceBoneName) != SourceBoneNameToAnimChannels.end())
 			{
-				const AnimationChannel& SourceBoneChannel = BoneNameToAnimChannels.at(SourceBoneName);
+				const AnimationChannel& SourceBoneChannel = SourceBoneNameToAnimChannels.at(SourceBoneName);
 
 				set<float> TimeTable = SourceBoneChannel.GetTimeTable();
 				for (const float& Time : TimeTable)
@@ -61,9 +65,7 @@ shared_ptr<AnimationAsset> AnimationRetargeter::GetRetargetedAnimation(const str
 					const XMMATRIX InvSourceTPose = XMMatrixInverse(nullptr, TPoseLocalSourceTransformations.at(SourceBoneName));
 					const XMMATRIX DestTPose = TPoseLocalDestTransformations.at(DestBoneName);
 
-					XMVECTOR Position;
-					XMVECTOR Quaternion;
-					XMVECTOR Scale;
+
 
 					XMMatrixDecompose(&Scale, &Quaternion, &Position, SourceLocalAnimation * InvSourceTPose * DestTPose);
 
@@ -71,8 +73,23 @@ shared_ptr<AnimationAsset> AnimationRetargeter::GetRetargetedAnimation(const str
 					NewChannel.AddQuaternionKey(Time, Quaternion);
 					NewChannel.AddScaleKey(Time, Scale);
 				}
+				RetargetedAnimation->AddAnimationChannel(DestBoneName, NewChannel);
 			}
-			RetargetedAnimation->AddAnimationChannel(DestBoneName, NewChannel);
+			else
+			{
+				const XMMATRIX DestTPose = TPoseLocalDestTransformations.at(DestBoneName);
+				XMMatrixDecompose(&Scale, &Quaternion, &Position, DestTPose);
+
+				AnimationChannel IdentityChannel;
+				IdentityChannel.AddPositionKey(0.f, Position);
+				IdentityChannel.AddPositionKey(Duration, Position);
+				IdentityChannel.AddQuaternionKey(0.f, Quaternion);
+				IdentityChannel.AddQuaternionKey(Duration, Quaternion);
+				IdentityChannel.AddScaleKey(0.f, Scale);
+				IdentityChannel.AddScaleKey(Duration, Scale);
+
+				RetargetedAnimation->AddAnimationChannel(DestBoneName, IdentityChannel);
+			}		
 		}
 
 		return RetargetedAnimation;
