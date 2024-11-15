@@ -131,6 +131,7 @@ void MapOutlinerWindow::RenderPlaceablesOutline()
         if (IsItemClicked() or IsItemToggledOpen())
         {
             SelectedMapAsset->SetSelectedPlaceable(PlacedObject);
+            SelectedMapAsset->SetSelectedAttachable(nullptr);
         }
 
         if (IsOpen)
@@ -162,17 +163,13 @@ void MapOutlinerWindow::RenderSelectedPlaceableOutline()
             NodeFlags |= (ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow);
         }
 
-        bool IsOpen = TreeNodeEx(SelectedPlacedObject->GetObjectName().c_str(), NodeFlags);
-        if (IsOpen)
+        Text(SelectedPlacedObject->GetObjectName().c_str());
+        Indent();
+        for (auto& AttachedObject : AttachedObjects)
         {
-            Indent();
-            for (auto& AttachedObject : AttachedObjects)
-            {
-                RenderAttachedOutline(AttachedObject.get());
-            }
-            Unindent();
-            TreePop();
+            RenderAttachedOutline(AttachedObject.get());
         }
+        Unindent();
     }
 
     DeleteAttachableModalInstance.DoModal();

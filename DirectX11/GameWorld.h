@@ -44,8 +44,10 @@ protected:
 	std::vector<std::unique_ptr<AWindow>> Dialogs;
 
 private:
+	TaskAnalyzerWindow* TaskAnalyzerWindowInstance = nullptr;
 	ViewportWindow* ViewportWindowInstance = nullptr;
 	MapOutlinerWindow* MapOutlinerWindowInstance = nullptr;
+	AssetManagerWindow* AssetManagerWindowInstance = nullptr;
 
 private:
 	template<typename T, typename... Args>

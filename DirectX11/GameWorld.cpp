@@ -48,14 +48,14 @@ void GameWorld::InitEditor(HWND WindowHandle)
 		App::GGraphicPipeline->GetDeviceContext()
 	);
 
-	AddDialog<TaskAnalyzerWindow>();
-	ViewportWindowInstance = AddDialog<ViewportWindow>();
-	
-	MapOutlinerWindowInstance = AddDialog<MapOutlinerWindow>();
 	OnMapSelected = bind(&GameWorld::SetCurrentMap, this, placeholders::_1);
-	MapOutlinerWindowInstance->MapSelectedEvent += OnMapSelected;
+
+	TaskAnalyzerWindowInstance = AddDialog<TaskAnalyzerWindow>();
+	ViewportWindowInstance = AddDialog<ViewportWindow>();
+	MapOutlinerWindowInstance = AddDialog<MapOutlinerWindow>();
+	AssetManagerWindowInstance = AddDialog<AssetManagerWindow>();
 	
-	Dialogs.push_back(make_unique<AssetManagerWindow>());
+	MapOutlinerWindowInstance->MapSelectedEvent += OnMapSelected;
 }
 
 void GameWorld::Update(const float& DeltaTimeIn)
