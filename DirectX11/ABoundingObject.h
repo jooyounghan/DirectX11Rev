@@ -10,10 +10,7 @@ class PSOObject;
 class ABoundingObject : public IIntersectable, public AAttachableObject
 {	
 public:
-	ABoundingObject(
-		MapAsset* MapAssetInstance,
-		const std::string& AttachableKindIn
-	);
+	ABoundingObject(const std::string& AttachableKindIn);
 	virtual ~ABoundingObject();
 
 protected:
@@ -42,6 +39,6 @@ protected:
 	PSOObject* PickingIDWireframePSOCached = nullptr;
 
 public:
-	virtual void Render() override final;
+	virtual void Render(MapAsset* MapAssetIn) override final;
 };
 

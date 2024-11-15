@@ -20,10 +20,9 @@ using namespace std;
 using namespace DirectX;
 
 AMeshObject::AMeshObject(
-	MapAsset* MapAssetInstance,
 	const string& AttachableKindIn
 )
-	: AAttachableObject(MapAssetInstance, AttachableKindIn)
+	: AAttachableObject(AttachableKindIn)
 {
 }
 
@@ -70,12 +69,12 @@ size_t AMeshObject::GetLODLevel(
 	return static_cast<size_t>(LODFloat);
 }
 
-void AMeshObject::Render()
+void AMeshObject::Render(MapAsset* MapAssetIn)
 {
-	AAttachableObject::Render();
+	AAttachableObject::Render(MapAssetIn);
 
 	AMeshAsset* MeshAssetInstance = GetMeshAssetInstance();
-	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 
 	if (CurrentCamera != nullptr && MeshAssetInstance != nullptr)
 	{
@@ -118,14 +117,14 @@ void AMeshObject::Render()
 
 			for (size_t PartIdx = 0; PartIdx < MaterialIndexesPerPart.size(); ++PartIdx)
 			{
-				vector<ID3D11Buffer*> MeshObjectVSConstants = GetMeshObjectVSConstants(MaterialIndexesPerPart[PartIdx]);
-				vector<ID3D11Buffer*> MeshObjectHSConstants = GetMeshObjectHSConstants(MaterialIndexesPerPart[PartIdx]);
-				vector<ID3D11Buffer*> MeshObjectDSConstants = GetMeshObjectDSConstants(MaterialIndexesPerPart[PartIdx]);
-				vector<ID3D11Buffer*> MeshObjectPSConstants = GetMeshObjectPSConstants(MaterialIndexesPerPart[PartIdx]);
-				vector<ID3D11ShaderResourceView*> MeshObjectVSSRVs = GetMeshObjectVSSRVs(MaterialIndexesPerPart[PartIdx]);
-				vector<ID3D11ShaderResourceView*> MeshObjectHSSRVs = GetMeshObjectHSSRVs(MaterialIndexesPerPart[PartIdx]);
-				vector<ID3D11ShaderResourceView*> MeshObjectDSSRVs = GetMeshObjectDSSRVs(MaterialIndexesPerPart[PartIdx]);
-				vector<ID3D11ShaderResourceView*> MeshObjectPSSRVs = GetMeshObjectPSSRVs(MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11Buffer*> MeshObjectVSConstants = GetMeshObjectVSConstants(MapAssetIn, MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11Buffer*> MeshObjectHSConstants = GetMeshObjectHSConstants(MapAssetIn, MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11Buffer*> MeshObjectDSConstants = GetMeshObjectDSConstants(MapAssetIn, MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11Buffer*> MeshObjectPSConstants = GetMeshObjectPSConstants(MapAssetIn, MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11ShaderResourceView*> MeshObjectVSSRVs = GetMeshObjectVSSRVs(MapAssetIn, MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11ShaderResourceView*> MeshObjectHSSRVs = GetMeshObjectHSSRVs(MapAssetIn, MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11ShaderResourceView*> MeshObjectDSSRVs = GetMeshObjectDSSRVs(MapAssetIn, MaterialIndexesPerPart[PartIdx]);
+				vector<ID3D11ShaderResourceView*> MeshObjectPSSRVs = GetMeshObjectPSSRVs(MapAssetIn, MaterialIndexesPerPart[PartIdx]);
 
 				MeshObjectPSOCached->SetVSConstantBuffers(0, MeshObjectVSConstants.size(), MeshObjectVSConstants.data());
 				MeshObjectPSOCached->SetHSConstantBuffers(0, MeshObjectHSConstants.size(), MeshObjectHSConstants.data());

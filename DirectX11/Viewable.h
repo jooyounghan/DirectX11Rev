@@ -13,7 +13,6 @@ class Viewable : public AAttachableObject
 {
 public:
 	Viewable(
-		MapAsset* MapAssetInstance, 
 		const UINT& WidthIn, const UINT& HeightIn,
 		const std::string& AttachableKindIn
 	);
@@ -54,6 +53,6 @@ public:
 	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
 
 public:
-	virtual void Render() override;
+	virtual void Render(MapAsset* MapAssetIn) override;
 };
 

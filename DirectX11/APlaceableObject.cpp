@@ -9,11 +9,8 @@ using namespace DirectX;
 
 UINT APlaceableObject::PickingIDIssued = 0xABCDEF12;
 
-APlaceableObject::APlaceableObject(
-	MapAsset* MapAssetInstance,
-	const string& PlaceableKindIn
-)
-	: AObject(MapAssetInstance), PickingID(PickingIDIssued), PlaceableKind(PlaceableKindIn)
+APlaceableObject::APlaceableObject(const string& PlaceableKindIn)
+	: AObject(), PickingID(PickingIDIssued), PlaceableKind(PlaceableKindIn)
 {
 	PickingIDIssued++;
 	PickingIDBuffer.InitializeForGPU(PickingID.GetColor());
@@ -174,11 +171,11 @@ void APlaceableObject::Update(const float& DeltaTimeIn)
 	}
 }
 
-void APlaceableObject::Render()
+void APlaceableObject::Render(MapAsset* MapAssetIn)
 {
 	for (auto& AttachedChild : AttachedChildrenObjects)
 	{
-		AttachedChild->Render();
+		AttachedChild->Render(MapAssetIn);
 	}
 }
 

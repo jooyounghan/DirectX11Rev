@@ -20,8 +20,8 @@ using namespace std;
 
 string EnvironmentActor::EnvironmentActorKind = "Environment Actor";
 
-EnvironmentActor::EnvironmentActor(MapAsset* MapAssetInstance)
-	: AActor(MapAssetInstance, EnvironmentActor::EnvironmentActorKind)
+EnvironmentActor::EnvironmentActor()
+	: AActor(EnvironmentActor::EnvironmentActorKind)
 {
 	static size_t EnvironmentActorCount = 0;
 
@@ -52,11 +52,11 @@ void EnvironmentActor::AcceptGui(IGuiModelVisitor* GuiVisitor)
 	GuiVisitor->Visit(this);
 }
 
-void EnvironmentActor::Render()
+void EnvironmentActor::Render(MapAsset* MapAssetIn)
 {
-	AActor::Render();
+	AActor::Render(MapAssetIn);
 
-	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 	if (CurrentCamera != nullptr && EnvironmentMeshAsset != nullptr)
 	{
 		ID3D11RenderTargetView* RTVs[]{ CurrentCamera->GetSDRSceneRTV() };

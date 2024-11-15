@@ -1,7 +1,8 @@
 #pragma once
+class MapAsset;
 
 class IRenderable
 {
 public:
-	virtual void Render() = 0;
+	virtual void Render(MapAsset* MapAssetIn) = 0;
 };

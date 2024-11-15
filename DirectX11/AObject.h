@@ -26,13 +26,10 @@ class IGuiModelVisitor;
 class AObject : public IOnSerializableElement, public IUpdatable, public IRenderable, public IGuiModelAcceptor, public AMovable
 {
 public:
-	AObject(MapAsset* MapAssetInstance);
+	AObject();
 
 protected:
 	ID3D11DeviceContext* DeviceContextCached = nullptr;
-
-protected:
-	MapAsset* MapAssetCached = nullptr;
 
 protected:
 	std::string ObjectName;

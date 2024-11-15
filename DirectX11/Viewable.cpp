@@ -12,11 +12,10 @@ using namespace std;
 using namespace DirectX;
 
 Viewable::Viewable(
-	MapAsset* MapAssetInstance, 
 	const UINT& WidthIn, const UINT& HeightIn,
 	const string& AttachableKindIn
 )
-	: AAttachableObject(MapAssetInstance, AttachableKindIn)
+	: AAttachableObject(AttachableKindIn)
 {
 	ViewProjBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<UploadBuffer<ViewProjBufferData>>();
 	Resize(WidthIn, HeightIn);
@@ -95,7 +94,7 @@ void Viewable::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	fread(&FarZ, sizeof(float), 1, FileIn);
 }
 
-void Viewable::Render()
+void Viewable::Render(MapAsset* MapAssetIn)
 {
-	AAttachableObject::Render();
+	AAttachableObject::Render(MapAssetIn);
 }

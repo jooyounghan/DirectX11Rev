@@ -6,11 +6,8 @@
 using namespace std;
 using namespace DirectX;
 
-AAttachableObject::AAttachableObject(
-	MapAsset* MapAssetInstance,
-	const string& AttachableKindIn
-)
-	: AObject(MapAssetInstance), AttachableKind(AttachableKindIn)
+AAttachableObject::AAttachableObject(const string& AttachableKindIn)
+	: AObject(), AttachableKind(AttachableKindIn)
 {
 }
 
@@ -209,11 +206,11 @@ void AAttachableObject::Update(const float& DeltaTimeIn)
 	}
 }
 
-void AAttachableObject::Render()
+void AAttachableObject::Render(MapAsset* MapAssetIn)
 {
 	for (auto& AttachedChild : AttachedChildrenObjects)
 	{
-		AttachedChild->Render();
+		AttachedChild->Render(MapAssetIn);
 	}
 }
 

@@ -17,7 +17,7 @@ struct SHDRToneMappingConstant
 class EnvironmentActor : public AActor
 {
 public:
-	EnvironmentActor(MapAsset* MapAssetInstance);
+	EnvironmentActor();
 	virtual ~EnvironmentActor();
 
 public:
@@ -50,7 +50,7 @@ protected:
 	PSOObject* EnvironmentActorPSOCached = nullptr;
 
 public:
-	virtual void Render() override final;
+	virtual void Render(MapAsset* MapAssetIn) override final;
 
 public:
 	virtual void OnSerialize(FILE* FileIn) override;

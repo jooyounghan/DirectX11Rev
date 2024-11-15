@@ -13,7 +13,7 @@ TODO : Viewable* ViewableInstance를 인자로 받아야만 할까?
 class BoundingFrustumObject : public ABoundingObject, public DirectX::BoundingFrustum
 {
 public:
-	BoundingFrustumObject(MapAsset* MapAssetInstance, Viewable* ViewableInstance);
+	BoundingFrustumObject(Viewable* ViewableInstance);
 	virtual ~BoundingFrustumObject();
 
 public:

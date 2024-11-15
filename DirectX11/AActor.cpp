@@ -1,6 +1,6 @@
 #include "AActor.h"
 
-void AActor::Render()
+void AActor::Render(MapAsset* MapAssetIn)
 {
-	APlaceableObject::Render();
+	APlaceableObject::Render(MapAssetIn);
 }

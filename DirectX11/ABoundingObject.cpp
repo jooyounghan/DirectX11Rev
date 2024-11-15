@@ -12,11 +12,8 @@
 
 using namespace DirectX;
 
-ABoundingObject::ABoundingObject(
-	MapAsset* MapAssetInstance,
-	const std::string& AttachableKindIn
-)
-	: AAttachableObject(MapAssetInstance, AttachableKindIn)
+ABoundingObject::ABoundingObject(const std::string& AttachableKindIn)
+	: AAttachableObject(AttachableKindIn)
 {
 	DebuggingColorBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<UploadBuffer<XMVECTOR>>();
 	BoundingObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::BoundingObject_Wireframe);
@@ -42,11 +39,11 @@ void ABoundingObject::SetCollisionColor()
 	}
 }
 
-void ABoundingObject::Render()
+void ABoundingObject::Render(MapAsset* MapAssetIn)
 {
-	AAttachableObject::Render();
+	AAttachableObject::Render(MapAssetIn);
 
-	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 	if (CurrentCamera != nullptr && DebugObject != nullptr)
 	{
 		ID3D11Buffer* VertexBuffers[] = { DebugObject->GetVertexBuffer() };

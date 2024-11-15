@@ -8,15 +8,14 @@ class AActor : public APlaceableObject
 {
 public:
 	AActor(
-		MapAsset* MapAssetInstance, 
 		const std::string& PlaceableKindIn
-	) : APlaceableObject(MapAssetInstance, PlaceableKindIn) {};
+	) : APlaceableObject(PlaceableKindIn) {};
 	virtual ~AActor() {};
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
 
 public:
-	virtual void Render() override;
+	virtual void Render(MapAsset* MapAssetIn) override;
 };
 

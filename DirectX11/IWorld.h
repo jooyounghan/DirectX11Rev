@@ -3,7 +3,7 @@
 
 #include <Windows.h>
 
-class IWorld : public IRenderable
+class IWorld
 {
 public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;

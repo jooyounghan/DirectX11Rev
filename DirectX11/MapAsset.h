@@ -27,7 +27,7 @@ class SkeletalMeshAsset;
 
 constexpr const char* MapAssetOutPath = ".\\Assets\\Maps\\";
 
-class MapAsset : public AAssetFile, public IUpdatable, public IRenderable, public IGuiModelAcceptor
+class MapAsset : public AAssetFile, public IUpdatable, public IGuiModelAcceptor
 {
 public:
 	MapAsset(
@@ -86,7 +86,7 @@ public:
 	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
-	virtual void Render() override;
+	void Render();
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
@@ -109,7 +109,7 @@ public:
 	{
 		static_assert(std::is_base_of<APlaceableObject, T>::value, DerivedCondition(APlaceableObject));
 
-		RootPlaceables.emplace_back(std::make_unique<T>(this, args...));
+		RootPlaceables.emplace_back(std::make_unique<T>(args...));
 		APlaceableObject* RootPlaceable = RootPlaceables.back().get();
 
 		IdToPlaceables[RootPlaceable->GetPickingID().GetID()] = RootPlaceable;

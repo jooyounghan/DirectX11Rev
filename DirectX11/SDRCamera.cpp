@@ -4,8 +4,8 @@ using namespace std;
 
 string SDRCamera::SDRCameraKind = "SDR Camera";
 
-SDRCamera::SDRCamera(MapAsset* MapAssetInstance, const UINT& WidthIn, const UINT& HeightIn)
-	: ACamera(MapAssetInstance, WidthIn, HeightIn, SDRCamera::SDRCameraKind)
+SDRCamera::SDRCamera(const UINT& WidthIn, const UINT& HeightIn)
+	: ACamera(WidthIn, HeightIn, SDRCamera::SDRCameraKind)
 {
 }
 

@@ -3,14 +3,12 @@
 
 using namespace std;
 
-APawn::APawn(
-	MapAsset* MapAssetInstance,
-	const string& PlaceableKindIn
-) : AActor(MapAssetInstance, PlaceableKindIn) {}
+APawn::APawn(const string& PlaceableKindIn)
+	: AActor(PlaceableKindIn) {}
 
 APawn::~APawn() {}
 
-void APawn::Render()
+void APawn::Render(MapAsset* MapAssetIn)
 {
-	AActor::Render();
+	AActor::Render(MapAssetIn);
 }

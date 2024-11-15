@@ -13,7 +13,6 @@ class ACamera : public Viewable
 {
 public: 
 	ACamera(
-		MapAsset* MapAssetInstance, 
 		const UINT& WidthIn, const UINT& HeightIn,
 		const std::string& AttachableKindIn
 	);
@@ -69,6 +68,6 @@ public:
 	virtual void CleanupLens() = 0;
 
 public:
-	virtual void Render() override final;
+	virtual void Render(MapAsset* MapAssetIn) override final;
 };
 

@@ -42,8 +42,8 @@ MapAsset::MapAsset(
 {
 	if (!LoadFromAsset)
 	{
-		EditorActorInstance = make_unique<EditorPawn>(this);
-		EnvironmentActorInstance = make_unique<EnvironmentActor>(this);
+		EditorActorInstance = make_unique<EditorPawn>();
+		EnvironmentActorInstance = make_unique<EnvironmentActor>();
 		BaseMeshAsset* BaseMeshInstance = AssetManagerCached->GetManagingBaseMesh("BaseSphere");
 		EnvironmentActorInstance->SetEnvironmentMeshAsset(BaseMeshInstance);
 
@@ -153,13 +153,13 @@ void MapAsset::Render()
 {
 	CurrentCamera->CleanupLens();
 
-	EnvironmentActorInstance->Render();
+	EnvironmentActorInstance->Render(this);
 
 	for (auto& RootPlaceable : RootPlaceables)
 	{
 		if (RootPlaceable->GetIsRenderable())
 		{
-			RootPlaceable->Render();
+			RootPlaceable->Render(this);
 		}
 	}
 }
@@ -199,8 +199,8 @@ void MapAsset::Serialize()
 
 void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 {
-	EditorActorInstance = make_unique<EditorPawn>(this);
-	EnvironmentActorInstance = make_unique<EnvironmentActor>(this);
+	EditorActorInstance = make_unique<EditorPawn>();
+	EnvironmentActorInstance = make_unique<EnvironmentActor>();
 
 	EditorActorInstance->OnDeserialize(FileIn, AssetManagerIn);
 	EnvironmentActorInstance->OnDeserialize(FileIn, AssetManagerIn);
@@ -306,31 +306,31 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 		AAttachableObject* AddedMeshObject = nullptr;
 		if (AttachableObjectKind == StaticMeshObject::StaticMeshObjectKind)
 		{
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<StaticMeshObject>(this, nullptr);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<StaticMeshObject>(nullptr);
 		}
 		else if (AttachableObjectKind == SkeletalMeshObject::SkeletalMeshObjectKind)
 		{
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<SkeletalMeshObject>(this, nullptr);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<SkeletalMeshObject>(nullptr);
 		}
 		else if (AttachableObjectKind == BoundingSphereObject::BoundingSphereKind)
 		{
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>(this);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingSphereObject>();
 		}
 		//else if (AttachableObjectKind == BoundingFrustumObject::BoundingFrustumKind)
 		//{
-		//	AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingFrustumObject>(this);
+		//	AddedMeshObject = ParentObjectIn->AddAttachedObject<BoundingFrustumObject>();
 		//}
 		else if (AttachableObjectKind == OBBObject::BoundingOBBKind)
 		{
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>(this);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<OBBObject>();
 		}
 		else if (AttachableObjectKind == SDRCamera::SDRCameraKind)
 		{
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<SDRCamera>(this, App::GWidth, App::GHeight);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<SDRCamera>(App::GWidth, App::GHeight);
 		}
 		else if (AttachableObjectKind == HDRCamera::HDRCameraKind)
 		{
-			AddedMeshObject = ParentObjectIn->AddAttachedObject<HDRCamera>(this, App::GWidth, App::GHeight);
+			AddedMeshObject = ParentObjectIn->AddAttachedObject<HDRCamera>(App::GWidth, App::GHeight);
 		}
 
 		if (AddedMeshObject != nullptr)

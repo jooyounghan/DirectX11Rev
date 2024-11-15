@@ -7,16 +7,15 @@ using namespace std;
 string SkeletalMeshObjectActor::SkeletalMeshObjectActorKind = "Skeletal Actor";
 
 SkeletalMeshObjectActor::SkeletalMeshObjectActor(
-	MapAsset* MapAssetInstance, 
 	std::shared_ptr<SkeletalMeshAsset> MeshAssetInstanceIn
 )
-	: AActor(MapAssetInstance, SkeletalMeshObjectActor::SkeletalMeshObjectActorKind)
+	: AActor(SkeletalMeshObjectActor::SkeletalMeshObjectActorKind)
 {
 	static size_t SkeletalActorCount = 0;
 	SkeletalActorCount++;
 	ObjectName = SkeletalMeshObjectActor::SkeletalMeshObjectActorKind + to_string(SkeletalActorCount);
 
-	SkeletalMeshObjectInstance = make_unique<SkeletalMeshObject>(MapAssetInstance, MeshAssetInstanceIn);
+	SkeletalMeshObjectInstance = make_unique<SkeletalMeshObject>(MeshAssetInstanceIn);
 	SkeletalMeshObjectInstance->SetParent(this, PickingIDBuffer.GetBuffer());
 
 }
@@ -40,10 +39,10 @@ void SkeletalMeshObjectActor::AcceptGui(IGuiModelVisitor* GuiVisitor)
 	GuiVisitor->Visit(this);
 }
 
-void SkeletalMeshObjectActor::Render()
+void SkeletalMeshObjectActor::Render(MapAsset* MapAssetIn)
 {
-	AActor::Render();
-	SkeletalMeshObjectInstance->Render();
+	AActor::Render(MapAssetIn);
+	SkeletalMeshObjectInstance->Render(MapAssetIn);
 }
 
 void SkeletalMeshObjectActor::OnSerialize(FILE* FileIn)

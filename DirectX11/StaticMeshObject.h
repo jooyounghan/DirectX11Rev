@@ -7,7 +7,7 @@ class PSOObject;
 class StaticMeshObject : public AMeshObject
 {
 public:
-	StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn);
+	StaticMeshObject(std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn);
 	virtual ~StaticMeshObject();
 
 public:
@@ -25,17 +25,17 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 
 public:
-	virtual void Render() override final;
+	virtual void Render(MapAsset* MapAssetIn) override final;
 
 protected:
-	virtual std::vector<ID3D11Buffer*> GetMeshObjectVSConstants(const size_t& MaterialIdx) override;
-	virtual std::vector<ID3D11Buffer*> GetMeshObjectHSConstants(const size_t& MaterialIdx) override;
-	virtual std::vector<ID3D11Buffer*> GetMeshObjectDSConstants(const size_t& MaterialIdx) override;
-	virtual std::vector<ID3D11Buffer*> GetMeshObjectPSConstants(const size_t& MaterialIdx) override;
-	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectVSSRVs(const size_t& MaterialIdx) override;
-	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectHSSRVs(const size_t& MaterialIdx) override;
-	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectDSSRVs(const size_t& MaterialIdx) override;
-	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectPSSRVs(const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectVSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectHSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectDSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11Buffer*> GetMeshObjectPSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectVSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectHSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectDSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx) override;
+	virtual std::vector<ID3D11ShaderResourceView*> GetMeshObjectPSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx) override;
 
 public:
 	virtual void OnSerialize(FILE* FileIn) override;

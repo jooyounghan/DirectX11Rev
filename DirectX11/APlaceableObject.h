@@ -16,7 +16,7 @@ class APlaceableObject : public AObject
 	friend AAttachableObject;
 
 public:
-	APlaceableObject(MapAsset* MapAssetInstance, const std::string& PlaceableKindIn);
+	APlaceableObject(const std::string& PlaceableKindIn);
 	virtual ~APlaceableObject();
 
 protected:
@@ -81,7 +81,7 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
 
 public:
-	virtual void Render() override;
+	virtual void Render(MapAsset* MapAssetIn) override;
 
 public:
 	template<typename Attachment, typename ...Args>

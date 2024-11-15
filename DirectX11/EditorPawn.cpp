@@ -14,13 +14,13 @@ using namespace std;
 
 string EditorPawn::EditorPawnKind = "Editor Pawn";
 
-EditorPawn::EditorPawn(MapAsset* MapAssetInstance)
-	: APawn(MapAssetInstance, EditorPawn::EditorPawnKind)
+EditorPawn::EditorPawn()
+	: APawn(EditorPawn::EditorPawnKind)
 {
     Controller = make_unique<DefaultController>();
     Controller->SetPossesdPawn(this);
 
-    CameraInstance = make_unique<SDRCamera>(MapAssetInstance, App::GWidth, App::GHeight);
+    CameraInstance = make_unique<SDRCamera>(App::GWidth, App::GHeight);
     CameraInstance->SetParent(this, PickingIDBuffer.GetBuffer());
 }
 
@@ -35,9 +35,9 @@ void EditorPawn::Update(const float& DeltaTimeIn)
     CameraInstance->Update(DeltaTimeIn);
 }
 
-void EditorPawn::Render()
+void EditorPawn::Render(MapAsset* MapAssetIn)
 {
-    AActor::Render();
+    AActor::Render(MapAssetIn);
 }
 
 void EditorPawn::AcceptGui(IGuiModelVisitor* GuiVisitor)

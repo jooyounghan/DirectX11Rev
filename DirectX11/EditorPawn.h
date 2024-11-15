@@ -8,7 +8,7 @@ class ACamera;
 class EditorPawn : public APawn
 {
 public:
-	EditorPawn(MapAsset* MapAssetInstance);
+	EditorPawn();
 	virtual ~EditorPawn();
 
 public:
@@ -22,7 +22,7 @@ public:
 	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
-	virtual void Render() override final;
+	virtual void Render(MapAsset* MapAssetIn) override final;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;;

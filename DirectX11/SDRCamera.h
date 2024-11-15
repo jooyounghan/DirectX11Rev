@@ -4,8 +4,7 @@
 class SDRCamera : public ACamera
 {
 public:
-	SDRCamera(
-		MapAsset* MapAssetInstance, const UINT& WidthIn, const UINT& HeightIn);
+	SDRCamera(const UINT& WidthIn, const UINT& HeightIn);
 	virtual ~SDRCamera();
 
 public:

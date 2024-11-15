@@ -61,7 +61,7 @@ private:
 	void SetCurrentMap(const std::shared_ptr<MapAsset>& NewMap);
 
 public:
-	virtual void Render() override;
+	void Render();
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 private:

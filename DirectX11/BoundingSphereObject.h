@@ -6,8 +6,8 @@ class OBBObject;
 class BoundingSphereObject : public ABoundingObject, public DirectX::BoundingSphere
 {
 public:
-	BoundingSphereObject(MapAsset* MapAssetInstance);
-	BoundingSphereObject(MapAsset* MapAssetInstance, const float& RadiusIn);
+	BoundingSphereObject();
+	BoundingSphereObject(const float& RadiusIn);
 	virtual ~BoundingSphereObject();
 
 public:

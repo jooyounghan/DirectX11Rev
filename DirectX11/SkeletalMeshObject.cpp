@@ -22,8 +22,8 @@ using namespace std;
 
 string SkeletalMeshObject::SkeletalMeshObjectKind = "Skeletal Mesh Object";
 
-SkeletalMeshObject::SkeletalMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstanceIn)
-	: AMeshObject(MapAssetInstance, SkeletalMeshObject::SkeletalMeshObjectKind)
+SkeletalMeshObject::SkeletalMeshObject(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetInstanceIn)
+	: AMeshObject(SkeletalMeshObject::SkeletalMeshObjectKind)
 {
 	static size_t SkeletalMeshObjectCount = 0;
 
@@ -71,25 +71,25 @@ void SkeletalMeshObject::Update(const float& DeltaTimeIn)
 	AnimationPlayerInstance.Update(DeltaTimeIn);
 }
 
-void SkeletalMeshObject::Render()
+void SkeletalMeshObject::Render(MapAsset* MapAssetIn)
 {
-	AMeshObject::Render();
+	AMeshObject::Render(MapAssetIn);
 }
 
-std::vector<ID3D11Buffer*> SkeletalMeshObject::GetMeshObjectVSConstants(const size_t& MaterialIdx)
+std::vector<ID3D11Buffer*> SkeletalMeshObject::GetMeshObjectVSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
-	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 	return std::vector<ID3D11Buffer*>{ CurrentCamera->GetViewProjBuffer()->GetBuffer(), TransformationBuffer->GetBuffer() };
 }
 
-std::vector<ID3D11Buffer*> SkeletalMeshObject::GetMeshObjectHSConstants(const size_t& MaterialIdx)
+std::vector<ID3D11Buffer*> SkeletalMeshObject::GetMeshObjectHSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	return std::vector<ID3D11Buffer*>();
 }
 
-std::vector<ID3D11Buffer*> SkeletalMeshObject::GetMeshObjectDSConstants(const size_t& MaterialIdx)
+std::vector<ID3D11Buffer*> SkeletalMeshObject::GetMeshObjectDSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
-	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 	const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIdx];
 
 	return std::vector<ID3D11Buffer*>{
@@ -98,27 +98,27 @@ std::vector<ID3D11Buffer*> SkeletalMeshObject::GetMeshObjectDSConstants(const si
 	};
 }
 
-std::vector<ID3D11Buffer*> SkeletalMeshObject::GetMeshObjectPSConstants(const size_t& MaterialIdx)
+std::vector<ID3D11Buffer*> SkeletalMeshObject::GetMeshObjectPSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIdx];
-	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 	return std::vector<ID3D11Buffer*>{
 		CurrentCamera->GetViewProjBuffer()->GetBuffer(),
 			MaterialInstance != nullptr ? MaterialInstance->GetMaterialDataBuffer()->GetBuffer() : nullptr
 	};
 }
 
-std::vector<ID3D11ShaderResourceView*> SkeletalMeshObject::GetMeshObjectVSSRVs(const size_t& MaterialIdx)
+std::vector<ID3D11ShaderResourceView*> SkeletalMeshObject::GetMeshObjectVSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	return std::vector<ID3D11ShaderResourceView*>{ AnimationPlayerInstance.GetAnimationTransformationBuffer()->GetStructuredBufferSRV() };
 }
 
-std::vector<ID3D11ShaderResourceView*> SkeletalMeshObject::GetMeshObjectHSSRVs(const size_t& MaterialIdx)
+std::vector<ID3D11ShaderResourceView*> SkeletalMeshObject::GetMeshObjectHSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	return std::vector<ID3D11ShaderResourceView*>();
 }
 
-std::vector<ID3D11ShaderResourceView*> SkeletalMeshObject::GetMeshObjectDSSRVs(const size_t& MaterialIdx)
+std::vector<ID3D11ShaderResourceView*> SkeletalMeshObject::GetMeshObjectDSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	vector<ID3D11ShaderResourceView*> Result;
 
@@ -129,11 +129,11 @@ std::vector<ID3D11ShaderResourceView*> SkeletalMeshObject::GetMeshObjectDSSRVs(c
 	return Result;
 }
 
-std::vector<ID3D11ShaderResourceView*> SkeletalMeshObject::GetMeshObjectPSSRVs(const size_t& MaterialIdx)
+std::vector<ID3D11ShaderResourceView*> SkeletalMeshObject::GetMeshObjectPSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	vector<ID3D11ShaderResourceView*> Result;
 
-	EnvironmentActor* CurrentEnvironment = MapAssetCached->GetEnvironmentActorInstance();
+	EnvironmentActor* CurrentEnvironment = MapAssetIn->GetEnvironmentActorInstance();
 	DDSTextureAsset* SpecularDDS = CurrentEnvironment->GetEnvironmentSpecularDDSTextureAsset();
 	DDSTextureAsset* DiffuseDDS = CurrentEnvironment->GetEnvironmentDiffuseDDSTextureAsset();
 	DDSTextureAsset* BRDFDDS = CurrentEnvironment->GetEnvironmentBRDFDDSTextureAsset();

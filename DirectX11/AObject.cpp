@@ -10,8 +10,8 @@
 using namespace std;
 using namespace DirectX;
 
-AObject::AObject(MapAsset* MapAssetInstance)
-	: AMovable(), MapAssetCached(MapAssetInstance),
+AObject::AObject()
+	: AMovable(),
 	DeviceContextCached(App::GGraphicPipeline->GetDeviceContext()),
 	ObjectID(string{ format("{}", (uint64_t)this) })
 {

@@ -7,10 +7,7 @@ class InputEventManager;
 class APawn : public AActor
 {
 public:
-	APawn(
-		MapAsset* MapAssetInstance,
-		const std::string& PlaceableKindIn
-	);
+	APawn(const std::string& PlaceableKindIn);
 	virtual ~APawn();
 
 protected:
@@ -20,7 +17,7 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) = 0;
 
 public:
-	virtual void Render() override;
+	virtual void Render(MapAsset* MapAssetIn) override;
 
 public:
 	virtual void OnSerialize(FILE* FileIn) = 0;

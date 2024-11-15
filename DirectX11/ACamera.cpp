@@ -9,13 +9,12 @@ const FLOAT ACamera::ClearColor[4] = { 0.2f, 0.2f, 0.2f, 1.f };
 const FLOAT ACamera::IDClearColor[4] = { 1.f, 1.f, 1.f, 1.f };
 
 ACamera::ACamera(
-	MapAsset* MapAssetInstance, 
 	const UINT& WidthIn, const UINT& HeightIn,
 	const string& AttachableKindIn
 )
-	: Viewable(MapAssetInstance, WidthIn, HeightIn, AttachableKindIn)
+	: Viewable(WidthIn, HeightIn, AttachableKindIn)
 {
-	CamearaFrustum = make_unique<BoundingFrustumObject>(MapAssetInstance, this);
+	CamearaFrustum = make_unique<BoundingFrustumObject>(this);
 	CamearaFrustum->SetParent(this, PickingIDBufferCached);
 
 	static size_t CameraCount = 0;
@@ -127,8 +126,8 @@ UINT ACamera::GetID(const float& RelativeMousePosX, const float& RelativeMousePo
 }
 
 
-void ACamera::Render()
+void ACamera::Render(MapAsset* MapAssetIn)
 {
-	Viewable::Render();
-	CamearaFrustum->Render();
+	Viewable::Render(MapAssetIn);
+	CamearaFrustum->Render(MapAssetIn);
 }

@@ -20,8 +20,8 @@ using namespace std;
 
 string StaticMeshObject::StaticMeshObjectKind = "Static Mesh Object";
 
-StaticMeshObject::StaticMeshObject(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn)
-	: AMeshObject(MapAssetInstance, StaticMeshObject::StaticMeshObjectKind)
+StaticMeshObject::StaticMeshObject(std::shared_ptr<StaticMeshAsset> StaticMeshAssetInstanceIn)
+	: AMeshObject(StaticMeshObject::StaticMeshObjectKind)
 {
 	static size_t StaticMeshObjectCount = 0;
 
@@ -57,25 +57,25 @@ void StaticMeshObject::AcceptGui(IGuiModelVisitor* GuiVisitor)
 	GuiVisitor->Visit(this);
 }
 
-void StaticMeshObject::Render()
+void StaticMeshObject::Render(MapAsset* MapAssetIn)
 {
-	AMeshObject::Render();
+	AMeshObject::Render(MapAssetIn);
 }
 
-std::vector<ID3D11Buffer*> StaticMeshObject::GetMeshObjectVSConstants(const size_t& MaterialIdx)
+std::vector<ID3D11Buffer*> StaticMeshObject::GetMeshObjectVSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
-	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 	return std::vector<ID3D11Buffer*>{ CurrentCamera->GetViewProjBuffer()->GetBuffer(), TransformationBuffer->GetBuffer() };
 }
 
-std::vector<ID3D11Buffer*> StaticMeshObject::GetMeshObjectHSConstants(const size_t& MaterialIdx)
+std::vector<ID3D11Buffer*> StaticMeshObject::GetMeshObjectHSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	return std::vector<ID3D11Buffer*>();
 }
 
-std::vector<ID3D11Buffer*> StaticMeshObject::GetMeshObjectDSConstants(const size_t& MaterialIdx)
+std::vector<ID3D11Buffer*> StaticMeshObject::GetMeshObjectDSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
-	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 	const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIdx];
 
 	return std::vector<ID3D11Buffer*>{
@@ -84,27 +84,27 @@ std::vector<ID3D11Buffer*> StaticMeshObject::GetMeshObjectDSConstants(const size
 	};
 }
 
-std::vector<ID3D11Buffer*> StaticMeshObject::GetMeshObjectPSConstants(const size_t& MaterialIdx)
+std::vector<ID3D11Buffer*> StaticMeshObject::GetMeshObjectPSConstants(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIdx];
-	ACamera* CurrentCamera = MapAssetCached->GetCurrentCamera();
+	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 	return std::vector<ID3D11Buffer*>{ 
 		CurrentCamera->GetViewProjBuffer()->GetBuffer(),
 		MaterialInstance != nullptr ? MaterialInstance->GetMaterialDataBuffer()->GetBuffer() : nullptr
 	};
 }
 
-std::vector<ID3D11ShaderResourceView*> StaticMeshObject::GetMeshObjectVSSRVs(const size_t& MaterialIdx)
+std::vector<ID3D11ShaderResourceView*> StaticMeshObject::GetMeshObjectVSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	return std::vector<ID3D11ShaderResourceView*>();
 }
 
-std::vector<ID3D11ShaderResourceView*> StaticMeshObject::GetMeshObjectHSSRVs(const size_t& MaterialIdx)
+std::vector<ID3D11ShaderResourceView*> StaticMeshObject::GetMeshObjectHSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	return std::vector<ID3D11ShaderResourceView*>();
 }
 
-std::vector<ID3D11ShaderResourceView*> StaticMeshObject::GetMeshObjectDSSRVs(const size_t& MaterialIdx)
+std::vector<ID3D11ShaderResourceView*> StaticMeshObject::GetMeshObjectDSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	vector<ID3D11ShaderResourceView*> Result;
 
@@ -115,11 +115,11 @@ std::vector<ID3D11ShaderResourceView*> StaticMeshObject::GetMeshObjectDSSRVs(con
 	return Result;
 }
 
-std::vector<ID3D11ShaderResourceView*> StaticMeshObject::GetMeshObjectPSSRVs(const size_t& MaterialIdx)
+std::vector<ID3D11ShaderResourceView*> StaticMeshObject::GetMeshObjectPSSRVs(MapAsset* MapAssetIn, const size_t& MaterialIdx)
 {
 	vector<ID3D11ShaderResourceView*> Result;
 
-	EnvironmentActor* CurrentEnvironment = MapAssetCached->GetEnvironmentActorInstance();
+	EnvironmentActor* CurrentEnvironment = MapAssetIn->GetEnvironmentActorInstance();
 	DDSTextureAsset* SpecularDDS = CurrentEnvironment->GetEnvironmentSpecularDDSTextureAsset();
 	DDSTextureAsset* DiffuseDDS = CurrentEnvironment->GetEnvironmentDiffuseDDSTextureAsset();
 	DDSTextureAsset* BRDFDDS = CurrentEnvironment->GetEnvironmentBRDFDDSTextureAsset();

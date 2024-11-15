@@ -8,7 +8,7 @@ class StaticMeshObject;
 class StaticMeshObjectActor : public AActor
 {
 public:
-	StaticMeshObjectActor(MapAsset* MapAssetInstance, std::shared_ptr<StaticMeshAsset> MeshAssetInstanceIn);
+	StaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> MeshAssetInstanceIn);
 	~StaticMeshObjectActor();
 
 public:
@@ -25,7 +25,7 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 
 public:
-	virtual void Render() override final;
+	virtual void Render(MapAsset* MapAssetIn) override final;
 
 public:
 	virtual void OnSerialize(FILE* FileIn) override;

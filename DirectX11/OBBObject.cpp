@@ -17,8 +17,8 @@ using namespace DirectX;
 
 string OBBObject::BoundingOBBKind = "Bounding OBB";
 
-OBBObject::OBBObject(MapAsset* MapAssetInstance)
-	: ABoundingObject(MapAssetInstance, OBBObject::BoundingOBBKind)
+OBBObject::OBBObject()
+	: ABoundingObject(OBBObject::BoundingOBBKind)
 {
 	InitOBB(App::GGraphicPipeline->GetDevice());
 
@@ -28,12 +28,11 @@ OBBObject::OBBObject(MapAsset* MapAssetInstance)
 }
 
 OBBObject::OBBObject(
-	MapAsset* MapAssetInstance,
 	const float& HalfXIn, 
 	const float& HalfYIn,
 	const float& HalfZIn
 )
-	: ABoundingObject(MapAssetInstance, OBBObject::BoundingOBBKind)
+	: ABoundingObject(OBBObject::BoundingOBBKind)
 {
 	InitOBB(App::GGraphicPipeline->GetDevice());
 	DescaledExtents.x = HalfXIn;

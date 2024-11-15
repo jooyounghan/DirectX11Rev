@@ -15,8 +15,8 @@ using namespace DirectX;
 
 string BoundingFrustumObject::BoundingFrustumKind = "Bounding Frustum";
 
-BoundingFrustumObject::BoundingFrustumObject(MapAsset* MapAssetInstance, Viewable* ViewableInstance)
-	: ABoundingObject(MapAssetInstance, BoundingFrustumObject::BoundingFrustumKind), ViewableCached(ViewableInstance)
+BoundingFrustumObject::BoundingFrustumObject(Viewable* ViewableInstance)
+	: ABoundingObject(BoundingFrustumObject::BoundingFrustumKind), ViewableCached(ViewableInstance)
 {
     static shared_ptr<Debugable> FrustumDebugObject = CreateDebugFrustumObject(App::GGraphicPipeline->GetDevice());
 

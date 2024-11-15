@@ -4,8 +4,8 @@ using namespace std;
 
 string HDRCamera::HDRCameraKind = "HDR Camera";
 
-HDRCamera::HDRCamera(MapAsset* MapAssetInstance, const UINT& WidthIn, const UINT& HeightIn)
-	: ACamera(MapAssetInstance, WidthIn, HeightIn, HDRCamera::HDRCameraKind)
+HDRCamera::HDRCamera(const UINT& WidthIn, const UINT& HeightIn)
+	: ACamera(WidthIn, HeightIn, HDRCamera::HDRCameraKind)
 {
 	ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
 

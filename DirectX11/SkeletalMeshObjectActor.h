@@ -8,7 +8,7 @@ class SkeletalMeshObject;
 class SkeletalMeshObjectActor : public AActor
 {
 public:
-	SkeletalMeshObjectActor(MapAsset* MapAssetInstance, std::shared_ptr<SkeletalMeshAsset> MeshAssetInstanceIn);
+	SkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> MeshAssetInstanceIn);
 	~SkeletalMeshObjectActor();
 
 public:
@@ -25,7 +25,7 @@ public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;
 
 public:
-	virtual void Render() override final;
+	virtual void Render(MapAsset* MapAssetIn) override final;
 
 public:
 	virtual void OnSerialize(FILE* FileIn) override;
