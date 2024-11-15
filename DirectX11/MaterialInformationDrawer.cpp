@@ -1,17 +1,18 @@
 #include "MaterialInformationDrawer.h"
-#include "MaterialAsset.h"
-#include "AssetManager.h"
 #include "AMeshObject.h"
 
-#include "UIVariable.h"
-
+#include "GlobalVariable.h"
+#include "AssetManager.h"
+#include "MaterialAsset.h"
 #include "AssetSelectHelper.h"
+
+#include "UIVariable.h"
 
 using namespace std;
 using namespace ImGui;
 
-MaterialInformationDrawer::MaterialInformationDrawer(AMeshObject* ObjectIn, AssetManager* AssetManagerIn)
-    : AInformationDrawer(ObjectIn), AssetManagerCached(AssetManagerIn)
+MaterialInformationDrawer::MaterialInformationDrawer(AMeshObject* ObjectIn)
+    : AInformationDrawer(ObjectIn)
 {
 }
 
@@ -19,7 +20,7 @@ void MaterialInformationDrawer::DrawInformation()
 {
 	SeparatorText("Materials");
 
-    const unordered_map<string, shared_ptr<MaterialAsset>>& ManagingMaterials = AssetManagerCached->GetManagingMaterials();
+    const unordered_map<string, shared_ptr<MaterialAsset>>& ManagingMaterials = App::GAssetManager->GetManagingMaterials();
     const vector<shared_ptr<MaterialAsset>>& MaterialInstances = ObjectCached->GetMaterialAssetInstances();
 
     for (size_t idx = 0; idx < MaterialInstances.size(); ++idx)

@@ -2,7 +2,6 @@
 #include "Vertexable.h"
 #include "Indexable.h"
 #include "UploadBuffer.h"
-#include "DefineType.h"
 
 class Debugable : public Indexable<uint16_t>, public Vertexable<DirectX::XMFLOAT3>
 {

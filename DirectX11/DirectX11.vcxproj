@@ -203,10 +203,9 @@
     <ClCompile Include="BoneAsset.cpp" />
     <ClCompile Include="CollisionVisitor.cpp" />
     <ClCompile Include="Debugable.cpp" />
-    <ClCompile Include="DefineType.cpp" />
+    <ClCompile Include="Ray.cpp" />
     <ClCompile Include="EnvironementActorDrawer.cpp" />
     <ClCompile Include="HDRCamera.cpp" />
-    <ClCompile Include="EditorWorld.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="EnvironmentActor.cpp" />
     <ClCompile Include="Externals\DDSTextureLoader\DDSTextureLoader11.cpp" />
@@ -238,7 +237,6 @@
     <ClCompile Include="ModelHelper.cpp" />
     <ClCompile Include="MapOutlinerWindow.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
-    <ClCompile Include="ModelDetailWindow.cpp" />
     <ClCompile Include="ModelDetailedInformationVisitor.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="OBBObject.cpp" />
@@ -335,7 +333,7 @@
     <ClInclude Include="CollisionVisitor.h" />
     <ClInclude Include="ConstantArrayBuffer.h" />
     <ClInclude Include="Debugable.h" />
-    <ClInclude Include="DefineType.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="DefineUtility.h" />
     <ClInclude Include="EnvironementActorDrawer.h" />
     <ClInclude Include="HDRCamera.h" />
@@ -374,7 +372,6 @@
     <ClInclude Include="SkeletalMeshObjetPSO.h" />
     <ClInclude Include="StaticMeshObjectActor.h" />
     <ClInclude Include="StaticMeshObjectInformationDrawer.h" />
-    <ClInclude Include="ModelDetailWindow.h" />
     <ClInclude Include="ModelDetailedInformationVisitor.h" />
     <ClInclude Include="APawn.h" />
     <ClInclude Include="APlaceableObject.h" />
@@ -399,7 +396,6 @@
     <ClInclude Include="PSOObjectHelper.h" />
     <ClInclude Include="StringHelper.h" />
     <ClInclude Include="UploadBuffer.h" />
-    <ClInclude Include="EditorWorld.h" />
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="GlobalVariable.h" />

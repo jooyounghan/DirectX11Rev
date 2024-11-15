@@ -4,7 +4,7 @@
 class AddAttachableModal : public AObjectManageModal
 {
 public:
-	AddAttachableModal(const std::string& ModalHeaderNameIn, EditorWorld* EditorWorldIn);
+	AddAttachableModal(const std::string& ModalHeaderNameIn);
 	virtual ~AddAttachableModal();
 
 private:

@@ -4,7 +4,7 @@
 class DeleteAttachableModal : public AObjectManageModal
 {
 public:
-	DeleteAttachableModal(const std::string& ModalHeaderNameIn, EditorWorld* EditorWorldIn);
+	DeleteAttachableModal(const std::string& ModalHeaderNameIn);
 	virtual ~DeleteAttachableModal();
 
 protected:

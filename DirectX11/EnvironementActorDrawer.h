@@ -10,10 +10,7 @@ class AssetManager;
 
 class EnvironementActorDrawer : AInformationDrawer<EnvironmentActor>
 {
-public: EnvironementActorDrawer(EnvironmentActor* EnvironmentActorIn, AssetManager* AssetManagerIn);
-
-protected:
-	AssetManager* AssetManagerCached = nullptr;
+public: EnvironementActorDrawer(EnvironmentActor* EnvironmentActorIn);
 
 public:
 	virtual void DrawInformation() override;

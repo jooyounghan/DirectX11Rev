@@ -1,5 +1,7 @@
 #include "BaseTextureInputNode.h"
 #include "BaseTextureOutputPort.h"
+
+#include "GlobalVariable.h"
 #include "AssetManager.h"
 #include "AssetSelectHelper.h"
 
@@ -10,11 +12,9 @@ using namespace ImGui;
 BaseTextureInputNode::BaseTextureInputNode(
 	const ImVec2& CenterPositionIn, 
 	const ImVec2& RectangleSizeIn,
-	AssetManager* AssetManagerIn,
 	std::shared_ptr<BaseTextureAsset> BaseTextureAssetIn
 )
-	: VariableInputNode(CenterPositionIn, RectangleSizeIn), 
-	AssetManagerCached(AssetManagerIn),
+	: VariableInputNode(CenterPositionIn, RectangleSizeIn),
 	BaseTextureAssetCached(BaseTextureAssetIn),
 	ImageSizeX(ElementSize.x / 2.f - 2.f * NodePaddingSize),
 	ImageSizeY(ElementSize.y - 2.f * NodePaddingSize),
@@ -45,7 +45,8 @@ void BaseTextureInputNode::AddToDrawList(const ImVec2& OriginPosition, ImDrawLis
 	Image(BaseTextureAssetCached != nullptr ? BaseTextureAssetCached->GetSRV() : nullptr, ImageSize);
 
 	SetCursorScreenPos(TextBoxPosition);
-	const unordered_map<string, shared_ptr<BaseTextureAsset>>& BaseTextures = AssetManagerCached->GetManagingBasicTextures();
+	
+	const unordered_map<string, shared_ptr<BaseTextureAsset>>& BaseTextures = App::GAssetManager->GetManagingBasicTextures();
 	shared_ptr<BaseTextureAsset> Result = AssetSelectHelper::SelectAsset(
 		BaseTextures, BaseTextureAssetCached.get(), NodeID.c_str(), "Base Texture", "Select BaseTexuture Asset", NULL, ComboWidth);
 

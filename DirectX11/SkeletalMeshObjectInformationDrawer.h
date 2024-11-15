@@ -7,10 +7,7 @@ class AssetManager;
 class SkeletalMeshObjectInformationDrawer : public AInformationDrawer<SkeletalMeshObject>
 {
 public:
-	SkeletalMeshObjectInformationDrawer(SkeletalMeshObject* ObjectIn, AssetManager* AssetManagerIn);
-
-protected:
-	AssetManager* AssetManagerCached = nullptr;
+	SkeletalMeshObjectInformationDrawer(SkeletalMeshObject* ObjectIn);
 
 public:
 	virtual void DrawInformation() override;

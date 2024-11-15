@@ -7,6 +7,8 @@ class GraphicsPipeline;
 class PSOManager;
 class InputEventManager;
 class UploadableBufferManager;
+class GameWorld;
+class AssetManager;
 
 namespace App
 {
@@ -17,6 +19,7 @@ namespace App
 	extern PSOManager*				GPSOManager;
 	extern InputEventManager*		GInputEventManager;
 	extern UploadableBufferManager*	GUploadableBufferManager;
+	extern AssetManager*			GAssetManager;
 }
 
 namespace Performance

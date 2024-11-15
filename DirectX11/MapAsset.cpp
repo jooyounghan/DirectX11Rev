@@ -57,7 +57,44 @@ MapAsset::~MapAsset()
 	Serialize();
 }
 
-void MapAsset::AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticMeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
+void MapAsset::SetSelectedPlaceableByID(const UINT& IdIn)
+{
+	if (IdToPlaceables.find(IdIn) != IdToPlaceables.end())
+	{
+		SelectedPlaceable = IdToPlaceables.at(IdIn);
+	}
+	else
+	{
+		SelectedPlaceable = nullptr;
+	}
+}
+
+
+void MapAsset::AddAsset(AAssetFile* AssetFileIn, const float& PosXIn, const float& PosYIn, const float& PosZIn)
+{
+	const string& AssetType = AssetFileIn->GetAssetType();
+
+	if (AssetType == StaticMeshAsset::StaticMeshAssetKind)
+	{
+		AddStaticMeshObjectActor(
+			App::GAssetManager->GetManagingStaticMesh(AssetFileIn->GetAssetName()),
+			PosXIn,
+			PosYIn,
+			PosZIn
+		);
+	}
+	else if (AssetType == SkeletalMeshAsset::SkeletalMeshAssetKind)
+	{
+		AddSkeletalMeshObjectActor(
+			App::GAssetManager->GetManagingSkeletalMesh(AssetFileIn->GetAssetName()),
+			PosXIn,
+			PosYIn,
+			PosZIn
+		);
+	}
+}
+
+void MapAsset::AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticMeshAssetIn, const float& PosXIn, const float& PosYIn, const float& PosZIn)
 {
 	StaticMeshObjectActor* StaticMeshObjectIn = PlaceableAddHelper<StaticMeshObjectActor>(StaticMeshAssetIn);
 	StaticMeshObjectIn->RelativePosition.x = PosXIn;
@@ -65,7 +102,7 @@ void MapAsset::AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticM
 	StaticMeshObjectIn->RelativePosition.z = PosZIn;
 }
 
-void MapAsset::AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetIn, float PosXIn, float PosYIn, float PosZIn)
+void MapAsset::AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetIn, const float& PosXIn, const float& PosYIn, const float& PosZIn)
 {
 	SkeletalMeshObjectActor* SkeletalMeshObjectIn = PlaceableAddHelper<SkeletalMeshObjectActor>(SkeletalMeshAssetIn);
 	SkeletalMeshObjectIn->RelativePosition.x = PosXIn;

@@ -12,13 +12,11 @@ public:
 	BaseTextureInputNode(
 		const ImVec2& CenterPositionIn,
 		const ImVec2& RectangleSizeIn,
-		AssetManager* AssetManagerIn,
 		std::shared_ptr<BaseTextureAsset> BaseTextureAssetIn
 	);
 	virtual ~BaseTextureInputNode();
 
 protected:
-	AssetManager* AssetManagerCached = nullptr;
 	std::shared_ptr<BaseTextureAsset> BaseTextureAssetCached;
 	
 protected:

@@ -6,6 +6,7 @@
 #include "imgui_internal.h"
 
 #include "Delegation.h"
+
 class AWindow;
 
 typedef std::function<void(AWindow*)> WindowClosedHandler;

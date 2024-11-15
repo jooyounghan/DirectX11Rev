@@ -13,7 +13,7 @@ template<typename T, typename ...Args>
 class AssetControlWindow : public AWindow
 {
 public:
-	AssetControlWindow(AssetManager* AssetManagerIn, AAssetFile* AssetFileIn, Args... args);
+	AssetControlWindow(AAssetFile* AssetFileIn, Args... args);
 
 protected:
 	std::string WindowDescription;
@@ -27,11 +27,11 @@ public:
 };
 
 template<typename T, typename ...Args>
-inline AssetControlWindow<T, Args...>::AssetControlWindow(AssetManager* AssetManagerIn, AAssetFile* AssetFileIn, Args... args)
+inline AssetControlWindow<T, Args...>::AssetControlWindow(AAssetFile* AssetFileIn, Args... args)
 {
 	static_assert(std::is_base_of<AAssetNodeCanvas, T>::value, DerivedCondition(AAssetNodeCanvas));
 
-	NodeCanvasInstance = std::make_unique<T>(AssetManagerIn, AssetFileIn, args...);
+	NodeCanvasInstance = std::make_unique<T>(AssetFileIn, args...);
 	if (AssetFileIn != nullptr)
 	{
 		WindowDescription = "Asset Control Window For " + AssetFileIn->GetAssetName();

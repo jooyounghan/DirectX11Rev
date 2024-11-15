@@ -1,6 +1,7 @@
 #include "EnvironementActorDrawer.h"
 #include "EnvironmentActor.h"
 
+#include "GlobalVariable.h"
 #include "AssetManager.h"
 #include "EXRTextureAsset.h"
 #include "DDSTextureAsset.h"
@@ -12,8 +13,8 @@
 using namespace std;
 using namespace ImGui;
 
-EnvironementActorDrawer::EnvironementActorDrawer(EnvironmentActor* EnvironmentActorIn, AssetManager* AssetManagerIn)
-    : AInformationDrawer(EnvironmentActorIn), AssetManagerCached(AssetManagerIn)
+EnvironementActorDrawer::EnvironementActorDrawer(EnvironmentActor* EnvironmentActorIn)
+    : AInformationDrawer(EnvironmentActorIn)
 {}
 
 void EnvironementActorDrawer::DrawInformation()
@@ -26,7 +27,7 @@ void EnvironementActorDrawer::DrawInformation()
 void EnvironementActorDrawer::DrawBackgroundEXRTexture()
 {
     SeparatorText("Background Texture");
-    const std::unordered_map<std::string, std::shared_ptr<EXRTextureAsset>>& ManagingEXRTextures = AssetManagerCached->GetManagingEXRTextures();
+    const std::unordered_map<std::string, std::shared_ptr<EXRTextureAsset>>& ManagingEXRTextures = App::GAssetManager->GetManagingEXRTextures();
     EXRTextureAsset* EXRTextureAssetInstance = ObjectCached->GetEnvironmentBackgroundEXRTextureAsset();
     shared_ptr<EXRTextureAsset> SelectedEXRTexture = DrawAndSelectNormalTexture(
         ManagingEXRTextures, EXRTextureAssetInstance,
@@ -38,7 +39,7 @@ void EnvironementActorDrawer::DrawBackgroundEXRTexture()
 void EnvironementActorDrawer::DrawIBLTextures()
 {
     SeparatorText("IBL Texture");
-    const std::unordered_map<std::string, std::shared_ptr<DDSTextureAsset>>& ManagingDDSTextures = AssetManagerCached->GetManagingDDSTextures();
+    const std::unordered_map<std::string, std::shared_ptr<DDSTextureAsset>>& ManagingDDSTextures = App::GAssetManager->GetManagingDDSTextures();
 
     DDSTextureAsset* DDSSpecularTextureAssetInstance = ObjectCached->GetEnvironmentSpecularDDSTextureAsset();
     DDSTextureAsset* DDSDiffuseTextureAssetInstance = ObjectCached->GetEnvironmentDiffuseDDSTextureAsset();

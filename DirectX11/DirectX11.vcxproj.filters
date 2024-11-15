@@ -483,7 +483,7 @@
     <ClCompile Include="GameWorld.cpp">
       <Filter>소스 파일\World</Filter>
     </ClCompile>
-    <ClCompile Include="DefineType.cpp">
+    <ClCompile Include="Ray.cpp">
       <Filter>소스 파일\Utility</Filter>
     </ClCompile>
     <ClCompile Include="MathematicalHelper.cpp">
@@ -557,9 +557,6 @@
     </ClCompile>
     <ClCompile Include="GlobalVariable.cpp">
       <Filter>소스 파일\Global</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelDetailWindow.cpp">
-      <Filter>소스 파일\Editor\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="AAddObjectHelper.cpp">
       <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\AddObjectModal</Filter>
@@ -692,9 +689,6 @@
     </ClCompile>
     <ClCompile Include="AssetControl.cpp">
       <Filter>소스 파일\Editor\GUI\Control</Filter>
-    </ClCompile>
-    <ClCompile Include="EditorWorld.cpp">
-      <Filter>소스 파일\World</Filter>
     </ClCompile>
     <ClCompile Include="InputPort.cpp">
       <Filter>소스 파일\Editor\NodeEditor\DrawElement\Port\InputPort</Filter>
@@ -869,7 +863,7 @@
     <ClInclude Include="GameWorld.h">
       <Filter>헤더 파일\World</Filter>
     </ClInclude>
-    <ClInclude Include="DefineType.h">
+    <ClInclude Include="Ray.h">
       <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
     <ClInclude Include="DefineUtility.h">
@@ -985,9 +979,6 @@
     </ClInclude>
     <ClInclude Include="StaticAssertHelper.h">
       <Filter>헤더 파일\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelDetailWindow.h">
-      <Filter>헤더 파일\Editor\GUI\Window</Filter>
     </ClInclude>
     <ClInclude Include="ModelDetailedInformationVisitor.h">
       <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer</Filter>
@@ -1159,9 +1150,6 @@
     </ClInclude>
     <ClInclude Include="AssetControlWindow.h">
       <Filter>헤더 파일\Editor\GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorWorld.h">
-      <Filter>헤더 파일\World</Filter>
     </ClInclude>
     <ClInclude Include="IGuiControl.h">
       <Filter>헤더 파일\Editor</Filter>

@@ -1,4 +1,6 @@
 #include "AssetManagerWindow.h"
+
+#include "GlobalVariable.h"
 #include "AssetManager.h"
 #include "AAssetFile.h"
 
@@ -25,19 +27,18 @@ using namespace std;
 using namespace ImGui;
 using namespace filesystem;
 
-AssetManagerWindow::AssetManagerWindow(AssetManager* AssetManagerIn)
-	: AssetManagerCached(AssetManagerIn),
-    AddAssetFilePopupInstance(format("AddAssetFilePopupInstance{}", (uint64_t)this))    
+AssetManagerWindow::AssetManagerWindow()
+	: AddAssetFilePopupInstance(format("AddAssetFilePopupInstance{}", (uint64_t)this))    
 {
     RootDirectory.Name = "Assets";
     RootDirectory.Directory = ".\\Assets\\";
 
-    CreateAssetModalInstances.emplace("CreateMaterialAssetModalInstance", make_unique<CreateMaterialAssetModal>("Create Material Asset", AssetManagerIn));
-    CreateAssetModalInstances.emplace("CreateRTAnimationAssetModalInstance", make_unique<CreateRetargetedAnimationAssetModal>("Create Retargeted Animation Asset", AssetManagerIn));
+    CreateAssetModalInstances.emplace("CreateMaterialAssetModalInstance", make_unique<CreateMaterialAssetModal>("Create Material Asset"));
+    CreateAssetModalInstances.emplace("CreateRTAnimationAssetModalInstance", make_unique<CreateRetargetedAnimationAssetModal>("Create Retargeted Animation Asset"));
 
 #pragma region Binding
     OnAssetChanged = bind(&AssetManagerWindow::RefreshAssetDirectoriesFromRoot, this);
-    AssetManagerCached->AssetChangedEvent += OnAssetChanged;
+    App::GAssetManager->AssetChangedEvent += OnAssetChanged;
 
     OnAssetControlBeginDragDrop = bind(&AssetManagerWindow::SetAssetControlDragDrop, this, placeholders::_1);
 
@@ -183,13 +184,13 @@ void AssetManagerWindow::BuildAssetDirectories(DirectorySet& DirectorySetIn)
     if (!exists(Directory) && create_directories(Directory)) {/* Do Nothing But Make Directory */ };
 
     // TODO : 하드코딩 수정
-    const shared_ptr<BaseTextureAsset>& BaseTextureThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseTextureThumbnail_BaseTexture");
-    const shared_ptr<BaseTextureAsset>& BaseStaticThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseStaticMeshThumbnail_BaseTexture");
-    const shared_ptr<BaseTextureAsset>& BaseSkeletalThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseSkeletalMeshThumbnail_BaseTexture");
-    const shared_ptr<BaseTextureAsset>& BaseBoneThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseBoneThumbnail_BaseTexture");
-    const shared_ptr<BaseTextureAsset>& BaseAnimationThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseAnimationThumbnail_BaseTexture");
-    const shared_ptr<BaseTextureAsset>& BaseMapThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseMapThumbnail_BaseTexture");
-    const shared_ptr<BaseTextureAsset>& BaseMaterialThumbnail = AssetManagerCached->GetManagingBasicTexture("BaseMaterialThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseTextureThumbnail = App::GAssetManager->GetManagingBasicTexture("BaseTextureThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseStaticThumbnail = App::GAssetManager->GetManagingBasicTexture("BaseStaticMeshThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseSkeletalThumbnail = App::GAssetManager->GetManagingBasicTexture("BaseSkeletalMeshThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseBoneThumbnail = App::GAssetManager->GetManagingBasicTexture("BaseBoneThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseAnimationThumbnail = App::GAssetManager->GetManagingBasicTexture("BaseAnimationThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseMapThumbnail = App::GAssetManager->GetManagingBasicTexture("BaseMapThumbnail_BaseTexture");
+    const shared_ptr<BaseTextureAsset>& BaseMaterialThumbnail = App::GAssetManager->GetManagingBasicTexture("BaseMaterialThumbnail_BaseTexture");
 
 
     for (const auto& entry : directory_iterator(Directory))
@@ -216,7 +217,7 @@ void AssetManagerWindow::BuildAssetDirectories(DirectorySet& DirectorySetIn)
 
             if (CurrentAssetExtension == AssetExtension)
             {
-                AAssetFile* AssetFile = AssetManagerCached->GetManagingAsset(CurrentAssetName);
+                AAssetFile* AssetFile = App::GAssetManager->GetManagingAsset(CurrentAssetName);
 
                 if (AssetFile != nullptr)
                 {
@@ -339,7 +340,7 @@ void AssetManagerWindow::OpenItemSetting(AssetControl* AssetControlCached)
             const string& AssetType = AssetFile->GetAssetType();
             if (AssetType == MaterialAsset::MaterialAssetKind)
             {
-                AssetControlWindows.emplace_back(make_unique<AssetControlWindow<MaterialAssetNodeCanvas>>(AssetManagerCached, AssetFile));
+                AssetControlWindows.emplace_back(make_unique<AssetControlWindow<MaterialAssetNodeCanvas>>(AssetFile));
                 AssetControlWindowAdded = true;
             }
         }

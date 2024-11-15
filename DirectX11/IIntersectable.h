@@ -1,7 +1,6 @@
 #pragma once
+#include "Ray.h"
 #include "CollisionVisitor.h"
-
-struct Ray;
 
 class IIntersectable
 {

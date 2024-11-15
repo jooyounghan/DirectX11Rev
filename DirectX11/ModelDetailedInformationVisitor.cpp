@@ -1,6 +1,4 @@
 #include "ModelDetailedInformationVisitor.h"
-#include "ModelDetailWindow.h"
-
 #include "GameWorld.h"
 
 #include "MapAsset.h"
@@ -31,8 +29,7 @@ using namespace ImGui;
 using namespace DirectX;
 
 
-ModelDetailedInformationVisitor::ModelDetailedInformationVisitor(AssetManager* AssetManagerInstanceIn)
-	: AssetManagerCached(AssetManagerInstanceIn)
+ModelDetailedInformationVisitor::ModelDetailedInformationVisitor()
 {
 }
 
@@ -50,12 +47,12 @@ void ModelDetailedInformationVisitor::Visit(StaticMeshObjectActor* ActorInstance
     TransformDrawer.DrawInformation();
 
     StaticMeshObject* StaticMeshObjectInstance = ActorInstance->GetStaticMeshObjectInstance();
-    StaticMeshObjectInformationDrawer MeshObjectDrawer(StaticMeshObjectInstance, AssetManagerCached);
+    StaticMeshObjectInformationDrawer MeshObjectDrawer(StaticMeshObjectInstance);
     MeshObjectDrawer.DrawInformation();
 
     if (StaticMeshObjectInstance != nullptr)
     {
-        MaterialInformationDrawer MaterialDrawer(StaticMeshObjectInstance, AssetManagerCached);
+        MaterialInformationDrawer MaterialDrawer(StaticMeshObjectInstance);
         MaterialDrawer.DrawInformation();
     }
     PopID();
@@ -69,12 +66,12 @@ void ModelDetailedInformationVisitor::Visit(SkeletalMeshObjectActor* ActorInstan
     TransformDrawer.DrawInformation();
 
     SkeletalMeshObject* SkeletalMeshObjectInstance = ActorInstance->GetSkeletalMeshObjectInstance();
-    SkeletalMeshObjectInformationDrawer MeshObjectDrawer(SkeletalMeshObjectInstance, AssetManagerCached);
+    SkeletalMeshObjectInformationDrawer MeshObjectDrawer(SkeletalMeshObjectInstance);
     MeshObjectDrawer.DrawInformation();
 
     if (SkeletalMeshObjectInstance != nullptr)
     {
-        MaterialInformationDrawer MaterialDrawer(SkeletalMeshObjectInstance, AssetManagerCached);
+        MaterialInformationDrawer MaterialDrawer(SkeletalMeshObjectInstance);
         MaterialDrawer.DrawInformation();
     }
     PopID();
@@ -84,7 +81,7 @@ void ModelDetailedInformationVisitor::Visit(EnvironmentActor* EnvironmentActorIn
 {
     PushID(EnvironmentActorInstance->GetObjectID().c_str());
 
-    EnvironementActorDrawer EnvironmentDrawer(EnvironmentActorInstance, AssetManagerCached);
+    EnvironementActorDrawer EnvironmentDrawer(EnvironmentActorInstance);
     EnvironmentDrawer.DrawInformation();
 
     PopID();
@@ -104,7 +101,7 @@ void ModelDetailedInformationVisitor::Visit(StaticMeshObject* StaticMeshObjectIn
     TransformationInformationDrawer TransformDrawer(StaticMeshObjectInstance, StaticMeshObjectInstance->GetParentObject());
     TransformDrawer.DrawInformation();
 
-    StaticMeshObjectInformationDrawer MeshObjectDrawer(StaticMeshObjectInstance, AssetManagerCached);
+    StaticMeshObjectInformationDrawer MeshObjectDrawer(StaticMeshObjectInstance);
     MeshObjectDrawer.DrawInformation();
 
     PopID();
@@ -117,7 +114,7 @@ void ModelDetailedInformationVisitor::Visit(SkeletalMeshObject* SkeletalMeshObje
     TransformationInformationDrawer TransformDrawer(SkeletalMeshObjectInstance, SkeletalMeshObjectInstance->GetParentObject());
     TransformDrawer.DrawInformation();
 
-    SkeletalMeshObjectInformationDrawer MeshObjectDrawer(SkeletalMeshObjectInstance, AssetManagerCached);
+    SkeletalMeshObjectInformationDrawer MeshObjectDrawer(SkeletalMeshObjectInstance);
     MeshObjectDrawer.DrawInformation();
 
     PopID();

@@ -1,38 +1,39 @@
 #pragma once
 #include "AWindow.h"
+#include "HeaderHelper.h"
+#include "Delegation.h"
 
-class EditorWorld;
-class EditorPawn;
-class ACamera; 
+#include <memory>
 
-class GameWorld;
-class AssetManager;
-class MapAsset;
+struct Ray;
+struct ImVec2;
+struct XMFLOAT3;
+
+class AAssetFile;
+class ACamera;
+
+typedef std::function<void(const unsigned int&)> IDSelectHandler;
+typedef std::function<void(AAssetFile*, const float&, const float&, const float&)> AssetDropHandler;
 
 class ViewportWindow : public AWindow
 {
 public: 
-	ViewportWindow(EditorWorld* EditorWorldCached);
+	ViewportWindow();
 	virtual ~ViewportWindow();
 
 public:
 	virtual void RenderWindow() override;
 
-private:
-	EditorWorld* EditorWorldCached = nullptr;
-	GameWorld* GameWorldCached = nullptr;
-	AssetManager* AssetManagerCached = nullptr;
-	MapAsset* CurrentMap = nullptr;
+protected:
+	ACamera* CurrentCamera = nullptr;
+	MakeSetter(CurrentCamera);
 
-private:
-	ACamera* CameraCached = nullptr;
+public:
+	Delegation<const unsigned int&> IDSelectEvent;
+	Delegation<AAssetFile*, const float&, const float&, const float&> AssetDropEvent;
 
 private:
 	ImVec2 ImagePosition = ImVec2();
 	ImVec2 ImageSize = ImVec2();
-
-private:
-	void ManageAssetDrop();
-	void ManageMouseLBClick();
 };
 

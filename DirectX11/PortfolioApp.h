@@ -10,6 +10,7 @@ class PSOManager;
 class InputEventManager;
 class UploadableBufferManager;
 class GameWorld;
+class AssetManager;
 
 class PortfolioApp
 {
@@ -33,6 +34,9 @@ protected:
 	std::unique_ptr<PSOManager>					PSOManagerInstance;
 	std::unique_ptr<InputEventManager>			InputEventManagerInstance;
 	std::unique_ptr<UploadableBufferManager>	UploadableBufferManagerInstance;
+	std::unique_ptr<AssetManager>				AssetManagerInstance;
+
+protected:
 	std::unique_ptr<GameWorld>					GameWorldInstance;
 
 private:

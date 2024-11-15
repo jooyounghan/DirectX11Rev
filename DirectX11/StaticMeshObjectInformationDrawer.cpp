@@ -2,6 +2,7 @@
 #include "StaticMeshObject.h"
 #include "StaticMeshAsset.h"
 
+#include "GlobalVariable.h"
 #include "AssetManager.h"
 #include "AssetSelectHelper.h"
 
@@ -10,8 +11,8 @@
 using namespace std;
 using namespace ImGui;
 
-StaticMeshObjectInformationDrawer::StaticMeshObjectInformationDrawer(StaticMeshObject* ObjectIn, AssetManager* AssetManagerIn)
-    : AInformationDrawer(ObjectIn), AssetManagerCached(AssetManagerIn)
+StaticMeshObjectInformationDrawer::StaticMeshObjectInformationDrawer(StaticMeshObject* ObjectIn)
+    : AInformationDrawer(ObjectIn)
 {
 }
 
@@ -19,7 +20,7 @@ void StaticMeshObjectInformationDrawer::DrawInformation()
 {
 	SeparatorText("Static Mesh Object");
 
-    const std::unordered_map<std::string, std::shared_ptr<StaticMeshAsset>>& ManagingStaticMeshes = AssetManagerCached->GetManagingStaticMeshes();
+    const std::unordered_map<std::string, std::shared_ptr<StaticMeshAsset>>& ManagingStaticMeshes = App::GAssetManager->GetManagingStaticMeshes();
 
     StaticMeshAsset* const MeshAssetInstance = ObjectCached->GetStaticMeshAssetInstance();
 

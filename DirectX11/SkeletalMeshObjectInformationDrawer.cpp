@@ -2,6 +2,7 @@
 #include "SkeletalMeshObject.h"
 #include "SkeletalMeshAsset.h"
 
+#include "GlobalVariable.h"
 #include "AssetManager.h"
 
 #include "UIVariable.h"
@@ -17,8 +18,8 @@
 using namespace std;
 using namespace ImGui;
 
-SkeletalMeshObjectInformationDrawer::SkeletalMeshObjectInformationDrawer(SkeletalMeshObject* ObjectIn, AssetManager* AssetManagerIn)
-    : AInformationDrawer(ObjectIn), AssetManagerCached(AssetManagerIn)
+SkeletalMeshObjectInformationDrawer::SkeletalMeshObjectInformationDrawer(SkeletalMeshObject* ObjectIn)
+    : AInformationDrawer(ObjectIn)
 {
 }
 
@@ -26,7 +27,7 @@ void SkeletalMeshObjectInformationDrawer::DrawInformation()
 {
     SeparatorText("Skeletal Mesh Object");
 
-    const unordered_map<string, shared_ptr<SkeletalMeshAsset>>& ManagingSkeletalMeshes = AssetManagerCached->GetManagingSkeletalMeshes();
+    const unordered_map<string, shared_ptr<SkeletalMeshAsset>>& ManagingSkeletalMeshes = App::GAssetManager->GetManagingSkeletalMeshes();
     SkeletalMeshAsset* const MeshAssetInstance = ObjectCached->GetSkeletalMeshAssetInstance();
 
     Image(nullptr, UISize::FileSize);
@@ -43,7 +44,7 @@ void SkeletalMeshObjectInformationDrawer::DrawInformation()
     // Test
     SeparatorText("Animation");
 
-    const unordered_map<string, shared_ptr<AnimationAsset>>& ManagingAnimations = AssetManagerCached->GetManagingAnimations();
+    const unordered_map<string, shared_ptr<AnimationAsset>>& ManagingAnimations = App::GAssetManager->GetManagingAnimations();
     const AnimationPlayer& AnimPlayer = ObjectCached->GetAnimationPlayerInstance();
     AnimationAsset* const AnimAssetCached = AnimPlayer.GetAnimationAssetCached();
     shared_ptr<AnimationAsset> AnimResult = AssetSelectHelper::SelectAsset(

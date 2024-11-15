@@ -1,16 +1,13 @@
 #include "DeleteAttachableModal.h"
 #include "AAttachableObject.h"
 #include "APlaceableObject.h"
-#include "EditorWorld.h"
+#include "MapAsset.h"
 
 using namespace std;
 using namespace ImGui;
 
-DeleteAttachableModal::DeleteAttachableModal(
-	const string& ModalHeaderNameIn,
-	EditorWorld* EditorWorldIn
-)
-	: AObjectManageModal(ModalHeaderNameIn, EditorWorldIn)
+DeleteAttachableModal::DeleteAttachableModal(const string& ModalHeaderNameIn)
+	: AObjectManageModal(ModalHeaderNameIn)
 {
 }
 
@@ -20,12 +17,14 @@ DeleteAttachableModal::~DeleteAttachableModal()
 
 bool DeleteAttachableModal::ModalCondition()
 {
-	return IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsWindowFocused();
+	return CurrentMapAssetCached != nullptr &&
+        CurrentMapAssetCached->GetSelectedAttachable() != nullptr &&
+        IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsWindowFocused();
 }
 
 void DeleteAttachableModal::RenderModal()
 {
-	AAttachableObject* SelectedAttached = EditorWorldCached->GetSelectedAttached();
+	AAttachableObject* SelectedAttached = CurrentMapAssetCached->GetSelectedAttachable();
 
     if (SelectedAttached != nullptr)
     {
@@ -34,11 +33,11 @@ void DeleteAttachableModal::RenderModal()
 
         if (Button("OK", ImVec2(120, 0)))
         {
-            APlaceableObject* SelectedPlaceableObject = EditorWorldCached->GetSelectedPlaceable();
+            APlaceableObject* SelectedPlaceableObject = CurrentMapAssetCached->GetSelectedPlaceable();
             if (SelectedPlaceableObject != nullptr)
             {
                 SelectedPlaceableObject->RemoveAttachedObject(SelectedAttached);
-                EditorWorldCached->SetSelectedAttached(nullptr);
+                CurrentMapAssetCached->SetSelectedAttachable(nullptr);
             }
             CloseCurrentPopup();
         }

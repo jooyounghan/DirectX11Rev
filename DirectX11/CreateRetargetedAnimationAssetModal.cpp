@@ -1,4 +1,6 @@
 #include "CreateRetargetedAnimationAssetModal.h"
+
+#include "GlobalVariable.h"
 #include "AssetManager.h"
 #include "AssetSelectHelper.h"
 
@@ -9,8 +11,8 @@ using namespace std;
 using namespace DirectX;
 using namespace ImGui;
 
-CreateRetargetedAnimationAssetModal::CreateRetargetedAnimationAssetModal(const std::string& ModalHeaderNameIn, AssetManager* AssetManagerIn)
-    : CreateAssetModal(ModalHeaderNameIn, AssetManagerIn)
+CreateRetargetedAnimationAssetModal::CreateRetargetedAnimationAssetModal(const std::string& ModalHeaderNameIn)
+    : CreateAssetModal(ModalHeaderNameIn)
 {
 }
 
@@ -22,8 +24,8 @@ void CreateRetargetedAnimationAssetModal::RenderModal()
 {
     CreateAssetModal::RenderModal();
 
-    const unordered_map<string, shared_ptr<BoneAsset>>& ManagingBones = AssetManagerCached->GetManagingBones();
-    const unordered_map<string, shared_ptr<AnimationAsset>>& ManagingAnimations = AssetManagerCached->GetManagingAnimations();
+    const unordered_map<string, shared_ptr<BoneAsset>>& ManagingBones = App::GAssetManager->GetManagingBones();
+    const unordered_map<string, shared_ptr<AnimationAsset>>& ManagingAnimations = App::GAssetManager->GetManagingAnimations();
 
     BoneAsset* const SourceBoneAsset = AnimationRetargeterInstance.GetSourceBoneAsset();
     BoneAsset* const ToBoneAsset = AnimationRetargeterInstance.GetDestBoneAsset();
@@ -111,7 +113,7 @@ void CreateRetargetedAnimationAssetModal::RenderModal()
         shared_ptr<AnimationAsset> RetargetedAnimationAsset = AnimationRetargeterInstance.GetRetargetedAnimation(AssetNameBuffer);
         if (RetargetedAnimationAsset != nullptr)
         {
-            AssetManagerCached->SerailizeAndAddToContainer(RetargetedAnimationAsset);
+            App::GAssetManager->SerailizeAndAddToContainer(RetargetedAnimationAsset);
             CloseCurrentPopup();
         }
     }

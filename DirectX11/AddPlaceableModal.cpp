@@ -9,11 +9,8 @@
 using namespace std;
 using namespace ImGui;
 
-AddPlaceableModal::AddPlaceableModal(
-    const string& ModalHeaderNameIn,
-    EditorWorld* EditorWorldIn
-)
-    : AObjectManageModal(ModalHeaderNameIn, EditorWorldIn)
+AddPlaceableModal::AddPlaceableModal(const string& ModalHeaderNameIn)
+    : AObjectManageModal(ModalHeaderNameIn)
 {
     PlaceableItemIdentifiers =
     {
@@ -33,7 +30,7 @@ bool AddPlaceableModal::ModalCondition()
 	const char* SmallButtonText = "Add Placeable +";
 	float ButtonWidth = CalcTextSize(SmallButtonText).x;
 	SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
-	return SmallButton(SmallButtonText);
+	return SmallButton(SmallButtonText) && (CurrentMapAssetCached != nullptr);
 }
 
 void AddPlaceableModal::RenderModal()

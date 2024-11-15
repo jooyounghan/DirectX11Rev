@@ -1,7 +1,8 @@
 #include "MapOutlinerWindow.h"
+#include "ModelDetailedInformationVisitor.h"
 
-#include "EditorWorld.h"
-#include "GameWorld.h"
+#include "GlobalVariable.h"
+#include "AssetManager.h"
 #include "MapAsset.h"
 
 #include <list> 
@@ -10,18 +11,14 @@
 using namespace std;
 using namespace ImGui;
 
-MapOutlinerWindow::MapOutlinerWindow(EditorWorld* EditorWorldIn)
+MapOutlinerWindow::MapOutlinerWindow()
 	: 
-    EditorWorldCached(EditorWorldIn), 
-    AddAttachableModalInstance("Add Attachable Object", EditorWorldIn),
-    AddPlaceableModalInstance("Add Placeable Object", EditorWorldIn),
-    DeleteAttachableModalInstance("Delete Attachable Object", EditorWorldCached),
-    DeletePlaceableModalInstance("Delete Placeable Object", EditorWorldCached)
+    AddAttachableModalInstance("Add Attachable Object"),
+    AddPlaceableModalInstance("Add Placeable Object"),
+    DeleteAttachableModalInstance("Delete Attachable Object"),
+    DeletePlaceableModalInstance("Delete Placeable Object")
 {
-    if (EditorWorldCached != nullptr)
-    {
-        GameWorldCached = EditorWorldCached->GetGameWorldCached();
-    }
+
 }
 
 MapOutlinerWindow::~MapOutlinerWindow()
@@ -30,26 +27,85 @@ MapOutlinerWindow::~MapOutlinerWindow()
 
 void MapOutlinerWindow::RenderWindow()
 {
+    RenderMapOutliner();
+    RenderModelDetail();
+}
+
+void MapOutlinerWindow::RenderMapOutliner()
+{
     Begin("Map Outliner");
-
-    CurrentMap = GameWorldCached->GetCurrentMap();
-
-    AddAttachableModalInstance.SetCurrentMapAssetCached(CurrentMap);
-    AddPlaceableModalInstance.SetCurrentMapAssetCached(CurrentMap);
-    DeleteAttachableModalInstance.SetCurrentMapAssetCached(CurrentMap);
-    DeletePlaceableModalInstance.SetCurrentMapAssetCached(CurrentMap);
-
     RenderMapAssetOverview();
-    RenderPlaceablesOutline();
-    RenderSelectedPlaceableOutline();
+    if (SelectedMapAsset)
+    {
+        RenderPlaceablesOutline();
+        RenderSelectedPlaceableOutline();
+    }
+    End();
+}
 
+void MapOutlinerWindow::RenderModelDetail()
+{
+    Begin("Model Detailed");
+    ImVec2 RegionAvail = GetContentRegionAvail();
+    BeginChild("Selected Detail Information", ImVec2(RegionAvail.x, RegionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
+
+    if (SelectedMapAsset)
+    {
+        APlaceableObject* SelectedPlaceable = SelectedMapAsset->GetSelectedPlaceable();
+        AAttachableObject* SelectedAttached = SelectedMapAsset->GetSelectedAttachable();
+
+        ModelDetailedInformationVisitor InformationVisitor;
+
+        if (SelectedAttached != nullptr)
+        {
+            SelectedAttached->AcceptGui(&InformationVisitor);
+        }
+        else if (SelectedPlaceable != nullptr)
+        {
+            SelectedPlaceable->AcceptGui(&InformationVisitor);
+        }
+        else
+        {
+            SelectedMapAsset->AcceptGui(&InformationVisitor);
+        }
+    }
+    EndChild();
     End();
 }
 
 void MapOutlinerWindow::RenderMapAssetOverview()
 {
     Text("Map Asset Overview");
-    RenderMapInformation();
+    const unordered_map<string, shared_ptr<MapAsset>>& ManaginMaps = App::GAssetManager->GetManagingMaps();
+
+    for (auto& ManagingMap : ManaginMaps)
+    {
+        const string& MapName = ManagingMap.first;
+        const std::shared_ptr<MapAsset>& Map = ManagingMap.second;
+
+        ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_SpanAvailWidth;
+        if (SelectedMapAsset == Map)
+        {
+            NodeFlags |= ImGuiTreeNodeFlags_Selected;
+        }
+
+        bool IsOpen = TreeNodeEx(MapName.c_str(), NodeFlags);
+        if (IsItemClicked() or IsItemToggledOpen())
+        {
+            SelectedMapAsset = Map;
+            AddAttachableModalInstance.SetCurrentMapAssetCached(Map);
+            AddPlaceableModalInstance.SetCurrentMapAssetCached(Map);
+            DeleteAttachableModalInstance.SetCurrentMapAssetCached(Map);
+            DeletePlaceableModalInstance.SetCurrentMapAssetCached(Map);
+
+            MapSelectedEvent.Invoke(Map);
+        }
+
+        if (IsOpen)
+        {
+            TreePop();
+        }
+    }
 
 }
 
@@ -58,7 +114,30 @@ void MapOutlinerWindow::RenderPlaceablesOutline()
     Text("Placed Object List:");
     AddPlaceableModalInstance.DoModal();
 
-    RenderPlacedListBox();
+    APlaceableObject* SelectedPlacedObject = SelectedMapAsset->GetSelectedPlaceable();
+    const list<unique_ptr<APlaceableObject>>& RootPlaceables = SelectedMapAsset->GetRootPlaceables();
+
+    for (auto& Placeable : RootPlaceables)
+    {
+        APlaceableObject* PlacedObject = Placeable.get();
+
+        ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_SpanAvailWidth;
+        if (SelectedPlacedObject == PlacedObject)
+        {
+            NodeFlags |= ImGuiTreeNodeFlags_Selected;
+        }
+
+        bool IsOpen = TreeNodeEx(PlacedObject->GetObjectName().c_str(), NodeFlags);
+        if (IsItemClicked() or IsItemToggledOpen())
+        {
+            SelectedMapAsset->SetSelectedPlaceable(PlacedObject);
+        }
+
+        if (IsOpen)
+        {
+            TreePop();
+        }
+    }
 
     DeletePlaceableModalInstance.DoModal();
 }
@@ -67,73 +146,11 @@ void MapOutlinerWindow::RenderSelectedPlaceableOutline()
 {
     Text("Attached Object List:\t");
     AddAttachableModalInstance.DoModal();
-    
-    RenderAttachedTree();
 
-    DeleteAttachableModalInstance.DoModal();
-}
-
-void MapOutlinerWindow::RenderMapInformation()
-{
-    const unordered_map<UINT, shared_ptr<MapAsset>>& MapInstances = GameWorldCached->GetMapInstances();
-    for (auto& MapInstance : MapInstances)
+    APlaceableObject* SelectedPlacedObject = SelectedMapAsset->GetSelectedPlaceable();
+    if (SelectedPlacedObject != nullptr)
     {
-        MapAsset* MapAssetPointer = MapInstance.second.get();
-
-        ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_SpanAvailWidth;
-
-        if (EditorWorldCached->GetSelectedMapAsset() == MapAssetPointer)
-        {
-            NodeFlags |= ImGuiTreeNodeFlags_Selected;
-        }
-
-        bool IsOpen = TreeNodeEx(MapAssetPointer->GetAssetName().c_str(), NodeFlags);
-        if (IsItemClicked() or IsItemToggledOpen())
-        {
-            EditorWorldCached->SetSelectedMapAsset(MapAssetPointer);
-        }
-
-        if (IsOpen)
-        {
-            TreePop();
-        }
-    }
-}
-
-void MapOutlinerWindow::RenderPlacedListBox()
-{
-    const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
-    for (auto& Placeable : RootPlaceables)
-    {
-        APlaceableObject* PlaceableObj = Placeable.get();
-
-        ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_SpanAvailWidth;
-
-        if (EditorWorldCached->GetSelectedPlaceable() == PlaceableObj)
-        {
-            NodeFlags |= ImGuiTreeNodeFlags_Selected;
-        }
-
-        bool IsOpen = TreeNodeEx(PlaceableObj->GetObjectName().c_str(), NodeFlags);
-        if (IsItemClicked() or IsItemToggledOpen())
-        {
-            EditorWorldCached->SetSelectedPlaceable(PlaceableObj);
-        }
-
-        if (IsOpen)
-        {
-            TreePop();
-        }
-    }
-
-}
-
-void MapOutlinerWindow::RenderAttachedTree()
-{
-    APlaceableObject* SelectedPlaceable = EditorWorldCached->GetSelectedPlaceable();
-    if (SelectedPlaceable != nullptr)
-    {
-        const list<unique_ptr<AAttachableObject>>& AttachedObjects = SelectedPlaceable->GetAttachedChildrenObjects();
+        const list<unique_ptr<AAttachableObject>>& AttachedObjects = SelectedPlacedObject->GetAttachedChildrenObjects();
 
         ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
         if (AttachedObjects.size() == 0)
@@ -145,12 +162,7 @@ void MapOutlinerWindow::RenderAttachedTree()
             NodeFlags |= (ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow);
         }
 
-        bool IsOpen = TreeNodeEx(SelectedPlaceable->GetObjectName().c_str(), NodeFlags);
-        if (IsItemClicked() or IsItemToggledOpen())
-        {
-            EditorWorldCached->SetSelectedAttached(nullptr);
-        }
-
+        bool IsOpen = TreeNodeEx(SelectedPlacedObject->GetObjectName().c_str(), NodeFlags);
         if (IsOpen)
         {
             Indent();
@@ -162,10 +174,13 @@ void MapOutlinerWindow::RenderAttachedTree()
             TreePop();
         }
     }
+
+    DeleteAttachableModalInstance.DoModal();
 }
 
 void MapOutlinerWindow::RenderAttachedOutline(AAttachableObject* Attachment)
 {
+    AAttachableObject* SelectedAttachableObject = SelectedMapAsset->GetSelectedAttachable();
     const list<unique_ptr<AAttachableObject>>& AttachedObjects = Attachment->GetAttachedChildrenObjects();
 
     ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -178,7 +193,7 @@ void MapOutlinerWindow::RenderAttachedOutline(AAttachableObject* Attachment)
         NodeFlags |= (ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow);
     }
 
-    if (EditorWorldCached->GetSelectedAttached() == Attachment)
+    if (SelectedAttachableObject == Attachment)
     {
         NodeFlags |= ImGuiTreeNodeFlags_Selected;
     }
@@ -186,7 +201,7 @@ void MapOutlinerWindow::RenderAttachedOutline(AAttachableObject* Attachment)
     bool IsOpen = TreeNodeEx(Attachment->GetObjectName().c_str(), NodeFlags);
     if (IsItemClicked() or IsItemToggledOpen())
     {
-        EditorWorldCached->SetSelectedAttached(Attachment);
+        SelectedMapAsset->SetSelectedAttachable(Attachment);
     }
 
     if (IsOpen)

@@ -5,11 +5,8 @@ using namespace ImGui;
 
 const char* CreateAssetModal::InvalidChars = "\\/:*?\"<>|";
 
-CreateAssetModal::CreateAssetModal(
-    const std::string& ModalHeaderNameIn, 
-    AssetManager* AssetManagerIn
-)
-    : AModal(ModalHeaderNameIn), AssetManagerCached(AssetManagerIn)
+CreateAssetModal::CreateAssetModal(const std::string& ModalHeaderNameIn)
+    : AModal(ModalHeaderNameIn)
 {
     memset(AssetNameBuffer, '\0', AssetNameBufferSize);
 }

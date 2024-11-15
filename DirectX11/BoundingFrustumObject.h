@@ -1,6 +1,5 @@
 #pragma once
 #include "ABoundingObject.h"
-#include "DefineType.h"
 #include "GlobalVariable.h"
 
 class Viewable;

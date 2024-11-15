@@ -1,4 +1,4 @@
-#include "DefineType.h"
+#include "Ray.h"
 #include <iostream>
 
 using namespace DirectX;

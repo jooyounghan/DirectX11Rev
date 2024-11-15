@@ -7,6 +7,7 @@
 #include "InputEventManager.h"
 #include "UploadableBufferManager.h"
 #include "GameWorld.h"
+#include "AssetManager.h"
 
 using namespace std;
 
@@ -60,11 +61,10 @@ PortfolioApp::PortfolioApp()
 	UploadableBufferManagerInstance = make_unique<UploadableBufferManager>();
 	App::GUploadableBufferManager = UploadableBufferManagerInstance.get();
 
-#ifdef _DEBUG
+	AssetManagerInstance = make_unique<AssetManager>();
+	App::GAssetManager = AssetManagerInstance.get();
+
 	GameWorldInstance = make_unique<GameWorld>(MainWindow);
-#else
-	GameWorldInstance = make_unique<GameWorld>();
-#endif // _DEBUG
 }
 
 PortfolioApp::~PortfolioApp()

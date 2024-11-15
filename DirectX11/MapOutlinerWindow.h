@@ -1,29 +1,38 @@
 #pragma once
 #include "AWindow.h"
+
 #include "AddAttachableModal.h"
 #include "AddPlaceableModal.h"
 #include "DeleteAttachableModal.h"
 #include "DeletePlaceableModal.h"
 
-class EditorWorld;
+#include <memory>
+
 class GameWorld;
 class MapAsset;
-
+class APlaceableObject;
 class AAttachableObject;
+
+typedef std::function<void(const std::shared_ptr<MapAsset>&)> MapSelectedHandler;
 
 class MapOutlinerWindow : public AWindow
 {
 public:
-	MapOutlinerWindow(EditorWorld* EditorWorldIn);
+	MapOutlinerWindow();
 	virtual ~MapOutlinerWindow();
 
 public:
 	virtual void RenderWindow() override;
 
 private:
-	EditorWorld* EditorWorldCached = nullptr;
-	GameWorld* GameWorldCached = nullptr;
-	MapAsset* CurrentMap = nullptr;
+	void RenderMapOutliner();
+	void RenderModelDetail();
+
+public:
+	Delegation<const std::shared_ptr<MapAsset>&> MapSelectedEvent;
+
+public:
+	std::shared_ptr<MapAsset> SelectedMapAsset = nullptr;
 
 protected:
 	AddAttachableModal AddAttachableModalInstance;
@@ -38,11 +47,6 @@ private:
 	void RenderMapAssetOverview();
 	void RenderPlaceablesOutline();
 	void RenderSelectedPlaceableOutline();
-
-private:
-	void RenderMapInformation();
-	void RenderPlacedListBox();
-	void RenderAttachedTree();
 
 private:
 	void RenderAttachedOutline(AAttachableObject* Attachment);

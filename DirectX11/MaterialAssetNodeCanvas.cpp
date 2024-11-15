@@ -15,8 +15,8 @@ using namespace std;
 using namespace ImGui;
 using namespace DirectX;
 
-MaterialAssetNodeCanvas::MaterialAssetNodeCanvas(AssetManager* AssetMangerIn, AAssetFile* AssetFileIn)
-    : AAssetNodeCanvas(AssetMangerIn, AssetFileIn, ImVec2(700.f, 1200.f)), MaterialAssetCached(dynamic_cast<MaterialAsset*>(AssetFileIn)),
+MaterialAssetNodeCanvas::MaterialAssetNodeCanvas(AAssetFile* AssetFileIn)
+    : AAssetNodeCanvas(AssetFileIn, ImVec2(700.f, 1200.f)), MaterialAssetCached(dynamic_cast<MaterialAsset*>(AssetFileIn)),
     MaterialElementNodeXPos(MaterialElementNodeWidth / 2.f + NodeOffset),
     AddMaterialElementPopupInstance(format("AddBaseTextureForMaterial{}", (uint64_t)this))
 {
@@ -86,14 +86,14 @@ void MaterialAssetNodeCanvas::RenderControl()
 
 BaseTextureInputNode* MaterialAssetNodeCanvas::AddBaseTextureInputNodeHelper(float& NodeHeightPos, const shared_ptr<BaseTextureAsset>& BaseTextureAssetIn)
 {
-    BaseTextureInputNode* AddedInputNode = AddNodeElement<BaseTextureInputNode>(ImVec2(MaterialElementNodeXPos, NodeHeightPos), ImVec2(MaterialElementNodeWidth, MaterialElementNodeHeight), AssetManagerCached, BaseTextureAssetIn);
+    BaseTextureInputNode* AddedInputNode = AddNodeElement<BaseTextureInputNode>(ImVec2(MaterialElementNodeXPos, NodeHeightPos), ImVec2(MaterialElementNodeWidth, MaterialElementNodeHeight), BaseTextureAssetIn);
     NodeHeightPos += (MaterialElementNodeHeight + NodeOffset);
     return AddedInputNode;
 }
 
 BaseTextureInputNode* MaterialAssetNodeCanvas::AddBaseTextureInputNodeHelper(const ImVec2& NodePos, const shared_ptr<BaseTextureAsset>& BaseTextureAssetIn)
 {
-    BaseTextureInputNode* AddedInputNode = AddNodeElement<BaseTextureInputNode>(NodePos, ImVec2(MaterialElementNodeWidth, MaterialElementNodeHeight), AssetManagerCached, BaseTextureAssetIn);
+    BaseTextureInputNode* AddedInputNode = AddNodeElement<BaseTextureInputNode>(NodePos, ImVec2(MaterialElementNodeWidth, MaterialElementNodeHeight), BaseTextureAssetIn);
     return AddedInputNode;
 }
 

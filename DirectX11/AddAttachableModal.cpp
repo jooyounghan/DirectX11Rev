@@ -1,6 +1,5 @@
 #include "AddAttachableModal.h"
 
-#include "EditorWorld.h"
 #include "MapAsset.h"
 
 #include "SkeletalMeshObject.h"
@@ -16,11 +15,8 @@
 using namespace std;
 using namespace ImGui;
 
-AddAttachableModal::AddAttachableModal(
-    const string& ModalHeaderNameIn,
-    EditorWorld* EditorWorldIn
-)
-    : AObjectManageModal(ModalHeaderNameIn, EditorWorldIn)
+AddAttachableModal::AddAttachableModal(const string& ModalHeaderNameIn)
+    : AObjectManageModal(ModalHeaderNameIn)
 {
     AttachableItemIdentifiers =
     {
@@ -43,15 +39,15 @@ bool AddAttachableModal::ModalCondition()
 	const char* SmallButtonText = "Add Attachable +";
 	float ButtonWidth = CalcTextSize(SmallButtonText).x;
 	SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
-	return SmallButton(SmallButtonText);
+	return SmallButton(SmallButtonText) && (CurrentMapAssetCached != nullptr);
 }
 
 void AddAttachableModal::RenderModal()
 {
-    AAttachableObject* SelectedAttached = EditorWorldCached->GetSelectedAttached();
-    APlaceableObject* SelectedPlaced = EditorWorldCached->GetSelectedPlaceable();
+    AAttachableObject* SelectedAttachable = CurrentMapAssetCached->GetSelectedAttachable();
+    APlaceableObject* SelectedPlaced = CurrentMapAssetCached->GetSelectedPlaceable();
 
-    if (SelectedPlaced != nullptr || SelectedAttached != nullptr)
+    if (SelectedPlaced != nullptr || SelectedAttachable != nullptr)
     {
         static string SelectedAttachableKind;
 
@@ -71,41 +67,42 @@ void AddAttachableModal::RenderModal()
 
         if (Button("OK", ImVec2(120, 0)))
         {
+            MapAsset* CurrentMap = CurrentMapAssetCached.get();
             if (SelectedAttachableKind == StaticMeshObject::StaticMeshObjectKind)
             {
-                SelectedAttached != nullptr ?
-                    SelectedAttached->AddAttachedObject<StaticMeshObject>(CurrentMapAssetCached, nullptr) :
-                    SelectedPlaced->AddAttachedObject<StaticMeshObject>(CurrentMapAssetCached, nullptr);
+                SelectedAttachable != nullptr ?
+                    SelectedAttachable->AddAttachedObject<StaticMeshObject>(CurrentMap, nullptr) :
+                    SelectedPlaced->AddAttachedObject<StaticMeshObject>(CurrentMap, nullptr);
             }
             else if (SelectedAttachableKind == SkeletalMeshObject::SkeletalMeshObjectKind)
             {
-                SelectedAttached != nullptr ?
-                    SelectedAttached->AddAttachedObject<SkeletalMeshObject>(CurrentMapAssetCached, nullptr) :
-                    SelectedPlaced->AddAttachedObject<SkeletalMeshObject>(CurrentMapAssetCached, nullptr);
+                SelectedAttachable != nullptr ?
+                    SelectedAttachable->AddAttachedObject<SkeletalMeshObject>(CurrentMap, nullptr) :
+                    SelectedPlaced->AddAttachedObject<SkeletalMeshObject>(CurrentMap, nullptr);
             }                              
             else if (SelectedAttachableKind == BoundingSphereObject::BoundingSphereKind)
             {
-                SelectedAttached != nullptr ?
-                    SelectedAttached->AddAttachedObject<BoundingSphereObject>(CurrentMapAssetCached) :
-                    SelectedPlaced->AddAttachedObject<BoundingSphereObject>(CurrentMapAssetCached);
+                SelectedAttachable != nullptr ?
+                    SelectedAttachable->AddAttachedObject<BoundingSphereObject>(CurrentMap) :
+                    SelectedPlaced->AddAttachedObject<BoundingSphereObject>(CurrentMap);
             }
             else if (SelectedAttachableKind == OBBObject::BoundingOBBKind)
             {
-                SelectedAttached != nullptr ?
-                    SelectedAttached->AddAttachedObject<OBBObject>(CurrentMapAssetCached) :
-                    SelectedPlaced->AddAttachedObject<OBBObject>(CurrentMapAssetCached);
+                SelectedAttachable != nullptr ?
+                    SelectedAttachable->AddAttachedObject<OBBObject>(CurrentMap) :
+                    SelectedPlaced->AddAttachedObject<OBBObject>(CurrentMap);
             }
             else if (SelectedAttachableKind == SDRCamera::SDRCameraKind)
             {
-                SelectedAttached != nullptr ?
-                    SelectedAttached->AddAttachedObject<SDRCamera>(CurrentMapAssetCached, App::GWidth, App::GHeight) :
-                    SelectedPlaced->AddAttachedObject<SDRCamera>(CurrentMapAssetCached, App::GWidth, App::GHeight);
+                SelectedAttachable != nullptr ?
+                    SelectedAttachable->AddAttachedObject<SDRCamera>(CurrentMap, App::GWidth, App::GHeight) :
+                    SelectedPlaced->AddAttachedObject<SDRCamera>(CurrentMap, App::GWidth, App::GHeight);
             }
             else if (SelectedAttachableKind == HDRCamera::HDRCameraKind)
             {
-                SelectedAttached != nullptr ?
-                    SelectedAttached->AddAttachedObject<HDRCamera>(CurrentMapAssetCached, App::GWidth, App::GHeight) :
-                    SelectedPlaced->AddAttachedObject<HDRCamera>(CurrentMapAssetCached, App::GWidth, App::GHeight);
+                SelectedAttachable != nullptr ?
+                    SelectedAttachable->AddAttachedObject<HDRCamera>(CurrentMap, App::GWidth, App::GHeight) :
+                    SelectedPlaced->AddAttachedObject<HDRCamera>(CurrentMap, App::GWidth, App::GHeight);
             }
             else
             {

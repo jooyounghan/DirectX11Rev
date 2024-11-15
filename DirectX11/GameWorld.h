@@ -1,53 +1,79 @@
 #pragma once
 #include "IWorld.h"
-#include "IUpdatable.h"
 #include "HeaderHelper.h"
+#include "StaticAssertHelper.h"
 
-#include <d3d11.h>
+#include "IUpdatable.h"
+#include "Delegation.h"
+
+#include "TaskAnalyzerWindow.h"
+#include "ViewportWindow.h" 
+#include "MapOutlinerWindow.h"
+#include "AssetManagerWindow.h"
+
+#include <windows.h>
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
+class AWindow;
 class AssetManager;
-class EditorWorld;
 class MapAsset;
 
 class GameWorld : public IWorld, public IUpdatable
 {
 public:
-#ifdef _DEBUG	
 	GameWorld(HWND WindowHandle);
-#else
-	GameWorld();
-#endif // _DEBUG
 	virtual ~GameWorld();
 
+private:
+	void InitEditor(HWND WindowHandle);
+
 public:
-	void LoadManagingMaps();
 	virtual void Update(const float& DeltaTimeIn) override;
 
 protected:
-	std::unique_ptr<AssetManager> AssetManagerInstance;
-	MakeSmartPtrGetter(AssetManagerInstance);
-
-#ifdef _DEBUG
-protected:
-	std::unique_ptr<EditorWorld> EditorWorldInstance;
-	MakeSmartPtrGetter(EditorWorldInstance)
-#endif // _DEBUG
+	UINT FontSrvHandleID = 0;
+	MakeGetter(FontSrvHandleID);
 
 protected:
-	std::unordered_map<UINT, std::shared_ptr<MapAsset>> MapInstances;
-	MakeGetter(MapInstances);
+	IDSelectHandler OnIDSelected;
+	AssetDropHandler OnAssetDropped;
 
 protected:
-	MapAsset* CurrentMap = nullptr;
-	MakeGetter(CurrentMap);
+	std::vector<std::unique_ptr<AWindow>> Dialogs;
+
+private:
+	ViewportWindow* ViewportWindowInstance = nullptr;
+	MapOutlinerWindow* MapOutlinerWindowInstance = nullptr;
+
+private:
+	template<typename T, typename... Args>
+	T* AddDialog(Args... arg);
+
+protected:
+	std::shared_ptr<MapAsset> CurrentMap = nullptr;
+
+private:
+	MapSelectedHandler OnMapSelected;
+	void SetCurrentMap(const std::shared_ptr<MapAsset>& NewMap);
 
 public:
 	virtual void Render() override;
-
-public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+
+private:
 	virtual void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+
+private:
+	void OnDropFiles(HDROP hDropIn);
 };
 
+template<typename T, typename ...Args>
+inline T* GameWorld::AddDialog(Args ...args)
+{
+	static_assert(std::is_base_of<AWindow, T>::value, DerivedCondition(AWindow));
+
+	Dialogs.emplace_back(make_unique<T>(args...));
+	return (T*)Dialogs.back().get();
+}

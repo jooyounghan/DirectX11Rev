@@ -15,7 +15,7 @@ class AssetVariableInputPort;
 class MaterialAssetNodeCanvas : public AAssetNodeCanvas
 {
 public:
-	MaterialAssetNodeCanvas(AssetManager* AssetMangerIn, AAssetFile* AssetFileIn);
+	MaterialAssetNodeCanvas(AAssetFile* AssetFileIn);
 	virtual ~MaterialAssetNodeCanvas();
 
 protected:

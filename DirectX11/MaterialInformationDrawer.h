@@ -7,10 +7,7 @@ class AssetManager;
 class MaterialInformationDrawer : public AInformationDrawer<AMeshObject>
 {
 public:
-	MaterialInformationDrawer(AMeshObject* ObjectIn, AssetManager* AssetManagerIn);
-
-protected:
-	AssetManager* AssetManagerCached = nullptr;
+	MaterialInformationDrawer(AMeshObject* ObjectIn);
 
 public:
 	virtual void DrawInformation() override;

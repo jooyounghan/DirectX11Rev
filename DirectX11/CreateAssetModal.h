@@ -2,18 +2,13 @@
 #include "AModal.h"
 #include "HeaderHelper.h"
 
-class AssetManager;
-
 constexpr size_t AssetNameBufferSize = 254;
 
 class CreateAssetModal : public AModal
 {
 public:
-	CreateAssetModal(const std::string& ModalHeaderNameIn, AssetManager* AssetManagerIn);
+	CreateAssetModal(const std::string& ModalHeaderNameIn);
 	virtual ~CreateAssetModal();
-
-protected:
-	AssetManager* AssetManagerCached = nullptr;
 
 protected:
 	char AssetNameBuffer[AssetNameBufferSize];

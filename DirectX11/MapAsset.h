@@ -63,9 +63,21 @@ protected:
 	std::unordered_map<unsigned int, APlaceableObject*> IdToPlaceables;
 	MakeGetter(IdToPlaceables);
 
+protected:
+	APlaceableObject* SelectedPlaceable = nullptr;
+	AAttachableObject* SelectedAttachable = nullptr;
+	MakeSetterGetter(SelectedPlaceable);
+	MakeSetterGetter(SelectedAttachable);
+
 public:
-	void AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticMeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
-	void AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetIn, float PosXIn, float PosYIn, float PosZIn);
+	void SetSelectedPlaceableByID(const UINT& IdIn);
+
+public:
+	void AddAsset(AAssetFile* AssetFileIn, const float& PosXIn, const float& PosYIn, const float& PosZIn);
+
+private:
+	void AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticMeshAssetIn, const float& PosXIn, const float& PosYIn, const float& PosZIn);
+	void AddSkeletalMeshObjectActor(std::shared_ptr<SkeletalMeshAsset> SkeletalMeshAssetIn, const float& PosXIn, const float& PosYIn, const float& PosZIn);
 
 private:
 	void SetEnvironmentActorByCamera();
@@ -74,7 +86,7 @@ public:
 	virtual void Update(const float& DeltaTimeIn) override;
 
 public:
-	virtual void Render() override ;
+	virtual void Render() override;
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

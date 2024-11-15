@@ -5,7 +5,7 @@
 class CreateRetargetedAnimationAssetModal : public CreateAssetModal
 {
 public:
-	CreateRetargetedAnimationAssetModal(const std::string& ModalHeaderNameIn, AssetManager* AssetManagerIn);
+	CreateRetargetedAnimationAssetModal(const std::string& ModalHeaderNameIn);
 	virtual ~CreateRetargetedAnimationAssetModal();
 
 protected:

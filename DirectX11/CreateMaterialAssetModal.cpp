@@ -1,15 +1,14 @@
 #include "CreateMaterialAssetModal.h"
+
+#include "GlobalVariable.h"
 #include "AssetManager.h"
 #include "MaterialAsset.h"
 
 using namespace std;
 using namespace ImGui;
 
-CreateMaterialAssetModal::CreateMaterialAssetModal(
-	const std::string& ModalHeaderNameIn, 
-	AssetManager* AssetManagerIn
-)
-	: CreateAssetModal(ModalHeaderNameIn, AssetManagerIn)
+CreateMaterialAssetModal::CreateMaterialAssetModal(const std::string& ModalHeaderNameIn)
+	: CreateAssetModal(ModalHeaderNameIn)
 {
 }
 
@@ -25,7 +24,7 @@ void CreateMaterialAssetModal::RenderModal()
     if (Button("OK", ImVec2(120, 0)))
     {
         shared_ptr<MaterialAsset> MaterialAssetAdded = make_shared<MaterialAsset>(AssetNameBuffer, false);
-        AssetManagerCached->SerailizeAndAddToContainer(MaterialAssetAdded);
+        App::GAssetManager->SerailizeAndAddToContainer(MaterialAssetAdded);
         CloseCurrentPopup();
     }
     SetItemDefaultFocus();

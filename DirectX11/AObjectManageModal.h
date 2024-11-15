@@ -2,21 +2,18 @@
 #include "AModal.h"
 #include "HeaderHelper.h"
 
-class EditorWorld;
+#include <memory>
+
 class MapAsset;
 
 class AObjectManageModal : public AModal
 {
 public:
-	AObjectManageModal(
-		const std::string& ModalHeaderNameIn,
-		EditorWorld* EditorWorldIn
-	);
+	AObjectManageModal(const std::string& ModalHeaderNameIn);
 	virtual ~AObjectManageModal();
 
 protected:
-	EditorWorld* EditorWorldCached = nullptr;
-	MapAsset* CurrentMapAssetCached = nullptr;
+	std::shared_ptr<MapAsset> CurrentMapAssetCached = nullptr;
 	MakeSetter(CurrentMapAssetCached);
 
 protected:

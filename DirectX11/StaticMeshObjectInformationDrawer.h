@@ -7,10 +7,7 @@ class AssetManager;
 class StaticMeshObjectInformationDrawer : public AInformationDrawer<StaticMeshObject>
 {
 public:
-	StaticMeshObjectInformationDrawer(StaticMeshObject* ObjectIn, AssetManager* AssetManagerIn);
-
-protected:
-	AssetManager* AssetManagerCached = nullptr;
+	StaticMeshObjectInformationDrawer(StaticMeshObject* ObjectIn);
 
 public:
 	virtual void DrawInformation() override;

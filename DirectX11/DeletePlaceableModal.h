@@ -4,7 +4,7 @@
 class DeletePlaceableModal : public AObjectManageModal
 {
 public:
-	DeletePlaceableModal(const std::string& ModalHeaderNameIn, EditorWorld* EditorWorldIn);
+	DeletePlaceableModal(const std::string& ModalHeaderNameIn);
 	virtual ~DeletePlaceableModal();
 
 protected:

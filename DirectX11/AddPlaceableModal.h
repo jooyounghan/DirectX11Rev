@@ -4,7 +4,7 @@
 class AddPlaceableModal : public AObjectManageModal
 {
 public:
-	AddPlaceableModal(const std::string& ModalHeaderNameIn, EditorWorld* EditorWorldIn);
+	AddPlaceableModal(const std::string& ModalHeaderNameIn);
 	virtual ~AddPlaceableModal();
 
 private:

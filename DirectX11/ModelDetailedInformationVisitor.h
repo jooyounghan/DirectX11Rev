@@ -3,15 +3,11 @@
 #include "directxmath/DirectXMath.h"
 
 class ModelDetailWindow;
-class AssetManager;
 
 class ModelDetailedInformationVisitor : public IGuiModelVisitor
 {
 public:
-	ModelDetailedInformationVisitor(AssetManager* AssetManagerInstanceIn);
-
-protected:
-	AssetManager* AssetManagerCached;
+	ModelDetailedInformationVisitor();
 
 public:
 	virtual void Visit(MapAsset* MapAssetInstance) override;

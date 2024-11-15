@@ -4,7 +4,7 @@
 class CreateMaterialAssetModal : public CreateAssetModal
 {
 public:
-	CreateMaterialAssetModal(const std::string& ModalHeaderNameIn, AssetManager* AssetManagerIn);
+	CreateMaterialAssetModal(const std::string& ModalHeaderNameIn);
 	virtual ~CreateMaterialAssetModal();
 
 protected:

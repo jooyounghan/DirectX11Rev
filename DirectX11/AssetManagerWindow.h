@@ -18,11 +18,8 @@ class CreateAssetModal;
 class AssetManagerWindow : public AWindow
 {
 public:
-	AssetManagerWindow(AssetManager* AssetManagerIn);
+	AssetManagerWindow();
 	virtual ~AssetManagerWindow();
-
-private:
-	AssetManager* AssetManagerCached = nullptr;
 
 public:
 	virtual void RenderWindow() override;

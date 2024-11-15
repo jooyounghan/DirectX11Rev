@@ -1,40 +1,17 @@
 #include "ViewportWindow.h"
 
-#include "EditorWorld.h"
-#include "GameWorld.h"
-
-#include "MapAsset.h"
-#include "AssetManager.h"
-
-#include "StaticMeshAsset.h"
-#include "SkeletalMeshAsset.h"
-
-#include "EditorPawn.h"
 #include "ACamera.h"
+#include "Ray.h"
 
 #include "UIVariable.h"
+
 
 using namespace std;
 using namespace ImGui;
 using namespace DirectX;
 
-ViewportWindow::ViewportWindow(EditorWorld* EditorWorldCached)
-    : EditorWorldCached(EditorWorldCached)
+ViewportWindow::ViewportWindow()
 {
-
-    if (EditorWorldCached != nullptr)
-    {
-        GameWorldCached = EditorWorldCached->GetGameWorldCached();
-        if (GameWorldCached != nullptr)
-        {
-            AssetManagerCached = GameWorldCached->GetAssetManagerInstance();
-            CurrentMap = GameWorldCached->GetCurrentMap();
-            if (CurrentMap != nullptr)
-            {
-                CameraCached = CurrentMap->GetCurrentCamera();
-            }
-        }
-    }
 }
 
 ViewportWindow::~ViewportWindow()
@@ -44,82 +21,49 @@ ViewportWindow::~ViewportWindow()
 void ViewportWindow::RenderWindow()
 {
     Begin("Viewport");
-    CurrentMap = GameWorldCached->GetCurrentMap();
-    if (CurrentMap != nullptr)
-    {
-        if (CameraCached != nullptr)
-        {
-            ImagePosition = ImGui::GetCursorScreenPos();
-            ImageSize = GetContentRegionAvail();
-            Image(CameraCached->GetSDRSceneSRV(), ImageSize);
-            ManageAssetDrop();
-            ManageMouseLBClick();
-        }
-        else
-        {
-            CameraCached = CurrentMap->GetCurrentCamera();
-        }
-    }
-    End();
-}
 
-void ViewportWindow::ManageAssetDrop()
-{
-    if (BeginDragDropTarget())
+    if (CurrentCamera != nullptr)
     {
-        if (const ImGuiPayload* payload = AcceptDragDropPayload(DragDrop::GAsset))
-        {
-            IM_ASSERT(payload->DataSize == sizeof(AAssetFile*));
-            AAssetFile* AssetFile = *(AAssetFile**)(payload->Data);
+        ImagePosition = ImGui::GetCursorScreenPos();
+        ImageSize = GetContentRegionAvail();
 
-            if (CurrentMap != nullptr)
+
+        Image(CurrentCamera->GetSDRSceneSRV(), ImageSize);
+        if (BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = AcceptDragDropPayload(DragDrop::GAsset))
             {
+                IM_ASSERT(payload->DataSize == sizeof(AAssetFile*));
+                AAssetFile* AssetFile = *(AAssetFile**)(payload->Data);
+
                 ImGuiIO& io = GetIO();
                 ImVec2 AbsMousePos = io.MousePos;
                 ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - ImagePosition.x, AbsMousePos.y - ImagePosition.y);
 
                 Ray ClickedRay = Ray::CreateRay(
-                    RelativeMousePos.x, RelativeMousePos.y, 
+                    RelativeMousePos.x, RelativeMousePos.y,
                     ImageSize.x, ImageSize.y,
-                    CameraCached->GetProjectionMatrix(),
-                    CameraCached->GetViewMatrix()
+                    CurrentCamera->GetProjectionMatrix(),
+                    CurrentCamera->GetViewMatrix()
                 );
+
                 const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
+
+                AssetDropEvent.Invoke(AssetFile, PlacePositon.m128_f32[0], PlacePositon.m128_f32[1], PlacePositon.m128_f32[2]);
                 
-                const string& AssetType = AssetFile->GetAssetType();
-                if (AssetType == StaticMeshAsset::StaticMeshAssetKind)
-                {
-                    CurrentMap->AddStaticMeshObjectActor(
-                        AssetManagerCached->GetManagingStaticMesh(AssetFile->GetAssetName()),
-                        PlacePositon.m128_f32[0],
-                        PlacePositon.m128_f32[1],
-                        PlacePositon.m128_f32[2]
-                    );
-                }
-                else if (AssetType == SkeletalMeshAsset::SkeletalMeshAssetKind)
-                {
-                    CurrentMap->AddSkeletalMeshObjectActor(
-                        AssetManagerCached->GetManagingSkeletalMesh(AssetFile->GetAssetName()),
-                        PlacePositon.m128_f32[0],
-                        PlacePositon.m128_f32[1],
-                        PlacePositon.m128_f32[2]
-                    );
-                }
             }
+            EndDragDropTarget();
         }
-        EndDragDropTarget();
-    }
-}
+            
+        if (IsMouseClicked(ImGuiMouseButton_Left) && IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
+        {
+            ImGuiIO& io = GetIO();
+            ImVec2 AbsMousePos = io.MousePos;
+            ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - ImagePosition.x, AbsMousePos.y - ImagePosition.y);
 
-void ViewportWindow::ManageMouseLBClick()
-{
-    if (IsMouseClicked(ImGuiMouseButton_Left) && IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
-    {
-        ImGuiIO& io = GetIO();
-        ImVec2 AbsMousePos = io.MousePos;
-        ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - ImagePosition.x, AbsMousePos.y - ImagePosition.y);
-
-        UINT SelectedID = CameraCached->GetID(RelativeMousePos.x, RelativeMousePos.y, ImageSize.x, ImageSize.y);
-        EditorWorldCached->SetSelecteObjectByID(SelectedID);
+            UINT SelectedID = CurrentCamera->GetID(RelativeMousePos.x, RelativeMousePos.y, ImageSize.x, ImageSize.y);
+            IDSelectEvent.Invoke(SelectedID);
+        }
     }
+    End();
 }
