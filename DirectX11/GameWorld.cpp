@@ -21,6 +21,9 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 
 GameWorld::GameWorld(HWND WindowHandle)
 {
+	OnMapSelected = bind(&GameWorld::SetCurrentMap, this, placeholders::_1);
+	OnIDSelected = bind(&GameWorld::SelectPlaceableByID, this, placeholders::_1);
+	OnAssetDropped = bind(&GameWorld::AddAssetWithDropped, this, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4);
 	InitEditor(WindowHandle);
 }
 
@@ -48,13 +51,15 @@ void GameWorld::InitEditor(HWND WindowHandle)
 		App::GGraphicPipeline->GetDeviceContext()
 	);
 
-	OnMapSelected = bind(&GameWorld::SetCurrentMap, this, placeholders::_1);
 
 	TaskAnalyzerWindowInstance = AddDialog<TaskAnalyzerWindow>();
-	ViewportWindowInstance = AddDialog<ViewportWindow>();
 	MapOutlinerWindowInstance = AddDialog<MapOutlinerWindow>();
+
+
 	AssetManagerWindowInstance = AddDialog<AssetManagerWindow>();
 	
+	MapOutlinerWindowInstance->IDSelectEvent += OnIDSelected;
+	MapOutlinerWindowInstance->AssetDropEvent += OnAssetDropped;
 	MapOutlinerWindowInstance->MapSelectedEvent += OnMapSelected;
 }
 
@@ -68,25 +73,30 @@ void GameWorld::Update(const float& DeltaTimeIn)
 
 void GameWorld::SetCurrentMap(const std::shared_ptr<MapAsset>& NewMap)
 {
-	if (CurrentMap != nullptr)
-	{
-		ViewportWindowInstance->IDSelectEvent -= OnIDSelected;
-		ViewportWindowInstance->AssetDropEvent -= OnAssetDropped;
-	}
-
 	CurrentMap = NewMap;
-	
-	if (NewMap != nullptr)
+	MapOutlinerWindowInstance->SetCurrentCamera(NewMap->GetCurrentCamera());
+}
+
+void GameWorld::SelectPlaceableByID(const UINT& SelectedID)
+{
+	if (CurrentMap)
 	{
-		ViewportWindowInstance->SetCurrentCamera(NewMap->GetCurrentCamera());
-
-		OnIDSelected = bind(&MapAsset::SetSelectedPlaceableByID, NewMap.get(), placeholders::_1);
-		OnAssetDropped = bind(&MapAsset::AddAsset, NewMap.get(), placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4);
-
-		ViewportWindowInstance->IDSelectEvent += OnIDSelected;
-		ViewportWindowInstance->AssetDropEvent += OnAssetDropped;
+		APlaceableObject* SelectedPlaceableObject = CurrentMap->GetSelectedPlaceableByID(SelectedID);
+		MapOutlinerWindowInstance->SetSelectedPlaceable(SelectedPlaceableObject);
 	}
+}
 
+void GameWorld::AddAssetWithDropped(
+	AAssetFile* AssetFileIn, 
+	const float& PosXIn, 
+	const float& PosYIn, 
+	const float& PosZIn
+)
+{
+	if (CurrentMap)
+	{
+		CurrentMap->AddAsset(AssetFileIn, PosXIn, PosYIn, PosZIn);
+	}
 }
 
 void GameWorld::Render()
@@ -94,6 +104,7 @@ void GameWorld::Render()
 	
 	if (CurrentMap)
 	{
+		//MapOutlinerWindowInstance->GetSelectedPlaceable()->Render();
 		CurrentMap->Render();
 	}
 

@@ -2,21 +2,24 @@
 #include "ModelDetailedInformationVisitor.h"
 
 #include "GlobalVariable.h"
+#include "UIVariable.h"
+
 #include "AssetManager.h"
 #include "MapAsset.h"
 
-#include <list> 
-#include <memory>
+#include "ACamera.h"
+#include "Ray.h"
 
 using namespace std;
 using namespace ImGui;
+using namespace DirectX;
 
 MapOutlinerWindow::MapOutlinerWindow()
 	: 
-    AddAttachableModalInstance("Add Attachable Object"),
+    AddAttachableModalInstance(this, "Add Attachable Object"),
     AddPlaceableModalInstance("Add Placeable Object"),
-    DeleteAttachableModalInstance("Delete Attachable Object"),
-    DeletePlaceableModalInstance("Delete Placeable Object")
+    DeleteAttachableModalInstance(this, "Delete Attachable Object"),
+    DeletePlaceableModalInstance(this, "Delete Placeable Object")
 {
 
 }
@@ -27,8 +30,59 @@ MapOutlinerWindow::~MapOutlinerWindow()
 
 void MapOutlinerWindow::RenderWindow()
 {
+    RenderViewport();
     RenderMapOutliner();
     RenderModelDetail();
+}
+
+void MapOutlinerWindow::RenderViewport()
+{
+    Begin("Viewport");
+
+    if (CurrentCamera != nullptr)
+    {
+        ImagePosition = ImGui::GetCursorScreenPos();
+        ImageSize = GetContentRegionAvail();
+
+
+        Image(CurrentCamera->GetSDRSceneSRV(), ImageSize);
+        if (BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = AcceptDragDropPayload(DragDrop::GAsset))
+            {
+                IM_ASSERT(payload->DataSize == sizeof(AAssetFile*));
+                AAssetFile* AssetFile = *(AAssetFile**)(payload->Data);
+
+                ImGuiIO& io = GetIO();
+                ImVec2 AbsMousePos = io.MousePos;
+                ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - ImagePosition.x, AbsMousePos.y - ImagePosition.y);
+
+                Ray ClickedRay = Ray::CreateRay(
+                    RelativeMousePos.x, RelativeMousePos.y,
+                    ImageSize.x, ImageSize.y,
+                    CurrentCamera->GetProjectionMatrix(),
+                    CurrentCamera->GetViewMatrix()
+                );
+
+                const XMVECTOR PlacePositon = ClickedRay.Origin + ClickedRay.Direction * (500.f);
+
+                AssetDropEvent.Invoke(AssetFile, PlacePositon.m128_f32[0], PlacePositon.m128_f32[1], PlacePositon.m128_f32[2]);
+
+            }
+            EndDragDropTarget();
+        }
+
+        if (IsMouseClicked(ImGuiMouseButton_Left) && IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
+        {
+            ImGuiIO& io = GetIO();
+            ImVec2 AbsMousePos = io.MousePos;
+            ImVec2 RelativeMousePos = ImVec2(AbsMousePos.x - ImagePosition.x, AbsMousePos.y - ImagePosition.y);
+
+            UINT SelectedID = CurrentCamera->GetID(RelativeMousePos.x, RelativeMousePos.y, ImageSize.x, ImageSize.y);
+            IDSelectEvent.Invoke(SelectedID);
+        }
+    }
+    End();
 }
 
 void MapOutlinerWindow::RenderMapOutliner()
@@ -51,14 +105,11 @@ void MapOutlinerWindow::RenderModelDetail()
 
     if (SelectedMapAsset)
     {
-        APlaceableObject* SelectedPlaceable = SelectedMapAsset->GetSelectedPlaceable();
-        AAttachableObject* SelectedAttached = SelectedMapAsset->GetSelectedAttachable();
-
         ModelDetailedInformationVisitor InformationVisitor;
 
-        if (SelectedAttached != nullptr)
+        if (SelectedAttachable != nullptr)
         {
-            SelectedAttached->AcceptGui(&InformationVisitor);
+            SelectedAttachable->AcceptGui(&InformationVisitor);
         }
         else if (SelectedPlaceable != nullptr)
         {
@@ -93,10 +144,8 @@ void MapOutlinerWindow::RenderMapAssetOverview()
         if (IsItemClicked() or IsItemToggledOpen())
         {
             SelectedMapAsset = Map;
-            AddAttachableModalInstance.SetCurrentMapAssetCached(Map);
-            AddPlaceableModalInstance.SetCurrentMapAssetCached(Map);
-            DeleteAttachableModalInstance.SetCurrentMapAssetCached(Map);
-            DeletePlaceableModalInstance.SetCurrentMapAssetCached(Map);
+            AddPlaceableModalInstance.SetMapAssetCached(Map);
+            DeletePlaceableModalInstance.SetMapAssetCached(Map);
 
             MapSelectedEvent.Invoke(Map);
         }
@@ -114,7 +163,6 @@ void MapOutlinerWindow::RenderPlaceablesOutline()
     Text("Placed Object List:");
     AddPlaceableModalInstance.DoModal();
 
-    APlaceableObject* SelectedPlacedObject = SelectedMapAsset->GetSelectedPlaceable();
     const list<unique_ptr<APlaceableObject>>& RootPlaceables = SelectedMapAsset->GetRootPlaceables();
 
     for (auto& Placeable : RootPlaceables)
@@ -122,7 +170,7 @@ void MapOutlinerWindow::RenderPlaceablesOutline()
         APlaceableObject* PlacedObject = Placeable.get();
 
         ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_SpanAvailWidth;
-        if (SelectedPlacedObject == PlacedObject)
+        if (SelectedPlaceable == PlacedObject)
         {
             NodeFlags |= ImGuiTreeNodeFlags_Selected;
         }
@@ -130,8 +178,8 @@ void MapOutlinerWindow::RenderPlaceablesOutline()
         bool IsOpen = TreeNodeEx(PlacedObject->GetObjectName().c_str(), NodeFlags);
         if (IsItemClicked() or IsItemToggledOpen())
         {
-            SelectedMapAsset->SetSelectedPlaceable(PlacedObject);
-            SelectedMapAsset->SetSelectedAttachable(nullptr);
+            SelectedPlaceable = PlacedObject;
+            SelectedAttachable = nullptr;
         }
 
         if (IsOpen)
@@ -148,10 +196,9 @@ void MapOutlinerWindow::RenderSelectedPlaceableOutline()
     Text("Attached Object List:\t");
     AddAttachableModalInstance.DoModal();
 
-    APlaceableObject* SelectedPlacedObject = SelectedMapAsset->GetSelectedPlaceable();
-    if (SelectedPlacedObject != nullptr)
+    if (SelectedPlaceable != nullptr)
     {
-        const list<unique_ptr<AAttachableObject>>& AttachedObjects = SelectedPlacedObject->GetAttachedChildrenObjects();
+        const list<unique_ptr<AAttachableObject>>& AttachedObjects = SelectedPlaceable->GetAttachedChildrenObjects();
 
         ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
         if (AttachedObjects.size() == 0)
@@ -163,7 +210,7 @@ void MapOutlinerWindow::RenderSelectedPlaceableOutline()
             NodeFlags |= (ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow);
         }
 
-        Text(SelectedPlacedObject->GetObjectName().c_str());
+        Text(SelectedPlaceable->GetObjectName().c_str());
         Indent();
         for (auto& AttachedObject : AttachedObjects)
         {
@@ -177,7 +224,6 @@ void MapOutlinerWindow::RenderSelectedPlaceableOutline()
 
 void MapOutlinerWindow::RenderAttachedOutline(AAttachableObject* Attachment)
 {
-    AAttachableObject* SelectedAttachableObject = SelectedMapAsset->GetSelectedAttachable();
     const list<unique_ptr<AAttachableObject>>& AttachedObjects = Attachment->GetAttachedChildrenObjects();
 
     ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -190,7 +236,7 @@ void MapOutlinerWindow::RenderAttachedOutline(AAttachableObject* Attachment)
         NodeFlags |= (ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow);
     }
 
-    if (SelectedAttachableObject == Attachment)
+    if (SelectedAttachable == Attachment)
     {
         NodeFlags |= ImGuiTreeNodeFlags_Selected;
     }
@@ -198,7 +244,7 @@ void MapOutlinerWindow::RenderAttachedOutline(AAttachableObject* Attachment)
     bool IsOpen = TreeNodeEx(Attachment->GetObjectName().c_str(), NodeFlags);
     if (IsItemClicked() or IsItemToggledOpen())
     {
-        SelectedMapAsset->SetSelectedAttachable(Attachment);
+        SelectedAttachable = Attachment;
     }
 
     if (IsOpen)

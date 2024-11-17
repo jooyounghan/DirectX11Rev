@@ -1,11 +1,16 @@
 #pragma once
-#include "AObjectManageModal.h"
+#include "AModal.h"
 
-class DeleteAttachableModal : public AObjectManageModal
+class MapOutlinerWindow;
+
+class DeleteAttachableModal : public AModal
 {
 public:
-	DeleteAttachableModal(const std::string& ModalHeaderNameIn);
+	DeleteAttachableModal(MapOutlinerWindow* MapOutlinerWindowIn, const std::string& ModalHeaderNameIn);
 	virtual ~DeleteAttachableModal();
+
+private:
+	MapOutlinerWindow* MapOutlinerWindowCached = nullptr;
 
 protected:
 	virtual bool ModalCondition() override;

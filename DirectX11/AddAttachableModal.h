@@ -1,14 +1,19 @@
 #pragma once
-#include "AObjectManageModal.h"
+#include "AModal.h"
 
-class AddAttachableModal : public AObjectManageModal
+class MapOutlinerWindow;
+
+class AddAttachableModal : public AModal
 {
 public:
-	AddAttachableModal(const std::string& ModalHeaderNameIn);
+	AddAttachableModal(MapOutlinerWindow* MapOutlinerWindowIn, const std::string& ModalHeaderNameIn);
 	virtual ~AddAttachableModal();
 
 private:
 	std::vector<std::string> AttachableItemIdentifiers;
+
+private:
+	MapOutlinerWindow* MapOutlinerWindowCached = nullptr;
 
 protected:
 	virtual bool ModalCondition() override;

@@ -1,4 +1,6 @@
 #include "DeleteAttachableModal.h"
+
+#include "MapOutlinerWindow.h"
 #include "AAttachableObject.h"
 #include "APlaceableObject.h"
 #include "MapAsset.h"
@@ -6,8 +8,8 @@
 using namespace std;
 using namespace ImGui;
 
-DeleteAttachableModal::DeleteAttachableModal(const string& ModalHeaderNameIn)
-	: AObjectManageModal(ModalHeaderNameIn)
+DeleteAttachableModal::DeleteAttachableModal(MapOutlinerWindow* MapOutlinerWindowIn, const string& ModalHeaderNameIn)
+	: AModal(ModalHeaderNameIn), MapOutlinerWindowCached(MapOutlinerWindowIn)
 {
 }
 
@@ -17,14 +19,13 @@ DeleteAttachableModal::~DeleteAttachableModal()
 
 bool DeleteAttachableModal::ModalCondition()
 {
-	return CurrentMapAssetCached != nullptr &&
-        CurrentMapAssetCached->GetSelectedAttachable() != nullptr &&
+	return MapOutlinerWindowCached->GetSelectedAttachable() != nullptr &&
         IsKeyPressed(ImGuiKey::ImGuiKey_Delete) && IsWindowFocused();
 }
 
 void DeleteAttachableModal::RenderModal()
 {
-	AAttachableObject* SelectedAttached = CurrentMapAssetCached->GetSelectedAttachable();
+	AAttachableObject* SelectedAttached = MapOutlinerWindowCached->GetSelectedAttachable();
 
     if (SelectedAttached != nullptr)
     {
@@ -33,11 +34,11 @@ void DeleteAttachableModal::RenderModal()
 
         if (Button("OK", ImVec2(120, 0)))
         {
-            APlaceableObject* SelectedPlaceableObject = CurrentMapAssetCached->GetSelectedPlaceable();
+            APlaceableObject* SelectedPlaceableObject = MapOutlinerWindowCached->GetSelectedPlaceable();
             if (SelectedPlaceableObject != nullptr)
             {
                 SelectedPlaceableObject->RemoveAttachedObject(SelectedAttached);
-                CurrentMapAssetCached->SetSelectedAttachable(nullptr);
+                MapOutlinerWindowCached->SetSelectedAttachable(nullptr);
             }
             CloseCurrentPopup();
         }

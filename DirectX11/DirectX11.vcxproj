@@ -153,7 +153,6 @@
     <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationPlayer.cpp" />
     <ClCompile Include="AnimationRetargeter.cpp" />
-    <ClCompile Include="AObjectManageModal.cpp" />
     <ClCompile Include="APawn.cpp" />
     <ClCompile Include="APopup.cpp" />
     <ClCompile Include="AssetSelectHelper.cpp" />
@@ -263,7 +262,6 @@
     <ClCompile Include="VariablePredicateNode.cpp" />
     <ClCompile Include="Viewable.cpp" />
     <ClCompile Include="ViewableInformationDrawer.cpp" />
-    <ClCompile Include="ViewportWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AAssetNodeCanvas.h" />
@@ -281,7 +279,6 @@
     <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationPlayer.h" />
     <ClInclude Include="AnimationRetargeter.h" />
-    <ClInclude Include="AObjectManageModal.h" />
     <ClInclude Include="APopup.h" />
     <ClInclude Include="AssetSelectHelper.h" />
     <ClInclude Include="AssetVariableInputPort.h" />
@@ -423,7 +420,6 @@
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Viewable.h" />
     <ClInclude Include="ViewableInformationDrawer.h" />
-    <ClInclude Include="ViewportWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\BoundingObjectPS.hlsl">

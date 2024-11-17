@@ -56,16 +56,13 @@ MapAsset::~MapAsset()
 	Serialize();
 }
 
-void MapAsset::SetSelectedPlaceableByID(const UINT& IdIn)
+APlaceableObject* MapAsset::GetSelectedPlaceableByID(const UINT& IdIn)
 {
 	if (IdToPlaceables.find(IdIn) != IdToPlaceables.end())
 	{
-		SelectedPlaceable = IdToPlaceables.at(IdIn);
+		return IdToPlaceables.at(IdIn);
 	}
-	else
-	{
-		SelectedPlaceable = nullptr;
-	}
+	return nullptr;
 }
 
 

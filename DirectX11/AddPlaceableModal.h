@@ -1,7 +1,11 @@
 #pragma once
-#include "AObjectManageModal.h"
+#include "HeaderHelper.h"
+#include "AModal.h"
+#include <memory>
 
-class AddPlaceableModal : public AObjectManageModal
+class MapAsset;
+
+class AddPlaceableModal : public AModal
 {
 public:
 	AddPlaceableModal(const std::string& ModalHeaderNameIn);
@@ -9,6 +13,9 @@ public:
 
 private:
 	std::vector<std::string> PlaceableItemIdentifiers;
+	std::shared_ptr<MapAsset> MapAssetCached = nullptr;
+	MakeSetterGetter(MapAssetCached);
+
 
 protected:
 	virtual bool ModalCondition() override;

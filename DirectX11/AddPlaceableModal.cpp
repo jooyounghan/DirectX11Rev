@@ -10,7 +10,7 @@ using namespace std;
 using namespace ImGui;
 
 AddPlaceableModal::AddPlaceableModal(const string& ModalHeaderNameIn)
-    : AObjectManageModal(ModalHeaderNameIn)
+    : AModal(ModalHeaderNameIn)
 {
     PlaceableItemIdentifiers =
     {
@@ -30,7 +30,7 @@ bool AddPlaceableModal::ModalCondition()
 	const char* SmallButtonText = "Add Placeable +";
 	float ButtonWidth = CalcTextSize(SmallButtonText).x;
 	SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
-	return SmallButton(SmallButtonText) && (CurrentMapAssetCached != nullptr);
+	return SmallButton(SmallButtonText) && (MapAssetCached != nullptr);
 }
 
 void AddPlaceableModal::RenderModal()
@@ -54,15 +54,15 @@ void AddPlaceableModal::RenderModal()
     {
         if (SelectedPlaceableKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
         {
-            CurrentMapAssetCached->PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
+            MapAssetCached->PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
         }
         else if (SelectedPlaceableKind == SkeletalMeshObjectActor::SkeletalMeshObjectActorKind)
         {
-            CurrentMapAssetCached->PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
+            MapAssetCached->PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
         }
         else if (SelectedPlaceableKind == EnvironmentActor::EnvironmentActorKind)
         {
-            CurrentMapAssetCached->PlaceableAddHelper<EnvironmentActor>();
+            MapAssetCached->PlaceableAddHelper<EnvironmentActor>();
         }
         CloseCurrentPopup();
     }

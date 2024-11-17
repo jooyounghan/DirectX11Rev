@@ -7,7 +7,6 @@
 #include "Delegation.h"
 
 #include "TaskAnalyzerWindow.h"
-#include "ViewportWindow.h" 
 #include "MapOutlinerWindow.h"
 #include "AssetManagerWindow.h"
 
@@ -39,13 +38,13 @@ protected:
 protected:
 	IDSelectHandler OnIDSelected;
 	AssetDropHandler OnAssetDropped;
+	MapSelectedHandler OnMapSelected;
 
 protected:
 	std::vector<std::unique_ptr<AWindow>> Dialogs;
 
 private:
 	TaskAnalyzerWindow* TaskAnalyzerWindowInstance = nullptr;
-	ViewportWindow* ViewportWindowInstance = nullptr;
 	MapOutlinerWindow* MapOutlinerWindowInstance = nullptr;
 	AssetManagerWindow* AssetManagerWindowInstance = nullptr;
 
@@ -57,8 +56,11 @@ protected:
 	std::shared_ptr<MapAsset> CurrentMap = nullptr;
 
 private:
-	MapSelectedHandler OnMapSelected;
 	void SetCurrentMap(const std::shared_ptr<MapAsset>& NewMap);
+	
+private:
+	void SelectPlaceableByID(const UINT& SelectedID);
+	void AddAssetWithDropped(AAssetFile* AssetFileIn, const float& PosXIn, const float& PosYIn, const float& PosZIn);
 
 public:
 	void Render();
@@ -66,8 +68,6 @@ public:
 
 private:
 	virtual void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
-
-private:
 	void OnDropFiles(HDROP hDropIn);
 };
 

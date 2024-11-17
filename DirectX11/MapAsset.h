@@ -59,14 +59,8 @@ protected:
 	std::unordered_map<unsigned int, APlaceableObject*> IdToPlaceables;
 	MakeGetter(IdToPlaceables);
 
-protected:
-	APlaceableObject* SelectedPlaceable = nullptr;
-	AAttachableObject* SelectedAttachable = nullptr;
-	MakeSetterGetter(SelectedPlaceable);
-	MakeSetterGetter(SelectedAttachable);
-
 public:
-	void SetSelectedPlaceableByID(const UINT& IdIn);
+	APlaceableObject* GetSelectedPlaceableByID(const UINT& IdIn);
 
 public:
 	void AddAsset(AAssetFile* AssetFileIn, const float& PosXIn, const float& PosYIn, const float& PosZIn);

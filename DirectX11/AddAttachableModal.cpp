@@ -1,4 +1,5 @@
 #include "AddAttachableModal.h"
+#include "MapOutlinerWindow.h"
 
 #include "MapAsset.h"
 
@@ -15,8 +16,8 @@
 using namespace std;
 using namespace ImGui;
 
-AddAttachableModal::AddAttachableModal(const string& ModalHeaderNameIn)
-    : AObjectManageModal(ModalHeaderNameIn)
+AddAttachableModal::AddAttachableModal(MapOutlinerWindow* MapOutlinerWindowIn, const string& ModalHeaderNameIn)
+    : AModal(ModalHeaderNameIn), MapOutlinerWindowCached(MapOutlinerWindowIn)
 {
     AttachableItemIdentifiers =
     {
@@ -39,13 +40,13 @@ bool AddAttachableModal::ModalCondition()
 	const char* SmallButtonText = "Add Attachable +";
 	float ButtonWidth = CalcTextSize(SmallButtonText).x;
 	SetCursorPosX(GetCursorPosX() + GetContentRegionAvail().x - ButtonWidth);
-	return SmallButton(SmallButtonText) && (CurrentMapAssetCached != nullptr);
+	return SmallButton(SmallButtonText);
 }
 
 void AddAttachableModal::RenderModal()
 {
-    AAttachableObject* SelectedAttachable = CurrentMapAssetCached->GetSelectedAttachable();
-    APlaceableObject* SelectedPlaced = CurrentMapAssetCached->GetSelectedPlaceable();
+    AAttachableObject* SelectedAttachable = MapOutlinerWindowCached->GetSelectedAttachable();
+    APlaceableObject* SelectedPlaced = MapOutlinerWindowCached->GetSelectedPlaceable();
 
     if (SelectedPlaced != nullptr || SelectedAttachable != nullptr)
     {

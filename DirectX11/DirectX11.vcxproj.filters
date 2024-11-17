@@ -501,9 +501,6 @@
     <ClCompile Include="TaskAnalyzerWindow.cpp">
       <Filter>소스 파일\Editor\GUI\Window</Filter>
     </ClCompile>
-    <ClCompile Include="ViewportWindow.cpp">
-      <Filter>소스 파일\Editor\GUI\Window</Filter>
-    </ClCompile>
     <ClCompile Include="AssetManagerWindow.cpp">
       <Filter>소스 파일\Editor\GUI\Window</Filter>
     </ClCompile>
@@ -792,9 +789,6 @@
     <ClCompile Include="AModal.cpp">
       <Filter>소스 파일\Editor\GUI\Modal</Filter>
     </ClCompile>
-    <ClCompile Include="AObjectManageModal.cpp">
-      <Filter>소스 파일\Editor\GUI\Modal\Extended</Filter>
-    </ClCompile>
     <ClCompile Include="AddAttachableModal.cpp">
       <Filter>소스 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
     </ClCompile>
@@ -903,9 +897,6 @@
       <Filter>헤더 파일\Buffer\Constant</Filter>
     </ClInclude>
     <ClInclude Include="TaskAnalyzerWindow.h">
-      <Filter>헤더 파일\Editor\GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewportWindow.h">
       <Filter>헤더 파일\Editor\GUI\Window</Filter>
     </ClInclude>
     <ClInclude Include="FileSelectDialog.h">
@@ -1264,9 +1255,6 @@
     </ClInclude>
     <ClInclude Include="AddPlaceableModal.h">
       <Filter>헤더 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
-    </ClInclude>
-    <ClInclude Include="AObjectManageModal.h">
-      <Filter>헤더 파일\Editor\GUI\Modal\Extended</Filter>
     </ClInclude>
     <ClInclude Include="DeleteAttachableModal.h">
       <Filter>헤더 파일\Editor\GUI\Modal\Extended\ObjectModal</Filter>
