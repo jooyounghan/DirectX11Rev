@@ -65,8 +65,8 @@ void StaticMeshAsset::Serialize()
 	}
 }
 
-void StaticMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void StaticMeshAsset::Deserialize(FILE* FileIn)
 {
-	DeserializeBaseMeshData(FileIn, AssetManagerIn);
+	DeserializeBaseMeshData(FileIn);
 	Initialize();
 }

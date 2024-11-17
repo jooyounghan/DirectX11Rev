@@ -32,16 +32,12 @@ class MapAsset : public AAssetFile, public IUpdatable, public IGuiModelAcceptor
 public:
 	MapAsset(
 		const std::string& MapNameIn, 
-		AssetManager* AssetManagerIn, 
 		bool LoadFromAsset
 	);
 	virtual ~MapAsset();
 
 public:
 	static std::string MapAssetKind;
-
-protected:
-	AssetManager* AssetManagerCached = nullptr;
 
 protected:
 	std::unique_ptr<EditorPawn> EditorActorInstance;
@@ -93,7 +89,7 @@ public:
 
 public:
 	virtual void Serialize() override;
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void Deserialize(FILE* FileIn) override;
 
 private:
 	void SerializeChildrenObjects(APlaceableObject* ChildPlaceableObjectIn, FILE* FileIn);
@@ -101,7 +97,7 @@ private:
 
 private:
 	template<typename T>
-	void DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, AssetManager* AssetManagerIn);
+	void DeserializeParentObject(T* ParentObjectIn, FILE* FileIn);
 
 public:
 	template<typename T, typename ...Args>

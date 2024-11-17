@@ -70,7 +70,7 @@ public:
 
 public:
 	virtual void Serialize() override;
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void Deserialize(FILE* FileIn) override;
 
 private:
 	void SerializeAssetNameHelper(FILE* FileIn, std::shared_ptr<BaseTextureAsset> BasicTextureAssetIn);

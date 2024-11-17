@@ -13,6 +13,8 @@ using namespace Microsoft::WRL;
 
 PSOManager::PSOManager()
 {
+    App::GPSOManager = this;
+
     ID3D11Device* Device = App::GGraphicPipeline->GetDevice();
     ID3D11DeviceContext* DeviceContext = App::GGraphicPipeline->GetDeviceContext();
 

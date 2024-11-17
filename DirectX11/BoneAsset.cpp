@@ -42,7 +42,7 @@ void Bone::OnSerialize(FILE* FileIn)
 	fwrite(&(OffsetMatrix), sizeof(XMMATRIX), 1, FileIn);
 }
 
-void Bone::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void Bone::OnDeserialize(FILE* FileIn)
 {
 	// Bone Name
 	AAssetFile::DeserializeString(BoneName, FileIn);
@@ -143,7 +143,7 @@ void BoneAsset::Serialize()
 	}
 }
 
-void BoneAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void BoneAsset::Deserialize(FILE* FileIn)
 {
 	// Total Bone Count
 	size_t BoneCount;
@@ -154,7 +154,7 @@ void BoneAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 		// Bone Name
 		string BoneName;
 		AAssetFile::DeserializeString(BoneName, FileIn);
-		NameToBones[BoneName].OnDeserialize(FileIn, AssetManagerIn);
+		NameToBones[BoneName].OnDeserialize(FileIn);
 	}
 
 	for (auto& NameToBone : NameToBones)

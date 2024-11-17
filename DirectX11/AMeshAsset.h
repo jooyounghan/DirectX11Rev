@@ -54,12 +54,8 @@ public:
 public:
 	virtual void Initialize();
 
-public:
-	virtual void Serialize() = 0;
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
-
 protected:
 	virtual void SerializeBaseMeshData(FILE* FileIn);
-	virtual void DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn);
+	virtual void DeserializeBaseMeshData(FILE* FileIn);
 };
 

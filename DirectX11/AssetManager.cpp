@@ -56,6 +56,7 @@ unordered_map<string, EFileType> AssetManager::FileExtensionToType
 
 AssetManager::AssetManager()
 {
+    App::GAssetManager = this;
     PreloadAssets();
 }
 
@@ -963,7 +964,7 @@ void AssetManager::LoadAssetWithTopologySorting(const vector<string>& AssetPaths
                 }
                 else if (AssetType == MapAsset::MapAssetKind)
                 {
-                    LoadAssetHelper(InputAssetFile, ManagingMaps, AssetPreloadArgs.AssetName, this, true);
+                    LoadAssetHelper(InputAssetFile, ManagingMaps, AssetPreloadArgs.AssetName, true);
                 }
                 else if (AssetType == BaseTextureAsset::BaseTextureAssetKind)
                 {
@@ -1008,7 +1009,7 @@ void AssetManager::LoadAssetHelper(
 )
 {
     shared_ptr<T> AssetFile = make_shared<T>(AssetName, AssetConstructArgs...);
-    AssetFile->Deserialize(FileIn, this);
+    AssetFile->Deserialize(FileIn);
     ManagingContainer.emplace(AssetName, AssetFile);
 }
 

@@ -51,8 +51,8 @@ void EditorPawn::OnSerialize(FILE* FileIn)
     CameraInstance->OnSerialize(FileIn);
 }
 
-void EditorPawn::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void EditorPawn::OnDeserialize(FILE* FileIn)
 {
-    AObject::OnDeserialize(FileIn, AssetManagerIn);
-    CameraInstance->OnDeserialize(FileIn, AssetManagerIn);
+    AObject::OnDeserialize(FileIn);
+    CameraInstance->OnDeserialize(FileIn);
 }

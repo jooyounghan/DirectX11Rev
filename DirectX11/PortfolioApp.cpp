@@ -45,24 +45,16 @@ PortfolioApp::PortfolioApp()
 
 	GraphicsPipelineInstance = make_unique<GraphicsPipeline>();
 	GraphicsPipelineInstance->LoadPipeline(App::GWidth, App::GHeight, hWindow);
-	App::GGraphicPipeline = GraphicsPipelineInstance.get();
-
-	PSOManagerInstance = make_unique<PSOManager>();
-	App::GPSOManager = PSOManagerInstance.get();
 
 	OnChangeWindow();
-
 	QueryPerformanceFrequency(&Frequency);
 	QueryPerformanceCounter(&PrevTime);
 
+	PSOManagerInstance = make_unique<PSOManager>();
 	InputEventManagerInstance = make_unique<InputEventManager>();
-	App::GInputEventManager = InputEventManagerInstance.get();
-
 	UploadableBufferManagerInstance = make_unique<UploadableBufferManager>();
-	App::GUploadableBufferManager = UploadableBufferManagerInstance.get();
-
 	AssetManagerInstance = make_unique<AssetManager>();
-	App::GAssetManager = AssetManagerInstance.get();
+
 
 	GameWorldInstance = make_unique<GameWorld>(MainWindow);
 }

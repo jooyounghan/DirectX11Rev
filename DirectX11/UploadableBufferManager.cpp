@@ -4,6 +4,7 @@ using namespace std;
 
 UploadableBufferManager::UploadableBufferManager()
 {
+	App::GUploadableBufferManager = this;
 	OnUploadFlagUpdated = bind(&UploadableBufferManager::SetUploadFlag, this, placeholders::_1);
 	OnUploadableBufferRemoved = bind(&UploadableBufferManager::RemoveUploadableBuffer, this, placeholders::_1);
 }

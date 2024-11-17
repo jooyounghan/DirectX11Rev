@@ -165,12 +165,12 @@ void StaticMeshObject::OnSerialize(FILE* FileIn)
 
 }
 
-void StaticMeshObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void StaticMeshObject::OnDeserialize(FILE* FileIn)
 {
-	AMeshObject::OnDeserialize(FileIn, AssetManagerIn);
+	AMeshObject::OnDeserialize(FileIn);
 
 	string MeshAssetName;
 	AAssetFile::DeserializeString(MeshAssetName, FileIn);
 
-	StaticMeshAssetInstance = AssetManagerIn->GetManagingStaticMesh(MeshAssetName);
+	StaticMeshAssetInstance = App::GAssetManager->GetManagingStaticMesh(MeshAssetName);
 }

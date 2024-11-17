@@ -85,9 +85,9 @@ void Viewable::OnSerialize(FILE* FileIn)
 	fwrite(&FarZ, sizeof(float), 1, FileIn);
 }
 
-void Viewable::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void Viewable::OnDeserialize(FILE* FileIn)
 {
-	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn);
 	fread(&Viewport, sizeof(D3D11_VIEWPORT), 1, FileIn);
 	fread(&FovAngle, sizeof(float), 1, FileIn);
 	fread(&NearZ, sizeof(float), 1, FileIn);

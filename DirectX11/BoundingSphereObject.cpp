@@ -103,8 +103,8 @@ void BoundingSphereObject::OnSerialize(FILE* FileIn)
 	fwrite(&Radius, sizeof(float), 1, FileIn);
 }
 
-void BoundingSphereObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void BoundingSphereObject::OnDeserialize(FILE* FileIn)
 {
-	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn);
 	fread(&Radius, sizeof(float), 1, FileIn);
 }

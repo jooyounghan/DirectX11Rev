@@ -21,12 +21,8 @@ public:
 public:
 	virtual void Initialize() override;
 
-public:
-	virtual void Serialize() = 0;
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
-
 protected:
 	virtual void SerializeBaseMeshData(FILE* FileIn) override;
-	virtual void DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void DeserializeBaseMeshData(FILE* FileIn) override;
 };
 

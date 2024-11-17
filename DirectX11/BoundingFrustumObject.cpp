@@ -140,6 +140,6 @@ void BoundingFrustumObject::OnSerialize(FILE* FileIn)
 {
 }
 
-void BoundingFrustumObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void BoundingFrustumObject::OnDeserialize(FILE* FileIn)
 {
 }

@@ -1,7 +1,8 @@
 #include "MapAsset.h"
 
-#include "GraphicsPipeline.h"
 #include "GlobalVariable.h"
+#include "GraphicsPipeline.h"
+#include "AssetManager.h"
 
 #include "PSOManager.h"
 #include "PSOObject.h"
@@ -33,18 +34,16 @@ string MapAsset::MapAssetKind = "Map";
 
 MapAsset::MapAsset(
 	const std::string& MapNameIn,
-	AssetManager* AssetManagerIn,
 	bool LoadFromAsset
 )
 	: 
-	AssetManagerCached(AssetManagerIn),
 	AAssetFile(LoadFromAsset ? MapNameIn : MapNameIn + "_" + MapAsset::MapAssetKind, MapAsset::MapAssetKind)
 {
 	if (!LoadFromAsset)
 	{
 		EditorActorInstance = make_unique<EditorPawn>();
 		EnvironmentActorInstance = make_unique<EnvironmentActor>();
-		BaseMeshAsset* BaseMeshInstance = AssetManagerCached->GetManagingBaseMesh("BaseSphere");
+		BaseMeshAsset* BaseMeshInstance = App::GAssetManager->GetManagingBaseMesh("BaseSphere");
 		EnvironmentActorInstance->SetEnvironmentMeshAsset(BaseMeshInstance);
 
 		CurrentCamera = EditorActorInstance->GetCameraInstance();
@@ -197,13 +196,13 @@ void MapAsset::Serialize()
 	}
 }
 
-void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void MapAsset::Deserialize(FILE* FileIn)
 {
 	EditorActorInstance = make_unique<EditorPawn>();
 	EnvironmentActorInstance = make_unique<EnvironmentActor>();
 
-	EditorActorInstance->OnDeserialize(FileIn, AssetManagerIn);
-	EnvironmentActorInstance->OnDeserialize(FileIn, AssetManagerIn);
+	EditorActorInstance->OnDeserialize(FileIn);
+	EnvironmentActorInstance->OnDeserialize(FileIn);
 
 	CurrentCamera = EditorActorInstance->GetCameraInstance();
 	SetEnvironmentActorByCamera();
@@ -220,14 +219,14 @@ void MapAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 		if (PlaceableObjectKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
 		{
 			StaticMeshObjectActor* AddedActor = PlaceableAddHelper<StaticMeshObjectActor>(nullptr);
-			AddedActor->OnDeserialize(FileIn, AssetManagerIn);
-			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
+			AddedActor->OnDeserialize(FileIn);
+			DeserializeParentObject(AddedActor, FileIn);
 		}
 		else if (PlaceableObjectKind == SkeletalMeshObjectActor::SkeletalMeshObjectActorKind)
 		{
 			SkeletalMeshObjectActor* AddedActor = PlaceableAddHelper<SkeletalMeshObjectActor>(nullptr);
-			AddedActor->OnDeserialize(FileIn, AssetManagerIn);
-			DeserializeParentObject(AddedActor, FileIn, AssetManagerIn);
+			AddedActor->OnDeserialize(FileIn);
+			DeserializeParentObject(AddedActor, FileIn);
 		}
 		else if (PlaceableObjectKind == StaticMeshObjectActor::StaticMeshObjectActorKind)
 		{
@@ -287,7 +286,7 @@ void MapAsset::SerializeChildrenObjects(AAttachableObject* ChildAttachableObject
 }
 
 template<typename T>
-inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, AssetManager* AssetManagerIn)
+inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn)
 {
 	static_assert(
 		std::is_base_of<APlaceableObject, T>::value | std::is_base_of<AAttachableObject, T>::value,
@@ -335,8 +334,8 @@ inline void MapAsset::DeserializeParentObject(T* ParentObjectIn, FILE* FileIn, A
 
 		if (AddedMeshObject != nullptr)
 		{
-			AddedMeshObject->OnDeserialize(FileIn, AssetManagerIn);
-			DeserializeParentObject(AddedMeshObject, FileIn, AssetManagerIn);
+			AddedMeshObject->OnDeserialize(FileIn);
+			DeserializeParentObject(AddedMeshObject, FileIn);
 		}
 	}
 }

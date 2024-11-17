@@ -97,7 +97,7 @@ void SkeletalMeshAsset::Serialize()
 	}
 }
 
-void SkeletalMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void SkeletalMeshAsset::Deserialize(FILE* FileIn)
 {
 	// Linked Bone Name
 	string BoneAssetName;
@@ -106,10 +106,10 @@ void SkeletalMeshAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	BoneAssetName.resize(LinkedBoneAssetNameCount);
 	fread(BoneAssetName.data(), sizeof(char), LinkedBoneAssetNameCount, FileIn);
 
-	std::shared_ptr<BoneAsset> BoneAssetFile = AssetManagerIn->GetManagingBone(BoneAssetName);
+	std::shared_ptr<BoneAsset> BoneAssetFile = App::GAssetManager->GetManagingBone(BoneAssetName);
 	LinkedBoneAsset = BoneAssetFile;
 
-	DeserializeBaseMeshData(FileIn, AssetManagerIn);
+	DeserializeBaseMeshData(FileIn);
 
 	Initialize();
 }
@@ -135,9 +135,9 @@ void SkeletalMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 	}
 }
 
-void SkeletalMeshAsset::DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn)
+void SkeletalMeshAsset::DeserializeBaseMeshData(FILE* FileIn)
 {
-	ANBTMeshAsset::DeserializeBaseMeshData(FileIn, AssetManagerIn);
+	ANBTMeshAsset::DeserializeBaseMeshData(FileIn);
 	BlendWeightPerLOD.resize(LODCount);
 	BlendIndexPerLOD.resize(LODCount);
 

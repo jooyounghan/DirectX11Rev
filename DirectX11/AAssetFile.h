@@ -37,10 +37,6 @@ protected:
 	MakeComPtrGetter(ThumbnailTexture2D);
 	MakeComPtrGetter(ThumbnailSRV);
 
-public:
-	virtual void Serialize() = 0;
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
-
 protected:
 	std::string DefaultOpenFileHelper(const char* AssetFilePath, FILE*& FileOut);
 	void SerializeHeader(FILE* FileIn);

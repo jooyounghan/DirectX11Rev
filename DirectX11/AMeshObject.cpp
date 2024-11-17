@@ -203,9 +203,9 @@ void AMeshObject::OnSerialize(FILE* FileIn)
 	}
 }
 
-void AMeshObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void AMeshObject::OnDeserialize(FILE* FileIn)
 {
-	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn);
 
 	size_t MaterialCount;
 	fread(&MaterialCount, sizeof(size_t), 1, FileIn);
@@ -216,6 +216,6 @@ void AMeshObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 		string MaterialAssetName;
 		AAssetFile::DeserializeString(MaterialAssetName, FileIn);
 		
-		MaterialAssetInstances[idx] = AssetManagerIn->GetManagingMaterial(MaterialAssetName);
+		MaterialAssetInstances[idx] = App::GAssetManager->GetManagingMaterial(MaterialAssetName);
 	}
 }

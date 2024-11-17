@@ -40,7 +40,7 @@ void AObject::OnSerialize(FILE* FileIn)
 	fwrite(&RelativeScale, sizeof(XMFLOAT3), 1, FileIn);
 }
 
-void AObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void AObject::OnDeserialize(FILE* FileIn)
 {
 	// Object Name
 	AAssetFile::DeserializeString(ObjectName, FileIn);

@@ -4,6 +4,7 @@
 
 using namespace std;
 
+
 unordered_map<WPARAM, EKeyInput> InputEventManager::WinMsgToKeyInput
 {
 	{ 0x10, EKeyInput::KEY_SHIFT },
@@ -46,6 +47,11 @@ unordered_map<WPARAM, EKeyInput> InputEventManager::WinMsgToKeyInput
 	{ 0x59,EKeyInput::KEY_Y },
 	{ 0x5A,EKeyInput::KEY_Z }
 };
+
+InputEventManager::InputEventManager()
+{
+	App::GInputEventManager = this;
+}
 
 EKeyInput InputEventManager::GetKeyInputFromWinMsg(WPARAM wParam)
 {

@@ -117,9 +117,9 @@ void EnvironmentActor::OnSerialize(FILE* FileIn)
 	fwrite(&StagedData.Gamma, sizeof(float), 1, FileIn);
 }
 
-void EnvironmentActor::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void EnvironmentActor::OnDeserialize(FILE* FileIn)
 {
-	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn);
 
 	string EnvironmentMeshAssetName;
 	string EnvironmentBackgroundEXRTextureAssetName;
@@ -133,11 +133,11 @@ void EnvironmentActor::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	AAssetFile::DeserializeString(EnvironmentDiffuseDDSTextureAssetName, FileIn);
 	AAssetFile::DeserializeString(EnvironmentBRDFDDSTextureAssetName, FileIn);
 
-	EnvironmentMeshAsset = AssetManagerIn->GetManagingBaseMesh(EnvironmentMeshAssetName);
-	EnvironmentBackgroundEXRTextureAsset = AssetManagerIn->GetManagingEXRTexture(EnvironmentBackgroundEXRTextureAssetName);
-	EnvironmentSpecularDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentSpecularDDSTextureAssetName);
-	EnvironmentDiffuseDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentDiffuseDDSTextureAssetName);
-	EnvironmentBRDFDDSTextureAsset = AssetManagerIn->GetManagingDDSTexture(EnvironmentBRDFDDSTextureAssetName);
+	EnvironmentMeshAsset = App::GAssetManager->GetManagingBaseMesh(EnvironmentMeshAssetName);
+	EnvironmentBackgroundEXRTextureAsset = App::GAssetManager->GetManagingEXRTexture(EnvironmentBackgroundEXRTextureAssetName);
+	EnvironmentSpecularDDSTextureAsset = App::GAssetManager->GetManagingDDSTexture(EnvironmentSpecularDDSTextureAssetName);
+	EnvironmentDiffuseDDSTextureAsset = App::GAssetManager->GetManagingDDSTexture(EnvironmentDiffuseDDSTextureAssetName);
+	EnvironmentBRDFDDSTextureAsset = App::GAssetManager->GetManagingDDSTexture(EnvironmentBRDFDDSTextureAssetName);
 
 	float Exposure, Gamma;
 	fread(&Exposure, sizeof(float), 1, FileIn);

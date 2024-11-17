@@ -181,14 +181,14 @@ void SkeletalMeshObject::OnSerialize(FILE* FileIn)
 	AAssetFile::SerializeString(SkeletalMeshAssetInstance != nullptr ? SkeletalMeshAssetInstance->GetAssetName() : "", FileIn);
 }
 
-void SkeletalMeshObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void SkeletalMeshObject::OnDeserialize(FILE* FileIn)
 {
-	AMeshObject::OnDeserialize(FileIn, AssetManagerIn);
+	AMeshObject::OnDeserialize(FileIn);
 
 	string MeshAssetName;
 	AAssetFile::DeserializeString(MeshAssetName, FileIn);
 
-	SkeletalMeshAssetInstance = AssetManagerIn->GetManagingSkeletalMesh(MeshAssetName);
+	SkeletalMeshAssetInstance = App::GAssetManager->GetManagingSkeletalMesh(MeshAssetName);
 	if (SkeletalMeshAssetInstance != nullptr)
 	{
 		AnimationPlayerInstance.SetBoneAsset(SkeletalMeshAssetInstance->GetLinkedBoneAsset());

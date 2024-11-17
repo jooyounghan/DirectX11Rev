@@ -35,10 +35,10 @@ public:
 
 public:
 	virtual void Serialize() override;
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void Deserialize(FILE* FileIn) override;
 
 protected:
 	virtual void SerializeBaseMeshData(FILE* FileIn) override;
-	virtual void DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void DeserializeBaseMeshData(FILE* FileIn) override;
 };
 

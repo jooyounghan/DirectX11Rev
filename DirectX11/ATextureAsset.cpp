@@ -124,7 +124,7 @@ void ATextureAsset::Serialize()
 	}
 }
 
-void ATextureAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void ATextureAsset::Deserialize(FILE* FileIn)
 {
 	fread(&Width, sizeof(UINT), 1, FileIn);
 	fread(&Height, sizeof(UINT), 1, FileIn);

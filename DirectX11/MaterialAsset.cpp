@@ -48,7 +48,7 @@ void MaterialAsset::Serialize()
 	}
 }
 
-void MaterialAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void MaterialAsset::Deserialize(FILE* FileIn)
 {
 	string AmbientOcculusionTextureAssetName;
 	string SpecularTextureAssetName;
@@ -74,14 +74,14 @@ void MaterialAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	fread(&F0In, sizeof(XMFLOAT3), 1, FileIn);
 	fread(&HeightScaleIn, sizeof(float), 1, FileIn);
 
-	SetAmbientOcculusionTextureAsset(AssetManagerIn->GetManagingBasicTexture(AmbientOcculusionTextureAssetName));
-	SetSpecularTextureAsset(AssetManagerIn->GetManagingBasicTexture(SpecularTextureAssetName));
-	SetDiffuseTextureAsset(AssetManagerIn->GetManagingBasicTexture(DiffuseTextureAssetName));
-	SetRoughnessTextureAsset(AssetManagerIn->GetManagingBasicTexture(RoughnessTextureAssetName));
-	SetMetalicTextureAsset(AssetManagerIn->GetManagingBasicTexture(MetalicTextureAssetName));
-	SetNormalTextureAsset(AssetManagerIn->GetManagingBasicTexture(NormalTextureAssetName));
-	SetHeightTextureAsset(AssetManagerIn->GetManagingBasicTexture(HeightTextureAssetName));
-	SetEmissiveTextureAsset(AssetManagerIn->GetManagingBasicTexture(EmissiveTextureAssetName));
+	SetAmbientOcculusionTextureAsset(App::GAssetManager->GetManagingBasicTexture(AmbientOcculusionTextureAssetName));
+	SetSpecularTextureAsset(App::GAssetManager->GetManagingBasicTexture(SpecularTextureAssetName));
+	SetDiffuseTextureAsset(App::GAssetManager->GetManagingBasicTexture(DiffuseTextureAssetName));
+	SetRoughnessTextureAsset(App::GAssetManager->GetManagingBasicTexture(RoughnessTextureAssetName));
+	SetMetalicTextureAsset(App::GAssetManager->GetManagingBasicTexture(MetalicTextureAssetName));
+	SetNormalTextureAsset(App::GAssetManager->GetManagingBasicTexture(NormalTextureAssetName));
+	SetHeightTextureAsset(App::GAssetManager->GetManagingBasicTexture(HeightTextureAssetName));
+	SetEmissiveTextureAsset(App::GAssetManager->GetManagingBasicTexture(EmissiveTextureAssetName));
 	SetF0(F0In);
 	SetHeightScale(HeightScaleIn);
 }

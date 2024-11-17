@@ -49,8 +49,8 @@ void StaticMeshObjectActor::OnSerialize(FILE* FileIn)
 	StaticMeshObjectInstance->OnSerialize(FileIn);
 }
 
-void StaticMeshObjectActor::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void StaticMeshObjectActor::OnDeserialize(FILE* FileIn)
 {
-	AObject::OnDeserialize(FileIn, AssetManagerIn);
-	StaticMeshObjectInstance->OnDeserialize(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn);
+	StaticMeshObjectInstance->OnDeserialize(FileIn);
 }

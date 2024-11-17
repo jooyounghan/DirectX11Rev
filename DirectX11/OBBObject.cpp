@@ -118,8 +118,8 @@ void OBBObject::OnSerialize(FILE* FileIn)
 	fwrite(&DescaledExtents, sizeof(XMFLOAT3), 1, FileIn);
 }
 
-void OBBObject::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void OBBObject::OnDeserialize(FILE* FileIn)
 {
-	AObject::OnDeserialize(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn);
 	fread(&DescaledExtents, sizeof(XMFLOAT3), 1, FileIn);
 }

@@ -40,9 +40,9 @@ void ANBTMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 	}
 }
 
-void ANBTMeshAsset::DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn)
+void ANBTMeshAsset::DeserializeBaseMeshData(FILE* FileIn)
 {
-	AMeshAsset::DeserializeBaseMeshData(FileIn, AssetManagerIn);
+	AMeshAsset::DeserializeBaseMeshData(FileIn);
 	TangentsPerLOD.resize(LODCount);
 
 	// Tangents

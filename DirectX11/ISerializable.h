@@ -8,12 +8,12 @@ class ISerializable
 {
 public:
 	virtual void Serialize() = 0;
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
+	virtual void Deserialize(FILE* FileIn) = 0;
 };
 
 class IOnSerializableElement
 {
 public:
 	virtual void OnSerialize(FILE* FileIn) = 0;
-	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) = 0;
+	virtual void OnDeserialize(FILE* FileIn) = 0;
 };

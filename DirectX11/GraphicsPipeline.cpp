@@ -10,7 +10,7 @@ using namespace Microsoft::WRL;
 
 GraphicsPipeline::GraphicsPipeline()
 {
-
+    App::GGraphicPipeline = this;
 }
 
 GraphicsPipeline::~GraphicsPipeline()

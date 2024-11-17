@@ -22,5 +22,5 @@ public:
 
 public:
 	virtual void Serialize() override;
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void Deserialize(FILE* FileIn) override;
 };

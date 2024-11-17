@@ -19,6 +19,6 @@ public:
 
 public:
 	virtual void Serialize() override final {  };
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override final {/* Base Mesh Does Not Deserialize*/};
+	virtual void Deserialize(FILE* FileIn) override final {/* Base Mesh Does Not Deserialize*/};
 };
 

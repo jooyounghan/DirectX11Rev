@@ -53,7 +53,7 @@ private:
 
 public:
 	virtual void OnSerialize(FILE* FileIn) override;
-	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void OnDeserialize(FILE* FileIn) override;
 };
 
 class AnimationAsset : public AAssetFile
@@ -89,5 +89,5 @@ public:
 
 public:
 	virtual void Serialize() override;
-	virtual void Deserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void Deserialize(FILE* FileIn) override;
 };

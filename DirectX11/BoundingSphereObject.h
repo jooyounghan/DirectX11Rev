@@ -38,6 +38,6 @@ public:
 
 public:
 	virtual void OnSerialize(FILE* FileIn) override;
-	virtual void OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn) override;
+	virtual void OnDeserialize(FILE* FileIn) override;
 };
 

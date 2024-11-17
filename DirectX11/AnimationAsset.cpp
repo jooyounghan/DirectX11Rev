@@ -75,7 +75,7 @@ void AnimationChannel::OnSerialize(FILE* FileIn)
 	}
 }
 
-void AnimationChannel::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void AnimationChannel::OnDeserialize(FILE* FileIn)
 {
 	size_t PositionCounts;
 	size_t QuaternionCounts;
@@ -228,7 +228,7 @@ void AnimationAsset::Serialize()
 	}
 }
 
-void AnimationAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void AnimationAsset::Deserialize(FILE* FileIn)
 {
 	fread(&Duration, sizeof(float), 1, FileIn);
 	fread(&TicksPerSecond, sizeof(float), 1, FileIn);
@@ -240,7 +240,7 @@ void AnimationAsset::Deserialize(FILE* FileIn, AssetManager* AssetManagerIn)
 	{
 		string ChannelName;
 		AAssetFile::DeserializeString(ChannelName, FileIn);
-		BoneNameToAnimationChannels[ChannelName].OnDeserialize(FileIn, AssetManagerIn);
+		BoneNameToAnimationChannels[ChannelName].OnDeserialize(FileIn);
 	}
 
 }

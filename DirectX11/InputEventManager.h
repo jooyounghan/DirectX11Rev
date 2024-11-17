@@ -9,6 +9,9 @@
 
 class InputEventManager : public IUpdatable
 {
+public:
+	InputEventManager();
+
 protected:
 	KeyEvent KeyEvents[KeyActionCount][KeyInputCount];
 	bool IsKeyPressed[KeyInputCount];

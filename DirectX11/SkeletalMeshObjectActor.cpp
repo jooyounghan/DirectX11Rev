@@ -51,8 +51,8 @@ void SkeletalMeshObjectActor::OnSerialize(FILE* FileIn)
 	SkeletalMeshObjectInstance->OnSerialize(FileIn);
 }
 
-void SkeletalMeshObjectActor::OnDeserialize(FILE* FileIn, AssetManager* AssetManagerIn)
+void SkeletalMeshObjectActor::OnDeserialize(FILE* FileIn)
 {
-	AObject::OnDeserialize(FileIn, AssetManagerIn);
-	SkeletalMeshObjectInstance->OnDeserialize(FileIn, AssetManagerIn);
+	AObject::OnDeserialize(FileIn);
+	SkeletalMeshObjectInstance->OnDeserialize(FileIn);
 }

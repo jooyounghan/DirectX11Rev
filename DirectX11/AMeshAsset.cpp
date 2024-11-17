@@ -171,7 +171,7 @@ void AMeshAsset::SerializeBaseMeshData(FILE* FileIn)
 	}
 }
 
-void AMeshAsset::DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManagerIn)
+void AMeshAsset::DeserializeBaseMeshData(FILE* FileIn)
 {
 	fread(&LODCount, sizeof(size_t), 1, FileIn);
 
@@ -255,6 +255,6 @@ void AMeshAsset::DeserializeBaseMeshData(FILE* FileIn, AssetManager* AssetManage
 	{
 		string MaterialName;
 		DeserializeString(MaterialName, FileIn);
-		DefaultMaterialAssets[MaterialIdx] = AssetManagerIn->GetManagingMaterial(MaterialName);
+		DefaultMaterialAssets[MaterialIdx] = App::GAssetManager->GetManagingMaterial(MaterialName);
 	}
 }
