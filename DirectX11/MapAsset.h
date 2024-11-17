@@ -3,9 +3,6 @@
 
 #include "HeaderHelper.h"
 #include "StaticAssertHelper.h"
-
-#include "IUpdatable.h"
-#include "IRenderable.h"
 #include "IGuiModelAcceptor.h"
 
 #include "APlaceableObject.h"
@@ -27,7 +24,7 @@ class SkeletalMeshAsset;
 
 constexpr const char* MapAssetOutPath = ".\\Assets\\Maps\\";
 
-class MapAsset : public AAssetFile, public IUpdatable, public IGuiModelAcceptor
+class MapAsset : public AAssetFile, public IGuiModelAcceptor
 {
 public:
 	MapAsset(
@@ -41,10 +38,8 @@ public:
 
 protected:
 	std::unique_ptr<EditorPawn> EditorActorInstance;
-	MakeSmartPtrGetter(EditorActorInstance);
-
-protected:
 	std::unique_ptr<EnvironmentActor> EnvironmentActorInstance;
+	MakeSmartPtrGetter(EditorActorInstance);
 	MakeSmartPtrGetter(EnvironmentActorInstance);
 
 protected:
@@ -53,17 +48,13 @@ protected:
 
 protected:
 	std::list<std::unique_ptr<APlaceableObject>> RootPlaceables;
-	MakeGetter(RootPlaceables);
-
-protected:
 	std::unordered_map<unsigned int, APlaceableObject*> IdToPlaceables;
+	MakeGetter(RootPlaceables);
 	MakeGetter(IdToPlaceables);
 
 public:
-	APlaceableObject* GetSelectedPlaceableByID(const UINT& IdIn);
-
-public:
 	void AddAsset(AAssetFile* AssetFileIn, const float& PosXIn, const float& PosYIn, const float& PosZIn);
+	APlaceableObject* GetSelectedPlaceableByID(const UINT& IdIn);
 
 private:
 	void AddStaticMeshObjectActor(std::shared_ptr<StaticMeshAsset> StaticMeshAssetIn, const float& PosXIn, const float& PosYIn, const float& PosZIn);
@@ -71,12 +62,6 @@ private:
 
 private:
 	void SetEnvironmentActorByCamera();
-
-public:
-	virtual void Update(const float& DeltaTimeIn) override;
-
-public:
-	void Render();
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

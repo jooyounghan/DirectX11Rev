@@ -4,6 +4,10 @@
 #include "AssetManager.h"
 #include "MapAsset.h"
 
+#include "ACamera.h"
+#include "EnvironmentActor.h"
+#include "EditorPawn.h"
+
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -67,8 +71,71 @@ void GameWorld::Update(const float& DeltaTimeIn)
 {
 	if (CurrentMap)
 	{
-		CurrentMap->Update(DeltaTimeIn);
+		ACamera* CurrentCamera = CurrentMap->GetCurrentCamera();
+		EditorPawn* EditorActorInstance = CurrentMap->GetEditorActorInstance();
+		EnvironmentActor* EnvironmentActorInstance = CurrentMap->GetEnvironmentActorInstance();
+		
+		EditorActorInstance->Update(DeltaTimeIn);
+		EnvironmentActorInstance->RelativePosition = EditorActorInstance->RelativePosition;
+		EnvironmentActorInstance->Update(DeltaTimeIn);
+		const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
+
+		BoundingFrustumObject* CameraFrustum = CurrentCamera->GetCamearaFrustum();
+		for (auto& RootPlaceable : RootPlaceables)
+		{
+			RootPlaceable->Update(DeltaTimeIn);
+
+			// TODO : 추후 Collision Manager로 변경
+			const std::list<IIntersectable*>& Intersectables = RootPlaceable->GetIntersectables();
+			for (auto& intersectable : Intersectables)
+			{
+				CollisionVisitor CollisionVisitorInstance(intersectable);
+				if (CollisionVisitorInstance.Visit(CameraFrustum))
+				{
+					RootPlaceable->SetIsRenderable(true);
+					break;
+				}
+				else
+				{
+					RootPlaceable->SetIsRenderable(false);
+				}
+			}
+		}
 	}
+}
+
+void GameWorld::Render()
+{
+	
+	if (CurrentMap)
+	{
+		//MapOutlinerWindowInstance->GetSelectedPlaceable()->Render();
+
+		RenderingAlgorithm SelectedRenderingAlgorithm = TaskAnalyzerWindowInstance->GetSelectedRenderingAlgorithm();
+
+		if (SelectedRenderingAlgorithm == RenderingAlgorithm::ForwardRendering)
+		{
+			ACamera* CurrentCamera = CurrentMap->GetCurrentCamera();
+			EnvironmentActor* EnvironmentActorInstance = CurrentMap->GetEnvironmentActorInstance();
+			const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
+			CurrentCamera->CleanupLens();
+
+			EnvironmentActorInstance->Render(CurrentMap.get());
+
+			for (auto& RootPlaceable : RootPlaceables)
+			{
+				if (RootPlaceable->GetIsRenderable())
+				{
+					RootPlaceable->Render(CurrentMap.get());
+				}
+			}
+		}
+		else if (SelectedRenderingAlgorithm == RenderingAlgorithm::DefferedRendering)
+		{
+		}
+	}
+
+	RenderUI();
 }
 
 void GameWorld::SetCurrentMap(const std::shared_ptr<MapAsset>& NewMap)
@@ -99,15 +166,18 @@ void GameWorld::AddAssetWithDropped(
 	}
 }
 
-void GameWorld::Render()
-{
-	
-	if (CurrentMap)
-	{
-		//MapOutlinerWindowInstance->GetSelectedPlaceable()->Render();
-		CurrentMap->Render();
-	}
 
+
+void GameWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+#ifdef _DEBUG
+	ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
+#endif
+	ManageMessage(hWnd, msg, wParam, lParam);
+}
+
+void GameWorld::RenderUI()
+{
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 
@@ -133,15 +203,6 @@ void GameWorld::Render()
 	ImGui::EndFrame();
 	ImGui::UpdatePlatformWindows();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-}
-
-
-void GameWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-#ifdef _DEBUG
-	ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
-#endif
-	ManageMessage(hWnd, msg, wParam, lParam);
 }
 
 void GameWorld::ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -174,4 +235,14 @@ void GameWorld::OnDropFiles(HDROP hDropIn)
 		}
 	}
 	DragFinish(hDropIn);
+}
+
+
+template<typename T, typename ...Args>
+inline T* GameWorld::AddDialog(Args ...args)
+{
+	static_assert(std::is_base_of<AWindow, T>::value, DerivedCondition(AWindow));
+
+	Dialogs.emplace_back(make_unique<T>(args...));
+	return (T*)Dialogs.back().get();
 }

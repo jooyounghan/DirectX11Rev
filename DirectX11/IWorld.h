@@ -1,6 +1,4 @@
 #pragma once
-#include "IRenderable.h"
-
 #include <Windows.h>
 
 class IWorld

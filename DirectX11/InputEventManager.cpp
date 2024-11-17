@@ -51,6 +51,8 @@ unordered_map<WPARAM, EKeyInput> InputEventManager::WinMsgToKeyInput
 InputEventManager::InputEventManager()
 {
 	App::GInputEventManager = this;
+	memset(IsKeyPressed, false, KeyInputCount);
+	memset(IsMousePressed, false, MouseInputCount);
 }
 
 EKeyInput InputEventManager::GetKeyInputFromWinMsg(WPARAM wParam)

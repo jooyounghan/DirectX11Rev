@@ -116,50 +116,6 @@ void MapAsset::SetEnvironmentActorByCamera()
 	}
 }
 
-void MapAsset::Update(const float& DeltaTimeIn)
-{
-	EditorActorInstance->Update(DeltaTimeIn);
-	EnvironmentActorInstance->RelativePosition = EditorActorInstance->RelativePosition;
-	EnvironmentActorInstance->Update(DeltaTimeIn);
-
-
-	BoundingFrustumObject* CameraFrustum = CurrentCamera->GetCamearaFrustum();
-	for (auto& RootPlaceable : RootPlaceables)
-	{
-		RootPlaceable->Update(DeltaTimeIn);
-
-		const std::list<IIntersectable*>& Intersectables = RootPlaceable->GetIntersectables();
-		for (auto& intersectable : Intersectables)
-		{
-			CollisionVisitor CollisionVisitorInstance(intersectable);
-			if (CollisionVisitorInstance.Visit(CameraFrustum))
-			{
-				RootPlaceable->SetIsRenderable(true);
-				break;
-			}
-			else
-			{
-				RootPlaceable->SetIsRenderable(false);
-			}
-		}
-	}
-}
-
-void MapAsset::Render()
-{
-	CurrentCamera->CleanupLens();
-
-	EnvironmentActorInstance->Render(this);
-
-	for (auto& RootPlaceable : RootPlaceables)
-	{
-		if (RootPlaceable->GetIsRenderable())
-		{
-			RootPlaceable->Render(this);
-		}
-	}
-}
-
 void MapAsset::AcceptGui(IGuiModelVisitor* GuiVisitor)
 {
 	GuiVisitor->Visit(this);

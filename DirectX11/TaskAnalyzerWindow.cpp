@@ -1,7 +1,17 @@
 #include "TaskAnalyzerWindow.h"
 #include "GlobalVariable.h"
 
+#include <string>
+
+using namespace std;
 using namespace ImGui;
+
+unordered_map<RenderingAlgorithm, string> TaskAnalyzerWindow::RenderingAlgorithmToDescriptions
+=
+{
+    {RenderingAlgorithm::ForwardRendering, "Forward Rendering"},
+    {RenderingAlgorithm::DefferedRendergin, "Deffered Rendering"}
+};
 
 TaskAnalyzerWindow::TaskAnalyzerWindow()
     : AWindow()
@@ -17,6 +27,8 @@ void TaskAnalyzerWindow::RenderWindow()
     Begin("Task Analyzer");
 
     DrawFPSLinePlotting();
+    DrawTotalIndexedCount();
+    DrawRenderingAlgorithmSelection();
 
     End();
 }
@@ -42,7 +54,28 @@ void TaskAnalyzerWindow::DrawFPSLinePlotting()
     PushID("FPSPlot");
     PlotLines("", FrameRates, IM_ARRAYSIZE(FrameRates), values_offset, OverlayText, 0.0f, average * 2.f);
     PopID();
+}
 
+void TaskAnalyzerWindow::DrawTotalIndexedCount()
+{
     Text("Total Drawn Indices Count %d", Performance::GTotalIndexCount);
     Performance::GTotalIndexCount = 0;
+
+}
+
+void TaskAnalyzerWindow::DrawRenderingAlgorithmSelection()
+{
+    PushID("SelectingRenderingAlgorithm");
+    if (ImGui::BeginCombo("", RenderingAlgorithmToDescriptions[SelectedRenderingAlgorithm].c_str()))
+    {
+        for (auto& RenderingAlgorithmToDescription : RenderingAlgorithmToDescriptions)
+        {
+            if (ImGui::Selectable(RenderingAlgorithmToDescription.second.c_str()))
+            {
+                SelectedRenderingAlgorithm = RenderingAlgorithmToDescription.first;
+            }
+        }
+        ImGui::EndCombo();
+    }
+    PopID();
 }

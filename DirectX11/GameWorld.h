@@ -1,35 +1,26 @@
 #pragma once
 #include "IWorld.h"
+
 #include "HeaderHelper.h"
 #include "StaticAssertHelper.h"
-
-#include "IUpdatable.h"
 #include "Delegation.h"
 
 #include "TaskAnalyzerWindow.h"
 #include "MapOutlinerWindow.h"
 #include "AssetManagerWindow.h"
 
-#include <windows.h>
 #include <memory>
-#include <unordered_map>
 #include <vector>
 
 class AWindow;
 class AssetManager;
 class MapAsset;
 
-class GameWorld : public IWorld, public IUpdatable
+class GameWorld : public IWorld
 {
 public:
 	GameWorld(HWND WindowHandle);
 	virtual ~GameWorld();
-
-private:
-	void InitEditor(HWND WindowHandle);
-
-public:
-	virtual void Update(const float& DeltaTimeIn) override;
 
 protected:
 	UINT FontSrvHandleID = 0;
@@ -52,30 +43,24 @@ private:
 	template<typename T, typename... Args>
 	T* AddDialog(Args... arg);
 
-protected:
-	std::shared_ptr<MapAsset> CurrentMap = nullptr;
-
 private:
+	void InitEditor(HWND WindowHandle);
 	void SetCurrentMap(const std::shared_ptr<MapAsset>& NewMap);
-	
-private:
 	void SelectPlaceableByID(const UINT& SelectedID);
 	void AddAssetWithDropped(AAssetFile* AssetFileIn, const float& PosXIn, const float& PosYIn, const float& PosZIn);
 
+protected:
+	std::shared_ptr<MapAsset> CurrentMap = nullptr;
+
 public:
+	void Update(const float& DeltaTimeIn);
 	void Render();
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+
+private:
+	void RenderUI();
 
 private:
 	virtual void ManageMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 	void OnDropFiles(HDROP hDropIn);
 };
-
-template<typename T, typename ...Args>
-inline T* GameWorld::AddDialog(Args ...args)
-{
-	static_assert(std::is_base_of<AWindow, T>::value, DerivedCondition(AWindow));
-
-	Dialogs.emplace_back(make_unique<T>(args...));
-	return (T*)Dialogs.back().get();
-}
