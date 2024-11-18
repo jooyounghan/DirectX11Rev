@@ -35,7 +35,7 @@ float4 main(GBufferResolveVertexOutput Input) : SV_TARGET
     float Roughness = AO_Metallic_Roughness.z;
     
     return float4(
-        CalculateIBL(float3(0.04, 0.04, 0.04), BaseColor, AO, Metallic, Roughness, Normal,
+        CalculateIBL(float3(0.0, 0.0, 0.0), BaseColor, AO, Metallic, Roughness, Normal,
             ToEye, SpecularTexture, DiffuseTexture, BRDFTexture, WrapSampler)
         + Emissive, 1.f
     );

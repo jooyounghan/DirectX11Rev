@@ -42,6 +42,7 @@ public:
 
 protected:
 	std::shared_ptr<UploadBuffer<SHDRToneMappingConstant>> HDRToneMappingConstantBuffer;
+	MakeSmartPtrGetter(HDRToneMappingConstantBuffer);
 
 public:
 	virtual void AcceptGui(IGuiModelVisitor* GuiVisitor) override;

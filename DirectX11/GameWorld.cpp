@@ -235,7 +235,7 @@ void GameWorld::ResolveGBuffer()
 
 		vector<ID3D11RenderTargetView*> RTVs = { CurrentCamera->GetSDRSceneRTV() };
 
-		GBufferResolvePSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, CurrentCamera->GetSceneDSV());
+		GBufferResolvePSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, CurrentCamera->GetGBufferDSV());
 
 		vector<ID3D11Buffer*> PSConstants{ CurrentCamera->GetViewProjBuffer()->GetBuffer() };
 		vector<ID3D11ShaderResourceView*> PSSRVs{

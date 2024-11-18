@@ -29,7 +29,10 @@ PSOManager::PSOManager()
     CreateRastersizerState(D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, SampleDesc, CullBackWireframeRS);
 
     ComPtr<ID3D11DepthStencilState> DepthCompLessDSS;
+    ComPtr<ID3D11DepthStencilState> DepthCompGreaterDSS;
+
     CreateDepthStencilState(TRUE, D3D11_COMPARISON_LESS, FALSE, DepthCompLessDSS);
+    CreateDepthStencilState(TRUE, D3D11_COMPARISON_GREATER, FALSE, DepthCompGreaterDSS);
 
     ComPtr<ID3D11BlendState> DisabledBS;
     CreateBlendState(FALSE, FALSE, DisabledBS, 0, FALSE,
@@ -299,7 +302,7 @@ PSOManager::PSOManager()
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         CullBackSolidRS,
-        DepthCompLessDSS, NULL,
+        DepthCompGreaterDSS, NULL,
         DisabledBS.Get(), SamplerStates
     ));
 #pragma endregion

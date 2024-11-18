@@ -65,8 +65,10 @@ void EnvironementActorDrawer::DrawIBLTextures()
 
 void EnvironementActorDrawer::DrawToneMappingConstant()
 {
-    static float Exposure = 1.f;
-    static float Gamma = 1.f;
+    const SHDRToneMappingConstant& StagedToneMappingConstant = ObjectCached->GetHDRToneMappingConstantBuffer()->GetStagedData();
+
+    float Exposure = StagedToneMappingConstant.Exposure;
+    float Gamma = StagedToneMappingConstant.Gamma;
 
     SeparatorText("Tone Mapping");
 
