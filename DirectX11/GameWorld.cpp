@@ -2,7 +2,12 @@
 
 #include "GlobalVariable.h"
 #include "AssetManager.h"
+
+#include "PSOManager.h"
+#include "PSOObject.h"
 #include "MapAsset.h"
+#include "DDSTextureAsset.h"
+#include "BaseTextureAsset.h"
 
 #include "ACamera.h"
 #include "EnvironmentActor.h"
@@ -15,6 +20,7 @@
 
 using namespace std;
 using namespace ImGui;
+using namespace DirectX;
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 	HWND hWnd,
@@ -117,6 +123,7 @@ void GameWorld::Render()
 		
 		EnvironmentActor* EnvironmentActorInstance = CurrentMap->GetEnvironmentActorInstance();
 		EnvironmentActorInstance->Render(CurrentMap.get());
+
 		const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
 
 		if (SelectedRenderingAlgorithm == RenderingAlgorithm::ForwardRendering)
@@ -141,8 +148,17 @@ void GameWorld::Render()
 				}
 			}
 
-			//CurrentCamera->ProcessGBuffer();
 		}
+		
+		ResolveGBuffer();
+
+
+
+
+
+
+
+
 		//MapOutlinerWindowInstance->GetSelectedPlaceable()->Render();
 // 
 		//CurrentCamera->PostProcess();
@@ -186,6 +202,64 @@ void GameWorld::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
 #endif
 	ManageMessage(hWnd, msg, wParam, lParam);
+}
+
+void GameWorld::ResolveGBuffer()
+{
+	if (CurrentMap != nullptr)
+	{
+		ACamera* CurrentCamera = CurrentMap->GetCurrentCamera();
+		EnvironmentActor* EnvironmentActorInstance =  CurrentMap->GetEnvironmentActorInstance();
+
+		const D3D11_VIEWPORT* Viewport = &CurrentCamera->GetViewport();
+		const std::vector<ID3D11Buffer*> VertexBuffers{
+			CurrentCamera->GetResolveSquarePositionBuffer().GetBuffer(),
+			CurrentCamera->GetResolveSquareUVBuffer	().GetBuffer()
+		};
+		const std::vector<UINT> Strides{ sizeof(XMFLOAT3), sizeof(XMFLOAT2) };
+		const std::vector<UINT> Offsets{ 0, 0 };
+
+		ID3D11Buffer* IndexBuffer = CurrentCamera->GetResolveSquareIndexBuffer().GetBuffer();
+		const UINT IndexTotalCount = CurrentCamera->GetResolveSquareIndexBuffer().GetIndicesCount();
+		const DXGI_FORMAT IndexFormat = DXGI_FORMAT_R8_UINT;
+
+		ID3D11DeviceContext* DeviceContextCached = App::GGraphicPipeline->GetDeviceContext();
+		PSOObject* GBufferResolvePSOCached = App::GPSOManager->GetPSOObject(EPSOType::GBuffer_Resolve);
+
+		DeviceContextCached->IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
+		DeviceContextCached->IASetVertexBuffers(0, static_cast<UINT>(VertexBuffers.size()),
+			VertexBuffers.data(),
+			Strides.data(),
+			Offsets.data()
+		);
+
+		vector<ID3D11RenderTargetView*> RTVs = { CurrentCamera->GetSDRSceneRTV() };
+
+		GBufferResolvePSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, CurrentCamera->GetSceneDSV());
+
+		vector<ID3D11Buffer*> PSConstants{ CurrentCamera->GetViewProjBuffer()->GetBuffer() };
+		vector<ID3D11ShaderResourceView*> PSSRVs{
+			EnvironmentActorInstance->GetEnvironmentSpecularDDSTextureAsset()->GetSRV(),
+			EnvironmentActorInstance->GetEnvironmentDiffuseDDSTextureAsset()->GetSRV(),
+			EnvironmentActorInstance->GetEnvironmentBRDFDDSTextureAsset()->GetSRV(),
+
+			CurrentCamera->GetGBufferSRV(EGBuffer::Position_GBuffer),
+			CurrentCamera->GetGBufferSRV(EGBuffer::BaseColor_GBuffer),
+			CurrentCamera->GetGBufferSRV(EGBuffer::Normal_GBuffer),
+			CurrentCamera->GetGBufferSRV(EGBuffer::AO_Metallic_Roughness_GBuffer),
+			CurrentCamera->GetGBufferSRV(EGBuffer::Emissive_GBuffer),
+		};
+
+		GBufferResolvePSOCached->SetPSConstantBuffers(0, PSConstants.size(), PSConstants.data());
+		GBufferResolvePSOCached->SetPSShaderResourceViews(0, PSSRVs.size(), PSSRVs.data());
+
+		GBufferResolvePSOCached->CheckPipelineValidation();
+		DeviceContextCached->DrawIndexed(IndexTotalCount, 0, 0);
+		Performance::GTotalIndexCount += IndexTotalCount;
+
+		GBufferResolvePSOCached->ResetPSConstantBuffers(0, PSConstants.size());
+		GBufferResolvePSOCached->ResetPSShaderResourceViews(0, PSSRVs.size());
+	}
 }
 
 void GameWorld::RenderUI()

@@ -56,7 +56,7 @@ PSOManager::PSOManager()
 #pragma region EnvironmentActor_Solid
     DXGI_FORMAT SceneFormat[1] = { DXGI_FORMAT_R8G8B8A8_UNORM };
 
-    D3D11_INPUT_ELEMENT_DESC EnvironmentActorInputElementDesc[3] =
+    vector<D3D11_INPUT_ELEMENT_DESC> EnvironmentActorInputElementDesc =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -67,7 +67,8 @@ PSOManager::PSOManager()
     ComPtr<ID3D11PixelShader>   EnvironmentActorPS;
     ComPtr<ID3D11InputLayout>   EnvironmentActorInputLayout;
 
-    CreateVertexShader(L"./Shaders/EnvironmentActorVS.hlsl", EnvironmentActorInputElementDesc, 3, EnvironmentActorVS, EnvironmentActorInputLayout);
+    CreateVertexShader(L"./Shaders/EnvironmentActorVS.hlsl", EnvironmentActorInputElementDesc.data(), 
+        EnvironmentActorInputElementDesc.size(), EnvironmentActorVS, EnvironmentActorInputLayout);
     CreatePixelShader(L"./Shaders/EnvironmentActorPS.hlsl", EnvironmentActorPS);
 
     PSOObjects.emplace(EPSOType::Environment_Solid, make_unique<PSOObject>(
@@ -92,7 +93,7 @@ PSOManager::PSOManager()
 #pragma region Forward_Bounding_Wireframe
     vector<DXGI_FORMAT> SceneWithIDFormats = { DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM };
 
-    D3D11_INPUT_ELEMENT_DESC BoundingObjectInputElementDesc[1] =
+    vector<D3D11_INPUT_ELEMENT_DESC> BoundingObjectInputElementDesc =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
@@ -101,7 +102,8 @@ PSOManager::PSOManager()
     ComPtr<ID3D11PixelShader>   BoundingObjectPS;
     ComPtr<ID3D11InputLayout>   BoundingObjectInputLayout;
 
-    CreateVertexShader(L"./Shaders/BoundingObjectVS.hlsl", BoundingObjectInputElementDesc, 1, BoundingObjectVS, BoundingObjectInputLayout);
+    CreateVertexShader(L"./Shaders/BoundingObjectVS.hlsl", BoundingObjectInputElementDesc.data(), 
+        BoundingObjectInputElementDesc.size(), BoundingObjectVS, BoundingObjectInputLayout);
     CreatePixelShader(L"./Shaders/BoundingObjectPS.hlsl", BoundingObjectPS);
 
     PSOObjects.emplace(EPSOType::Forward_Bounding_Wireframe, make_unique<PSOObject>(
@@ -125,8 +127,7 @@ PSOManager::PSOManager()
     ComPtr<ID3D11VertexShader> StaticMeshVS;
     ComPtr<ID3D11InputLayout> StaticMeshInputLayout;
 
-    const size_t StaticMeshElementDescsCount = 4;
-    D3D11_INPUT_ELEMENT_DESC StaticMeshElementDescs[StaticMeshElementDescsCount] =
+    vector<D3D11_INPUT_ELEMENT_DESC> StaticMeshElementDescs =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -134,7 +135,8 @@ PSOManager::PSOManager()
         { "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-    CreateVertexShader(L"./Shaders/StaticMeshObjectVS.hlsl", StaticMeshElementDescs, StaticMeshElementDescsCount, StaticMeshVS, StaticMeshInputLayout);
+    CreateVertexShader(L"./Shaders/StaticMeshObjectVS.hlsl", StaticMeshElementDescs.data(), StaticMeshElementDescs.size(),
+        StaticMeshVS, StaticMeshInputLayout);
 
     ComPtr<ID3D11HullShader> MeshObjectHS;
     CreateHullShader(L"./Shaders/MeshObjectHS.hlsl", MeshObjectHS);
@@ -166,8 +168,7 @@ PSOManager::PSOManager()
     ComPtr<ID3D11VertexShader> SkeletalMeshVS;
     ComPtr<ID3D11InputLayout> SkeletalMeshInputLayout;
 
-    const size_t SkeletalMeshInputElementDescsCount = 6;
-    D3D11_INPUT_ELEMENT_DESC SkeletalMeshInputElementDescs[SkeletalMeshInputElementDescsCount] =
+    vector<D3D11_INPUT_ELEMENT_DESC> SkeletalMeshInputElementDescs =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -177,8 +178,8 @@ PSOManager::PSOManager()
         { "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 5, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
-    CreateVertexShader(L"./Shaders/SkeletalMeshObjectVS.hlsl", SkeletalMeshInputElementDescs, SkeletalMeshInputElementDescsCount, SkeletalMeshVS, SkeletalMeshInputLayout);
-
+    CreateVertexShader(L"./Shaders/SkeletalMeshObjectVS.hlsl", SkeletalMeshInputElementDescs.data(), 
+        SkeletalMeshInputElementDescs.size(), SkeletalMeshVS, SkeletalMeshInputLayout);
 
     PSOObjects.emplace(EPSOType::Forward_Skeletal_Solid, make_unique<PSOObject>(
         DeviceContext,
@@ -203,9 +204,9 @@ PSOManager::PSOManager()
 
 #pragma region Deffered_Bounding_Wireframe
     vector<DXGI_FORMAT> GBuffersWithIDFormat = { 
-        DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, /* BaseColor, Normal*/ 
-        DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, /* AO_Metallic_Roughness, Emissive */
-        DXGI_FORMAT_R8G8B8A8_UNORM /* ID*/
+        DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, /* Position, BaseColor*/ 
+        DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, /* Normal, AO_Metallic_Roughness*/
+        DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM /* Normal, ID*/
     };
 
     ComPtr<ID3D11PixelShader> DefferedBoundingObjectPS;
@@ -267,6 +268,40 @@ PSOManager::PSOManager()
     ));
 #pragma endregion
 
+#pragma endregion
+
+#pragma region Resolver
+    vector<DXGI_FORMAT> GBufferResolveSceneFormat = { DXGI_FORMAT_R8G8B8A8_UNORM };
+
+    vector<D3D11_INPUT_ELEMENT_DESC> GBufferResolverElementDesc =
+    {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    };
+
+    ComPtr<ID3D11VertexShader>  GBufferResolveVS;
+    ComPtr<ID3D11PixelShader>   GBufferResolvePS;
+    ComPtr<ID3D11InputLayout>   GBufferResolveInputLayout;
+
+    CreateVertexShader(L"./Shaders/GBufferResolveVS.hlsl", GBufferResolverElementDesc.data(), 
+        GBufferResolverElementDesc.size(), GBufferResolveVS, GBufferResolveInputLayout);
+    CreatePixelShader(L"./Shaders/GBufferResolvePS.hlsl", GBufferResolvePS);
+
+    PSOObjects.emplace(EPSOType::GBuffer_Resolve, make_unique<PSOObject>(
+        DeviceContext,
+        GBufferResolveInputLayout,
+        GBufferResolveVS, 0, 0,
+        nullptr, 0, 0,
+        nullptr, 0, 0,
+        GBufferResolvePS, 1, 8,
+        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+        GBufferResolveSceneFormat.size(), GBufferResolveSceneFormat.data(),
+        DXGI_FORMAT_D24_UNORM_S8_UINT,
+        SampleDesc,
+        CullBackSolidRS,
+        DepthCompLessDSS, NULL,
+        DisabledBS.Get(), SamplerStates
+    ));
 #pragma endregion
 }
 

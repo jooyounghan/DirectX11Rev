@@ -114,9 +114,9 @@ void AMeshObject::Render(MapAsset* MapAssetIn)
 			//MeshObjectPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, CurrentCamera->GetSceneDSV());
 
 			vector<ID3D11RenderTargetView*> RTVs = { 
-				CurrentCamera->GetGBufferRTV(BaseColor_GBuffer), CurrentCamera->GetGBufferRTV(Normal_GBuffer),
-				CurrentCamera->GetGBufferRTV(AO_Metallic_Roughness_GBuffer), CurrentCamera->GetGBufferRTV(Emissive_GBuffer),
-				CurrentCamera->GetIdSelectRTV() 
+			CurrentCamera->GetGBufferRTV(Position_GBuffer), CurrentCamera->GetGBufferRTV(BaseColor_GBuffer),
+			CurrentCamera->GetGBufferRTV(Normal_GBuffer), CurrentCamera->GetGBufferRTV(AO_Metallic_Roughness_GBuffer),
+			CurrentCamera->GetGBufferRTV(Emissive_GBuffer), CurrentCamera->GetIdSelectRTV()
 			};
 			MeshObjectPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, CurrentCamera->GetGBufferDSV());
 

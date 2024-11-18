@@ -3,6 +3,8 @@
 #include "Viewable.h"
 #include "HeaderHelper.h"
 #include "IDColor.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 #include <memory>
 
@@ -11,6 +13,7 @@ class BoundingFrustumObject;
 
 enum EGBuffer : size_t
 {
+	Position_GBuffer,
 	BaseColor_GBuffer,
 	Normal_GBuffer,
 	AO_Metallic_Roughness_GBuffer,
@@ -76,18 +79,20 @@ protected:
 	static const FLOAT IDClearColor[4];
 
 public:
+	virtual void CleanupLens() = 0;
 	virtual void Update(const float& DeltaTimeIn) override;
-
-public:
+	virtual void Render(MapAsset* MapAssetIn) override final;
 	UINT GetID(
 		const float& RelativeMousePosX, const float& RelativeMousePosY,
 		const float& WindowSizeX, const float& WindowSizeY
 	);
 
-public:
-	virtual void CleanupLens() = 0;
-
-public:
-	virtual void Render(MapAsset* MapAssetIn) override final;
+protected:
+	VertexBuffer<DirectX::XMFLOAT3> ResolveSquarePositionBuffer;
+	VertexBuffer<DirectX::XMFLOAT2> ResolveSquareUVBuffer;
+	IndexBuffer<uint8_t>	ResolveSquareIndexBuffer;
+	MakeGetter(ResolveSquarePositionBuffer);
+	MakeGetter(ResolveSquareUVBuffer);
+	MakeGetter(ResolveSquareIndexBuffer);
 };
 

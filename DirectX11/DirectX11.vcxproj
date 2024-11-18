@@ -440,6 +440,14 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="Shaders\GBufferResolvePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\GBufferResolveVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Shaders\MeshObjectDS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Domain</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -473,6 +481,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\EnvironmentActorHeader.hlsli" />
+    <None Include="Shaders\GBufferResolverHeader.hlsli" />
     <None Include="Shaders\MaterialHeader.hlsli" />
     <None Include="Shaders\PBRHeader.hlsli" />
     <None Include="Shaders\MeshObjectHeader.hlsli" />

@@ -42,8 +42,6 @@ DefferedMeshObjectPixelOutput main(MeshObjectDomainOutput Input) : SV_TARGET
 {
     DefferedMeshObjectPixelOutput Result;
     
-    float3 ToEye = normalize(ViewPosition - Input.f3ModelPos);
-    
     float3 BaseColor = MaterialTexture[DIFFUSE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb;
     float AmbientOcculusion = 1.f;
     float Metallic = 0.f;
@@ -69,7 +67,8 @@ DefferedMeshObjectPixelOutput main(MeshObjectDomainOutput Input) : SV_TARGET
     }
  
     float3 Emissive = MaterialTexture[EMISSIVE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb;
-    
+
+    Result.f4Position = Input.f4ModelPos;
     Result.f4BaseColor = float4(BaseColor, 1.f);
     Result.f4Normal = float4(Normal, 1.f);
     Result.AO_Metallic_Roughness = float4(AmbientOcculusion, Metallic, Roughness, 1.f);

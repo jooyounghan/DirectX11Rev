@@ -64,9 +64,9 @@ void ABoundingObject::Render(MapAsset* MapAssetIn)
 		//);
 
 		vector<ID3D11RenderTargetView*> SDRRTVs{ 
-			CurrentCamera->GetGBufferRTV(BaseColor_GBuffer), CurrentCamera->GetGBufferRTV(Normal_GBuffer),
-			CurrentCamera->GetGBufferRTV(AO_Metallic_Roughness_GBuffer), CurrentCamera->GetGBufferRTV(Emissive_GBuffer),
-			CurrentCamera->GetIdSelectRTV() 
+			CurrentCamera->GetGBufferRTV(Position_GBuffer), CurrentCamera->GetGBufferRTV(BaseColor_GBuffer),
+			CurrentCamera->GetGBufferRTV(Normal_GBuffer), CurrentCamera->GetGBufferRTV(AO_Metallic_Roughness_GBuffer),
+			CurrentCamera->GetGBufferRTV(Emissive_GBuffer), CurrentCamera->GetIdSelectRTV() 
 		};
 
 		BoundingObjectPSOCached->SetPipelineStateObject(

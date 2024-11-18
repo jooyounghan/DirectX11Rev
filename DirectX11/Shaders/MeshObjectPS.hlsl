@@ -42,7 +42,7 @@ MeshObjectPixelOutput main(MeshObjectDomainOutput Input) : SV_TARGET
 {        
     MeshObjectPixelOutput Result;
     
-    float3 ToEye = normalize(ViewPosition - Input.f3ModelPos);
+    float3 ToEye = normalize(ViewPosition - Input.f4ModelPos.xyz);
     
     float3 BaseColor = MaterialTexture[DIFFUSE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb;
     float AmbientOcculusion = 1.f;

@@ -4,6 +4,7 @@
 #include "BoundingFrustumObject.h"
 
 using namespace std;
+using namespace DirectX;
 
 const FLOAT ACamera::ClearColor[4] = { 0.2f, 0.2f, 0.2f, 1.f };
 const FLOAT ACamera::IDClearColor[4] = { 1.f, 1.f, 1.f, 1.f };
@@ -95,10 +96,37 @@ ACamera::ACamera(
 	Device->CreateTexture2D(&DepthStencilTexture2DDesc, NULL, GBufferDSTexture.GetAddressOf());
 	Device->CreateDepthStencilView(GBufferDSTexture.Get(), NULL, GBufferDSV.GetAddressOf());
 #pragma endregion
+
+	vector<XMFLOAT3> ResolverPositions{ 
+		{-1.f, 1.f, 0.f}, {1.f, 1.f, 0.f}, {-1.f, -1.f, 0.f}, 
+		{-1.f, -1.f, 0.f}, {1.f, 1.f, 0.f}, {1.f, -1.f, 0.f}
+	};
+	vector<XMFLOAT2> ResolverUVBuffers{ 
+		{0.f, 0.f}, {1.f, 0.f}, {0.f, 1.f},
+		{0.f, 1.f}, {1.f, 0.f}, {1.f, 1.f},
+	};
+	vector<uint8_t> ResolverIndex{ 0, 1, 2, 3, 4, 5 };
+
+	//vector<XMFLOAT3> ResolverPositions{ {-1.f, 1.f, 0.f}, {3.f, 1.f, 0.f}, {-1.f, -3.f, 0.f} };
+	//vector<XMFLOAT2> ResolverUVBuffers{ {0.f, 0.f}, {2.f, 0.f}, {0.f, 2.f} };
+	//vector<uint8_t> ResolverIndex{ 0, 1, 2 };
+	ResolveSquarePositionBuffer.InitializeForGPU(ResolverPositions.size(), ResolverPositions.data());
+	ResolveSquareUVBuffer.InitializeForGPU(ResolverUVBuffers.size(), ResolverUVBuffers.data());
+	ResolveSquareIndexBuffer.InitializeForGPU(ResolverIndex.size(), ResolverIndex.data());
 }
 
 ACamera::~ACamera()
 {
+}
+
+ID3D11ShaderResourceView* ACamera::GetGBufferSRV(EGBuffer GBufferIdx)
+{
+	return GBufferSRVs[GBufferIdx].Get();
+}
+
+ID3D11RenderTargetView* ACamera::GetGBufferRTV(EGBuffer GBufferIdx)
+{
+	return GBufferRTVs[GBufferIdx].Get();
 }
 
 void ACamera::Update(const float& DeltaTimeIn)
@@ -134,19 +162,8 @@ UINT ACamera::GetID(const float& RelativeMousePosX, const float& RelativeMousePo
 	return IDResult;
 }
 
-
 void ACamera::Render(MapAsset* MapAssetIn)
 {
 	Viewable::Render(MapAssetIn);
 	CamearaFrustum->Render(MapAssetIn);
-}
-
-ID3D11ShaderResourceView* ACamera::GetGBufferSRV(EGBuffer GBufferIdx)
-{
-	return GBufferSRVs[GBufferIdx].Get();
-}
-
-ID3D11RenderTargetView* ACamera::GetGBufferRTV(EGBuffer GBufferIdx)
-{
-	return GBufferRTVs[GBufferIdx].Get();
 }

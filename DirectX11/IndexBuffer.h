@@ -23,7 +23,7 @@ protected:
 template<typename T>
 inline void IndexBuffer<T>::InitializeForGPU(const UINT& ArrayCountIn, T* CPUDataPtr)
 {
-	IndicesCount = static_cast<UINT>(ArrayCountIn);
+	IndicesCount = ArrayCountIn;
 
 	D3D11_BUFFER_DESC BufferDesc;
 	AutoZeroMemory(BufferDesc);

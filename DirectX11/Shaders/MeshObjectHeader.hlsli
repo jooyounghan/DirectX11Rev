@@ -46,7 +46,7 @@ struct MeshObjectHullOutput
 struct MeshObjectDomainOutput
 {
     float4 f4ProjPos : SV_Position;
-    float4 f3ModelPos : POSITIONT;
+    float4 f4ModelPos : POSITIONT;
     float2 f2TexCoord : TEXCOORD;
     float3 f3ModelNormal : NORMAL;
     float3 f3ModelTangent : TANGENT;
@@ -61,9 +61,10 @@ struct MeshObjectPixelOutput
 
 struct DefferedMeshObjectPixelOutput
 {
-    float4 f4BaseColor : SV_Target0;
-    float4 f4Normal : SV_Target1;
-    float4 AO_Metallic_Roughness : SV_Target2;
-    float4 Emissive : SV_Target3;
-    float4 f4ID : SV_Target4;
+    float4 f4Position : SV_Target0;
+    float4 f4BaseColor : SV_Target1;
+    float4 f4Normal : SV_Target2;
+    float4 AO_Metallic_Roughness : SV_Target3;
+    float4 Emissive : SV_Target4;
+    float4 f4ID : SV_Target5;
 };

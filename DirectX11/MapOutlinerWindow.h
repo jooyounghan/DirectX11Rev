@@ -11,7 +11,6 @@
 
 struct Ray;
 struct ImVec2;
-struct XMFLOAT3;
 
 class AAssetFile;
 class MapAsset;

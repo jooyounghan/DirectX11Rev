@@ -58,6 +58,7 @@ public:
 	virtual void AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 private:
+	void ResolveGBuffer();
 	void RenderUI();
 
 private:

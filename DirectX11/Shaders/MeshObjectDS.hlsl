@@ -55,8 +55,8 @@ MeshObjectDomainOutput main(
     }
 
     Result.f3ModelNormal = normalize(mul(float4(f3WorldNormal, 0.f), ModelInvMatrix).xyz);
-    Result.f3ModelPos = mul(f4WorldPos, ModelMatrix);
-    Result.f4ProjPos = mul(Result.f3ModelPos, ViewProjMatrix);
+    Result.f4ModelPos = mul(f4WorldPos, ModelMatrix);
+    Result.f4ProjPos = mul(Result.f4ModelPos, ViewProjMatrix);
     
     return Result;
 }

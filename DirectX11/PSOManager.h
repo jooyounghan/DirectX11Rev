@@ -20,6 +20,9 @@ enum class EPSOType
 	Deffered_Static_Solid,
 	Deffered_Skeletal_Solid,
 
+	// Resolve
+	GBuffer_Resolve,
+
 	// Count
 	EPSOTypeCount
 };

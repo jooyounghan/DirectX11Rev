@@ -87,12 +87,18 @@ void MapOutlinerWindow::RenderViewport()
     if (CurrentCamera != nullptr)
     {
         ImVec2 DefferedShadingRegion = GetContentRegionAvail();
-        Image(CurrentCamera->GetGBufferSRV(EGBuffer::BaseColor_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 2.f));
+
+        Image(CurrentCamera->GetGBufferSRV(EGBuffer::Position_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 3.f));
         SameLine();
-        Image(CurrentCamera->GetGBufferSRV(EGBuffer::Normal_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 2.f));
-        Image(CurrentCamera->GetGBufferSRV(EGBuffer::AO_Metallic_Roughness_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 2.f));
+        Image(CurrentCamera->GetGBufferSRV(EGBuffer::BaseColor_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 3.f));
+        
+        Image(CurrentCamera->GetGBufferSRV(EGBuffer::Normal_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 3.f));
         SameLine();
-        Image(CurrentCamera->GetGBufferSRV(EGBuffer::Emissive_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 2.f));
+        Image(CurrentCamera->GetGBufferSRV(EGBuffer::AO_Metallic_Roughness_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 3.f));
+        
+        Image(CurrentCamera->GetGBufferSRV(EGBuffer::Emissive_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 3.f));
+        SameLine();
+        //Image(CurrentCamera->GetGBufferDSV(), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 3.f));
     }
     End();
 }

@@ -460,6 +460,9 @@
     <Filter Include="Shader\BoundingObject">
       <UniqueIdentifier>{53ead1bb-4183-4788-bd59-d925cf19c712}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Resolve">
+      <UniqueIdentifier>{665507ab-6629-43c5-91b0-95c75d181db2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PortfolioApp.cpp">
@@ -1336,6 +1339,12 @@
     <FxCompile Include="Shaders\DefferedBoundingObjectPS.hlsl">
       <Filter>Shader\BoundingObject</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\GBufferResolvePS.hlsl">
+      <Filter>Shader\Resolve</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GBufferResolveVS.hlsl">
+      <Filter>Shader\Resolve</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\EnvironmentActorHeader.hlsli">
@@ -1352,6 +1361,9 @@
     </None>
     <None Include="Shaders\BoundingObjectHeader.hlsli">
       <Filter>Shader\BoundingObject</Filter>
+    </None>
+    <None Include="Shaders\GBufferResolverHeader.hlsli">
+      <Filter>Shader\Resolve</Filter>
     </None>
   </ItemGroup>
 </Project>
