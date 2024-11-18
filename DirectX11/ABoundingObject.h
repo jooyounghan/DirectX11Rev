@@ -36,7 +36,6 @@ public:
 
 protected:
 	PSOObject* BoundingObjectPSOCached = nullptr;
-	PSOObject* PickingIDWireframePSOCached = nullptr;
 
 public:
 	virtual void Render(MapAsset* MapAssetIn) override final;

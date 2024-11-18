@@ -7,7 +7,7 @@
 enum class RenderingAlgorithm
 {
 	ForwardRendering,
-	DefferedRendergin
+	DefferedRendering
 };
 
 class TaskAnalyzerWindow : public AWindow

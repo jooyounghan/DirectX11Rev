@@ -52,14 +52,10 @@ PSOManager::PSOManager()
 
     vector<ComPtr<ID3D11SamplerState>> SamplerStates{ WrapSampler, ClampSampler, WrapComparisonSampler, ClampComparisonSampler };
 
-    const UINT SingleR8G8B8A8Count = 1;
-    DXGI_FORMAT SingleR8G8B8A8Format[SingleR8G8B8A8Count] = { DXGI_FORMAT_R8G8B8A8_UNORM };
-
-    //const UINT SingleR16G16B16A16Count = 1;
-    //DXGI_FORMAT SingleR16G16B16A16Format[SingleR16G16B16A16Count] = { DXGI_FORMAT_R16G16B16A16_FLOAT };
-
 
 #pragma region EnvironmentActor_Solid
+    DXGI_FORMAT SceneFormat[1] = { DXGI_FORMAT_R8G8B8A8_UNORM };
+
     D3D11_INPUT_ELEMENT_DESC EnvironmentActorInputElementDesc[3] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -82,7 +78,7 @@ PSOManager::PSOManager()
         nullptr, 0, 0,
         EnvironmentActorPS, 1, 1,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        SingleR8G8B8A8Count, SingleR8G8B8A8Format,
+        1, SceneFormat,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         CullBackSolidRS,
@@ -91,28 +87,32 @@ PSOManager::PSOManager()
     ));
 #pragma endregion
 
-#pragma region BoundingObject_Wireframe
-    D3D11_INPUT_ELEMENT_DESC OnlyPositionInputElementDesc[1] =
+#pragma region Forward Shading
+
+#pragma region Forward_Bounding_Wireframe
+    vector<DXGI_FORMAT> SceneWithIDFormats = { DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM };
+
+    D3D11_INPUT_ELEMENT_DESC BoundingObjectInputElementDesc[1] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-    ComPtr<ID3D11VertexShader>  PositionOnlyPathVS;
-    ComPtr<ID3D11PixelShader>   BoundingComponentPS;
-    ComPtr<ID3D11InputLayout>   PostionOnlyInputLayout;
+    ComPtr<ID3D11VertexShader>  BoundingObjectVS;
+    ComPtr<ID3D11PixelShader>   BoundingObjectPS;
+    ComPtr<ID3D11InputLayout>   BoundingObjectInputLayout;
 
-    CreateVertexShader(L"./Shaders/PositionOnlyPathVS.hlsl", OnlyPositionInputElementDesc, 1, PositionOnlyPathVS, PostionOnlyInputLayout);
-    CreatePixelShader(L"./Shaders/BoundingObjectPS.hlsl", BoundingComponentPS);
+    CreateVertexShader(L"./Shaders/BoundingObjectVS.hlsl", BoundingObjectInputElementDesc, 1, BoundingObjectVS, BoundingObjectInputLayout);
+    CreatePixelShader(L"./Shaders/BoundingObjectPS.hlsl", BoundingObjectPS);
 
-    PSOObjects.emplace(EPSOType::BoundingObject_Wireframe, make_unique<PSOObject>(
+    PSOObjects.emplace(EPSOType::Forward_Bounding_Wireframe, make_unique<PSOObject>(
         DeviceContext,
-        PostionOnlyInputLayout,
-        PositionOnlyPathVS, 2, 0,
+        BoundingObjectInputLayout,
+        BoundingObjectVS, 2, 0,
         nullptr, 0, 0,
         nullptr, 0, 0,
-        BoundingComponentPS, 1, 0,
+        BoundingObjectPS, 2, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        SingleR8G8B8A8Count, SingleR8G8B8A8Format,
+        SceneWithIDFormats.size(), SceneWithIDFormats.data(),
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         CullBackWireframeRS,
@@ -121,7 +121,7 @@ PSOManager::PSOManager()
     ));
 #pragma endregion
 
-#pragma region Static_Solid
+#pragma region Foward_Static_Solid
     ComPtr<ID3D11VertexShader> StaticMeshVS;
     ComPtr<ID3D11InputLayout> StaticMeshInputLayout;
 
@@ -145,15 +145,15 @@ PSOManager::PSOManager()
     ComPtr<ID3D11PixelShader> MeshObjectPS;
     CreatePixelShader(L"./Shaders/MeshObjectPS.hlsl", MeshObjectPS);
 
-    PSOObjects.emplace(EPSOType::Static_Solid, make_unique<PSOObject>(
+    PSOObjects.emplace(EPSOType::Foward_Static_Solid, make_unique<PSOObject>(
         DeviceContext,
         StaticMeshInputLayout,
         StaticMeshVS, 2, 0,
         MeshObjectHS, 0, 0,
         MeshObjectDS, 3, 1,
-        MeshObjectPS, 2, 10,
+        MeshObjectPS, 3, 10,
         D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST,
-        SingleR8G8B8A8Count, SingleR8G8B8A8Format,
+        SceneWithIDFormats.size(), SceneWithIDFormats.data(),
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         CullBackSolidRS,
@@ -162,7 +162,7 @@ PSOManager::PSOManager()
     ));
 #pragma endregion
 
-#pragma region Skeletal_Solid
+#pragma region Forward_Skeletal_Solid
     ComPtr<ID3D11VertexShader> SkeletalMeshVS;
     ComPtr<ID3D11InputLayout> SkeletalMeshInputLayout;
 
@@ -180,15 +180,15 @@ PSOManager::PSOManager()
     CreateVertexShader(L"./Shaders/SkeletalMeshObjectVS.hlsl", SkeletalMeshInputElementDescs, SkeletalMeshInputElementDescsCount, SkeletalMeshVS, SkeletalMeshInputLayout);
 
 
-    PSOObjects.emplace(EPSOType::Skeletal_Solid, make_unique<PSOObject>(
+    PSOObjects.emplace(EPSOType::Forward_Skeletal_Solid, make_unique<PSOObject>(
         DeviceContext,
         SkeletalMeshInputLayout,
         SkeletalMeshVS, 2, 1,
         MeshObjectHS, 0, 0,
         MeshObjectDS, 3, 1,
-        MeshObjectPS, 2, 10,
+        MeshObjectPS, 3, 10,
         D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST,
-        SingleR8G8B8A8Count, SingleR8G8B8A8Format,
+        SceneWithIDFormats.size(), SceneWithIDFormats.data(),
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         CullBackSolidRS,
@@ -197,18 +197,29 @@ PSOManager::PSOManager()
     ));
 #pragma endregion
 
-#pragma region BoundingObject_ID_Wireframe
-    ComPtr<ID3D11PixelShader> PickingIDPS;
-    CreatePixelShader(L"./Shaders/PickingIDPS.hlsl", PickingIDPS);
-    PSOObjects.emplace(EPSOType::BoundingObject_ID_Wireframe, make_unique<PSOObject>(
+#pragma endregion
+
+#pragma region Deffered Shading
+
+#pragma region Deffered_Bounding_Wireframe
+    vector<DXGI_FORMAT> GBuffersWithIDFormat = { 
+        DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, /* BaseColor, Normal*/ 
+        DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, /* AO_Metallic_Roughness, Emissive */
+        DXGI_FORMAT_R8G8B8A8_UNORM /* ID*/
+    };
+
+    ComPtr<ID3D11PixelShader> DefferedBoundingObjectPS;
+    CreatePixelShader(L"./Shaders/DefferedBoundingObjectPS.hlsl", DefferedBoundingObjectPS);
+
+    PSOObjects.emplace(EPSOType::Deffered_Bounding_Wireframe, make_unique<PSOObject>(
         DeviceContext,
-        PostionOnlyInputLayout,
-        PositionOnlyPathVS, 2, 0,
+        BoundingObjectInputLayout,
+        BoundingObjectVS, 2, 0,
         nullptr, 0, 0,
         nullptr, 0, 0,
-        PickingIDPS, 1, 0,
+        DefferedBoundingObjectPS, 2, 0,
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        SingleR8G8B8A8Count, SingleR8G8B8A8Format,
+        GBuffersWithIDFormat.size(), GBuffersWithIDFormat.data(),
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         CullBackWireframeRS,
@@ -217,16 +228,19 @@ PSOManager::PSOManager()
     ));
 #pragma endregion
 
-#pragma region Static_ID_Solid
-    PSOObjects.emplace(EPSOType::Static_ID_Solid, make_unique<PSOObject>(
+#pragma region Deffered_Static_Solid
+    ComPtr<ID3D11PixelShader> DefferedMeshObjectPS;
+    CreatePixelShader(L"./Shaders/DefferedMeshObjectPS.hlsl", DefferedMeshObjectPS);
+
+    PSOObjects.emplace(EPSOType::Deffered_Static_Solid, make_unique<PSOObject>(
         DeviceContext,
-        PostionOnlyInputLayout,
-        PositionOnlyPathVS, 2, 0,
-        nullptr, 0, 0,
-        nullptr, 0, 0,
-        PickingIDPS, 1, 0,
-        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        SingleR8G8B8A8Count, SingleR8G8B8A8Format,
+        StaticMeshInputLayout,
+        StaticMeshVS, 2, 0,
+        MeshObjectHS, 0, 0,
+        MeshObjectDS, 3, 1,
+        DefferedMeshObjectPS, 3, 10,
+        D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST,
+        GBuffersWithIDFormat.size(), GBuffersWithIDFormat.data(),
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         CullBackSolidRS,
@@ -235,22 +249,24 @@ PSOManager::PSOManager()
     ));
 #pragma endregion
 
-#pragma region Skeletal_ID_Solid
-    PSOObjects.emplace(EPSOType::Skeletal_ID_Solid, make_unique<PSOObject>(
+#pragma region Deffered_Skeletal_Solid
+    PSOObjects.emplace(EPSOType::Deffered_Skeletal_Solid, make_unique<PSOObject>(
         DeviceContext,
-        PostionOnlyInputLayout,
-        PositionOnlyPathVS, 2, 0,
-        nullptr, 0, 0,
-        nullptr, 0, 0,
-        PickingIDPS, 1, 0,
-        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-        SingleR8G8B8A8Count, SingleR8G8B8A8Format,
+        SkeletalMeshInputLayout,
+        SkeletalMeshVS, 2, 1,
+        MeshObjectHS, 0, 0,
+        MeshObjectDS, 3, 1,
+        DefferedMeshObjectPS, 3, 10,
+        D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST,
+        GBuffersWithIDFormat.size(), GBuffersWithIDFormat.data(),
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         SampleDesc,
         CullBackSolidRS,
         DepthCompLessDSS, NULL,
         DisabledBS.Get(), SamplerStates
     ));
+#pragma endregion
+
 #pragma endregion
 }
 

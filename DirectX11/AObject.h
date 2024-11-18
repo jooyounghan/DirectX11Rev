@@ -27,6 +27,7 @@ class AObject : public IOnSerializableElement, public IUpdatable, public IRender
 {
 public:
 	AObject();
+	virtual ~AObject();
 
 protected:
 	ID3D11DeviceContext* DeviceContextCached = nullptr;

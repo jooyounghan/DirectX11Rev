@@ -110,10 +110,15 @@ void AMeshObject::Render(MapAsset* MapAssetIn)
 				Offsets.data()
 			);
 
-			vector<ID3D11RenderTargetView*> RTVs = { CurrentCamera->GetSDRSceneRTV() };
-			ID3D11DepthStencilView* DSV = CurrentCamera->GetSceneDSV();
+			//vector<ID3D11RenderTargetView*> RTVs = { CurrentCamera->GetSDRSceneRTV(), CurrentCamera->GetIdSelectRTV() };
+			//MeshObjectPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, CurrentCamera->GetSceneDSV());
 
-			MeshObjectPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, DSV);
+			vector<ID3D11RenderTargetView*> RTVs = { 
+				CurrentCamera->GetGBufferRTV(BaseColor_GBuffer), CurrentCamera->GetGBufferRTV(Normal_GBuffer),
+				CurrentCamera->GetGBufferRTV(AO_Metallic_Roughness_GBuffer), CurrentCamera->GetGBufferRTV(Emissive_GBuffer),
+				CurrentCamera->GetIdSelectRTV() 
+			};
+			MeshObjectPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, CurrentCamera->GetGBufferDSV());
 
 			for (size_t PartIdx = 0; PartIdx < MaterialIndexesPerPart.size(); ++PartIdx)
 			{
@@ -149,30 +154,6 @@ void AMeshObject::Render(MapAsset* MapAssetIn)
 				MeshObjectPSOCached->ResetDSShaderResourceViews(0, MeshObjectDSSRVs.size());
 				MeshObjectPSOCached->ResetPSShaderResourceViews(0, MeshObjectPSSRVs.size());
 			}
-		}
-#pragma endregion
-
-#pragma region PickingIDSolidStaticPSOCached
-		{
-			DeviceContextCached->IASetVertexBuffers(0, 1, VertexBuffers.data(), Strides.data(), Offsets.data());
-
-			vector<ID3D11RenderTargetView*> RTVs = { CurrentCamera->GetIdSelectRTV() };
-			ID3D11DepthStencilView* DSV = CurrentCamera->GetIdSelectDSV();
-
-			vector<ID3D11Buffer*> VSConstBuffers = { CurrentCamera->GetViewProjBuffer()->GetBuffer(), TransformationBuffer->GetBuffer() };
-			vector<ID3D11Buffer*> PSConstBuffers = { PickingIDBufferCached };
-
-			PickingIDSolidPSOCached->SetPipelineStateObject(RTVs.size(), RTVs.data(), Viewport, DSV);
-
-			PickingIDSolidPSOCached->SetVSConstantBuffers(0, VSConstBuffers.size(), VSConstBuffers.data());
-			PickingIDSolidPSOCached->SetPSConstantBuffers(0, PSConstBuffers.size(), PSConstBuffers.data());
-
-			PickingIDSolidPSOCached->CheckPipelineValidation();
-
-			DeviceContextCached->DrawIndexed(static_cast<UINT>(IndexTotalCount), 0, 0);
-
-			PickingIDSolidPSOCached->ResetVSConstantBuffers(0, VSConstBuffers.size());
-			PickingIDSolidPSOCached->ResetPSConstantBuffers(0, PSConstBuffers.size());
 		}
 #pragma endregion
 	}

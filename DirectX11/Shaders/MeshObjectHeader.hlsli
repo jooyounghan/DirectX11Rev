@@ -52,3 +52,18 @@ struct MeshObjectDomainOutput
     float3 f3ModelTangent : TANGENT;
     float fLODLevel : LOD_LEVEL;
 };
+
+struct MeshObjectPixelOutput
+{
+    float4 f4Color;
+    float4 f4ID;
+};
+
+struct DefferedMeshObjectPixelOutput
+{
+    float4 f4BaseColor : SV_Target0;
+    float4 f4Normal : SV_Target1;
+    float4 AO_Metallic_Roughness : SV_Target2;
+    float4 Emissive : SV_Target3;
+    float4 f4ID : SV_Target4;
+};

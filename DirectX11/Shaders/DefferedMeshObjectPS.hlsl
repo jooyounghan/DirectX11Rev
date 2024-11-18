@@ -17,16 +17,16 @@ cbuffer CameraViewConstantBuffer : register(b1)
 
 cbuffer MaterialAssetData : register(b2)
 {
-    bool    IsAmbientOcculusionSet;
-    bool    IsSpecularSet;
-    bool    IsDiffuseSet;
-    bool    IsRoughnessSet;
-    bool    IsMetalicSet;
-    bool    IsNormalSet;
-    bool    IsHeightSet;
-    bool    IsEmissiveSet;
-    float3  F0;
-    bool    Dummy1;
+    bool IsAmbientOcculusionSet;
+    bool IsSpecularSet;
+    bool IsDiffuseSet;
+    bool IsRoughnessSet;
+    bool IsMetalicSet;
+    bool IsNormalSet;
+    bool IsHeightSet;
+    bool IsEmissiveSet;
+    float3 F0;
+    bool Dummy1;
 };
 
 TextureCube SpecularTexture : register(t0);
@@ -38,9 +38,9 @@ Texture2D MaterialTexture[7] : register(t3);
 SamplerState WrapSampler : register(s0);
 SamplerState ClampSampler : register(s1);
 
-MeshObjectPixelOutput main(MeshObjectDomainOutput Input) : SV_TARGET
-{        
-    MeshObjectPixelOutput Result;
+DefferedMeshObjectPixelOutput main(MeshObjectDomainOutput Input) : SV_TARGET
+{
+    DefferedMeshObjectPixelOutput Result;
     
     float3 ToEye = normalize(ViewPosition - Input.f3ModelPos);
     
@@ -70,7 +70,11 @@ MeshObjectPixelOutput main(MeshObjectDomainOutput Input) : SV_TARGET
  
     float3 Emissive = MaterialTexture[EMISSIVE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb;
     
-    Result.f4Color = float4(CalculateIBL(F0, BaseColor, AmbientOcculusion, Metallic, Roughness, Normal, ToEye, SpecularTexture, DiffuseTexture, BRDFTexture, WrapSampler) + Emissive, 1.f);
+    Result.f4BaseColor = float4(BaseColor, 1.f);
+    Result.f4Normal = float4(Normal, 1.f);
+    Result.AO_Metallic_Roughness = float4(AmbientOcculusion, Metallic, Roughness, 1.f);
+    Result.Emissive = float4(Emissive, 1.f);
     Result.f4ID = IDValues;
+    
     return Result;
 }

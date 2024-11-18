@@ -109,19 +109,18 @@ void GameWorld::Render()
 	
 	if (CurrentMap)
 	{
-		//MapOutlinerWindowInstance->GetSelectedPlaceable()->Render();
 
 		RenderingAlgorithm SelectedRenderingAlgorithm = TaskAnalyzerWindowInstance->GetSelectedRenderingAlgorithm();
 
+		ACamera* CurrentCamera = CurrentMap->GetCurrentCamera();
+		CurrentCamera->CleanupLens();
+		
+		EnvironmentActor* EnvironmentActorInstance = CurrentMap->GetEnvironmentActorInstance();
+		EnvironmentActorInstance->Render(CurrentMap.get());
+		const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
+
 		if (SelectedRenderingAlgorithm == RenderingAlgorithm::ForwardRendering)
 		{
-			ACamera* CurrentCamera = CurrentMap->GetCurrentCamera();
-			EnvironmentActor* EnvironmentActorInstance = CurrentMap->GetEnvironmentActorInstance();
-			const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
-			CurrentCamera->CleanupLens();
-
-			EnvironmentActorInstance->Render(CurrentMap.get());
-
 			for (auto& RootPlaceable : RootPlaceables)
 			{
 				if (RootPlaceable->GetIsRenderable())
@@ -132,9 +131,22 @@ void GameWorld::Render()
 		}
 		else if (SelectedRenderingAlgorithm == RenderingAlgorithm::DefferedRendering)
 		{
-		}
-	}
+			const list<unique_ptr<APlaceableObject>>& RootPlaceables = CurrentMap->GetRootPlaceables();
 
+			for (auto& RootPlaceable : RootPlaceables)
+			{
+				if (RootPlaceable->GetIsRenderable())
+				{
+					//RootPlaceable->RenderDeffered(CurrentMap.get());
+				}
+			}
+
+			//CurrentCamera->ProcessGBuffer();
+		}
+		//MapOutlinerWindowInstance->GetSelectedPlaceable()->Render();
+// 
+		//CurrentCamera->PostProcess();
+	}
 	RenderUI();
 }
 

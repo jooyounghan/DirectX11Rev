@@ -10,14 +10,17 @@
 
 #include "UploadableBufferManager.h"
 
+#include <vector>
+
+using namespace std;
 using namespace DirectX;
 
 ABoundingObject::ABoundingObject(const std::string& AttachableKindIn)
 	: AAttachableObject(AttachableKindIn)
 {
 	DebuggingColorBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<UploadBuffer<XMVECTOR>>();
-	BoundingObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::BoundingObject_Wireframe);
-	PickingIDWireframePSOCached = App::GPSOManager->GetPSOObject(EPSOType::BoundingObject_ID_Wireframe);
+	//BoundingObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Forward_Bounding_Wireframe);
+	BoundingObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Deffered_Bounding_Wireframe);
 }
 
 ABoundingObject::~ABoundingObject()
@@ -50,21 +53,32 @@ void ABoundingObject::Render(MapAsset* MapAssetIn)
 		UINT Strides[] = { DebugObject->GetVertexTypeSize() };
 		UINT Offsets[] = { 0 };
 		ID3D11Buffer* VSConstBuffers[] = { CurrentCamera->GetViewProjBuffer()->GetBuffer(), TransformationBuffer->GetBuffer()};
-		ID3D11Buffer* PSConstBuffers[] = { DebuggingColorBuffer->GetBuffer() };
+		ID3D11Buffer* PSConstBuffers[] = { DebuggingColorBuffer->GetBuffer(), PickingIDBufferCached };
 
 #pragma region BoundingObjectPSOCached
-		ID3D11RenderTargetView* SDRRTVs[]{ CurrentCamera->GetSDRSceneRTV() };
+
+		//ID3D11RenderTargetView* SDRRTVs[]{ CurrentCamera->GetSDRSceneRTV(), CurrentCamera->GetIdSelectRTV()};
+		//BoundingObjectPSOCached->SetPipelineStateObject(
+		//	SDRRTVs.size(), SDRRTVs.data(), &CurrentCamera->GetViewport(),
+		//	CurrentCamera->GetSceneDSV()
+		//);
+
+		vector<ID3D11RenderTargetView*> SDRRTVs{ 
+			CurrentCamera->GetGBufferRTV(BaseColor_GBuffer), CurrentCamera->GetGBufferRTV(Normal_GBuffer),
+			CurrentCamera->GetGBufferRTV(AO_Metallic_Roughness_GBuffer), CurrentCamera->GetGBufferRTV(Emissive_GBuffer),
+			CurrentCamera->GetIdSelectRTV() 
+		};
 
 		BoundingObjectPSOCached->SetPipelineStateObject(
-			1, SDRRTVs, &CurrentCamera->GetViewport(), 
-			CurrentCamera->GetSceneDSV()
+			SDRRTVs.size(), SDRRTVs.data(), &CurrentCamera->GetViewport(),
+			CurrentCamera->GetGBufferDSV()
 		);
 
 		DeviceContextCached->IASetVertexBuffers(0, 1, VertexBuffers, Strides, Offsets);
 		DeviceContextCached->IASetIndexBuffer(DebugObject->GetIndexBuffer(), DebugObject->GetIndexFormat(), 0);
 
 		BoundingObjectPSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
-		BoundingObjectPSOCached->SetPSConstantBuffers(0, 1, PSConstBuffers);
+		BoundingObjectPSOCached->SetPSConstantBuffers(0, 2, PSConstBuffers);
 
 #ifdef _DEBUG
 		BoundingObjectPSOCached->CheckPipelineValidation();
@@ -72,31 +86,7 @@ void ABoundingObject::Render(MapAsset* MapAssetIn)
 		DeviceContextCached->DrawIndexed(static_cast<UINT>(DebugObject->GetIndexCount()), 0, 0);
 
 		BoundingObjectPSOCached->ResetVSConstantBuffers(0, 2);
-		BoundingObjectPSOCached->ResetPSConstantBuffers(0, 1);
-#pragma endregion
-
-#pragma region PickingIDWireframePSOCached
-		ID3D11RenderTargetView* IDRTVs[]{ CurrentCamera->GetIdSelectRTV() };
-
-		PickingIDWireframePSOCached->SetPipelineStateObject(1, IDRTVs, &CurrentCamera->GetViewport(), CurrentCamera->GetIdSelectDSV());
-
-		DeviceContextCached->IASetVertexBuffers(0, 1, VertexBuffers, Strides, Offsets);
-		DeviceContextCached->IASetIndexBuffer(DebugObject->GetIndexBuffer(), DebugObject->GetIndexFormat(), 0);
-
-		PickingIDWireframePSOCached->SetVSConstantBuffers(0, 2, VSConstBuffers);
-		PickingIDWireframePSOCached->SetPSConstantBuffers(0, 1, PSConstBuffers);
-
-#ifdef _DEBUG
-		PickingIDWireframePSOCached->CheckPipelineValidation();
-#endif // DEBUG
-
-		DeviceContextCached->DrawIndexed(static_cast<UINT>(DebugObject->GetIndexCount()), 0, 0);
-
-		PickingIDWireframePSOCached->ResetVSConstantBuffers(0, 2);
-		PickingIDWireframePSOCached->ResetPSConstantBuffers(0, 1);
-
+		BoundingObjectPSOCached->ResetPSConstantBuffers(0, 2);
 #pragma endregion
 	}
-
-
 }

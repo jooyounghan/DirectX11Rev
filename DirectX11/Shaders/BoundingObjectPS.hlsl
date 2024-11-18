@@ -1,11 +1,19 @@
-#include "PositionOnlyPathHeader.hlsli"
+#include "BoundingObjectHeader.hlsli"
 
 cbuffer DebuggingColor : register(b0)
 {
     float4 Color;
 };
 
-float4 main(PositionOnlyVertexOutPut Input) : SV_TARGET
+cbuffer PickingID : register(b1)
 {
-    return Color;
+    float4 IDValues;
+};
+
+BoundingObjectPixelOutPut main(BoundingObjectVertexOutPut Input)
+{
+    BoundingObjectPixelOutPut Result;
+    Result.f4Color = Color;
+    Result.f4ID = IDValues;
+    return Result;
 }

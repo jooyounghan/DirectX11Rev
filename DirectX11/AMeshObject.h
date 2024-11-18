@@ -36,7 +36,6 @@ public:
 
 protected:
 	PSOObject* MeshObjectPSOCached = nullptr;
-	PSOObject* PickingIDSolidPSOCached = nullptr;
 
 public:
 	virtual void Update(const float& DeltaTimeIn) override;

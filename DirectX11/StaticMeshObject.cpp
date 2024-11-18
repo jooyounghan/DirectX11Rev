@@ -28,8 +28,8 @@ StaticMeshObject::StaticMeshObject(std::shared_ptr<StaticMeshAsset> StaticMeshAs
 	StaticMeshObjectCount++;
 	ObjectName = StaticMeshObject::StaticMeshObjectKind + to_string(StaticMeshObjectCount);
 
-	MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_Solid);
-	PickingIDSolidPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Static_ID_Solid);
+	//MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Foward_Static_Solid);
+	MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Deffered_Static_Solid);
 
 	SetStaticMeshAssetInstance(StaticMeshAssetInstanceIn);
 }
@@ -89,6 +89,7 @@ std::vector<ID3D11Buffer*> StaticMeshObject::GetMeshObjectPSConstants(MapAsset* 
 	const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIdx];
 	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 	return std::vector<ID3D11Buffer*>{ 
+		PickingIDBufferCached,
 		CurrentCamera->GetViewProjBuffer()->GetBuffer(),
 		MaterialInstance != nullptr ? MaterialInstance->GetMaterialDataBuffer()->GetBuffer() : nullptr
 	};

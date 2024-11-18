@@ -9,6 +9,15 @@
 class GraphicsPipeline;
 class BoundingFrustumObject;
 
+enum EGBuffer : size_t
+{
+	BaseColor_GBuffer,
+	Normal_GBuffer,
+	AO_Metallic_Roughness_GBuffer,
+	Emissive_GBuffer,
+	GBufferCount
+};
+
 class ACamera : public Viewable
 {
 public: 
@@ -31,7 +40,7 @@ protected:
 	MakeComPtrGetter(SDRSceneRTV);
 
 protected:
-	Microsoft::WRL::ComPtr<ID3D11Texture2D>				DepthStencilTexture2D;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				SceneDSTexture;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		SceneDSV;
 	MakeComPtrGetter(SceneDSV);
 
@@ -47,9 +56,20 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				IdStagingTexture2D;
 
 protected:
-	Microsoft::WRL::ComPtr<ID3D11Texture2D>				IdSelectDepthStencilTexture2D;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		IdSelectDSV;
-	MakeComPtrGetter(IdSelectDSV);
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				GBufferTexture2Ds[GBufferCount];
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	GBufferSRVs[GBufferCount];
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		GBufferRTVs[GBufferCount];
+
+
+protected:
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				GBufferDSTexture;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		GBufferDSV;
+	MakeComPtrGetter(GBufferDSV);
+
+public:
+	ID3D11ShaderResourceView* GetGBufferSRV(EGBuffer GBufferIdx);
+	ID3D11RenderTargetView* GetGBufferRTV(EGBuffer GBufferIdx);
+
 
 protected:
 	static const FLOAT ClearColor[4];

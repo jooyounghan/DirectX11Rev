@@ -1,5 +1,5 @@
 #pragma once
-#include "ACamera.h"
+#include "SDRCamera.h"
 
 class HDRCamera : public ACamera
 {

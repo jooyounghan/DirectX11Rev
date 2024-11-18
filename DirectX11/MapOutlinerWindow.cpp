@@ -38,7 +38,6 @@ void MapOutlinerWindow::RenderWindow()
 void MapOutlinerWindow::RenderViewport()
 {
     Begin("Viewport");
-
     if (CurrentCamera != nullptr)
     {
         ImagePosition = ImGui::GetCursorScreenPos();
@@ -81,6 +80,19 @@ void MapOutlinerWindow::RenderViewport()
             UINT SelectedID = CurrentCamera->GetID(RelativeMousePos.x, RelativeMousePos.y, ImageSize.x, ImageSize.y);
             IDSelectEvent.Invoke(SelectedID);
         }
+    }
+    End();
+
+    Begin("Deffered Shading");
+    if (CurrentCamera != nullptr)
+    {
+        ImVec2 DefferedShadingRegion = GetContentRegionAvail();
+        Image(CurrentCamera->GetGBufferSRV(EGBuffer::BaseColor_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 2.f));
+        SameLine();
+        Image(CurrentCamera->GetGBufferSRV(EGBuffer::Normal_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 2.f));
+        Image(CurrentCamera->GetGBufferSRV(EGBuffer::AO_Metallic_Roughness_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 2.f));
+        SameLine();
+        Image(CurrentCamera->GetGBufferSRV(EGBuffer::Emissive_GBuffer), ImVec2(DefferedShadingRegion.x / 2.f, DefferedShadingRegion.y / 2.f));
     }
     End();
 }

@@ -91,9 +91,6 @@
     <Filter Include="소스 파일\Collision">
       <UniqueIdentifier>{905256e4-f194-4f73-962b-4c7087e5de31}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader\PositionOnly">
-      <UniqueIdentifier>{fa3c8c60-12b7-4660-a671-a87b670a8b12}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\PSO">
       <UniqueIdentifier>{ac23e4ea-c4f6-4e8b-be39-4a11458338e0}</UniqueIdentifier>
     </Filter>
@@ -126,9 +123,6 @@
     </Filter>
     <Filter Include="소스 파일\Object\Placeable\Pawn">
       <UniqueIdentifier>{c75582a7-9529-4fd5-a7a4-6a5bbca51cb6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Object\View">
-      <UniqueIdentifier>{2ab6c005-d21d-4874-9e2e-899e368baae8}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Object">
       <UniqueIdentifier>{cf287dd9-4094-4d15-b7de-af4edb0ed927}</UniqueIdentifier>
@@ -460,6 +454,12 @@
     <Filter Include="헤더 파일\Interface / Abstract">
       <UniqueIdentifier>{6fddc017-1621-4933-8376-8c8fa86dba4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Object\Attachable\View">
+      <UniqueIdentifier>{2ab6c005-d21d-4874-9e2e-899e368baae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\BoundingObject">
+      <UniqueIdentifier>{53ead1bb-4183-4788-bd59-d925cf19c712}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PortfolioApp.cpp">
@@ -532,10 +532,10 @@
       <Filter>소스 파일\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Viewable.cpp">
-      <Filter>소스 파일\Object\View</Filter>
+      <Filter>소스 파일\Object\Attachable\View</Filter>
     </ClCompile>
     <ClCompile Include="ACamera.cpp">
-      <Filter>소스 파일\Object\View</Filter>
+      <Filter>소스 파일\Object\Attachable\View</Filter>
     </ClCompile>
     <ClCompile Include="IDColor.cpp">
       <Filter>소스 파일\Object</Filter>
@@ -643,10 +643,7 @@
       <Filter>소스 파일\Object</Filter>
     </ClCompile>
     <ClCompile Include="HDRCamera.cpp">
-      <Filter>소스 파일\Object\View</Filter>
-    </ClCompile>
-    <ClCompile Include="SkeletalMeshObjetPSO.cpp">
-      <Filter>소스 파일\PSO</Filter>
+      <Filter>소스 파일\Object\Attachable\View</Filter>
     </ClCompile>
     <ClCompile Include="BoundingOBBInformationDrawer.cpp">
       <Filter>소스 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
@@ -817,7 +814,7 @@
       <Filter>소스 파일\Asset\Animation</Filter>
     </ClCompile>
     <ClCompile Include="SDRCamera.cpp">
-      <Filter>소스 파일\Object\View</Filter>
+      <Filter>소스 파일\Object\Attachable\View</Filter>
     </ClCompile>
     <ClCompile Include="AnimationPlayer.cpp">
       <Filter>소스 파일\Animation</Filter>
@@ -1094,9 +1091,6 @@
     <ClInclude Include="HDRCamera.h">
       <Filter>헤더 파일\Object\Attachable\View</Filter>
     </ClInclude>
-    <ClInclude Include="SkeletalMeshObjetPSO.h">
-      <Filter>헤더 파일\PSO</Filter>
-    </ClInclude>
     <ClInclude Include="BoundingOBBInformationDrawer.h">
       <Filter>헤더 파일\Editor\GUI\Visitor\Outliner\Helper\InformationDrawer\Helper</Filter>
     </ClInclude>
@@ -1315,15 +1309,6 @@
     <FxCompile Include="Shaders\StaticMeshObjectVS.hlsl">
       <Filter>Shader\MeshObject\StaticMesh</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\BoundingObjectPS.hlsl">
-      <Filter>Shader\PositionOnly</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\PositionOnlyPathVS.hlsl">
-      <Filter>Shader\PositionOnly</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\PickingIDPS.hlsl">
-      <Filter>Shader\PositionOnly</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\EnvironmentActorPS.hlsl">
       <Filter>Shader\Environment</Filter>
     </FxCompile>
@@ -1339,11 +1324,20 @@
     <FxCompile Include="Shaders\MeshObjectHS.hlsl">
       <Filter>Shader\MeshObject</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\BoundingObjectVS.hlsl">
+      <Filter>Shader\BoundingObject</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\BoundingObjectPS.hlsl">
+      <Filter>Shader\BoundingObject</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DefferedMeshObjectPS.hlsl">
+      <Filter>Shader\MeshObject</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DefferedBoundingObjectPS.hlsl">
+      <Filter>Shader\BoundingObject</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\PositionOnlyPathHeader.hlsli">
-      <Filter>Shader\PositionOnly</Filter>
-    </None>
     <None Include="Shaders\EnvironmentActorHeader.hlsli">
       <Filter>Shader\Environment</Filter>
     </None>
@@ -1355,6 +1349,9 @@
     </None>
     <None Include="Shaders\MeshObjectHeader.hlsli">
       <Filter>Shader\MeshObject</Filter>
+    </None>
+    <None Include="Shaders\BoundingObjectHeader.hlsli">
+      <Filter>Shader\BoundingObject</Filter>
     </None>
   </ItemGroup>
 </Project>

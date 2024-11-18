@@ -16,8 +16,13 @@ SDRCamera::~SDRCamera()
 void SDRCamera::CleanupLens()
 {
 	DeviceContextCached->ClearRenderTargetView(SDRSceneRTV.Get(), ClearColor);
-	DeviceContextCached->ClearDepthStencilView(SceneDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
-
 	DeviceContextCached->ClearRenderTargetView(IdSelectRTV.Get(), IDClearColor);
-	DeviceContextCached->ClearDepthStencilView(IdSelectDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
+	for (size_t idx = 0; idx < GBufferCount; ++idx)
+	{
+		DeviceContextCached->ClearRenderTargetView(GBufferRTVs[idx].Get(), ClearColor);
+	}
+
+	DeviceContextCached->ClearDepthStencilView(SceneDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+	DeviceContextCached->ClearDepthStencilView(GBufferDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 }

@@ -46,6 +46,15 @@ ACamera::ACamera(
 	Device->CreateRenderTargetView(SDRSceneTexture2D.Get(), NULL, SDRSceneRTV.GetAddressOf());
 #pragma endregion
 
+#pragma region Create GBuffers
+	for (size_t idx = 0; idx < GBufferCount; ++idx)
+	{
+		Device->CreateTexture2D(&SceneTexture2DDesc, NULL, GBufferTexture2Ds[idx].GetAddressOf());
+		Device->CreateShaderResourceView(GBufferTexture2Ds[idx].Get(), NULL, GBufferSRVs[idx].GetAddressOf());
+		Device->CreateRenderTargetView(GBufferTexture2Ds[idx].Get(), NULL, GBufferRTVs[idx].GetAddressOf());
+	}
+#pragma endregion
+
 #pragma region Create ID Texture
 	Device->CreateTexture2D(&SceneTexture2DDesc, NULL, IdSelectTexture2D.GetAddressOf());
 	Device->CreateShaderResourceView(IdSelectTexture2D.Get(), NULL, IdSelectSRV.GetAddressOf());
@@ -78,13 +87,13 @@ ACamera::ACamera(
 	DepthStencilTexture2DDesc.MiscFlags = NULL;
 
 #pragma region Create SDR Depth Stencil Texture
-	Device->CreateTexture2D(&DepthStencilTexture2DDesc, NULL, DepthStencilTexture2D.GetAddressOf());
-	Device->CreateDepthStencilView(DepthStencilTexture2D.Get(), NULL, SceneDSV.GetAddressOf());
+	Device->CreateTexture2D(&DepthStencilTexture2DDesc, NULL, SceneDSTexture.GetAddressOf());
+	Device->CreateDepthStencilView(SceneDSTexture.Get(), NULL, SceneDSV.GetAddressOf());
 #pragma endregion
 
-#pragma region Create ID Depth Stencil Texture
-	Device->CreateTexture2D(&DepthStencilTexture2DDesc, NULL, IdSelectDepthStencilTexture2D.GetAddressOf());
-	Device->CreateDepthStencilView(IdSelectDepthStencilTexture2D.Get(), NULL, IdSelectDSV.GetAddressOf());
+#pragma region Create GBuffer Depth Stencil Texture
+	Device->CreateTexture2D(&DepthStencilTexture2DDesc, NULL, GBufferDSTexture.GetAddressOf());
+	Device->CreateDepthStencilView(GBufferDSTexture.Get(), NULL, GBufferDSV.GetAddressOf());
 #pragma endregion
 }
 
@@ -130,4 +139,14 @@ void ACamera::Render(MapAsset* MapAssetIn)
 {
 	Viewable::Render(MapAssetIn);
 	CamearaFrustum->Render(MapAssetIn);
+}
+
+ID3D11ShaderResourceView* ACamera::GetGBufferSRV(EGBuffer GBufferIdx)
+{
+	return GBufferSRVs[GBufferIdx].Get();
+}
+
+ID3D11RenderTargetView* ACamera::GetGBufferRTV(EGBuffer GBufferIdx)
+{
+	return GBufferRTVs[GBufferIdx].Get();
 }

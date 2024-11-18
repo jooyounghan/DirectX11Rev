@@ -10,7 +10,7 @@ unordered_map<RenderingAlgorithm, string> TaskAnalyzerWindow::RenderingAlgorithm
 =
 {
     {RenderingAlgorithm::ForwardRendering, "Forward Rendering"},
-    {RenderingAlgorithm::DefferedRendergin, "Deffered Rendering"}
+    {RenderingAlgorithm::DefferedRendering, "Deffered Rendering"}
 };
 
 TaskAnalyzerWindow::TaskAnalyzerWindow()

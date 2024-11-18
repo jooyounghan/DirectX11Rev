@@ -30,8 +30,8 @@ SkeletalMeshObject::SkeletalMeshObject(std::shared_ptr<SkeletalMeshAsset> Skelet
 	SkeletalMeshObjectCount++;
 	ObjectName = SkeletalMeshObject::SkeletalMeshObjectKind + to_string(SkeletalMeshObjectCount);
 
-	MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_Solid);
-	PickingIDSolidPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Skeletal_ID_Solid);
+	//MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Forward_Skeletal_Solid);
+	MeshObjectPSOCached = App::GPSOManager->GetPSOObject(EPSOType::Deffered_Skeletal_Solid);
 
 	SetSkeletalMeshAssetInstance(SkeletalMeshAssetInstanceIn);
 }
@@ -103,6 +103,7 @@ std::vector<ID3D11Buffer*> SkeletalMeshObject::GetMeshObjectPSConstants(MapAsset
 	const shared_ptr<MaterialAsset>& MaterialInstance = MaterialAssetInstances[MaterialIdx];
 	ACamera* CurrentCamera = MapAssetIn->GetCurrentCamera();
 	return std::vector<ID3D11Buffer*>{
+		PickingIDBufferCached,
 		CurrentCamera->GetViewProjBuffer()->GetBuffer(),
 			MaterialInstance != nullptr ? MaterialInstance->GetMaterialDataBuffer()->GetBuffer() : nullptr
 	};

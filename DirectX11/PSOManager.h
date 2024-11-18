@@ -10,19 +10,15 @@ enum class EPSOType
 	// Environment
 	Environment_Solid,
 
-	// Position Only
-	BoundingObject_Wireframe,
+	// Forward Rendering
+	Forward_Bounding_Wireframe,
+	Foward_Static_Solid,
+	Forward_Skeletal_Solid,
 
-	// Static / Skeletal
-	Static_Solid,
-	Skeletal_Solid,
-
-	// ID
-	BoundingObject_ID_Wireframe,
-
-	// Static / Skeletal
-	Static_ID_Solid,
-	Skeletal_ID_Solid,
+	// Deffered Rendering
+	Deffered_Bounding_Wireframe,
+	Deffered_Static_Solid,
+	Deffered_Skeletal_Solid,
 
 	// Count
 	EPSOTypeCount

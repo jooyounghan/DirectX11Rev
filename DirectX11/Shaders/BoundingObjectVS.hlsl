@@ -1,4 +1,4 @@
-#include "PositionOnlyPathHeader.hlsli"
+#include "BoundingObjectHeader.hlsli"
 
 cbuffer CameraViewProj : register(b0)
 {
@@ -14,9 +14,9 @@ cbuffer ModelMatrix : register(b1)
     matrix ModelInvMatrix;
 };
 
-PositionOnlyVertexOutPut main(PositionOnlyVertexInput Input)
+BoundingObjectVertexOutPut main(BoundingObjectVertexInput Input)
 {
-    PositionOnlyVertexOutPut Result;
+    BoundingObjectVertexOutPut Result;
 
     Result.f4ProjPos = mul(float4(Input.f3WorldPos, 1.f), ModelMatrix);
     Result.f4ProjPos = mul(Result.f4ProjPos, ViewProjMatrix);

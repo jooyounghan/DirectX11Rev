@@ -18,6 +18,10 @@ AObject::AObject()
 	TransformationBuffer = App::GUploadableBufferManager->CreateUploadableBuffer<UploadBuffer<TransformationMatrix>>();
 }
 
+AObject::~AObject()
+{
+}
+
 void AObject::Update(const float& DeltaTimeIn)
 {
 	TransformationMatrix TempTransformation;
