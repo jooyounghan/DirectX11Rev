@@ -221,7 +221,7 @@ void GameWorld::ResolveGBuffer()
 
 		ID3D11Buffer* IndexBuffer = CurrentCamera->GetResolveSquareIndexBuffer().GetBuffer();
 		const UINT IndexTotalCount = CurrentCamera->GetResolveSquareIndexBuffer().GetIndicesCount();
-		const DXGI_FORMAT IndexFormat = DXGI_FORMAT_R8_UINT;
+		const DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT;
 
 		ID3D11DeviceContext* DeviceContextCached = App::GGraphicPipeline->GetDeviceContext();
 		PSOObject* GBufferResolvePSOCached = App::GPSOManager->GetPSOObject(EPSOType::GBuffer_Resolve);

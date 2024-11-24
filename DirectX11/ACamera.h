@@ -90,7 +90,7 @@ public:
 protected:
 	VertexBuffer<DirectX::XMFLOAT3> ResolveSquarePositionBuffer;
 	VertexBuffer<DirectX::XMFLOAT2> ResolveSquareUVBuffer;
-	IndexBuffer<uint8_t>	ResolveSquareIndexBuffer;
+	IndexBuffer<uint16_t>	ResolveSquareIndexBuffer;
 	MakeGetter(ResolveSquarePositionBuffer);
 	MakeGetter(ResolveSquareUVBuffer);
 	MakeGetter(ResolveSquareIndexBuffer);
