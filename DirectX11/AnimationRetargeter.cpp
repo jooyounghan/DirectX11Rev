@@ -66,7 +66,6 @@ shared_ptr<AnimationAsset> AnimationRetargeter::GetRetargetedAnimation(const str
 					const XMMATRIX DestTPose = TPoseLocalDestTransformations.at(DestBoneName);
 
 
-
 					XMMatrixDecompose(&Scale, &Quaternion, &Position, SourceLocalAnimation * InvSourceTPose * DestTPose);
 
 					NewChannel.AddPositionKey(Time, Position);
@@ -185,14 +184,7 @@ void AnimationRetargeter::UpdateTPoseLocalTransformation(map<string, XMMATRIX>& 
 		XMMATRIX Result = XMMatrixIdentity();
 
 		Bone* ParentBone = CurrentBoneIn->GetParentBone();
-		while (ParentBone != nullptr)
-		{
-			Result = XMMatrixMultiply(GetTPoseParentFactor(Transformations, ParentBone), Result);
-			ParentBone = ParentBone->GetParentBone();
-		}
-
-		Transformations[BoneName] = XMMatrixMultiply(XMMatrixInverse(nullptr, CurrentBoneIn->GetOffsetMatrix()), Result);
-
+		Transformations[BoneName] = XMMatrixMultiply(XMMatrixInverse(nullptr, CurrentBoneIn->GetOffsetMatrix()), ParentBone != nullptr ? ParentBone->GetOffsetMatrix() : Result);
 
 		const vector<Bone*> ChildrenBones = CurrentBoneIn->GetChildrenBones();
 		for (Bone* ChildBone : ChildrenBones)
