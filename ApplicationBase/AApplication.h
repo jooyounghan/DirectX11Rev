@@ -1,6 +1,5 @@
 #pragma once
 #include <windows.h>
-#include <memory>
 #include <functional>
 
 namespace App
@@ -26,6 +25,7 @@ namespace App
 		WNDCLASSEX m_windowClass;
 		HWND m_mainWindow;
 
+
 	protected:
 		SWindowSize m_appSize;
 		LARGE_INTEGER m_frequency;
@@ -39,9 +39,15 @@ namespace App
 		static void ResetCursorHotSpot(const DWORD& HotspotX, const DWORD& HotspotY);
 
 	public:
-		void Init(const wchar_t* className, const wchar_t* applicaitonName);
+		virtual void Init(const wchar_t* className, const wchar_t* applicaitonName);
 		void Run();
 		void Quit();
+
+	public:
+		LRESULT WINAPI AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+	protected:
+		void OnWindowSizeMove();
 
 	protected:
 		virtual void Update(const float& deltaTime) = 0;
@@ -51,12 +57,6 @@ namespace App
 		void SetDefaultHandler();
 		void InitTimer();
 		float GetDeltaTimeFromLastCall();
-
-	public:
-		LRESULT WINAPI AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-	protected:
-		void OnWindowSizeMove();
 	};
 
 

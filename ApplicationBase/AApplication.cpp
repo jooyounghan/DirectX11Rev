@@ -115,6 +115,22 @@ void AApplication::Quit()
 {
 }
 
+LRESULT __stdcall AApplication::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg)
+	{
+	case WM_EXITSIZEMOVE:
+		m_onWindowSizeMoveHandler();
+		break;
+	case WM_CREATE:
+		DragAcceptFiles(hWnd, TRUE);
+		break;
+	}
+	Update(0.f);
+	AppProcImpl(hWnd, msg, wParam, lParam);
+	return ::DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
 void AApplication::OnWindowSizeMove()
 {
 	RECT Rect;
@@ -149,18 +165,3 @@ float AApplication::GetDeltaTimeFromLastCall()
 	return DeltaTime;
 }
 
-LRESULT __stdcall AApplication::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	switch (msg)
-	{
-	case WM_EXITSIZEMOVE:
-		m_onWindowSizeMoveHandler();
-		break;
-	case WM_CREATE:
-		DragAcceptFiles(hWnd, TRUE);
-		break;
-	}
-	Update(0.f);
-	AppProcImpl(hWnd, msg, wParam, lParam);
-	return ::DefWindowProc(hWnd, msg, wParam, lParam); 
-}
