@@ -10,7 +10,7 @@ namespace App
 		UINT height;
 	};
 
-	using WindowSizeMoveHandler = std::function<void()>;
+	using WindowSizeMoveHandler = std::function<void(const UINT&, const UINT&)>;
 
 	class AApplication
 	{

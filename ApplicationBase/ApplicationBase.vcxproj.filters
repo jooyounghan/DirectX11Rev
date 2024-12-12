@@ -7,6 +7,9 @@
     <ClInclude Include="AApplication.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="AppUtilities.h">
+      <Filter>헤더 파일\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -15,6 +18,12 @@
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{4f7c0c7d-9a22-4476-b205-9f3d20bba009}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Utilities">
+      <UniqueIdentifier>{066eadec-33e4-4eda-95ec-23bdfec8f2f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Utilities">
+      <UniqueIdentifier>{9f3e7592-3a1a-4779-8246-363a7943714c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
@@ -22,6 +31,9 @@
     </ClCompile>
     <ClCompile Include="D3D11Engine.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AppUtilities.cpp">
+      <Filter>소스 파일\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

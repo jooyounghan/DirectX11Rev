@@ -120,13 +120,12 @@ LRESULT __stdcall AApplication::AppProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 	switch (msg)
 	{
 	case WM_EXITSIZEMOVE:
-		m_onWindowSizeMoveHandler();
+		OnWindowSizeMove();
 		break;
 	case WM_CREATE:
 		DragAcceptFiles(hWnd, TRUE);
 		break;
 	}
-	Update(0.f);
 	AppProcImpl(hWnd, msg, wParam, lParam);
 	return ::DefWindowProc(hWnd, msg, wParam, lParam);
 }
@@ -138,13 +137,14 @@ void AApplication::OnWindowSizeMove()
 	{
 		m_appSize.width = Rect.right - Rect.left;
 		m_appSize.height = Rect.bottom - Rect.top;
+		m_onWindowSizeMoveHandler(m_appSize.width, m_appSize.height);
 	}
 }
 
 void AApplication::SetDefaultHandler()
 {
 	App::AApplication::MainApp = this;
-	m_onWindowSizeMoveHandler = bind(&AApplication::OnWindowSizeMove, this);
+	m_onWindowSizeMoveHandler = [&](const UINT&, const UINT&) {};
 }
 
 void AApplication::InitTimer()

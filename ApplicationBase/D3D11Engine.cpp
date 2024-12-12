@@ -51,16 +51,17 @@ void D3D11Engine::D3D11Engine::InitEngine(const UINT& widthIn, const UINT& heigh
     assert(m_device != nullptr);
     assert(m_deviceContext != nullptr);
 
-    m_swapChain->GetBuffer(0, IID_PPV_ARGS(m_backBufferTexture.GetAddressOf()));
-    AssertIfFailed(m_device->CreateRenderTargetView(m_backBufferTexture.Get(), nullptr, m_backBufferRTV.GetAddressOf()));
-
     LoadBackBufferFromSwapchain();
 }
 
 void D3D11Engine::D3D11Engine::ResizeSwapChain(const UINT& widthIn, const UINT& heightIn)
 {
-    m_backBufferTexture->Release();
-    m_backBufferRTV->Release();
+    ResetRTVFromBackBuffer();
+
+    m_backBufferTexture.Reset();
+    m_backBufferRTV.Reset();
+
+    m_deviceContext->Flush();
 
     m_swapChain->ResizeBuffers(
         BackBufferCount,
@@ -70,6 +71,22 @@ void D3D11Engine::D3D11Engine::ResizeSwapChain(const UINT& widthIn, const UINT& 
     );
 
     LoadBackBufferFromSwapchain();
+}
+
+void D3D11::D3D11Engine::ClearBackBuffer(const Utilities::SColor& clearColor)
+{
+    m_deviceContext->ClearRenderTargetView(m_backBufferRTV.Get(), clearColor.GetAddress());
+}
+
+void D3D11::D3D11Engine::SetRTVAsBackBuffer()
+{
+    m_deviceContext->OMSetRenderTargets(1, m_backBufferRTV.GetAddressOf(), nullptr);
+}
+
+void D3D11::D3D11Engine::ResetRTVFromBackBuffer()
+{
+    ID3D11RenderTargetView* const rtv = nullptr;
+    m_deviceContext->OMSetRenderTargets(1, &rtv, nullptr);
 }
 
 void D3D11::D3D11Engine::LoadBackBufferFromSwapchain()

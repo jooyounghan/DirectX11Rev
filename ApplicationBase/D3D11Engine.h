@@ -1,4 +1,6 @@
 #pragma once
+#include "AppUtilities.h"
+
 #include <windows.h>
 #include <wrl/client.h>
 #include <d3d11.h>
@@ -19,7 +21,7 @@ namespace D3D11
 #endif
 	constexpr D3D_DRIVER_TYPE	DriverType = D3D_DRIVER_TYPE_HARDWARE;
 	constexpr D3D_FEATURE_LEVEL FeatureLevels[2] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
-
+	
 	class D3D11Engine
 	{
 	private:
@@ -43,17 +45,20 @@ namespace D3D11
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_backBufferRTV;
 
 	public:
-		ID3D11Device*			GetDevice() { return m_device.Get(); }
-		ID3D11DeviceContext*	GetDeviceContext() { return m_deviceContext.Get(); }
-		IDXGISwapChain*			GetSwapChain() { return m_swapChain.Get(); }
+		inline ID3D11Device*			GetDevice() { return m_device.Get(); }
+		inline ID3D11DeviceContext*		GetDeviceContext() { return m_deviceContext.Get(); }
+		inline IDXGISwapChain*			GetSwapChain() { return m_swapChain.Get(); }
 
 	public:
-		ID3D11Texture2D* GetBackBufferTexture() { return m_backBufferTexture.Get(); }
-		ID3D11RenderTargetView* GetBackBufferRTV() { return m_backBufferRTV.Get(); }
+		inline ID3D11Texture2D*			GetBackBufferTexture() { return m_backBufferTexture.Get(); }
+		inline ID3D11RenderTargetView*	GetBackBufferRTV() { return m_backBufferRTV.Get(); }
 
 	public:
 		void InitEngine(const UINT& widthIn, const UINT& heightIn, HWND wndHandle);
 		void ResizeSwapChain(const UINT& widthIn, const UINT& heightIn);
+		void ClearBackBuffer(const Utilities::SColor& clearColor);
+		void SetRTVAsBackBuffer();
+		void ResetRTVFromBackBuffer();
 
 	private:
 		void LoadBackBufferFromSwapchain();
