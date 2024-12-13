@@ -2,6 +2,7 @@
 #include "AApplication.h"
 #include "D3D11Engine.h"
 #include "AImGuiWindow.h"
+#include "AssetManager.h"
 #include <memory>
 
 class GameEngine : public App::AApplication
@@ -20,6 +21,9 @@ protected:
 	D3D11::D3D11Engine** m_engineDoublePtr;
 	std::vector<AImGuiWindow*> m_imguiWindows;
 
+protected:
+	AssetManager m_assetManager;
+	
 protected:
 	static Utilities::SColor ClearColor;
 

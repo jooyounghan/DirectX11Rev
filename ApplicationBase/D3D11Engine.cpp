@@ -1,5 +1,5 @@
 #include "D3D11Engine.h"
-#include "RenderingManager/DirectXUtilities.h"
+#include "DirectXUtilities.h"
 
 using namespace D3D11;
 

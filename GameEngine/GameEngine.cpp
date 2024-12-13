@@ -24,6 +24,7 @@ GameEngine::GameEngine()
 void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 {
 	AApplication::Init(className, applicaitonName);
+
 	D3D11Engine* engine = GetEngine();
 	if (engine != nullptr)
 	{
@@ -46,6 +47,9 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 		engine->GetDevice(),
 		engine->GetDeviceContext()
 	);
+
+	m_assetManager.RegisterAssetReadPath("./");
+	m_assetManager.PreloadAsset();
 }
 
 void GameEngine::Update(const float& deltaTime)
@@ -66,7 +70,7 @@ void GameEngine::Update(const float& deltaTime)
 	ImGuiViewport* main_viewport = ImGui::GetMainViewport();
 	if (!main_viewport)
 		return;
-	main_viewport->Size = ImVec2(m_appSize.width, m_appSize.height);
+	main_viewport->Size = ImVec2(static_cast<float>(m_appSize.width), static_cast<float>(m_appSize.height));
 	main_viewport->WorkSize = main_viewport->Size;
 
 	ImGui::DockSpaceOverViewport(0, main_viewport);

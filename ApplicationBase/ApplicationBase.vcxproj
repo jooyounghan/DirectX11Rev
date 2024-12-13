@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Archive\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\AssetManager\AssetManager\AssetManager;..\..\CollisionManager\CollisionManager\CollisionManager;..\..\RenderingManager\RenderingManager\RenderingManager</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -130,10 +130,10 @@
     </Link>
     <Lib>
       <AdditionalDependencies>AssetManager.lib;CollisionManager.lib;RenderingManager.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)Archive\lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\AssetManager\AssetManager\$(Platform)\$(Configuration);..\..\CollisionManager\CollisionManager\$(Platform)\$(Configuration);..\..\RenderingManager\RenderingManager\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
