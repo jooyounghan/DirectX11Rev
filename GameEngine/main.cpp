@@ -4,7 +4,7 @@
 int main()
 {
     std::cout << "Hello World!\n";
-    GameEngine gameEngine;
+    YHEngine::GameEngine gameEngine;
     gameEngine.Init(L"Test", L"Engine");
     gameEngine.Run();
     gameEngine.Quit();

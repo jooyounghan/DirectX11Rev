@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일\BufferManager">
+      <UniqueIdentifier>{fc4a9d57-57ae-4603-a951-7d111bcbd2bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\BufferManager">
+      <UniqueIdentifier>{d068d9c4-8734-4bdd-b66b-44525e8c5360}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ShaderResourceManager">
+      <UniqueIdentifier>{8dc5105d-3daf-48f7-8ddd-78735c226430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\ShaderResourceManager">
+      <UniqueIdentifier>{90ec13f3-c5cd-4232-894d-ee189ccf78ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\RenderingManager">
+      <UniqueIdentifier>{5a28550a-3512-46b2-aa13-e437f55b7ff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RenderingManager">
+      <UniqueIdentifier>{749de4ef-dbd8-4aa5-9635-754f87ef0550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\BufferManager\Buffer">
+      <UniqueIdentifier>{b5bb898c-bb49-453d-a7bb-4434086045e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\BufferManager\Buffer">
+      <UniqueIdentifier>{bac8cdcd-d974-4b93-9534-d993e0dc838d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\BufferManager\Buffer\Constant">
+      <UniqueIdentifier>{a7c19b77-5d04-447e-9dec-d3aa74af6e78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\BufferManager\Buffer\Constant">
+      <UniqueIdentifier>{98334c3f-0045-4783-a5ac-93c05495e06c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\BufferManager\Buffer\Dynamic">
+      <UniqueIdentifier>{44956613-a7bf-44f2-8cb3-99af7045ee95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\BufferManager\Buffer\Dynamic">
+      <UniqueIdentifier>{cf9a94c5-0799-485a-a72d-53f7f56e7fa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Exception">
+      <UniqueIdentifier>{dc88fe2d-4475-47c8-9a4e-ec10f08332e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Exception">
+      <UniqueIdentifier>{a4f3ca3b-401b-4609-b48e-8ed9ff135f56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Utilities">
+      <UniqueIdentifier>{ba25892d-2fe3-4195-acbe-003c340c7f94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\BufferManager\Buffer\Structure">
+      <UniqueIdentifier>{ca3f1b99-1856-4295-ae42-61323dd3c8d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\BufferManager\Buffer\Structure">
+      <UniqueIdentifier>{fae4e90d-29a6-4975-8933-1ac466275eba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ShaderResourceManager\Texture2D">
+      <UniqueIdentifier>{9a62471e-3230-4a3b-9616-ec62a0355a27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\ShaderResourceManager\Texture2D">
+      <UniqueIdentifier>{4b006075-c7bb-4412-ab4c-ab0a94d7744c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RenderingManager\PSOManager">
+      <UniqueIdentifier>{42b2b5f8-6c69-456a-a299-b2880b03c08c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RenderingManager\PSOManager\Shader">
+      <UniqueIdentifier>{acb61cd6-648d-40b9-9722-d862d18ea54f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\RenderingManager\PSOManager">
+      <UniqueIdentifier>{1e47d4d2-f549-4ef8-bfc8-2f711f174548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\RenderingManager\PSOManager\Shader">
+      <UniqueIdentifier>{bb16ed62-fc74-4fcc-a6b1-1cd21fd218b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\RenderingManager\PSOManager\PSOObject">
+      <UniqueIdentifier>{459c97f5-a7ef-4788-bbe8-384e79dc4633}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\RenderingManager\PSOManager\PSOObject">
+      <UniqueIdentifier>{b74722a3-7f40-49ef-b81f-558380a50b0b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BufferManager.h">
+      <Filter>헤더 파일\BufferManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResourceManager.h">
+      <Filter>헤더 파일\ShaderResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="PSOManager.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingManager.h">
+      <Filter>헤더 파일\RenderingManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ABuffer.h">
+      <Filter>헤더 파일\BufferManager\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>헤더 파일\BufferManager\Buffer\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicBuffer.h">
+      <Filter>헤더 파일\BufferManager\Buffer\Dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXUtilities.h">
+      <Filter>헤더 파일\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="StructureBuffer.h">
+      <Filter>헤더 파일\BufferManager\Buffer\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="AUploadableBuffer.h">
+      <Filter>헤더 파일\BufferManager\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ITextureOption.h">
+      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClInclude>
+    <ClInclude Include="SRVOption.h">
+      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClInclude>
+    <ClInclude Include="RTVOption.h">
+      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClInclude>
+    <ClInclude Include="DSVOption.h">
+      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClInclude>
+    <ClInclude Include="UAVOption.h">
+      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2DInstance.h">
+      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClInclude>
+    <ClInclude Include="AShader.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="DomainShader.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryShader.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="HullShader.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderable.h">
+      <Filter>헤더 파일\RenderingManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AViewable.h">
+      <Filter>헤더 파일\RenderingManager</Filter>
+    </ClInclude>
+    <ClInclude Include="PSOObject.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager\PSOObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputePSOObject.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager\PSOObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsPSOObject.h">
+      <Filter>헤더 파일\RenderingManager\PSOManager\PSOObject</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BufferManager.cpp">
+      <Filter>소스 파일\BufferManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderResourceManager.cpp">
+      <Filter>소스 파일\ShaderResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="PSOManager.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingManager.cpp">
+      <Filter>소스 파일\RenderingManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ABuffer.cpp">
+      <Filter>소스 파일\BufferManager\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>소스 파일\BufferManager\Buffer\Constant</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicBuffer.cpp">
+      <Filter>소스 파일\BufferManager\Buffer\Dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="StructureBuffer.cpp">
+      <Filter>소스 파일\BufferManager\Buffer\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="AUploadableBuffer.cpp">
+      <Filter>소스 파일\BufferManager\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="ITextureOption.cpp">
+      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClCompile>
+    <ClCompile Include="SRVOption.cpp">
+      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClCompile>
+    <ClCompile Include="RTVOption.cpp">
+      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClCompile>
+    <ClCompile Include="UAVOption.cpp">
+      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClCompile>
+    <ClCompile Include="DSVOption.cpp">
+      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2DInstance.cpp">
+      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+    </ClCompile>
+    <ClCompile Include="AShader.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="DomainShader.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryShader.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="HullShader.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="IRenderable.cpp">
+      <Filter>소스 파일\RenderingManager</Filter>
+    </ClCompile>
+    <ClCompile Include="AViewable.cpp">
+      <Filter>소스 파일\RenderingManager</Filter>
+    </ClCompile>
+    <ClCompile Include="PSOObject.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager\PSOObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputePSOObject.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager\PSOObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsPSOObject.cpp">
+      <Filter>소스 파일\RenderingManager\PSOManager\PSOObject</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

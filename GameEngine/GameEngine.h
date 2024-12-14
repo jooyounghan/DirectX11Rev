@@ -1,32 +1,40 @@
 #pragma once
 #include "AApplication.h"
 #include "D3D11Engine.h"
-#include "AImGuiWindow.h"
+#include "AWindow.h"
 #include "AssetManager.h"
 #include <memory>
 
-class GameEngine : public App::AApplication
+
+namespace YHEngine
 {
-public:
-	GameEngine();
+	class GameEngine : public App::AApplication
+	{
+	public:
+		GameEngine();
 
-public:
-	virtual void Init(const wchar_t* className, const wchar_t* applicaitonName) override;
+	public:
+		virtual void Init(const wchar_t* className, const wchar_t* applicaitonName) override;
 
-protected:	
-	virtual void Update(const float& deltaTime) override;
-	virtual void AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+	protected:
+		virtual void Update(const float& deltaTime) override;
+		virtual void AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 
-protected:
-	D3D11::D3D11Engine** m_engineDoublePtr;
-	std::vector<AImGuiWindow*> m_imguiWindows;
+	protected:
+		void OnDropFiles(const HDROP& hDrop);
 
-protected:
-	AssetManager m_assetManager;
-	
-protected:
-	static Utilities::SColor ClearColor;
+	protected:
+		D3D11::D3D11Engine** m_engineDoublePtr;
+		std::vector<std::unique_ptr<AWindow>> m_imguiWindows;
 
-public:
-	inline D3D11::D3D11Engine* GetEngine() { return *m_engineDoublePtr; }
-};
+	protected:
+		AssetManager m_assetManager;
+
+	protected:
+		static Utilities::SColor ClearColor;
+
+	public:
+		inline D3D11::D3D11Engine* GetEngine() { return *m_engineDoublePtr; }
+	};
+}
+

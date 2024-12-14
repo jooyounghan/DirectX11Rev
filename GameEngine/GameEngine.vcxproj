@@ -73,6 +73,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnabled>true</VcpkgEnabled>
+    <VcpkgManifestInstall>true</VcpkgManifestInstall>
+    <VcpkgAutoLink>true</VcpkgAutoLink>
+    <VcpkgApplocalDeps>true</VcpkgApplocalDeps>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -110,13 +113,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)ApplicationBase;$(ProjectDir)Archive\include;$(ProjectDir)Archive\include\imgui;..\..\AssetManager\AssetManager\AssetManager;..\..\CollisionManager\CollisionManager\CollisionManager;..\..\RenderingManager\RenderingManager\RenderingManager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ApplicationBase;$(SolutionDir)AssetManager;$(SolutionDir)CollisionManager;$(SolutionDir)RenderingManager;$(SolutionDir)ImGuiHelper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ApplicationBase.lib;imguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)Archive\lib\$(Configuration);$(SolutionDir)$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ApplicationBase.lib;ImGuiHelper.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,17 +140,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Externals\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Externals\imgui_impl_win32.cpp" />
+    <ClCompile Include="AssetViewWindow.cpp" />
+    <ClCompile Include="FileControl.cpp" />
     <ClCompile Include="GameEngine.cpp" />
-    <ClCompile Include="AImGuiWindow.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Externals\imgui_impl_dx11.h" />
-    <ClInclude Include="Externals\imgui_impl_win32.h" />
+    <ClInclude Include="AssetViewWindow.h" />
+    <ClInclude Include="FileControl.h" />
     <ClInclude Include="GameEngine.h" />
-    <ClInclude Include="AImGuiWindow.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +157,9 @@
   <ItemGroup>
     <ProjectReference Include="..\ApplicationBase\ApplicationBase.vcxproj">
       <Project>{b7efa41a-54f9-4a96-8d87-6e3cd27b0027}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ImGuiHelper\ImGuiHelper.vcxproj">
+      <Project>{ac32b636-a426-4d56-9573-97d836caee88}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

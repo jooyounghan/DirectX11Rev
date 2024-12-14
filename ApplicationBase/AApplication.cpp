@@ -39,34 +39,6 @@ SWindowSize AApplication::LoadMonitorInfo()
 	return result;
 }
 
-void AApplication::ResetCursorHotSpot(const DWORD& HotspotX, const DWORD& HotspotY)
-{
-	HCURSOR currentCursor = GetCursor();
-	if (!currentCursor) { return; }
-
-	ICONINFO iconInfo;
-	if (!GetIconInfo(currentCursor, &iconInfo)) { return; }
-
-	iconInfo.xHotspot = HotspotX;
-	iconInfo.yHotspot = HotspotY;
-
-	HCURSOR newCursor = CreateIconIndirect(&iconInfo);
-
-	if (iconInfo.hbmMask)
-	{
-		DeleteObject(iconInfo.hbmMask);
-	}
-	if (iconInfo.hbmColor)
-	{
-		DeleteObject(iconInfo.hbmColor);
-	}
-
-	if (newCursor)
-	{
-		SetCursor(newCursor);
-	}
-}
-
 void App::AApplication::Init(const wchar_t* className, const wchar_t* applicaitonName)
 {
 	m_appSize = LoadMonitorInfo();
@@ -89,7 +61,6 @@ void App::AApplication::Init(const wchar_t* className, const wchar_t* applicaito
 
 	ShowWindow(m_mainWindow, SW_SHOW);
 
-	ResetCursorHotSpot(0, 0);
 	InitTimer();
 }
 

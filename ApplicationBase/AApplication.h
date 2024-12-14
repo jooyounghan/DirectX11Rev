@@ -12,6 +12,7 @@ namespace App
 
 	using WindowSizeMoveHandler = std::function<void(const UINT&, const UINT&)>;
 
+
 	class AApplication
 	{
 	public:
@@ -32,11 +33,10 @@ namespace App
 		LARGE_INTEGER m_prevTime;
 
 	protected:
-		WindowSizeMoveHandler m_onWindowSizeMoveHandler;
+		WindowSizeMoveHandler	m_onWindowSizeMoveHandler;
 
 	protected:
 		static SWindowSize LoadMonitorInfo();
-		static void ResetCursorHotSpot(const DWORD& HotspotX, const DWORD& HotspotY);
 
 	public:
 		virtual void Init(const wchar_t* className, const wchar_t* applicaitonName);
@@ -48,6 +48,7 @@ namespace App
 
 	protected:
 		void OnWindowSizeMove();
+		void OnDropFiles();
 
 	protected:
 		virtual void Update(const float& deltaTime) = 0;

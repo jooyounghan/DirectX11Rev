@@ -13,14 +13,26 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\Window">
+    <Filter Include="소스 파일\GUI">
+      <UniqueIdentifier>{6a3b233c-642b-4a6f-9351-a72123c84e98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GUI\Window">
       <UniqueIdentifier>{35f88027-6d3d-42d4-a418-dfc25600f507}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Window">
+    <Filter Include="소스 파일\GUI\Control">
+      <UniqueIdentifier>{40296840-7df3-4ad1-b237-5af958362d71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI">
+      <UniqueIdentifier>{385a8f1e-e4b2-4c4a-9e49-e615a01ebaa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\Control">
+      <UniqueIdentifier>{9e5565ae-99a5-4e98-9fc3-572b5718bb09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\Window">
       <UniqueIdentifier>{1b4f8a16-8bf1-4098-bfbc-862fd7c2ae0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="External">
-      <UniqueIdentifier>{677c734b-30ae-4c95-8b5c-4a9d0bc864a3}</UniqueIdentifier>
+    <Filter Include="헤더 파일\GUI\Window\Extended">
+      <UniqueIdentifier>{d953c5df-49e3-4834-bdcd-9d2ab0c85642}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -30,14 +42,11 @@
     <ClCompile Include="GameEngine.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="AImGuiWindow.cpp">
-      <Filter>소스 파일\Window</Filter>
+    <ClCompile Include="AssetViewWindow.cpp">
+      <Filter>소스 파일\GUI\Window</Filter>
     </ClCompile>
-    <ClCompile Include="Externals\imgui_impl_dx11.cpp">
-      <Filter>External</Filter>
-    </ClCompile>
-    <ClCompile Include="Externals\imgui_impl_win32.cpp">
-      <Filter>External</Filter>
+    <ClCompile Include="FileControl.cpp">
+      <Filter>소스 파일\GUI\Control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -47,14 +56,11 @@
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="AImGuiWindow.h">
-      <Filter>헤더 파일\Window</Filter>
+    <ClInclude Include="AssetViewWindow.h">
+      <Filter>헤더 파일\GUI\Window\Extended</Filter>
     </ClInclude>
-    <ClInclude Include="Externals\imgui_impl_dx11.h">
-      <Filter>External</Filter>
-    </ClInclude>
-    <ClInclude Include="Externals\imgui_impl_win32.h">
-      <Filter>External</Filter>
+    <ClInclude Include="FileControl.h">
+      <Filter>헤더 파일\GUI\Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

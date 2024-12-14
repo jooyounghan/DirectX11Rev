@@ -1,10 +1,11 @@
 #include "GameEngine.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
-#include "Externals/imgui_impl_win32.h"
-#include "Externals/imgui_impl_dx11.h"
+#include "ImGuiInitializer.h"
 
+#include "AssetViewWindow.h"
+
+using namespace std;
 using namespace D3D11;
+using namespace YHEngine;
 
 Utilities::SColor GameEngine::ClearColor = Utilities::SColor(0.5f, 0.2f, 0.4f, 1.0f);
 
@@ -19,6 +20,7 @@ GameEngine::GameEngine()
 	: AApplication(), m_engineDoublePtr(D3D11Engine::GetInstance())
 {
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { GetEngine()->ResizeSwapChain(widthIn, heightIn); };
+	m_imguiWindows.emplace_back(make_unique<AssetViewWindow>("AssetManager", & m_assetManager));
 }
 
 void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
@@ -31,24 +33,12 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 		engine->InitEngine(m_appSize.width, m_appSize.height, m_mainWindow);
 	}
 
-	IMGUI_CHECKVERSION();
+	ImGuiInitializer::InitImGui(m_mainWindow, engine->GetDevice(), engine->GetDeviceContext());
 
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
+	OnWindowSizeMove();
 
-	ImGuiIO& io = ImGui::GetIO();
-	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesKorean());
-
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-	ImGui_ImplWin32_Init(m_mainWindow);
-	ImGui_ImplDX11_Init(
-		engine->GetDevice(),
-		engine->GetDeviceContext()
-	);
-
-	m_assetManager.RegisterAssetReadPath("./");
+	m_assetManager.RegisterAssetReadPath("./Assets");
+	m_assetManager.RegisterAssetWritePath("./Assets");
 	m_assetManager.PreloadAsset();
 }
 
@@ -67,15 +57,9 @@ void GameEngine::Update(const float& deltaTime)
 
 	ImGui::NewFrame();
 
-	ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	if (!main_viewport)
-		return;
-	main_viewport->Size = ImVec2(static_cast<float>(m_appSize.width), static_cast<float>(m_appSize.height));
-	main_viewport->WorkSize = main_viewport->Size;
+	ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
 
-	ImGui::DockSpaceOverViewport(0, main_viewport);
-
-	for (AImGuiWindow* imguiWindow : m_imguiWindows)
+	for (auto& imguiWindow : m_imguiWindows)
 	{
 		imguiWindow->ShowWindow();
 	}
@@ -91,4 +75,31 @@ void GameEngine::Update(const float& deltaTime)
 void GameEngine::AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
+
+	switch (msg)
+	{
+	case WM_DROPFILES:
+	{
+		HDROP hDrop = (HDROP)wParam;
+		OnDropFiles(hDrop);
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void YHEngine::GameEngine::OnDropFiles(const HDROP& hDrop)
+{
+	UINT fileCount = DragQueryFileA(hDrop, 0xFFFFFFFF, NULL, 0);
+	for (UINT i = 0; i < fileCount; ++i)
+	{
+		char filePath[MAX_PATH];
+		if (DragQueryFileA(hDrop, i, filePath, MAX_PATH))
+		{
+			string filePathStr = string(filePath);
+			m_assetManager.WrtieFileAsAsset(filePathStr);
+		}
+	}
+	DragFinish(hDrop);
 }
