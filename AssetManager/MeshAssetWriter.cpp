@@ -13,7 +13,8 @@ void MeshAssetWriter::LoadMeshPartData(
 {
 	if (mesh->HasFaces())
 	{
-		const uint32_t indexOffset = meshPartData->GetVerticesCount();
+		const uint32_t indexOffset = meshPartData == nullptr ? 0 : meshPartData->GetVerticesCount();
+		meshPartData->AddPartOffset(indexOffset);
 
 		for (uint32_t faceIdx = 0; faceIdx < mesh->mNumFaces; ++faceIdx)
 		{

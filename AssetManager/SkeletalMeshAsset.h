@@ -21,6 +21,16 @@ public:
 public:
 	virtual void Serialize(FILE* fileIn) const override;
 	virtual void Deserialize(FILE* fileIn) override;
+
+public:
+	virtual std::vector<UINT> GetStrides() override;
+	virtual std::vector<UINT> GetOffsets() override;
+
+public:
+	virtual void InitializeGPUAsset(
+		ID3D11Device* device,
+		ID3D11DeviceContext* deviceContext
+	) override;
 };
 
 class SkeletalMeshAsset : public AMeshAsset
@@ -52,6 +62,15 @@ public:
 public:
 	virtual void Serialize(FILE* fileIn) const override;
 	virtual void Deserialize(FILE* fileIn) override;
+
+public:
+	virtual void InitializeGPUAsset(
+		ID3D11Device* device,
+		ID3D11DeviceContext* deviceContext
+	) override;
+
+public:
+	virtual void Accept(IAssetVisitor* visitor) override;
 };
 
 class ISkeletalMeshProvider

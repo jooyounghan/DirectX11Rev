@@ -45,7 +45,7 @@
     <ClCompile Include="AssetViewWindow.cpp">
       <Filter>소스 파일\GUI\Window</Filter>
     </ClCompile>
-    <ClCompile Include="FileControl.cpp">
+    <ClCompile Include="AssetFileControl.cpp">
       <Filter>소스 파일\GUI\Control</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,9 +59,32 @@
     <ClInclude Include="AssetViewWindow.h">
       <Filter>헤더 파일\GUI\Window\Extended</Filter>
     </ClInclude>
-    <ClInclude Include="FileControl.h">
+    <ClInclude Include="AssetFileControl.h">
       <Filter>헤더 파일\GUI\Control</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="AnimationAssetTN.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="BoneAssetTN.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="MapAssetTN.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="MaterialAssetTN.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="SkeletalAssetTN.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="StaticAssetTN.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="TextureAssetTN.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">

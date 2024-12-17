@@ -14,17 +14,16 @@ BOOL ResourceManager::EnumResouceNameProc(HMODULE hModule, LPCWSTR lpszType, LPW
     if (IS_INTRESOURCE(lpszName))
     {
         const size_t resouceId = reinterpret_cast<size_t>(lpszName);
-
         result->emplace_back(new BaseTextureAsset(
             format("Resouce_{}", to_string(resouceId)).c_str(),
-            resourceInfo.width, resourceInfo.height / 2,
+            resourceInfo.width, resourceInfo.height, 4,
             resourceInfo.resourceData.data()
         ));
     }
     else 
     {
         result->emplace_back(new BaseTextureAsset(
-            StringHelper::ConvertWStringToACP(lpszName), resourceInfo.width, resourceInfo.height / 2,
+            StringHelper::ConvertWStringToACP(lpszName), resourceInfo.width, resourceInfo.height, 4,
             resourceInfo.resourceData.data()
         ));
     }
@@ -55,23 +54,27 @@ SResourceInfo ResourceManager::GetResourceInfo(HMODULE hModule, LPCWSTR lpszType
 
     uint8_t* pBits = reinterpret_cast<uint8_t*>(pResourceData) + pBitmapInfo->bmiHeader.biSize;
 
-    resourceInfo.resourceData.resize(width * height * 4);
+    constexpr size_t rgbChannelCount = 3;
+    constexpr size_t rgbaChannelCount = 4;
+
+    resourceInfo.width = width;
+    resourceInfo.height = height;
+    resourceInfo.resourceData.resize(width * height * rgbaChannelCount);
 
     for (int y = 0; y < height; ++y) 
     {
         for (int x = 0; x < width; ++x)
         {
-            int index = (height - y - 1) * width + x;
-            uint8_t* pixel = pBits + index * 3;
+            int index = y * width + x;
+            uint8_t* pixel = pBits + index * rgbChannelCount;
 
-            int rgbaIndex = index * 4;
+            int rgbaIndex = ((height - y - 1) * width + x) * rgbaChannelCount;
             resourceInfo.resourceData[rgbaIndex] = pixel[0];
             resourceInfo.resourceData[rgbaIndex + 1] = pixel[1];
             resourceInfo.resourceData[rgbaIndex + 2] = pixel[2];
             resourceInfo.resourceData[rgbaIndex + 3] = 255;
         }
-    }
-
+    }    
     return resourceInfo;
 }
 

@@ -168,7 +168,7 @@ BaseTextureAsset* ModelFileToAssetWriter::LoadBaseTextureFromMaterial(const aiSc
             stbi_uc* imageBuffer = stbi_load_from_memory((const stbi_uc*)texture->pcData, texture->mWidth, &widthOut, &heightOut, &channelOut, 4);
             if (imageBuffer != nullptr)
             {
-                asset = new BaseTextureAsset(textureName, widthOut, heightOut, imageBuffer);
+                asset = new BaseTextureAsset(textureName, widthOut, heightOut, channelOut, imageBuffer);
                 stbi_image_free(imageBuffer);
             }
         }
@@ -309,6 +309,9 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadMeshesAnd
 
              for (uint32_t idx = 0; idx < node->mNumChildren; ++idx)
              {
+                 if (idx == 5) {
+                     bool test = true;
+                 }
                  dfs(meshAsset, node->mChildren[idx], currentTransformation);
              }
          };

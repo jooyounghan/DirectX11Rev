@@ -1,8 +1,10 @@
 #pragma once
 #include "Asset.h"
-#include <vector>
+#include "ATextureGPUAsset.h"
+#include "Texture2DInstance.h"
+#include "SRVOption.h"
 
-class ATextureAsset : public AAsset
+class ATextureAsset : public AAsset, public ATextureGPUAsset
 {
 public:
 	ATextureAsset() = default;
@@ -20,21 +22,16 @@ protected:
 	unsigned int m_arraySize = 0;
 
 protected:
-	std::vector<size_t> m_originalSizePerArray;
-	std::vector<size_t> m_compressedSizePerArray;
-
-protected:
-	std::vector<std::vector<uint8_t>> m_compressedBufferPerArray;
+	std::vector<std::vector<uint8_t>> m_imageBuffers;
 
 public:
-	std::vector<std::vector<uint8_t>> CompressDataArray(const std::vector<std::vector<uint8_t>>& originalBufferPerArray);
-	std::vector<std::vector<uint8_t>> DecompressDataArray();
+	inline const std::vector<std::vector<uint8_t>>& GetImageBuffers() { return m_imageBuffers; }
 
 public:
 	virtual std::vector<uint32_t> GetRowPitchArray() = 0;
 
 public:
-	virtual void Serialize(FILE* fileIn) const override;
-	virtual void Deserialize(FILE* fileIn) override;
+	virtual void Serialize(FILE* fileIn) const override final;
+	virtual void Deserialize(FILE* fileIn) override final;
 };
 

@@ -141,18 +141,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssetViewWindow.cpp" />
-    <ClCompile Include="FileControl.cpp" />
+    <ClCompile Include="AssetFileControl.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetViewWindow.h" />
-    <ClInclude Include="FileControl.h" />
+    <ClInclude Include="AssetFileControl.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
+    <ResourceCompile Include="Resource.rc">
+      <DeploymentContent>true</DeploymentContent>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ApplicationBase\ApplicationBase.vcxproj">
@@ -161,6 +163,17 @@
     <ProjectReference Include="..\ImGuiHelper\ImGuiHelper.vcxproj">
       <Project>{ac32b636-a426-4d56-9573-97d836caee88}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="AnimationAssetTN.bmp">
+      <DeploymentContent>false</DeploymentContent>
+    </Image>
+    <Image Include="BoneAssetTN.bmp" />
+    <Image Include="MapAssetTN.bmp" />
+    <Image Include="MaterialAssetTN.bmp" />
+    <Image Include="SkeletalAssetTN.bmp" />
+    <Image Include="StaticAssetTN.bmp" />
+    <Image Include="TextureAssetTN.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,8 +1,13 @@
 
 #include "ConstantBuffer.h"
 
-ConstantBuffer::ConstantBuffer(const UINT& elementSize, const UINT& arrayCount, void* cpuDataIn, const D3D11_USAGE& usage)
-	: ABuffer(elementSize, arrayCount, cpuDataIn), m_usage(usage)
+ConstantBuffer::ConstantBuffer(
+	const UINT& elementSize, const UINT& arrayCount,
+	void* cpuDataIn, 
+	const D3D11_BIND_FLAG& bindFlag,
+	const D3D11_USAGE& usage
+)
+	: ABuffer(elementSize, arrayCount, cpuDataIn), m_bindFlag(bindFlag), m_usage(usage)
 {
 
 }
@@ -14,7 +19,7 @@ void ConstantBuffer::Initialize(ID3D11Device* device)
 
 	bufferDesc.ByteWidth = m_elementSize * m_arrayCount;
 	bufferDesc.Usage = m_usage;
-	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bufferDesc.BindFlags = m_bindFlag;
 	bufferDesc.CPUAccessFlags = NULL;
 	bufferDesc.MiscFlags = NULL;
 	bufferDesc.StructureByteStride = 0;

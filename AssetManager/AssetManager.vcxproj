@@ -131,8 +131,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)RenderingManager</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -140,9 +139,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc143-mtd.lib;DirectXTex.lib;zlibd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;DirectXTex.lib;zlibd.lib;RenderingManager.lib</AdditionalDependencies>
     </Lib>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -171,14 +169,19 @@
     <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationRetargeter.h" />
     <ClInclude Include="AssetException.h" />
+    <ClInclude Include="AssetGPUInitializer.h" />
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="AssetReader.h" />
     <ClInclude Include="AssetWrapper.h" />
     <ClInclude Include="AssetWriter.h" />
     <ClInclude Include="BoneAsset.h" />
     <ClInclude Include="HeaderHelper.h" />
+    <ClInclude Include="IAssetVisitor.h" />
     <ClInclude Include="IBLMaterialAsset.h" />
+    <ClInclude Include="IGPUAsset.h" />
     <ClInclude Include="ImageFileToAssetWriter.h" />
+    <ClInclude Include="AMeshGPUAsset.h" />
+    <ClInclude Include="ATextureGPUAsset.h" />
     <ClInclude Include="MapAsset.h" />
     <ClInclude Include="MathematicalHelper.h" />
     <ClInclude Include="MeshAssetWriter.h" />
@@ -204,13 +207,17 @@
     <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationRetargeter.cpp" />
     <ClCompile Include="AssetException.cpp" />
+    <ClCompile Include="AssetGPUInitializer.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AssetReader.cpp" />
     <ClCompile Include="AssetWrapper.cpp" />
     <ClCompile Include="AssetWriter.cpp" />
+    <ClCompile Include="ATextureGPUAsset.cpp" />
     <ClCompile Include="BoneAsset.cpp" />
+    <ClCompile Include="IAssetVisitor.cpp" />
     <ClCompile Include="IBLMaterialAsset.cpp" />
     <ClCompile Include="ImageFileToAssetWriter.cpp" />
+    <ClCompile Include="AMeshGPUAsset.cpp" />
     <ClCompile Include="MapAsset.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
     <ClCompile Include="MeshAssetWriter.cpp" />

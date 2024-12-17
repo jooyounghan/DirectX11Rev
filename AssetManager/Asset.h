@@ -1,6 +1,7 @@
 #pragma once
 #include "SerializeHelper.h"
 #include "HeaderHelper.h"
+#include "IAssetVisitor.h"
 
 class AAsset : public ISerializable
 {
@@ -24,6 +25,9 @@ public:
 public:
 	virtual void Serialize(FILE* fileIn) const override;
 	virtual void Deserialize(FILE* fileIn) override;
+
+public:
+	virtual void Accept(IAssetVisitor* visitor) = 0;
 
 public:
 	void SerializeAssetName(

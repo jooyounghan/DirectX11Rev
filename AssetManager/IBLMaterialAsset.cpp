@@ -65,3 +65,8 @@ void IBLMaterialAsset::Deserialize(FILE* fileIn)
 
 }
 
+void IBLMaterialAsset::Accept(IAssetVisitor* visitor)
+{
+	visitor->Visit(this);
+}
+

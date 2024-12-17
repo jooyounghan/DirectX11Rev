@@ -88,7 +88,7 @@ AAsset* ImageFileToAssetWriter::LoadBaseTexureAsset(const string& filePath, cons
 
 		if (imageBuffer != nullptr)
 		{
-			result = new BaseTextureAsset(fileName, widthOut, heightOut, imageBuffer);
+			result = new BaseTextureAsset(fileName, widthOut, heightOut, 4, imageBuffer);
 		}
 		fclose(fileHandle);
 

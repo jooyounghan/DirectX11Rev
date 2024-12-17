@@ -24,12 +24,56 @@ void StaticMeshPartData::Deserialize(FILE* fileIn)
 }
 
 
+vector<ID3D11Buffer*> StaticMeshPartData::GetVertexBuffers()
+{
+	vector<ID3D11Buffer*> result;
+	for (ConstantBuffer* buffer : m_vertexBuffers)
+	{
+		result.emplace_back(buffer->GetBuffer());
+	}
+	return result;
+}
+
+ID3D11Buffer* StaticMeshPartData::GetIndexBuffer()
+{
+	return m_indexBuffer != nullptr ? m_indexBuffer->GetBuffer() : nullptr;
+}
+
+vector<UINT> StaticMeshPartData::GetStrides()
+{
+	return vector<UINT> {
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT2),
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT3)
+	};
+}
+
+vector<UINT> StaticMeshPartData::GetOffsets()
+{
+	return vector<UINT>{ 0, 0, 0, 0 };
+}
+
+void StaticMeshPartData::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+{
+	ResetGPUAsset();
+	m_vertexBuffers.clear();
+
+	m_vertexBuffers.emplace_back(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(m_positions.size()), m_positions.data(), D3D11_BIND_VERTEX_BUFFER));
+	m_vertexBuffers.emplace_back(new ConstantBuffer(sizeof(XMFLOAT2), static_cast<UINT>(m_uvTextures.size()), m_uvTextures.data(), D3D11_BIND_VERTEX_BUFFER));
+	m_vertexBuffers.emplace_back(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(m_normals.size()), m_normals.data(), D3D11_BIND_VERTEX_BUFFER));
+	m_vertexBuffers.emplace_back(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(m_tangents.size()), m_tangents.data(), D3D11_BIND_VERTEX_BUFFER));
+
+	m_indexBuffer = new ConstantBuffer(sizeof(uint32_t), static_cast<UINT>(m_indices.size()), m_indices.data(), D3D11_BIND_INDEX_BUFFER);
+}
+
+
+
 StaticMeshAsset::StaticMeshAsset(const string& assetName)
 	: AMeshAsset(assetName)
 {
 
 }
-
 
 StaticMeshAsset::~StaticMeshAsset() 
 {
@@ -57,7 +101,6 @@ void StaticMeshAsset::Serialize(FILE* fileIn) const
 {
 	AMeshAsset::Serialize(fileIn);
 
-	SerializeHelper::SerializeContainerSize(m_staticMeshPartsPerLOD, fileIn);
 	for (auto& staticMeshPart : m_staticMeshPartsPerLOD)
 	{
 		const uint32_t& lodLevel = staticMeshPart.first;
@@ -80,4 +123,17 @@ void StaticMeshAsset::Deserialize(FILE* fileIn)
 		staticMeshPartData->Deserialize(fileIn);
 		m_staticMeshPartsPerLOD.emplace(lodLevel, staticMeshPartData);
 	}
+}
+
+void StaticMeshAsset::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+{
+	for (auto& staticMeshPartPair : m_staticMeshPartsPerLOD)
+	{
+		staticMeshPartPair.second->InitializeGPUAsset(device, deviceContext);
+	}
+}
+
+void StaticMeshAsset::Accept(IAssetVisitor* visitor)
+{
+	visitor->Visit(this);
 }

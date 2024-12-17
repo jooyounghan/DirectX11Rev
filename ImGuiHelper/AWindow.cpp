@@ -9,9 +9,9 @@ AWindow::AWindow(const std::string& windowID)
 
 void AWindow::ShowWindow()
 {
-	m_controlManager.CheckMouseControlEvents();
-
 	ImGui::Begin(m_windowID.c_str());
 	RenderWindowImpl();
 	ImGui::End();
+
+	CheckMouseControlEvents();
 }

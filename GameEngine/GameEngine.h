@@ -12,6 +12,7 @@ namespace YHEngine
 	{
 	public:
 		GameEngine();
+		virtual ~GameEngine();
 
 	public:
 		virtual void Init(const wchar_t* className, const wchar_t* applicaitonName) override;
@@ -28,7 +29,7 @@ namespace YHEngine
 		std::vector<std::unique_ptr<AWindow>> m_imguiWindows;
 
 	protected:
-		AssetManager m_assetManager;
+		AssetManager* m_assetManager;
 
 	protected:
 		static Utilities::SColor ClearColor;

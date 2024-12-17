@@ -20,7 +20,8 @@ GUID BufferManager::RegisterConstantBuffer(
 	ID3D11Device* device, 
 	const UINT& elementSize, 
 	const UINT& arrayCount,
-	void* cpuDataIn, 
+	void* cpuDataIn,
+	const D3D11_BIND_FLAG& bindFlag,
 	const D3D11_USAGE& usage
 )
 {
@@ -28,7 +29,7 @@ GUID BufferManager::RegisterConstantBuffer(
 	m_guidToRegisteredConstantBuffers.emplace(
 		guid, 
 		RegisterWithCreateHelper<ConstantBuffer>(
-			device, elementSize, arrayCount, cpuDataIn, usage
+			device, elementSize, arrayCount, cpuDataIn, bindFlag, usage
 		));
 	return guid;
 }

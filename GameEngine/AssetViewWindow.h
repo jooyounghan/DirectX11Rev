@@ -1,11 +1,26 @@
 #pragma once
 #include "AWindow.h"
 #include "AssetManager.h"
-#include "FileControl.h"
+#include "AssetFileControl.h"
+#include "Texture2DInstance.h"
+#include "SRVOption.h"
+
+enum class EAssetThumbnailType
+{
+	ASSET_THUMBNAIL_TYPE_ANIMATION,
+	ASSET_THUMBNAIL_TYPE_BONE,
+	ASSET_THUMBNAIL_TYPE_TEXTURE,
+	ASSET_THUMBNAIL_TYPE_STATIC,
+	ASSET_THUMBNAIL_TYPE_SKELETAL,
+	ASSET_THUMBNAIL_TYPE_MATERIAL,
+	ASSET_THUMBNAIL_TYPE_MAP
+};
+
+constexpr size_t AssetThumbnailTypeCount = static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MAP) + 1;
 
 struct SAssetFolder
 {
-	std::vector<FileControl> assetControls;
+	std::vector<std::unique_ptr<AssetFileControl>> assetControls;
 	std::unordered_map<std::string, SAssetFolder> childFolders;
 };
 
@@ -19,13 +34,27 @@ private:
 	SAssetFolder  m_assetRootFolders;
 	const SAssetFolder* m_selectedFolders = nullptr;
 
-public:
-	virtual void RenderWindowImpl() override;
+private:
+	static std::string AnimationAssetTN;
+	static std::string BoneAssetTN;
+	static std::string TextureAssetTN;
+	static std::string SkeletalMeshAssetTN;
+	static std::string StaticMeshAssetTN;
+	static std::string MapAssetTN;
+	static std::string MaterialAssetTN;
 
 private:
-	void AddAssetControl(const std::string& assetPath, AAsset* asset);
+	std::unique_ptr<Texture2DInstance<SRVOption>> m_thumbnails[AssetThumbnailTypeCount];
+	void InitThumbnailTextureAsAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const EAssetThumbnailType& assetType, const UINT& widht, const UINT& height, BaseTextureAsset* const asset);
+
+public:
+	virtual void RenderWindowImpl() override;
+	virtual void InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* deviceContext) override;
+
+private:
+	void AddAssetControl(const EAssetType& assetType, const std::string& assetPath, AAsset* asset);
 	void AddAssetByRecursiveKey(
-		SAssetFolder& targetFolder, const std::string& assetPath, AAsset* asset
+		const EAssetType& assetType, SAssetFolder& targetFolder, const std::string& assetPath, AAsset* asset
 	);
 
 private:
@@ -33,5 +62,6 @@ private:
 		const std::string& folderName, 
 		const SAssetFolder* const assetFolder
 	);
+	void RenderSelectedAssetFolders(const SAssetFolder* const assetFolder);
 };
 

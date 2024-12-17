@@ -132,7 +132,7 @@
       <AdditionalLibraryDirectories>$(ProjectDir)Archive\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Lib>
-      <AdditionalDependencies>AssetManager.lib;CollisionManager.lib;RenderingManager.lib</AdditionalDependencies>
+      <AdditionalDependencies>AssetManager.lib;CollisionManager.lib;</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>

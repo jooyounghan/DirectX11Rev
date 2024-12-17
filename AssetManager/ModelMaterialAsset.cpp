@@ -76,3 +76,8 @@ void ModelMaterialAsset::Deserialize(FILE* fileIn)
 	fread(&m_heightScale, sizeof(float), 1, fileIn);
 }
 
+void ModelMaterialAsset::Accept(IAssetVisitor* visitor)
+{
+	visitor->Visit(this);
+}
+

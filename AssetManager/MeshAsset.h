@@ -1,9 +1,11 @@
 #pragma once
 #include "Asset.h"
 #include "ModelMaterialAsset.h"
+#include "AMeshGPUAsset.h"
+
 #include <map>
 
-class MeshPartsData : public ISerializable
+class MeshPartsData : public ISerializable, public AMeshGPUAsset
 {
 public:
 	MeshPartsData() = default;
@@ -16,12 +18,11 @@ protected:
 	const DirectX::XMFLOAT2 m_emptyFloat2 = DirectX::XMFLOAT2(0, 0);
 
 protected:
-	std::map<uint32_t, std::vector<uint32_t>> m_offsetToIndices;
-	const std::vector<uint32_t> m_emptyIndices;
+	std::vector<uint32_t> m_indices;
+	std::vector<uint32_t> m_partOffsets;
 
 public:
-	const std::vector<uint32_t>& GetIndices(const uint32_t& offset);
-	size_t GetPartsCount() { return m_offsetToIndices.size(); }
+	size_t GetPartsCount() { return m_partOffsets.size(); }
 
 public:
 	const DirectX::XMFLOAT3& GetPosition(const size_t& index);
@@ -32,16 +33,18 @@ public:
 	void AddPosition(const float& x, const float& y, const float& z);
 	void AddUVTexture(const float& u, const float& v);
 	void AddNormal(const float& x, const float& y, const float& z);
+	void AddPartOffset(const uint32_t& offset);
 	void AddIndex(const uint32_t& offset, const uint32_t index);
 	uint32_t GetVerticesCount();
-	std::vector<uint32_t> GetVertexOffsets();
+	const std::vector<uint32_t>& GetIndices();
+	const std::vector<uint32_t>& GetVertexOffsets();
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;
 	virtual void Deserialize(FILE* fileIn) override;
 };
 
-class AMeshAsset : public AAsset
+class AMeshAsset : public AAsset, public IGPUAsset
 {
 public:
 	AMeshAsset() = default;

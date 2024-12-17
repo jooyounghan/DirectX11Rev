@@ -36,7 +36,7 @@ void ImGuiControlManager::CheckMouseControlEvents()
 		if (imGuiIO.MouseDown[idx])
 		{
 			if (imGuiIO.MouseClicked[idx])
-			{
+			{				
 				MouseClickEventArgs mouseClickEventArgs(mouseEventArgs, mouseSource, EMouseEvent::CLICKED);
 				IterateControlsWithMouseClickEvent(mouseClickEventArgs, bind(&RaiseClickEvent, placeholders::_1, placeholders::_2));
 			}
@@ -70,6 +70,7 @@ void ImGuiControlManager::IterateControlWithMouseEvent(MouseEventArgs& mouseEven
 			}
 			else
 			{
+				control->SetMouseIn(true);
 				control->OnMouseEnter(mouseEventArgs);
 			}
 		}
@@ -77,6 +78,7 @@ void ImGuiControlManager::IterateControlWithMouseEvent(MouseEventArgs& mouseEven
 		{
 			if (control->IsMouseIn())
 			{
+				control->SetMouseIn(false);
 				control->OnMouseLeave(mouseEventArgs);
 			}
 		}
@@ -113,10 +115,20 @@ void ImGuiControlManager::RaiseDoubleClickEvent(AControl* const control, MouseCl
 
 void ImGuiControlManager::RaiseDownEvent(AControl* const control, MouseClickEventArgs& args)
 {
-	return control->OnMouseDown(args);
+	if (control->IsMousePressed())
+	{
+		return control->OnMouseDown(args);
+	}
+	else
+	{
+		control->SetMousePressed(true);
+		return control->OnBeginDrag();
+	}
+
 }
 
 void ImGuiControlManager::RaiseReleasedEvent(AControl* const control, MouseClickEventArgs& args)
 {
+	control->SetMousePressed(false);
 	return control->OnMouseReleased(args);
 }

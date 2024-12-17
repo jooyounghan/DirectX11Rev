@@ -112,3 +112,8 @@ void BoneAsset::Deserialize(FILE* fileIn)
 
 	m_rootBone = dfs();
 }
+
+void BoneAsset::Accept(IAssetVisitor* visitor)
+{
+	visitor->Visit(this);
+}

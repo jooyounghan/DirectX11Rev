@@ -24,6 +24,12 @@
     <Filter Include="소스 파일\Utilities">
       <UniqueIdentifier>{9f3e7592-3a1a-4779-8246-363a7943714c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Model">
+      <UniqueIdentifier>{0add3f0a-2b60-45b0-8d50-388b7418ccec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Model">
+      <UniqueIdentifier>{45146daf-c892-470a-94c2-ea85d9cd3f80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">

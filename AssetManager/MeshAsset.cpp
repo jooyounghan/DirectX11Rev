@@ -4,16 +4,6 @@
 using namespace std;
 using namespace DirectX;
 
-
-const vector<uint32_t>& MeshPartsData::GetIndices(const uint32_t& offset)
-{
-	if (m_offsetToIndices.find(offset) != m_offsetToIndices.end())
-	{
-		return m_offsetToIndices[offset];
-	}
-	return m_emptyIndices;
-}
-
 const DirectX::XMFLOAT3& MeshPartsData::GetPosition(const size_t& index)
 {
 	if (m_positions.size() > index)
@@ -56,9 +46,14 @@ void MeshPartsData::AddNormal(const float& x, const float& y, const float& z)
 	m_normals.emplace_back(XMFLOAT3(x, y, z));
 }
 
+void MeshPartsData::AddPartOffset(const uint32_t& offset)
+{
+	m_partOffsets.emplace_back(offset);
+}
+
 void MeshPartsData::AddIndex(const uint32_t& offset, const uint32_t index)
 {
-	m_offsetToIndices[offset].emplace_back(index);
+	m_indices.emplace_back(offset + index);
 }
 
 uint32_t MeshPartsData::GetVerticesCount()
@@ -66,14 +61,14 @@ uint32_t MeshPartsData::GetVerticesCount()
 	return static_cast<uint32_t>(m_positions.size());
 }
 
-vector<uint32_t> MeshPartsData::GetVertexOffsets()
+const std::vector<uint32_t>& MeshPartsData::GetIndices()
 {
-	vector<uint32_t> result;
-	for (const auto& offsetToIndice : m_offsetToIndices)
-	{
-		result.emplace_back(offsetToIndice.first);
-	}
-	return result;
+	return m_indices;
+}
+
+const vector<uint32_t>& MeshPartsData::GetVertexOffsets()
+{
+	return m_partOffsets;
 }
 
 void MeshPartsData::Serialize(FILE* fileIn) const
@@ -81,14 +76,8 @@ void MeshPartsData::Serialize(FILE* fileIn) const
 	SerializeHelper::SerializeSequenceContainer(m_positions, fileIn);
 	SerializeHelper::SerializeSequenceContainer(m_uvTextures, fileIn);
 	SerializeHelper::SerializeSequenceContainer(m_normals, fileIn);
-
-	SerializeHelper::SerializeContainerSize(m_offsetToIndices, fileIn);
-	for (auto& offsetToIndice : m_offsetToIndices)
-	{
-		SerializeHelper::SerializeElement(offsetToIndice.first, fileIn);
-		SerializeHelper::SerializeSequenceContainer(offsetToIndice.second, fileIn);
-	}
-
+	SerializeHelper::SerializeSequenceContainer(m_indices, fileIn);
+	SerializeHelper::SerializeSequenceContainer(m_partOffsets, fileIn);
 }
 
 void MeshPartsData::Deserialize(FILE* fileIn)
@@ -96,14 +85,8 @@ void MeshPartsData::Deserialize(FILE* fileIn)
 	m_positions = DeserializeHelper::DeserializeSequenceContainer<vector<XMFLOAT3>>(fileIn);
 	m_uvTextures = DeserializeHelper::DeserializeSequenceContainer<vector<XMFLOAT2>>(fileIn);
 	m_normals = DeserializeHelper::DeserializeSequenceContainer<vector<XMFLOAT3>>(fileIn);
-
-	const size_t containerCount = DeserializeHelper::DeserializeContainerSize(fileIn);
-	for (size_t idx = 0; idx < containerCount; ++idx)
-	{
-		const uint32_t offset = DeserializeHelper::DeserializeElement<uint32_t>(fileIn);
-		const vector<uint32_t> indices = DeserializeHelper::DeserializeSequenceContainer<vector<uint32_t>>(fileIn);
-		m_offsetToIndices.emplace(offset, indices);
-	}
+	m_indices = DeserializeHelper::DeserializeSequenceContainer<vector<uint32_t>>(fileIn);
+	m_partOffsets = DeserializeHelper::DeserializeSequenceContainer<vector<uint32_t>>(fileIn);
 }
 
 AMeshAsset::AMeshAsset(const string& assetName)

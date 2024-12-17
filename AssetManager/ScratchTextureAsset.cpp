@@ -17,8 +17,6 @@ ScratchTextureAsset::ScratchTextureAsset(
 		static_cast<unsigned int>(metaData.arraySize)
 	)
 {
-	vector<vector<uint8_t>> originalBufferPerArray;
-
 	for (size_t ArrayIdx = 0; ArrayIdx < m_arraySize; ++ArrayIdx)
 	{
 		const Image* img = scratch.GetImage(0, ArrayIdx, 0);
@@ -28,39 +26,50 @@ ScratchTextureAsset::ScratchTextureAsset(
 			const size_t originalBufferSize = img->rowPitch * img->height;
 			vector<uint8_t> originalBuffer(originalBufferSize);
 			memcpy(originalBuffer.data(), img->pixels, originalBufferSize);
-			m_originalSizePerArray.push_back(originalBufferSize);
+
+			m_imageBuffers.emplace_back(move(originalBuffer));
 			m_rowPitchPerArray.push_back(static_cast<UINT>(img->rowPitch));
 		}
 		else
 		{
-			originalBufferPerArray.push_back(vector<uint8_t>());
-			m_originalSizePerArray.push_back(NULL);
-			m_rowPitchPerArray.push_back(NULL);
 			AssetException assetException(*this, "ScratchImage::GetImage's Result (DirectX::Image) is nullptr");
 			throw assetException;
 		}
-
 	}
-	m_compressedBufferPerArray = CompressDataArray(originalBufferPerArray);
 }
 
 ScratchTextureAsset::~ScratchTextureAsset()
 {
 }
 
-std::vector<uint32_t> ScratchTextureAsset::GetRowPitchArray()
+vector<uint32_t> ScratchTextureAsset::GetRowPitchArray()
 {
 	return m_rowPitchPerArray;
 }
 
-void ScratchTextureAsset::Serialize(FILE* fileIn) const
+const ID3D11Texture2D* const ScratchTextureAsset::GetTexture2D()
 {
-	ATextureAsset::Serialize(fileIn);
-	SerializeHelper::SerializeSequenceContainer(m_rowPitchPerArray, fileIn);
+	return m_textureWithSRV->GetTexture2D();
 }
 
-void ScratchTextureAsset::Deserialize(FILE* fileIn)
+const ID3D11ShaderResourceView* const ScratchTextureAsset::GetSRV()
 {
-	ATextureAsset::Deserialize(fileIn);
-	m_rowPitchPerArray = DeserializeHelper::DeserializeSequenceContainer<vector<UINT>>(fileIn);
+	return m_textureWithSRV->GetSRV();
+}
+
+void ScratchTextureAsset::InitializeGPUAsset(
+	ID3D11Device* device,
+	ID3D11DeviceContext* deviceContext
+)
+{
+	m_textureWithSRV = new Texture2DInstance<SRVOption>(
+		m_width, m_height, m_arraySize, m_imageBuffers, GetRowPitchArray(),
+		NULL, D3D11_RESOURCE_MISC_GENERATE_MIPS, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM,
+		device, deviceContext
+	);
+}
+
+void ScratchTextureAsset::Accept(IAssetVisitor* visitor)
+{
+	visitor->Visit(this);
 }

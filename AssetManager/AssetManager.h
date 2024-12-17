@@ -1,4 +1,6 @@
 #pragma once
+#include "IAssetVisitor.h"
+
 #include "AssetReader.h"
 #include "AssetWriter.h"
 #include "ResourceManager.h"
@@ -18,8 +20,12 @@ class AssetManager : public IBaseTextureProvider, public IScratchTextureProvider
 	public IAnimationProvider, public IMapProvider, public IResourceProvider
 {
 public:
-	AssetManager();
+	AssetManager(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	~AssetManager();
+
+protected:
+	ID3D11Device* m_deviceCached = nullptr;
+	ID3D11DeviceContext* m_deviceContextCached = nullptr;
 
 protected:
 	std::unordered_map<std::string, AssetReader> m_assetReadersWithPath;
@@ -34,11 +40,25 @@ public:
 	void RegisterAssetWritePath(const std::string& writePath);
 
 public:
-	void PreloadAsset();
+	void PreloadFromResources();
+	void PreloadFromDirectories();
 	void WrtieFileAsAsset(const std::string filePath);
 
+private:
+	void AddAssetHelper(const EAssetType& assetType, std::string assetPath, AAsset* asset);
+
+private:
+	std::unordered_map<
+		std::string, 
+		std::function<void(const EAssetType&, std::string, AAsset*)>
+	> OnAssetLoaded;
+	
 public:
-	std::function<void(std::string, AAsset*)> OnAssetLoaded = [&](const std::string&, AAsset*) {};
+	void RegisterAssetLoadedHandler(const std::string& handlerName, const std::function<void(const EAssetType&, std::string, AAsset*)>& handler);
+	void DeregisterAssetLoadedHandler(const std::string& handlerName);
+
+private:
+	void InvokeAssetLoadedHandler(const EAssetType& assetType, std::string assetPath, AAsset* asset);
 
 public:
 	virtual BaseTextureAsset* const GetBaseTextureAsset(const std::string& assetName) override;

@@ -7,28 +7,48 @@ BaseTextureAsset::BaseTextureAsset(
 	const string& assetName,
 	const unsigned int& widthIn,
 	const unsigned int& heightIn,
+	const unsigned int& channelIn,
 	uint8_t* imageBufferIn
 )
-	: ATextureAsset(assetName, widthIn, heightIn, 1)
+	: ATextureAsset(assetName, widthIn, heightIn, 1), m_channel(channelIn)
 {
-	m_originalSizePerArray.push_back(m_width * m_height * 4);
+	vector<uint8_t> imageBuffer;
+	imageBuffer.resize(m_width * m_height * m_channel);
+	memcpy(imageBuffer.data(), imageBufferIn, imageBuffer.size());
 
-	vector<uint8_t> originalBuffer;
-	originalBuffer.resize(m_width * m_height * 4);
-	memcpy(originalBuffer.data(), imageBufferIn, originalBuffer.size());
-
-	vector<vector<uint8_t>> originalBufferPerArray;
-	originalBufferPerArray.push_back(move(originalBuffer));
-
-	m_compressedBufferPerArray = CompressDataArray(originalBufferPerArray);
+	m_imageBuffers.emplace_back(move(imageBuffer));
 }
 
-BaseTextureAsset::~BaseTextureAsset()
-{
+BaseTextureAsset::~BaseTextureAsset() {}
 
+vector<uint32_t> BaseTextureAsset::GetRowPitchArray()
+{
+	return { m_width * m_channel };
 }
 
-std::vector<uint32_t> BaseTextureAsset::GetRowPitchArray()
+const ID3D11Texture2D* const BaseTextureAsset::GetTexture2D()
 {
-	return { m_width * 4 };
+	return m_textureWithSRV->GetTexture2D();
+}
+
+const ID3D11ShaderResourceView* const BaseTextureAsset::GetSRV()
+{
+	return m_textureWithSRV->GetSRV();
+}
+
+void BaseTextureAsset::InitializeGPUAsset(
+	ID3D11Device* device,
+	ID3D11DeviceContext* deviceContext
+)
+{
+	m_textureWithSRV = new Texture2DInstance<SRVOption>(
+		m_width, m_height, 1, m_imageBuffers, GetRowPitchArray(),
+		NULL, D3D11_RESOURCE_MISC_GENERATE_MIPS, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM,
+		device, deviceContext
+	);
+}
+
+void BaseTextureAsset::Accept(IAssetVisitor* visitor)
+{
+	visitor->Visit(this);
 }

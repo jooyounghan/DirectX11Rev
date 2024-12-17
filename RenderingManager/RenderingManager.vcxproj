@@ -164,11 +164,11 @@
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PSOObject.h" />
     <ClInclude Include="RTVOption.h" />
+    <ClInclude Include="ShaderResourceManager.h" />
     <ClInclude Include="SRVOption.h" />
     <ClInclude Include="ITextureOption.h" />
     <ClInclude Include="PSOManager.h" />
     <ClInclude Include="RenderingManager.h" />
-    <ClInclude Include="ShaderResourceManager.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="StructureBuffer.h" />
     <ClInclude Include="Texture2DInstance.h" />
@@ -193,11 +193,11 @@
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PSOObject.cpp" />
     <ClCompile Include="RTVOption.cpp" />
+    <ClCompile Include="ShaderResourceManager.cpp" />
     <ClCompile Include="SRVOption.cpp" />
     <ClCompile Include="ITextureOption.cpp" />
     <ClCompile Include="PSOManager.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
-    <ClCompile Include="ShaderResourceManager.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="StructureBuffer.cpp" />
     <ClCompile Include="Texture2DInstance.cpp" />

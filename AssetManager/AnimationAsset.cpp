@@ -154,3 +154,8 @@ void AnimationAsset::Deserialize(FILE* fileIn)
 		boneNameToAnimChannels.emplace(boneName, animChannel);
 	}
 }
+
+void AnimationAsset::Accept(IAssetVisitor* visitor)
+{
+	visitor->Visit(this);
+}

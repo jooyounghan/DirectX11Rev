@@ -1,12 +1,15 @@
 ﻿#include "pch.h"
 #include "AssetManager.h"
+#include "AssetGPUInitializer.h"
 
 #include "ModelFileToAssetWriter.h"
 #include "ImageFileToAssetWriter.h"
 
 using namespace std;
 
-AssetManager::AssetManager()
+
+AssetManager::AssetManager(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+	: m_deviceCached(device), m_deviceContextCached(deviceContext)
 {
 }
 
@@ -48,13 +51,17 @@ void AssetManager::RegisterAssetWritePath(const std::string& writePath)
 	
 }
 
-void AssetManager::PreloadAsset()
+void AssetManager::PreloadFromResources()
 {
 	const vector<BaseTextureAsset*> bitmapResourceAssets = m_resourceManager.LoadBitmapResources();
 	for (BaseTextureAsset* const bitmapResourceAsset : bitmapResourceAssets)
 	{
 		m_assetNameToAssets[EAssetType::ASSET_TYPE_RESOURCE].emplace(bitmapResourceAsset->GetAssetName(), bitmapResourceAsset);
 	}
+}
+
+void AssetManager::PreloadFromDirectories()
+{
 
 	for (auto assetReaderWithPath : m_assetReadersWithPath)
 	{
@@ -69,12 +76,10 @@ void AssetManager::PreloadAsset()
 			const vector<pair<string, AAsset*>> loadedAssetsWithPath = assetTypeToLoadedAssetsWithPath.second;
 			for (auto& loadedAssetWithPath : loadedAssetsWithPath)
 			{
-				string path = loadedAssetWithPath.first;
+				string assetPath = loadedAssetWithPath.first;
 				AAsset* const asset = loadedAssetWithPath.second;
 
-				OnAssetLoaded(path, asset);
-
-				m_assetNameToAssets[assetType][asset->GetAssetName()] = asset;
+				AddAssetHelper(assetType, assetPath, asset);
 			}
 		}
 	}
@@ -97,12 +102,40 @@ void AssetManager::WrtieFileAsAsset(const std::string filePath)
 					const vector<AAsset*>& assets = savedTypeToAssets.second;
 					for (AAsset* const asset : assets)
 					{
-						m_assetNameToAssets[assetType][asset->GetAssetName()] = asset;
+						AddAssetHelper(assetType, filePath, asset);
 					}
 				}
 
 			}
 		}
+	}
+}
+
+void AssetManager::AddAssetHelper(const EAssetType& assetType, std::string assetPath, AAsset* asset)
+{
+	AssetGPUInitializer assetGPUInitializer(m_deviceCached, m_deviceContextCached);
+
+	InvokeAssetLoadedHandler(assetType, assetPath, asset);
+	m_assetNameToAssets[assetType][asset->GetAssetName()] = asset;
+	asset->Accept(&assetGPUInitializer);
+}
+
+void AssetManager::RegisterAssetLoadedHandler(const std::string& handlerName, const std::function<void(const EAssetType&, std::string, AAsset*)>& handler)
+{
+	OnAssetLoaded[handlerName] = handler;
+}
+
+void AssetManager::DeregisterAssetLoadedHandler(const std::string& handlerName)
+{
+	OnAssetLoaded.erase(handlerName);
+}
+
+void AssetManager::InvokeAssetLoadedHandler(const EAssetType& assetType, std::string assetPath, AAsset* asset)
+{
+	for (auto& handlerWithName : OnAssetLoaded)
+	{
+		auto& handler = handlerWithName.second;
+		handler(assetType, assetPath, asset);
 	}
 }
 

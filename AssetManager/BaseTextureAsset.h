@@ -9,13 +9,30 @@ public:
 		const std::string& assetName,
 		const unsigned int& widthIn,
 		const unsigned int& heightIn,
+		const unsigned int& channelIn,
 		uint8_t* imageBufferIn
 	);
 
 	virtual ~BaseTextureAsset();
 
+protected:
+	unsigned int m_channel;
+
 public:
 	virtual std::vector<uint32_t> GetRowPitchArray() override;
+
+public:
+	virtual const ID3D11Texture2D* const GetTexture2D() override;
+	virtual const ID3D11ShaderResourceView* const GetSRV() override;
+
+public:
+	virtual void InitializeGPUAsset(
+		ID3D11Device* device,
+		ID3D11DeviceContext* deviceContext
+	) override;
+
+public:
+	virtual void Accept(IAssetVisitor* visitor) override;
 };
 
 class IBaseTextureProvider

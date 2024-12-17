@@ -43,6 +43,7 @@ public:
 		ID3D11Device* device,
 		const UINT& elementSize, 
 		const UINT& arrayCount, void* cpuDataIn, 
+		const D3D11_BIND_FLAG& bindFlag = D3D11_BIND_CONSTANT_BUFFER,
 		const D3D11_USAGE& usage = D3D11_USAGE_IMMUTABLE
 	);
 

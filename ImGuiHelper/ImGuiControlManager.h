@@ -5,11 +5,16 @@
 class ControlZComparer
 {
 public:
-    bool operator() (AControl* control1, AControl* control2) const
+    bool operator()(AControl* control1, AControl* control2) const
     {
-        return control1->GetZIndex() > control2->GetZIndex();
+        if (control1->GetZIndex() != control2->GetZIndex())
+        {
+            return control1->GetZIndex() > control2->GetZIndex();
+        }
+        return control1 < control2;
     }
 };
+
 
 class ImGuiControlManager
 {
@@ -22,6 +27,7 @@ protected:
 public:
     inline void RegisterControl(AControl* control) { m_controls.insert(control); }
     inline void DeregisterControl(AControl* control) { m_controls.erase(control); }
+    inline void ClearRegisteredControl() { m_controls.clear(); }
     void CheckMouseControlEvents();
 
 private:

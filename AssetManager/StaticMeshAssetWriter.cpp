@@ -14,6 +14,7 @@ void StaticMeshAssetWriter::LoadMeshPartData(
 {
 	MeshAssetWriter::LoadMeshPartData(meshPartData, isGltf, mesh, transformation);
 	StaticMeshPartData* staticMeshPartData = dynamic_cast<StaticMeshPartData*>(meshPartData);
+
 	if (staticMeshPartData != nullptr)
 	{
 		if (mesh->HasTangentsAndBitangents())
@@ -29,8 +30,9 @@ void StaticMeshAssetWriter::LoadMeshPartData(
             const vector<uint32_t> offsets = meshPartData->GetVertexOffsets();
             const uint32_t offset = offsets.empty() ? 0 : offsets[offsets.size() - 1];
 
-            const vector<uint32_t>& indices = meshPartData->GetIndices(offset);
-            for (size_t idx = 0; idx < indices.size(); idx += 3)
+            const vector<uint32_t>& indices = meshPartData->GetIndices();
+
+            for (size_t idx = offset; idx < indices.size(); idx += 3)
             {
 				const uint32_t& index0 = indices[idx];
 				const uint32_t& index1 = indices[idx + 1];

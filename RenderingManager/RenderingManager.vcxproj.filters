@@ -93,9 +93,6 @@
     <ClInclude Include="BufferManager.h">
       <Filter>헤더 파일\BufferManager</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderResourceManager.h">
-      <Filter>헤더 파일\ShaderResourceManager</Filter>
-    </ClInclude>
     <ClInclude Include="PSOManager.h">
       <Filter>헤더 파일\RenderingManager\PSOManager</Filter>
     </ClInclude>
@@ -174,13 +171,13 @@
     <ClInclude Include="GraphicsPSOObject.h">
       <Filter>헤더 파일\RenderingManager\PSOManager\PSOObject</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderResourceManager.h">
+      <Filter>헤더 파일\ShaderResourceManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferManager.cpp">
       <Filter>소스 파일\BufferManager</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderResourceManager.cpp">
-      <Filter>소스 파일\ShaderResourceManager</Filter>
     </ClCompile>
     <ClCompile Include="PSOManager.cpp">
       <Filter>소스 파일\RenderingManager\PSOManager</Filter>
@@ -256,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="GraphicsPSOObject.cpp">
       <Filter>소스 파일\RenderingManager\PSOManager\PSOObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderResourceManager.cpp">
+      <Filter>소스 파일\ShaderResourceManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

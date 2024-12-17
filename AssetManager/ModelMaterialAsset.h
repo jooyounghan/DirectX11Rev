@@ -57,6 +57,9 @@ public:
 public:
 	virtual void Serialize(FILE* fileIn) const override;
 	virtual void Deserialize(FILE* fileIn) override;
+
+public:
+	virtual void Accept(IAssetVisitor* visitor) override;
 };
 
 class IModelMaterialProvider

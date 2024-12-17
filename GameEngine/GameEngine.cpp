@@ -19,8 +19,15 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 GameEngine::GameEngine()
 	: AApplication(), m_engineDoublePtr(D3D11Engine::GetInstance())
 {
+	D3D11Engine* engine = GetEngine();
+	m_assetManager = new AssetManager(engine->GetDevice(), engine->GetDeviceContext());
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { GetEngine()->ResizeSwapChain(widthIn, heightIn); };
-	m_imguiWindows.emplace_back(make_unique<AssetViewWindow>("AssetManager", & m_assetManager));
+	m_imguiWindows.emplace_back(make_unique<AssetViewWindow>("AssetManager", m_assetManager));
+}
+
+YHEngine::GameEngine::~GameEngine()
+{
+	delete m_assetManager;
 }
 
 void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
@@ -33,13 +40,23 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 		engine->InitEngine(m_appSize.width, m_appSize.height, m_mainWindow);
 	}
 
-	ImGuiInitializer::InitImGui(m_mainWindow, engine->GetDevice(), engine->GetDeviceContext());
+	ID3D11Device* device = engine->GetDevice();
+	ID3D11DeviceContext* deviceContext = engine->GetDeviceContext();
+
+	ImGuiInitializer::InitImGui(m_mainWindow, device, deviceContext);
 
 	OnWindowSizeMove();
 
-	m_assetManager.RegisterAssetReadPath("./Assets");
-	m_assetManager.RegisterAssetWritePath("./Assets");
-	m_assetManager.PreloadAsset();
+	m_assetManager->RegisterAssetReadPath("./Assets");
+	m_assetManager->RegisterAssetWritePath("./Assets");
+	m_assetManager->PreloadFromResources();
+
+	for (auto& imguiWindow : m_imguiWindows)
+	{
+		imguiWindow->InitializeWindow(device, deviceContext);
+	}
+
+	m_assetManager->PreloadFromDirectories();
 }
 
 void GameEngine::Update(const float& deltaTime)
@@ -98,7 +115,7 @@ void YHEngine::GameEngine::OnDropFiles(const HDROP& hDrop)
 		if (DragQueryFileA(hDrop, i, filePath, MAX_PATH))
 		{
 			string filePathStr = string(filePath);
-			m_assetManager.WrtieFileAsAsset(filePathStr);
+			m_assetManager->WrtieFileAsAsset(filePathStr);
 		}
 	}
 	DragFinish(hDrop);

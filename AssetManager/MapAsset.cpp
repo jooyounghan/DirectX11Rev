@@ -76,3 +76,8 @@ void MapAsset::Deserialize(FILE* fileIn)
 		m_assetNameToTransformations.emplace(move(assetName), move(transformations));
 	}
 }
+
+void MapAsset::Accept(IAssetVisitor* visitor)
+{
+	visitor->Visit(this);
+}

@@ -61,6 +61,32 @@ void SkeletalMeshPartData::Deserialize(FILE* fileIn)
 }
 
 
+std::vector<UINT> SkeletalMeshPartData::GetStrides()
+{
+	return vector<UINT> {
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT2),
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT3),
+		sizeof(XMFLOAT4),
+		sizeof(XMINT4)
+	};
+}
+
+std::vector<UINT> SkeletalMeshPartData::GetOffsets()
+{
+	return vector<UINT>{ 0, 0, 0, 0, 0, 0 };
+}
+
+void SkeletalMeshPartData::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+{
+	StaticMeshPartData::InitializeGPUAsset(device, deviceContext);
+
+	m_vertexBuffers.emplace_back(new ConstantBuffer(sizeof(XMFLOAT4), static_cast<UINT>(m_blendWeight.size()), m_blendWeight.data(), D3D11_BIND_VERTEX_BUFFER));
+	m_vertexBuffers.emplace_back(new ConstantBuffer(sizeof(XMINT4), static_cast<UINT>(m_blendIndex.size()), m_blendIndex.data(), D3D11_BIND_VERTEX_BUFFER));
+}
+
+
 SkeletalMeshAsset::SkeletalMeshAsset(const string& assetName)
 	: AMeshAsset(assetName)
 {
@@ -131,5 +157,18 @@ void SkeletalMeshAsset::Deserialize(FILE* fileIn)
 	}
 
 	m_boneAssetName = DeserializeHelper::DeserializeString(fileIn);
+}
+
+void SkeletalMeshAsset::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+{
+	for (auto& skeletalMeshPartPair : m_skeletalMeshPartsPerLOD)
+	{
+		skeletalMeshPartPair.second->InitializeGPUAsset(device, deviceContext);
+	}
+}
+
+void SkeletalMeshAsset::Accept(IAssetVisitor* visitor)
+{
+	visitor->Visit(this);
 }
 
