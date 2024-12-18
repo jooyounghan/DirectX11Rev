@@ -20,9 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AControl.cpp" />
+    <ClCompile Include="AModal.cpp" />
+    <ClCompile Include="TaskModal.cpp" />
     <ClCompile Include="AWindow.cpp" />
     <ClCompile Include="ImGuiControlManager.cpp" />
     <ClCompile Include="ImGuiInitializer.cpp" />
+    <ClCompile Include="ImGuiTaskWaiter.cpp" />
     <ClCompile Include="imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="MouseClickEventArgs.cpp" />
@@ -30,9 +33,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AControl.h" />
+    <ClInclude Include="AModal.h" />
+    <ClInclude Include="TaskModal.h" />
     <ClInclude Include="AWindow.h" />
     <ClInclude Include="ImGuiControlManager.h" />
     <ClInclude Include="ImGuiInitializer.h" />
+    <ClInclude Include="ImGuiTaskWaiter.h" />
     <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="MouseClickEventArgs.h" />

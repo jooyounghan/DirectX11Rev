@@ -94,6 +94,8 @@ void AssetManager::WrtieFileAsAsset(const std::string filePath)
 		{
 			if (assetWriter->IsAcceptableFilePath(filePath))
 			{
+				const string relativeFilePath = assetWriter->GetRelativePathFromSavePath(filePath);
+
 				const unordered_map<EAssetType, vector<AAsset*>> savedTypesToAssets = assetWriter->SaveAsAssets(filePath);
 
 				for (const auto& savedTypeToAssets : savedTypesToAssets)
@@ -102,7 +104,7 @@ void AssetManager::WrtieFileAsAsset(const std::string filePath)
 					const vector<AAsset*>& assets = savedTypeToAssets.second;
 					for (AAsset* const asset : assets)
 					{
-						AddAssetHelper(assetType, filePath, asset);
+						AddAssetHelper(assetType, relativeFilePath, asset);
 					}
 				}
 

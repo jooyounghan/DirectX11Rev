@@ -35,27 +35,40 @@ unordered_map<EAssetType, vector<AAsset*>> ImageFileToAssetWriter::SaveAsAssets(
 	const string& fileName = path(filePath).stem().string();
 	const string& extension = path(filePath).extension().string();
 	
-	if (extension == PngExtension || extension == JpegExtension)
+	if (IsAssetNotLoaded(fileName))
 	{
-		AAsset* baseTextureAsset = LoadBaseTexureAsset(filePath, fileName);
-		writtenAssets[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(baseTextureAsset);
-	}
-	else if (extension == ExrExtension)
-	{
-		AAsset* scratchTextureAsset = LoadScratchTexureByEXRAsset(filePath, fileName);
-		writtenAssets[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(scratchTextureAsset);
+		bool isAdded = false;
+		if (extension == PngExtension || extension == JpegExtension)
+		{
+			isAdded = true;
+			AAsset* baseTextureAsset = LoadBaseTexureAsset(filePath, fileName);
+			writtenAssets[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(baseTextureAsset);
+		}
+		else if (extension == ExrExtension)
+		{
+			isAdded = true;
+			AAsset* scratchTextureAsset = LoadScratchTexureByEXRAsset(filePath, fileName);
+			writtenAssets[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(scratchTextureAsset);
 
 
-	}
-	else if (extension == HdrExtension)
-	{
-		AAsset* scratchTextureAsset = LoadScratchTexureByHDRAsset(filePath, fileName);
-		writtenAssets[EAssetType::ASSET_TYPE_SCRATCH_TEXTURE].emplace_back(scratchTextureAsset);
-	}
-	else
-	{
+		}
+		else if (extension == HdrExtension)
+		{
+			isAdded = true;
+			AAsset* scratchTextureAsset = LoadScratchTexureByHDRAsset(filePath, fileName);
+			writtenAssets[EAssetType::ASSET_TYPE_SCRATCH_TEXTURE].emplace_back(scratchTextureAsset);
+		}
+		else
+		{
 
+		}
+
+		if (isAdded)
+		{
+			m_loadedAssetName.insert(fileName);
+		}
 	}
+
 
 	for (auto& writtenAsset : writtenAssets)
 	{
@@ -88,7 +101,7 @@ AAsset* ImageFileToAssetWriter::LoadBaseTexureAsset(const string& filePath, cons
 
 		if (imageBuffer != nullptr)
 		{
-			result = new BaseTextureAsset(fileName, widthOut, heightOut, 4, imageBuffer);
+			result = new BaseTextureAsset(fileName, widthOut, heightOut, imageBuffer);
 		}
 		fclose(fileHandle);
 

@@ -37,6 +37,18 @@
     <Filter Include="헤더 파일\Manager">
       <UniqueIdentifier>{c4e97d8b-703a-4ff2-af1e-a48940493946}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Modal">
+      <UniqueIdentifier>{d76455b3-cd97-4606-9719-271e753c90ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Modal">
+      <UniqueIdentifier>{551e9273-90de-4aa1-a16b-2ccfbe10ea2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Modal\Extended">
+      <UniqueIdentifier>{2878affc-9654-48cc-97ab-6d81a86daf17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Modal\Extended">
+      <UniqueIdentifier>{06ec5379-df3e-4f38-b4fc-3dc36ff3d3c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui_impl_dx11.cpp">
@@ -63,6 +75,15 @@
     <ClCompile Include="ImGuiControlManager.cpp">
       <Filter>소스 파일\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="AModal.cpp">
+      <Filter>소스 파일\Modal</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskModal.cpp">
+      <Filter>소스 파일\Modal\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiTaskWaiter.cpp">
+      <Filter>소스 파일\Modal\Extended</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui_impl_dx11.h">
@@ -88,6 +109,15 @@
     </ClInclude>
     <ClInclude Include="ImGuiControlManager.h">
       <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="AModal.h">
+      <Filter>헤더 파일\Modal</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskModal.h">
+      <Filter>헤더 파일\Modal\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiTaskWaiter.h">
+      <Filter>헤더 파일\Modal\Extended</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

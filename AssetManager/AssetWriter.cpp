@@ -12,6 +12,26 @@ AAssetWriter::~AAssetWriter()
 {
 }
 
+bool AAssetWriter::IsAssetNotLoaded(const std::string& assetName) const
+{
+    return m_loadedAssetName.find(assetName) == m_loadedAssetName.end();
+}
+
+std::string AAssetWriter::GetRelativePathFromSavePath(const std::string& path) const
+{
+    size_t lastSlashPos = m_assetSavePath.find_last_of('/');
+    std::string basePathMarker = (lastSlashPos != std::string::npos) ?
+        m_assetSavePath.substr(lastSlashPos + 1) : m_assetSavePath;
+
+    auto pos = path.find(basePathMarker);
+    if (pos == std::string::npos) 
+    {
+        return path;
+    }
+
+    return m_assetSavePath + path.substr(pos + basePathMarker.length());
+}
+
 void AAssetWriter::SaveAssets(const EAssetType& assetType, const vector<AAsset*>& assets) const
 {
     AssetWrapper assetWrapper;

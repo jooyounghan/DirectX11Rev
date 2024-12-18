@@ -45,8 +45,6 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::SaveAsAssets(
         aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_GenUVCoords | aiProcess_ConvertToLeftHanded
     );
 
-
-
     if (scene != nullptr)
     {
         if (scene->HasMaterials())
@@ -88,7 +86,7 @@ bool ModelFileToAssetWriter::IsAcceptableFilePath(const string& filePath) const
     return (find(ModelFileExtensions.begin(), ModelFileExtensions.end(), extension) != ModelFileExtensions.end());
 }
 
-unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadTexturesAndMaterials(const aiScene* const scene) const
+unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadTexturesAndMaterials(const aiScene* const scene)
 {
     unordered_map<EAssetType, vector<AAsset*>> result;
 
@@ -96,63 +94,84 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadTexturesA
     {
         aiMaterial* material = scene->mMaterials[material_idx];
 
-        ModelMaterialAsset* modelMaterialAsset = new ModelMaterialAsset(material->GetName().C_Str());
+        const string& materialAssetName = material->GetName().C_Str();
+        if (IsAssetNotLoaded(materialAssetName))
+        {
+            m_loadedAssetName.insert(materialAssetName);
+            ModelMaterialAsset* modelMaterialAsset = new ModelMaterialAsset(materialAssetName);
 
-        if (material->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION) > 0)
-        {
-            BaseTextureAsset* ambientOcculusion = LoadBaseTextureFromMaterial(scene, material, aiTextureType_AMBIENT_OCCLUSION);
-            modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_AMBIENTOCCULUSION, ambientOcculusion);
-            result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(ambientOcculusion);
+            if (material->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION) > 0)
+            {
+                if (BaseTextureAsset* ambientOcculusion = LoadBaseTextureFromMaterial(scene, material, aiTextureType_AMBIENT_OCCLUSION))
+                {
+                    modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_AMBIENTOCCULUSION, ambientOcculusion);
+                    result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(ambientOcculusion);
+                }
+            }
+            if (material->GetTextureCount(aiTextureType_SPECULAR) > 0)
+            {
+                if (BaseTextureAsset* specular = LoadBaseTextureFromMaterial(scene, material, aiTextureType_SPECULAR))
+                {
+                    modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_SPECULAR, specular);
+                    result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(specular);
+                }
+            }
+            if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+            {
+                if (BaseTextureAsset* diffuse = LoadBaseTextureFromMaterial(scene, material, aiTextureType_DIFFUSE))
+                {
+                    modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_DIFFUSE, diffuse);
+                    result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(diffuse);
+                }
+            }
+            if (material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS) > 0)
+            {
+                if (BaseTextureAsset* roughness = LoadBaseTextureFromMaterial(scene, material, aiTextureType_DIFFUSE_ROUGHNESS))
+                {
+                    modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_ROUGHNESS, roughness);
+                    result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(roughness);
+                }
+            }
+            if (material->GetTextureCount(aiTextureType_METALNESS) > 0)
+            {
+                if (BaseTextureAsset* metalness = LoadBaseTextureFromMaterial(scene, material, aiTextureType_METALNESS))
+                {
+                    modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_METALIC, metalness);
+                    result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(metalness);
+                }
+            }
+            if (material->GetTextureCount(aiTextureType_NORMALS) > 0)
+            {
+                if (BaseTextureAsset* normal = LoadBaseTextureFromMaterial(scene, material, aiTextureType_NORMALS))
+                {
+                    modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_NORMAL, normal);
+                    result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(normal);
+                }
+            }
+            if (material->GetTextureCount(aiTextureType_HEIGHT) > 0)
+            {
+                if (BaseTextureAsset* height = LoadBaseTextureFromMaterial(scene, material, aiTextureType_HEIGHT))
+                {
+                    modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_HEIGHT, height);
+                    result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(height);
+                }
+            }
+            if (material->GetTextureCount(aiTextureType_EMISSIVE) > 0)
+            {
+                if (BaseTextureAsset* emissive = LoadBaseTextureFromMaterial(scene, material, aiTextureType_EMISSIVE))
+                {
+                    modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_EMISSIVE, emissive);
+                    result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(emissive);
+                }
+            }
+            result[EAssetType::ASSET_TYPE_MODEL_MATERIAL].emplace_back(modelMaterialAsset);
         }
-        if (material->GetTextureCount(aiTextureType_SPECULAR) > 0)
-        {
-            BaseTextureAsset* specular = LoadBaseTextureFromMaterial(scene, material, aiTextureType_SPECULAR);
-            modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_SPECULAR, specular);
-            result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(specular);
-        }
-        if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
-        {
-            BaseTextureAsset* diffuse = LoadBaseTextureFromMaterial(scene, material, aiTextureType_DIFFUSE);
-            modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_DIFFUSE, diffuse);
-            result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(diffuse);
-        }
-        if (material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS) > 0)
-        {
-            BaseTextureAsset* roughness = LoadBaseTextureFromMaterial(scene, material, aiTextureType_DIFFUSE_ROUGHNESS);
-            modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_ROUGHNESS, roughness);
-            result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(roughness);
-        }
-        if (material->GetTextureCount(aiTextureType_METALNESS) > 0)
-        {
-            BaseTextureAsset* metalness = LoadBaseTextureFromMaterial(scene, material, aiTextureType_METALNESS);
-            modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_METALIC, metalness);
-            result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(metalness);
-        }
-        if (material->GetTextureCount(aiTextureType_NORMALS) > 0)
-        {
-            BaseTextureAsset* normal = LoadBaseTextureFromMaterial(scene, material, aiTextureType_NORMALS);
-            modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_NORMAL, normal);
-            result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(normal);
-        }
-        if (material->GetTextureCount(aiTextureType_HEIGHT) > 0)
-        {
-            BaseTextureAsset* height = LoadBaseTextureFromMaterial(scene, material, aiTextureType_HEIGHT);
-            modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_HEIGHT, height);
-            result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(height);
-        }
-        if (material->GetTextureCount(aiTextureType_EMISSIVE) > 0)
-        {
-            BaseTextureAsset* emissive = LoadBaseTextureFromMaterial(scene, material, aiTextureType_EMISSIVE);
-            modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_EMISSIVE, emissive);
-            result[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(emissive);
-        }
-        result[EAssetType::ASSET_TYPE_MODEL_MATERIAL].emplace_back(modelMaterialAsset);
     }
 
     return result;
 }
 
-BaseTextureAsset* ModelFileToAssetWriter::LoadBaseTextureFromMaterial(const aiScene* const scene, aiMaterial* material, aiTextureType textureType) const
+BaseTextureAsset* ModelFileToAssetWriter::LoadBaseTextureFromMaterial(const aiScene* const scene, aiMaterial* material, aiTextureType textureType)
 {
     BaseTextureAsset* asset = nullptr;
     aiString aiTexturePath;
@@ -161,15 +180,19 @@ BaseTextureAsset* ModelFileToAssetWriter::LoadBaseTextureFromMaterial(const aiSc
         const string texturePath = aiTexturePath.C_Str();
         const string textureName = path(texturePath).stem().string();
 
-        const aiTexture* texture = scene->GetEmbeddedTexture(texturePath.c_str());
-        if (texture != nullptr)
+        if (IsAssetNotLoaded(textureName))
         {
-            int widthOut, heightOut, channelOut;
-            stbi_uc* imageBuffer = stbi_load_from_memory((const stbi_uc*)texture->pcData, texture->mWidth, &widthOut, &heightOut, &channelOut, 4);
-            if (imageBuffer != nullptr)
+            m_loadedAssetName.insert(textureName);
+            const aiTexture* texture = scene->GetEmbeddedTexture(texturePath.c_str());
+            if (texture != nullptr)
             {
-                asset = new BaseTextureAsset(textureName, widthOut, heightOut, channelOut, imageBuffer);
-                stbi_image_free(imageBuffer);
+                int widthOut, heightOut, channelOut;
+                stbi_uc* imageBuffer = stbi_load_from_memory((const stbi_uc*)texture->pcData, texture->mWidth, &widthOut, &heightOut, &channelOut, 4);
+                if (imageBuffer != nullptr)
+                {
+                    asset = new BaseTextureAsset(textureName, widthOut, heightOut, imageBuffer);
+                    stbi_image_free(imageBuffer);
+                }
             }
         }
     }
@@ -189,22 +212,36 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadMeshesAnd
 
     if (HasBones(scene))
     {
-        SkeletalMeshAsset* skeletalMeshAsset = new SkeletalMeshAsset(fileName + "_Skeletal");
-        result[EAssetType::ASSET_TYPE_SKELETAL].emplace_back(skeletalMeshAsset);
+        const string skeletalMeshAssetName = fileName + "_Skeletal";
+        const string boneAssetName = fileName + "_Bone";
 
-        BoneAsset* boneAsset = new BoneAsset(fileName + "_Bone");
-        result[EAssetType::ASSET_TYPE_BONE].emplace_back(boneAsset);
-        skeletalMeshAsset->SetBoneAsset(boneAsset);
-        
-        LoadBones(scene, boneAsset);
-        LoadMeshes(scene, skeletalMeshAsset, m_skeletalMehsAssetWriter, isGltf);
+        if (IsAssetNotLoaded(skeletalMeshAssetName) && IsAssetNotLoaded(boneAssetName))
+        {
+            m_loadedAssetName.insert(skeletalMeshAssetName);
+            m_loadedAssetName.insert(boneAssetName);
+
+            SkeletalMeshAsset* skeletalMeshAsset = new SkeletalMeshAsset(skeletalMeshAssetName);
+            result[EAssetType::ASSET_TYPE_SKELETAL].emplace_back(skeletalMeshAsset);
+
+            BoneAsset* boneAsset = new BoneAsset(boneAssetName);
+            result[EAssetType::ASSET_TYPE_BONE].emplace_back(boneAsset);
+            skeletalMeshAsset->SetBoneAsset(boneAsset);
+
+            LoadBones(scene, boneAsset);
+            LoadMeshes(scene, skeletalMeshAsset, m_skeletalMehsAssetWriter, isGltf);
+        }
     }
     else
     {
-        StaticMeshAsset* staticMeshAsset = new StaticMeshAsset(fileName + "_Static");
-        result[EAssetType::ASSET_TYPE_STATIC].emplace_back(staticMeshAsset);
+        const string staticMeshAssetName = fileName + "_Static";
+        if (IsAssetNotLoaded(staticMeshAssetName))
+        {
+            m_loadedAssetName.insert(staticMeshAssetName);
+            StaticMeshAsset* staticMeshAsset = new StaticMeshAsset(fileName + "_Static");
+            result[EAssetType::ASSET_TYPE_STATIC].emplace_back(staticMeshAsset);
 
-        LoadMeshes(scene, staticMeshAsset, m_staticMeshAssetWriter, isGltf);
+            LoadMeshes(scene, staticMeshAsset, m_staticMeshAssetWriter, isGltf);
+        }
     }
 
     return result;
@@ -342,49 +379,55 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadMeshesAnd
      {
          aiAnimation* animation = scene->mAnimations[animationIdx];
          
-         AnimationAsset* animationAsset = new AnimationAsset(format("{}_{}", fileName, "ANIM"));
-         result[EAssetType::ASSET_TYPE_ANIMATION].emplace_back(animationAsset);
+         const string& animationAssetName = format("{}_{}", fileName, "ANIM");
 
-         animationAsset->SetAnimationDuration(
-             static_cast<float>(animation->mDuration), 
-             static_cast<float>(animation->mTicksPerSecond)
-         );
-
-         for (uint32_t channelIdx = 0; channelIdx < animation->mNumChannels; ++channelIdx)
+         if (IsAssetNotLoaded(animationAssetName))
          {
-             AnimChannel animChannel;
+             m_loadedAssetName.insert(animationAssetName);
+             AnimationAsset* animationAsset = new AnimationAsset(animationAssetName);
+             result[EAssetType::ASSET_TYPE_ANIMATION].emplace_back(animationAsset);
 
-             aiNodeAnim* channel = animation->mChannels[channelIdx];
-             const string channelName = channel->mNodeName.C_Str();
+             animationAsset->SetAnimationDuration(
+                 static_cast<float>(animation->mDuration),
+                 static_cast<float>(animation->mTicksPerSecond)
+             );
 
-             for (uint32_t positionIdx = 0; positionIdx < channel->mNumPositionKeys; ++positionIdx)
-             { 
-                 const aiVectorKey& positionKey = channel->mPositionKeys[positionIdx];
-                 animChannel.AddPositionKey(
-                     static_cast<float>(positionKey.mTime), 
-                     XMVectorSet(positionKey.mValue.x, positionKey.mValue.y, positionKey.mValue.z, 1.f)
-                 );
-             }
-
-             for (uint32_t quaternionIdx = 0; quaternionIdx < channel->mNumRotationKeys; ++quaternionIdx)
+             for (uint32_t channelIdx = 0; channelIdx < animation->mNumChannels; ++channelIdx)
              {
-                 const aiQuatKey& quaternionKey = channel->mRotationKeys[quaternionIdx];
-                 animChannel.AddQuaternionKey(
-                     static_cast<float>(quaternionKey.mTime),
-                     XMVectorSet(quaternionKey.mValue.x, quaternionKey.mValue.y, quaternionKey.mValue.z, quaternionKey.mValue.w)
-                 );
-             }
+                 AnimChannel animChannel;
 
-             for (uint32_t scaleIdx = 0; scaleIdx < channel->mNumScalingKeys; ++scaleIdx)
-             {
-                 const aiVectorKey& scaleKey = channel->mScalingKeys[scaleIdx];
-                 animChannel.AddScaleKey(
-                     static_cast<float>(scaleKey.mTime),
-                     XMVectorSet(scaleKey.mValue.x, scaleKey.mValue.y, scaleKey.mValue.z, 0.f)
-                 );
-             }
+                 aiNodeAnim* channel = animation->mChannels[channelIdx];
+                 const string channelName = channel->mNodeName.C_Str();
 
-             animationAsset->AddAnimChannel(channelName, move(animChannel));
+                 for (uint32_t positionIdx = 0; positionIdx < channel->mNumPositionKeys; ++positionIdx)
+                 {
+                     const aiVectorKey& positionKey = channel->mPositionKeys[positionIdx];
+                     animChannel.AddPositionKey(
+                         static_cast<float>(positionKey.mTime),
+                         XMVectorSet(positionKey.mValue.x, positionKey.mValue.y, positionKey.mValue.z, 1.f)
+                     );
+                 }
+
+                 for (uint32_t quaternionIdx = 0; quaternionIdx < channel->mNumRotationKeys; ++quaternionIdx)
+                 {
+                     const aiQuatKey& quaternionKey = channel->mRotationKeys[quaternionIdx];
+                     animChannel.AddQuaternionKey(
+                         static_cast<float>(quaternionKey.mTime),
+                         XMVectorSet(quaternionKey.mValue.x, quaternionKey.mValue.y, quaternionKey.mValue.z, quaternionKey.mValue.w)
+                     );
+                 }
+
+                 for (uint32_t scaleIdx = 0; scaleIdx < channel->mNumScalingKeys; ++scaleIdx)
+                 {
+                     const aiVectorKey& scaleKey = channel->mScalingKeys[scaleIdx];
+                     animChannel.AddScaleKey(
+                         static_cast<float>(scaleKey.mTime),
+                         XMVectorSet(scaleKey.mValue.x, scaleKey.mValue.y, scaleKey.mValue.z, 0.f)
+                     );
+                 }
+
+                 animationAsset->AddAnimChannel(channelName, move(animChannel));
+             }
          }
      }
      return result;

@@ -16,14 +16,14 @@ BOOL ResourceManager::EnumResouceNameProc(HMODULE hModule, LPCWSTR lpszType, LPW
         const size_t resouceId = reinterpret_cast<size_t>(lpszName);
         result->emplace_back(new BaseTextureAsset(
             format("Resouce_{}", to_string(resouceId)).c_str(),
-            resourceInfo.width, resourceInfo.height, 4,
+            resourceInfo.width, resourceInfo.height,
             resourceInfo.resourceData.data()
         ));
     }
     else 
     {
         result->emplace_back(new BaseTextureAsset(
-            StringHelper::ConvertWStringToACP(lpszName), resourceInfo.width, resourceInfo.height, 4,
+            StringHelper::ConvertWStringToACP(lpszName), resourceInfo.width, resourceInfo.height,
             resourceInfo.resourceData.data()
         ));
     }

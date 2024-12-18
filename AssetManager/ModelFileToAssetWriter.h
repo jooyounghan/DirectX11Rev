@@ -34,12 +34,12 @@ public:
 	virtual bool IsAcceptableFilePath(const std::string& filePath) const override;
 
 private:
-	std::unordered_map<EAssetType, std::vector<AAsset*>> LoadTexturesAndMaterials(const aiScene* const scene) const;
+	std::unordered_map<EAssetType, std::vector<AAsset*>> LoadTexturesAndMaterials(const aiScene* const scene);
 	BaseTextureAsset* LoadBaseTextureFromMaterial(
 		const aiScene* const scene,
 		aiMaterial* material,
 		aiTextureType textureType
-	) const;
+	);
 		
 private:
 	std::unordered_map<EAssetType, std::vector<AAsset*>> LoadMeshesAndBones(
