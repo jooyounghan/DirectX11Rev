@@ -31,7 +31,7 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_texture2D;
 
 public:
-	inline const ID3D11Texture2D* const GetTexture2D() { return m_texture2D.Get(); }
+	inline ID3D11Texture2D* const GetTexture2D() { return m_texture2D.Get(); }
 
 private:
 	virtual void InitializeByOption(ID3D11Resource* resource, ID3D11Device* device) override;

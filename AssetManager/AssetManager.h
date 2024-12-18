@@ -20,12 +20,12 @@ class AssetManager : public IBaseTextureProvider, public IScratchTextureProvider
 	public IAnimationProvider, public IMapProvider, public IResourceProvider
 {
 public:
-	AssetManager(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	AssetManager(ID3D11Device** deviceAddress, ID3D11DeviceContext** deviceContextAddress);
 	~AssetManager();
 
 protected:
-	ID3D11Device* m_deviceCached = nullptr;
-	ID3D11DeviceContext* m_deviceContextCached = nullptr;
+	ID3D11Device** m_deviceAddress = nullptr;
+	ID3D11DeviceContext** m_deviceContextAddress = nullptr;
 
 protected:
 	std::unordered_map<std::string, AssetReader> m_assetReadersWithPath;

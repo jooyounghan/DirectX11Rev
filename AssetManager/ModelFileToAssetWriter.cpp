@@ -309,9 +309,6 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadMeshesAnd
 
              for (uint32_t idx = 0; idx < node->mNumChildren; ++idx)
              {
-                 if (idx == 5) {
-                     bool test = true;
-                 }
                  dfs(meshAsset, node->mChildren[idx], currentTransformation);
              }
          };

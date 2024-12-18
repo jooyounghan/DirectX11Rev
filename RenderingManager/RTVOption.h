@@ -19,5 +19,5 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_rtv;
 
 public:
-	ID3D11RenderTargetView* GetRTV() const { return m_rtv.Get(); }
+	ID3D11RenderTargetView* const GetRTV() const { return m_rtv.Get(); }
 };

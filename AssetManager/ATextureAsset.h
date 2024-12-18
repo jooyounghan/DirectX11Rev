@@ -17,12 +17,15 @@ public:
 	virtual ~ATextureAsset();
 
 protected:
-	unsigned int m_width = 0;
-	unsigned int m_height = 0;
-	unsigned int m_arraySize = 0;
+	uint32_t m_width = 0;
+	uint32_t m_height = 0;
+	uint32_t m_arraySize = 0;
 
 protected:
 	std::vector<std::vector<uint8_t>> m_imageBuffers;
+
+protected:
+	std::vector<uint32_t> m_imageBuffersSize;
 
 public:
 	inline const std::vector<std::vector<uint8_t>>& GetImageBuffers() { return m_imageBuffers; }
@@ -30,8 +33,12 @@ public:
 public:
 	virtual std::vector<uint32_t> GetRowPitchArray() = 0;
 
+private:
+	static std::vector<std::pair<uint32_t, std::vector<uint8_t>>> GetCompressedImageBuffersWithOriginSize(const std::vector<std::vector<uint8_t>>& imageBuffers);
+	static std::vector<std::vector<uint8_t>> DecompressedImageBuffers(const std::vector<std::pair<uint32_t, std::vector<uint8_t>>>& compressedImageBuffersWithSize);
+
 public:
-	virtual void Serialize(FILE* fileIn) const override final;
-	virtual void Deserialize(FILE* fileIn) override final;
+	virtual void Serialize(FILE* fileIn) const override;
+	virtual void Deserialize(FILE* fileIn) override;
 };
 

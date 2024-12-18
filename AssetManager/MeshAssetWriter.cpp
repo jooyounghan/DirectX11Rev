@@ -13,16 +13,17 @@ void MeshAssetWriter::LoadMeshPartData(
 {
 	if (mesh->HasFaces())
 	{
-		const uint32_t indexOffset = meshPartData == nullptr ? 0 : meshPartData->GetVerticesCount();
-		meshPartData->AddPartOffset(indexOffset);
+		const uint32_t vertexOffset = static_cast<uint32_t>(meshPartData->GetPositions().size());
+		const uint32_t indexOffset = static_cast<uint32_t>(meshPartData->GetIndices().size());
 
+		meshPartData->AddPartOffsets(vertexOffset, indexOffset);
 		for (uint32_t faceIdx = 0; faceIdx < mesh->mNumFaces; ++faceIdx)
 		{
 			aiFace& currentFace = mesh->mFaces[faceIdx];
 
 			for (uint32_t idx = 0; idx < currentFace.mNumIndices; ++idx)
 			{
-				meshPartData->AddIndex(indexOffset, static_cast<uint32_t>(currentFace.mIndices[idx]));
+				meshPartData->AddIndex(vertexOffset, static_cast<uint32_t>(currentFace.mIndices[idx]));
 			}
 		}
 	}

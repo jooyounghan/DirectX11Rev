@@ -17,12 +17,11 @@ void SkeletalMeshAssetWriter::LoadMeshPartData(
 
 	if (skeletalMeshPartData != nullptr)
 	{
-        const vector<uint32_t> offsets = skeletalMeshPartData->GetVertexOffsets();
-        const uint32_t offset = offsets.empty() ? 0 : offsets[offsets.size() - 1];
-        const uint32_t verticesCount = skeletalMeshPartData->GetVerticesCount();
-        const uint32_t newVerticesCount = verticesCount - offset;
+        const uint32_t verticesCount = static_cast<uint32_t>(skeletalMeshPartData->GetPositions().size());
+        skeletalMeshPartData->ResizeBlendProperties(verticesCount);
 
-        skeletalMeshPartData->AppendBlendProperties(newVerticesCount);
+        const vector<uint32_t> vertexOffsets = skeletalMeshPartData->GetVertexOffsets();
+        const uint32_t vertexOffset = vertexOffsets.empty() ? 0 : vertexOffsets[vertexOffsets.size() - 1];
         
         for (uint32_t boneIdx = 0; boneIdx < mesh->mNumBones; ++boneIdx)
         {
@@ -32,7 +31,7 @@ void SkeletalMeshAssetWriter::LoadMeshPartData(
                 aiVertexWeight& vertexWeight = currentBone->mWeights[weightIdx];
 
                 skeletalMeshPartData->SetBlendProperties(
-                    offset + vertexWeight.mVertexId, 
+                    vertexOffset + vertexWeight.mVertexId, 
                     boneIdx, 
                     vertexWeight.mWeight
                 );

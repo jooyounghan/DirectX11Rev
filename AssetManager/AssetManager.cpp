@@ -8,8 +8,8 @@
 using namespace std;
 
 
-AssetManager::AssetManager(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
-	: m_deviceCached(device), m_deviceContextCached(deviceContext)
+AssetManager::AssetManager(ID3D11Device** deviceAddress, ID3D11DeviceContext** deviceContextAddress)
+	: m_deviceAddress(deviceAddress), m_deviceContextAddress(deviceContextAddress)
 {
 }
 
@@ -113,11 +113,11 @@ void AssetManager::WrtieFileAsAsset(const std::string filePath)
 
 void AssetManager::AddAssetHelper(const EAssetType& assetType, std::string assetPath, AAsset* asset)
 {
-	AssetGPUInitializer assetGPUInitializer(m_deviceCached, m_deviceContextCached);
+	AssetGPUInitializer assetGPUInitializer(*m_deviceAddress, *m_deviceContextAddress);
+	asset->Accept(&assetGPUInitializer);
 
 	InvokeAssetLoadedHandler(assetType, assetPath, asset);
 	m_assetNameToAssets[assetType][asset->GetAssetName()] = asset;
-	asset->Accept(&assetGPUInitializer);
 }
 
 void AssetManager::RegisterAssetLoadedHandler(const std::string& handlerName, const std::function<void(const EAssetType&, std::string, AAsset*)>& handler)

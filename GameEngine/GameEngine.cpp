@@ -20,7 +20,7 @@ GameEngine::GameEngine()
 	: AApplication(), m_engineDoublePtr(D3D11Engine::GetInstance())
 {
 	D3D11Engine* engine = GetEngine();
-	m_assetManager = new AssetManager(engine->GetDevice(), engine->GetDeviceContext());
+	m_assetManager = new AssetManager(engine->GetDeviceAddress(), engine->GetDeviceContextAddress());
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { GetEngine()->ResizeSwapChain(widthIn, heightIn); };
 	m_imguiWindows.emplace_back(make_unique<AssetViewWindow>("AssetManager", m_assetManager));
 }

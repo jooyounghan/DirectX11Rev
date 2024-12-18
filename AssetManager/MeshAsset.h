@@ -19,10 +19,13 @@ protected:
 
 protected:
 	std::vector<uint32_t> m_indices;
-	std::vector<uint32_t> m_partOffsets;
+	
+protected:
+	std::vector<uint32_t> m_partVertexOffsets;
+	std::vector<uint32_t> m_partIndexOffsets;
 
 public:
-	size_t GetPartsCount() { return m_partOffsets.size(); }
+	size_t GetPartsCount() { return m_partIndexOffsets.size(); }
 
 public:
 	const DirectX::XMFLOAT3& GetPosition(const size_t& index);
@@ -33,11 +36,16 @@ public:
 	void AddPosition(const float& x, const float& y, const float& z);
 	void AddUVTexture(const float& u, const float& v);
 	void AddNormal(const float& x, const float& y, const float& z);
-	void AddPartOffset(const uint32_t& offset);
 	void AddIndex(const uint32_t& offset, const uint32_t index);
-	uint32_t GetVerticesCount();
+	void AddPartOffsets(const uint32_t& vertexOffset, const uint32_t& indexOffset);
+
+public:
+	const std::vector<DirectX::XMFLOAT3>& GetPositions();
 	const std::vector<uint32_t>& GetIndices();
+
+public:
 	const std::vector<uint32_t>& GetVertexOffsets();
+	const std::vector<uint32_t>& GetIndexOffsets();
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;

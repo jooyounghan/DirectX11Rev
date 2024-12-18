@@ -108,8 +108,11 @@ void AssetViewWindow::AddAssetByRecursiveKey(
             break;
         case EAssetType::ASSET_TYPE_BASE_TEXTURE:
         case EAssetType::ASSET_TYPE_SCRATCH_TEXTURE:
-            thumbnailSRV = m_thumbnails[static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_TEXTURE)]->GetSRV();
+        {
+            ATextureAsset* textureAsset = (ATextureAsset*)asset;
+            thumbnailSRV = textureAsset->GetSRV();
             break;
+        }
         case EAssetType::ASSET_TYPE_MODEL_MATERIAL:
         case EAssetType::ASSET_TYPE_IBL_MATERIAL:
             thumbnailSRV = m_thumbnails[static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MATERIAL)]->GetSRV();

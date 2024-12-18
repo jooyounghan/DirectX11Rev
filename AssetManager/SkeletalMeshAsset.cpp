@@ -4,10 +4,10 @@
 using namespace std;
 using namespace DirectX;
 
-void SkeletalMeshPartData::AppendBlendProperties(const size_t& appendCount)
+void SkeletalMeshPartData::ResizeBlendProperties(const size_t& resizeCount)
 {
-	m_blendWeight.resize(m_blendWeight.size() + appendCount);
-	m_blendIndex.resize(m_blendIndex.size() + appendCount);
+	m_blendWeight.resize(resizeCount);
+	m_blendIndex.resize(resizeCount);
 }
 
 void SkeletalMeshPartData::SetBlendProperties(

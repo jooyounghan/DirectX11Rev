@@ -27,12 +27,12 @@ void StaticMeshAssetWriter::LoadMeshPartData(
 		}
 		else
 		{
-            const vector<uint32_t> offsets = meshPartData->GetVertexOffsets();
-            const uint32_t offset = offsets.empty() ? 0 : offsets[offsets.size() - 1];
-
             const vector<uint32_t>& indices = meshPartData->GetIndices();
+            const vector<uint32_t> indexOffsets = meshPartData->GetIndexOffsets();
+            const uint32_t indexOffset = indexOffsets.empty() ? 0 : indexOffsets[indexOffsets.size() - 1];
 
-            for (size_t idx = offset; idx < indices.size(); idx += 3)
+
+            for (size_t idx = indexOffset; idx < indices.size(); idx += 3)
             {
 				const uint32_t& index0 = indices[idx];
 				const uint32_t& index1 = indices[idx + 1];

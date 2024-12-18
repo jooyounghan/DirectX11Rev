@@ -12,7 +12,7 @@ protected:
 	std::vector<DirectX::XMINT4> m_blendIndex;
 
 public:
-	void AppendBlendProperties(const size_t& appendCount);
+	void ResizeBlendProperties(const size_t& resizeCount);
 	void SetBlendProperties(
 		const size_t& vertexIndex,
 		const int& boneIndex,

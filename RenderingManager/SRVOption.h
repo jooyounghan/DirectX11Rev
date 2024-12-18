@@ -19,6 +19,6 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_srv;
 
 public:
-	ID3D11ShaderResourceView* GetSRV() const { return m_srv.Get(); }
+	inline ID3D11ShaderResourceView* const GetSRV() const { return m_srv.Get(); }
 };
 

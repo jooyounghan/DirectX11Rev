@@ -47,6 +47,8 @@ namespace D3D11
 	public:
 		inline ID3D11Device*			GetDevice() { return m_device.Get(); }
 		inline ID3D11DeviceContext*		GetDeviceContext() { return m_deviceContext.Get(); }
+		inline ID3D11Device**			GetDeviceAddress() { return m_device.GetAddressOf(); }
+		inline ID3D11DeviceContext**	GetDeviceContextAddress() { return m_deviceContext.GetAddressOf(); }
 		inline IDXGISwapChain*			GetSwapChain() { return m_swapChain.Get(); }
 
 	public:

@@ -3,8 +3,8 @@
 
 ATextureGPUAsset::~ATextureGPUAsset()
 {
-	if (m_textureWithSRV != nullptr)
+	if (m_resource != nullptr)
 	{
-		delete m_textureWithSRV;
+		delete m_resource;
 	}
 }
