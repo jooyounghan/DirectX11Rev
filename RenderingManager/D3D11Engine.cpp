@@ -3,13 +3,10 @@
 
 using namespace D3D11;
 
-D3D11Engine* D3D11Engine::g_engine = nullptr;
-
-D3D11Engine** D3D11Engine::GetInstance()
+D3D11Engine* D3D11Engine::GetInstance()
 {
 	static D3D11Engine engine;
-    g_engine = &engine;
-	return &g_engine;
+	return &engine;
 }
 
 void D3D11Engine::D3D11Engine::InitEngine(const UINT& widthIn, const UINT& heightIn, HWND wndHandle)

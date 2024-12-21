@@ -17,9 +17,13 @@ class TaskManager
 		std::string description;
 	};
 
+private:
+	TaskManager() = default;
+	TaskManager(const TaskManager& engine) = delete;
+	TaskManager(TaskManager&& engine) = delete;
+
 public:
-	TaskManager();
-	~TaskManager();
+	static TaskManager* GetInstance();
 
 protected:
 	Concurrency::concurrent_queue<SSerialTask> m_serialTasks;

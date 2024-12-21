@@ -29,11 +29,8 @@ namespace D3D11
 		D3D11Engine(const D3D11Engine& engine) = delete;
 		D3D11Engine(D3D11Engine&& engine) = delete;
 
-	protected:
-		static D3D11Engine* g_engine;
-
 	public:
-		static D3D11Engine** GetInstance();
+		static D3D11Engine* GetInstance();
 
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11Device>		m_device;

@@ -42,11 +42,6 @@
     <ClInclude Include="MouseClickEventArgs.h" />
     <ClInclude Include="MouseEventArgs.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RenderingManager\RenderingManager.vcxproj">
-      <Project>{bbf7a5f4-c34a-4970-b1c6-2e001813678f}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

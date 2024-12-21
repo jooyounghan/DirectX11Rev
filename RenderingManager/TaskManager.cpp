@@ -4,12 +4,10 @@
 
 using namespace std;
 
-TaskManager::TaskManager()
+TaskManager* TaskManager::GetInstance()
 {
-}
-
-TaskManager::~TaskManager()
-{
+	static TaskManager taskManager;
+	return &taskManager;
 }
 
 void TaskManager::RegisterTask(const Task& task, const std::string& decription)
@@ -35,7 +33,6 @@ void ON_MAIN_THREAD TaskManager::StartLaunchingTasks()
 					OnTaskStarted(taskCounts, serialTask.description);
 
 					serialTask.task();
-					this_thread::sleep_for(chrono::milliseconds(100));
 					OnTasksCompleted();
 				}
 				else
@@ -46,6 +43,7 @@ void ON_MAIN_THREAD TaskManager::StartLaunchingTasks()
 						OnTasksCompleted();
 					}
 				}
+				this_thread::sleep_for(chrono::milliseconds(100));
 			}
 		}
 	);

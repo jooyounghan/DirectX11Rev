@@ -34,7 +34,7 @@ namespace YHEngine
 		void OnDropFiles(const HDROP& hDrop);
 
 	protected:
-		D3D11::D3D11Engine** m_engineDoublePtr;
+		D3D11::D3D11Engine* m_engine;
 		std::unordered_map<EDefferedContextType, DefferedContext*> m_defferedContexts;
 		
 	protected:
@@ -45,13 +45,10 @@ namespace YHEngine
 		AssetManager* m_assetManager;
 
 	protected:
-		TaskManager m_taskManager;
+		TaskManager* m_taskManager;
 	
 	protected:
 		static Utilities::SColor ClearColor;
-
-	public:
-		inline D3D11::D3D11Engine* GetEngine() { return *m_engineDoublePtr; }
 	};
 }
 
