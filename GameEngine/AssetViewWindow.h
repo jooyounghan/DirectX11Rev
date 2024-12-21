@@ -49,7 +49,7 @@ private:
 
 public:
 	virtual void RenderWindowImpl() override;
-	virtual void InitializeWindow(ID3D11Device* device, DefferedContext* defferedContext) override;
+	virtual void InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* deviceContext) override;
 
 private:
 	void AddAssetControl(const EAssetType& assetType, const std::string& assetPath, AAsset* asset);

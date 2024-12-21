@@ -14,31 +14,45 @@ TaskManager::~TaskManager()
 
 void TaskManager::RegisterTask(const Task& task, const std::string& decription)
 {
-	m_serialTasks.emplace(make_pair(task, decription));
+	SSerialTask serialTask;
+	serialTask.task = task;
+	serialTask.description = decription;
+	m_serialTasks.push(move(serialTask));
 }
 
-void TaskManager::LaunchTasks()
+void ON_MAIN_THREAD TaskManager::StartLaunchingTasks()
 {
-	OnTasksLaunched(m_serialTasks.size());
-
-	m_taskThread = thread([&]()
+	m_isLauncingTasks = true;
+	m_backgroundThread = thread([&]()
 		{
-			size_t taskDoneCount = 0;
-
-			queue<pair<Task, string>> serialTasks = move(m_serialTasks);
-			m_serialTasks = queue<pair<Task, string>>();
-
-			while (!serialTasks.empty())
+			while (m_isLauncingTasks)
 			{
-				auto serialTask = serialTasks.front();
-				serialTasks.pop();
+				size_t taskCounts = m_serialTasks.unsafe_size();
+				SSerialTask serialTask;
+				if (m_serialTasks.try_pop(serialTask))
+				{
+					m_isTaskProcessing = true;
+					OnTaskStarted(taskCounts, serialTask.description);
 
-				OnTaskStarted(serialTask.second);
-				serialTask.first();
-
-				this_thread::sleep_for(chrono::milliseconds(1000));
+					serialTask.task();
+					this_thread::sleep_for(chrono::milliseconds(100));
+					OnTasksCompleted();
+				}
+				else
+				{
+					if (m_isTaskProcessing)
+					{
+						m_isTaskProcessing = false;
+						OnTasksCompleted();
+					}
+				}
 			}
-			OnTasksCompleted();
 		}
 	);
+
+}
+
+void ON_MAIN_THREAD TaskManager::FinishLaunchingTasks()
+{
+	m_isLauncingTasks = false;
 }

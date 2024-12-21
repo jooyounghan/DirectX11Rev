@@ -160,17 +160,8 @@
     <ProjectReference Include="..\ApplicationBase\ApplicationBase.vcxproj">
       <Project>{b7efa41a-54f9-4a96-8d87-6e3cd27b0027}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\AssetManager\AssetManager.vcxproj">
-      <Project>{0573a263-8f91-4a0c-aa84-5078fee36623}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\CollisionManager\CollisionManager.vcxproj">
-      <Project>{8b0f58ac-a008-496c-9cd5-178ac68b75cb}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\ImGuiHelper\ImGuiHelper.vcxproj">
       <Project>{ac32b636-a426-4d56-9573-97d836caee88}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\RenderingManager\RenderingManager.vcxproj">
-      <Project>{bbf7a5f4-c34a-4970-b1c6-2e001813678f}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

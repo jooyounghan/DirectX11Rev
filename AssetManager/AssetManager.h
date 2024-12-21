@@ -15,19 +15,13 @@
 #include "AnimationAsset.h"
 #include "MapAsset.h"
 
-#include "DefferedContext.h"
-
 class AssetManager : public IBaseTextureProvider, public IScratchTextureProvider, public IStaticMeshProvider,
 	public ISkeletalMeshProvider, public IModelMaterialProvider, public IIBLMaterialProvider, public IBoneProvider,
 	public IAnimationProvider, public IMapProvider, public IResourceProvider
 {
 public:
-	AssetManager(ID3D11Device** deviceAddress, DefferedContext* defferedContext);
+	AssetManager();
 	~AssetManager();
-
-protected:
-	ID3D11Device** m_deviceAddressCached = nullptr;
-	DefferedContext* m_defferedContextCached = nullptr;
 
 protected:
 	std::unordered_map<std::string, AssetReader> m_assetReadersWithPath;
@@ -43,11 +37,11 @@ public:
 
 public:
 	void PreloadFromResources();
-	void PreloadFromDirectories();
-	void WrtieFileAsAsset(const std::string filePath);
+	void PreloadFromDirectories(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	void WrtieFileAsAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const std::string filePath);
 
 private:
-	void AddAssetHelper(const EAssetType& assetType, std::string assetPath, AAsset* asset);
+	void AddAssetHelper(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const EAssetType& assetType, std::string assetPath, AAsset* asset);
 
 private:
 	std::unordered_map<

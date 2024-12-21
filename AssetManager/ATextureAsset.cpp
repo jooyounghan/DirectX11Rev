@@ -19,18 +19,20 @@ ATextureAsset::~ATextureAsset()
 
 }
 
-vector<pair<uint32_t, vector<uint8_t>>> ATextureAsset::GetCompressedImageBuffersWithOriginSize(const vector<vector<uint8_t>>& imageBuffers)
+vector<pair<uint32_t, vector<uint8_t>>> ATextureAsset::GetCompressedImageBuffers(const vector<vector<uint8_t>>& imageBuffers)
 {
     vector<pair<uint32_t, vector<uint8_t>>> compressedImageBuffersWithOriginSize;
 
     for (const vector<uint8_t>& imageBuffer : imageBuffers)
     {
-        uLong compressedSize = compressBound(static_cast<uLong>(imageBuffer.size()));
+        uLong originSize = static_cast<uLong>(imageBuffer.size());
+        uLong compressedSize = compressBound(originSize);
+
         vector<uint8_t> compressedData(compressedSize);
         int compressResult = compress2(
             compressedData.data(), &compressedSize,
             imageBuffer.data(),
-            compressedSize, Z_BEST_COMPRESSION
+            originSize, Z_BEST_COMPRESSION
         );
         compressedData.resize(compressedSize);
         compressedImageBuffersWithOriginSize.emplace_back(make_pair(imageBuffer.size(), move(compressedData)));
@@ -65,7 +67,7 @@ void ATextureAsset::Serialize(FILE* fileIn) const
     SerializeHelper::SerializeElement(m_height, fileIn);
     SerializeHelper::SerializeElement(m_arraySize, fileIn);
 
-    vector<pair<uint32_t, vector<uint8_t>>> compressedImageBuffersWithSize = GetCompressedImageBuffersWithOriginSize(m_imageBuffers);
+    vector<pair<uint32_t, vector<uint8_t>>> compressedImageBuffersWithSize = GetCompressedImageBuffers(m_imageBuffers);
     SerializeHelper::SerializeContainerSize(compressedImageBuffersWithSize, fileIn);
     for (auto& compressedImageBufferWithSize : compressedImageBuffersWithSize)
     {

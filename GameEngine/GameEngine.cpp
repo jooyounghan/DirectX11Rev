@@ -21,23 +21,26 @@ GameEngine::GameEngine()
 	: AApplication(), m_engineDoublePtr(D3D11Engine::GetInstance())
 {
 	D3D11Engine* engine = GetEngine();
-	m_defferedContexts[EDefferedContextType::ASSET] = new DefferedContext(engine->GetDeviceAddress());
-	m_defferedContexts[EDefferedContextType::INIT_WINDOW] = new DefferedContext(engine->GetDeviceAddress());
 
-	m_assetManager = new AssetManager(engine->GetDeviceAddress(), m_defferedContexts[EDefferedContextType::ASSET]);
+	m_defferedContexts[EDefferedContextType::ASSETS] = new DefferedContext(engine->GetDeviceAddress());
+	m_defferedContexts[EDefferedContextType::WINDOWS] = new DefferedContext(engine->GetDeviceAddress());
+
+	m_assetManager = new AssetManager();
+
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { GetEngine()->ResizeSwapChain(widthIn, heightIn); };
 	m_imguiWindows.emplace_back(new AssetViewWindow("AssetManager", m_assetManager));
 
 	TaskModal* taskModal = new TaskModal("Processing...");
 	m_imguiModals.emplace_back(taskModal);
-	m_taskManager.OnTasksLaunched = bind(&TaskModal::SetTasksLaunched, taskModal, placeholders::_1);
-	m_taskManager.OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1);
+	m_taskManager.OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1, placeholders::_2);
 	m_taskManager.OnTasksCompleted = bind(&TaskModal::SetTasksCompleted, taskModal);
 
 }
 
 YHEngine::GameEngine::~GameEngine()
 {
+	m_taskManager.FinishLaunchingTasks();
+
 	delete m_assetManager;
 
 	for (auto& defferedContexts : m_defferedContexts)
@@ -80,19 +83,29 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 	m_assetManager->RegisterAssetReadPath("./Assets");
 	m_assetManager->RegisterAssetWritePath("./Assets");
 
+	m_taskManager.StartLaunchingTasks();
+
 	m_taskManager.RegisterTask([&]() { m_assetManager->PreloadFromResources(); }, "Load Asset From Resources...");
+
+	DefferedContext* assetsDefferedContext = m_defferedContexts[EDefferedContextType::ASSETS];
+	DefferedContext* windowsDefferedContext = m_defferedContexts[EDefferedContextType::WINDOWS];
 
 	for (auto& imguiWindow : m_imguiWindows)
 	{
-		m_taskManager.RegisterTask([&, device]() { 
-			imguiWindow->InitializeWindow(
-				device, m_defferedContexts[EDefferedContextType::INIT_WINDOW]);
+		m_taskManager.RegisterTask([&, device, windowsDefferedContext]()
+			{ 
+				imguiWindow->InitializeWindow(device, windowsDefferedContext->GetDefferedContext());
+				windowsDefferedContext->RecordToCommandList();
 			}, "Initializing Windows..."
 		);
 	}
 
-	m_taskManager.RegisterTask([&]() { m_assetManager->PreloadFromDirectories(); }, "Load Asset From Directories...");
-	m_taskManager.LaunchTasks();
+	m_taskManager.RegisterTask([&, device, assetsDefferedContext]()
+		{ 
+			m_assetManager->PreloadFromDirectories(device, assetsDefferedContext->GetDefferedContext());
+			assetsDefferedContext->RecordToCommandList();
+		}, "Load Asset From Directories..."
+	);
 }
 
 void GameEngine::Update(const float& deltaTime)
@@ -162,8 +175,18 @@ void YHEngine::GameEngine::OnDropFiles(const HDROP& hDrop)
 		char filePath[MAX_PATH];
 		if (DragQueryFileA(hDrop, i, filePath, MAX_PATH))
 		{
+			D3D11Engine* engine = GetEngine();
+			ID3D11Device* device = engine->GetDevice();
+			DefferedContext* assetsDefferedContext = m_defferedContexts[EDefferedContextType::ASSETS];
+
 			string filePathStr = string(filePath);
-			m_assetManager->WrtieFileAsAsset(filePathStr);
+
+			m_taskManager.RegisterTask([&, device, assetsDefferedContext, filePathStr]()
+				{
+					m_assetManager->WrtieFileAsAsset(device, assetsDefferedContext->GetDefferedContext(), filePathStr);
+					assetsDefferedContext->RecordToCommandList();
+				}, "Load Asset From Files..."
+			);
 		}
 	}
 	DragFinish(hDrop);

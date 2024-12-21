@@ -11,8 +11,8 @@
 
 enum class EDefferedContextType
 {
-	ASSET,
-	INIT_WINDOW
+	ASSETS,
+	WINDOWS
 };
 
 namespace YHEngine

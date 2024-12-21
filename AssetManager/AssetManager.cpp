@@ -8,8 +8,7 @@
 using namespace std;
 
 
-AssetManager::AssetManager(ID3D11Device** deviceAddress, DefferedContext* defferedContext)
-	: m_deviceAddressCached(deviceAddress), m_defferedContextCached(defferedContext)
+AssetManager::AssetManager()
 {
 }
 
@@ -60,7 +59,7 @@ void AssetManager::PreloadFromResources()
 	}
 }
 
-void AssetManager::PreloadFromDirectories()
+void AssetManager::PreloadFromDirectories(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 
 	for (auto assetReaderWithPath : m_assetReadersWithPath)
@@ -79,14 +78,13 @@ void AssetManager::PreloadFromDirectories()
 				string assetPath = loadedAssetWithPath.first;
 				AAsset* const asset = loadedAssetWithPath.second;
 
-				AddAssetHelper(assetType, assetPath, asset);
+				AddAssetHelper(device, deviceContext, assetType, assetPath, asset);
 			}
 		}
 	}
-	m_defferedContextCached->RecordToCommandList();
 }
 
-void AssetManager::WrtieFileAsAsset(const std::string filePath)
+void AssetManager::WrtieFileAsAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const std::string filePath)
 {
 	for (auto assetWritersWithPath : m_assetWritersWithPath)
 	{
@@ -105,19 +103,18 @@ void AssetManager::WrtieFileAsAsset(const std::string filePath)
 					const vector<AAsset*>& assets = savedTypeToAssets.second;
 					for (AAsset* const asset : assets)
 					{
-						AddAssetHelper(assetType, relativeFilePath, asset);
+						AddAssetHelper(device, deviceContext, assetType, relativeFilePath, asset);
 					}
 				}
 
 			}
 		}
 	}
-	m_defferedContextCached->RecordToCommandList();
 }
 
-void AssetManager::AddAssetHelper(const EAssetType& assetType, std::string assetPath, AAsset* asset)
+void AssetManager::AddAssetHelper(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const EAssetType& assetType, std::string assetPath, AAsset* asset)
 {
-	AssetGPUInitializer assetGPUInitializer(*m_deviceAddressCached, m_defferedContextCached->GetDefferedContext());
+	AssetGPUInitializer assetGPUInitializer(device, deviceContext);
 	asset->Accept(&assetGPUInitializer);
 
 	InvokeAssetLoadedHandler(assetType, assetPath, asset);

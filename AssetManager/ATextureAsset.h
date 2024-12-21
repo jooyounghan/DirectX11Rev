@@ -34,7 +34,7 @@ public:
 	virtual std::vector<uint32_t> GetRowPitchArray() = 0;
 
 private:
-	static std::vector<std::pair<uint32_t, std::vector<uint8_t>>> GetCompressedImageBuffersWithOriginSize(const std::vector<std::vector<uint8_t>>& imageBuffers);
+	static std::vector<std::pair<uint32_t, std::vector<uint8_t>>> GetCompressedImageBuffers(const std::vector<std::vector<uint8_t>>& imageBuffers);
 	static std::vector<std::vector<uint8_t>> DecompressedImageBuffers(const std::vector<std::pair<uint32_t, std::vector<uint8_t>>>& compressedImageBuffersWithSize);
 
 public:

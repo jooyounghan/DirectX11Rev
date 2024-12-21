@@ -12,18 +12,11 @@ TaskModal::~TaskModal()
 {
 }
 
-void TaskModal::SetTasksLaunched(const size_t& taskTotalCount)
+void TaskModal::SetTaskDescription(const size_t& taskLeftCount, const std::string& taskDescription)
 {
 	m_isTaskProcessing = true;
-	m_taskTotalCount = taskTotalCount;
-	m_taskDoneCount = 0;
-}
-
-void TaskModal::SetTaskDescription(const std::string& taskDescription)
-{
-	m_taskDoneCount++;
-	m_taskDonePercent = (m_taskDoneCount / static_cast<float>(m_taskTotalCount)) * 100.f;
-	m_currentTaskDescription = std::format("{}({}/{})", taskDescription, to_string(m_taskDoneCount), to_string(m_taskTotalCount));
+	m_taskLeftCount = taskLeftCount;
+	m_currentTaskDescription = std::format("{}({} Left)", taskDescription, to_string(m_taskLeftCount));
 }
 
 void TaskModal::SetTasksCompleted() 
