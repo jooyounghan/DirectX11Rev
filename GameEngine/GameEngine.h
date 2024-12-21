@@ -1,10 +1,19 @@
 #pragma once
 #include "AApplication.h"
 #include "D3D11Engine.h"
-#include "AWindow.h"
 #include "AssetManager.h"
+#include "DefferedContext.h"
+#include "TaskManager.h"
+#include "AWindow.h"
+#include "AModal.h"
+
 #include <memory>
 
+enum class EDefferedContextType
+{
+	ASSET,
+	INIT_WINDOW
+};
 
 namespace YHEngine
 {
@@ -26,11 +35,18 @@ namespace YHEngine
 
 	protected:
 		D3D11::D3D11Engine** m_engineDoublePtr;
-		std::vector<std::unique_ptr<AWindow>> m_imguiWindows;
+		std::unordered_map<EDefferedContextType, DefferedContext*> m_defferedContexts;
+		
+	protected:
+		std::vector<AWindow*> m_imguiWindows;
+		std::vector<AModal*> m_imguiModals;
 
 	protected:
 		AssetManager* m_assetManager;
 
+	protected:
+		TaskManager m_taskManager;
+	
 	protected:
 		static Utilities::SColor ClearColor;
 

@@ -2,6 +2,7 @@
 #include "ImGuiInitializer.h"
 
 #include "AssetViewWindow.h"
+#include "TaskModal.h"
 
 using namespace std;
 using namespace D3D11;
@@ -20,14 +21,39 @@ GameEngine::GameEngine()
 	: AApplication(), m_engineDoublePtr(D3D11Engine::GetInstance())
 {
 	D3D11Engine* engine = GetEngine();
-	m_assetManager = new AssetManager(engine->GetDeviceAddress(), engine->GetDeviceContextAddress());
+	m_defferedContexts[EDefferedContextType::ASSET] = new DefferedContext(engine->GetDeviceAddress());
+	m_defferedContexts[EDefferedContextType::INIT_WINDOW] = new DefferedContext(engine->GetDeviceAddress());
+
+	m_assetManager = new AssetManager(engine->GetDeviceAddress(), m_defferedContexts[EDefferedContextType::ASSET]);
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { GetEngine()->ResizeSwapChain(widthIn, heightIn); };
-	m_imguiWindows.emplace_back(make_unique<AssetViewWindow>("AssetManager", m_assetManager));
+	m_imguiWindows.emplace_back(new AssetViewWindow("AssetManager", m_assetManager));
+
+	TaskModal* taskModal = new TaskModal("Processing...");
+	m_imguiModals.emplace_back(taskModal);
+	m_taskManager.OnTasksLaunched = bind(&TaskModal::SetTasksLaunched, taskModal, placeholders::_1);
+	m_taskManager.OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1);
+	m_taskManager.OnTasksCompleted = bind(&TaskModal::SetTasksCompleted, taskModal);
+
 }
 
 YHEngine::GameEngine::~GameEngine()
 {
 	delete m_assetManager;
+
+	for (auto& defferedContexts : m_defferedContexts)
+	{
+		delete defferedContexts.second;
+	}
+
+	for (AWindow* imguiWindow : m_imguiWindows)
+	{
+		delete imguiWindow;
+	}
+
+	for (AModal* imguiModal : m_imguiModals)
+	{
+		delete imguiModal;
+	}
 }
 
 void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
@@ -38,6 +64,10 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 	if (engine != nullptr)
 	{
 		engine->InitEngine(m_appSize.width, m_appSize.height, m_mainWindow);
+		for (auto& defferedContexts : m_defferedContexts)
+		{
+			defferedContexts.second->InitDefferedContext();
+		}
 	}
 
 	ID3D11Device* device = engine->GetDevice();
@@ -49,14 +79,20 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 
 	m_assetManager->RegisterAssetReadPath("./Assets");
 	m_assetManager->RegisterAssetWritePath("./Assets");
-	m_assetManager->PreloadFromResources();
+
+	m_taskManager.RegisterTask([&]() { m_assetManager->PreloadFromResources(); }, "Load Asset From Resources...");
 
 	for (auto& imguiWindow : m_imguiWindows)
 	{
-		imguiWindow->InitializeWindow(device, deviceContext);
+		m_taskManager.RegisterTask([&, device]() { 
+			imguiWindow->InitializeWindow(
+				device, m_defferedContexts[EDefferedContextType::INIT_WINDOW]);
+			}, "Initializing Windows..."
+		);
 	}
 
-	m_assetManager->PreloadFromDirectories();
+	m_taskManager.RegisterTask([&]() { m_assetManager->PreloadFromDirectories(); }, "Load Asset From Directories...");
+	m_taskManager.LaunchTasks();
 }
 
 void GameEngine::Update(const float& deltaTime)
@@ -69,6 +105,13 @@ void GameEngine::Update(const float& deltaTime)
 		engine->SetRTVAsBackBuffer();
 	}
 
+	ID3D11DeviceContext* immediateContext = engine->GetDeviceContext();
+
+	for (auto& defferedContexts : m_defferedContexts)
+	{
+		defferedContexts.second->TryExecuteCommandList(immediateContext);
+	}
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 
@@ -79,6 +122,11 @@ void GameEngine::Update(const float& deltaTime)
 	for (auto& imguiWindow : m_imguiWindows)
 	{
 		imguiWindow->ShowWindow();
+	}
+
+	for (auto& imguiModal : m_imguiModals)
+	{
+		imguiModal->DoModal();
 	}
 
 	ImGui::Render();

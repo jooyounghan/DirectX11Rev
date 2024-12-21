@@ -15,17 +15,19 @@
 #include "AnimationAsset.h"
 #include "MapAsset.h"
 
+#include "DefferedContext.h"
+
 class AssetManager : public IBaseTextureProvider, public IScratchTextureProvider, public IStaticMeshProvider,
 	public ISkeletalMeshProvider, public IModelMaterialProvider, public IIBLMaterialProvider, public IBoneProvider,
 	public IAnimationProvider, public IMapProvider, public IResourceProvider
 {
 public:
-	AssetManager(ID3D11Device** deviceAddress, ID3D11DeviceContext** deviceContextAddress);
+	AssetManager(ID3D11Device** deviceAddress, DefferedContext* defferedContext);
 	~AssetManager();
 
 protected:
-	ID3D11Device** m_deviceAddress = nullptr;
-	ID3D11DeviceContext** m_deviceContextAddress = nullptr;
+	ID3D11Device** m_deviceAddressCached = nullptr;
+	DefferedContext* m_defferedContextCached = nullptr;
 
 protected:
 	std::unordered_map<std::string, AssetReader> m_assetReadersWithPath;

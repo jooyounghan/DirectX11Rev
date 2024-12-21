@@ -34,6 +34,9 @@
     <Filter Include="헤더 파일\GUI\Window\Extended">
       <UniqueIdentifier>{d953c5df-49e3-4834-bdcd-9d2ab0c85642}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GUI\Modal">
+      <UniqueIdentifier>{fc43d1db-e100-45e8-b689-4140ff805e26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

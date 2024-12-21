@@ -163,13 +163,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp" />
-    <ClCompile Include="D3D11Engine.cpp" />
-    <ClCompile Include="AppUtilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AApplication.h" />
-    <ClInclude Include="D3D11Engine.h" />
-    <ClInclude Include="AppUtilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AssetManager\AssetManager.vcxproj">

@@ -8,8 +8,8 @@
 using namespace std;
 
 
-AssetManager::AssetManager(ID3D11Device** deviceAddress, ID3D11DeviceContext** deviceContextAddress)
-	: m_deviceAddress(deviceAddress), m_deviceContextAddress(deviceContextAddress)
+AssetManager::AssetManager(ID3D11Device** deviceAddress, DefferedContext* defferedContext)
+	: m_deviceAddressCached(deviceAddress), m_defferedContextCached(defferedContext)
 {
 }
 
@@ -83,6 +83,7 @@ void AssetManager::PreloadFromDirectories()
 			}
 		}
 	}
+	m_defferedContextCached->RecordToCommandList();
 }
 
 void AssetManager::WrtieFileAsAsset(const std::string filePath)
@@ -111,11 +112,12 @@ void AssetManager::WrtieFileAsAsset(const std::string filePath)
 			}
 		}
 	}
+	m_defferedContextCached->RecordToCommandList();
 }
 
 void AssetManager::AddAssetHelper(const EAssetType& assetType, std::string assetPath, AAsset* asset)
 {
-	AssetGPUInitializer assetGPUInitializer(*m_deviceAddress, *m_deviceContextAddress);
+	AssetGPUInitializer assetGPUInitializer(*m_deviceAddressCached, m_defferedContextCached->GetDefferedContext());
 	asset->Accept(&assetGPUInitializer);
 
 	InvokeAssetLoadedHandler(assetType, assetPath, asset);

@@ -1,5 +1,5 @@
 #pragma once
-#include "AppUtilities.h"
+#include "D3D11Utilities.h"
 
 #include <windows.h>
 #include <wrl/client.h>

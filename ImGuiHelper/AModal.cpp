@@ -14,7 +14,8 @@ AModal::~AModal()
 
 void AModal::DoModal()
 {
-    if (ModalCondition())
+    bool isModalAllow = ModalCondition();
+    if (isModalAllow)
     {
         OpenPopup(m_modalHeaderName.c_str());
     }
@@ -23,6 +24,10 @@ void AModal::DoModal()
     if (BeginPopupModal(m_modalHeaderName.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize))
     {
         RenderModal();
+        if (!isModalAllow)
+        {
+            CloseCurrentPopup();
+        }
         EndPopup();
     }
     ResetWindowPosToPrevious();

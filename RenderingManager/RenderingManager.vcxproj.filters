@@ -19,12 +19,6 @@
     <Filter Include="소스 파일\BufferManager">
       <UniqueIdentifier>{d068d9c4-8734-4bdd-b66b-44525e8c5360}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\ShaderResourceManager">
-      <UniqueIdentifier>{8dc5105d-3daf-48f7-8ddd-78735c226430}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\ShaderResourceManager">
-      <UniqueIdentifier>{90ec13f3-c5cd-4232-894d-ee189ccf78ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\RenderingManager">
       <UniqueIdentifier>{5a28550a-3512-46b2-aa13-e437f55b7ff7}</UniqueIdentifier>
     </Filter>
@@ -64,12 +58,6 @@
     <Filter Include="소스 파일\BufferManager\Buffer\Structure">
       <UniqueIdentifier>{fae4e90d-29a6-4975-8933-1ac466275eba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\ShaderResourceManager\Texture2D">
-      <UniqueIdentifier>{9a62471e-3230-4a3b-9616-ec62a0355a27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\ShaderResourceManager\Texture2D">
-      <UniqueIdentifier>{4b006075-c7bb-4412-ab4c-ab0a94d7744c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\RenderingManager\PSOManager">
       <UniqueIdentifier>{42b2b5f8-6c69-456a-a299-b2880b03c08c}</UniqueIdentifier>
     </Filter>
@@ -87,6 +75,24 @@
     </Filter>
     <Filter Include="헤더 파일\RenderingManager\PSOManager\PSOObject">
       <UniqueIdentifier>{b74722a3-7f40-49ef-b81f-558380a50b0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\TaskManager">
+      <UniqueIdentifier>{e13bbad5-5150-40c7-ae45-b7ab12ed79a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\TaskManager">
+      <UniqueIdentifier>{b813b53f-f965-4a7b-8084-549f6525535d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Texture2D">
+      <UniqueIdentifier>{4b006075-c7bb-4412-ab4c-ab0a94d7744c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Texture2D">
+      <UniqueIdentifier>{9a62471e-3230-4a3b-9616-ec62a0355a27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\DefferedContext">
+      <UniqueIdentifier>{022eca1c-7966-44b1-8130-557570c7f250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\DefferedContext">
+      <UniqueIdentifier>{bce6bc0f-000d-401d-b8c4-290dcd9b51f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -118,22 +124,22 @@
       <Filter>헤더 파일\BufferManager\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="ITextureOption.h">
-      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>헤더 파일\Texture2D</Filter>
     </ClInclude>
     <ClInclude Include="SRVOption.h">
-      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>헤더 파일\Texture2D</Filter>
     </ClInclude>
     <ClInclude Include="RTVOption.h">
-      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>헤더 파일\Texture2D</Filter>
     </ClInclude>
     <ClInclude Include="DSVOption.h">
-      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>헤더 파일\Texture2D</Filter>
     </ClInclude>
     <ClInclude Include="UAVOption.h">
-      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>헤더 파일\Texture2D</Filter>
     </ClInclude>
     <ClInclude Include="Texture2DInstance.h">
-      <Filter>헤더 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>헤더 파일\Texture2D</Filter>
     </ClInclude>
     <ClInclude Include="AShader.h">
       <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
@@ -171,8 +177,17 @@
     <ClInclude Include="GraphicsPSOObject.h">
       <Filter>헤더 파일\RenderingManager\PSOManager\PSOObject</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderResourceManager.h">
-      <Filter>헤더 파일\ShaderResourceManager</Filter>
+    <ClInclude Include="TaskManager.h">
+      <Filter>헤더 파일\TaskManager</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Engine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Utilities.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DefferedContext.h">
+      <Filter>헤더 파일\DefferedContext</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -201,22 +216,22 @@
       <Filter>소스 파일\BufferManager\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="ITextureOption.cpp">
-      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>소스 파일\Texture2D</Filter>
     </ClCompile>
     <ClCompile Include="SRVOption.cpp">
-      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>소스 파일\Texture2D</Filter>
     </ClCompile>
     <ClCompile Include="RTVOption.cpp">
-      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>소스 파일\Texture2D</Filter>
     </ClCompile>
     <ClCompile Include="UAVOption.cpp">
-      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>소스 파일\Texture2D</Filter>
     </ClCompile>
     <ClCompile Include="DSVOption.cpp">
-      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>소스 파일\Texture2D</Filter>
     </ClCompile>
     <ClCompile Include="Texture2DInstance.cpp">
-      <Filter>소스 파일\ShaderResourceManager\Texture2D</Filter>
+      <Filter>소스 파일\Texture2D</Filter>
     </ClCompile>
     <ClCompile Include="AShader.cpp">
       <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
@@ -254,8 +269,17 @@
     <ClCompile Include="GraphicsPSOObject.cpp">
       <Filter>소스 파일\RenderingManager\PSOManager\PSOObject</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderResourceManager.cpp">
-      <Filter>소스 파일\ShaderResourceManager</Filter>
+    <ClCompile Include="TaskManager.cpp">
+      <Filter>소스 파일\TaskManager</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Engine.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Utilities.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DefferedContext.cpp">
+      <Filter>소스 파일\DefferedContext</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

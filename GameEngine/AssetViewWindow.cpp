@@ -45,7 +45,7 @@ void AssetViewWindow::RenderWindowImpl()
     EndGroup();
 }
 
-void AssetViewWindow::InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+void AssetViewWindow::InitializeWindow(ID3D11Device* device, DefferedContext* defferedContext)
 {
     constexpr UINT thumbnailWidth = 128;
     constexpr UINT thumbnailHeight = 128;
@@ -58,13 +58,17 @@ void AssetViewWindow::InitializeWindow(ID3D11Device* device, ID3D11DeviceContext
     BaseTextureAsset* mapAssetTN = m_assetManagerCached->GetResourceAsset(MapAssetTN);
     BaseTextureAsset* materialAssetTN = m_assetManagerCached->GetResourceAsset(MaterialAssetTN);
 
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_ANIMATION, thumbnailWidth, thumbnailHeight, animationAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_BONE, thumbnailWidth, thumbnailHeight, boneAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_TEXTURE, thumbnailWidth, thumbnailHeight, textureAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_STATIC, thumbnailWidth, thumbnailHeight, staticMeshAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_SKELETAL, thumbnailWidth, thumbnailHeight, skeletalMeshAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MATERIAL, thumbnailWidth, thumbnailHeight, materialAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MAP, thumbnailWidth, thumbnailHeight, mapAssetTN);
+    ID3D11DeviceContext* defferedContextInstance = defferedContext->GetDefferedContext();
+
+    InitThumbnailTextureAsAsset(device, defferedContextInstance, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_ANIMATION, thumbnailWidth, thumbnailHeight, animationAssetTN);
+    InitThumbnailTextureAsAsset(device, defferedContextInstance, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_BONE, thumbnailWidth, thumbnailHeight, boneAssetTN);
+    InitThumbnailTextureAsAsset(device, defferedContextInstance, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_TEXTURE, thumbnailWidth, thumbnailHeight, textureAssetTN);
+    InitThumbnailTextureAsAsset(device, defferedContextInstance, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_STATIC, thumbnailWidth, thumbnailHeight, staticMeshAssetTN);
+    InitThumbnailTextureAsAsset(device, defferedContextInstance, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_SKELETAL, thumbnailWidth, thumbnailHeight, skeletalMeshAssetTN);
+    InitThumbnailTextureAsAsset(device, defferedContextInstance, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MATERIAL, thumbnailWidth, thumbnailHeight, materialAssetTN);
+    InitThumbnailTextureAsAsset(device, defferedContextInstance, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MAP, thumbnailWidth, thumbnailHeight, mapAssetTN);
+
+    defferedContext->RecordToCommandList();
 }
 
 void AssetViewWindow::AddAssetControl(const EAssetType& assetType, const string& assetPath, AAsset* asset)
