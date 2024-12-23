@@ -116,6 +116,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -123,8 +124,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;Ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -163,7 +167,6 @@
     <ClInclude Include="GraphicsPSOObject.h" />
     <ClInclude Include="HullShader.h" />
     <ClInclude Include="IRenderable.h" />
-    <ClInclude Include="AViewable.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PSOObject.h" />
     <ClInclude Include="RTVOption.h" />
@@ -195,7 +198,6 @@
     <ClCompile Include="GraphicsPSOObject.cpp" />
     <ClCompile Include="HullShader.cpp" />
     <ClCompile Include="IRenderable.cpp" />
-    <ClCompile Include="AViewable.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PSOObject.cpp" />
     <ClCompile Include="RTVOption.cpp" />

@@ -15,8 +15,10 @@ protected:
 	ConstantBuffer*					m_indexBuffer = nullptr;
 
 public:
-	virtual std::vector<ID3D11Buffer*> GetVertexBuffers() = 0;
-	virtual ID3D11Buffer* GetIndexBuffer() = 0;
+	std::vector<ID3D11Buffer*> GetVertexBuffers();
+	ID3D11Buffer* GetIndexBuffer();
+
+public:
 	virtual std::vector<UINT> GetStrides() = 0;
 	virtual std::vector<UINT> GetOffsets() = 0;
 

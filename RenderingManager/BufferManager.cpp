@@ -107,11 +107,11 @@ void BufferManager::RequestUpload(const GUID& guid, ID3D11DeviceContext* deviceC
 
 	if (uploadableBuffer != nullptr)
 	{
-		uploadRequestArgs.uploadableBuffer = uploadableBuffer;
-		uploadRequestArgs.deviceContext = deviceContext;
-		uploadRequestArgs.elementSize = elementSize;
-		uploadRequestArgs.arrayCount = arrayCount;
-		uploadRequestArgs.cpuDataIn = cpuDataIn;
+		uploadRequestArgs.m_uploadableBuffer = uploadableBuffer;
+		uploadRequestArgs.m_deviceContextCached = deviceContext;
+		uploadRequestArgs.m_elementSize = elementSize;
+		uploadRequestArgs.m_arrayCount = arrayCount;
+		uploadRequestArgs.m_cpuDataIn = cpuDataIn;
 
 		m_uploadRequestedArgs.emplace_back(move(uploadRequestArgs));
 	}
@@ -121,11 +121,11 @@ void BufferManager::ExecuteUpload()
 {
 	for (const UploadRequestArgs& uploadRequestedArg : m_uploadRequestedArgs)
 	{
-		uploadRequestedArg.uploadableBuffer->Upload(
-			uploadRequestedArg.deviceContext,
-			uploadRequestedArg.elementSize,
-			uploadRequestedArg.arrayCount,
-			uploadRequestedArg.cpuDataIn
+		uploadRequestedArg.m_uploadableBuffer->Upload(
+			uploadRequestedArg.m_deviceContextCached,
+			uploadRequestedArg.m_elementSize,
+			uploadRequestedArg.m_arrayCount,
+			uploadRequestedArg.m_cpuDataIn
 		);
 	}
 	m_uploadRequestedArgs.clear();

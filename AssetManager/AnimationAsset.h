@@ -8,8 +8,8 @@
 
 struct SAnimationKey
 {
-	float time;
-	DirectX::XMVECTOR animationData;
+	float m_time;
+	DirectX::XMVECTOR m_animationData;
 };
 
 class AnimChannel : public ISerializable

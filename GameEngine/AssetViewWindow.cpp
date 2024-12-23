@@ -86,7 +86,7 @@ void AssetViewWindow::AddAssetByRecursiveKey(
         std::string firstComponent = normalizedPath.substr(0, firstSlash);
         std::string remainingPath = normalizedPath.substr(firstSlash + 1);
 
-        AddAssetByRecursiveKey(assetType, targetFolder.childFolders[firstComponent], remainingPath, asset);
+        AddAssetByRecursiveKey(assetType, targetFolder.m_childFolders[firstComponent], remainingPath, asset);
     }
     else
     {
@@ -124,14 +124,14 @@ void AssetViewWindow::AddAssetByRecursiveKey(
             break;
         }
 
-        targetFolder.assetControls.emplace_back(make_unique<AssetFileControl>(assetType, asset, thumbnailSRV));
+        targetFolder.m_assetControls.emplace_back(make_unique<AssetFileControl>(assetType, asset, thumbnailSRV));
     }
 }
 
 void AssetViewWindow::RenderAssetFolderStructureByRecursive(const string& folderName, const SAssetFolder* const assetFolder)
 {
     ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
-    if (assetFolder->childFolders.size() == 0)
+    if (assetFolder->m_childFolders.size() == 0)
     {
         NodeFlags |= ImGuiTreeNodeFlags_Leaf;
     }
@@ -152,7 +152,7 @@ void AssetViewWindow::RenderAssetFolderStructureByRecursive(const string& folder
         m_selectedFolders = assetFolder;
 
         ClearRegisteredControl();
-        for (auto& assetControl : m_selectedFolders->assetControls)
+        for (auto& assetControl : m_selectedFolders->m_assetControls)
         {
             RegisterControl(assetControl.get());
         }
@@ -161,7 +161,7 @@ void AssetViewWindow::RenderAssetFolderStructureByRecursive(const string& folder
     if (IsOpen)
     {
         Indent();
-        for (const auto& childFolderWithName : assetFolder->childFolders)
+        for (const auto& childFolderWithName : assetFolder->m_childFolders)
         {
             const string& folderName = childFolderWithName.first;
             const SAssetFolder& assetFolder = childFolderWithName.second;
@@ -177,7 +177,7 @@ void AssetViewWindow::RenderSelectedAssetFolders(const SAssetFolder* const asset
 
     float windowWidth = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-    const vector<unique_ptr<AssetFileControl>>& assetFileControls = assetFolder->assetControls;
+    const vector<unique_ptr<AssetFileControl>>& assetFileControls = assetFolder->m_assetControls;
     ImGuiStyle& Style = ImGui::GetStyle();
 
     for (auto& assetFileControl : assetFileControls)

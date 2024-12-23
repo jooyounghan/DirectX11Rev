@@ -8,7 +8,7 @@ void RenderingManager::RegisterGraphicsRenderingOption(
 	GraphicsPSOObject* graphicsPsoObject, 
 	const vector<RTVOption*> renderTargetViews, 
 	DSVOption* depthStencilView, 
-	AViewable* viewable
+	const D3D11_VIEWPORT* viewport
 )
 {
 	if (m_namesToOptions.find(graphicsOptionName) != m_namesToOptions.end())
@@ -24,7 +24,7 @@ void RenderingManager::RegisterGraphicsRenderingOption(
 	m_namesToOptions[graphicsOptionName]->graphicsPsoObject = graphicsPsoObject;
 	m_namesToOptions[graphicsOptionName]->renderTargetViews = renderTargetViews;
 	m_namesToOptions[graphicsOptionName]->depthStencilView = depthStencilView;
-	m_namesToOptions[graphicsOptionName]->viewable = viewable;
+	m_namesToOptions[graphicsOptionName]->viewport = viewport;
 }
 
 void RenderingManager::RegisterGraphicsRenderingArgs(const std::string& graphicsOptionName, const SRenderingArgs& renderingArgs)
@@ -60,7 +60,7 @@ void RenderingManager::Render(ID3D11DeviceContext* deviceContext)
 		SGraphicsPSOOption* const option = optionToRenderingArgs.first;
 		const vector<SRenderingArgs>& renderables = optionToRenderingArgs.second;
 
-		option->graphicsPsoObject->ApplyPSOObject(deviceContext, option->renderTargetViews, option->depthStencilView, option->viewable);
+		option->graphicsPsoObject->ApplyPSOObject(deviceContext, option->renderTargetViews, option->depthStencilView, option->viewport);
 
 		for (const SRenderingArgs& renderingArgs : renderables)
 		{			

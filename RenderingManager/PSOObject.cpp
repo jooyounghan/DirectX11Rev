@@ -21,9 +21,9 @@ PSOObject::PSOObject(
 
 void PSOObject::ApplyPSOObject(
 	ID3D11DeviceContext* deviceContext, 
-	const std::vector<RTVOption*>& renderTargetViews, 
+	const vector<RTVOption*>& renderTargetViews, 
 	DSVOption* depthStencilView, 
-	AViewable* viewable
+	const D3D11_VIEWPORT* viewport
 )
 {
 	if (IsValidate(renderTargetViews))
@@ -52,12 +52,12 @@ void PSOObject::ApplyPSOObject(
 
 		deviceContext->OMSetBlendState(m_blendState, BlendFactor, 0xFFFFFFFF);
 
-		deviceContext->RSSetViewports(1, &viewable->GetViewport());
+		deviceContext->RSSetViewports(1, viewport);
 		deviceContext->OMSetRenderTargets(static_cast<UINT>(renderTargetViews.size()), m_renderTargetViews.data(), depthStencilView->GetDSV());
 	}
 	else
 	{
-		throw std::exception();
+		throw exception();
 	}
 }
 

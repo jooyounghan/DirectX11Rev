@@ -60,13 +60,13 @@ DirectX::XMVECTOR AnimChannel::GetLerpedVectorKey(
 		const SAnimationKey& keyFrom = keys[idx];
 		const SAnimationKey& keyTo = keys[idx + 1];
 
-		if (keyFrom.time - AnimationTimeErr < timeIn && timeIn < keyTo.time + AnimationTimeErr)
+		if (keyFrom.m_time - AnimationTimeErr < timeIn && timeIn < keyTo.m_time + AnimationTimeErr)
 		{
-			return interpolationMethod(keyFrom.animationData, keyTo.animationData, (timeIn - keyFrom.time) / (keyTo.time - keyFrom.time));
+			return interpolationMethod(keyFrom.m_animationData, keyTo.m_animationData, (timeIn - keyFrom.m_time) / (keyTo.m_time - keyFrom.m_time));
 		}
 	}
 
-	return keys[0].animationData;
+	return keys[0].m_animationData;
 }
 
 DirectX::XMMATRIX AnimChannel::GetLocalTransformation(const float& timeIn) const

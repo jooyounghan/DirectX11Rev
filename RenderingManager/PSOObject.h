@@ -2,7 +2,6 @@
 #include "AShader.h"
 #include "RTVOption.h"
 #include "DSVOption.h"
-#include "AViewable.h"
 
 #include <memory>
 #include <vector>
@@ -35,7 +34,11 @@ protected:
 	std::vector<AShader*> m_shaders;
 
 public:
-	void ApplyPSOObject(ID3D11DeviceContext* deviceContext, const std::vector<RTVOption*>& renderTargetViews, DSVOption* depthStencilView, AViewable* viewable);
+	void ApplyPSOObject(
+		ID3D11DeviceContext* deviceContext, 
+		const std::vector<RTVOption*>& renderTargetViews, DSVOption* depthStencilView,
+		const D3D11_VIEWPORT* viewport
+	);
 	void ResetPSOObject(ID3D11DeviceContext* deviceContext) const;
 
 public:

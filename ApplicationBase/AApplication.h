@@ -6,8 +6,8 @@ namespace App
 {
 	struct SWindowSize
 	{
-		UINT width;
-		UINT height;
+		UINT m_width;
+		UINT m_height;
 	};
 
 	using WindowSizeMoveHandler = std::function<void(const UINT&, const UINT&)>;
@@ -48,7 +48,6 @@ namespace App
 
 	protected:
 		void OnWindowSizeMove();
-		void OnDropFiles();
 
 	protected:
 		virtual void Update(const float& deltaTime) = 0;

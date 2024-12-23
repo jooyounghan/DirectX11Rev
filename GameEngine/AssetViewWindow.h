@@ -20,8 +20,8 @@ constexpr size_t AssetThumbnailTypeCount = static_cast<size_t>(EAssetThumbnailTy
 
 struct SAssetFolder
 {
-	std::vector<std::unique_ptr<AssetFileControl>> assetControls;
-	std::unordered_map<std::string, SAssetFolder> childFolders;
+	std::vector<std::unique_ptr<AssetFileControl>> m_assetControls;
+	std::unordered_map<std::string, SAssetFolder> m_childFolders;
 };
 
 class AssetViewWindow : public AWindow

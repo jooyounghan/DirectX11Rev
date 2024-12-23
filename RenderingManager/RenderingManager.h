@@ -10,7 +10,7 @@ struct SGraphicsPSOOption
 	GraphicsPSOObject* graphicsPsoObject;
 	std::vector<RTVOption*> renderTargetViews;
 	DSVOption* depthStencilView;
-	AViewable* viewable;
+	const D3D11_VIEWPORT* viewport;
 };
 
 struct SShaderArgs
@@ -49,7 +49,7 @@ public:
 		GraphicsPSOObject* graphicsPsoObject,
 		const std::vector<RTVOption*> renderTargetViews,
 		DSVOption* depthStencilView,
-		AViewable* viewable
+		const D3D11_VIEWPORT* viewport
 	);
 	void RegisterGraphicsRenderingArgs(
 		const std::string& graphicsOptionName,

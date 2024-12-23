@@ -61,7 +61,7 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 {
 	AApplication::Init(className, applicaitonName);
 
-	m_engine->InitEngine(m_appSize.width, m_appSize.height, m_mainWindow);
+	m_engine->InitEngine(m_appSize.m_width, m_appSize.m_height, m_mainWindow);
 	for (auto& defferedContexts : m_defferedContexts)
 	{
 		defferedContexts.second->InitDefferedContext();

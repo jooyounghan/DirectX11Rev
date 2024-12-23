@@ -35,7 +35,9 @@ vector<pair<uint32_t, vector<uint8_t>>> ATextureAsset::GetCompressedImageBuffers
             originSize, Z_BEST_COMPRESSION
         );
         compressedData.resize(compressedSize);
-        compressedImageBuffersWithOriginSize.emplace_back(make_pair(imageBuffer.size(), move(compressedData)));
+        compressedImageBuffersWithOriginSize.emplace_back(
+            make_pair(static_cast<uint32_t>(imageBuffer.size()), move(compressedData))
+        );
     }
     return compressedImageBuffersWithOriginSize;
 }

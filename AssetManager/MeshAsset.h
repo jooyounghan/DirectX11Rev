@@ -64,6 +64,9 @@ protected:
 	std::vector<ModelMaterialAsset*> m_defaultMaterials;
 
 public:
+	inline const std::vector<ModelMaterialAsset*>& GetDefaultMaterials() const { return m_defaultMaterials; }
+
+public:
 	void UpdateDefaultMaterialAsset(IModelMaterialProvider& provider);
 
 public:

@@ -17,8 +17,6 @@ public:
 	virtual void Deserialize(FILE* fileIn) override;
 
 public:
-	virtual std::vector<ID3D11Buffer*> GetVertexBuffers() override final;
-	virtual ID3D11Buffer* GetIndexBuffer() override final;
 	virtual std::vector<UINT> GetStrides() override;
 	virtual std::vector<UINT> GetOffsets() override;
 

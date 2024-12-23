@@ -25,11 +25,11 @@ concept IsInitializableBuffer = requires (T buffer, ID3D11Device * device)
 
 struct UploadRequestArgs
 {
-	AUploadableBuffer* uploadableBuffer;
-	ID3D11DeviceContext* deviceContext;
-	UINT elementSize; 
-	UINT arrayCount;
-	void* cpuDataIn;
+	AUploadableBuffer* m_uploadableBuffer;
+	ID3D11DeviceContext* m_deviceContextCached;
+	UINT m_elementSize; 
+	UINT m_arrayCount;
+	void* m_cpuDataIn;
 };
 
 class BufferManager

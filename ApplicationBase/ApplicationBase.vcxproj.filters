@@ -4,6 +4,27 @@
     <ClInclude Include="AApplication.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="AComponent.h">
+      <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="IComponentVisitor.h">
+      <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticModelComponent.h">
+      <Filter>헤더 파일\Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalModelComponent.h">
+      <Filter>헤더 파일\Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="AModelComponent.h">
+      <Filter>헤더 파일\Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEntity.h">
+      <Filter>헤더 파일\Component\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewEntity.h">
+      <Filter>헤더 파일\Component\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -18,16 +39,49 @@
     <Filter Include="소스 파일\Utilities">
       <UniqueIdentifier>{9f3e7592-3a1a-4779-8246-363a7943714c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Model">
+    <Filter Include="헤더 파일\Component">
+      <UniqueIdentifier>{45146daf-c892-470a-94c2-ea85d9cd3f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Model">
+      <UniqueIdentifier>{def542df-de2a-4f27-998b-b264a67e6c7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component">
       <UniqueIdentifier>{0add3f0a-2b60-45b0-8d50-388b7418ccec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Model">
-      <UniqueIdentifier>{45146daf-c892-470a-94c2-ea85d9cd3f80}</UniqueIdentifier>
+    <Filter Include="소스 파일\Component\Model">
+      <UniqueIdentifier>{f8560266-a5a0-406d-bdef-9d8e161c291b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Entity">
+      <UniqueIdentifier>{a5b22167-bec1-40eb-be85-0f833135d1f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Entity">
+      <UniqueIdentifier>{72b52730-d056-46b5-8f8b-e186ff5a1624}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AComponent.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="IComponentVisitor.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticModelComponent.cpp">
+      <Filter>소스 파일\Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalModelComponent.cpp">
+      <Filter>소스 파일\Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="AModelComponent.cpp">
+      <Filter>소스 파일\Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEntity.cpp">
+      <Filter>소스 파일\Component\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewEntity.cpp">
+      <Filter>소스 파일\Component\Entity</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

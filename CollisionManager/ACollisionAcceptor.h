@@ -1,6 +1,5 @@
 #pragma once
 #include <functional>
-#include <DirectXCollision.h>
 
 class ICollisionVisitor;
 

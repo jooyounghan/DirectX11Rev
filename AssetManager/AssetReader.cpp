@@ -74,8 +74,8 @@ void AssetReader::UpdatePreloadArgs()
 					const EAssetType assetType = wrapper.GetAssetType();
 
 					SAssetPreloadArgs assetPreloadArgs;
-					assetPreloadArgs.assetPath = assetPathStr;
-					assetPreloadArgs.lastReadPoint = ftell(fileIn);
+					assetPreloadArgs.m_assetPath = assetPathStr;
+					assetPreloadArgs.m_lastReadPoint = ftell(fileIn);
 
 					fclose(fileIn);
 
@@ -134,8 +134,8 @@ unordered_map<EAssetType, vector<pair<string, AAsset*>>> AssetReader::GetLoadedA
 			for (const SAssetPreloadArgs& preloadArg : preloadArgs)
 			{
 				FILE* fileIn = nullptr;
-				const string& assetPath = preloadArg.assetPath.c_str();
-				const long& lastReadPoint = preloadArg.lastReadPoint;
+				const string& assetPath = preloadArg.m_assetPath.c_str();
+				const long& lastReadPoint = preloadArg.m_lastReadPoint;
 
 				fopen_s(&fileIn, assetPath.c_str(), "rb");
 				if (fileIn != nullptr)

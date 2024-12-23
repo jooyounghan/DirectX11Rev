@@ -125,6 +125,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)AssetManager;$(SolutionDir)CollisionManager;$(SolutionDir)RenderingManager</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,8 +137,11 @@
       <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -163,22 +167,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp" />
+    <ClCompile Include="AComponent.cpp" />
+    <ClCompile Include="AModelComponent.cpp" />
+    <ClCompile Include="IComponentVisitor.cpp" />
+    <ClCompile Include="ComponentEntity.cpp" />
+    <ClCompile Include="SkeletalModelComponent.cpp" />
+    <ClCompile Include="StaticModelComponent.cpp" />
+    <ClCompile Include="ViewEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AApplication.h" />
+    <ClInclude Include="AComponent.h" />
+    <ClInclude Include="AModelComponent.h" />
+    <ClInclude Include="IComponentVisitor.h" />
+    <ClInclude Include="ComponentEntity.h" />
+    <ClInclude Include="SkeletalModelComponent.h" />
+    <ClInclude Include="StaticModelComponent.h" />
+    <ClInclude Include="ViewEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AssetManager\AssetManager.vcxproj">
       <Project>{0573a263-8f91-4a0c-aa84-5078fee36623}</Project>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <ProjectReference Include="..\CollisionManager\CollisionManager.vcxproj">
       <Project>{8b0f58ac-a008-496c-9cd5-178ac68b75cb}</Project>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
-    </ProjectReference>
-    <ProjectReference Include="..\RenderingManager\RenderingManager.vcxproj">
-      <Project>{bbf7a5f4-c34a-4970-b1c6-2e001813678f}</Project>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

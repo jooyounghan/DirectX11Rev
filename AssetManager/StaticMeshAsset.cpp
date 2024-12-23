@@ -23,22 +23,6 @@ void StaticMeshPartData::Deserialize(FILE* fileIn)
 	m_tangents = DeserializeHelper::DeserializeSequenceContainer<vector<XMFLOAT3>>(fileIn);
 }
 
-
-vector<ID3D11Buffer*> StaticMeshPartData::GetVertexBuffers()
-{
-	vector<ID3D11Buffer*> result;
-	for (ConstantBuffer* buffer : m_vertexBuffers)
-	{
-		result.emplace_back(buffer->GetBuffer());
-	}
-	return result;
-}
-
-ID3D11Buffer* StaticMeshPartData::GetIndexBuffer()
-{
-	return m_indexBuffer != nullptr ? m_indexBuffer->GetBuffer() : nullptr;
-}
-
 vector<UINT> StaticMeshPartData::GetStrides()
 {
 	return vector<UINT> {

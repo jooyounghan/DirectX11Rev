@@ -41,7 +41,7 @@ void DynamicBuffer::Upload(ID3D11DeviceContext* deviceContext, const UINT& eleme
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	AutoZeroMemory(mappedResource);
 
-	AssertIfFailed(deviceContext->Map(m_stagingBuffer.Get(), 0, D3D11_MAP_WRITE, 0, &mappedResource));
+	AssertIfFailed(deviceContext->Map(m_stagingBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 	memcpy(mappedResource.pData, cpuDataIn, m_elementSize * m_arrayCount);
 	deviceContext->Unmap(m_stagingBuffer.Get(), 0);
 	deviceContext->CopyResource(m_buffer.Get(), m_stagingBuffer.Get());
