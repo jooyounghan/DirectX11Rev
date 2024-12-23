@@ -1,5 +1,5 @@
 #pragma once
-#include "d3d11.h"
+#include <d3d11.h>
 #include <DirectXMath.h>
 #include "DynamicBuffer.h"
 
@@ -30,6 +30,7 @@ public:
 	DirectX::XMVECTOR GetQuaternion();
 
 public:
+	virtual void InitEntity(ID3D11Device* device);
 	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext);
 };
 

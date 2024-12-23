@@ -6,7 +6,7 @@
 class AComponent
 {
 public:
-	AComponent();
+	AComponent() = default;
 
 protected:
 	std::vector<AComponent*> m_childComponents;

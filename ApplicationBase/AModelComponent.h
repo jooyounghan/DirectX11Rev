@@ -2,10 +2,10 @@
 #include "AComponent.h"
 #include "ModelMaterialAsset.h"
 
-class AModelComponent
+class AModelComponent : public AComponent, public ComponentEntity
 {
 public:
-	AModelComponent() = default;
+	AModelComponent(const uint64_t& componentID, DirectX::XMFLOAT3 position);
 
 protected:
 	std::vector<ModelMaterialAsset*> m_selectedMaterials;

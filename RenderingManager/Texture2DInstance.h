@@ -20,6 +20,17 @@ public:
 		ID3D11Device* device,
 		ID3D11DeviceContext* deviceContext
 	);
+public:
+	Texture2DInstance(
+		const UINT& width,
+		const UINT& height,
+		const UINT& arraySize,
+		const UINT& cpuAccessFlag,
+		const UINT& miscFlagIn,
+		const D3D11_USAGE& usage,
+		const DXGI_FORMAT& format,
+		ID3D11Device* device
+	);
 
 public:
 	static D3D11_BIND_FLAG GetBindFlags()
@@ -75,6 +86,36 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 			imageBuffer, textureRowPitchPerArray[arrayIdx], NULL
 		);
 	}
+
+	InitializeByOption(m_texture2D.Get(), device);
+}
+
+template<typename ...IsTextureOption>
+inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
+	const UINT& width,
+	const UINT& height,
+	const UINT& arraySize, 
+	const UINT& cpuAccessFlag,
+	const UINT& miscFlagIn, 
+	const D3D11_USAGE& usage,
+	const DXGI_FORMAT& format,
+	ID3D11Device* device
+)
+{
+	D3D11_TEXTURE2D_DESC texture2DDesc;
+	AutoZeroMemory(texture2DDesc);
+	texture2DDesc.Width = width;
+	texture2DDesc.Height = height;
+	texture2DDesc.ArraySize = arraySize;
+	texture2DDesc.MipLevels = 0;
+	texture2DDesc.BindFlags = Texture2DInstance<IsTextureOption...>::GetBindFlags();
+	texture2DDesc.CPUAccessFlags = cpuAccessFlag;
+	texture2DDesc.MiscFlags = miscFlagIn;
+	texture2DDesc.SampleDesc.Count = 1;
+	texture2DDesc.SampleDesc.Quality = 0;
+	texture2DDesc.Usage = usage;
+	texture2DDesc.Format = format;
+	AssertIfFailed(device->CreateTexture2D(&texture2DDesc, NULL, m_texture2D.GetAddressOf()));
 
 	InitializeByOption(m_texture2D.Get(), device);
 }

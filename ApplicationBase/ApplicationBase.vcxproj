@@ -169,8 +169,9 @@
     <ClCompile Include="AApplication.cpp" />
     <ClCompile Include="AComponent.cpp" />
     <ClCompile Include="AModelComponent.cpp" />
-    <ClCompile Include="IComponentVisitor.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="ComponentEntity.cpp" />
+    <ClCompile Include="ComponentGPUInitializer.cpp" />
     <ClCompile Include="SkeletalModelComponent.cpp" />
     <ClCompile Include="StaticModelComponent.cpp" />
     <ClCompile Include="ViewEntity.cpp" />
@@ -179,6 +180,8 @@
     <ClInclude Include="AApplication.h" />
     <ClInclude Include="AComponent.h" />
     <ClInclude Include="AModelComponent.h" />
+    <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="ComponentGPUInitializer.h" />
     <ClInclude Include="IComponentVisitor.h" />
     <ClInclude Include="ComponentEntity.h" />
     <ClInclude Include="SkeletalModelComponent.h" />

@@ -33,6 +33,12 @@ XMMATRIX ViewEntity::GetProjectionMatrix()
 	return XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fovAngle), Width / Height, m_nearZ, m_farZ);
 }
 
+void ViewEntity::InitEntity(ID3D11Device* device)
+{
+	ComponentEntity::InitEntity(device);
+	m_viewProjBuffer.Initialize(device);
+}
+
 void ViewEntity::UpdateEntity(ID3D11DeviceContext* deviceContext)
 {
 	ComponentEntity::UpdateEntity(deviceContext);

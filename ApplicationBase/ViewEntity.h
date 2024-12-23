@@ -11,7 +11,7 @@ struct SViewElement
 	DirectX::XMMATRIX m_invViewProj = DirectX::XMMatrixIdentity();
 };
 
-class ViewEntity : public ComponentEntity, D3D11_VIEWPORT
+class ViewEntity : public ComponentEntity, public D3D11_VIEWPORT
 {
 public:
 	ViewEntity(
@@ -34,6 +34,7 @@ public:
 	DirectX::XMMATRIX GetProjectionMatrix();
 
 public:
+	virtual void InitEntity(ID3D11Device* device);
 	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext);
 };
 

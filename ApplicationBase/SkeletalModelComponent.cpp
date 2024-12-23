@@ -1,7 +1,13 @@
 #include "SkeletalModelComponent.h"
 
-SkeletalModelComponent::SkeletalModelComponent(const SkeletalMeshAsset* const skeletalMeshAsset)
-	: m_skeletalMeshAsset(skeletalMeshAsset)
+using namespace std;
+using namespace DirectX;
+
+SkeletalModelComponent::SkeletalModelComponent(
+	const uint64_t& componentID, DirectX::XMFLOAT3 position,
+	const SkeletalMeshAsset* const skeletalMeshAsset
+)
+	: AModelComponent(componentID, position), m_skeletalMeshAsset(skeletalMeshAsset)
 {
 	m_selectedMaterials = m_skeletalMeshAsset->GetDefaultMaterials();
 }

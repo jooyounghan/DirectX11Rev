@@ -1,9 +1,5 @@
 #include "AComponent.h"
 
-AComponent::AComponent()
-{
-}
-
 void AComponent::AddChildComponent(AComponent* component)
 {
 	component->m_parentComponent = this;

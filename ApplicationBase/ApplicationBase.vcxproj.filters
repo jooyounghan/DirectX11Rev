@@ -7,9 +7,6 @@
     <ClInclude Include="AComponent.h">
       <Filter>헤더 파일\Component</Filter>
     </ClInclude>
-    <ClInclude Include="IComponentVisitor.h">
-      <Filter>헤더 파일\Component</Filter>
-    </ClInclude>
     <ClInclude Include="StaticModelComponent.h">
       <Filter>헤더 파일\Component\Model</Filter>
     </ClInclude>
@@ -25,6 +22,13 @@
     <ClInclude Include="ViewEntity.h">
       <Filter>헤더 파일\Component\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>헤더 파일\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="IComponentVisitor.h">
+      <Filter>헤더 파일\Component\Visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentGPUInitializer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -57,15 +61,27 @@
     <Filter Include="헤더 파일\Component\Entity">
       <UniqueIdentifier>{72b52730-d056-46b5-8f8b-e186ff5a1624}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\Camera">
+      <UniqueIdentifier>{3c740a55-9f10-4cfd-94db-d708a2cb83a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Camera">
+      <UniqueIdentifier>{8988b2c8-39b2-4911-8c44-1d1eb85f675c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Visitor">
+      <UniqueIdentifier>{da88a190-4448-442f-81d9-82f85ffebc83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Visitor">
+      <UniqueIdentifier>{935d5778-62da-497c-8874-42c9ff158b75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Visitor\Extended">
+      <UniqueIdentifier>{a002d25e-5794-4fb4-9149-028b0a5f3bf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="AComponent.cpp">
-      <Filter>소스 파일\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="IComponentVisitor.cpp">
       <Filter>소스 파일\Component</Filter>
     </ClCompile>
     <ClCompile Include="StaticModelComponent.cpp">
@@ -83,5 +99,9 @@
     <ClCompile Include="ViewEntity.cpp">
       <Filter>소스 파일\Component\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>소스 파일\Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentGPUInitializer.cpp" />
   </ItemGroup>
 </Project>

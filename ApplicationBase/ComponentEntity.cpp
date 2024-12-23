@@ -31,6 +31,11 @@ XMVECTOR ComponentEntity::GetQuaternion()
 	);
 }
 
+void ComponentEntity::InitEntity(ID3D11Device* device)
+{
+	m_transformationBuffer.Initialize(device);
+}
+
 void ComponentEntity::UpdateEntity(ID3D11DeviceContext* deviceContext)
 {
 	m_componentElement.m_transformation = GetTranformation();
