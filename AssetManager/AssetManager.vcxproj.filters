@@ -72,12 +72,6 @@
     <Filter Include="헤더 파일\Utilities">
       <UniqueIdentifier>{9476b860-d982-4c6f-a0a7-dd9c6a099525}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Asset\Map">
-      <UniqueIdentifier>{286d9ddc-3f1d-4ccf-90db-7e8eddbd49af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Asset\Map">
-      <UniqueIdentifier>{5702f4d8-ea03-48cb-a5b3-f28a2630619b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Utilities">
       <UniqueIdentifier>{a2b47f26-bfd8-490f-8921-241dbeb5744c}</UniqueIdentifier>
     </Filter>
@@ -111,11 +105,11 @@
     <Filter Include="헤더 파일\AssetRead/Writer\AssetWriter\ImageFile">
       <UniqueIdentifier>{1e6afa85-b062-446e-b336-8353f11f242f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Visitor">
-      <UniqueIdentifier>{18f6ec7c-958b-4bbe-87e0-ad7b5cfe4f8e}</UniqueIdentifier>
+    <Filter Include="소스 파일\Asset\Visitor">
+      <UniqueIdentifier>{ee0ad883-c48a-4f28-a826-0ce556ae315a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Visitor">
-      <UniqueIdentifier>{0843d7a1-1a18-4f31-988c-7df8d1361a01}</UniqueIdentifier>
+    <Filter Include="헤더 파일\Asset\Visitor">
+      <UniqueIdentifier>{18f6ec7c-958b-4bbe-87e0-ad7b5cfe4f8e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -170,9 +164,6 @@
     <ClInclude Include="HeaderHelper.h">
       <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="MapAsset.h">
-      <Filter>헤더 파일\Asset\Map</Filter>
-    </ClInclude>
     <ClInclude Include="IBLMaterialAsset.h">
       <Filter>헤더 파일\Asset\Material</Filter>
     </ClInclude>
@@ -213,7 +204,7 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="IAssetVisitor.h">
-      <Filter>헤더 파일\Visitor</Filter>
+      <Filter>헤더 파일\Asset\Visitor</Filter>
     </ClInclude>
     <ClInclude Include="AMeshGPUAsset.h">
       <Filter>헤더 파일\Asset</Filter>
@@ -225,7 +216,7 @@
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="AssetGPUInitializer.h">
-      <Filter>헤더 파일\AssetRead/Writer</Filter>
+      <Filter>헤더 파일\Asset\Visitor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -274,9 +265,6 @@
     <ClCompile Include="AnimationRetargeter.cpp">
       <Filter>소스 파일\Asset\AssetHandler</Filter>
     </ClCompile>
-    <ClCompile Include="MapAsset.cpp">
-      <Filter>소스 파일\Asset\Map</Filter>
-    </ClCompile>
     <ClCompile Include="IBLMaterialAsset.cpp">
       <Filter>소스 파일\Asset\Material</Filter>
     </ClCompile>
@@ -316,17 +304,17 @@
     <ClCompile Include="AssetManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="IAssetVisitor.cpp">
-      <Filter>소스 파일\Visitor</Filter>
-    </ClCompile>
     <ClCompile Include="ATextureGPUAsset.cpp">
       <Filter>소스 파일\Asset</Filter>
     </ClCompile>
     <ClCompile Include="AMeshGPUAsset.cpp">
       <Filter>소스 파일\Asset</Filter>
     </ClCompile>
+    <ClCompile Include="IAssetVisitor.cpp">
+      <Filter>소스 파일\Asset\Visitor</Filter>
+    </ClCompile>
     <ClCompile Include="AssetGPUInitializer.cpp">
-      <Filter>소스 파일\AssetRead/Wrtirer</Filter>
+      <Filter>소스 파일\Asset\Visitor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

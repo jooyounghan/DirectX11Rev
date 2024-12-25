@@ -180,11 +180,6 @@ AnimationAsset* const AssetManager::GetAnimationAsset(const string& assetName)
 	return GetAssetHelper<AnimationAsset>(EAssetType::ASSET_TYPE_ANIMATION, assetName);
 }
 
-MapAsset* const AssetManager::GetMapAsset(const string& assetName)
-{
-	return GetAssetHelper<MapAsset>(EAssetType::ASSET_TYPE_MAP, assetName);
-}
-
 BaseTextureAsset* const AssetManager::GetResourceAsset(const string& assetName)
 {
 	return GetAssetHelper<BaseTextureAsset>(EAssetType::ASSET_TYPE_RESOURCE, assetName);

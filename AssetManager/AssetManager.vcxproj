@@ -189,7 +189,6 @@
     <ClInclude Include="ImageFileToAssetWriter.h" />
     <ClInclude Include="AMeshGPUAsset.h" />
     <ClInclude Include="ATextureGPUAsset.h" />
-    <ClInclude Include="MapAsset.h" />
     <ClInclude Include="MathematicalHelper.h" />
     <ClInclude Include="MeshAssetWriter.h" />
     <ClInclude Include="ModelFileToAssetWriter.h" />
@@ -225,7 +224,6 @@
     <ClCompile Include="IBLMaterialAsset.cpp" />
     <ClCompile Include="ImageFileToAssetWriter.cpp" />
     <ClCompile Include="AMeshGPUAsset.cpp" />
-    <ClCompile Include="MapAsset.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
     <ClCompile Include="MeshAssetWriter.cpp" />
     <ClCompile Include="ModelFileToAssetWriter.cpp" />

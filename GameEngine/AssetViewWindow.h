@@ -13,10 +13,9 @@ enum class EAssetThumbnailType
 	ASSET_THUMBNAIL_TYPE_STATIC,
 	ASSET_THUMBNAIL_TYPE_SKELETAL,
 	ASSET_THUMBNAIL_TYPE_MATERIAL,
-	ASSET_THUMBNAIL_TYPE_MAP
 };
 
-constexpr size_t AssetThumbnailTypeCount = static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MAP) + 1;
+constexpr size_t AssetThumbnailTypeCount = static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MATERIAL) + 1;
 
 struct SAssetFolder
 {

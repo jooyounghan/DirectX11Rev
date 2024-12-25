@@ -9,7 +9,6 @@
 #include "IBLMaterialAsset.h"
 #include "BoneAsset.h"
 #include "AnimationAsset.h"
-#include "MapAsset.h"
 
 AssetGPUInitializer::AssetGPUInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 	: m_deviceCached(device), m_deviceContextCached(deviceContext)
@@ -44,9 +43,6 @@ void AssetGPUInitializer::Visit(IBLMaterialAsset* iblMaterialAsset)
 {
 }
 
-void AssetGPUInitializer::Visit(MapAsset* mapAsset)
-{
-}
 
 void AssetGPUInitializer::Visit(BoneAsset* boneAsset)
 {

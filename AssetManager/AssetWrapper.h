@@ -13,10 +13,9 @@ enum class EAssetType
 	ASSET_TYPE_MODEL_MATERIAL,
 	ASSET_TYPE_IBL_MATERIAL,
 	ASSET_TYPE_RESOURCE,
-	ASSET_TYPE_MAP
 };
 
-constexpr size_t AssetTypeCount = static_cast<size_t>(EAssetType::ASSET_TYPE_MAP) + 1;
+constexpr size_t AssetTypeCount = static_cast<size_t>(EAssetType::ASSET_TYPE_RESOURCE) + 1;
 
 class AssetWrapper : public ISerializable
 {

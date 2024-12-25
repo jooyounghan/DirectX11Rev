@@ -12,8 +12,6 @@
 #include "ModelMaterialAsset.h"
 #include "IBLMaterialAsset.h"
 
-#include "MapAsset.h"
-
 #include <filesystem>
 
 using namespace std;
@@ -30,7 +28,6 @@ AssetReader::AssetReader(const string& assetBasePath)
 	m_topologySorter.AddTopologyNode(EAssetType::ASSET_TYPE_SCRATCH_TEXTURE);
 	m_topologySorter.AddTopologyNode(EAssetType::ASSET_TYPE_MODEL_MATERIAL);
 	m_topologySorter.AddTopologyNode(EAssetType::ASSET_TYPE_IBL_MATERIAL);
-	m_topologySorter.AddTopologyNode(EAssetType::ASSET_TYPE_MAP);
 
 	m_topologySorter.AddPrequisite(EAssetType::ASSET_TYPE_STATIC, EAssetType::ASSET_TYPE_MODEL_MATERIAL);
 	m_topologySorter.AddPrequisite(EAssetType::ASSET_TYPE_SKELETAL, EAssetType::ASSET_TYPE_MODEL_MATERIAL);
@@ -40,8 +37,6 @@ AssetReader::AssetReader(const string& assetBasePath)
 	m_topologySorter.AddPrequisite(EAssetType::ASSET_TYPE_MODEL_MATERIAL, EAssetType::ASSET_TYPE_SCRATCH_TEXTURE);
 	m_topologySorter.AddPrequisite(EAssetType::ASSET_TYPE_IBL_MATERIAL, EAssetType::ASSET_TYPE_BASE_TEXTURE);
 	m_topologySorter.AddPrequisite(EAssetType::ASSET_TYPE_IBL_MATERIAL, EAssetType::ASSET_TYPE_SCRATCH_TEXTURE);
-	m_topologySorter.AddPrequisite(EAssetType::ASSET_TYPE_MAP, EAssetType::ASSET_TYPE_IBL_MATERIAL);
-	m_topologySorter.AddPrequisite(EAssetType::ASSET_TYPE_MAP, EAssetType::ASSET_TYPE_STATIC);
 
 
 	path assetBasePathSet = path(m_assetBasePath);
@@ -125,9 +120,6 @@ unordered_map<EAssetType, vector<pair<string, AAsset*>>> AssetReader::GetLoadedA
 				break;
 			case EAssetType::ASSET_TYPE_IBL_MATERIAL:
 				assetMaker = [&] { return new IBLMaterialAsset(); };
-				break;
-			case EAssetType::ASSET_TYPE_MAP:
-				assetMaker = [&] { return new MapAsset(); };
 				break;
 			}
 

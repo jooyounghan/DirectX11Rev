@@ -96,9 +96,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BufferManager.h">
-      <Filter>헤더 파일\BufferManager</Filter>
-    </ClInclude>
     <ClInclude Include="PSOManager.h">
       <Filter>헤더 파일\RenderingManager\PSOManager</Filter>
     </ClInclude>
@@ -117,7 +114,7 @@
     <ClInclude Include="DirectXUtilities.h">
       <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="StructureBuffer.h">
+    <ClInclude Include="StructuredBuffer.h">
       <Filter>헤더 파일\BufferManager\Buffer\Structure</Filter>
     </ClInclude>
     <ClInclude Include="AUploadableBuffer.h">
@@ -188,9 +185,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BufferManager.cpp">
-      <Filter>소스 파일\BufferManager</Filter>
-    </ClCompile>
     <ClCompile Include="PSOManager.cpp">
       <Filter>소스 파일\RenderingManager\PSOManager</Filter>
     </ClCompile>
@@ -206,7 +200,7 @@
     <ClCompile Include="DynamicBuffer.cpp">
       <Filter>소스 파일\BufferManager\Buffer\Dynamic</Filter>
     </ClCompile>
-    <ClCompile Include="StructureBuffer.cpp">
+    <ClCompile Include="StructuredBuffer.cpp">
       <Filter>소스 파일\BufferManager\Buffer\Structure</Filter>
     </ClCompile>
     <ClCompile Include="AUploadableBuffer.cpp">

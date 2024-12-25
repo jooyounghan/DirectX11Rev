@@ -51,6 +51,9 @@
     <ClCompile Include="AssetFileControl.cpp">
       <Filter>소스 파일\GUI\Control</Filter>
     </ClCompile>
+    <ClCompile Include="SceneWindow.cpp">
+      <Filter>소스 파일\GUI\Window</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -64,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="AssetFileControl.h">
       <Filter>헤더 파일\GUI\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneWindow.h">
+      <Filter>헤더 파일\GUI\Window\Extended</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

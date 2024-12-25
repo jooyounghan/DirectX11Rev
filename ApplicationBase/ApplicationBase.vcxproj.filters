@@ -19,16 +19,24 @@
     <ClInclude Include="ComponentEntity.h">
       <Filter>헤더 파일\Component\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="ViewEntity.h">
-      <Filter>헤더 파일\Component\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="CameraComponent.h">
       <Filter>헤더 파일\Component\Camera</Filter>
     </ClInclude>
     <ClInclude Include="IComponentVisitor.h">
       <Filter>헤더 파일\Component\Visitor</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentGPUInitializer.h" />
+    <ClInclude Include="Scene.h">
+      <Filter>헤더 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="AInstancedModelComponent.h">
+      <Filter>헤더 파일\Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneRenderer.h">
+      <Filter>헤더 파일\Component\Visitor\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentDB.h">
+      <Filter>헤더 파일\Database</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -76,6 +84,18 @@
     <Filter Include="헤더 파일\Component\Visitor\Extended">
       <UniqueIdentifier>{a002d25e-5794-4fb4-9149-028b0a5f3bf5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Scene">
+      <UniqueIdentifier>{9055fe74-bb19-4f9d-bf69-62f14cf27cdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Scene">
+      <UniqueIdentifier>{778f3bae-0198-4a4d-b0a5-c24112aead7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Database">
+      <UniqueIdentifier>{2ba21392-4c41-41ac-a2d4-c9466ba9dd07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Database">
+      <UniqueIdentifier>{af003479-d6c6-49ef-bef7-719e611791ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
@@ -96,12 +116,20 @@
     <ClCompile Include="ComponentEntity.cpp">
       <Filter>소스 파일\Component\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="ViewEntity.cpp">
-      <Filter>소스 파일\Component\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="CameraComponent.cpp">
       <Filter>소스 파일\Component\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentGPUInitializer.cpp" />
+    <ClCompile Include="Scene.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="AInstancedModelComponent.cpp">
+      <Filter>소스 파일\Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneRenderer.cpp">
+      <Filter>소스 파일\Component\Visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentDB.cpp">
+      <Filter>소스 파일\Database</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

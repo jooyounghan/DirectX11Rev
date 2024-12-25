@@ -3,10 +3,10 @@
 #include "ComponentEntity.h"
 #include <vector>
 
-class AComponent
+class AComponent : public ComponentEntity
 {
 public:
-	AComponent() = default;
+	AComponent(const uint64_t& componentID, DirectX::XMFLOAT3 position);;
 
 protected:
 	std::vector<AComponent*> m_childComponents;

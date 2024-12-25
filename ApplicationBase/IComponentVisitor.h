@@ -12,6 +12,6 @@ public:
 	virtual void Visit(SkeletalModelComponent* skeletalMeshAsset) = 0;
 
 public:
-	virtual void Visit(CameraComponent* baseTextureAsset) = 0;
+	virtual void Visit(CameraComponent* cameraComponent) = 0;
 };
 

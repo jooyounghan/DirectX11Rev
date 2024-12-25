@@ -24,7 +24,6 @@ public:
 	virtual void Visit(IBLMaterialAsset* iblMaterialAsset) override;
 
 public:
-	virtual void Visit(MapAsset* mapAsset) override;
 	virtual void Visit(BoneAsset* boneAsset) override;
 	virtual void Visit(AnimationAsset* animationAsset) override;
 };

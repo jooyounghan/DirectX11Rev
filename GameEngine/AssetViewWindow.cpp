@@ -31,13 +31,13 @@ void AssetViewWindow::RenderWindowImpl()
     BeginGroup();
     PushID("RenderAssetFolder");
 
-    ImVec2 RegionAvail = GetContentRegionAvail();
+    ImVec2 regionAvail = GetContentRegionAvail();
     
-    BeginChild("AssetFolderStructure", ImVec2(RegionAvail.x * 0.2f, RegionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
+    BeginChild("AssetFolderStructure", ImVec2(regionAvail.x * 0.2f, regionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
     RenderAssetFolderStructureByRecursive("Root", &m_assetRootFolders);
     EndChild();
     SameLine();
-    BeginChild("SelectedAssetFolder", ImVec2(RegionAvail.x * 0.8f, RegionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
+    BeginChild("SelectedAssetFolder", ImVec2(regionAvail.x * 0.8f, regionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
     RenderSelectedAssetFolders(m_selectedFolders == nullptr ? &m_assetRootFolders : m_selectedFolders);
     EndChild();
 
@@ -64,7 +64,6 @@ void AssetViewWindow::InitializeWindow(ID3D11Device* device, ID3D11DeviceContext
     InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_STATIC, thumbnailWidth, thumbnailHeight, staticMeshAssetTN);
     InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_SKELETAL, thumbnailWidth, thumbnailHeight, skeletalMeshAssetTN);
     InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MATERIAL, thumbnailWidth, thumbnailHeight, materialAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MAP, thumbnailWidth, thumbnailHeight, mapAssetTN);
 }
 
 void AssetViewWindow::AddAssetControl(const EAssetType& assetType, const string& assetPath, AAsset* asset)
@@ -116,9 +115,6 @@ void AssetViewWindow::AddAssetByRecursiveKey(
         case EAssetType::ASSET_TYPE_MODEL_MATERIAL:
         case EAssetType::ASSET_TYPE_IBL_MATERIAL:
             thumbnailSRV = m_thumbnails[static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MATERIAL)]->GetSRV();
-            break;
-        case EAssetType::ASSET_TYPE_MAP:
-            thumbnailSRV = m_thumbnails[static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MAP)]->GetSRV();
             break;
         default:
             break;

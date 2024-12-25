@@ -11,9 +11,8 @@ protected:
 
 public:
 	virtual void Upload(
-		ID3D11DeviceContext* deviceContext,
-		const UINT& elementSize, const UINT& arrayCount,
-		void* cpuDataIn
+		ID3D11Device* device, ID3D11DeviceContext* deviceContext,
+		const UINT& elementSize, const UINT& arrayCount, void* cpuDataIn
 	) = 0;
 };
 

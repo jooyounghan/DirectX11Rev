@@ -1,12 +1,11 @@
+#include "StructuredBuffer.h"
 
-#include "StructureBuffer.h"
-
-StructureBuffer::StructureBuffer(const UINT& elementSize, const UINT& arrayCount)
+StructuredBuffer::StructuredBuffer(const UINT& elementSize, const UINT& arrayCount)
 	: AUploadableBuffer(elementSize, arrayCount)
 {
 }
 
-void StructureBuffer::Initialize(ID3D11Device* device)
+void StructuredBuffer::Initialize(ID3D11Device* device)
 {
 	D3D11_BUFFER_DESC bufferDesc;
 	AutoZeroMemory(bufferDesc);
@@ -40,7 +39,8 @@ void StructureBuffer::Initialize(ID3D11Device* device)
 	device->CreateShaderResourceView(m_buffer.Get(), &srvDesc, m_structuredSRV.GetAddressOf());
 }
 
-void StructureBuffer::Upload(
+void StructuredBuffer::Upload(
+	ID3D11Device* device,
 	ID3D11DeviceContext* deviceContext, 
 	const UINT& elementSize, 
 	const UINT& arrayCount, 
@@ -48,7 +48,15 @@ void StructureBuffer::Upload(
 )
 {
 	if (elementSize != m_elementSize) return;
-	if (arrayCount != m_arrayCount) return;
+	if (arrayCount != m_arrayCount)
+	{
+		m_structuredSRV->Release();
+		m_stagingBuffer->Release();
+		m_buffer->Release();
+		m_arrayCount = arrayCount;
+
+		Initialize(device);
+	}
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	AutoZeroMemory(mappedResource);

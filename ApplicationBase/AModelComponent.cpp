@@ -3,7 +3,7 @@
 using namespace DirectX;
 
 AModelComponent::AModelComponent(const uint64_t& componentID, XMFLOAT3 position)
-	: ComponentEntity(componentID, position)
+	: AComponent(componentID, position)
 {
 }
 

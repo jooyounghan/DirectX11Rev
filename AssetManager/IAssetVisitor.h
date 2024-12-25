@@ -9,7 +9,6 @@ class ScratchTextureAsset;
 class ModelMaterialAsset;
 class IBLMaterialAsset;
 
-class MapAsset;
 class BoneAsset;
 class AnimationAsset;
 
@@ -28,7 +27,6 @@ public:
 	virtual void Visit(IBLMaterialAsset* iblMaterialAsset) = 0;
 
 public:
-	virtual void Visit(MapAsset* mapAsset) = 0;
 	virtual void Visit(BoneAsset* boneAsset) = 0;
 	virtual void Visit(AnimationAsset* animationAsset) = 0;
 };

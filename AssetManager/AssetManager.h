@@ -13,11 +13,10 @@
 #include "IBLMaterialAsset.h"
 #include "BoneAsset.h"
 #include "AnimationAsset.h"
-#include "MapAsset.h"
 
 class AssetManager : public IBaseTextureProvider, public IScratchTextureProvider, public IStaticMeshProvider,
 	public ISkeletalMeshProvider, public IModelMaterialProvider, public IIBLMaterialProvider, public IBoneProvider,
-	public IAnimationProvider, public IMapProvider, public IResourceProvider
+	public IAnimationProvider, public IResourceProvider
 {
 public:
 	AssetManager();
@@ -65,7 +64,6 @@ public:
 	virtual IBLMaterialAsset* const GetIBLMaterialAsset(const std::string& assetName) override;
 	virtual BoneAsset* const GetBoneAsset(const std::string& assetName) override;
 	virtual AnimationAsset* const GetAnimationAsset(const std::string& assetName) override;
-	virtual MapAsset* const GetMapAsset(const std::string& assetName) override;
 	virtual BaseTextureAsset* const GetResourceAsset(const std::string& assetName) override;
 
 private:

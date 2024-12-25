@@ -153,7 +153,6 @@
     <ClInclude Include="ABuffer.h" />
     <ClInclude Include="D3D11Utilities.h" />
     <ClInclude Include="AUploadableBuffer.h" />
-    <ClInclude Include="BufferManager.h" />
     <ClInclude Include="ComputePSOObject.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="D3D11Engine.h" />
@@ -175,7 +174,7 @@
     <ClInclude Include="PSOManager.h" />
     <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="ConstantBuffer.h" />
-    <ClInclude Include="StructureBuffer.h" />
+    <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="TaskManager.h" />
     <ClInclude Include="Texture2DInstance.h" />
     <ClInclude Include="UAVOption.h" />
@@ -185,7 +184,6 @@
     <ClCompile Include="ABuffer.cpp" />
     <ClCompile Include="D3D11Utilities.cpp" />
     <ClCompile Include="AUploadableBuffer.cpp" />
-    <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="ComputePSOObject.cpp" />
     <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="D3D11Engine.cpp" />
@@ -206,7 +204,7 @@
     <ClCompile Include="PSOManager.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
-    <ClCompile Include="StructureBuffer.cpp" />
+    <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="TaskManager.cpp" />
     <ClCompile Include="Texture2DInstance.cpp" />
     <ClCompile Include="UAVOption.cpp" />

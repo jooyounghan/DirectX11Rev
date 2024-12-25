@@ -168,25 +168,29 @@
   <ItemGroup>
     <ClCompile Include="AApplication.cpp" />
     <ClCompile Include="AComponent.cpp" />
+    <ClCompile Include="AInstancedModelComponent.cpp" />
     <ClCompile Include="AModelComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="ComponentDB.cpp" />
     <ClCompile Include="ComponentEntity.cpp" />
-    <ClCompile Include="ComponentGPUInitializer.cpp" />
+    <ClCompile Include="SceneRenderer.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SkeletalModelComponent.cpp" />
     <ClCompile Include="StaticModelComponent.cpp" />
-    <ClCompile Include="ViewEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AApplication.h" />
     <ClInclude Include="AComponent.h" />
+    <ClInclude Include="AInstancedModelComponent.h" />
     <ClInclude Include="AModelComponent.h" />
     <ClInclude Include="CameraComponent.h" />
-    <ClInclude Include="ComponentGPUInitializer.h" />
+    <ClInclude Include="ComponentDB.h" />
+    <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="IComponentVisitor.h" />
     <ClInclude Include="ComponentEntity.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="SkeletalModelComponent.h" />
     <ClInclude Include="StaticModelComponent.h" />
-    <ClInclude Include="ViewEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AssetManager\AssetManager.vcxproj">
