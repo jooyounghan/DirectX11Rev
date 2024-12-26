@@ -3,13 +3,27 @@
 using namespace DirectX;
 
 CameraComponent::CameraComponent(
-	const uint64_t& componentID, XMFLOAT3 position, 
-	const uint32_t& width, const uint32_t& height,
-	const float& nearZ, const float& farZ, const float& fovAngle
+	const uint32_t& componentID, 
+	const XMFLOAT3& position, 
+	const XMFLOAT3& angle,
+	const XMFLOAT3& scale
 )
-	: AComponent(componentID, position), m_nearZ(nearZ), m_farZ(farZ), m_fovAngle(fovAngle),
+	: AComponent(componentID, position, angle, scale),
 	m_viewProjBuffer(sizeof(SViewElement), 1)
 {
+
+}
+
+void CameraComponent::SetCameraProperties(
+	const uint32_t& width, const uint32_t& height, 
+	const float& nearZ, const float& farZ, 
+	const float& fovAngle
+)
+{
+	m_nearZ = nearZ;
+	m_farZ = farZ; 
+	m_fovAngle = fovAngle;
+
 	TopLeftX = 0.f;
 	TopLeftY = 0.f;
 	Width = static_cast<float>(width);

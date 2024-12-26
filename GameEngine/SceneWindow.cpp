@@ -4,8 +4,7 @@ using namespace ImGui;
 using namespace DirectX;
 
 SceneWindow::SceneWindow(const std::string& windowID, PSOManager* psoManager, const uint32_t& width, const uint32_t& height)
-	: AWindow(windowID), m_sceneRenderer(psoManager),
-	m_cameraComponent(NULL, XMFLOAT3(0.f, 0.f, 0.f), width, height, GSceneNearZ, GSceneFarZ, GSceneFovAngle)
+	: AWindow(windowID), m_sceneRenderer(psoManager)
 {
 }
 
@@ -31,13 +30,11 @@ void SceneWindow::RenderWindowImpl()
 
 void SceneWindow::InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-	m_cameraComponent.InitEntity(device);
 }
 
 void SceneWindow::RenderScene()
 {
-    const auto& film = m_cameraComponent.GetFilm();
-    Image(film != nullptr ? film->GetSRV() : nullptr, GetContentRegionAvail());
+    Image(nullptr, GetContentRegionAvail());
 }
 
 void SceneWindow::RenderComponentTree()

@@ -2,19 +2,32 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "DynamicBuffer.h"
+#include "ConstantBuffer.h"
 
-struct SComponentElement
+struct STransformation
 {
-	SComponentElement(const uint64_t& componentID) : m_componentID(componentID) { }
-	const uint64_t m_componentID;
 	DirectX::XMMATRIX m_transformation = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX m_invTransformation = DirectX::XMMatrixIdentity();
+};
+
+struct SComponent
+{
+	SComponent(const uint32_t& componentID);;
+	const uint32_t m_componentID;
+	const uint32_t m_dummy1;
+	const uint32_t m_dummy2;
+	const uint32_t m_dummy3;
 };
 
 class ComponentEntity
 {
 public:
-	ComponentEntity(const uint64_t& componentID, DirectX::XMFLOAT3 position);
+	ComponentEntity(
+		const uint32_t& componentID, 
+		const DirectX::XMFLOAT3& position,
+		const DirectX::XMFLOAT3& angle,
+		const DirectX::XMFLOAT3& scale
+	);
 
 protected:
 	DirectX::XMVECTOR m_position;
@@ -22,8 +35,15 @@ protected:
 	DirectX::XMVECTOR m_scale;
 	
 protected:
-	SComponentElement m_componentElement;
+	STransformation m_transformation;
 	DynamicBuffer m_transformationBuffer;
+
+protected:
+	SComponent m_componentConstant;
+	ConstantBuffer m_componentBuffer;
+
+public:
+	inline const uint32_t& GetComponentID() { return m_componentConstant.m_componentID; }
 
 public:
 	DirectX::XMMATRIX GetTranformation();

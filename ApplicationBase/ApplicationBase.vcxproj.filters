@@ -34,8 +34,11 @@
     <ClInclude Include="SceneRenderer.h">
       <Filter>헤더 파일\Component\Visitor\Extended</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentDB.h">
+    <ClInclude Include="ComponentSchema.h">
       <Filter>헤더 파일\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentDBInitializer.h">
+      <Filter>헤더 파일\Component\Visitor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -128,8 +131,11 @@
     <ClCompile Include="SceneRenderer.cpp">
       <Filter>소스 파일\Component\Visitor</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentDB.cpp">
+    <ClCompile Include="ComponentSchema.cpp">
       <Filter>소스 파일\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentDBInitializer.cpp">
+      <Filter>소스 파일\Component\Visitor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

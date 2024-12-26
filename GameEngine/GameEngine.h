@@ -1,9 +1,15 @@
 #pragma once
 #include "AApplication.h"
+
 #include "D3D11Engine.h"
-#include "AssetManager.h"
 #include "DefferedContext.h"
+
+#include "AssetManager.h"
 #include "TaskManager.h"
+
+#include "SessionManager.h"
+#include "ComponentManager.h"
+
 #include "AWindow.h"
 #include "AModal.h"
 
@@ -42,11 +48,13 @@ namespace YHEngine
 		std::vector<AModal*> m_imguiModals;
 
 	protected:
-		AssetManager* m_assetManager;
+		AssetManager* m_assetManager = nullptr;
+		TaskManager* m_taskManager = nullptr;
 
 	protected:
-		TaskManager* m_taskManager;
-	
+		SessionManager m_sessionManager;
+		ComponentSchema* m_componentDB = nullptr;
+
 	protected:
 		static Utilities::SColor ClearColor;
 	};

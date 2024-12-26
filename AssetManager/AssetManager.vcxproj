@@ -249,9 +249,6 @@
     <ClCompile Include="TopologySorter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\RenderingManager\RenderingManager.vcxproj">
       <Project>{bbf7a5f4-c34a-4970-b1c6-2e001813678f}</Project>
     </ProjectReference>

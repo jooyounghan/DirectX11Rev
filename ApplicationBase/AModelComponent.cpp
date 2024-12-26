@@ -2,8 +2,13 @@
 
 using namespace DirectX;
 
-AModelComponent::AModelComponent(const uint64_t& componentID, XMFLOAT3 position)
-	: AComponent(componentID, position)
+AModelComponent::AModelComponent(
+	const uint32_t& componentID,
+	const XMFLOAT3& position,
+	const XMFLOAT3& rotation,
+	const XMFLOAT3& scale
+)
+	: AComponent(componentID, position, rotation, scale)
 {
 }
 

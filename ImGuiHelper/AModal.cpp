@@ -15,9 +15,10 @@ AModal::~AModal()
 void AModal::DoModal()
 {
     bool isModalAllow = ModalCondition();
+    
     if (isModalAllow)
     {
-        OpenPopup(m_modalHeaderName.c_str());
+        OpenPopup(m_modalHeaderName.c_str(), ImGuiPopupFlags_::ImGuiPopupFlags_NoOpenOverExistingPopup);
     }
 
     SetWindowPosToCenter();

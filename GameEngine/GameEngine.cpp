@@ -3,7 +3,9 @@
 
 #include "AssetViewWindow.h"
 #include "SceneWindow.h"
+
 #include "TaskModal.h"
+#include "MessageBoxModal.h"
 
 using namespace std;
 using namespace D3D11;
@@ -19,7 +21,9 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 );
 
 GameEngine::GameEngine()
-	: AApplication(), m_engine(D3D11Engine::GetInstance()), m_taskManager(TaskManager::GetInstance())
+	: AApplication(), m_engine(D3D11Engine::GetInstance()), 
+	m_taskManager(TaskManager::GetInstance()), 
+	m_sessionManager("localhost", 33060, "gameEngineSession", "YHengine12!@")
 {
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { m_engine->ResizeSwapChain(widthIn, heightIn); };
 	
@@ -69,6 +73,13 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 	m_imguiModals.emplace_back(taskModal);
 	m_taskManager->OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1, placeholders::_2);
 	m_taskManager->OnTasksCompleted = bind(&TaskModal::SetTasksCompleted, taskModal);
+
+	// Bind Between ComponentDB - MessageModal
+	m_componentDB = new ComponentSchema(&m_sessionManager);
+	MessageBoxModal* errorMessageBoxModal = new MessageBoxModal("Error!");
+	m_imguiModals.emplace_back(errorMessageBoxModal);
+	m_componentDB->OnErrorOccurs = bind(&MessageBoxModal::ModalMessage, errorMessageBoxModal, placeholders::_1);
+	m_componentDB->InitDB();
 
 
 	ID3D11Device* device = m_engine->GetDevice();

@@ -5,7 +5,12 @@
 class AModelComponent : public AComponent
 {
 public:
-	AModelComponent(const uint64_t& componentID, DirectX::XMFLOAT3 position);
+	AModelComponent(
+		const uint32_t& componentID, 
+		const DirectX::XMFLOAT3& position,
+		const DirectX::XMFLOAT3& angle,
+		const DirectX::XMFLOAT3& scale	
+	);
 
 protected:
 	std::vector<ModelMaterialAsset*> m_selectedMaterials;

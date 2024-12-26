@@ -8,8 +8,8 @@ class CameraComponent;
 class IComponentVisitor
 {
 public:
-	virtual void Visit(StaticModelComponent* staticMeshAsset) = 0;
-	virtual void Visit(SkeletalModelComponent* skeletalMeshAsset) = 0;
+	virtual void Visit(StaticModelComponent* staticModelComponent) = 0;
+	virtual void Visit(SkeletalModelComponent* skeletalModelComponent) = 0;
 
 public:
 	virtual void Visit(CameraComponent* cameraComponent) = 0;

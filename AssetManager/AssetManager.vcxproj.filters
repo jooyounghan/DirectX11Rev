@@ -317,7 +317,4 @@
       <Filter>소스 파일\Asset\Visitor</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
 </Project>

@@ -19,9 +19,6 @@ private:
 	SceneRenderer m_sceneRenderer;
 
 public:
-	CameraComponent m_cameraComponent;
-
-public:
 	virtual void RenderWindowImpl() override;
 	virtual void InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* deviceContext) override;
 

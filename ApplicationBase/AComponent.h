@@ -6,7 +6,12 @@
 class AComponent : public ComponentEntity
 {
 public:
-	AComponent(const uint64_t& componentID, DirectX::XMFLOAT3 position);;
+	AComponent(
+		const uint32_t& componentID, 
+		const DirectX::XMFLOAT3& position,
+		const DirectX::XMFLOAT3& angle,
+		const DirectX::XMFLOAT3& scale	
+	);
 
 protected:
 	std::vector<AComponent*> m_childComponents;

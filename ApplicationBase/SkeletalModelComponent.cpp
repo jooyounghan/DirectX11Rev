@@ -4,10 +4,22 @@ using namespace std;
 using namespace DirectX;
 
 SkeletalModelComponent::SkeletalModelComponent(
-	const uint64_t& componentID, DirectX::XMFLOAT3 position,
-	const SkeletalMeshAsset* const skeletalMeshAsset
+	const uint32_t& componentID, 
+	const XMFLOAT3& position,
+	const XMFLOAT3& rotation,
+	const XMFLOAT3& scale
 )
-	: AModelComponent(componentID, position), m_skeletalMeshAsset(skeletalMeshAsset)
+	: AModelComponent(componentID, position, rotation, scale)
 {
+}
+
+void SkeletalModelComponent::SetSkeletalMeshAsset(const SkeletalMeshAsset* skeletalMeshAsset)
+{
+	m_skeletalMeshAsset = skeletalMeshAsset;
 	m_selectedMaterials = m_skeletalMeshAsset->GetDefaultMaterials();
+}
+
+void SkeletalModelComponent::Accept(IComponentVisitor* visitor)
+{
+	visitor->Visit(this);
 }

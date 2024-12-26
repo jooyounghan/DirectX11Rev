@@ -2,8 +2,13 @@
 
 using namespace DirectX;
 
-AComponent::AComponent(const uint64_t& componentID, XMFLOAT3 position) 
-	: ComponentEntity(componentID, position) 
+AComponent::AComponent(
+	const uint32_t& componentID, 
+	const XMFLOAT3& position, 
+	const XMFLOAT3& rotation, 
+	const XMFLOAT3& scale
+)
+	: ComponentEntity(componentID, position, rotation, scale)
 {}
 
 void AComponent::AddChildComponent(AComponent* component)

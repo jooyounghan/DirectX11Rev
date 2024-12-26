@@ -6,12 +6,19 @@ class StaticModelComponent : public AModelComponent
 {
 public:
 	StaticModelComponent(
-		const uint64_t& componentID, DirectX::XMFLOAT3 position, 
-		const StaticMeshAsset* const staticMeshAsset
+		const uint32_t& componentID, 
+		const DirectX::XMFLOAT3& position,
+		const DirectX::XMFLOAT3& angle,
+		const DirectX::XMFLOAT3& scale
 	);
 
 protected:
-	const StaticMeshAsset* const m_staticMeshAsset;
+	const StaticMeshAsset* m_staticMeshAsset;
 
+public:
+	void SetStaticMeshAsset(const StaticMeshAsset* staticMeshAsset);
+
+public:
+	virtual void Accept(IComponentVisitor* visitor) override;
 };
 

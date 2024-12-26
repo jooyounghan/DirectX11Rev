@@ -19,15 +19,22 @@ class CameraComponent : public AComponent, public D3D11_VIEWPORT
 {
 public:
 	CameraComponent(
-		const uint64_t& componentID, DirectX::XMFLOAT3 position,
-		const uint32_t& width, const uint32_t& height,
-		const float& nearZ, const float& farZ, const float& fovAngle
+		const uint32_t& componentID, 
+		const DirectX::XMFLOAT3& position,
+		const DirectX::XMFLOAT3& angle,
+		const DirectX::XMFLOAT3& scale
 	);
 
 protected:
 	float m_nearZ;
 	float m_farZ;
 	float m_fovAngle;
+
+public:
+	void SetCameraProperties(
+		const uint32_t& width, const uint32_t& height,
+		const float& nearZ, const float& farZ, const float& fovAngle
+	);
 
 protected:
 	SViewElement m_viewElement;
