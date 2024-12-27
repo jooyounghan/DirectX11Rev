@@ -34,6 +34,11 @@ protected:
 	DirectX::XMVECTOR m_angle;
 	DirectX::XMVECTOR m_scale;
 	
+public:
+	float* GetPositionAddress() { return m_position.m128_f32; }
+	float* GetAngleAddress() { return m_angle.m128_f32; }
+	float* GetScaleAddress() { return m_scale.m128_f32; }
+
 protected:
 	STransformation m_transformation;
 	DynamicBuffer m_transformationBuffer;

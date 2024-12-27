@@ -40,7 +40,7 @@ GameEngine::GameEngine()
 
 	/* Window */
 	m_imguiWindows.emplace_back(new AssetViewWindow("AssetManager", m_assetManager));
-	m_imguiWindows.emplace_back(new SceneWindow("Scene", m_componentManager, nullptr/* PSOManager */));
+	m_imguiWindows.emplace_back(new SceneWindow("Scene", m_assetManager, m_componentManager, nullptr/* PSOManager */));
 
 	/* Modal */
 	TaskModal* taskModal = new TaskModal("Processing...");

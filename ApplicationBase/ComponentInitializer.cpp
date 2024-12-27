@@ -1,5 +1,6 @@
 #include "ComponentInitializer.h"
 
+#include "Scene.h"
 #include "StaticModelComponent.h"
 #include "SkeletalModelComponent.h"
 #include "CameraComponent.h"
@@ -96,4 +97,10 @@ void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 	{
 		OnErrorOccurs(ex.what());
 	}
+}
+
+void ComponentInitializer::Visit(Scene* scene)
+{
+	scene->UpdateSceneMeshAsset(*m_assetManagerCached);
+	scene->UpdateSceneIBLMaterialAsset(*m_assetManagerCached);
 }

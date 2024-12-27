@@ -16,6 +16,7 @@ class SceneWindow : public AWindow
 public:
 	SceneWindow(
 		const std::string& windowID, 
+		AssetManager* assetManager,
 		ComponentManager* componentManager, 
 		PSOManager* psoManager
 	);

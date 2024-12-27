@@ -15,8 +15,18 @@ public:
 	~Scene() = default;
 
 protected:
+	std::string m_sceneStaticMeshName;
+	std::string m_iblMaterialName;
+
+protected:
 	StaticMeshAsset* m_sceneMeshAsset = nullptr;
 	IBLMaterialAsset* m_iblMaterialAsset = nullptr;
+
+public:
+	inline void SetSceneStaticMeshName(const std::string& sceneStaticMeshName) { m_sceneStaticMeshName = sceneStaticMeshName; }
+	inline void SetIBLMaterialName(const std::string& iblMaterialName) { m_iblMaterialName = iblMaterialName; }
+	void UpdateSceneMeshAsset(IStaticMeshProvider& staticMeshProvider);
+	void UpdateSceneIBLMaterialAsset(IIBLMaterialProvider& iblMaterialProvider);
 
 protected:
 	std::vector<AComponent*> m_rootComponentsCached;

@@ -124,10 +124,17 @@ void ComponentManager::LoadScenes()
 		{
 			const SceneID sceneID = sceneResult[0].get<SceneID>();
 			const std::string sceneDescription = sceneResult[1].get<std::string>();
+			const std::string staticMeshName = sceneResult[2].get<std::string>();
+			const std::string iblMaterialName = sceneResult[3].get<std::string>();
 
 			Scene* scene = new Scene();
+			scene->SetSceneStaticMeshName(staticMeshName);
+			scene->SetIBLMaterialName(iblMaterialName);
+
 			m_sceneIDsToScene.emplace(sceneID, scene);
 			m_scenesToDescription.emplace(scene, sceneDescription);
+
+			m_componentInitializer.Visit(scene);
 		}
 
 	}

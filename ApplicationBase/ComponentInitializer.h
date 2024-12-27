@@ -4,6 +4,8 @@
 #include "AssetManager.h"
 #include "IComponentVisitor.h"
 
+class Scene;
+
 class ComponentInitializer : public IComponentVisitor, public DBErrorHandler
 {
 public:
@@ -25,6 +27,7 @@ public:
 public:
 	virtual void Visit(CameraComponent* cameraComponent) override;
 
-
+public:
+	void Visit(Scene* scene);
 };
 

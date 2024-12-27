@@ -6,10 +6,11 @@ using namespace DirectX;
 
 SceneWindow::SceneWindow(
     const std::string& windowID,
+    AssetManager* assetManager,
     ComponentManager* componentManager,
     PSOManager* psoManager
 )
-	: AWindow(windowID), m_componentManagerCached(componentManager), m_psoManageCached(psoManager), m_componentInformer(componentManager)
+	: AWindow(windowID), m_componentManagerCached(componentManager), m_psoManageCached(psoManager), m_componentInformer(assetManager, componentManager)
 {
 }
 
