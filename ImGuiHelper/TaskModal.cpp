@@ -12,11 +12,17 @@ TaskModal::~TaskModal()
 {
 }
 
+void TaskModal::SetTaskCount(const size_t& taskLeftCount)
+{
+	m_taskLeftCount = taskLeftCount;
+	m_currentTaskDescription = std::format("{}({} Left)", m_taskDescription, to_string(m_taskLeftCount));
+}
+
 void TaskModal::SetTaskDescription(const size_t& taskLeftCount, const std::string& taskDescription)
 {
 	m_isTaskProcessing = true;
-	m_taskLeftCount = taskLeftCount;
-	m_currentTaskDescription = std::format("{}({} Left)", taskDescription, to_string(m_taskLeftCount));
+	m_taskDescription = taskDescription;
+	SetTaskCount(taskLeftCount);
 }
 
 void TaskModal::SetTasksCompleted() 

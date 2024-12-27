@@ -29,7 +29,7 @@ void AssetFileControl::RenderControlImpl()
 	}
 
 	BeginGroup();
-	Image(m_thumbanilCached, ImVec2(controlWidth, controlWidth));
+	Image((ImU64)m_thumbanilCached, ImVec2(controlWidth, controlWidth));
 	ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + controlWidth);
 	ImGui::Text(assetName.c_str());
 	ImGui::PopTextWrapPos();

@@ -3,7 +3,7 @@
 using namespace ImGui;
 using namespace DirectX;
 
-SceneWindow::SceneWindow(const std::string& windowID, PSOManager* psoManager, const uint32_t& width, const uint32_t& height)
+SceneWindow::SceneWindow(const std::string& windowID, PSOManager* psoManager)
 	: AWindow(windowID), m_sceneRenderer(psoManager)
 {
 }
@@ -34,7 +34,7 @@ void SceneWindow::InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* de
 
 void SceneWindow::RenderScene()
 {
-    Image(nullptr, GetContentRegionAvail());
+    Image((ImU64)nullptr, GetContentRegionAvail());
 }
 
 void SceneWindow::RenderComponentTree()

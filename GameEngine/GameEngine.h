@@ -41,6 +41,12 @@ namespace YHEngine
 
 	protected:
 		D3D11::D3D11Engine* m_engine;
+		TaskManager* m_taskManager = nullptr;
+
+	protected:
+		SessionManager m_sessionManager;
+
+	protected:
 		std::unordered_map<EDefferedContextType, DefferedContext*> m_defferedContexts;
 		
 	protected:
@@ -49,11 +55,9 @@ namespace YHEngine
 
 	protected:
 		AssetManager* m_assetManager = nullptr;
-		TaskManager* m_taskManager = nullptr;
 
 	protected:
-		SessionManager m_sessionManager;
-		ComponentSchema* m_componentDB = nullptr;
+		ComponentManager* m_componentManager = nullptr;
 
 	protected:
 		static Utilities::SColor ClearColor;

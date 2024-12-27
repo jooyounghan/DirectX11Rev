@@ -1,8 +1,9 @@
 #pragma once
 #include <functional>
-#include <concurrent_queue.h>
+#include <queue>
 #include <thread>
 #include <string>
+#include <shared_mutex>
 
 #define ON_MAIN_THREAD
 #define ON_LAUNCHED_THREAD
@@ -26,14 +27,16 @@ public:
 	static TaskManager* GetInstance();
 
 protected:
-	Concurrency::concurrent_queue<SSerialTask> m_serialTasks;
+	std::queue<SSerialTask> m_serialTasks;
 	std::thread m_backgroundThread;
+	std::shared_mutex m_taskMutex;
 
 protected:
 	bool m_isLauncingTasks = false;
 	bool m_isTaskProcessing = false;
 
 public:
+	ON_MAIN_THREAD std::function<void(const size_t&)> OnTaskInserted = [&](const size_t&) {};
 	ON_MAIN_THREAD std::function<void(const size_t&, const std::string&)> OnTaskStarted = [&](const size_t&, const std::string&) {};
 	ON_MAIN_THREAD std::function<void()> OnTasksCompleted = [&]() {};
 

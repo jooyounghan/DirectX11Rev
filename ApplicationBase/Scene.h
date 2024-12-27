@@ -12,25 +12,18 @@ class Scene
 {
 public:
 	Scene() = default;
-	~Scene();
+	~Scene() = default;
 
 protected:
 	StaticMeshAsset* m_sceneMeshAsset = nullptr;
 	IBLMaterialAsset* m_iblMaterialAsset = nullptr;
 
 protected:
-	std::vector<AComponent*> m_rootComponents;
+	std::vector<AComponent*> m_rootComponentsCached;
 
 public:
-	inline const std::vector<AComponent*>& GetRootComponents() { return m_rootComponents; }
+	inline void AddRootComponent(AComponent* component) { m_rootComponentsCached.push_back(component); }
 
 public:
-	template<typename ComponentType, typename ...Args>
-	void AddRootComponent(Args&&...);
+	inline const std::vector<AComponent*>& GetRootComponents() { return m_rootComponentsCached; }
 };
-
-template<typename ComponentType, typename ...Args>
-inline void Scene::AddRootComponent(Args&&... args)
-{
-	m_rootComponents.emplace_back(new ComponentType(std::forward(args)));
-}

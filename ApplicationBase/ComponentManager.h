@@ -1,7 +1,10 @@
 #pragma once
+#include <DirectXMath.h>
 #include "SessionManager.h"
 #include "SchemaManager.h"
-#include "Scene.h"
+
+class Scene;
+class AComponent;
 
 enum class EComponentType
 {
@@ -14,26 +17,36 @@ enum class EComponentType
 class ComponentManager : public SchemaManager
 {
 	typedef uint32_t ComponentID;
+	typedef uint32_t SceneID;
 
 public:
 	ComponentManager(SessionManager* sessionManager);
 	virtual ~ComponentManager();
 
 public:
-	void InitDB();
+	void InitComponentManager();
 
 protected:
 	std::unordered_map<EComponentType, std::function
 		<AComponent*(const ComponentID&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&)>
 	> m_componentTypesToMaker;
-	std::unordered_map<ComponentID, AComponent*> m_componentIDToComponent;
+	std::unordered_map<ComponentID, AComponent*> m_componentIDsToComponent;
+
+protected:
+	std::unordered_map<SceneID, Scene*> m_sceneIDsToScene;
+	std::unordered_map<Scene*, std::string> m_scenesToDescription;
 
 public:
 	std::function<void(const std::string&)> OnErrorOccurs = [&](const std::string&) {};
 
 private:
-	void LoadComponentMaker();
+	void LoadComponentMakers();
 	void LoadComponents();
+	void LoadScenes();
+	void LoadScenesInformation();
+
+public:
+	inline const std::unordered_map<Scene*, std::string>& GetScenesWithDescription() { return m_scenesToDescription; }
 
 private:
 	void LoadParentComponentsRecursive(const std::vector<ComponentID>& addedComponentIDs, mysqlx::Table& table);

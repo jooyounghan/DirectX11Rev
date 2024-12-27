@@ -12,7 +12,7 @@ constexpr float GSceneFovAngle = 120.f;
 class SceneWindow : public AWindow
 {
 public:
-	SceneWindow(const std::string& windowID, PSOManager* psoManager, const uint32_t& width, const uint32_t& height);
+	SceneWindow(const std::string& windowID, PSOManager* psoManager);
 
 private:
 	Scene* m_selectedScene = nullptr;

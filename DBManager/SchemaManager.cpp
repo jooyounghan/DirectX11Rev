@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "SchemaManager.h"
-#include "SessionManager.h"
 
 using namespace std;
 using namespace mysqlx;

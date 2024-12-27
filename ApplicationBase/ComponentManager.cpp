@@ -1,4 +1,6 @@
-#include "ComponentSchema.h"
+#include "ComponentManager.h"
+
+#include "Scene.h"
 
 #include "StaticModelComponent.h"
 #include "SkeletalModelComponent.h"
@@ -8,32 +10,43 @@ using namespace std;
 using namespace mysqlx;
 using namespace DirectX;
 
-ComponentSchema::ComponentSchema(SessionManager* sessionManager)
+ComponentManager::ComponentManager(SessionManager* sessionManager)
 	: SchemaManager(sessionManager, "component_db")
 {
-}
-
-ComponentSchema::~ComponentSchema()
-{
 
 }
 
-void ComponentSchema::InitDB()
+ComponentManager::~ComponentManager()
 {
-	LoadComponentMaker();
+	for (auto& componentIDToComponent : m_componentIDsToComponent)
+	{
+		delete componentIDToComponent.second;
+	}
+	for (auto& sceneIDToScene : m_sceneIDsToScene)
+	{
+		delete sceneIDToScene.second;
+	}
+}
+
+void ComponentManager::InitComponentManager()
+{
+	LoadComponentMakers();
 	LoadComponents();
+	LoadScenes();
+	LoadScenesInformation();
 }
 
-void ComponentSchema::LoadComponentMaker()
+void ComponentManager::LoadComponentMakers()
 {
 	try
 	{
-		const std::string& componentTypeTableName = "component_types";
+		const std::string& componentsTypeTableName = "component_types";
 
-		Table table = getTable(componentTypeTableName, true);
-		RowResult componentTypeResults = table.select("*").lockShared().execute();
+		Table componentsTypeTable = getTable(componentsTypeTableName, true);
+		RowResult componentTypeResults = componentsTypeTable.select("*").lockShared().execute();
 
-		for (auto componentTypeResult : componentTypeResults)
+		Row componentTypeResult;
+		while ((componentTypeResult = componentTypeResults.fetchOne()))
 		{
 			const EComponentType componentType = static_cast<EComponentType>(componentTypeResult[0].get<uint32_t>());
 			const std::string typeDescription = componentTypeResult[1].get<std::string>();
@@ -42,7 +55,7 @@ void ComponentSchema::LoadComponentMaker()
 			{
 			case EComponentType::STATIC_COMPONENT:
 				m_componentTypesToMaker.emplace(componentType, bind(
-					[&](const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale) 
+					[&](const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
 					{ return new StaticModelComponent(componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4)
 				);
 				break;
@@ -54,7 +67,7 @@ void ComponentSchema::LoadComponentMaker()
 				break;
 			case EComponentType::CAMERA_COMPONENT:
 				m_componentTypesToMaker.emplace(componentType, bind(
-					[&](const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale) 
+					[&](const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
 					{ return new CameraComponent(componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4)
 				);
 				break;
@@ -67,15 +80,15 @@ void ComponentSchema::LoadComponentMaker()
 	}
 }
 
-void ComponentSchema::LoadComponents()
+void ComponentManager::LoadComponents()
 {
 	try
 	{
-		const std::string& componentTableName = "components";
-		Table table = getTable(componentTableName, true);
+		const std::string& componentsTableName = "components";
+		Table componentsTable = getTable(componentsTableName, true);
 
-		RowResult componentResults = table.select("*").where("parent_component_id is NULL").lockShared().execute();
-		LoadParentComponentsRecursiveImpl(componentResults, nullptr, table);
+		RowResult componentResults = componentsTable.select("component_id", "component_type", "position_x", "position_y", "position_z", "angle_x", "angle_y", "angle_z", "scale_x", "scale_y", "scale_z").where("parent_component_id is NULL").lockShared().execute();
+		LoadParentComponentsRecursiveImpl(componentResults, nullptr, componentsTable);
 
 	}
 	catch (const std::exception& ex)
@@ -84,33 +97,92 @@ void ComponentSchema::LoadComponents()
 	}
 }
 
-void ComponentSchema::LoadParentComponentsRecursive(const vector<ComponentID>& addedComponentIDs, Table& table)
+void ComponentManager::LoadScenes()
+{
+	try
+	{
+		const std::string& scenesTableName = "scenes";
+		Table scenesTable = getTable(scenesTableName, true);
+
+		RowResult sceneResults = scenesTable.select("*").lockShared().execute();
+
+		Row sceneResult;
+		while ((sceneResult = sceneResults.fetchOne()))
+		{
+			const SceneID sceneID = sceneResult[0].get<SceneID>();
+			const std::string sceneDescription = sceneResult[1].get<std::string>();
+
+			Scene* scene = new Scene();
+			m_sceneIDsToScene.emplace(sceneID, scene);
+			m_scenesToDescription.emplace(scene, sceneDescription);
+		}
+
+	}
+	catch (const std::exception& ex)
+	{
+		OnErrorOccurs(ex.what());
+	}
+}
+
+void ComponentManager::LoadScenesInformation()
+{
+	try
+	{
+		const std::string& scenesInformationsTableName = "scene_informations";
+		Table scenesInformationsTable = getTable(scenesInformationsTableName, true);
+
+		RowResult sceneInformationResults = scenesInformationsTable.select("scene_id", "component_id").lockShared().execute();
+
+		Row sceneInformationResult;
+		while ((sceneInformationResult = sceneInformationResults.fetchOne()))
+		{
+			const SceneID sceneID = sceneInformationResult[0].get<SceneID>();
+			const ComponentID componentID = sceneInformationResult[1].get<ComponentID>();
+
+			if (m_sceneIDsToScene.find(sceneID) != m_sceneIDsToScene.end() && m_componentIDsToComponent.find(componentID) != m_componentIDsToComponent.end())
+			{
+				m_sceneIDsToScene[sceneID]->AddRootComponent(m_componentIDsToComponent[componentID]);
+			}
+			else
+			{
+				throw std::exception(format("Scene ID({}) or Component ID({}) Not Founded", sceneID, componentID).c_str());
+			}
+		}
+	}
+	catch (const std::exception& ex)
+	{
+		OnErrorOccurs(ex.what());
+	}
+}
+
+void ComponentManager::LoadParentComponentsRecursive(const vector<ComponentID>& addedComponentIDs, Table& table)
 {
 	for (const ComponentID& addedComponentID : addedComponentIDs)
 	{
 		AComponent* parentComponent = nullptr;
-		if (m_componentIDToComponent.find(addedComponentID) != m_componentIDToComponent.end())
+		if (m_componentIDsToComponent.find(addedComponentID) != m_componentIDsToComponent.end())
 		{
-			parentComponent = m_componentIDToComponent[addedComponentID];
+			parentComponent = m_componentIDsToComponent[addedComponentID];
 		}
 
-		RowResult componentResults = table.select("component_id, component_type, position_x, position_y, position_z, angle_x, angle_y, angle_z, scale_x, scale_y, scale_z")
+		RowResult componentResults = table.select("component_id", "component_type", "position_x", "position_y", "position_z", "angle_x", "angle_y", "angle_z", "scale_x", "scale_y", "scale_z")
 			.where("parent_component_id = :parent_component_id").bind("parent_component_id", addedComponentID).lockShared().execute();
 		LoadParentComponentsRecursiveImpl(componentResults, parentComponent, table);
 	}
 }
 
-void ComponentSchema::LoadParentComponentsRecursiveImpl(RowResult& rowResults, AComponent* parentComponent, Table& table)
+void ComponentManager::LoadParentComponentsRecursiveImpl(RowResult& rowResults, AComponent* parentComponent, Table& table)
 {
+	Row rowResult;
 	vector<ComponentID> addedComponentIDs;
-	for (auto componentResult : rowResults)
+	while ((rowResult = rowResults.fetchOne()))
 	{
-		const ComponentID componentID = componentResult[0].get<ComponentID>();
-		const EComponentType componentType = static_cast<EComponentType>(componentResult[1].get<uint32_t>());
+		const ComponentID componentID = rowResult[0].get<ComponentID>();
+		const EComponentType componentType = static_cast<EComponentType>(rowResult[1].get<uint32_t>());
 
-		XMFLOAT3 position = XMFLOAT3(componentResult[2].get<float>(), componentResult[3].get<float>(), componentResult[4].get<float>());
-		XMFLOAT3 angle = XMFLOAT3(componentResult[5].get<float>(), componentResult[6].get<float>(), componentResult[7].get<float>());
-		XMFLOAT3 scale = XMFLOAT3(componentResult[8].get<float>(), componentResult[9].get<float>(), componentResult[10].get<float>());
+		XMFLOAT3 position = XMFLOAT3(rowResult[2].get<float>(), rowResult[3].get<float>(), rowResult[4].get<float>());
+		XMFLOAT3 angle = XMFLOAT3(rowResult[5].get<float>(), rowResult[6].get<float>(), rowResult[7].get<float>());
+		XMFLOAT3 scale = XMFLOAT3(rowResult[8].get<float>(), rowResult[9].get<float>(), rowResult[10].get<float>());
 
 		AddComponent(componentID, componentType, position, angle, scale, parentComponent);
 		addedComponentIDs.emplace_back(componentID);
@@ -120,7 +192,7 @@ void ComponentSchema::LoadParentComponentsRecursiveImpl(RowResult& rowResults, A
 }
 
 
-void ComponentSchema::AddComponent(
+void ComponentManager::AddComponent(
 	const ComponentID& componentID, const EComponentType& componentType, 
 	const XMFLOAT3 position, const XMFLOAT3 angle, const XMFLOAT3 scale, 
 	AComponent* parentComponent
@@ -129,7 +201,7 @@ void ComponentSchema::AddComponent(
 	if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
 	{
 		AComponent* addedComponent = m_componentTypesToMaker[componentType](componentID, position, angle, scale);
-		m_componentIDToComponent.emplace(componentID, addedComponent);
+		m_componentIDsToComponent.emplace(componentID, addedComponent);
 		if (parentComponent != nullptr) parentComponent->AddChildComponent(addedComponent);
 	}
 }

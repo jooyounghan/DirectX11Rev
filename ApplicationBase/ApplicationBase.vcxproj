@@ -121,7 +121,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)AssetManager;$(SolutionDir)CollisionManager;$(SolutionDir)RenderingManager;$(SolutionDir)DBManager</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -171,8 +171,8 @@
     <ClCompile Include="AInstancedModelComponent.cpp" />
     <ClCompile Include="AModelComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
-    <ClCompile Include="ComponentDBInitializer.cpp" />
-    <ClCompile Include="ComponentSchema.cpp" />
+    <ClCompile Include="ComponentInitializer.cpp" />
+    <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="ComponentEntity.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -185,8 +185,8 @@
     <ClInclude Include="AInstancedModelComponent.h" />
     <ClInclude Include="AModelComponent.h" />
     <ClInclude Include="CameraComponent.h" />
-    <ClInclude Include="ComponentDBInitializer.h" />
-    <ClInclude Include="ComponentSchema.h" />
+    <ClInclude Include="ComponentInitializer.h" />
+    <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="IComponentVisitor.h" />
     <ClInclude Include="ComponentEntity.h" />

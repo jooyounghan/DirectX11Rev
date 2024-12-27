@@ -85,6 +85,7 @@ void StaticMeshAsset::Serialize(FILE* fileIn) const
 {
 	AMeshAsset::Serialize(fileIn);
 
+	SerializeHelper::SerializeContainerSize(m_staticMeshPartsPerLOD, fileIn);
 	for (auto& staticMeshPart : m_staticMeshPartsPerLOD)
 	{
 		const uint32_t& lodLevel = staticMeshPart.first;

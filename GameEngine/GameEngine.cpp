@@ -21,14 +21,39 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 );
 
 GameEngine::GameEngine()
-	: AApplication(), m_engine(D3D11Engine::GetInstance()), 
+	: AApplication(), 
+	m_engine(D3D11Engine::GetInstance()), 
 	m_taskManager(TaskManager::GetInstance()), 
 	m_sessionManager("localhost", 33060, "gameEngineSession", "YHengine12!@")
 {
-	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { m_engine->ResizeSwapChain(widthIn, heightIn); };
-	
+	/* Deffered Context */
 	m_defferedContexts[EDefferedContextType::ASSETS] = new DefferedContext(m_engine->GetDeviceAddress());
 	m_defferedContexts[EDefferedContextType::WINDOWS] = new DefferedContext(m_engine->GetDeviceAddress());
+
+	/* Asset Manager*/
+	m_assetManager = new AssetManager();
+	m_assetManager->RegisterAssetReadPath("./Assets");
+	m_assetManager->RegisterAssetWritePath("./Assets");
+
+	/* Component Manager*/
+	m_componentManager = new ComponentManager(&m_sessionManager);
+
+	/* Window */
+	m_imguiWindows.emplace_back(new AssetViewWindow("AssetManager", m_assetManager));
+	m_imguiWindows.emplace_back(new SceneWindow("Scene", nullptr/* PSOManager */));
+
+	/* Modal */
+	TaskModal* taskModal = new TaskModal("Processing...");
+	MessageBoxModal* errorMessageBoxModal = new MessageBoxModal("Error!");
+	m_imguiModals.emplace_back(taskModal);
+	m_imguiModals.emplace_back(errorMessageBoxModal);
+
+	/* Bind Event Handler */
+	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { m_engine->ResizeSwapChain(widthIn, heightIn); };
+	m_taskManager->OnTaskInserted = bind(&TaskModal::SetTaskCount, taskModal, placeholders::_1);
+	m_taskManager->OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1, placeholders::_2);
+	m_taskManager->OnTasksCompleted = bind(&TaskModal::SetTasksCompleted, taskModal);
+	m_componentManager->OnErrorOccurs = bind(&MessageBoxModal::ModalMessage, errorMessageBoxModal, placeholders::_1);
 }
 
 YHEngine::GameEngine::~GameEngine()
@@ -63,34 +88,13 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 		defferedContexts.second->InitDefferedContext();
 	}
 
-	// Create Windows
-	m_assetManager = new AssetManager();
-	m_imguiWindows.emplace_back(new AssetViewWindow("AssetManager", m_assetManager));
-	m_imguiWindows.emplace_back(new SceneWindow("Scene", nullptr, m_appSize.m_width, m_appSize.m_height));
-
-	// Bind Between TaskManager - TaskModal
-	TaskModal* taskModal = new TaskModal("Processing...");
-	m_imguiModals.emplace_back(taskModal);
-	m_taskManager->OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1, placeholders::_2);
-	m_taskManager->OnTasksCompleted = bind(&TaskModal::SetTasksCompleted, taskModal);
-
-	// Bind Between ComponentDB - MessageModal
-	m_componentDB = new ComponentSchema(&m_sessionManager);
-	MessageBoxModal* errorMessageBoxModal = new MessageBoxModal("Error!");
-	m_imguiModals.emplace_back(errorMessageBoxModal);
-	m_componentDB->OnErrorOccurs = bind(&MessageBoxModal::ModalMessage, errorMessageBoxModal, placeholders::_1);
-	m_componentDB->InitDB();
-
-
 	ID3D11Device* device = m_engine->GetDevice();
 	ID3D11DeviceContext* deviceContext = m_engine->GetDeviceContext();
 
 	ImGuiInitializer::InitImGui(m_mainWindow, device, deviceContext);
-
 	OnWindowSizeMove();
 
-	m_assetManager->RegisterAssetReadPath("./Assets");
-	m_assetManager->RegisterAssetWritePath("./Assets");
+
 
 	m_taskManager->StartLaunchingTasks();
 
@@ -114,6 +118,12 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 			m_assetManager->PreloadFromDirectories(device, assetsDefferedContext->GetDefferedContext());
 			assetsDefferedContext->RecordToCommandList();
 		}, "Load Asset From Directories..."
+	);
+
+	m_taskManager->RegisterTask([&]()
+		{
+			m_componentManager->InitComponentManager();
+		}, "Load Component From DB..."
 	);
 }
 

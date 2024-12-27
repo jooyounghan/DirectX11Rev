@@ -1,4 +1,4 @@
-#include "ComponentDBInitializer.h"
+#include "ComponentInitializer.h"
 
 #include "StaticModelComponent.h"
 #include "SkeletalModelComponent.h"
@@ -7,7 +7,7 @@
 using namespace std;
 using namespace mysqlx;
 
-ComponentDBInitializer::ComponentDBInitializer(
+ComponentInitializer::ComponentInitializer(
 	ID3D11Device* device,
 	AssetManager* assetManager,
 	mysqlx::Schema* schema
@@ -16,7 +16,7 @@ ComponentDBInitializer::ComponentDBInitializer(
 {
 }
 
-void ComponentDBInitializer::Visit(StaticModelComponent* staticModelComponent)
+void ComponentInitializer::Visit(StaticModelComponent* staticModelComponent)
 {
 	try
 	{
@@ -42,7 +42,7 @@ void ComponentDBInitializer::Visit(StaticModelComponent* staticModelComponent)
 	}
 }
 
-void ComponentDBInitializer::Visit(SkeletalModelComponent* skeletalModelComponent)
+void ComponentInitializer::Visit(SkeletalModelComponent* skeletalModelComponent)
 {
 	try
 	{
@@ -68,7 +68,7 @@ void ComponentDBInitializer::Visit(SkeletalModelComponent* skeletalModelComponen
 	}
 }
 
-void ComponentDBInitializer::Visit(CameraComponent* cameraComponent)
+void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 {
 	try
 	{
@@ -77,7 +77,7 @@ void ComponentDBInitializer::Visit(CameraComponent* cameraComponent)
 
 		Table cameraComponentTable = m_schemaCached->getTable(cameraComponentTableName, true);
 		RowResult rowResult = cameraComponentTable
-			.select("width, height, near_z, far_z, fov_angle").where("camera_component_id = :camera_component_id")
+			.select("width", "height", "near_z", "far_z", "fov_angle").where("camera_component_id = :camera_component_id")
 			.bind("camera_component_id", comopnentID).lockShared().execute();
 
 		auto row = rowResult.fetchOne();

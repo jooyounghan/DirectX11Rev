@@ -4,10 +4,10 @@
 #include "IComponentVisitor.h"
 #include "ComponentManager.h"
 
-class ComponentDBInitializer : public IComponentVisitor, public DBErrorHandler
+class ComponentInitializer : public IComponentVisitor, public DBErrorHandler
 {
 public:
-	ComponentDBInitializer(
+	ComponentInitializer(
 		ID3D11Device* device,
 		AssetManager* assetManager,
 		mysqlx::Schema* schema
