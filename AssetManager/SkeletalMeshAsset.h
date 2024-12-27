@@ -49,11 +49,7 @@ protected:
 
 public:
 	void SetBoneAsset(const BoneAsset* const boneAsset);
-
-public:
-	void UpdateBoneAsset(
-		IBoneProvider& provider
-	);
+	void UpdateBoneAsset(IBoneProvider& provider);
 
 public:
 	virtual size_t GetLODCount() override;

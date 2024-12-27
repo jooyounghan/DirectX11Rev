@@ -1,7 +1,9 @@
 #pragma once
+#include <d3d11.h>
 #include <DirectXMath.h>
 #include "SessionManager.h"
 #include "SchemaManager.h"
+#include "ComponentInitializer.h"
 
 class Scene;
 class AComponent;
@@ -20,15 +22,23 @@ class ComponentManager : public SchemaManager
 	typedef uint32_t SceneID;
 
 public:
-	ComponentManager(SessionManager* sessionManager);
+	ComponentManager(
+		SessionManager* sessionManager,
+		AssetManager* assetManager,
+		ID3D11Device** deviceAddress, 
+		ID3D11DeviceContext** deviceContextAddress
+	);
 	virtual ~ComponentManager();
+
+protected:
+	ComponentInitializer m_componentInitializer;
 
 public:
 	void InitComponentManager();
 
 protected:
 	std::unordered_map<EComponentType, std::function
-		<AComponent*(const ComponentID&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&)>
+		<AComponent*(const std::string&, const ComponentID&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&)>
 	> m_componentTypesToMaker;
 	std::unordered_map<ComponentID, AComponent*> m_componentIDsToComponent;
 
@@ -54,7 +64,7 @@ private:
 
 private:
 	void AddComponent(
-		const ComponentID& componentID, const EComponentType& componentType, 
+		const ComponentID& componentID, const EComponentType& componentType, const std::string& componentName,
 		const DirectX::XMFLOAT3 position, const DirectX::XMFLOAT3 angle, const DirectX::XMFLOAT3 scale,
 		AComponent* parentComponent
 	);

@@ -19,6 +19,7 @@ class CameraComponent : public AComponent, public D3D11_VIEWPORT
 {
 public:
 	CameraComponent(
+		const std::string& componentName,
 		const uint32_t& componentID, 
 		const DirectX::XMFLOAT3& position,
 		const DirectX::XMFLOAT3& angle,

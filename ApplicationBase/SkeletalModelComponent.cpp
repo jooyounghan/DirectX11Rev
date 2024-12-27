@@ -4,12 +4,13 @@ using namespace std;
 using namespace DirectX;
 
 SkeletalModelComponent::SkeletalModelComponent(
+	const string& componentName,
 	const uint32_t& componentID, 
 	const XMFLOAT3& position,
 	const XMFLOAT3& rotation,
 	const XMFLOAT3& scale
 )
-	: AModelComponent(componentID, position, rotation, scale)
+	: AModelComponent(componentName, componentID, position, rotation, scale)
 {
 }
 

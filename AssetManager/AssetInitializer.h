@@ -1,13 +1,17 @@
 #pragma once
-#include <d3d11.h>
 #include "IAssetVisitor.h"
 
-class AssetGPUInitializer : public IAssetVisitor
+class AssetManager;
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+
+class AssetInitializer : public IAssetVisitor
 {
 public:
-	AssetGPUInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	AssetInitializer(AssetManager* assetManager, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 
 protected:
+	AssetManager* m_assetManager = nullptr;
 	ID3D11Device* m_deviceCached = nullptr;
 	ID3D11DeviceContext* m_deviceContextCached = nullptr;
 

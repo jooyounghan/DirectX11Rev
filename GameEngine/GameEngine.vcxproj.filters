@@ -37,6 +37,12 @@
     <Filter Include="소스 파일\GUI\Modal">
       <UniqueIdentifier>{fc43d1db-e100-45e8-b689-4140ff805e26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GUI\Child">
+      <UniqueIdentifier>{c930e817-bb9c-4588-99d5-1a8b784fed60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\Child">
+      <UniqueIdentifier>{284c7c62-f08c-4734-8a0e-f3043b6ce0dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -54,6 +60,9 @@
     <ClCompile Include="SceneWindow.cpp">
       <Filter>소스 파일\GUI\Window</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentInformer.cpp">
+      <Filter>소스 파일\GUI\Child</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -70,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="SceneWindow.h">
       <Filter>헤더 파일\GUI\Window\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentInformer.h">
+      <Filter>헤더 파일\GUI\Child</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

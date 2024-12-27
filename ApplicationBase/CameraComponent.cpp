@@ -1,14 +1,16 @@
 #include "CameraComponent.h"
 
+using namespace std;
 using namespace DirectX;
 
 CameraComponent::CameraComponent(
+	const string& componentName,
 	const uint32_t& componentID, 
 	const XMFLOAT3& position, 
 	const XMFLOAT3& angle,
 	const XMFLOAT3& scale
 )
-	: AComponent(componentID, position, angle, scale),
+	: AComponent(componentName, componentID, position, angle, scale),
 	m_viewProjBuffer(sizeof(SViewElement), 1)
 {
 

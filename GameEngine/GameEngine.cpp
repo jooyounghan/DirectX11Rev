@@ -36,11 +36,11 @@ GameEngine::GameEngine()
 	m_assetManager->RegisterAssetWritePath("./Assets");
 
 	/* Component Manager*/
-	m_componentManager = new ComponentManager(&m_sessionManager);
+	m_componentManager = new ComponentManager(&m_sessionManager, m_assetManager, m_engine->GetDeviceAddress(), m_engine->GetDeviceContextAddress());
 
 	/* Window */
 	m_imguiWindows.emplace_back(new AssetViewWindow("AssetManager", m_assetManager));
-	m_imguiWindows.emplace_back(new SceneWindow("Scene", nullptr/* PSOManager */));
+	m_imguiWindows.emplace_back(new SceneWindow("Scene", m_componentManager, nullptr/* PSOManager */));
 
 	/* Modal */
 	TaskModal* taskModal = new TaskModal("Processing...");

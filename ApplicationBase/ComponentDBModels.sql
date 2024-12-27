@@ -1,1 +1,1 @@
-SELECT * FROM component_db.static_mesh_components;
+SELECT * FROM component_db.mesh_component_informations;

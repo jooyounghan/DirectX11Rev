@@ -8,11 +8,11 @@ using namespace std;
 using namespace mysqlx;
 
 ComponentInitializer::ComponentInitializer(
-	ID3D11Device* device,
 	AssetManager* assetManager,
+	ID3D11Device** deviceAdress,
 	mysqlx::Schema* schema
 )
-	: m_schemaCached(schema)
+	: m_assetManagerCached(assetManager), m_deviceAdressCached(deviceAdress), m_schemaCached(schema)
 {
 }
 
@@ -34,7 +34,7 @@ void ComponentInitializer::Visit(StaticModelComponent* staticModelComponent)
 			const std::string static_asset_name = row[0].get<std::string>();
 			staticModelComponent->SetStaticMeshAsset(m_assetManagerCached->GetStaticMeshAsset(static_asset_name));
 		}
-		staticModelComponent->InitEntity(m_deviceCached);
+		staticModelComponent->InitEntity(*m_deviceAdressCached);
 	}
 	catch (const std::exception& ex)
 	{
@@ -60,7 +60,7 @@ void ComponentInitializer::Visit(SkeletalModelComponent* skeletalModelComponent)
 			const std::string skeletal_asset_name = row[0].get<std::string>();
 			skeletalModelComponent->SetSkeletalMeshAsset(m_assetManagerCached->GetSkeletalMeshAsset(skeletal_asset_name));
 		}
-		skeletalModelComponent->InitEntity(m_deviceCached);
+		skeletalModelComponent->InitEntity(*m_deviceAdressCached);
 	}
 	catch (const std::exception& ex)
 	{
@@ -90,7 +90,7 @@ void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 			const float fov_angle = row[0].get<float>();
 			cameraComponent->SetCameraProperties(width, height, near_z, far_z, fov_angle);
 		}
-		cameraComponent->InitEntity(m_deviceCached);
+		cameraComponent->InitEntity(*m_deviceAdressCached);
 	}
 	catch (const std::exception& ex)
 	{

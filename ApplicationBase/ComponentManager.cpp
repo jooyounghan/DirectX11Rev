@@ -10,8 +10,14 @@ using namespace std;
 using namespace mysqlx;
 using namespace DirectX;
 
-ComponentManager::ComponentManager(SessionManager* sessionManager)
-	: SchemaManager(sessionManager, "component_db")
+ComponentManager::ComponentManager(
+	SessionManager* sessionManager,
+	AssetManager* assetManager,
+	ID3D11Device** deviceAddress,
+	ID3D11DeviceContext** deviceContextAddress
+)
+	: SchemaManager(sessionManager, "component_db"), 
+	m_componentInitializer(assetManager, deviceAddress, this)
 {
 
 }
@@ -34,6 +40,11 @@ void ComponentManager::InitComponentManager()
 	LoadComponents();
 	LoadScenes();
 	LoadScenesInformation();
+
+	for (auto& componentIDToComponent : m_componentIDsToComponent)
+	{
+		componentIDToComponent.second->Accept(&m_componentInitializer);
+	}
 }
 
 void ComponentManager::LoadComponentMakers()
@@ -55,20 +66,20 @@ void ComponentManager::LoadComponentMakers()
 			{
 			case EComponentType::STATIC_COMPONENT:
 				m_componentTypesToMaker.emplace(componentType, bind(
-					[&](const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-					{ return new StaticModelComponent(componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4)
+					[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+					{ return new StaticModelComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5)
 				);
 				break;
 			case EComponentType::SKELETAL_COMPONENT:
 				m_componentTypesToMaker.emplace(componentType, bind(
-					[&](const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-					{ return new SkeletalModelComponent(componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4)
+					[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+					{ return new SkeletalModelComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5)
 				);
 				break;
 			case EComponentType::CAMERA_COMPONENT:
 				m_componentTypesToMaker.emplace(componentType, bind(
-					[&](const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-					{ return new CameraComponent(componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4)
+					[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+					{ return new CameraComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5)
 				);
 				break;
 			}
@@ -87,7 +98,9 @@ void ComponentManager::LoadComponents()
 		const std::string& componentsTableName = "components";
 		Table componentsTable = getTable(componentsTableName, true);
 
-		RowResult componentResults = componentsTable.select("component_id", "component_type", "position_x", "position_y", "position_z", "angle_x", "angle_y", "angle_z", "scale_x", "scale_y", "scale_z").where("parent_component_id is NULL").lockShared().execute();
+		RowResult componentResults = componentsTable
+			.select("component_id", "component_type", "component_name", "position_x", "position_y", "position_z", "angle_x", "angle_y", "angle_z", "scale_x", "scale_y", "scale_z")
+			.where("parent_component_id is NULL").lockShared().execute();
 		LoadParentComponentsRecursiveImpl(componentResults, nullptr, componentsTable);
 
 	}
@@ -165,7 +178,7 @@ void ComponentManager::LoadParentComponentsRecursive(const vector<ComponentID>& 
 			parentComponent = m_componentIDsToComponent[addedComponentID];
 		}
 
-		RowResult componentResults = table.select("component_id", "component_type", "position_x", "position_y", "position_z", "angle_x", "angle_y", "angle_z", "scale_x", "scale_y", "scale_z")
+		RowResult componentResults = table.select("component_id", "component_type", "component_name", "position_x", "position_y", "position_z", "angle_x", "angle_y", "angle_z", "scale_x", "scale_y", "scale_z")
 			.where("parent_component_id = :parent_component_id").bind("parent_component_id", addedComponentID).lockShared().execute();
 		LoadParentComponentsRecursiveImpl(componentResults, parentComponent, table);
 	}
@@ -179,12 +192,13 @@ void ComponentManager::LoadParentComponentsRecursiveImpl(RowResult& rowResults, 
 	{
 		const ComponentID componentID = rowResult[0].get<ComponentID>();
 		const EComponentType componentType = static_cast<EComponentType>(rowResult[1].get<uint32_t>());
+		const std::string componentName = rowResult[2].get<std::string>();
 
-		XMFLOAT3 position = XMFLOAT3(rowResult[2].get<float>(), rowResult[3].get<float>(), rowResult[4].get<float>());
-		XMFLOAT3 angle = XMFLOAT3(rowResult[5].get<float>(), rowResult[6].get<float>(), rowResult[7].get<float>());
-		XMFLOAT3 scale = XMFLOAT3(rowResult[8].get<float>(), rowResult[9].get<float>(), rowResult[10].get<float>());
+		XMFLOAT3 position = XMFLOAT3(rowResult[3].get<float>(), rowResult[4].get<float>(), rowResult[5].get<float>());
+		XMFLOAT3 angle = XMFLOAT3(rowResult[6].get<float>(), rowResult[7].get<float>(), rowResult[8].get<float>());
+		XMFLOAT3 scale = XMFLOAT3(rowResult[9].get<float>(), rowResult[10].get<float>(), rowResult[11].get<float>());
 
-		AddComponent(componentID, componentType, position, angle, scale, parentComponent);
+		AddComponent(componentID, componentType, componentName, position, angle, scale, parentComponent);
 		addedComponentIDs.emplace_back(componentID);
 	}
 
@@ -193,14 +207,14 @@ void ComponentManager::LoadParentComponentsRecursiveImpl(RowResult& rowResults, 
 
 
 void ComponentManager::AddComponent(
-	const ComponentID& componentID, const EComponentType& componentType, 
+	const ComponentID& componentID, const EComponentType& componentType, const std::string& componentName,
 	const XMFLOAT3 position, const XMFLOAT3 angle, const XMFLOAT3 scale, 
 	AComponent* parentComponent
 )
 {
 	if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
 	{
-		AComponent* addedComponent = m_componentTypesToMaker[componentType](componentID, position, angle, scale);
+		AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
 		m_componentIDsToComponent.emplace(componentID, addedComponent);
 		if (parentComponent != nullptr) parentComponent->AddChildComponent(addedComponent);
 	}

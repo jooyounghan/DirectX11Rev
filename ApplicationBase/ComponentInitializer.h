@@ -1,21 +1,21 @@
 #pragma once
+#include "mysqlx/xdevapi.h"
 #include "DBErrorHandler.h"
 #include "AssetManager.h"
 #include "IComponentVisitor.h"
-#include "ComponentManager.h"
 
 class ComponentInitializer : public IComponentVisitor, public DBErrorHandler
 {
 public:
 	ComponentInitializer(
-		ID3D11Device* device,
 		AssetManager* assetManager,
+		ID3D11Device** deviceAddress,
 		mysqlx::Schema* schema
 	);
 
 protected:
-	ID3D11Device* m_deviceCached = nullptr;
 	AssetManager* m_assetManagerCached = nullptr;
+	ID3D11Device** m_deviceAdressCached = nullptr;
 	mysqlx::Schema* m_schemaCached = nullptr;
 
 public:

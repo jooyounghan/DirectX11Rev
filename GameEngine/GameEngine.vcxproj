@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="AssetViewWindow.cpp" />
     <ClCompile Include="AssetFileControl.cpp" />
+    <ClCompile Include="ComponentInformer.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
@@ -153,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="AssetViewWindow.h" />
     <ClInclude Include="AssetFileControl.h" />
+    <ClInclude Include="ComponentInformer.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneWindow.h" />

@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "AssetManager.h"
-#include "AssetGPUInitializer.h"
+#include "AssetInitializer.h"
 
 #include "ModelFileToAssetWriter.h"
 #include "ImageFileToAssetWriter.h"
@@ -114,7 +114,7 @@ void AssetManager::WrtieFileAsAsset(ID3D11Device* device, ID3D11DeviceContext* d
 
 void AssetManager::AddAssetHelper(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const EAssetType& assetType, std::string assetPath, AAsset* asset)
 {
-	AssetGPUInitializer assetGPUInitializer(device, deviceContext);
+	AssetInitializer assetGPUInitializer(this, device, deviceContext);
 	asset->Accept(&assetGPUInitializer);
 
 	InvokeAssetLoadedHandler(assetType, assetPath, asset);
@@ -192,7 +192,8 @@ inline T* const AssetManager::GetAssetHelper(const EAssetType& asssetType, const
 	const unordered_map<string, AAsset*>& assetNameToAssets = m_assetNameToAssets[asssetType];
 	if (assetNameToAssets.find(assetName) != assetNameToAssets.end())
 	{
-		return dynamic_cast<T*>(assetNameToAssets.at(assetName));
+		return (T*)(assetNameToAssets.at(assetName));
+		//return dynamic_cast<T*>(assetNameToAssets.at(assetName));
 	}
 	return nullptr;
 }

@@ -6,6 +6,7 @@ class AModelComponent : public AComponent
 {
 public:
 	AModelComponent(
+		const std::string& componentName,
 		const uint32_t& componentID, 
 		const DirectX::XMFLOAT3& position,
 		const DirectX::XMFLOAT3& angle,
