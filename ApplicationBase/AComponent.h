@@ -29,7 +29,7 @@ public:
 	inline const std::string& GetComponentName() { return m_componentName; }
 
 public:
-	inline const bool& ComsumeIsModified() { return m_isModified.exchange(false, std::memory_order_acquire); }
+	inline const bool ComsumeIsModified() { return m_isModified.exchange(false, std::memory_order_acquire); }
 	inline void SetIsModified(const bool& isModified) { m_isModified.store(isModified); }
 
 protected:
@@ -38,7 +38,9 @@ protected:
 
 public:
 	inline const std::vector<AComponent*>& GetChildComponents() { return m_childComponents; }
-	void AddChildComponent(AComponent* component);
+	void AttachChildComponent(AComponent* component);
+	void DetachChildComponent(AComponent* component);
+	void RemoveFromParent();
 	inline AComponent* GetParentComponent() { return m_parentComponent; }
 
 public:

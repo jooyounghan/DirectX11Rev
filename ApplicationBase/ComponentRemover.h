@@ -2,10 +2,10 @@
 #include "mysqlx/xdevapi.h"
 #include "IComponentVisitor.h"
 
-class ComponentUpdater : public IComponentVisitor
+class ComponentRemover : public IComponentVisitor
 {
 public:
-	ComponentUpdater(mysqlx::Schema* schema);
+	ComponentRemover(mysqlx::Schema* schema);
 
 protected:
 	mysqlx::Schema* m_schemaCached = nullptr;
@@ -18,7 +18,8 @@ public:
 	virtual void Visit(CameraComponent* cameraComponent) override;
 
 private:
-	void UpdateComponent(AComponent* component);
-	void UpdateMeshComponent(AMeshComponent* meshComponent);
+	void DeleteComponent(AComponent* component);
+	void DeleteComponetFromSceneInformation(AComponent* component);
+	void DeleteMeshComponent(AMeshComponent* meshComponent);
 };
 

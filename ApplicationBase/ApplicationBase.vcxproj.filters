@@ -43,6 +43,12 @@
     <ClInclude Include="ComponentUpdater.h">
       <Filter>헤더 파일\Component\Visitor\Extended</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentRemover.h">
+      <Filter>헤더 파일\Component\Visitor\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCreator.h">
+      <Filter>헤더 파일\Component\Visitor\Extended</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -141,6 +147,12 @@
       <Filter>소스 파일\Component\Visitor</Filter>
     </ClCompile>
     <ClCompile Include="ComponentUpdater.cpp">
+      <Filter>소스 파일\Component\Visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRemover.cpp">
+      <Filter>소스 파일\Component\Visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCreator.cpp">
       <Filter>소스 파일\Component\Visitor</Filter>
     </ClCompile>
   </ItemGroup>

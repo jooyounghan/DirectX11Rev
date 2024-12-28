@@ -171,6 +171,8 @@
     <ClCompile Include="AInstancedModelComponent.cpp" />
     <ClCompile Include="AMeshComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="ComponentCreator.cpp" />
+    <ClCompile Include="ComponentRemover.cpp" />
     <ClCompile Include="ComponentInitializer.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="ComponentEntity.cpp" />
@@ -186,6 +188,8 @@
     <ClInclude Include="AInstancedModelComponent.h" />
     <ClInclude Include="AMeshComponent.h" />
     <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="ComponentCreator.h" />
+    <ClInclude Include="ComponentRemover.h" />
     <ClInclude Include="ComponentInitializer.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentUpdater.h" />

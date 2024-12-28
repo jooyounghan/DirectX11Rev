@@ -11,8 +11,12 @@ concept ComponentType = std::is_base_of_v<AComponent, T>;
 class Scene
 {
 public:
-	Scene() = default;
+	Scene(const uint32_t sceneID, const std::string& sceneDescription);
 	~Scene() = default;
+
+protected:
+	uint32_t m_sceneID;
+	std::string m_sceneDescription;
 
 protected:
 	std::string m_sceneStaticMeshName;

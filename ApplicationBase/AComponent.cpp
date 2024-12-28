@@ -19,10 +19,30 @@ AComponent::AComponent(
 	m_componentName(componentName)
 {}
 
-void AComponent::AddChildComponent(AComponent* component)
+void AComponent::AttachChildComponent(AComponent* component)
 {
 	component->m_parentComponent = this;
 	m_childComponents.emplace_back(component);
+}
+
+void AComponent::DetachChildComponent(AComponent* component)
+{
+	if (component->GetParentComponent() == this)
+	{
+		m_childComponents.erase(
+			std::remove(m_childComponents.begin(), m_childComponents.end(), component),
+			m_childComponents.end()
+		);
+	}
+}
+
+void AComponent::RemoveFromParent()
+{
+	if (m_parentComponent != nullptr)
+	{
+		m_parentComponent->DetachChildComponent(this);
+	}
+	m_parentComponent = nullptr;
 }
 
 XMVECTOR AComponent::GetAbsolutePosition() { return XMVectorAdd(m_relativePosition, m_parentComponent == nullptr ? XMVectorZero() : m_parentComponent->GetAbsolutePosition()); }

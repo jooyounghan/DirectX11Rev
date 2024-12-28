@@ -1,10 +1,10 @@
 #pragma once
 #include "mysqlx/xdevapi.h"
-#include "DBErrorHandler.h"
 #include "AssetManager.h"
 #include "IComponentVisitor.h"
 
-class ComponentInitializer : public IComponentVisitor, public DBErrorHandler
+
+class ComponentInitializer : public IComponentVisitor
 {
 public:
 	ComponentInitializer(

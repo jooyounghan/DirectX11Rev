@@ -3,7 +3,14 @@
 #include <DirectXMath.h>
 #include "SessionManager.h"
 #include "SchemaManager.h"
+
 #include "ComponentInitializer.h"
+#include "ComponentUpdater.h"
+#include "ComponentRemover.h"
+#include "ComponentCreator.h"
+
+#include <queue>
+#include <shared_mutex>
 
 class Scene;
 class AComponent;
@@ -20,6 +27,9 @@ class ComponentManager : public SchemaManager
 {
 	typedef uint32_t ComponentID;
 	typedef uint32_t SceneID;
+	typedef std::function<AComponent* 
+		(const std::string&, const ComponentID&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&)
+	> ComponentConstructor;
 
 public:
 	ComponentManager(
@@ -35,14 +45,21 @@ protected:
 
 protected:
 	ComponentInitializer m_componentInitializer;
-
-public:
-	void InitComponentManager();
+	ComponentUpdater m_componentUpdater;
+	ComponentRemover m_componentRemover;
+	ComponentCreator m_componentCreator;
 
 protected:
-	std::unordered_map<EComponentType, std::function
-		<AComponent*(const std::string&, const ComponentID&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&)>
-	> m_componentTypesToMaker;
+	std::thread m_workThread;
+	std::shared_mutex m_insertQueueMutex;
+	std::shared_mutex m_removeQueueMutex;
+	std::queue<AComponent*> m_insertQueue;
+	std::queue<AComponent*> m_removeQueue;
+	bool m_workThreadStarted = false;
+
+protected:
+	std::shared_mutex m_componentMutex;
+	std::unordered_map<EComponentType, ComponentConstructor> m_componentTypesToMaker;
 	std::unordered_map<ComponentID, AComponent*> m_componentIDsToComponent;
 
 protected:
@@ -50,26 +67,22 @@ protected:
 	std::unordered_map<Scene*, std::string> m_scenesToDescription;
 
 public:
-	std::function<void(const std::string&)> OnErrorOccurs = [&](const std::string&) {};
+	void InitComponentManager();
 
 private:
 	void LoadComponentMakers();
 	void LoadComponents();
 	void LoadScenes();
 	void LoadScenesInformation();
+	void InitLoadedComponents();
+	void LaunchComponentDBMonitor();
+
+public:
+	void AddComponent(Scene* scene, AComponent* component);
+	void AddComponent(AComponent* parentComponent, AComponent* component);
+	void RemoveComponent(AComponent* component);
 
 public:
 	inline const std::unordered_map<Scene*, std::string>& GetScenesWithDescription() { return m_scenesToDescription; }
-
-private:
-	void LoadParentComponentsRecursive(const std::vector<ComponentID>& addedComponentIDs, mysqlx::Table& table);
-	void LoadParentComponentsRecursiveImpl(mysqlx::RowResult& rowResults, AComponent* parentComponent, mysqlx::Table& table);
-
-private:
-	void AddComponent(
-		const ComponentID& componentID, const EComponentType& componentType, const std::string& componentName,
-		const DirectX::XMFLOAT3 position, const DirectX::XMFLOAT3 angle, const DirectX::XMFLOAT3 scale,
-		AComponent* parentComponent
-	);
 };
 

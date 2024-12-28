@@ -16,15 +16,20 @@ ComponentManager::ComponentManager(
 	ID3D11Device** deviceAddress,
 	ID3D11DeviceContext** deviceContextAddress
 )
-	: SchemaManager(sessionManager, "component_db"), 
+	: SchemaManager(sessionManager, "component_db"),
 	m_assetManagerCached(assetManager),
-	m_componentInitializer(assetManager, deviceAddress, this)
+	m_componentInitializer(assetManager, deviceAddress, this),
+	m_componentUpdater(this),
+	m_componentRemover(this),
+	m_componentCreator(this)
 {
-
 }
 
 ComponentManager::~ComponentManager()
 {
+	m_workThreadStarted = false;
+	m_workThread.join();
+
 	for (auto& componentIDToComponent : m_componentIDsToComponent)
 	{
 		delete componentIDToComponent.second;
@@ -37,14 +42,18 @@ ComponentManager::~ComponentManager()
 
 void ComponentManager::InitComponentManager()
 {
-	LoadComponentMakers();
-	LoadComponents();
-	LoadScenes();
-	LoadScenesInformation();
-
-	for (auto& componentIDToComponent : m_componentIDsToComponent)
+	try
 	{
-		componentIDToComponent.second->Accept(&m_componentInitializer);
+		LoadComponentMakers();
+		LoadComponents();
+		LoadScenes();
+		LoadScenesInformation();
+		InitLoadedComponents();
+		LaunchComponentDBMonitor();
+	}
+	catch (const std::exception& ex)
+	{
+		OnErrorOccurs(ex.what());
 	}
 }
 
@@ -100,10 +109,40 @@ void ComponentManager::LoadComponents()
 		Table componentsTable = getTable(componentsTableName, true);
 
 		RowResult componentResults = componentsTable
-			.select("component_id", "component_type", "component_name", "position_x", "position_y", "position_z", "angle_x", "angle_y", "angle_z", "scale_x", "scale_y", "scale_z")
-			.where("parent_component_id is NULL").lockShared().execute();
-		LoadParentComponentsRecursiveImpl(componentResults, nullptr, componentsTable);
+			.select("*").lockShared().execute();
 
+		Row rowResult;
+		vector<pair<AComponent*, ComponentID>> componentsToParentID;
+
+		while ((rowResult = componentResults.fetchOne()))
+		{
+			const ComponentID componentID = rowResult[0].get<ComponentID>();
+			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
+			const EComponentType componentType = static_cast<EComponentType>(rowResult[2].get<uint32_t>());
+			const std::string componentName = rowResult[3].get<std::string>();
+
+			XMFLOAT3 position = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
+			XMFLOAT3 angle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
+			XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
+
+
+			if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
+			{
+				AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
+				m_componentIDsToComponent.emplace(componentID, addedComponent);
+
+				componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));
+			}
+		}
+
+		for (auto& componentToParentID : componentsToParentID)
+		{
+			if (m_componentIDsToComponent.find(componentToParentID.second) != m_componentIDsToComponent.end())
+			{
+				AComponent* parentComponent = m_componentIDsToComponent[componentToParentID.second];
+				parentComponent->AttachChildComponent(componentToParentID.first);
+			}
+		}
 	}
 	catch (const std::exception& ex)
 	{
@@ -128,7 +167,7 @@ void ComponentManager::LoadScenes()
 			const std::string staticMeshName = sceneResult[2].get<std::string>();
 			const std::string iblMaterialName = sceneResult[3].get<std::string>();
 
-			Scene* scene = new Scene();
+			Scene* scene = new Scene(sceneID, sceneDescription);
 			scene->SetSceneStaticMeshName(staticMeshName);
 			scene->SetIBLMaterialName(iblMaterialName);
 
@@ -177,57 +216,148 @@ void ComponentManager::LoadScenesInformation()
 	}
 }
 
-void ComponentManager::LoadParentComponentsRecursive(const vector<ComponentID>& addedComponentIDs, Table& table)
+void ComponentManager::InitLoadedComponents()
 {
-	for (const ComponentID& addedComponentID : addedComponentIDs)
+	for (auto& componentIDToComponent : m_componentIDsToComponent)
 	{
-		AComponent* parentComponent = nullptr;
-		if (m_componentIDsToComponent.find(addedComponentID) != m_componentIDsToComponent.end())
+		componentIDToComponent.second->Accept(&m_componentInitializer);
+	}
+}
+
+void ComponentManager::LaunchComponentDBMonitor()
+{
+	m_workThreadStarted = true;
+	m_workThread = thread([&]() {
+		while (m_workThreadStarted)
 		{
-			parentComponent = m_componentIDsToComponent[addedComponentID];
+			std::queue<AComponent*> tempInsertQueue;
+			std::queue<AComponent*> tempRemoveQueue;
+;
+			try
+			{
+				m_sessionManager->startTransaction();
+				{
+					{
+						unique_lock writeLock(m_insertQueueMutex);
+
+						while (!m_insertQueue.empty())
+						{
+							tempInsertQueue.push(m_insertQueue.front());
+							m_insertQueue.pop();
+							tempInsertQueue.back()->Accept(&m_componentCreator);
+						}
+					}
+
+					{
+						unique_lock writeLock(m_removeQueueMutex);
+
+						while (!m_removeQueue.empty())
+						{
+							tempRemoveQueue.push(m_removeQueue.front());
+							m_removeQueue.pop();
+							tempRemoveQueue.back()->Accept(&m_componentRemover);
+						}
+					}
+				}
+
+				{
+					shared_lock readLock(m_componentMutex);
+					for (auto& m_componentIDToComponent : m_componentIDsToComponent)
+					{
+						if (m_componentIDToComponent.second->ComsumeIsModified())
+						{
+							m_componentIDToComponent.second->Accept(&m_componentUpdater);
+						}
+					}
+				}
+
+				m_sessionManager->commit();
+
+				while (!tempRemoveQueue.empty())
+				{
+					delete tempRemoveQueue.front();
+					tempRemoveQueue.pop();
+				}
+
+				this_thread::sleep_for(chrono::seconds(1));
+			}
+			catch (const std::exception& ex)
+			{
+				{
+					unique_lock writeLock(m_insertQueueMutex);
+					while (!tempInsertQueue.empty())
+					{
+						m_insertQueue.push(tempInsertQueue.front());
+						tempInsertQueue.pop();
+					}
+				}
+
+				{
+					unique_lock writeLock(m_removeQueueMutex);
+					while (!tempRemoveQueue.empty())
+					{
+						m_removeQueue.push(tempRemoveQueue.front());
+						tempRemoveQueue.pop();
+					}
+				}
+
+				m_sessionManager->rollback();
+
+				OnErrorOccurs(ex.what());
+			}
 		}
+	});
 
-		RowResult componentResults = table.select("component_id", "component_type", "component_name", "position_x", "position_y", "position_z", "angle_x", "angle_y", "angle_z", "scale_x", "scale_y", "scale_z")
-			.where("parent_component_id = :parent_component_id").bind("parent_component_id", addedComponentID).lockShared().execute();
-		LoadParentComponentsRecursiveImpl(componentResults, parentComponent, table);
-	}
 }
 
-void ComponentManager::LoadParentComponentsRecursiveImpl(RowResult& rowResults, AComponent* parentComponent, Table& table)
+void ComponentManager::AddComponent(Scene* scene, AComponent* component)
 {
-	Row rowResult;
-	vector<ComponentID> addedComponentIDs;
-	while ((rowResult = rowResults.fetchOne()))
-	{
-		const ComponentID componentID = rowResult[0].get<ComponentID>();
-		const EComponentType componentType = static_cast<EComponentType>(rowResult[1].get<uint32_t>());
-		const std::string componentName = rowResult[2].get<std::string>();
-
-		XMFLOAT3 position = XMFLOAT3(rowResult[3].get<float>(), rowResult[4].get<float>(), rowResult[5].get<float>());
-		XMFLOAT3 angle = XMFLOAT3(rowResult[6].get<float>(), rowResult[7].get<float>(), rowResult[8].get<float>());
-		XMFLOAT3 scale = XMFLOAT3(rowResult[9].get<float>(), rowResult[10].get<float>(), rowResult[11].get<float>());
-
-		AddComponent(componentID, componentType, componentName, position, angle, scale, parentComponent);
-		addedComponentIDs.emplace_back(componentID);
-	}
-
-	LoadParentComponentsRecursive(addedComponentIDs, table);
 }
 
-
-void ComponentManager::AddComponent(
-	const ComponentID& componentID, const EComponentType& componentType, const std::string& componentName,
-	const XMFLOAT3 position, const XMFLOAT3 angle, const XMFLOAT3 scale, 
-	AComponent* parentComponent
-)
+void ComponentManager::AddComponent(AComponent* parentComponent, AComponent* component)
 {
-	if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
+}
+
+void ComponentManager::RemoveComponent(AComponent* component)
+{
+	m_componentIDsToComponent.erase(component->GetComponentID());
+	component->RemoveFromParent();
+
+
+	const vector<AComponent*>& childComponents = component->GetChildComponents();
+	for (AComponent* childComponent : childComponents)
 	{
-		AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
-		m_componentIDsToComponent.emplace(componentID, addedComponent);
-		if (parentComponent != nullptr) parentComponent->AddChildComponent(addedComponent);
+		RemoveComponent(childComponent);
+	}
+
+	{
+		unique_lock writeLock(m_removeQueueMutex);
+		m_removeQueue.push(component);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
