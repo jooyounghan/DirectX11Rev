@@ -7,10 +7,6 @@
 #include "CameraComponent.h"
 #include "ComponentInformer.h"
 
-//constexpr float GSceneNearZ = 0.1f;
-//constexpr float GSceneFarZ = 1E9f;
-//constexpr float GSceneFovAngle = 120.f;
-
 class SceneWindow : public AWindow
 {
 public:

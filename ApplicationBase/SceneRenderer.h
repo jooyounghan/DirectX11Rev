@@ -12,8 +12,8 @@ protected:
 	PSOManager* m_psoManagerCached = nullptr;
 
 public:
-	virtual void Visit(StaticModelComponent* staticMeshAsset) override;
-	virtual void Visit(SkeletalModelComponent* skeletalMeshAsset) override;
+	virtual void Visit(StaticMeshComponent* staticMeshAsset) override;
+	virtual void Visit(SkeletalMeshComponent* skeletalMeshAsset) override;
 
 public:
 	virtual void Visit(CameraComponent* cameraComponent) override;

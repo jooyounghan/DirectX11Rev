@@ -7,13 +7,13 @@
     <ClInclude Include="AComponent.h">
       <Filter>헤더 파일\Component</Filter>
     </ClInclude>
-    <ClInclude Include="StaticModelComponent.h">
+    <ClInclude Include="StaticMeshComponent.h">
       <Filter>헤더 파일\Component\Model</Filter>
     </ClInclude>
-    <ClInclude Include="SkeletalModelComponent.h">
+    <ClInclude Include="SkeletalMeshComponent.h">
       <Filter>헤더 파일\Component\Model</Filter>
     </ClInclude>
-    <ClInclude Include="AModelComponent.h">
+    <ClInclude Include="AMeshComponent.h">
       <Filter>헤더 파일\Component\Model</Filter>
     </ClInclude>
     <ClInclude Include="ComponentEntity.h">
@@ -38,6 +38,9 @@
       <Filter>헤더 파일\Database</Filter>
     </ClInclude>
     <ClInclude Include="ComponentInitializer.h">
+      <Filter>헤더 파일\Component\Visitor\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentUpdater.h">
       <Filter>헤더 파일\Component\Visitor\Extended</Filter>
     </ClInclude>
   </ItemGroup>
@@ -107,13 +110,13 @@
     <ClCompile Include="AComponent.cpp">
       <Filter>소스 파일\Component</Filter>
     </ClCompile>
-    <ClCompile Include="StaticModelComponent.cpp">
+    <ClCompile Include="StaticMeshComponent.cpp">
       <Filter>소스 파일\Component\Model</Filter>
     </ClCompile>
-    <ClCompile Include="SkeletalModelComponent.cpp">
+    <ClCompile Include="SkeletalMeshComponent.cpp">
       <Filter>소스 파일\Component\Model</Filter>
     </ClCompile>
-    <ClCompile Include="AModelComponent.cpp">
+    <ClCompile Include="AMeshComponent.cpp">
       <Filter>소스 파일\Component\Model</Filter>
     </ClCompile>
     <ClCompile Include="ComponentEntity.cpp">
@@ -135,6 +138,9 @@
       <Filter>소스 파일\Database</Filter>
     </ClCompile>
     <ClCompile Include="ComponentInitializer.cpp">
+      <Filter>소스 파일\Component\Visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentUpdater.cpp">
       <Filter>소스 파일\Component\Visitor</Filter>
     </ClCompile>
   </ItemGroup>

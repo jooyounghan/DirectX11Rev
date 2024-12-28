@@ -1,12 +1,15 @@
 #include "ComponentInitializer.h"
 
-#include "Scene.h"
-#include "StaticModelComponent.h"
-#include "SkeletalModelComponent.h"
+#include "StaticMeshComponent.h"
+#include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
+
+#include "nlohmann/json.hpp"
 
 using namespace std;
 using namespace mysqlx;
+
+using json = nlohmann::json;
 
 ComponentInitializer::ComponentInitializer(
 	AssetManager* assetManager,
@@ -17,11 +20,11 @@ ComponentInitializer::ComponentInitializer(
 {
 }
 
-void ComponentInitializer::Visit(StaticModelComponent* staticModelComponent)
+void ComponentInitializer::Visit(StaticMeshComponent* staticMeshComponent)
 {
 	try
 	{
-		const uint32_t comopnentID = staticModelComponent->GetComponentID();
+		const uint32_t comopnentID = staticMeshComponent->GetComponentID();
 		const std::string staticMeshComponentTableName = "static_mesh_components";
 
 		Table staticMeshComponentTable = m_schemaCached->getTable(staticMeshComponentTableName, true);
@@ -33,9 +36,12 @@ void ComponentInitializer::Visit(StaticModelComponent* staticModelComponent)
 		if (!row.isNull()) 
 		{
 			const std::string static_asset_name = row[0].get<std::string>();
-			staticModelComponent->SetStaticMeshAsset(m_assetManagerCached->GetStaticMeshAsset(static_asset_name));
+			staticMeshComponent->SetStaticMeshName(static_asset_name);
+			staticMeshComponent->UpdateModelMaterial(*m_assetManagerCached);
 		}
-		staticModelComponent->InitEntity(*m_deviceAdressCached);
+
+		LoadModelMaterials(staticMeshComponent);
+		staticMeshComponent->InitEntity(*m_deviceAdressCached);
 	}
 	catch (const std::exception& ex)
 	{
@@ -43,11 +49,11 @@ void ComponentInitializer::Visit(StaticModelComponent* staticModelComponent)
 	}
 }
 
-void ComponentInitializer::Visit(SkeletalModelComponent* skeletalModelComponent)
+void ComponentInitializer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
 	try
 	{
-		const uint32_t comopnentID = skeletalModelComponent->GetComponentID();
+		const uint32_t comopnentID = skeletalMeshComponent->GetComponentID();
 		const std::string skeletalMeshComponentTableName = "skeletal_mesh_components";
 
 		Table skeletalMeshComponentTable = m_schemaCached->getTable(skeletalMeshComponentTableName, true);
@@ -59,9 +65,12 @@ void ComponentInitializer::Visit(SkeletalModelComponent* skeletalModelComponent)
 		if (!row.isNull())
 		{
 			const std::string skeletal_asset_name = row[0].get<std::string>();
-			skeletalModelComponent->SetSkeletalMeshAsset(m_assetManagerCached->GetSkeletalMeshAsset(skeletal_asset_name));
+			skeletalMeshComponent->SetSkeletalMeshName(skeletal_asset_name);
+			skeletalMeshComponent->UpdateSkeletalMeshAsset(*m_assetManagerCached);
 		}
-		skeletalModelComponent->InitEntity(*m_deviceAdressCached);
+
+		LoadModelMaterials(skeletalMeshComponent);
+		skeletalMeshComponent->InitEntity(*m_deviceAdressCached);
 	}
 	catch (const std::exception& ex)
 	{
@@ -99,8 +108,40 @@ void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 	}
 }
 
-void ComponentInitializer::Visit(Scene* scene)
+void ComponentInitializer::LoadModelMaterials(AMeshComponent* meshComponent)
 {
-	scene->UpdateSceneMeshAsset(*m_assetManagerCached);
-	scene->UpdateSceneIBLMaterialAsset(*m_assetManagerCached);
+	try
+	{
+		const uint32_t comopnentID = meshComponent->GetComponentID();
+		const std::string meshComponentInformationTableName = "mesh_component_informations";
+
+		Table meshComponentInformationTable = m_schemaCached->getTable(meshComponentInformationTableName, true);
+		RowResult rowResult = meshComponentInformationTable
+			.select("material_names").where("mesh_component_id = :mesh_component_id")
+			.bind("mesh_component_id", comopnentID).lockShared().execute();
+
+		auto row = rowResult.fetchOne();
+		if (!row.isNull())
+		{
+			auto test1 = row[0].getType();
+			const std::string materialNamesJson = row[0].get<mysqlx::string>();
+			json parsedMaterialNamesJson = json::parse(materialNamesJson);
+			vector<std::string> materialNames;
+
+			if (parsedMaterialNamesJson.contains("material_names") && parsedMaterialNamesJson["material_names"].is_array()) 
+			{
+				for (const auto& materialName : parsedMaterialNamesJson["material_names"])
+				{
+					materialNames.push_back(materialName.get<std::string>());
+				}
+			}
+			meshComponent->SetModelMaterialName(materialNames);
+			meshComponent->UpdateModelMaterial(*m_assetManagerCached);
+		}
+	}
+	catch (const std::exception& ex)
+	{
+		OnErrorOccurs(ex.what());
+	}
+
 }

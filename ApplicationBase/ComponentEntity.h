@@ -22,22 +22,12 @@ struct SComponent
 class ComponentEntity
 {
 public:
-	ComponentEntity(
-		const uint32_t& componentID, 
-		const DirectX::XMFLOAT3& position,
-		const DirectX::XMFLOAT3& angle,
-		const DirectX::XMFLOAT3& scale
-	);
+	ComponentEntity(const uint32_t& componentID);
 
 protected:
-	DirectX::XMVECTOR m_position;
-	DirectX::XMVECTOR m_angle;
-	DirectX::XMVECTOR m_scale;
-	
-public:
-	float* GetPositionAddress() { return m_position.m128_f32; }
-	float* GetAngleAddress() { return m_angle.m128_f32; }
-	float* GetScaleAddress() { return m_scale.m128_f32; }
+	DirectX::XMVECTOR m_absolutePosition;
+	DirectX::XMVECTOR m_absoluteAngle;
+	DirectX::XMVECTOR m_absoluteScale;
 
 protected:
 	STransformation m_transformation;

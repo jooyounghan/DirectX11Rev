@@ -7,16 +7,8 @@ SComponent::SComponent(const uint32_t& componentID)
 {
 }
 
-ComponentEntity::ComponentEntity(
-	const uint32_t& componentID, 
-	const XMFLOAT3& position, 
-	const XMFLOAT3& angle, 
-	const XMFLOAT3& scale
-)
-	: m_position(XMVectorSet(position.x, position.y, position.z, 1.f)),
-	m_angle(XMVectorSet(angle.x, angle.y, angle.z, 0.f)),
-	m_scale(XMVectorSet(scale.x, scale.y, scale.z, 0.f)),
-	m_transformationBuffer(sizeof(STransformation), 1),
+ComponentEntity::ComponentEntity(const uint32_t& componentID)
+	: m_transformationBuffer(sizeof(STransformation), 1),
 	m_transformation(),
 	m_componentConstant(componentID),
 	m_componentBuffer(sizeof(SComponent), 1, &m_componentBuffer)
@@ -26,19 +18,19 @@ ComponentEntity::ComponentEntity(
 XMMATRIX ComponentEntity::GetTranformation()
 {
 	return XMMatrixAffineTransformation(
-		m_scale,
+		m_absoluteScale,
 		XMQuaternionIdentity(),
 		GetQuaternion(),
-		m_position
+		m_absolutePosition
 	);
 }
 
 XMVECTOR ComponentEntity::GetQuaternion()
 {
 	return XMQuaternionRotationRollPitchYaw(
-		XMVectorGetX(m_angle),
-		XMVectorGetY(m_angle),
-		XMVectorGetZ(m_angle)
+		XMVectorGetX(m_absoluteAngle),
+		XMVectorGetY(m_absoluteAngle),
+		XMVectorGetZ(m_absoluteAngle)
 	);
 }
 

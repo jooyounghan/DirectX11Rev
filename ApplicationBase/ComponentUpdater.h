@@ -1,21 +1,16 @@
 #pragma once
 #include "mysqlx/xdevapi.h"
 #include "DBErrorHandler.h"
-#include "AssetManager.h"
 #include "IComponentVisitor.h"
 
-class ComponentInitializer : public IComponentVisitor, public DBErrorHandler
+class Scene;
+
+class ComponentUpdater : public IComponentVisitor, public DBErrorHandler
 {
 public:
-	ComponentInitializer(
-		AssetManager* assetManager,
-		ID3D11Device** deviceAddress,
-		mysqlx::Schema* schema
-	);
+	ComponentUpdater(mysqlx::Schema* schema);
 
 protected:
-	AssetManager* m_assetManagerCached = nullptr;
-	ID3D11Device** m_deviceAdressCached = nullptr;
 	mysqlx::Schema* m_schemaCached = nullptr;
 
 public:
@@ -26,6 +21,7 @@ public:
 	virtual void Visit(CameraComponent* cameraComponent) override;
 
 private:
-	void LoadModelMaterials(AMeshComponent* meshComponent);
+	void UpdateComponent(AComponent* component);
+	void UpdateMeshComponent(AMeshComponent* meshComponent);
 };
 

@@ -5,11 +5,11 @@ SceneRenderer::SceneRenderer(PSOManager* psoManager)
 {
 }
 
-void SceneRenderer::Visit(StaticModelComponent* staticMeshAsset)
+void SceneRenderer::Visit(StaticMeshComponent* staticMeshAsset)
 {
 }
 
-void SceneRenderer::Visit(SkeletalModelComponent* skeletalMeshAsset)
+void SceneRenderer::Visit(SkeletalMeshComponent* skeletalMeshAsset)
 {
 }
 

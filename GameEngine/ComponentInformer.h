@@ -4,7 +4,14 @@
 #include "ComponentManager.h"
 
 class ComponentEntity;
-class AModelComponent;
+class AMeshComponent;
+
+enum class EComponentEntityType
+{
+	ENTITY_POSITION,
+	ENTITY_ANGLE,
+	ENTITY_SCALE
+};
 
 class ComponentInformer : public IComponentVisitor
 {
@@ -16,14 +23,22 @@ protected:
 	ComponentManager* m_componentManagerCached = nullptr;
 
 public:
-	virtual void Visit(StaticModelComponent* staticModelComponent) override;
-	virtual void Visit(SkeletalModelComponent* skeletalModelComponent) override;
+	virtual void Visit(StaticMeshComponent* staticMeshComponent) override;
+	virtual void Visit(SkeletalMeshComponent* skeletalMeshComponent) override;
 
 public:
 	virtual void Visit(CameraComponent* cameraComponent) override;
 
 private:
-	void RenderComponent(AComponent* component);
-	void RenderModelComponent(AModelComponent* modelComponent);
+	void RenderComponentTransformation(AComponent* component);
+	void RenderMeshComponent(AMeshComponent* meshComponent);
+
+private:
+	void RenderAbsoluteRelativeSelector(bool& isAbsolute, AComponent* component);
+	void RenderTransformationEntity(
+		bool& isAbsolute, const char* groupID,
+		const char* entityName, AComponent* component, const EComponentEntityType& entityType,
+		const float& valueSpeed, const float& minValue, const float& maxValue
+	);
 };
 

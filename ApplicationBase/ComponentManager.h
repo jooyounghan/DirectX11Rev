@@ -31,6 +31,9 @@ public:
 	virtual ~ComponentManager();
 
 protected:
+	AssetManager* m_assetManagerCached = nullptr;
+
+protected:
 	ComponentInitializer m_componentInitializer;
 
 public:

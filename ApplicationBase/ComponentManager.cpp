@@ -2,8 +2,8 @@
 
 #include "Scene.h"
 
-#include "StaticModelComponent.h"
-#include "SkeletalModelComponent.h"
+#include "StaticMeshComponent.h"
+#include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
 
 using namespace std;
@@ -17,6 +17,7 @@ ComponentManager::ComponentManager(
 	ID3D11DeviceContext** deviceContextAddress
 )
 	: SchemaManager(sessionManager, "component_db"), 
+	m_assetManagerCached(assetManager),
 	m_componentInitializer(assetManager, deviceAddress, this)
 {
 
@@ -67,13 +68,13 @@ void ComponentManager::LoadComponentMakers()
 			case EComponentType::STATIC_COMPONENT:
 				m_componentTypesToMaker.emplace(componentType, bind(
 					[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-					{ return new StaticModelComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5)
+					{ return new StaticMeshComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5)
 				);
 				break;
 			case EComponentType::SKELETAL_COMPONENT:
 				m_componentTypesToMaker.emplace(componentType, bind(
 					[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-					{ return new SkeletalModelComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5)
+					{ return new SkeletalMeshComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5)
 				);
 				break;
 			case EComponentType::CAMERA_COMPONENT:
@@ -134,7 +135,8 @@ void ComponentManager::LoadScenes()
 			m_sceneIDsToScene.emplace(sceneID, scene);
 			m_scenesToDescription.emplace(scene, sceneDescription);
 
-			m_componentInitializer.Visit(scene);
+			scene->UpdateSceneMeshAsset(*m_assetManagerCached);
+			scene->UpdateSceneIBLMaterialAsset(*m_assetManagerCached);
 		}
 
 	}

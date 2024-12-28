@@ -169,30 +169,32 @@
     <ClCompile Include="AApplication.cpp" />
     <ClCompile Include="AComponent.cpp" />
     <ClCompile Include="AInstancedModelComponent.cpp" />
-    <ClCompile Include="AModelComponent.cpp" />
+    <ClCompile Include="AMeshComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="ComponentInitializer.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="ComponentEntity.cpp" />
+    <ClCompile Include="ComponentUpdater.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="SkeletalModelComponent.cpp" />
-    <ClCompile Include="StaticModelComponent.cpp" />
+    <ClCompile Include="SkeletalMeshComponent.cpp" />
+    <ClCompile Include="StaticMeshComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AApplication.h" />
     <ClInclude Include="AComponent.h" />
     <ClInclude Include="AInstancedModelComponent.h" />
-    <ClInclude Include="AModelComponent.h" />
+    <ClInclude Include="AMeshComponent.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="ComponentInitializer.h" />
     <ClInclude Include="ComponentManager.h" />
+    <ClInclude Include="ComponentUpdater.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="IComponentVisitor.h" />
     <ClInclude Include="ComponentEntity.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="SkeletalModelComponent.h" />
-    <ClInclude Include="StaticModelComponent.h" />
+    <ClInclude Include="SkeletalMeshComponent.h" />
+    <ClInclude Include="StaticMeshComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AssetManager\AssetManager.vcxproj">

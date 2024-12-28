@@ -11,7 +11,7 @@ CameraComponent::CameraComponent(
 	const XMFLOAT3& scale
 )
 	: AComponent(componentName, componentID, position, angle, scale),
-	m_viewProjBuffer(sizeof(SViewElement), 1)
+	m_viewProjBuffer(sizeof(SViewElement), 1), m_nearZ(GDefaultNearZ), m_farZ(GDefaultFarZ), m_fovAngle(GDefaultFovAngle)
 {
 
 }
@@ -39,7 +39,7 @@ XMMATRIX CameraComponent::GetViewMatrix()
 	const XMVECTOR quaternion = GetQuaternion();
 	XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
 	XMVECTOR currentUp = XMVector3Rotate(GDefaultUp, quaternion);
-	return XMMatrixLookToLH(m_position, currentForward, currentUp);
+	return XMMatrixLookToLH(m_absolutePosition, currentForward, currentUp);
 
 }
 

@@ -1,15 +1,18 @@
 #pragma once
 
-class StaticModelComponent;
-class SkeletalModelComponent;
-
+class AComponent;
+class AMeshComponent;
+class StaticMeshComponent;
+class SkeletalMeshComponent;
 class CameraComponent;
+
+class Scene;
 
 class IComponentVisitor
 {
 public:
-	virtual void Visit(StaticModelComponent* staticModelComponent) = 0;
-	virtual void Visit(SkeletalModelComponent* skeletalModelComponent) = 0;
+	virtual void Visit(StaticMeshComponent* staticModelComponent) = 0;
+	virtual void Visit(SkeletalMeshComponent* skeletalModelComponent) = 0;
 
 public:
 	virtual void Visit(CameraComponent* cameraComponent) = 0;
