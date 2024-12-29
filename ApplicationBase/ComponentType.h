@@ -1,0 +1,8 @@
+#pragma once
+enum class EComponentType
+{
+	NOT_SELECTED,
+	STATIC_COMPONENT,
+	SKELETAL_COMPONENT,
+	CAMERA_COMPONENT,
+};

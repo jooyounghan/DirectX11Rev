@@ -17,8 +17,10 @@ public:
 
 public:
 	void ShowWindow();
+	virtual void PrepareWindow() = 0;
+
+private:
 	virtual void RenderWindowImpl() = 0;
-	virtual void InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* deviceContext) = 0;
 
 public:
 	std::function<void(AWindow*)> OnClose = [&](AWindow* window) {};

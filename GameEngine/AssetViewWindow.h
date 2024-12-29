@@ -42,13 +42,11 @@ private:
 	static std::string MapAssetTN;
 	static std::string MaterialAssetTN;
 
-private:
-	std::unique_ptr<Texture2DInstance<SRVOption>> m_thumbnails[AssetThumbnailTypeCount];
-	void InitThumbnailTextureAsAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const EAssetThumbnailType& assetType, const UINT& widht, const UINT& height, BaseTextureAsset* const asset);
-
 public:
+	virtual void PrepareWindow() override;
+
+private:
 	virtual void RenderWindowImpl() override;
-	virtual void InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* deviceContext) override;
 
 private:
 	void AddAssetControl(const EAssetType& assetType, const std::string& assetPath, AAsset* asset);

@@ -6,6 +6,7 @@
 
 #include "AssetManager.h"
 #include "TaskManager.h"
+#include "PSOManager.h"
 
 #include "SessionManager.h"
 #include "ComponentManager.h"
@@ -17,8 +18,9 @@
 
 enum class EDefferedContextType
 {
-	ASSETS,
-	WINDOWS
+	ASSETS_LOAD,
+	COMPONENT_UPDATE,
+	COMPONENT_RENDER
 };
 
 namespace YHEngine
@@ -41,23 +43,18 @@ namespace YHEngine
 
 	protected:
 		D3D11::D3D11Engine* m_engine;
-		TaskManager* m_taskManager = nullptr;
-
-	protected:
-		SessionManager m_sessionManager;
-
-	protected:
 		std::unordered_map<EDefferedContextType, DefferedContext*> m_defferedContexts;
-		
+
 	protected:
 		std::vector<AWindow*> m_imguiWindows;
 		std::vector<AModal*> m_imguiModals;
 
 	protected:
+		TaskManager* m_taskManager = nullptr;
+		SessionManager* m_sessionManager = nullptr;
 		AssetManager* m_assetManager = nullptr;
-
-	protected:
 		ComponentManager* m_componentManager = nullptr;
+		PSOManager* m_psoManager = nullptr;
 
 	protected:
 		static Utilities::SColor ClearColor;

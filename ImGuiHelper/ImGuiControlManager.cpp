@@ -60,7 +60,7 @@ void ImGuiControlManager::CheckMouseControlEvents()
 
 void ImGuiControlManager::IterateControlWithMouseEvent(MouseEventArgs& mouseEventArgs)
 {
-	for (AControl* const control : m_controls)
+	for (AUserControl* const control : m_controls)
 	{
 		if (control->IsPointIn(mouseEventArgs.m_mousePosX, mouseEventArgs.m_mousePosY))
 		{
@@ -87,10 +87,10 @@ void ImGuiControlManager::IterateControlWithMouseEvent(MouseEventArgs& mouseEven
 
 void ImGuiControlManager::IterateControlsWithMouseClickEvent(
 	MouseClickEventArgs& mouseClickedEventArgs, 
-	const std::function<void(AControl* const, MouseClickEventArgs&)>& eventHandler
+	const std::function<void(AUserControl* const, MouseClickEventArgs&)>& eventHandler
 )
 {
-	for (AControl* const control : m_controls)
+	for (AUserControl* const control : m_controls)
 	{
 		if (control->IsPointIn(mouseClickedEventArgs.m_mousePosX, mouseClickedEventArgs.m_mousePosY))
 		{
@@ -103,17 +103,17 @@ void ImGuiControlManager::IterateControlsWithMouseClickEvent(
 	}
 }
 
-void ImGuiControlManager::RaiseClickEvent(AControl* const control, MouseClickEventArgs& args)
+void ImGuiControlManager::RaiseClickEvent(AUserControl* const control, MouseClickEventArgs& args)
 {
 	return control->OnMouseClicked(args);
 }
 
-void ImGuiControlManager::RaiseDoubleClickEvent(AControl* const control, MouseClickEventArgs& args)
+void ImGuiControlManager::RaiseDoubleClickEvent(AUserControl* const control, MouseClickEventArgs& args)
 {
 	return control->OnMouseDoubleClicked(args);
 }
 
-void ImGuiControlManager::RaiseDownEvent(AControl* const control, MouseClickEventArgs& args)
+void ImGuiControlManager::RaiseDownEvent(AUserControl* const control, MouseClickEventArgs& args)
 {
 	if (control->IsMousePressed())
 	{
@@ -127,7 +127,7 @@ void ImGuiControlManager::RaiseDownEvent(AControl* const control, MouseClickEven
 
 }
 
-void ImGuiControlManager::RaiseReleasedEvent(AControl* const control, MouseClickEventArgs& args)
+void ImGuiControlManager::RaiseReleasedEvent(AUserControl* const control, MouseClickEventArgs& args)
 {
 	control->SetMousePressed(false);
 	return control->OnMouseReleased(args);

@@ -49,6 +49,12 @@
     <Filter Include="헤더 파일\Modal\Extended">
       <UniqueIdentifier>{06ec5379-df3e-4f38-b4fc-3dc36ff3d3c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Control\Wrapper">
+      <UniqueIdentifier>{c2d92a8a-64ef-4710-9147-161ff5828f70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Control\Wrapper">
+      <UniqueIdentifier>{8e12c266-aa3e-49fe-a88c-a1637788e3c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui_impl_dx11.cpp">
@@ -60,7 +66,7 @@
     <ClCompile Include="AWindow.cpp">
       <Filter>소스 파일\Window</Filter>
     </ClCompile>
-    <ClCompile Include="AControl.cpp">
+    <ClCompile Include="AUserControl.cpp">
       <Filter>소스 파일\Control</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiInitializer.cpp">
@@ -84,6 +90,15 @@
     <ClCompile Include="MessageBoxModal.cpp">
       <Filter>소스 파일\Modal\Extended</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiComboBox.cpp">
+      <Filter>소스 파일\Control\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiListBox.cpp">
+      <Filter>소스 파일\Control\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="AImGuiSelectable.cpp">
+      <Filter>소스 파일\Control\Wrapper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui_impl_dx11.h">
@@ -95,7 +110,7 @@
     <ClInclude Include="AWindow.h">
       <Filter>헤더 파일\Window</Filter>
     </ClInclude>
-    <ClInclude Include="AControl.h">
+    <ClInclude Include="AUserControl.h">
       <Filter>헤더 파일\Control</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiInitializer.h">
@@ -118,6 +133,15 @@
     </ClInclude>
     <ClInclude Include="MessageBoxModal.h">
       <Filter>헤더 파일\Modal\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiComboBox.h">
+      <Filter>헤더 파일\Control\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiListBox.h">
+      <Filter>헤더 파일\Control\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="AImGuiSelectable.h">
+      <Filter>헤더 파일\Control\Wrapper</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

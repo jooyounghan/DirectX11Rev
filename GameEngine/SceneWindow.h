@@ -3,15 +3,26 @@
 
 #include "PSOManager.h"
 #include "Scene.h"
-#include "SceneRenderer.h"
 #include "CameraComponent.h"
 #include "ComponentInformer.h"
+
+#include "SceneForwardRenderer.h"
+#include "SceneDefferedRenderer.h"
+
+#include "ImGuiComboBox.h"
+
+enum class ERendererType
+{
+	FORWARD_RENDERING,
+	DEFFERED_RENDERING
+};
 
 class SceneWindow : public AWindow
 {
 public:
 	SceneWindow(
-		const std::string& windowID, 
+		const std::string& windowID,
+		ID3D11DeviceContext** deviceConextAddress,
 		AssetManager* assetManager,
 		ComponentManager* componentManager, 
 		PSOManager* psoManager
@@ -19,29 +30,36 @@ public:
 
 private:
 	Scene* m_selectedScene = nullptr;
-
-private:
-
-private:
 	ComponentManager* m_componentManagerCached = nullptr;
 	PSOManager* m_psoManageCached = nullptr;
 
 public:
+	virtual void PrepareWindow() override;
+
+private:
 	virtual void RenderWindowImpl() override;
-	virtual void InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* deviceContext) override;
+	void RenderComponentRecursive(ASceneRenderer* const renderer, const std::vector<AComponent*>& components);
 
 private:
 	AComponent* m_selectedComponent = nullptr;
 	ComponentInformer m_componentInformer;
 
 private:
-	void RenderSceneSelector();
-	void RenderRendererSelector();
-	void RenderScene();
-	void RenderComponentTree();
-	void RenderComponentInformations();
+	SceneForwardRenderer m_forwardRenderer;
+	SceneDefferedRenderer m_defferedRenderer;
+	ERendererType m_selectedRendererType = ERendererType::FORWARD_RENDERING;
 
 private:
-	void RenderComponentRecursive(AComponent* const component);
+	ImGuiComboBox m_rendererComboBox;
+
+private:
+	void DrawSceneSelector();
+	void DrawRendererSelector();
+	void DrawScene();
+	void DrawComponentTree();
+	void DrawComponentInformations();
+
+private:
+	void DrawComponentTreeRecursive(AComponent* const component);
 };
 

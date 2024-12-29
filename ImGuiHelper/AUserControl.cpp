@@ -1,8 +1,8 @@
-#include "AControl.h"
+#include "AUserControl.h"
 
 using namespace ImGui;
 
-void AControl::RenderControl()
+void AUserControl::RenderControl()
 {
 	const ImVec2 cursorScrennPos = GetCursorScreenPos();
 	m_left = cursorScrennPos.x;

@@ -31,23 +31,32 @@
     <ClInclude Include="AInstancedModelComponent.h">
       <Filter>헤더 파일\Component\Model</Filter>
     </ClInclude>
-    <ClInclude Include="SceneRenderer.h">
-      <Filter>헤더 파일\Component\Visitor\Extended</Filter>
+    <ClInclude Include="ComponentType.h">
+      <Filter>헤더 파일\Component</Filter>
     </ClInclude>
     <ClInclude Include="ComponentManager.h">
-      <Filter>헤더 파일\Database</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentInitializer.h">
-      <Filter>헤더 파일\Component\Visitor\Extended</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentUpdater.h">
-      <Filter>헤더 파일\Component\Visitor\Extended</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentRemover.h">
-      <Filter>헤더 파일\Component\Visitor\Extended</Filter>
+      <Filter>헤더 파일\Component</Filter>
     </ClInclude>
     <ClInclude Include="ComponentCreator.h">
-      <Filter>헤더 파일\Component\Visitor\Extended</Filter>
+      <Filter>헤더 파일\Component\Visitor\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentInitializer.h">
+      <Filter>헤더 파일\Component\Visitor\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentRemover.h">
+      <Filter>헤더 파일\Component\Visitor\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentUpdater.h">
+      <Filter>헤더 파일\Component\Visitor\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneForwardRenderer.h">
+      <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDefferedRenderer.h">
+      <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ASceneRenderer.h">
+      <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -93,20 +102,23 @@
     <Filter Include="소스 파일\Component\Visitor">
       <UniqueIdentifier>{935d5778-62da-497c-8874-42c9ff158b75}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Component\Visitor\Extended">
-      <UniqueIdentifier>{a002d25e-5794-4fb4-9149-028b0a5f3bf5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Scene">
       <UniqueIdentifier>{9055fe74-bb19-4f9d-bf69-62f14cf27cdf}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Scene">
       <UniqueIdentifier>{778f3bae-0198-4a4d-b0a5-c24112aead7c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Database">
-      <UniqueIdentifier>{2ba21392-4c41-41ac-a2d4-c9466ba9dd07}</UniqueIdentifier>
+    <Filter Include="소스 파일\Component\Visitor\Database">
+      <UniqueIdentifier>{ce240847-c491-4f2c-85ef-7a1f183713fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Database">
-      <UniqueIdentifier>{af003479-d6c6-49ef-bef7-719e611791ef}</UniqueIdentifier>
+    <Filter Include="소스 파일\Component\Visitor\Rendering">
+      <UniqueIdentifier>{d8bc71cf-1e43-4d82-bdd2-df55d9f068c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Visitor\Database">
+      <UniqueIdentifier>{6cb68f8f-2e7c-4eb2-990a-e090991907a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Visitor\Rendering">
+      <UniqueIdentifier>{01817e33-0c5d-48e8-9ed6-7735f307b0d7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -137,23 +149,29 @@
     <ClCompile Include="AInstancedModelComponent.cpp">
       <Filter>소스 파일\Component\Model</Filter>
     </ClCompile>
-    <ClCompile Include="SceneRenderer.cpp">
-      <Filter>소스 파일\Component\Visitor</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentManager.cpp">
-      <Filter>소스 파일\Database</Filter>
+    <ClCompile Include="ComponentCreator.cpp">
+      <Filter>소스 파일\Component\Visitor\Database</Filter>
     </ClCompile>
     <ClCompile Include="ComponentInitializer.cpp">
-      <Filter>소스 파일\Component\Visitor</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentUpdater.cpp">
-      <Filter>소스 파일\Component\Visitor</Filter>
+      <Filter>소스 파일\Component\Visitor\Database</Filter>
     </ClCompile>
     <ClCompile Include="ComponentRemover.cpp">
-      <Filter>소스 파일\Component\Visitor</Filter>
+      <Filter>소스 파일\Component\Visitor\Database</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCreator.cpp">
-      <Filter>소스 파일\Component\Visitor</Filter>
+    <ClCompile Include="ComponentUpdater.cpp">
+      <Filter>소스 파일\Component\Visitor\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneForwardRenderer.cpp">
+      <Filter>소스 파일\Component\Visitor\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentManager.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneDefferedRenderer.cpp">
+      <Filter>소스 파일\Component\Visitor\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ASceneRenderer.cpp">
+      <Filter>소스 파일\Component\Visitor\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

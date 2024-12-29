@@ -9,10 +9,10 @@ concept ShaderType = std::is_base_of_v<AShader, T>;
 class PSOManager
 {
 public:
-	PSOManager(ID3D11Device* device);
+	PSOManager(ID3D11Device** deviceAddress);
 
 protected:
-	ID3D11Device* m_deviceCached = nullptr;
+	ID3D11Device** m_deviceAddressCached = nullptr;
 
 protected:
 	std::unordered_map<std::string, std::unique_ptr<AShader>> m_registeredShaders;

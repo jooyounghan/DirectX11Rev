@@ -1,15 +1,13 @@
 #pragma once
-#include "PSOManager.h"
-#include "PSOObject.h"
-#include "IComponentVisitor.h"
+#include "ASceneRenderer.h"
 
-class SceneRenderer : public IComponentVisitor
+class SceneForwardRenderer : public ASceneRenderer
 {
 public:
-	SceneRenderer(PSOManager* psoManager);
-
-protected:
-	PSOManager* m_psoManagerCached = nullptr;
+	SceneForwardRenderer(
+		ID3D11DeviceContext** deviceContextAddress, 
+		PSOManager* psoManager
+	);
 
 public:
 	virtual void Visit(StaticMeshComponent* staticMeshAsset) override;

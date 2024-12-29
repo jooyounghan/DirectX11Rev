@@ -35,7 +35,7 @@ public:
 	void RegisterAssetWritePath(const std::string& writePath);
 
 public:
-	void PreloadFromResources();
+	void PreloadFromResources(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	void PreloadFromDirectories(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	void WrtieFileAsAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const std::string filePath);
 

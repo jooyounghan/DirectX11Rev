@@ -6,12 +6,40 @@ using namespace DirectX;
 
 SceneWindow::SceneWindow(
     const std::string& windowID,
+    ID3D11DeviceContext** deviceConextAddress,
     AssetManager* assetManager,
     ComponentManager* componentManager,
     PSOManager* psoManager
 )
-	: AWindow(windowID), m_componentManagerCached(componentManager), m_psoManageCached(psoManager), m_componentInformer(assetManager, componentManager)
+    : AWindow(windowID), m_componentManagerCached(componentManager),
+    m_psoManageCached(psoManager),
+    m_componentInformer(assetManager, componentManager),
+    m_forwardRenderer(deviceConextAddress, psoManager),
+    m_defferedRenderer(deviceConextAddress, psoManager),
+    m_rendererComboBox({ "Forward Renderer", "Deffered Renderer" }, "RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
+    m_rendererComboBox.OnSelChanged = [&](const size_t& idx, const string& text) {m_selectedRendererType = static_cast<ERendererType>(idx); };
+}
+
+void SceneWindow::PrepareWindow()
+{
+    if (m_selectedScene != nullptr)
+    {
+        ASceneRenderer* sceneRenderer = nullptr;
+        switch (m_selectedRendererType)
+        {
+        case ERendererType::FORWARD_RENDERING:
+            sceneRenderer = &m_forwardRenderer;
+            break;
+        case ERendererType::DEFFERED_RENDERING:
+            sceneRenderer = &m_defferedRenderer;
+            break;
+        default:
+            throw invalid_argument("Invalid entity type");
+        }
+        const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
+        RenderComponentRecursive(sceneRenderer, sceneRootComponents);
+    }
 }
 
 void SceneWindow::RenderWindowImpl()
@@ -21,34 +49,39 @@ void SceneWindow::RenderWindowImpl()
 
     ImVec2 regionAvail = GetContentRegionAvail();
     BeginChild("SceneSelector", ImVec2(regionAvail.x * 0.1f, regionAvail.y));
-    RenderSceneSelector();
-    RenderRendererSelector();
+    DrawSceneSelector();
+    DrawRendererSelector();
     EndChild();
     SameLine();
 
     BeginChild("SceneViewport", ImVec2(regionAvail.x * 0.7f, regionAvail.y));
-    RenderScene();
+    DrawScene();
     EndChild();
     SameLine();
 
     BeginChild("ComponentHandler", ImVec2(regionAvail.x * 0.2f, regionAvail.y));
-    RenderComponentTree();
-    RenderComponentInformations();
+    DrawComponentTree();
+    DrawComponentInformations();
     EndChild();
 
     PopID();
     EndGroup();
 }
 
-void SceneWindow::InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+void SceneWindow::RenderComponentRecursive(ASceneRenderer* const renderer, const std::vector<AComponent*>& components)
 {
+    for (AComponent* component : components)
+    {
+        component->Accept(renderer);
+        RenderComponentRecursive(renderer, component->GetChildComponents());
+    }
 }
 
-void SceneWindow::RenderSceneSelector()
+void SceneWindow::DrawSceneSelector()
 {
     Text("Scene Selector");
     
-    unordered_map<Scene*, string> scenesWithDescription = m_componentManagerCached->GetScenesWithDescription();
+    const unordered_map<Scene*, string>& scenesWithDescription = m_componentManagerCached->GetScenesWithDescription();
     ImVec2 regionAvail = GetContentRegionAvail();
     if (BeginListBox("SceneSelectListBox", ImVec2(regionAvail.x, regionAvail.y * 0.4f)))
     {
@@ -65,18 +98,20 @@ void SceneWindow::RenderSceneSelector()
     }
 }
 
-void SceneWindow::RenderRendererSelector()
+void SceneWindow::DrawRendererSelector()
 {
+    static vector<string> rendererItems{ "Forward Rendering", "Deffered Rendering" };
+
     Text("Renderer Selector");
-    Button("Renderer Selector", GetContentRegionAvail());
+    m_rendererComboBox.Draw();
 }
 
-void SceneWindow::RenderScene()
+void SceneWindow::DrawScene()
 {
     Image((ImU64)nullptr, GetContentRegionAvail());
 }
 
-void SceneWindow::RenderComponentTree()
+void SceneWindow::DrawComponentTree()
 {
     Text("Components");
 
@@ -90,7 +125,7 @@ void SceneWindow::RenderComponentTree()
             vector<AComponent*> rootComponents = m_selectedScene->GetRootComponents();
             for (AComponent* const rootComponent : rootComponents)
             {
-                RenderComponentRecursive(rootComponent);
+                DrawComponentTreeRecursive(rootComponent);
             }
         }
         TreePop();
@@ -99,7 +134,7 @@ void SceneWindow::RenderComponentTree()
     EndChild();
 }
 
-void SceneWindow::RenderComponentInformations()
+void SceneWindow::DrawComponentInformations()
 {
     Text("Informations");
     BeginChild("ComponentInformations", GetContentRegionAvail());
@@ -110,7 +145,7 @@ void SceneWindow::RenderComponentInformations()
     EndChild();
 }
 
-void SceneWindow::RenderComponentRecursive(AComponent* const component)
+void SceneWindow::DrawComponentTreeRecursive(AComponent* const component)
 {
     int nodeFlags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_OpenOnDoubleClick;
     vector<AComponent*> childComponents = component->GetChildComponents();
@@ -152,7 +187,7 @@ void SceneWindow::RenderComponentRecursive(AComponent* const component)
     {
         for (AComponent* childComponent : childComponents)
         {
-            RenderComponentRecursive(childComponent);
+            DrawComponentTreeRecursive(childComponent);
         }
         TreePop();
     }

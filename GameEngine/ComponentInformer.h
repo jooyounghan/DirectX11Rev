@@ -2,6 +2,7 @@
 #include "imgui.h"
 #include "IComponentVisitor.h"
 #include "ComponentManager.h"
+#include "ImGuiComboBox.h"
 
 class ComponentEntity;
 class AMeshComponent;
@@ -22,6 +23,16 @@ protected:
 	AssetManager* m_assetManagerCached = nullptr;
 	ComponentManager* m_componentManagerCached = nullptr;
 
+private:
+	ImGuiComboBox m_absRelativeComboPosition;
+	ImGuiComboBox m_absRelativeComboAngle;
+	ImGuiComboBox m_absRelativeComboScale;
+
+private:
+	static bool isPositionAbsolute;
+	static bool isAngleAbsolute;
+	static bool isScaleAbsolute;
+
 public:
 	virtual void Visit(StaticMeshComponent* staticMeshComponent) override;
 	virtual void Visit(SkeletalMeshComponent* skeletalMeshComponent) override;
@@ -34,10 +45,9 @@ private:
 	void RenderMeshComponent(AMeshComponent* meshComponent);
 
 private:
-	void RenderAbsoluteRelativeSelector(bool& isAbsolute, AComponent* component);
 	void RenderTransformationEntity(
-		bool& isAbsolute, const char* groupID,
-		const char* entityName, AComponent* component, const EComponentEntityType& entityType,
+		const char* groupID, const char* entityName, 
+		AComponent* component, const EComponentEntityType& entityType,
 		const float& valueSpeed, const float& minValue, const float& maxValue
 	);
 };

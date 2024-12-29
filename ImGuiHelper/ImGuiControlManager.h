@@ -1,11 +1,11 @@
 #pragma once
-#include "AControl.h"
+#include "AUserControl.h"
 #include <set>
 
 class ControlZComparer
 {
 public:
-    bool operator()(AControl* control1, AControl* control2) const
+    bool operator()(AUserControl* control1, AUserControl* control2) const
     {
         if (control1->GetZIndex() != control2->GetZIndex())
         {
@@ -22,11 +22,11 @@ public:
 	ImGuiControlManager() = default;
 
 protected:
-    std::set<AControl*, ControlZComparer> m_controls;
+    std::set<AUserControl*, ControlZComparer> m_controls;
 
 public:
-    inline void RegisterControl(AControl* control) { m_controls.insert(control); }
-    inline void DeregisterControl(AControl* control) { m_controls.erase(control); }
+    inline void RegisterControl(AUserControl* control) { m_controls.insert(control); }
+    inline void DeregisterControl(AUserControl* control) { m_controls.erase(control); }
     inline void ClearRegisteredControl() { m_controls.clear(); }
     void CheckMouseControlEvents();
 
@@ -34,13 +34,13 @@ private:
     void IterateControlWithMouseEvent(MouseEventArgs& mouseEventArgs);
     void IterateControlsWithMouseClickEvent(
         MouseClickEventArgs& mouseClickedEventArgs, 
-        const std::function<void(AControl* const, MouseClickEventArgs&)>& checker
+        const std::function<void(AUserControl* const, MouseClickEventArgs&)>& checker
     );
 
 private:
-    static void RaiseClickEvent(AControl* const control, MouseClickEventArgs& args);
-    static void RaiseDoubleClickEvent(AControl* const control, MouseClickEventArgs& args);
-    static void RaiseDownEvent(AControl* const control, MouseClickEventArgs& args);
-    static void RaiseReleasedEvent(AControl* const control, MouseClickEventArgs& args);
+    static void RaiseClickEvent(AUserControl* const control, MouseClickEventArgs& args);
+    static void RaiseDoubleClickEvent(AUserControl* const control, MouseClickEventArgs& args);
+    static void RaiseDownEvent(AUserControl* const control, MouseClickEventArgs& args);
+    static void RaiseReleasedEvent(AUserControl* const control, MouseClickEventArgs& args);
 };
 

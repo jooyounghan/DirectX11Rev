@@ -1,6 +1,7 @@
 #pragma once
 #include "mysqlx/xdevapi.h"
 #include "IComponentVisitor.h"
+#include "ComponentType.h"
 
 class ComponentCreator : public IComponentVisitor
 {
@@ -17,5 +18,12 @@ public:
 public:
 	virtual void Visit(CameraComponent* cameraComponent) override;
 
+public:
+	void AddScene(Scene* scene);
+	void AddComponent(Scene* scene, AComponent* parentComponent, AComponent* component);
+
+private:
+	void AddMeshComponent(AMeshComponent* meshComponent);
+	void AddComponetToType(AComponent* component, const EComponentType& componentType);
 };
 

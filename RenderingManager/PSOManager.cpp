@@ -14,7 +14,7 @@
 using namespace std;
 using namespace Microsoft::WRL;
 
-PSOManager::PSOManager(ID3D11Device* device) : m_deviceCached(device)
+PSOManager::PSOManager(ID3D11Device** deviceAddress) : m_deviceAddressCached(deviceAddress)
 {
 }
 
@@ -90,7 +90,7 @@ void PSOManager::RegisterDepthStencilState(
 	depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	depthStencilStateDesc.DepthFunc = depthComparisonFunc;
 	depthStencilStateDesc.StencilEnable = stencilEnable;
-	m_deviceCached->CreateDepthStencilState(&depthStencilStateDesc, depthStencilState.GetAddressOf());
+	(*m_deviceAddressCached)->CreateDepthStencilState(&depthStencilStateDesc, depthStencilState.GetAddressOf());
 
 	m_registeredDepthStencilStates[stateName] = depthStencilState;
 }
@@ -113,7 +113,7 @@ void PSOManager::RegisterBlendState(
 		renderTargetBlendDescs.data(), 
 		(renderTargetBlendDescs.size() < 8 ? renderTargetBlendDescs.size() : 8) * sizeof(D3D11_RENDER_TARGET_BLEND_DESC)
 	);
-	m_deviceCached->CreateBlendState(&blendStateDesc, blendState.GetAddressOf());
+	(*m_deviceAddressCached)->CreateBlendState(&blendStateDesc, blendState.GetAddressOf());
 
 	m_registeredBlendStates[stateName] = blendState;
 }
@@ -135,7 +135,7 @@ void PSOManager::RegisterRasterizerState(
 	rasterizerStateDesc.DepthClipEnable = TRUE;
 	rasterizerStateDesc.MultisampleEnable = sampleDesc.Count > 1 ? TRUE : FALSE;
 	rasterizerStateDesc.AntialiasedLineEnable = FALSE;
-	m_deviceCached->CreateRasterizerState(&rasterizerStateDesc, rasterizerState.GetAddressOf());
+	(*m_deviceAddressCached)->CreateRasterizerState(&rasterizerStateDesc, rasterizerState.GetAddressOf());
 
 	m_registeredRasterizerStates[stateName] = rasterizerState;
 }
@@ -158,7 +158,7 @@ void PSOManager::RegisterSamplerState(
 	samplerDesc.AddressW = textureAddressModeW;
 	samplerDesc.ComparisonFunc = comparisonFunc;
 	samplerDesc.Filter = filter;
-	m_deviceCached->CreateSamplerState(&samplerDesc, samplerState.GetAddressOf());
+	(*m_deviceAddressCached)->CreateSamplerState(&samplerDesc, samplerState.GetAddressOf());
 
 	m_registeredSamplerStates[stateName] = samplerState;
 }

@@ -11,7 +11,7 @@
 #include <string>
 #include <functional>
 
-class AControl
+class AUserControl
 {
 protected:
 	int m_zIndex = 0;

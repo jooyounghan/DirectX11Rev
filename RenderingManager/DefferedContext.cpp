@@ -7,6 +7,12 @@ DefferedContext::DefferedContext(ID3D11Device** deviceAddress)
 {
 }
 
+DefferedContext::~DefferedContext()
+{
+	m_defferedContext->Release();
+	m_defferedContext = nullptr;
+}
+
 void DefferedContext::InitDefferedContext()
 {
 	(*m_deviceAddressCached)->CreateDeferredContext(NULL, m_defferedContext.GetAddressOf());
@@ -22,7 +28,7 @@ void DefferedContext::RecordToCommandList()
 void DefferedContext::TryExecuteCommandList(ID3D11DeviceContext* immediateContext)
 {
 	ID3D11CommandList* commandList;
-	if (m_commandListsQueue.try_pop(commandList))
+	while (m_commandListsQueue.try_pop(commandList))
 	{
 		immediateContext->ExecuteCommandList(commandList, TRUE);
 		commandList->Release();

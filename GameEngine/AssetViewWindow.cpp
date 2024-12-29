@@ -19,11 +19,8 @@ AssetViewWindow::AssetViewWindow(const std::string& windowID, AssetManager* asse
     m_assetManagerCached->RegisterAssetLoadedHandler("AddAssetControl", bind(&AssetViewWindow::AddAssetControl, this, placeholders::_1, placeholders::_2, placeholders::_3));
 }
 
-void AssetViewWindow::InitThumbnailTextureAsAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const EAssetThumbnailType& assetType, const UINT& width, const UINT& height, BaseTextureAsset* const asset)
+void AssetViewWindow::PrepareWindow()
 {
-    m_thumbnails[static_cast<size_t>(assetType)] = make_unique<Texture2DInstance<SRVOption>>(
-        width, height, 1, asset->GetImageBuffers(), asset->GetRowPitchArray(), NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_B8G8R8X8_UNORM, device, deviceContext
-    );
 }
 
 void AssetViewWindow::RenderWindowImpl()
@@ -43,27 +40,6 @@ void AssetViewWindow::RenderWindowImpl()
 
     PopID();
     EndGroup();
-}
-
-void AssetViewWindow::InitializeWindow(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
-{
-    constexpr UINT thumbnailWidth = 128;
-    constexpr UINT thumbnailHeight = 128;
-
-    BaseTextureAsset* animationAssetTN = m_assetManagerCached->GetResourceAsset(AnimationAssetTN);
-    BaseTextureAsset* boneAssetTN = m_assetManagerCached->GetResourceAsset(BoneAssetTN);
-    BaseTextureAsset* textureAssetTN = m_assetManagerCached->GetResourceAsset(TextureAssetTN);
-    BaseTextureAsset* skeletalMeshAssetTN = m_assetManagerCached->GetResourceAsset(SkeletalMeshAssetTN);
-    BaseTextureAsset* staticMeshAssetTN = m_assetManagerCached->GetResourceAsset(StaticMeshAssetTN);
-    BaseTextureAsset* mapAssetTN = m_assetManagerCached->GetResourceAsset(MapAssetTN);
-    BaseTextureAsset* materialAssetTN = m_assetManagerCached->GetResourceAsset(MaterialAssetTN);
-
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_ANIMATION, thumbnailWidth, thumbnailHeight, animationAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_BONE, thumbnailWidth, thumbnailHeight, boneAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_TEXTURE, thumbnailWidth, thumbnailHeight, textureAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_STATIC, thumbnailWidth, thumbnailHeight, staticMeshAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_SKELETAL, thumbnailWidth, thumbnailHeight, skeletalMeshAssetTN);
-    InitThumbnailTextureAsAsset(device, deviceContext, EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MATERIAL, thumbnailWidth, thumbnailHeight, materialAssetTN);
 }
 
 void AssetViewWindow::AddAssetControl(const EAssetType& assetType, const string& assetPath, AAsset* asset)
@@ -94,16 +70,16 @@ void AssetViewWindow::AddAssetByRecursiveKey(
         switch (assetType)
         {
         case EAssetType::ASSET_TYPE_STATIC:
-            thumbnailSRV = m_thumbnails[static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_STATIC)]->GetSRV();
+            thumbnailSRV = m_assetManagerCached->GetResourceAsset(StaticMeshAssetTN)->GetSRV();
             break;
         case EAssetType::ASSET_TYPE_SKELETAL:
-            thumbnailSRV = m_thumbnails[static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_SKELETAL)]->GetSRV();
+            thumbnailSRV = m_assetManagerCached->GetResourceAsset(SkeletalMeshAssetTN)->GetSRV();
             break;
         case EAssetType::ASSET_TYPE_BONE:
-            thumbnailSRV = m_thumbnails[static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_BONE)]->GetSRV();
+            thumbnailSRV = m_assetManagerCached->GetResourceAsset(BoneAssetTN)->GetSRV();
             break;
         case EAssetType::ASSET_TYPE_ANIMATION:
-            thumbnailSRV = m_thumbnails[static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_ANIMATION)]->GetSRV();
+            thumbnailSRV = m_assetManagerCached->GetResourceAsset(AnimationAssetTN)->GetSRV();
             break;
         case EAssetType::ASSET_TYPE_BASE_TEXTURE:
         case EAssetType::ASSET_TYPE_SCRATCH_TEXTURE:
@@ -114,7 +90,7 @@ void AssetViewWindow::AddAssetByRecursiveKey(
         }
         case EAssetType::ASSET_TYPE_MODEL_MATERIAL:
         case EAssetType::ASSET_TYPE_IBL_MATERIAL:
-            thumbnailSRV = m_thumbnails[static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MATERIAL)]->GetSRV();
+            thumbnailSRV = m_assetManagerCached->GetResourceAsset(MaterialAssetTN)->GetSRV();
             break;
         default:
             break;

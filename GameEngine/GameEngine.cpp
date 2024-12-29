@@ -7,6 +7,8 @@
 #include "TaskModal.h"
 #include "MessageBoxModal.h"
 
+#include <future>
+
 using namespace std;
 using namespace D3D11;
 using namespace YHEngine;
@@ -23,12 +25,19 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 GameEngine::GameEngine()
 	: AApplication(), 
 	m_engine(D3D11Engine::GetInstance()), 
-	m_taskManager(TaskManager::GetInstance()), 
-	m_sessionManager("localhost", 33060, "gameEngineSession", "YHengine12!@")
+	m_taskManager(TaskManager::GetInstance())
 {
+	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
+	ID3D11DeviceContext** deviceContextAddress = m_engine->GetDeviceContextAddress();
+
+
 	/* Deffered Context */
-	m_defferedContexts[EDefferedContextType::ASSETS] = new DefferedContext(m_engine->GetDeviceAddress());
-	m_defferedContexts[EDefferedContextType::WINDOWS] = new DefferedContext(m_engine->GetDeviceAddress());
+	m_defferedContexts[EDefferedContextType::ASSETS_LOAD] = new DefferedContext(deviceAddress);
+	m_defferedContexts[EDefferedContextType::COMPONENT_UPDATE] = new DefferedContext(deviceAddress);
+	m_defferedContexts[EDefferedContextType::COMPONENT_RENDER] = new DefferedContext(deviceAddress);
+
+	/* Session Manager */
+	m_sessionManager = new SessionManager("localhost", 33060, "gameEngineSession", "YHengine12!@");
 
 	/* Asset Manager*/
 	m_assetManager = new AssetManager();
@@ -36,11 +45,17 @@ GameEngine::GameEngine()
 	m_assetManager->RegisterAssetWritePath("./Assets");
 
 	/* Component Manager*/
-	m_componentManager = new ComponentManager(&m_sessionManager, m_assetManager, m_engine->GetDeviceAddress(), m_engine->GetDeviceContextAddress());
+	m_componentManager = new ComponentManager(m_sessionManager, m_assetManager, deviceAddress, deviceContextAddress);
+
+	/* PSO Manager */
+	m_psoManager = new PSOManager(deviceAddress);
 
 	/* Window */
 	m_imguiWindows.emplace_back(new AssetViewWindow("AssetManager", m_assetManager));
-	m_imguiWindows.emplace_back(new SceneWindow("Scene", m_assetManager, m_componentManager, nullptr/* PSOManager */));
+	m_imguiWindows.emplace_back(new SceneWindow(
+		"Scene", m_defferedContexts[EDefferedContextType::COMPONENT_RENDER]->GetDefferedContextAddress(), 
+		m_assetManager, m_componentManager, nullptr/* PSOManager */
+	));
 
 	/* Modal */
 	TaskModal* taskModal = new TaskModal("Processing...");
@@ -60,7 +75,9 @@ YHEngine::GameEngine::~GameEngine()
 {
 	m_taskManager->FinishLaunchingTasks();
 
+	delete m_sessionManager;
 	delete m_assetManager;
+	delete m_componentManager;
 
 	for (auto& defferedContexts : m_defferedContexts)
 	{
@@ -94,29 +111,25 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 	ImGuiInitializer::InitImGui(m_mainWindow, device, deviceContext);
 	OnWindowSizeMove();
 
-
-
 	m_taskManager->StartLaunchingTasks();
 
-	m_taskManager->RegisterTask([&]() { m_assetManager->PreloadFromResources(); }, "Load Asset From Resources...");
+	DefferedContext* assetsLoadDefferedContext = m_defferedContexts[EDefferedContextType::ASSETS_LOAD];
 
-	DefferedContext* assetsDefferedContext = m_defferedContexts[EDefferedContextType::ASSETS];
-	DefferedContext* windowsDefferedContext = m_defferedContexts[EDefferedContextType::WINDOWS];
-
-	for (auto& imguiWindow : m_imguiWindows)
-	{
-		m_taskManager->RegisterTask([&, device, windowsDefferedContext]()
-			{ 
-				imguiWindow->InitializeWindow(device, windowsDefferedContext->GetDefferedContext());
-				windowsDefferedContext->RecordToCommandList();
-			}, "Initializing Windows..."
-		);
-	}
-
-	m_taskManager->RegisterTask([&, device, assetsDefferedContext]()
+	m_taskManager->RegisterTask([&, device, assetsLoadDefferedContext]() 
 		{ 
-			m_assetManager->PreloadFromDirectories(device, assetsDefferedContext->GetDefferedContext());
-			assetsDefferedContext->RecordToCommandList();
+			m_assetManager->PreloadFromResources(device, assetsLoadDefferedContext->GetDefferedContext());
+		}, "Load Asset From Resources..."
+	);
+
+	m_taskManager->RegisterTask([&, device, assetsLoadDefferedContext]()
+		{ 
+			m_assetManager->PreloadFromDirectories(device, assetsLoadDefferedContext->GetDefferedContext());
+		}, "Load Asset From Directories..."
+	);
+
+	m_taskManager->RegisterTask([&, assetsLoadDefferedContext]()
+		{
+			assetsLoadDefferedContext->RecordToCommandList();
 		}, "Load Asset From Directories..."
 	);
 
@@ -134,10 +147,28 @@ void GameEngine::Update(const float& deltaTime)
 
 	ID3D11DeviceContext* immediateContext = m_engine->GetDeviceContext();
 
-	for (auto& defferedContexts : m_defferedContexts)
+	future<void> assetLoadGPUTask = async(launch::deferred, [&, immediateContext]() 
+		{
+			DefferedContext* assetLoadDefferedContext = m_defferedContexts[EDefferedContextType::ASSETS_LOAD];
+			assetLoadDefferedContext->TryExecuteCommandList(immediateContext); 
+		});
+
+	future<void> componentUpdateGPUTask = async(launch::deferred, [&, immediateContext]() 
+		{
+			DefferedContext* componentUpdateDefferedContext = m_defferedContexts[EDefferedContextType::COMPONENT_UPDATE];
+			componentUpdateDefferedContext->TryExecuteCommandList(immediateContext);
+		});
+
+	for (auto& imguiWindow : m_imguiWindows)
 	{
-		defferedContexts.second->TryExecuteCommandList(immediateContext);
+		imguiWindow->PrepareWindow();
 	}
+
+	future<void> componentRenderGPUTask = async(launch::deferred, [&, immediateContext]()
+		{
+			DefferedContext* componentRenderDefferedContext = m_defferedContexts[EDefferedContextType::COMPONENT_RENDER];
+			componentRenderDefferedContext->TryExecuteCommandList(immediateContext);
+		});
 
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -159,6 +190,11 @@ void GameEngine::Update(const float& deltaTime)
 	ImGui::Render();
 	ImGui::EndFrame();
 	ImGui::UpdatePlatformWindows();
+
+	assetLoadGPUTask.wait();
+	componentUpdateGPUTask.wait();
+	componentRenderGPUTask.wait();
+
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	m_engine->GetSwapChain()->Present(1, 0);
@@ -190,7 +226,7 @@ void YHEngine::GameEngine::OnDropFiles(const HDROP& hDrop)
 		if (DragQueryFileA(hDrop, i, filePath, MAX_PATH))
 		{
 			ID3D11Device* device = m_engine->GetDevice();
-			DefferedContext* assetsDefferedContext = m_defferedContexts[EDefferedContextType::ASSETS];
+			DefferedContext* assetsDefferedContext = m_defferedContexts[EDefferedContextType::ASSETS_LOAD];
 
 			string filePathStr = string(filePath);
 

@@ -19,8 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AControl.cpp" />
+    <ClCompile Include="AUserControl.cpp" />
     <ClCompile Include="AModal.cpp" />
+    <ClCompile Include="ImGuiComboBox.cpp" />
+    <ClCompile Include="ImGuiListBox.cpp" />
+    <ClCompile Include="AImGuiSelectable.cpp" />
     <ClCompile Include="MessageBoxModal.cpp" />
     <ClCompile Include="TaskModal.cpp" />
     <ClCompile Include="AWindow.cpp" />
@@ -32,8 +35,11 @@
     <ClCompile Include="MouseEventArgs.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AControl.h" />
+    <ClInclude Include="AUserControl.h" />
     <ClInclude Include="AModal.h" />
+    <ClInclude Include="ImGuiComboBox.h" />
+    <ClInclude Include="ImGuiListBox.h" />
+    <ClInclude Include="AImGuiSelectable.h" />
     <ClInclude Include="MessageBoxModal.h" />
     <ClInclude Include="TaskModal.h" />
     <ClInclude Include="AWindow.h" />

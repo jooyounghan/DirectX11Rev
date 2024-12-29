@@ -2,6 +2,7 @@
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
+
 #include <vector>
 #include <string>
 
@@ -9,9 +10,19 @@ using namespace std;
 using namespace ImGui;
 using namespace DirectX;
 
+bool ComponentInformer::isPositionAbsolute = true;
+bool ComponentInformer::isAngleAbsolute = true;
+bool ComponentInformer::isScaleAbsolute = true;
+
 ComponentInformer::ComponentInformer(AssetManager* assetManager, ComponentManager* componentManager)
-	: m_assetManagerCached(assetManager), m_componentManagerCached(componentManager)
+	: m_assetManagerCached(assetManager), m_componentManagerCached(componentManager),
+	m_absRelativeComboPosition({"Absolute", "Relative"}, "AbsRelativePositionCombo", "", ImGuiComboFlags_WidthFitPreview),
+	m_absRelativeComboAngle({ "Absolute", "Relative" }, "AbsRelativeAngleCombo", "", ImGuiComboFlags_WidthFitPreview),
+	m_absRelativeComboScale({ "Absolute", "Relative" }, "AbsRelativeScaleCombo", "", ImGuiComboFlags_WidthFitPreview)
 {
+	m_absRelativeComboPosition.OnSelChanged = [&](const size_t& idx, const string&) { isPositionAbsolute = !static_cast<bool>(idx); };
+	m_absRelativeComboAngle.OnSelChanged = [&](const size_t& idx, const string&) { isAngleAbsolute = !static_cast<bool>(idx); };
+	m_absRelativeComboScale.OnSelChanged = [&](const size_t& idx, const string&) { isScaleAbsolute = !static_cast<bool>(idx); };
 }
 
 void ComponentInformer::Visit(StaticMeshComponent* staticMeshComponent)
@@ -41,28 +52,25 @@ void ComponentInformer::Visit(CameraComponent* cameraComponent)
 
 void ComponentInformer::RenderComponentTransformation(AComponent* component)
 {
-	Text("Transformation");
+	SeparatorText("Transformation");
 
-	static bool isAbsolutePosition = 0;
+	static bool isAbsolutePosition = false;
 	static bool isAbsoluteAngle = 0;
 	static bool isAbsoluteScale = 0;
 
 	AComponent* parentComponent = component->GetParentComponent();
 
 	RenderTransformationEntity(
-		isAbsolutePosition,
 		"RenderPositionEntity", "Position", 
 		component, EComponentEntityType::ENTITY_POSITION,
 		1.f, -1E9f, 1E9f
 	);
 	RenderTransformationEntity(
-		isAbsoluteAngle,
 		"RenderAngleEntity", "Angle",
 		component, EComponentEntityType::ENTITY_ANGLE,
 		0.1f, -360.f, 360.f
 	);
 	RenderTransformationEntity(
-		isAbsoluteScale,
 		"RenderScaleEntity", "Scale",
 		component, EComponentEntityType::ENTITY_SCALE,
 		0.01f, 1E-3f, 10.f
@@ -71,70 +79,36 @@ void ComponentInformer::RenderComponentTransformation(AComponent* component)
 
 void ComponentInformer::RenderMeshComponent(AMeshComponent* meshComponent)
 {
-	Text("Materials");
+	SeparatorText("Materials");
 	for (const string& materialName : meshComponent->GetModelMaterialName())
 	{
 		Text(materialName.c_str());
 	}
 }
 
-void ComponentInformer::RenderAbsoluteRelativeSelector(bool& isAbsolute, AComponent* component)
-{
-	vector<std::string> items = { "Absolute", "Relative" };
-
-	AComponent* parentComponent = component->GetParentComponent();
-	if (parentComponent == nullptr)
-	{
-		isAbsolute = true;
-		return;
-	}
-
-	size_t previewIdx = isAbsolute ? 0 : 1;
-	if (BeginCombo("", items[previewIdx].c_str(), ImGuiComboFlags_WidthFitPreview))
-	{
-		for (size_t idx = 0; idx < items.size(); idx++)
-		{
-			const bool isSelected = (isAbsolute == (idx == 0));
-			if (Selectable(items[idx].c_str(), isSelected))
-			{
-				isAbsolute = (idx == 0);
-			}
-
-			if (isSelected)
-				SetItemDefaultFocus();
-		}
-		EndCombo();
-	}
-}
-
 void ComponentInformer::RenderTransformationEntity(
-	bool& isAbsolute, const char* groupID,
-	const char* entityName, AComponent* component, const EComponentEntityType& entityType,
+	const char* groupID, const char* entityName, 
+	AComponent* component, const EComponentEntityType& entityType,
 	const float& valueSpeed, const float& minValue, const float& maxValue
 )
 {
-	PushID(groupID);
-	Text(entityName);
-	RenderAbsoluteRelativeSelector(isAbsolute, component);
-	SameLine();
-
 	AComponent* parentComponent = component->GetParentComponent();
 	XMVECTOR absoluteParentEntity = XMVectorZero();
 	XMVECTOR absoluteEntity = XMVectorZero();
 	float* relativeEntityAddress = nullptr;
 
-	const auto getParentEntity = [&]() -> XMVECTOR 
+	const auto GetParentEntity = [&]() -> XMVECTOR
 		{
-			switch (entityType)	
+			switch (entityType)
 			{
 			case EComponentEntityType::ENTITY_POSITION: return parentComponent ? parentComponent->GetAbsolutePosition() : XMVectorZero();
 			case EComponentEntityType::ENTITY_ANGLE: return parentComponent ? parentComponent->GetAbsoluteAngle() : XMVectorZero();
 			case EComponentEntityType::ENTITY_SCALE: return parentComponent ? parentComponent->GetAbsoluteScale() : XMVectorZero();
 			default: return XMVectorZero();
 			}
-	};
+		};
 
-	const auto getRelativeEntityRef = [&]() -> XMVECTOR& 
+	const auto GetRelativeEntityRef = [&]() -> XMVECTOR&
 		{
 			switch (entityType) {
 			case EComponentEntityType::ENTITY_POSITION: return component->GetRelativePositionRef();
@@ -142,14 +116,54 @@ void ComponentInformer::RenderTransformationEntity(
 			case EComponentEntityType::ENTITY_SCALE: return component->GetRelativeScaleRef();
 			default: throw std::invalid_argument("Invalid entity type");
 			}
-	};
+		};
 
-	absoluteParentEntity = getParentEntity();
-	XMVECTOR& relativeEntity = getRelativeEntityRef();
+	const auto RenderAbsoluteRelativeSelector = [&]()
+		{
+			if (parentComponent == nullptr)
+			{
+				switch (entityType)
+				{
+				case EComponentEntityType::ENTITY_POSITION: isPositionAbsolute = true; break;
+				case EComponentEntityType::ENTITY_ANGLE: isAngleAbsolute = true; break;
+				case EComponentEntityType::ENTITY_SCALE: isScaleAbsolute = true; break;
+				default: throw std::invalid_argument("Invalid entity type");
+				}
+				return;
+			}
+
+			switch (entityType) 
+			{
+			case EComponentEntityType::ENTITY_POSITION: return m_absRelativeComboPosition.Draw();
+			case EComponentEntityType::ENTITY_ANGLE: return m_absRelativeComboAngle.Draw();
+			case EComponentEntityType::ENTITY_SCALE: return m_absRelativeComboScale.Draw();
+			default: throw std::invalid_argument("Invalid entity type");
+			}
+		};
+
+	const auto GetIsAbsolute = [&]() -> const bool
+		{
+			switch (entityType)
+			{
+			case EComponentEntityType::ENTITY_POSITION: return isPositionAbsolute;
+			case EComponentEntityType::ENTITY_ANGLE: return isAngleAbsolute;
+			case EComponentEntityType::ENTITY_SCALE: return isScaleAbsolute;
+			default: throw std::invalid_argument("Invalid entity type");
+			}
+		};
+
+
+	PushID(groupID);
+	Text(entityName);
+	RenderAbsoluteRelativeSelector();
+	SameLine();
+
+	absoluteParentEntity = GetParentEntity();
+	XMVECTOR& relativeEntity = GetRelativeEntityRef();
 	absoluteEntity = XMVectorAdd(absoluteParentEntity, relativeEntity);
 	relativeEntityAddress = &relativeEntity.m128_f32[0];
 
-	if (isAbsolute) 
+	if (GetIsAbsolute())
 	{
 		if (DragFloat3("", &absoluteEntity.m128_f32[0], valueSpeed, minValue, maxValue))
 		{
@@ -170,5 +184,4 @@ void ComponentInformer::RenderTransformationEntity(
 	}
 
 	PopID();
-	Separator();
 }

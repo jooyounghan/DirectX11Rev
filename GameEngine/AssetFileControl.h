@@ -1,9 +1,9 @@
 #pragma once
 #include "Asset.h"
-#include "AControl.h"
+#include "AUserControl.h"
 #include "AssetReader.h"
 
-class AssetFileControl : public AControl
+class AssetFileControl : public AUserControl
 {
 public:
 	AssetFileControl(const EAssetType& assetType, AAsset* asset, ID3D11ShaderResourceView* thumbnailSRV);

@@ -50,11 +50,13 @@ void AssetManager::RegisterAssetWritePath(const std::string& writePath)
 	
 }
 
-void AssetManager::PreloadFromResources()
+void AssetManager::PreloadFromResources(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
+	AssetInitializer assetGPUInitializer(this, device, deviceContext);
 	const vector<BaseTextureAsset*> bitmapResourceAssets = m_resourceManager.LoadBitmapResources();
 	for (BaseTextureAsset* const bitmapResourceAsset : bitmapResourceAssets)
 	{
+		bitmapResourceAsset->Accept(&assetGPUInitializer);
 		m_assetNameToAssets[EAssetType::ASSET_TYPE_RESOURCE].emplace(bitmapResourceAsset->GetAssetName(), bitmapResourceAsset);
 	}
 }
