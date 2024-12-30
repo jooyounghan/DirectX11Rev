@@ -6,7 +6,7 @@ class SceneDefferedRenderer : public ASceneRenderer
 public:
 	SceneDefferedRenderer(
 		ID3D11DeviceContext** deviceContextAddress, 
-		PSOManager* psoManager
+		ComponentPSOManager* componentPsoManager
 	);
 
 public:

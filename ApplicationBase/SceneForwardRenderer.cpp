@@ -2,9 +2,9 @@
 
 SceneForwardRenderer::SceneForwardRenderer(
 	ID3D11DeviceContext** deviceContextAddress,
-	PSOManager* psoManager
+	ComponentPSOManager* componentPsoManager
 )
-	: ASceneRenderer(deviceContextAddress, psoManager)
+	: ASceneRenderer(deviceContextAddress, componentPsoManager)
 {
 }
 

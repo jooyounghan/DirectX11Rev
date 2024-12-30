@@ -6,7 +6,7 @@ class SceneForwardRenderer : public ASceneRenderer
 public:
 	SceneForwardRenderer(
 		ID3D11DeviceContext** deviceContextAddress, 
-		PSOManager* psoManager
+		ComponentPSOManager* componentPsoManager
 	);
 
 public:

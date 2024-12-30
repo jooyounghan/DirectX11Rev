@@ -17,7 +17,7 @@ protected:
 protected:
 	std::unordered_map<std::string, std::unique_ptr<AShader>> m_registeredShaders;
 
-public:
+protected:
 	void RegisterVertexShader(const std::string& shaderName, const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs, const std::wstring& shaderPath, const std::string& entryPoint, const std::string& targetVersion, ID3D11Device* device);
 	void RegisterPixelShader(const std::string& shaderName, const UINT& renderTargetCounts, const std::wstring& shaderPath, const std::string& entryPoint, const std::string& targetVersion, ID3D11Device* device);
 	void RegisterHullShader(const std::string& shaderName, const std::wstring& shaderPath, const std::string& entryPoint, const std::string& targetVersion, ID3D11Device* device);
@@ -44,7 +44,7 @@ protected:
 	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D11RasterizerState>> m_registeredRasterizerStates;
 	std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D11SamplerState>> m_registeredSamplerStates;
 
-public:
+protected:
 	void RegisterDepthStencilState(
 		const std::string& stateName,
 		const BOOL& depthEnable,
@@ -72,7 +72,7 @@ public:
 		const D3D11_FILTER& filter
 	);
 
-public:
+protected:
 	ID3D11DepthStencilState* GetDepthStencilState(const std::string& stateName);
 	ID3D11BlendState* GetBlendState(const std::string& stateName);
 	ID3D11RasterizerState* GetRasterizerState(const std::string& stateName);

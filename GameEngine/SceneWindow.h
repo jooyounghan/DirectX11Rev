@@ -1,7 +1,7 @@
 #pragma once
 #include "AWindow.h"
 
-#include "PSOManager.h"
+#include "ComponentPSOManager.h"
 #include "Scene.h"
 #include "CameraComponent.h"
 #include "ComponentInformer.h"
@@ -25,13 +25,13 @@ public:
 		ID3D11DeviceContext** deviceConextAddress,
 		AssetManager* assetManager,
 		ComponentManager* componentManager, 
-		PSOManager* psoManager
+		ComponentPSOManager* componentPsoManager
 	);
 
 private:
 	Scene* m_selectedScene = nullptr;
 	ComponentManager* m_componentManagerCached = nullptr;
-	PSOManager* m_psoManageCached = nullptr;
+	ComponentPSOManager* m_componentPsoManageCached = nullptr;
 
 public:
 	virtual void PrepareWindow() override;

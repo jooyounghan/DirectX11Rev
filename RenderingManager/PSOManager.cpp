@@ -58,11 +58,8 @@ inline void PSOManager::RegisterShaderImpl(
 	Args... args
 )
 {
-	if (m_registeredShaders.find(shaderName) != m_registeredShaders.end())
-	{
-		m_registeredShaders[shaderName] = make_unique<ShaderType>(args...);
-		m_registeredShaders[shaderName]->CreateShader(shaderPath, entryPoint, targetVersion, device);
-	}
+	m_registeredShaders[shaderName] = make_unique<ShaderType>(args...);
+	m_registeredShaders[shaderName]->CreateShader(shaderPath, entryPoint, targetVersion, device);
 }
 
 

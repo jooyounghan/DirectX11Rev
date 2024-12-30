@@ -6,7 +6,7 @@
 
 #include "AssetManager.h"
 #include "TaskManager.h"
-#include "PSOManager.h"
+#include "ComponentPSOManager.h"
 
 #include "SessionManager.h"
 #include "ComponentManager.h"
@@ -54,7 +54,7 @@ namespace YHEngine
 		SessionManager* m_sessionManager = nullptr;
 		AssetManager* m_assetManager = nullptr;
 		ComponentManager* m_componentManager = nullptr;
-		PSOManager* m_psoManager = nullptr;
+		ComponentPSOManager* m_componentPSOManager = nullptr;
 
 	protected:
 		static Utilities::SColor ClearColor;

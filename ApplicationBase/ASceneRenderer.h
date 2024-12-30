@@ -1,6 +1,5 @@
 #pragma once
-#include "PSOManager.h"
-#include "PSOObject.h"
+#include "ComponentPSOManager.h"
 #include "IComponentVisitor.h"
 
 class ASceneRenderer : public IComponentVisitor
@@ -8,12 +7,12 @@ class ASceneRenderer : public IComponentVisitor
 public:
 	ASceneRenderer(
 		ID3D11DeviceContext** deviceContextAddress, 
-		PSOManager* psoManager
+		ComponentPSOManager* componentPsoManager
 	);
 
 protected:
 	ID3D11DeviceContext** m_deviceContextAddress = nullptr;
-	PSOManager* m_psoManagerCached = nullptr;
+	ComponentPSOManager* m_componentPsoManagerCached = nullptr;
 
 public:
 	virtual void Visit(StaticMeshComponent* staticMeshAsset) = 0;

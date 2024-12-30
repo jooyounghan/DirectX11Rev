@@ -13,4 +13,5 @@ void Scene::UpdateSceneMeshAsset(IStaticMeshProvider& staticMeshProvider)
 void Scene::UpdateSceneIBLMaterialAsset(IIBLMaterialProvider& iblMaterialProvider)
 {
 	iblMaterialProvider.GetIBLMaterialAsset(m_iblMaterialName);
+
 }

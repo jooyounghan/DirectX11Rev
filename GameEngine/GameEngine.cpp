@@ -48,7 +48,7 @@ GameEngine::GameEngine()
 	m_componentManager = new ComponentManager(m_sessionManager, m_assetManager, deviceAddress, deviceContextAddress);
 
 	/* PSO Manager */
-	m_psoManager = new PSOManager(deviceAddress);
+	m_componentPSOManager = new ComponentPSOManager(deviceAddress);
 
 	/* Window */
 	m_imguiWindows.emplace_back(new AssetViewWindow("AssetManager", m_assetManager));
@@ -112,6 +112,12 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 	OnWindowSizeMove();
 
 	m_taskManager->StartLaunchingTasks();
+
+	m_taskManager->RegisterTask([&]()
+		{
+			m_componentPSOManager->InitComopnentPSOManager();
+		}, "Compiling Shaders..."
+	);
 
 	DefferedContext* assetsLoadDefferedContext = m_defferedContexts[EDefferedContextType::ASSETS_LOAD];
 

@@ -9,13 +9,13 @@ SceneWindow::SceneWindow(
     ID3D11DeviceContext** deviceConextAddress,
     AssetManager* assetManager,
     ComponentManager* componentManager,
-    PSOManager* psoManager
+    ComponentPSOManager* componentPsoManager
 )
     : AWindow(windowID), m_componentManagerCached(componentManager),
-    m_psoManageCached(psoManager),
+    m_componentPsoManageCached(componentPsoManager),
     m_componentInformer(assetManager, componentManager),
-    m_forwardRenderer(deviceConextAddress, psoManager),
-    m_defferedRenderer(deviceConextAddress, psoManager),
+    m_forwardRenderer(deviceConextAddress, m_componentPsoManageCached),
+    m_defferedRenderer(deviceConextAddress, m_componentPsoManageCached),
     m_rendererComboBox({ "Forward Renderer", "Deffered Renderer" }, "RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
     m_rendererComboBox.OnSelChanged = [&](const size_t& idx, const string& text) {m_selectedRendererType = static_cast<ERendererType>(idx); };

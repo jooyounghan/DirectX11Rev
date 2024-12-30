@@ -2,8 +2,8 @@
 
 ASceneRenderer::ASceneRenderer(
 	ID3D11DeviceContext** deviceContextAddress,
-	PSOManager* psoManager
+	ComponentPSOManager* componentPsoManager
 )
-	: m_deviceContextAddress(deviceContextAddress), m_psoManagerCached(psoManager)
+	: m_deviceContextAddress(deviceContextAddress), m_componentPsoManagerCached(componentPsoManager)
 {
 }

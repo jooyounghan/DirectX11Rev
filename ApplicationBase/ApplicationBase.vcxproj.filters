@@ -58,6 +58,9 @@
     <ClInclude Include="ASceneRenderer.h">
       <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentPSOManager.h">
+      <Filter>헤더 파일\PSOManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -120,6 +123,30 @@
     <Filter Include="헤더 파일\Component\Visitor\Rendering">
       <UniqueIdentifier>{01817e33-0c5d-48e8-9ed6-7735f307b0d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PSOManager">
+      <UniqueIdentifier>{f96e35b3-6031-42b2-9f74-4d17e8cb1e0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\PSOManager">
+      <UniqueIdentifier>{52f160c7-2cca-443c-8b3b-ea56f124a5cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{69af0b85-78ea-4d4f-b920-7e4f5febf77a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\BoundingComponent">
+      <UniqueIdentifier>{402ec000-5199-4f75-9a3c-523dd4f2aa75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\MeshComponent">
+      <UniqueIdentifier>{9a6552dd-4370-49c3-adb5-6c99dbf4e683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Scene">
+      <UniqueIdentifier>{f1db2ba8-047e-491c-b1ee-ae9d2b719aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Header">
+      <UniqueIdentifier>{6a6792ac-3bce-4aca-8f19-20adbe8be766}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Resolver">
+      <UniqueIdentifier>{99851678-743c-4f84-9c37-3be0d55a3876}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
@@ -173,5 +200,66 @@
     <ClCompile Include="ASceneRenderer.cpp">
       <Filter>소스 파일\Component\Visitor\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentPSOManager.cpp">
+      <Filter>소스 파일\PSOManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\BoundingComponentHeader.hlsli">
+      <Filter>Shader\Header</Filter>
+    </None>
+    <None Include="Shaders\SceneHeader.hlsli">
+      <Filter>Shader\Header</Filter>
+    </None>
+    <None Include="Shaders\GBufferResolverHeader.hlsli">
+      <Filter>Shader\Header</Filter>
+    </None>
+    <None Include="Shaders\MeshComponentHeader.hlsli">
+      <Filter>Shader\Header</Filter>
+    </None>
+    <None Include="Shaders\MaterialComponentHeader.hlsli">
+      <Filter>Shader\Header</Filter>
+    </None>
+    <None Include="Shaders\PBRHeader.hlsli">
+      <Filter>Shader\Header</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\BoundingComponentVS.hlsl">
+      <Filter>Shader\BoundingComponent</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DefferedMeshComponentPS.hlsl">
+      <Filter>Shader\MeshComponent</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ForwardScenePS.hlsl">
+      <Filter>Shader\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SceneVS.hlsl">
+      <Filter>Shader\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GBufferResolvePS.hlsl">
+      <Filter>Shader\Resolver</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GBufferResolveVS.hlsl">
+      <Filter>Shader\Resolver</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ForwardMeshComponentPS.hlsl">
+      <Filter>Shader\MeshComponent</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\MeshComponentDS.hlsl">
+      <Filter>Shader\MeshComponent</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\MeshComponentHS.hlsl">
+      <Filter>Shader\MeshComponent</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkeletalMeshComponentVS.hlsl">
+      <Filter>Shader\MeshComponent</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticMeshComponentVS.hlsl">
+      <Filter>Shader\MeshComponent</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ForwardBoundingComponentPS.hlsl">
+      <Filter>Shader\BoundingComponent</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
