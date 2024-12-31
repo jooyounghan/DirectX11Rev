@@ -1,6 +1,6 @@
 #include "AssetContextMenu.h"
 
-#include "ACanvasWindow.h"
+#include "ANodeEditorWindow.h"
 
 using namespace std;
 using namespace ImGui;
@@ -24,7 +24,7 @@ bool AssetContextMenu::OpenCondition()
 
 void AssetContextMenu::RenderNotification()
 {
-    static ACanvasWindow test("tttttt");
+    static ANodeEditorWindow test("tttttt");
     test.ShowWindow();
 
     if (BeginMenu("Create Asset"))

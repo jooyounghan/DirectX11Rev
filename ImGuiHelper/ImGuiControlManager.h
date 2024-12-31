@@ -1,46 +1,35 @@
 #pragma once
-#include "AUserControl.h"
+#include "AInteractable.h"
+#include "ZIndexComparer.h"
+
 #include <set>
+#include <functional>
 
-class ControlZComparer
+class ImGuiInteractionManager
 {
 public:
-    bool operator()(AUserControl* control1, AUserControl* control2) const
-    {
-        if (control1->GetZIndex() != control2->GetZIndex())
-        {
-            return control1->GetZIndex() > control2->GetZIndex();
-        }
-        return control1 < control2;
-    }
-};
-
-
-class ImGuiControlManager
-{
-public:
-	ImGuiControlManager() = default;
+	ImGuiInteractionManager() = default;
 
 protected:
-    std::set<AUserControl*, ControlZComparer> m_controls;
+    std::set<AInteractable*, ZIndexComparer> m_interactables;
 
 public:
-    inline void RegisterControl(AUserControl* control) { m_controls.insert(control); }
-    inline void DeregisterControl(AUserControl* control) { m_controls.erase(control); }
-    inline void ClearRegisteredControl() { m_controls.clear(); }
+    inline void RegisterInteractable(AInteractable* interactable) { m_interactables.insert(interactable); }
+    inline void DeregisterInteractable(AInteractable* interactable) { m_interactables.erase(interactable); }
+    inline void ClearRegisteredInteractables() { m_interactables.clear(); }
     void CheckMouseControlEvents();
 
 private:
-    void IterateControlWithMouseEvent(MouseEventArgs& mouseEventArgs);
-    void IterateControlsWithMouseClickEvent(
+    void IterateInteractablesWithMouseEvent(MouseEventArgs& mouseEventArgs);
+    void IterateInteractablesWithMouseClickEvent(
         MouseClickEventArgs& mouseClickedEventArgs, 
-        const std::function<void(AUserControl* const, MouseClickEventArgs&)>& checker
+        const std::function<void(AInteractable* const, MouseClickEventArgs&)>& checker
     );
 
 private:
-    static void RaiseClickEvent(AUserControl* const control, MouseClickEventArgs& args);
-    static void RaiseDoubleClickEvent(AUserControl* const control, MouseClickEventArgs& args);
-    static void RaiseDownEvent(AUserControl* const control, MouseClickEventArgs& args);
-    static void RaiseReleasedEvent(AUserControl* const control, MouseClickEventArgs& args);
+    static void RaiseClickEvent(AInteractable* const interactable, MouseClickEventArgs& args);
+    static void RaiseDoubleClickEvent(AInteractable* const interactable, MouseClickEventArgs& args);
+    static void RaiseDownEvent(AInteractable* const interactable, MouseClickEventArgs& args);
+    static void RaiseReleasedEvent(AInteractable* const interactable, MouseClickEventArgs& args);
 };
 

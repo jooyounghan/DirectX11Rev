@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ACanvasWindow.cpp" />
+    <ClCompile Include="ADrawElement.cpp" />
+    <ClCompile Include="AInteractable.cpp" />
+    <ClCompile Include="ANode.cpp" />
+    <ClCompile Include="ANodeEditorWindow.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="AContextMenu.cpp" />
     <ClCompile Include="ANotificator.cpp" />
@@ -37,9 +40,14 @@
     <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="MouseClickEventArgs.cpp" />
     <ClCompile Include="MouseEventArgs.cpp" />
+    <ClCompile Include="ZIndexable.cpp" />
+    <ClCompile Include="ZIndexComparer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ACanvasWindow.h" />
+    <ClInclude Include="ADrawElement.h" />
+    <ClInclude Include="AInteractable.h" />
+    <ClInclude Include="ANode.h" />
+    <ClInclude Include="ANodeEditorWindow.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="AContextMenu.h" />
     <ClInclude Include="ANotificator.h" />
@@ -57,6 +65,8 @@
     <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="MouseClickEventArgs.h" />
     <ClInclude Include="MouseEventArgs.h" />
+    <ClInclude Include="ZIndexable.h" />
+    <ClInclude Include="ZIndexComparer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

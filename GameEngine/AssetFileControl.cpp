@@ -54,9 +54,9 @@ void AssetFileControl::RenderControlImpl()
 
 bool AssetFileControl::IsPointIn(const float& pointX, const float& pointY) const 
 {
-	if (m_left <= pointX && pointX <= m_left + m_width)
+	if (m_leftTop.x <= pointX && pointX <= m_leftTop.x + m_width)
 	{
-		if (m_top <= pointY && pointY <= m_top + m_height)
+		if (m_leftTop.y <= pointY && pointY <= m_leftTop.y + m_height)
 		{
 			return true;
 		}

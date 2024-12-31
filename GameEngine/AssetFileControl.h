@@ -1,6 +1,9 @@
 #pragma once
 #include "AUserControl.h"
 
+#include <d3d11.h>
+#include <string>
+
 class AAsset;
 enum class EAssetType;
 

@@ -4,9 +4,11 @@ using namespace ImGui;
 
 void AUserControl::RenderControl()
 {
-	const ImVec2 cursorScrennPos = GetCursorScreenPos();
-	m_left = cursorScrennPos.x;
-	m_top = cursorScrennPos.y;
-
+	AdjustPosition();
 	RenderControlImpl();
+}
+
+void AUserControl::AdjustPosition()
+{
+	m_leftTop = GetCursorScreenPos();
 }

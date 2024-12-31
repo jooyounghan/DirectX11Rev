@@ -133,10 +133,10 @@ void AssetViewWindow::RenderAssetFolderStructureByRecursive(const string& folder
     {
         m_selectedFolders = assetFolder;
 
-        ClearRegisteredControl();
+        ClearRegisteredInteractables();
         for (auto& assetControl : m_selectedFolders->m_assetControls)
         {
-            RegisterControl(assetControl.get());
+            RegisterInteractable(assetControl.get());
         }
     }
 

@@ -2,10 +2,10 @@
 #include "AWindow.h"
 #include "Canvas.h"
 
-class ACanvasWindow : public AWindow
+class ANodeEditorWindow : public AWindow
 {
 public:
-	ACanvasWindow(const std::string& windowID);
+	ANodeEditorWindow(const std::string& windowID);
 
 public:
 	virtual void PrepareWindow() override {};

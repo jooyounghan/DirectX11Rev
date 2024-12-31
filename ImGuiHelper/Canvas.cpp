@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include <math.h>
 
 using namespace std;
 using namespace ImGui;
@@ -7,17 +8,24 @@ Canvas::Canvas()
 {
 }
 
+Canvas::~Canvas()
+{
+    for (ANode* node : m_nodes)
+    {
+        delete node;
+    }
+}
+
+void Canvas::AddNode(const ImVec2& leftTop, const ImVec2& size)
+{
+    ANode* node = new ANode(leftTop, size, m_originPosition);
+    RegisterInteractable(node);
+    m_nodes.emplace_back(node);
+}
+
 void Canvas::RenderControlImpl()
 {
     ImGuiIO& io = GetIO();
-    
-    m_leftTop.x = m_left;
-    m_leftTop.y = m_top;
-    const ImVec2 availRegionSize = GetContentRegionAvail();
-    m_canvasSize.x = availRegionSize.x < 10.f ? 10.f : availRegionSize.x;
-    m_canvasSize.y = availRegionSize.y < 10.f ? 10.f : availRegionSize.y;
-    m_rightBottom.x = m_left + m_canvasSize.x;
-    m_rightBottom.y = m_top + m_canvasSize.y;
 
     RenderGridStep(32.f);
 
@@ -29,11 +37,28 @@ void Canvas::RenderControlImpl()
         m_scrollingPosition.y += io.MouseDelta.y;
     }
 
-
     ImDrawList* drawList = GetWindowDrawList();
-    m_originPosition = ImVec2(m_left + m_scrollingPosition.x, m_top + m_scrollingPosition.y);
-    const ImVec2 canvasMousePos(io.MousePos.x - m_originPosition.x, io.MousePos.y - m_originPosition.y);
+    m_originPosition = ImVec2(m_leftTop.x + m_scrollingPosition.x, m_leftTop.y + m_scrollingPosition.y);
 
+    for (ANode* node : m_nodes)
+    {
+        node->Draw(drawList);
+    }
+
+    CheckMouseControlEvents();
+    //const ImVec2 canvasMousePos(io.MousePos.x - m_originPosition.x, io.MousePos.y - m_originPosition.y);
+
+}
+
+void Canvas::AdjustPosition()
+{
+    AUserControl::AdjustPosition();
+    const ImVec2 availRegionSize = GetContentRegionAvail();
+    m_canvasSize.x = availRegionSize.x < 10.f ? 10.f : availRegionSize.x;
+    m_canvasSize.y = availRegionSize.y < 10.f ? 10.f : availRegionSize.y;
+
+    m_rightBottom.x = m_leftTop.x + m_canvasSize.x;
+    m_rightBottom.y = m_leftTop.y + m_canvasSize.y;
 }
 
 void Canvas::RenderGridStep(const float& gridStepSize)
@@ -47,11 +72,11 @@ void Canvas::RenderGridStep(const float& gridStepSize)
 
     for (float x = fmodf(m_scrollingPosition.x, gridStepSize); x < m_canvasSize.x; x += gridStepSize)
     {
-        DrawList->AddLine(ImVec2(m_left + x, m_top), ImVec2(m_left + x, m_rightBottom.y), IM_COL32(200, 200, 200, 40));
+        DrawList->AddLine(ImVec2(m_leftTop.x + x, m_leftTop.y), ImVec2(m_leftTop.x + x, m_rightBottom.y), IM_COL32(200, 200, 200, 40));
     }
     for (float y = fmodf(m_scrollingPosition.y, gridStepSize); y < m_canvasSize.y; y += gridStepSize)
     {
-        DrawList->AddLine(ImVec2(m_left, m_top + y), ImVec2(m_rightBottom.x, m_top + y), IM_COL32(200, 200, 200, 40));
+        DrawList->AddLine(ImVec2(m_leftTop.x, m_leftTop.y + y), ImVec2(m_rightBottom.x, m_leftTop.y + y), IM_COL32(200, 200, 200, 40));
     }
 }
 

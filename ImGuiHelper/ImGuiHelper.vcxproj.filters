@@ -70,17 +70,35 @@
     <Filter Include="헤더 파일\Canvas">
       <UniqueIdentifier>{faef9a32-ef60-4ff8-a09e-93eae43e7593}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Control\Canvas">
-      <UniqueIdentifier>{ce55edb3-86ef-4451-aa95-bed7d48f3bb8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Control\Canvas">
-      <UniqueIdentifier>{afc38c6b-af94-43c0-a6a2-359aa5e91fba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Window\Extended">
       <UniqueIdentifier>{54cb20a9-5f5a-4caa-b73a-c73f87a545f8}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Window\Extended">
       <UniqueIdentifier>{ad2f7453-ed29-4f82-ba62-0b4a2734e381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Control\NodeEditor">
+      <UniqueIdentifier>{00ed7351-a29d-4615-bc42-54c6536ec02d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Control\NodeEditor\Canvas">
+      <UniqueIdentifier>{ce55edb3-86ef-4451-aa95-bed7d48f3bb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\NodeEditor">
+      <UniqueIdentifier>{0b3bcb80-b408-4219-8a12-ea1da0ef4011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\NodeEditor\Canvas">
+      <UniqueIdentifier>{afc38c6b-af94-43c0-a6a2-359aa5e91fba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\NodeEditor\Node">
+      <UniqueIdentifier>{a218bd9b-569d-44c6-9ab1-ec916a0f7537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Control\NodeEditor\Node">
+      <UniqueIdentifier>{04f4a747-bfb2-488b-830e-4886efdaf915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Utilties">
+      <UniqueIdentifier>{22720d49-ed01-47c2-a846-7d0923bee948}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Utilities">
+      <UniqueIdentifier>{d3fc3f18-4492-4095-83c5-250daff64579}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -133,10 +151,25 @@
       <Filter>소스 파일\Notificator</Filter>
     </ClCompile>
     <ClCompile Include="Canvas.cpp">
-      <Filter>소스 파일\Control\Canvas</Filter>
+      <Filter>소스 파일\Control\NodeEditor\Canvas</Filter>
     </ClCompile>
-    <ClCompile Include="ACanvasWindow.cpp">
+    <ClCompile Include="ANodeEditorWindow.cpp">
       <Filter>소스 파일\Window\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="ANode.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="ZIndexable.cpp">
+      <Filter>소스 파일\Utilties</Filter>
+    </ClCompile>
+    <ClCompile Include="ZIndexComparer.cpp">
+      <Filter>소스 파일\Utilties</Filter>
+    </ClCompile>
+    <ClCompile Include="AInteractable.cpp">
+      <Filter>소스 파일\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="ADrawElement.cpp">
+      <Filter>소스 파일\Control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,10 +222,25 @@
       <Filter>헤더 파일\Notificator</Filter>
     </ClInclude>
     <ClInclude Include="Canvas.h">
-      <Filter>헤더 파일\Control\Canvas</Filter>
+      <Filter>헤더 파일\Control\NodeEditor\Canvas</Filter>
     </ClInclude>
-    <ClInclude Include="ACanvasWindow.h">
+    <ClInclude Include="ANodeEditorWindow.h">
       <Filter>헤더 파일\Window\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="ANode.h">
+      <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="ZIndexable.h">
+      <Filter>헤더 파일\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ZIndexComparer.h">
+      <Filter>헤더 파일\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AInteractable.h">
+      <Filter>헤더 파일\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="ADrawElement.h">
+      <Filter>헤더 파일\Control</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
