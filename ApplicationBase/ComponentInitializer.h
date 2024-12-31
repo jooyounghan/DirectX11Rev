@@ -1,8 +1,10 @@
 #pragma once
-#include "mysqlx/xdevapi.h"
-#include "AssetManager.h"
 #include "IComponentVisitor.h"
 
+#include <mysqlx/xdevapi.h>
+
+class AssetManager;
+struct ID3D11Device;
 
 class ComponentInitializer : public IComponentVisitor
 {

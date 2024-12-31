@@ -1,4 +1,9 @@
 #include "CameraComponent.h"
+#include "Texture2DInstance.h"
+#include "RTVOption.h"
+#include "SRVOption.h"
+#include "UAVOption.h"
+#include "DynamicBuffer.h"
 
 using namespace std;
 using namespace DirectX;
@@ -11,9 +16,14 @@ CameraComponent::CameraComponent(
 	const XMFLOAT3& scale
 )
 	: AComponent(componentName, componentID, position, angle, scale),
-	m_viewProjBuffer(sizeof(SViewElement), 1), m_nearZ(GDefaultNearZ), m_farZ(GDefaultFarZ), m_fovAngle(GDefaultFovAngle)
+	m_viewProjBuffer(new DynamicBuffer(sizeof(SViewElement), 1)), m_nearZ(GDefaultNearZ), m_farZ(GDefaultFarZ), m_fovAngle(GDefaultFovAngle)
 {
 
+}
+
+CameraComponent::~CameraComponent()
+{
+	delete m_viewProjBuffer;
 }
 
 void CameraComponent::SetCameraProperties(
@@ -51,7 +61,7 @@ XMMATRIX CameraComponent::GetProjectionMatrix()
 void CameraComponent::InitEntity(ID3D11Device* device)
 {
 	AComponent::InitEntity(device);
-	m_viewProjBuffer.Initialize(device);
+	m_viewProjBuffer->Initialize(device);
 	m_film = new Texture2DInstance<SRVOption, RTVOption, UAVOption>(
 		static_cast<uint32_t>(Width), static_cast<uint32_t>(Height), 1, NULL, NULL,
 		D3D11_USAGE_DEFAULT, 
@@ -65,7 +75,7 @@ void CameraComponent::UpdateEntity(ID3D11Device* device, ID3D11DeviceContext* de
 	AComponent::UpdateEntity(device, deviceContext);
 	m_viewElement.m_viewProj = GetViewMatrix() * GetProjectionMatrix();
 	m_viewElement.m_invViewProj = XMMatrixInverse(nullptr, m_viewElement.m_viewProj);
-	m_viewProjBuffer.Upload(device, deviceContext, sizeof(SViewElement), 1, &m_viewElement);
+	m_viewProjBuffer->Upload(device, deviceContext, sizeof(SViewElement), 1, &m_viewElement);
 }
 
 void CameraComponent::Accept(IComponentVisitor* visitor)

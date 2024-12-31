@@ -1,12 +1,16 @@
 #pragma once
 #include <memory>
-#include "BoneAsset.h"
-#include "AnimationAsset.h"
+#include <map>
+#include <unordered_map>
+#include <string>
 
 namespace DirectX
 {
 	struct XMMATRIX;
 }
+class Bone;
+class BoneAsset;
+class AnimationAsset;
 
 class AnimationRetargeter
 {

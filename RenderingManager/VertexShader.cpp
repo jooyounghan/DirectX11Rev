@@ -3,8 +3,12 @@
 
 using namespace std;
 
-VertexShader::VertexShader(const vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs)
-	: m_inputElementDescs(inputElementDescs)
+VertexShader::VertexShader(
+    const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs,
+    const D3D11_PRIMITIVE_TOPOLOGY& topology
+)
+	: m_inputElementDescs(inputElementDescs),
+    m_topology(topology)
 {
 }
 
@@ -32,6 +36,7 @@ void VertexShader::CreateShaderImpl(
 void VertexShader::SetShader(ID3D11DeviceContext* deviceContext) const
 {
     deviceContext->IASetInputLayout(m_inputLayout.Get());
+    deviceContext->IASetPrimitiveTopology(m_topology);
     deviceContext->VSSetShader(m_vertexShader.Get(), NULL, NULL);
 }
 

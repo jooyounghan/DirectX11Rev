@@ -8,14 +8,14 @@ public:
 	virtual ~MessageBoxModal();
 
 protected:
-	bool m_isPopped = false;
 	std::string m_message;
 
 public:
-	void ModalMessage(const std::string& message);
+	void SetMessage(const std::string& message);
 
 protected:
-	virtual bool ModalCondition() override final;
-	virtual void RenderModal() override final;
+	virtual bool OpenCondition() override final;
+	virtual bool CloseCondition() override final;
+	virtual void RenderNotification() override final;
 };
 

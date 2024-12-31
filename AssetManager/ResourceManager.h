@@ -1,6 +1,4 @@
 #pragma once
-#include "BaseTextureAsset.h"
-
 #include <windows.h>
 #include <vector>
 
@@ -16,6 +14,8 @@ struct SResourceInfo
     uint32_t height;
     std::vector<uint8_t> resourceData;
 };
+
+class BaseTextureAsset;
 
 class ResourceManager
 {

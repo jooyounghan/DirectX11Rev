@@ -64,16 +64,16 @@ public:
 	};
 
 public:
-	AShader* GetComponentPSOVertexShader(const EComponentPSOVertexShader& vsEnum);
-	AShader* GetComponentPSOPixelShader(const EComponentPSOPixelShader& vsEnum);
-	AShader* GetComponentPSOHullShader(const EComponentPSOHullShader& vsEnum);
-	AShader* GetComponentPSODomainShader(const EComponentPSODomainShader& vsEnum);
+	AShader* const  GetComponentPSOVertexShader(const EComponentPSOVertexShader& vsEnum);
+	AShader* const  GetComponentPSOPixelShader(const EComponentPSOPixelShader& vsEnum);
+	AShader* const GetComponentPSOHullShader(const EComponentPSOHullShader& vsEnum);
+	AShader* const  GetComponentPSODomainShader(const EComponentPSODomainShader& vsEnum);
 
 public:
-	ID3D11DepthStencilState* GetComponentPSODepthStencilState(const EComponentPSODeptshStencilState& dssEnum);
-	ID3D11BlendState* GetComponentPSOBlendState(const EComponentPSOBlendState& bsEnum);
-	ID3D11RasterizerState* GetComponentPSORasterizerState(const EComponentPSORasterizerState& rsEnum);
-	ID3D11SamplerState* GetComponentPSOSamplerState(const EComponentPSOSamplerState& samplerEnum);
+	ID3D11DepthStencilState* const  GetComponentPSODepthStencilState(const EComponentPSODeptshStencilState& dssEnum);
+	ID3D11BlendState* const GetComponentPSOBlendState(const EComponentPSOBlendState& bsEnum);
+	ID3D11RasterizerState* const GetComponentPSORasterizerState(const EComponentPSORasterizerState& rsEnum);
+	ID3D11SamplerState* const  GetComponentPSOSamplerState(const EComponentPSOSamplerState& samplerEnum);
 
 private:
 	void RegisterShaderForComponent();

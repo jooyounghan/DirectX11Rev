@@ -1,5 +1,6 @@
 #include "ComponentInitializer.h"
 
+#include "AssetManager.h"
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"

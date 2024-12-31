@@ -38,8 +38,9 @@ protected:
 	std::map<uint32_t, StaticMeshPartData*> m_staticMeshPartsPerLOD;
 
 public:
-	virtual size_t GetLODCount() override;
-	virtual MeshPartsData* GetMeshPartData(const uint32_t& lodLevel) override;
+	virtual size_t GetLODCount() const override;
+	virtual MeshPartsData* AddMeshPartData(const uint32_t& lodLevel) override;
+	virtual MeshPartsData* GetMeshPartData(const uint32_t& lodLevel) const override;
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;

@@ -1,14 +1,5 @@
 #pragma once
-#include "imgui.h"
-#include "imgui_internal.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
 #include "ImGuiControlManager.h"
-
-#include <d3d11.h>
-#include <string>
-#include <functional>
-
 
 class AWindow : public ImGuiControlManager
 {

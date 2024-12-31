@@ -1,11 +1,12 @@
 #pragma once
 #include "imgui.h"
 #include "IComponentVisitor.h"
-#include "ComponentManager.h"
 #include "ImGuiComboBox.h"
 
 class ComponentEntity;
 class AMeshComponent;
+class AssetManager;
+class ComponentManager;
 
 enum class EComponentEntityType
 {

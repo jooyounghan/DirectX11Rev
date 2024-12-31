@@ -19,6 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ACanvasWindow.cpp" />
+    <ClCompile Include="Canvas.cpp" />
+    <ClCompile Include="AContextMenu.cpp" />
+    <ClCompile Include="ANotificator.cpp" />
     <ClCompile Include="AUserControl.cpp" />
     <ClCompile Include="AModal.cpp" />
     <ClCompile Include="ImGuiComboBox.cpp" />
@@ -35,6 +39,10 @@
     <ClCompile Include="MouseEventArgs.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ACanvasWindow.h" />
+    <ClInclude Include="Canvas.h" />
+    <ClInclude Include="AContextMenu.h" />
+    <ClInclude Include="ANotificator.h" />
     <ClInclude Include="AUserControl.h" />
     <ClInclude Include="AModal.h" />
     <ClInclude Include="ImGuiComboBox.h" />

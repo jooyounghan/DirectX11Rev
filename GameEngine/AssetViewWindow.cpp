@@ -1,4 +1,11 @@
 #include "AssetViewWindow.h"
+
+#include "AssetManager.h"
+#include "AssetFileControl.h"
+
+#include "Texture2DInstance.h"
+#include "SRVOption.h"
+
 #include <filesystem>
 
 using namespace std;
@@ -14,7 +21,7 @@ string AssetViewWindow::MapAssetTN = "MAPASSETTN";
 string AssetViewWindow::MaterialAssetTN = "MATERIALASSETTN";
 
 AssetViewWindow::AssetViewWindow(const std::string& windowID, AssetManager* assetManager)
-	: AWindow(windowID), m_assetManagerCached(assetManager)
+	: AWindow(windowID), m_assetManagerCached(assetManager), m_assetContextMenuModal("Asset Context Menu")
 {
     m_assetManagerCached->RegisterAssetLoadedHandler("AddAssetControl", bind(&AssetViewWindow::AddAssetControl, this, placeholders::_1, placeholders::_2, placeholders::_3));
 }
@@ -29,17 +36,20 @@ void AssetViewWindow::RenderWindowImpl()
     PushID("RenderAssetFolder");
 
     ImVec2 regionAvail = GetContentRegionAvail();
-    
+
     BeginChild("AssetFolderStructure", ImVec2(regionAvail.x * 0.2f, regionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
     RenderAssetFolderStructureByRecursive("Root", &m_assetRootFolders);
     EndChild();
     SameLine();
+
     BeginChild("SelectedAssetFolder", ImVec2(regionAvail.x * 0.8f, regionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
     RenderSelectedAssetFolders(m_selectedFolders == nullptr ? &m_assetRootFolders : m_selectedFolders);
     EndChild();
 
     PopID();
     EndGroup();
+
+    m_assetContextMenuModal.DrawNotificator();
 }
 
 void AssetViewWindow::AddAssetControl(const EAssetType& assetType, const string& assetPath, AAsset* asset)

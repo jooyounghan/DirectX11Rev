@@ -1,14 +1,9 @@
 #pragma once
 #include "AWindow.h"
 
-#include "ComponentPSOManager.h"
-#include "Scene.h"
-#include "CameraComponent.h"
 #include "ComponentInformer.h"
-
 #include "SceneForwardRenderer.h"
 #include "SceneDefferedRenderer.h"
-
 #include "ImGuiComboBox.h"
 
 enum class ERendererType
@@ -16,6 +11,14 @@ enum class ERendererType
 	FORWARD_RENDERING,
 	DEFFERED_RENDERING
 };
+
+class Scene;
+class AComponent;
+class CameraComponent;
+
+class AssetManager;
+class ComponentManager;
+class ComponentPSOManager;
 
 class SceneWindow : public AWindow
 {
@@ -29,16 +32,23 @@ public:
 	);
 
 private:
+	ID3D11DeviceContext** m_deviceContextAddressCached = nullptr;
 	Scene* m_selectedScene = nullptr;
 	ComponentManager* m_componentManagerCached = nullptr;
 	ComponentPSOManager* m_componentPsoManageCached = nullptr;
+	CameraComponent* m_selectedCamera = nullptr;
+
 
 public:
+	inline void SetCameraComponent(CameraComponent* cameraComponent) { m_selectedCamera = cameraComponent; }
 	virtual void PrepareWindow() override;
 
 private:
-	virtual void RenderWindowImpl() override;
+	void RenderScene();
 	void RenderComponentRecursive(ASceneRenderer* const renderer, const std::vector<AComponent*>& components);
+
+private:
+	virtual void RenderWindowImpl() override;
 
 private:
 	AComponent* m_selectedComponent = nullptr;

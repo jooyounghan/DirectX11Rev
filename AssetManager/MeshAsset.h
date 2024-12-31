@@ -1,9 +1,10 @@
 #pragma once
 #include "Asset.h"
-#include "ModelMaterialAsset.h"
 #include "AMeshGPUAsset.h"
-
+#include <DirectXMath.h>
 #include <map>
+
+class IModelMaterialProvider;
 
 class MeshPartsData : public ISerializable, public AMeshGPUAsset
 {
@@ -70,8 +71,9 @@ public:
 	void UpdateDefaultMaterialAsset(IModelMaterialProvider& provider);
 
 public:
-	virtual size_t GetLODCount() = 0;
-	virtual MeshPartsData* GetMeshPartData(const uint32_t& lodLevel) = 0;
+	virtual size_t GetLODCount() const = 0;
+	virtual MeshPartsData* AddMeshPartData(const uint32_t& lodLevel) = 0;
+	virtual MeshPartsData* GetMeshPartData(const uint32_t& lodLevel) const = 0;
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;

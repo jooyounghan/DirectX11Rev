@@ -1,6 +1,6 @@
 #pragma once
 #include "AShader.h"
-#include "PSOObject.h"
+#include <memory>
 #include <unordered_map>
 
 template <typename T>
@@ -18,13 +18,13 @@ protected:
 	std::unordered_map<std::string, std::unique_ptr<AShader>> m_registeredShaders;
 
 protected:
-	void RegisterVertexShader(const std::string& shaderName, const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs, const std::wstring& shaderPath, const std::string& entryPoint, const std::string& targetVersion, ID3D11Device* device);
+	void RegisterVertexShader(const std::string& shaderName, const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs, const D3D11_PRIMITIVE_TOPOLOGY& topology, const std::wstring& shaderPath, const std::string& entryPoint, const std::string& targetVersion, ID3D11Device* device);
 	void RegisterPixelShader(const std::string& shaderName, const UINT& renderTargetCounts, const std::wstring& shaderPath, const std::string& entryPoint, const std::string& targetVersion, ID3D11Device* device);
 	void RegisterHullShader(const std::string& shaderName, const std::wstring& shaderPath, const std::string& entryPoint, const std::string& targetVersion, ID3D11Device* device);
 	void RegisterDomainShader(const std::string& shaderName, const std::wstring& shaderPath, const std::string& entryPoint, const std::string& targetVersion, ID3D11Device* device);
 	void RegisterGeometryShader(const std::string& shaderName, const std::wstring& shaderPath, const std::string& entryPoint, const std::string& targetVersion, ID3D11Device* device);
 	void RegisterComputeShader(const std::string& shaderName, const std::wstring& shaderPath, const std::string& entryPoint, const std::string& targetVersion, ID3D11Device* device);
-	AShader* GetRegisteredShader(const std::string& shaderName);
+	AShader* const GetRegisteredShader(const std::string& shaderName);
 
 private:
 	template<typename ShaderType, typename ...Args>
@@ -73,9 +73,9 @@ protected:
 	);
 
 protected:
-	ID3D11DepthStencilState* GetDepthStencilState(const std::string& stateName);
-	ID3D11BlendState* GetBlendState(const std::string& stateName);
-	ID3D11RasterizerState* GetRasterizerState(const std::string& stateName);
-	ID3D11SamplerState* GetSamplerState(const std::string& stateName);
+	ID3D11DepthStencilState* const GetDepthStencilState(const std::string& stateName);
+	ID3D11BlendState* const GetBlendState(const std::string& stateName);
+	ID3D11RasterizerState* const GetRasterizerState(const std::string& stateName);
+	ID3D11SamplerState* const GetSamplerState(const std::string& stateName);
 };
 

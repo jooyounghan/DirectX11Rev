@@ -1,7 +1,8 @@
 #include "ComponentManager.h"
 
-#include "Scene.h"
+#include "AssetManager.h"
 
+#include "Scene.h"
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"

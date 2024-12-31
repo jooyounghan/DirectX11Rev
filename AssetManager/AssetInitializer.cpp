@@ -50,6 +50,7 @@ void AssetInitializer::Visit(IBLMaterialAsset* iblMaterialAsset)
 			*m_assetManager
 		);
 	}
+	iblMaterialAsset->InitializeGPUAsset(m_deviceCached, m_deviceContextCached);
 }
 
 

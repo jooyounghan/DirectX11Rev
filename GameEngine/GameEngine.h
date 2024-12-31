@@ -23,41 +23,45 @@ enum class EDefferedContextType
 	COMPONENT_RENDER
 };
 
-namespace YHEngine
+
+class GameEngine : public App::AApplication
 {
-	class GameEngine : public App::AApplication
-	{
-	public:
-		GameEngine();
-		virtual ~GameEngine();
+public:
+	GameEngine();
+	virtual ~GameEngine();
 
-	public:
-		virtual void Init(const wchar_t* className, const wchar_t* applicaitonName) override;
+public:
+	virtual void Init(const wchar_t* className, const wchar_t* applicaitonName) override;
 
-	protected:
-		virtual void Update(const float& deltaTime) override;
-		virtual void AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+protected:
+	virtual void Update(const float& deltaTime) override;
+	virtual void AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 
-	protected:
-		void OnDropFiles(const HDROP& hDrop);
+protected:
+	void OnDropFiles(const HDROP& hDrop);
 
-	protected:
-		D3D11::D3D11Engine* m_engine;
-		std::unordered_map<EDefferedContextType, DefferedContext*> m_defferedContexts;
+protected:
+	D3D11::D3D11Engine* m_engine;
+	std::unordered_map<EDefferedContextType, DefferedContext*> m_defferedContexts;
 
-	protected:
-		std::vector<AWindow*> m_imguiWindows;
-		std::vector<AModal*> m_imguiModals;
+protected:
+	std::vector<AWindow*> m_imguiWindows;
+	std::vector<AModal*> m_imguiModals;
 
-	protected:
-		TaskManager* m_taskManager = nullptr;
-		SessionManager* m_sessionManager = nullptr;
-		AssetManager* m_assetManager = nullptr;
-		ComponentManager* m_componentManager = nullptr;
-		ComponentPSOManager* m_componentPSOManager = nullptr;
+protected:
+	TaskManager* m_taskManager = nullptr;
+	SessionManager* m_sessionManager = nullptr;
+	AssetManager* m_assetManager = nullptr;
+	ComponentManager* m_componentManager = nullptr;
+	ComponentPSOManager* m_componentPSOManager = nullptr;
 
-	protected:
-		static Utilities::SColor ClearColor;
-	};
-}
+
+	// =================================Test==========================
+protected:
+	CameraComponent* m_testCamera = nullptr;
+	// ===============================================================
+
+protected:
+	static Utilities::SColor ClearColor;
+};
 

@@ -43,6 +43,15 @@
     <Filter Include="헤더 파일\GUI\Child">
       <UniqueIdentifier>{284c7c62-f08c-4734-8a0e-f3043b6ce0dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\GUI\Modal">
+      <UniqueIdentifier>{4b0895e5-aa9c-4c30-9650-5a9a38c51352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\ContextMenu">
+      <UniqueIdentifier>{98641e98-8670-4c55-8496-42a492b80e2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\Modal\CreateAsset">
+      <UniqueIdentifier>{f2e7584e-c78c-4979-9bee-43c174215690}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -63,6 +72,9 @@
     <ClCompile Include="ComponentInformer.cpp">
       <Filter>소스 파일\GUI\Child</Filter>
     </ClCompile>
+    <ClCompile Include="AssetContextMenuModal.cpp">
+      <Filter>소스 파일\GUI\Modal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -82,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="ComponentInformer.h">
       <Filter>헤더 파일\GUI\Child</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetContextMenu.h">
+      <Filter>헤더 파일\GUI\ContextMenu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

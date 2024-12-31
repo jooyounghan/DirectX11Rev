@@ -20,7 +20,8 @@ public:
 	void SetTasksCompleted();
 
 protected:
-	virtual bool ModalCondition() override final;
-	virtual void RenderModal() override final;
+	virtual bool OpenCondition() override final;
+	virtual bool CloseCondition() override final;
+	virtual void RenderNotification() override final;
 };
 

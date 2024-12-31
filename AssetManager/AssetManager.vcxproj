@@ -175,7 +175,6 @@
   <ItemGroup>
     <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationRetargeter.h" />
-    <ClInclude Include="AssetException.h" />
     <ClInclude Include="AssetInitializer.h" />
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="AssetReader.h" />
@@ -212,7 +211,6 @@
   <ItemGroup>
     <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationRetargeter.cpp" />
-    <ClCompile Include="AssetException.cpp" />
     <ClCompile Include="AssetInitializer.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AssetReader.cpp" />

@@ -1,4 +1,5 @@
 #include "StaticMeshComponent.h"
+#include "StaticMeshAsset.h"
 
 using namespace std;
 using namespace DirectX;

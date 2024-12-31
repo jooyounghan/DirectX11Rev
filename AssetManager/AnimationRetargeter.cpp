@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "AnimationRetargeter.h"
-#include "AssetException.h"
-
+#include "BoneAsset.h"
+#include "AnimationAsset.h"
 #include <unordered_set>
 
 using namespace std;

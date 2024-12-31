@@ -37,23 +37,50 @@
     <Filter Include="헤더 파일\Manager">
       <UniqueIdentifier>{c4e97d8b-703a-4ff2-af1e-a48940493946}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Modal">
-      <UniqueIdentifier>{d76455b3-cd97-4606-9719-271e753c90ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Modal">
-      <UniqueIdentifier>{551e9273-90de-4aa1-a16b-2ccfbe10ea2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Modal\Extended">
-      <UniqueIdentifier>{2878affc-9654-48cc-97ab-6d81a86daf17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Modal\Extended">
-      <UniqueIdentifier>{06ec5379-df3e-4f38-b4fc-3dc36ff3d3c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Control\Wrapper">
       <UniqueIdentifier>{c2d92a8a-64ef-4710-9147-161ff5828f70}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Control\Wrapper">
       <UniqueIdentifier>{8e12c266-aa3e-49fe-a88c-a1637788e3c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Notificator">
+      <UniqueIdentifier>{92f57726-7213-4bbe-9f0e-c3ffefd1cc33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Notificator">
+      <UniqueIdentifier>{237aa85d-9744-4cda-a011-0d1349f71bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Notificator\Modal">
+      <UniqueIdentifier>{d76455b3-cd97-4606-9719-271e753c90ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Notificator\Modal\Extended">
+      <UniqueIdentifier>{2878affc-9654-48cc-97ab-6d81a86daf17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Notificator\ContextMenu">
+      <UniqueIdentifier>{147eecd0-2bc1-4419-8200-8711c90ee9d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Notificator\Modal">
+      <UniqueIdentifier>{551e9273-90de-4aa1-a16b-2ccfbe10ea2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Notificator\Modal\Extended">
+      <UniqueIdentifier>{06ec5379-df3e-4f38-b4fc-3dc36ff3d3c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Notificator\ContextMenu">
+      <UniqueIdentifier>{47db954f-ca8b-4c84-88ae-bfc4419620b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Canvas">
+      <UniqueIdentifier>{faef9a32-ef60-4ff8-a09e-93eae43e7593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Control\Canvas">
+      <UniqueIdentifier>{ce55edb3-86ef-4451-aa95-bed7d48f3bb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\Canvas">
+      <UniqueIdentifier>{afc38c6b-af94-43c0-a6a2-359aa5e91fba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Window\Extended">
+      <UniqueIdentifier>{54cb20a9-5f5a-4caa-b73a-c73f87a545f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Window\Extended">
+      <UniqueIdentifier>{ad2f7453-ed29-4f82-ba62-0b4a2734e381}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,13 +109,10 @@
       <Filter>소스 파일\Manager</Filter>
     </ClCompile>
     <ClCompile Include="AModal.cpp">
-      <Filter>소스 파일\Modal</Filter>
+      <Filter>소스 파일\Notificator\Modal</Filter>
     </ClCompile>
     <ClCompile Include="TaskModal.cpp">
-      <Filter>소스 파일\Modal\Extended</Filter>
-    </ClCompile>
-    <ClCompile Include="MessageBoxModal.cpp">
-      <Filter>소스 파일\Modal\Extended</Filter>
+      <Filter>소스 파일\Notificator\Modal\Extended</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiComboBox.cpp">
       <Filter>소스 파일\Control\Wrapper</Filter>
@@ -98,6 +122,21 @@
     </ClCompile>
     <ClCompile Include="AImGuiSelectable.cpp">
       <Filter>소스 파일\Control\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageBoxModal.cpp">
+      <Filter>소스 파일\Notificator\Modal\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="AContextMenu.cpp">
+      <Filter>소스 파일\Notificator\ContextMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="ANotificator.cpp">
+      <Filter>소스 파일\Notificator</Filter>
+    </ClCompile>
+    <ClCompile Include="Canvas.cpp">
+      <Filter>소스 파일\Control\Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="ACanvasWindow.cpp">
+      <Filter>소스 파일\Window\Extended</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -126,13 +165,10 @@
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
     <ClInclude Include="AModal.h">
-      <Filter>헤더 파일\Modal</Filter>
+      <Filter>헤더 파일\Notificator\Modal</Filter>
     </ClInclude>
     <ClInclude Include="TaskModal.h">
-      <Filter>헤더 파일\Modal\Extended</Filter>
-    </ClInclude>
-    <ClInclude Include="MessageBoxModal.h">
-      <Filter>헤더 파일\Modal\Extended</Filter>
+      <Filter>헤더 파일\Notificator\Modal\Extended</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiComboBox.h">
       <Filter>헤더 파일\Control\Wrapper</Filter>
@@ -142,6 +178,21 @@
     </ClInclude>
     <ClInclude Include="AImGuiSelectable.h">
       <Filter>헤더 파일\Control\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageBoxModal.h">
+      <Filter>헤더 파일\Notificator\Modal\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="AContextMenu.h">
+      <Filter>헤더 파일\Notificator\ContextMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="ANotificator.h">
+      <Filter>헤더 파일\Notificator</Filter>
+    </ClInclude>
+    <ClInclude Include="Canvas.h">
+      <Filter>헤더 파일\Control\Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="ACanvasWindow.h">
+      <Filter>헤더 파일\Window\Extended</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

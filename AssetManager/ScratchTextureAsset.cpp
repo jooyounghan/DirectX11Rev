@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ScratchTextureAsset.h"
-#include "AssetException.h"
+#include "Texture2DInstance.h"
+#include "SRVOption.h"
+#include "RTVOption.h"
 
 using namespace std;
 using namespace DirectX;
@@ -15,7 +17,7 @@ ScratchTextureAsset::ScratchTextureAsset(
 		static_cast<unsigned int>(metaData.width), 
 		static_cast<unsigned int>(metaData.height),
 		static_cast<unsigned int>(metaData.arraySize)
-	)
+	), m_format(metaData.format)
 {
 	for (size_t ArrayIdx = 0; ArrayIdx < m_arraySize; ++ArrayIdx)
 	{
@@ -32,7 +34,7 @@ ScratchTextureAsset::ScratchTextureAsset(
 		}
 		else
 		{
-			AssetException assetException(*this, "ScratchImage::GetImage's Result (DirectX::Image) is nullptr");
+			exception assetException("ScratchImage::GetImage's Result (DirectX::Image) is nullptr");
 			throw assetException;
 		}
 	}
@@ -54,7 +56,7 @@ void ScratchTextureAsset::InitializeGPUAsset(
 {
 	m_resource = new Texture2DInstance<SRVOption, RTVOption>(
 		m_width, m_height, m_arraySize, m_imageBuffers, GetRowPitchArray(),
-		NULL, D3D11_RESOURCE_MISC_GENERATE_MIPS, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM,
+		NULL, D3D11_RESOURCE_MISC_GENERATE_MIPS, D3D11_USAGE_DEFAULT, m_format,
 		device, deviceContext
 	);
 }
@@ -62,12 +64,14 @@ void ScratchTextureAsset::InitializeGPUAsset(
 void ScratchTextureAsset::Serialize(FILE* fileIn) const
 {
 	ATextureAsset::Serialize(fileIn);
+	SerializeHelper::SerializeElement(m_format, fileIn);
 	SerializeHelper::SerializeSequenceContainer(m_rowPitchPerArray, fileIn);
 }
 
 void ScratchTextureAsset::Deserialize(FILE* fileIn)
 {
 	ATextureAsset::Deserialize(fileIn);
+	m_format = DeserializeHelper::DeserializeElement<DXGI_FORMAT>(fileIn);
 	m_rowPitchPerArray = DeserializeHelper::DeserializeSequenceContainer<vector<UINT>>(fileIn);
 }
 

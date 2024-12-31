@@ -9,22 +9,26 @@ MessageBoxModal::~MessageBoxModal()
 {
 }
 
-void MessageBoxModal::ModalMessage(const std::string& message)
+void MessageBoxModal::SetMessage(const std::string& message)
 {
-	m_isPopped = true;
 	m_message = message;
 }
 
-bool MessageBoxModal::ModalCondition()
+bool MessageBoxModal::OpenCondition()
 {
-	return m_isPopped;
+	return !m_message.empty();
 }
 
-void MessageBoxModal::RenderModal()
+bool MessageBoxModal::CloseCondition()
+{
+	return m_message.empty();
+}
+
+void MessageBoxModal::RenderNotification()
 {
 	ImGui::Text(m_message.c_str());
 	if (ImGui::Button("OK"))
 	{
-		m_isPopped = false;
+		m_message.clear();
 	}
 }

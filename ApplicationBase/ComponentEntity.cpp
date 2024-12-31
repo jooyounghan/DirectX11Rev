@@ -1,4 +1,6 @@
 #include "ComponentEntity.h"
+#include "DynamicBuffer.h"
+#include "ConstantBuffer.h"
 
 using namespace DirectX;
 
@@ -8,11 +10,17 @@ SComponent::SComponent(const uint32_t& componentID)
 }
 
 ComponentEntity::ComponentEntity(const uint32_t& componentID)
-	: m_transformationBuffer(sizeof(STransformation), 1),
+	: m_transformationBuffer(new DynamicBuffer(sizeof(STransformation), 1)),
 	m_transformation(),
 	m_componentConstant(componentID),
-	m_componentBuffer(sizeof(SComponent), 1, &m_componentBuffer)
+	m_componentBuffer(new ConstantBuffer(sizeof(SComponent), 1, &m_componentBuffer))
 {
+}
+
+ComponentEntity::~ComponentEntity()
+{
+	delete m_transformationBuffer;
+	delete m_componentBuffer;
 }
 
 XMMATRIX ComponentEntity::GetTranformation()
@@ -36,7 +44,7 @@ XMVECTOR ComponentEntity::GetQuaternion()
 
 void ComponentEntity::InitEntity(ID3D11Device* device)
 {
-	m_transformationBuffer.Initialize(device);
+	m_transformationBuffer->Initialize(device);
 }
 
 void ComponentEntity::UpdateEntity(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
@@ -44,6 +52,6 @@ void ComponentEntity::UpdateEntity(ID3D11Device* device, ID3D11DeviceContext* de
 	m_transformation.m_transformation = GetTranformation();
 	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
 
-	m_transformationBuffer.Upload(device, deviceContext, sizeof(STransformation), 1, &m_transformation);
+	m_transformationBuffer->Upload(device, deviceContext, sizeof(STransformation), 1, &m_transformation);
 }
 

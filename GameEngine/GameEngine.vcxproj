@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetContextMenuModal.cpp" />
     <ClCompile Include="AssetViewWindow.cpp" />
     <ClCompile Include="AssetFileControl.cpp" />
     <ClCompile Include="ComponentInformer.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="SceneWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetContextMenu.h" />
     <ClInclude Include="AssetViewWindow.h" />
     <ClInclude Include="AssetFileControl.h" />
     <ClInclude Include="ComponentInformer.h" />

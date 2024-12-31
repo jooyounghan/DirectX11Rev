@@ -1,8 +1,9 @@
 #pragma once
 #include <d3d11.h>
 #include <DirectXMath.h>
-#include "DynamicBuffer.h"
-#include "ConstantBuffer.h"
+
+class ConstantBuffer;
+class DynamicBuffer;
 
 struct STransformation
 {
@@ -12,7 +13,7 @@ struct STransformation
 
 struct SComponent
 {
-	SComponent(const uint32_t& componentID);;
+	SComponent(const uint32_t& componentID);
 	const uint32_t m_componentID;
 	const uint32_t m_dummy1;
 	const uint32_t m_dummy2;
@@ -23,6 +24,7 @@ class ComponentEntity
 {
 public:
 	ComponentEntity(const uint32_t& componentID);
+	virtual ~ComponentEntity();
 
 protected:
 	DirectX::XMVECTOR m_absolutePosition;
@@ -31,11 +33,11 @@ protected:
 
 protected:
 	STransformation m_transformation;
-	DynamicBuffer m_transformationBuffer;
+	DynamicBuffer* m_transformationBuffer;
 
 protected:
 	SComponent m_componentConstant;
-	ConstantBuffer m_componentBuffer;
+	ConstantBuffer* m_componentBuffer;
 
 public:
 	inline const uint32_t& GetComponentID() { return m_componentConstant.m_componentID; }

@@ -1,6 +1,7 @@
 #pragma once
-#include "mysqlx/xdevapi.h"
 #include "IComponentVisitor.h"
+
+#include <mysqlx/xdevapi.h>
 
 class ComponentUpdater : public IComponentVisitor
 {

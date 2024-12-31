@@ -30,12 +30,17 @@ void TaskModal::SetTasksCompleted()
 	m_isTaskProcessing = false; 
 }
 
-bool TaskModal::ModalCondition()
+bool TaskModal::OpenCondition()
 {
 	return m_isTaskProcessing;
 }
 
-void TaskModal::RenderModal()
+bool TaskModal::CloseCondition()
+{
+	return !m_isTaskProcessing;
+}
+
+void TaskModal::RenderNotification()
 {
 	ImGui::Text(m_currentTaskDescription.c_str());
 }

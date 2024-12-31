@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "BaseTextureAsset.h"
+#include "Texture2DInstance.h"
+#include "SRVOption.h"
+#include "RTVOption.h"
 
 using namespace std;
 

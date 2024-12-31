@@ -1,8 +1,8 @@
 #pragma once
-#include "ConstantBuffer.h"
-
 #include "IGPUAsset.h"
 #include <vector>
+
+class ConstantBuffer;
 
 class AMeshGPUAsset : public IGPUAsset
 {

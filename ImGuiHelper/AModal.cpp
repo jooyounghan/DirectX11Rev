@@ -4,34 +4,12 @@ using namespace std;
 using namespace ImGui;
 
 AModal::AModal(const std::string& modalHeaderName)
-    : m_modalHeaderName(modalHeaderName)
+    : ANotificator(modalHeaderName)
 {
-}
-
-AModal::~AModal()
-{
-}
-
-void AModal::DoModal()
-{
-    bool isModalAllow = ModalCondition();
-    
-    if (isModalAllow)
-    {
-        OpenPopup(m_modalHeaderName.c_str(), ImGuiPopupFlags_::ImGuiPopupFlags_NoOpenOverExistingPopup);
-    }
-
-    SetWindowPosToCenter();
-    if (BeginPopupModal(m_modalHeaderName.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize))
-    {
-        RenderModal();
-        if (!isModalAllow)
+    m_notificatorOpener = [&](const char* id, ImGuiWindowFlags_ flag)
         {
-            CloseCurrentPopup();
-        }
-        EndPopup();
-    }
-    ResetWindowPosToPrevious();
+            return BeginPopupModal(id, NULL, flag);
+        };
 }
 
 void AModal::SetWindowPosToCenter()
@@ -44,4 +22,11 @@ void AModal::SetWindowPosToCenter()
 void AModal::ResetWindowPosToPrevious()
 {
     SetWindowPos(m_previousWindowPos, ImGuiCond_Appearing);
+}
+
+void AModal::DrawNotificator()
+{
+    SetWindowPosToCenter();
+    ANotificator::DrawNotificator();
+    ResetWindowPosToPrevious();
 }

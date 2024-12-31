@@ -1,9 +1,11 @@
 #pragma once
 #include "IGPUAsset.h"
-#include "Texture2DInstance.h"
-#include "SRVOption.h"
-#include "RTVOption.h"
 #include <vector>
+
+template<typename ...IsTextureOption>
+class Texture2DInstance;
+class SRVOption;
+class RTVOption;
 
 class ATextureGPUAsset : public IGPUAsset
 {
@@ -12,9 +14,9 @@ public:
 	virtual ~ATextureGPUAsset();
 
 public:
-	inline ID3D11Texture2D* const GetTexture2D() { return m_resource->GetTexture2D(); };
-	inline ID3D11ShaderResourceView* const GetSRV() { return m_resource->GetSRV(); };
-	inline ID3D11RenderTargetView* const GetRTV() { return m_resource->GetRTV(); };
+	ID3D11Texture2D* GetTexture2D() const;
+	ID3D11ShaderResourceView* GetSRV() const;
+	ID3D11RenderTargetView* GetRTV() const;
 
 protected:
 	Texture2DInstance<SRVOption, RTVOption>* m_resource = nullptr;

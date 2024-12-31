@@ -1,9 +1,8 @@
 #pragma once
 #include <d3d11.h>
 #include <DirectXMath.h>
-#include "SessionManager.h"
-#include "SchemaManager.h"
 
+#include "SchemaManager.h"
 #include "ComponentType.h"
 #include "ComponentInitializer.h"
 #include "ComponentUpdater.h"

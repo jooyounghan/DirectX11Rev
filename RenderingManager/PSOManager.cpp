@@ -18,9 +18,9 @@ PSOManager::PSOManager(ID3D11Device** deviceAddress) : m_deviceAddressCached(dev
 {
 }
 
-void PSOManager::RegisterVertexShader(const string& shaderName, const vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
+void PSOManager::RegisterVertexShader(const string& shaderName, const vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs, const D3D11_PRIMITIVE_TOPOLOGY& topology, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
 {
-	RegisterShaderImpl<VertexShader>(shaderName, shaderPath, entryPoint, targetVersion, device, inputElementDescs);
+	RegisterShaderImpl<VertexShader>(shaderName, shaderPath, entryPoint, targetVersion, device, inputElementDescs, topology);
 }
 
 void PSOManager::RegisterPixelShader(const string& shaderName, const UINT& renderTargetCounts, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
@@ -63,7 +63,7 @@ inline void PSOManager::RegisterShaderImpl(
 }
 
 
-AShader* PSOManager::GetRegisteredShader(const string& shaderName)
+AShader* const PSOManager::GetRegisteredShader(const string& shaderName)
 {
 	if (m_registeredShaders.find(shaderName) != m_registeredShaders.end())
 	{
@@ -160,7 +160,7 @@ void PSOManager::RegisterSamplerState(
 	m_registeredSamplerStates[stateName] = samplerState;
 }
 
-ID3D11DepthStencilState* PSOManager::GetDepthStencilState(const string& stateName)
+ID3D11DepthStencilState* const PSOManager::GetDepthStencilState(const string& stateName)
 {
 	if (m_registeredDepthStencilStates.find(stateName) != m_registeredDepthStencilStates.end())
 	{
@@ -169,7 +169,7 @@ ID3D11DepthStencilState* PSOManager::GetDepthStencilState(const string& stateNam
 	return nullptr;
 }
 
-ID3D11BlendState* PSOManager::GetBlendState(const string& stateName)
+ID3D11BlendState* const PSOManager::GetBlendState(const string& stateName)
 {
 	if (m_registeredBlendStates.find(stateName) != m_registeredBlendStates.end())
 	{
@@ -178,7 +178,7 @@ ID3D11BlendState* PSOManager::GetBlendState(const string& stateName)
 	return nullptr;
 }
 
-ID3D11RasterizerState* PSOManager::GetRasterizerState(const string& stateName)
+ID3D11RasterizerState* const PSOManager::GetRasterizerState(const string& stateName)
 {
 	if (m_registeredRasterizerStates.find(stateName) != m_registeredRasterizerStates.end())
 	{
@@ -187,7 +187,7 @@ ID3D11RasterizerState* PSOManager::GetRasterizerState(const string& stateName)
 	return nullptr;
 }
 
-ID3D11SamplerState* PSOManager::GetSamplerState(const string& stateName)
+ID3D11SamplerState* const PSOManager::GetSamplerState(const string& stateName)
 {
 	if (m_registeredSamplerStates.find(stateName) != m_registeredSamplerStates.end())
 	{

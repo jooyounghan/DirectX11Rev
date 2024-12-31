@@ -1,8 +1,6 @@
 #pragma once
 #include "Asset.h"
 #include "ATextureGPUAsset.h"
-#include "Texture2DInstance.h"
-#include "SRVOption.h"
 
 class ATextureAsset : public AAsset, public ATextureGPUAsset
 {

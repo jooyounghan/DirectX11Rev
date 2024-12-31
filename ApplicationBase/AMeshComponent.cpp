@@ -1,4 +1,5 @@
 #include "AMeshComponent.h"
+#include "ModelMaterialAsset.h"
 
 using namespace std;
 using namespace DirectX;

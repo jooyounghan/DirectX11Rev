@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SkeletalMeshAsset.h"
+#include "ConstantBuffer.h"
 
 using namespace std;
 using namespace DirectX;
@@ -111,18 +112,28 @@ void SkeletalMeshAsset::UpdateBoneAsset(IBoneProvider& provider)
 	m_boneAsset = provider.GetBoneAsset(m_boneAssetName);
 }
 
-size_t SkeletalMeshAsset::GetLODCount()
+size_t SkeletalMeshAsset::GetLODCount() const
 {
 	return m_skeletalMeshPartsPerLOD.size();
 }
 
-MeshPartsData* SkeletalMeshAsset::GetMeshPartData(const uint32_t& lodLevel)
+MeshPartsData* SkeletalMeshAsset::AddMeshPartData(const uint32_t& lodLevel)
 {
-	if (m_skeletalMeshPartsPerLOD.find(lodLevel) == m_skeletalMeshPartsPerLOD.end())
+	if (m_skeletalMeshPartsPerLOD.find(lodLevel) != m_skeletalMeshPartsPerLOD.end())
 	{
-		m_skeletalMeshPartsPerLOD[lodLevel] = new SkeletalMeshPartData();
+		delete m_skeletalMeshPartsPerLOD[lodLevel];
 	}
+	m_skeletalMeshPartsPerLOD[lodLevel] = new SkeletalMeshPartData();
 	return m_skeletalMeshPartsPerLOD[lodLevel];
+}
+
+MeshPartsData* SkeletalMeshAsset::GetMeshPartData(const uint32_t& lodLevel) const
+{
+	if (m_skeletalMeshPartsPerLOD.find(lodLevel) != m_skeletalMeshPartsPerLOD.end())
+	{
+		return m_skeletalMeshPartsPerLOD.at(lodLevel);
+	}
+	return nullptr;
 }
 
 void SkeletalMeshAsset::Serialize(FILE* fileIn) const

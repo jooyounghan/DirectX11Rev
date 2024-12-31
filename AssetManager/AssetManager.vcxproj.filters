@@ -33,12 +33,6 @@
     <Filter Include="소스 파일\Asset\Texture">
       <UniqueIdentifier>{00c279e5-9f50-47f3-ab48-d68501b92e4e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Exception">
-      <UniqueIdentifier>{7feda50a-e753-4f49-a99c-b0e09a4f5700}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Exception">
-      <UniqueIdentifier>{496388b1-238e-4d98-8b05-4ed853c454a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Asset\Material">
       <UniqueIdentifier>{0da6f796-fa5a-4b0a-816f-43fbe24ca7a3}</UniqueIdentifier>
     </Filter>
@@ -139,9 +133,6 @@
     </ClInclude>
     <ClInclude Include="ModelMaterialAsset.h">
       <Filter>헤더 파일\Asset\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetException.h">
-      <Filter>헤더 파일\Exception</Filter>
     </ClInclude>
     <ClInclude Include="MeshAsset.h">
       <Filter>헤더 파일\Asset\Mesh</Filter>
@@ -246,9 +237,6 @@
     </ClCompile>
     <ClCompile Include="MeshAsset.cpp">
       <Filter>소스 파일\Asset\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetException.cpp">
-      <Filter>소스 파일\Exception</Filter>
     </ClCompile>
     <ClCompile Include="StaticMeshAsset.cpp">
       <Filter>소스 파일\Asset\Mesh</Filter>

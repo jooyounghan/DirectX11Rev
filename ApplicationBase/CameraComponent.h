@@ -1,9 +1,11 @@
 #pragma once
 #include "AComponent.h"
-#include "Texture2DInstance.h"
-#include "RTVOption.h"
-#include "SRVOption.h"
-#include "UAVOption.h"
+
+template<typename ...IsTextureOption>
+class Texture2DInstance;
+class RTVOption;
+class SRVOption;
+class UAVOption;
 
 constexpr DirectX::XMVECTOR GDefaultForward = DirectX::XMVECTOR{ 0.f, 0.f, 1.f, 0.f };
 constexpr DirectX::XMVECTOR GDefaultUp = DirectX::XMVECTOR{ 0.f, 1.f, 0.f, 0.f };
@@ -28,6 +30,7 @@ public:
 		const DirectX::XMFLOAT3& angle,
 		const DirectX::XMFLOAT3& scale
 	);
+	virtual ~CameraComponent();
 
 protected:
 	float m_nearZ;
@@ -47,7 +50,10 @@ public:
 
 protected:
 	SViewElement m_viewElement;
-	DynamicBuffer m_viewProjBuffer;
+	DynamicBuffer* m_viewProjBuffer;
+
+public:
+	const DynamicBuffer* GetViewProjMatrixBuffer() const { return m_viewProjBuffer; }
 
 public:
 	DirectX::XMMATRIX GetViewMatrix();

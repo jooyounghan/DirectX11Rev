@@ -1,4 +1,5 @@
 #include "ASceneRenderer.h"
+#include "ComponentPSOManager.h"
 
 ASceneRenderer::ASceneRenderer(
 	ID3D11DeviceContext** deviceContextAddress,

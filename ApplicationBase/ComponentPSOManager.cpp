@@ -16,7 +16,7 @@ void ComponentPSOManager::InitComopnentPSOManager()
 	RegisterSamplerStateForComponent();
 }
 
-AShader* ComponentPSOManager::GetComponentPSOVertexShader(const EComponentPSOVertexShader& vsEnum)
+AShader* const ComponentPSOManager::GetComponentPSOVertexShader(const EComponentPSOVertexShader& vsEnum)
 {
 	static unordered_map<EComponentPSOVertexShader, string> vertexShaderEnumToString
 	{
@@ -30,7 +30,7 @@ AShader* ComponentPSOManager::GetComponentPSOVertexShader(const EComponentPSOVer
 	return GetRegisteredShader(vertexShaderEnumToString[vsEnum]);
 }
 
-AShader* ComponentPSOManager::GetComponentPSOPixelShader(const EComponentPSOPixelShader&  psEnum)
+AShader* const  ComponentPSOManager::GetComponentPSOPixelShader(const EComponentPSOPixelShader&  psEnum)
 {
 	static unordered_map<EComponentPSOPixelShader, string> pixelShaderEnumToString
 	{
@@ -44,7 +44,7 @@ AShader* ComponentPSOManager::GetComponentPSOPixelShader(const EComponentPSOPixe
 	return GetRegisteredShader(pixelShaderEnumToString[psEnum]);
 }
 
-AShader* ComponentPSOManager::GetComponentPSOHullShader(const EComponentPSOHullShader& hsEnum)
+AShader* const  ComponentPSOManager::GetComponentPSOHullShader(const EComponentPSOHullShader& hsEnum)
 {
 	static unordered_map<EComponentPSOHullShader, string> hullShaderEnumToString
 	{
@@ -54,7 +54,7 @@ AShader* ComponentPSOManager::GetComponentPSOHullShader(const EComponentPSOHullS
 	return GetRegisteredShader(hullShaderEnumToString[hsEnum]);
 }
 
-AShader* ComponentPSOManager::GetComponentPSODomainShader(const EComponentPSODomainShader& dsEnum)
+AShader* const  ComponentPSOManager::GetComponentPSODomainShader(const EComponentPSODomainShader& dsEnum)
 {
 	static unordered_map<EComponentPSODomainShader, string> domainShaderEnumToString
 	{
@@ -64,7 +64,7 @@ AShader* ComponentPSOManager::GetComponentPSODomainShader(const EComponentPSODom
 	return GetRegisteredShader(domainShaderEnumToString[dsEnum]);
 }
 
-ID3D11DepthStencilState* ComponentPSOManager::GetComponentPSODepthStencilState(const EComponentPSODeptshStencilState& dssEnum)
+ID3D11DepthStencilState* const  ComponentPSOManager::GetComponentPSODepthStencilState(const EComponentPSODeptshStencilState& dssEnum)
 {
 	static unordered_map<EComponentPSODeptshStencilState, string> depthStencilStateEnumToString
 	{
@@ -75,7 +75,7 @@ ID3D11DepthStencilState* ComponentPSOManager::GetComponentPSODepthStencilState(c
 	return GetDepthStencilState(depthStencilStateEnumToString[dssEnum]);
 }
 
-ID3D11BlendState* ComponentPSOManager::GetComponentPSOBlendState(const EComponentPSOBlendState& bsEnum)
+ID3D11BlendState* const ComponentPSOManager::GetComponentPSOBlendState(const EComponentPSOBlendState& bsEnum)
 {
 	static unordered_map<EComponentPSOBlendState, string> blendStateEnumToString
 	{
@@ -85,7 +85,7 @@ ID3D11BlendState* ComponentPSOManager::GetComponentPSOBlendState(const EComponen
 	return GetBlendState(blendStateEnumToString[bsEnum]);
 }
 
-ID3D11RasterizerState* ComponentPSOManager::GetComponentPSORasterizerState(const EComponentPSORasterizerState& rsEnum)
+ID3D11RasterizerState* const  ComponentPSOManager::GetComponentPSORasterizerState(const EComponentPSORasterizerState& rsEnum)
 {
 	static unordered_map<EComponentPSORasterizerState, string> rasterizerStateEnumToString
 	{
@@ -96,7 +96,7 @@ ID3D11RasterizerState* ComponentPSOManager::GetComponentPSORasterizerState(const
 	return GetRasterizerState(rasterizerStateEnumToString[rsEnum]);
 }
 
-ID3D11SamplerState* ComponentPSOManager::GetComponentPSOSamplerState(const EComponentPSOSamplerState& samplerEnum)
+ID3D11SamplerState* const ComponentPSOManager::GetComponentPSOSamplerState(const EComponentPSOSamplerState& samplerEnum)
 {
 	static unordered_map<EComponentPSOSamplerState, string> samplerStateEnumToString
 	{
@@ -115,7 +115,7 @@ void ComponentPSOManager::RegisterShaderForComponent()
 	RegisterPSForComponent();
 
 	RegisterHullShader("MeshComponentHS", L"../Shaders/MeshComponentHS.hlsl", "main", "hs_5_0", *m_deviceAddressCached);
-	RegisterHullShader("MeshComponentDS", L"../Shaders/MeshComponentDS.hlsl", "main", "ds_5_0", *m_deviceAddressCached);
+	RegisterDomainShader("MeshComponentDS", L"../Shaders/MeshComponentDS.hlsl", "main", "ds_5_0", *m_deviceAddressCached);
 }
 
 void ComponentPSOManager::RegisterDepthStencilStateForComponent()
@@ -153,28 +153,28 @@ void ComponentPSOManager::RegisterVSForComponent()
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-	RegisterVertexShader("BoundingComponentVS", inputElementDesc, L"../Shaders/BoundingComponentVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
+	RegisterVertexShader("BoundingComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/BoundingComponentVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		}
 		);
-	RegisterVertexShader("GBufferResolveVS", inputElementDesc, L"../Shaders/GBufferResolveVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
+	RegisterVertexShader("GBufferResolveVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/GBufferResolveVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
 			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		}
 	);
-	RegisterVertexShader("SceneVS", inputElementDesc, L"../Shaders/SceneVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
+	RegisterVertexShader("SceneVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/SceneVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
 			{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		}
 		);
-	RegisterVertexShader("StaticMeshComponentVS", inputElementDesc, L"../Shaders/StaticMeshComponentVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
+	RegisterVertexShader("StaticMeshComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST, L"../Shaders/StaticMeshComponentVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
@@ -182,7 +182,7 @@ void ComponentPSOManager::RegisterVSForComponent()
 			{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 5, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		}
 	);
-	RegisterVertexShader("SkeletalMeshComponentVS", inputElementDesc, L"../Shaders/SkeletalMeshComponentVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
+	RegisterVertexShader("SkeletalMeshComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST, L"../Shaders/SkeletalMeshComponentVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
 }
 
 void ComponentPSOManager::RegisterPSForComponent()

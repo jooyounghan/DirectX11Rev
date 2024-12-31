@@ -1,9 +1,5 @@
 #pragma once
 #include "imgui.h"
-#include "imgui_internal.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
-
 #include "MouseEventArgs.h"
 #include "MouseClickEventArgs.h"
 
@@ -21,8 +17,8 @@ private:
 	bool m_isMousePressed = false;
 
 protected:
-	float m_left;
-	float m_top;
+	float m_left = 0.f;
+	float m_top = 0.f;
 
 protected:
 	void* m_dragSource = nullptr;

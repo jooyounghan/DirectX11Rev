@@ -18,7 +18,7 @@ protected:
 	void* m_cpuDataIn;
 
 public:
-	ID3D11Buffer* GetBuffer() { return m_buffer.Get(); }
+	ID3D11Buffer* GetBuffer() const { return m_buffer.Get(); }
 	
 public:
 	virtual void Initialize(ID3D11Device* device) = 0;

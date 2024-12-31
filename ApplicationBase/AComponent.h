@@ -1,6 +1,7 @@
 #pragma once
 #include "IComponentVisitor.h"
 #include "ComponentEntity.h"
+
 #include <vector>
 #include <string>
 #include <atomic>

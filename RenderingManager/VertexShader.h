@@ -5,12 +5,16 @@
 class VertexShader : public AShader
 {
 public:
-	VertexShader(const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs);
+	VertexShader(
+		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs,
+		const D3D11_PRIMITIVE_TOPOLOGY& topology
+	);
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 	std::vector<D3D11_INPUT_ELEMENT_DESC> m_inputElementDescs;
+	D3D11_PRIMITIVE_TOPOLOGY m_topology;
 
 protected:
 	virtual void CreateShaderImpl(

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "AMeshGPUAsset.h"
+#include "ConstantBuffer.h"
 
 using namespace std;
 

@@ -1,7 +1,8 @@
 #pragma once
-#include "Asset.h"
 #include "AUserControl.h"
-#include "AssetReader.h"
+
+class AAsset;
+enum class EAssetType;
 
 class AssetFileControl : public AUserControl
 {

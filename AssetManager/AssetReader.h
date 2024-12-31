@@ -1,6 +1,4 @@
 #pragma once
-
-#include "Asset.h"
 #include "AssetWrapper.h"
 #include "TopologySorter.h"
 

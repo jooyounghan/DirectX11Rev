@@ -1,6 +1,8 @@
 #pragma once
 #include "AComponent.h"
-#include "ModelMaterialAsset.h"
+
+class ModelMaterialAsset;
+class IModelMaterialProvider;
 
 class AMeshComponent : public AComponent
 {

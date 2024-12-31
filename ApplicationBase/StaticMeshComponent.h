@@ -1,6 +1,8 @@
 #pragma once
 #include "AMeshComponent.h"
-#include "StaticMeshAsset.h"
+
+class StaticMeshAsset;
+class IStaticMeshProvider;
 
 class StaticMeshComponent : public AMeshComponent
 {

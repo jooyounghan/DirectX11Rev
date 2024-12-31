@@ -1,16 +1,28 @@
 #include "pch.h"
 #include "IBLMaterialAsset.h"
+#include "DynamicBuffer.h"
 
 using namespace std;
 using namespace DirectX;
 
+IBLMaterialAsset::IBLMaterialAsset()
+ : AAsset(), m_iblToneMappingBuffer(new DynamicBuffer(sizeof(SIBLToneMapping), 1))
+{
+}
+
 IBLMaterialAsset::IBLMaterialAsset(const string& assetName)
-	: AAsset(assetName), m_exposure(1.f), m_gamma(1.f)
+	: AAsset(assetName), m_iblToneMappingBuffer(new DynamicBuffer(sizeof(SIBLToneMapping), 1))
 {
 }
 
 IBLMaterialAsset::~IBLMaterialAsset()
 {
+	delete m_iblToneMappingBuffer;
+}
+
+const ScratchTextureAsset* const IBLMaterialAsset::GetScratchTextureAsset(const EIBLMaterialTexture& iblMaterialTexture) const
+{
+	return m_materialTexture[static_cast<size_t>(iblMaterialTexture)];
 }
 
 void IBLMaterialAsset::UpdateIBLBaseTextureAsset(
@@ -34,12 +46,6 @@ void IBLMaterialAsset::SetIBLMaterialTexture(
 	m_isModified = true;
 }
 
-void IBLMaterialAsset::SetToneMappingProperties(const float& exposure, const float& gamma)
-{
-	m_exposure = exposure;
-	m_gamma = gamma;
-	m_isModified = true;
-}
 
 void IBLMaterialAsset::Serialize(FILE* fileIn) const
 {
@@ -48,8 +54,8 @@ void IBLMaterialAsset::Serialize(FILE* fileIn) const
 	{
 		SerializeAssetName(m_materialTexture[materialIdx], fileIn);
 	}
-	fwrite(&m_exposure, sizeof(float), 1, fileIn);
-	fwrite(&m_gamma, sizeof(float), 1, fileIn);
+	fwrite(&m_iblToneMappingConstants.m_exposure, sizeof(float), 1, fileIn);
+	fwrite(&m_iblToneMappingConstants.m_gamma, sizeof(float), 1, fileIn);
 }
 
 void IBLMaterialAsset::Deserialize(FILE* fileIn)
@@ -60,13 +66,19 @@ void IBLMaterialAsset::Deserialize(FILE* fileIn)
 		string materialAssetName = DeserializeHelper::DeserializeString(fileIn);
 		m_materialTextureName[materialIdx] = materialAssetName;
 	}
-	fread(&m_exposure, sizeof(float), 1, fileIn);
-	fread(&m_gamma, sizeof(float), 1, fileIn);
+	fread(&m_iblToneMappingConstants.m_exposure, sizeof(float), 1, fileIn);
+	fread(&m_iblToneMappingConstants.m_gamma, sizeof(float), 1, fileIn);
 
 }
 
 void IBLMaterialAsset::Accept(IAssetVisitor* visitor)
 {
 	visitor->Visit(this);
+}
+
+void IBLMaterialAsset::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+{
+	m_iblToneMappingBuffer->Initialize(device);
+	m_iblToneMappingBuffer->Upload(device, deviceContext, sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants);
 }
 

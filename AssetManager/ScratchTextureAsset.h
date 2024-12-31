@@ -19,6 +19,7 @@ public:
 	virtual ~ScratchTextureAsset();
 
 protected:
+	DXGI_FORMAT m_format;
 	std::vector<UINT> m_rowPitchPerArray;
 
 public:

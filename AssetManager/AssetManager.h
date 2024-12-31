@@ -3,8 +3,8 @@
 
 #include "AssetReader.h"
 #include "AssetWriter.h"
-#include "ResourceManager.h"
 
+#include "ResourceManager.h"
 #include "BaseTextureAsset.h"
 #include "ScratchTextureAsset.h"
 #include "StaticMeshAsset.h"

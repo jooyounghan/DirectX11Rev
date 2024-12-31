@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ResourceManager.h"
+#include "BaseTextureAsset.h"
 #include "StringHelper.h"
 
 #include <format>

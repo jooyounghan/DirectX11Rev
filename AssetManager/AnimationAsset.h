@@ -1,10 +1,10 @@
 #pragma once
 #include "Asset.h"
-#include <DirectXMath.h>
 
+#include <set>
 #include <functional>
 #include <unordered_map>
-#include <set>
+#include <DirectXMath.h>
 
 struct SAnimationKey
 {

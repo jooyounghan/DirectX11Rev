@@ -1,17 +1,27 @@
 #include "SceneWindow.h"
 
+#include "Scene.h"
+#include "CameraComponent.h"
+
+#include "AssetManager.h"
+#include "ComponentManager.h"
+#include "ComponentPSOManager.h"
+
+#include "DynamicBuffer.h"
+
 using namespace std;
 using namespace ImGui;
 using namespace DirectX;
 
 SceneWindow::SceneWindow(
-    const std::string& windowID,
+    const string& windowID,
     ID3D11DeviceContext** deviceConextAddress,
     AssetManager* assetManager,
     ComponentManager* componentManager,
     ComponentPSOManager* componentPsoManager
 )
-    : AWindow(windowID), m_componentManagerCached(componentManager),
+    : AWindow(windowID), m_deviceContextAddressCached(deviceConextAddress),
+    m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
     m_componentInformer(assetManager, componentManager),
     m_forwardRenderer(deviceConextAddress, m_componentPsoManageCached),
@@ -23,7 +33,7 @@ SceneWindow::SceneWindow(
 
 void SceneWindow::PrepareWindow()
 {
-    if (m_selectedScene != nullptr)
+    if (m_selectedScene != nullptr && m_selectedCamera != nullptr)
     {
         ASceneRenderer* sceneRenderer = nullptr;
         switch (m_selectedRendererType)
@@ -37,16 +47,69 @@ void SceneWindow::PrepareWindow()
         default:
             throw invalid_argument("Invalid entity type");
         }
+
+        RenderScene();
+
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
         RenderComponentRecursive(sceneRenderer, sceneRootComponents);
     }
 }
 
+void SceneWindow::RenderScene()
+{
+    ID3D11DeviceContext* deviceContext = *m_deviceContextAddressCached;
+    
+    AShader* sceneVertexShader = m_componentPsoManageCached->GetComponentPSOVertexShader(ComponentPSOManager::EComponentPSOVertexShader::SCENE);
+    AShader* scenePixelShader = m_componentPsoManageCached->GetComponentPSOPixelShader(ComponentPSOManager::EComponentPSOPixelShader::FORWARD_SCENE);
+    ID3D11SamplerState* wrapSamplerState = m_componentPsoManageCached->GetComponentPSOSamplerState(ComponentPSOManager::EComponentPSOSamplerState::WRAP);
+
+    const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = m_selectedCamera->GetFilm();
+    
+    const StaticMeshAsset* const staticMeshAsset = m_selectedScene->GetSceneMeshAsset();
+    MeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(NULL);
+
+    const IBLMaterialAsset* const iblMaterialAsset = m_selectedScene->GetIBLMaterialAsset();
+    const ScratchTextureAsset* const backgroundTextureAsset = iblMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BACKGROUND);
+
+    const size_t& meshPartCount = meshPartsData->GetPartsCount();
+    const vector<UINT>& indicesOffsets = meshPartsData->GetIndexOffsets();
+    const vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetVertexBuffers();
+    const vector<UINT>& strides = meshPartsData->GetStrides();
+    const vector<UINT>& verticesOffsets = meshPartsData->GetVertexOffsets();
+    const UINT& totalIndicesCount = static_cast<UINT>(meshPartsData->GetIndices().size());
+
+    for (size_t idx = 0; idx < meshPartCount; ++idx)
+    {
+        const UINT indexCount = (idx + 1 == meshPartCount ? totalIndicesCount : indicesOffsets[idx + 1]) - indicesOffsets[idx];
+
+        sceneVertexShader->SetShader(deviceContext);
+        deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
+        deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, indicesOffsets[idx]);
+
+        vector<ID3D11Buffer*> vsConstantBuffers{ m_selectedCamera->GetViewProjMatrixBuffer()->GetBuffer() };
+        vector<ID3D11Buffer*> psConstantBuffers{ iblMaterialAsset->GetIBLToneMappingBuffer()->GetBuffer() };
+        vector<ID3D11ShaderResourceView*> psSRVs{ backgroundTextureAsset->GetSRV() };
+
+        deviceContext->VSSetConstantBuffers(0, 1, vsConstantBuffers.data());
+        deviceContext->PSSetConstantBuffers(0, 1, psConstantBuffers.data());
+        deviceContext->PSSetShaderResources(0, 1, psSRVs.data());
+
+        deviceContext->DrawIndexed(indexCount, NULL, NULL);
+    }
+
+}
+
+void SceneWindow::RenderComponentRecursive(ASceneRenderer* const renderer, const vector<AComponent*>& components)
+{
+    for (AComponent* component : components)
+    {
+        component->Accept(renderer);
+        RenderComponentRecursive(renderer, component->GetChildComponents());
+    }
+}
+
 void SceneWindow::RenderWindowImpl()
 {
-    BeginGroup();
-    PushID("RenderScene");
-
     ImVec2 regionAvail = GetContentRegionAvail();
     BeginChild("SceneSelector", ImVec2(regionAvail.x * 0.1f, regionAvail.y));
     DrawSceneSelector();
@@ -63,18 +126,6 @@ void SceneWindow::RenderWindowImpl()
     DrawComponentTree();
     DrawComponentInformations();
     EndChild();
-
-    PopID();
-    EndGroup();
-}
-
-void SceneWindow::RenderComponentRecursive(ASceneRenderer* const renderer, const std::vector<AComponent*>& components)
-{
-    for (AComponent* component : components)
-    {
-        component->Accept(renderer);
-        RenderComponentRecursive(renderer, component->GetChildComponents());
-    }
 }
 
 void SceneWindow::DrawSceneSelector()
@@ -117,7 +168,6 @@ void SceneWindow::DrawComponentTree()
 
     ImVec2 regionAvail = GetContentRegionAvail();
     BeginChild("RenderComponentTree", ImVec2(regionAvail.x, regionAvail.y * 0.6f));
-
     if (TreeNodeEx("Root"))
     {
         if (m_selectedScene != nullptr)
@@ -160,7 +210,7 @@ void SceneWindow::DrawComponentTreeRecursive(AComponent* const component)
 
     bool nodeOpen = TreeNodeEx(component->GetComponentName().c_str(), nodeFlags);
 
-    std::string contextMenuID = format("{}ContextMenu", component->GetComponentName());
+    string contextMenuID = format("{}ContextMenu", component->GetComponentName());
     if (IsItemClicked(ImGuiMouseButton_::ImGuiMouseButton_Left))
     {
         m_selectedComponent = component;

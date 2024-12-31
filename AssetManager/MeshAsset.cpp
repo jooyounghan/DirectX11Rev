@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MeshAsset.h"
+#include "ModelMaterialAsset.h"
 
 using namespace std;
 using namespace DirectX;

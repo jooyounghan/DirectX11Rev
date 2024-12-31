@@ -1,9 +1,8 @@
 #pragma once
 #include "AWindow.h"
-#include "AssetManager.h"
-#include "AssetFileControl.h"
-#include "Texture2DInstance.h"
-#include "SRVOption.h"
+#include "AssetContextMenu.h"
+
+#include <memory>
 
 enum class EAssetThumbnailType
 {
@@ -17,11 +16,17 @@ enum class EAssetThumbnailType
 
 constexpr size_t AssetThumbnailTypeCount = static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MATERIAL) + 1;
 
+class AAsset;
+class AssetManager;
+class AssetFileControl;
+enum class EAssetType;
+
 struct SAssetFolder
 {
 	std::vector<std::unique_ptr<AssetFileControl>> m_assetControls;
 	std::unordered_map<std::string, SAssetFolder> m_childFolders;
 };
+
 
 class AssetViewWindow : public AWindow
 {
@@ -32,6 +37,9 @@ private:
 	AssetManager* m_assetManagerCached = nullptr;
 	SAssetFolder  m_assetRootFolders;
 	const SAssetFolder* m_selectedFolders = nullptr;
+
+private:
+	AssetContextMenu m_assetContextMenuModal;
 
 private:
 	static std::string AnimationAssetTN;

@@ -1,5 +1,8 @@
 #include "AssetFileControl.h"
 
+#include "Asset.h"
+#include "AssetReader.h"
+
 using namespace std;
 using namespace ImGui;
 

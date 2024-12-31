@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "StaticMeshAsset.h"
+#include "ConstantBuffer.h"
 
 using namespace std;
 using namespace DirectX;
@@ -67,18 +68,29 @@ StaticMeshAsset::~StaticMeshAsset()
 	}
 }
 
-size_t StaticMeshAsset::GetLODCount()
+size_t StaticMeshAsset::GetLODCount() const
 {
 	return m_staticMeshPartsPerLOD.size();
 }
 
-MeshPartsData* StaticMeshAsset::GetMeshPartData(const uint32_t& lodLevel)
+MeshPartsData* StaticMeshAsset::AddMeshPartData(const uint32_t& lodLevel)
 {
-	if (m_staticMeshPartsPerLOD.find(lodLevel) == m_staticMeshPartsPerLOD.end())
+	if (m_staticMeshPartsPerLOD.find(lodLevel) != m_staticMeshPartsPerLOD.end())
 	{
-		m_staticMeshPartsPerLOD[lodLevel] = new StaticMeshPartData();
+		delete m_staticMeshPartsPerLOD[lodLevel];
 	}
+	m_staticMeshPartsPerLOD[lodLevel] = new StaticMeshPartData();
 	return m_staticMeshPartsPerLOD[lodLevel];
+}
+
+
+MeshPartsData* StaticMeshAsset::GetMeshPartData(const uint32_t& lodLevel) const
+{
+	if (m_staticMeshPartsPerLOD.find(lodLevel) != m_staticMeshPartsPerLOD.end())
+	{
+		return m_staticMeshPartsPerLOD.at(lodLevel);
+	}
+	return nullptr;
 }
 
 void StaticMeshAsset::Serialize(FILE* fileIn) const

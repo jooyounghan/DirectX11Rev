@@ -19,12 +19,6 @@
     <Filter Include="소스 파일\BufferManager">
       <UniqueIdentifier>{d068d9c4-8734-4bdd-b66b-44525e8c5360}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\RenderingManager">
-      <UniqueIdentifier>{5a28550a-3512-46b2-aa13-e437f55b7ff7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\RenderingManager">
-      <UniqueIdentifier>{749de4ef-dbd8-4aa5-9635-754f87ef0550}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\BufferManager\Buffer">
       <UniqueIdentifier>{b5bb898c-bb49-453d-a7bb-4434086045e4}</UniqueIdentifier>
     </Filter>
@@ -58,24 +52,6 @@
     <Filter Include="소스 파일\BufferManager\Buffer\Structure">
       <UniqueIdentifier>{fae4e90d-29a6-4975-8933-1ac466275eba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\RenderingManager\PSOManager">
-      <UniqueIdentifier>{42b2b5f8-6c69-456a-a299-b2880b03c08c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\RenderingManager\PSOManager\Shader">
-      <UniqueIdentifier>{acb61cd6-648d-40b9-9722-d862d18ea54f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\RenderingManager\PSOManager">
-      <UniqueIdentifier>{1e47d4d2-f549-4ef8-bfc8-2f711f174548}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\RenderingManager\PSOManager\Shader">
-      <UniqueIdentifier>{bb16ed62-fc74-4fcc-a6b1-1cd21fd218b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\RenderingManager\PSOManager\PSOObject">
-      <UniqueIdentifier>{459c97f5-a7ef-4788-bbe8-384e79dc4633}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\RenderingManager\PSOManager\PSOObject">
-      <UniqueIdentifier>{b74722a3-7f40-49ef-b81f-558380a50b0b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\TaskManager">
       <UniqueIdentifier>{e13bbad5-5150-40c7-ae45-b7ab12ed79a3}</UniqueIdentifier>
     </Filter>
@@ -94,13 +70,28 @@
     <Filter Include="소스 파일\DefferedContext">
       <UniqueIdentifier>{bce6bc0f-000d-401d-b8c4-290dcd9b51f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PSOManager">
+      <UniqueIdentifier>{42b2b5f8-6c69-456a-a299-b2880b03c08c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PSOManager\Shader">
+      <UniqueIdentifier>{acb61cd6-648d-40b9-9722-d862d18ea54f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PSOManager\PSOObject">
+      <UniqueIdentifier>{459c97f5-a7ef-4788-bbe8-384e79dc4633}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\PSOManager">
+      <UniqueIdentifier>{1e47d4d2-f549-4ef8-bfc8-2f711f174548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\PSOManager\Shader">
+      <UniqueIdentifier>{bb16ed62-fc74-4fcc-a6b1-1cd21fd218b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\PSOManager\PSOObject">
+      <UniqueIdentifier>{b74722a3-7f40-49ef-b81f-558380a50b0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PSOManager.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderingManager.h">
-      <Filter>헤더 파일\RenderingManager</Filter>
+      <Filter>헤더 파일\PSOManager</Filter>
     </ClInclude>
     <ClInclude Include="ABuffer.h">
       <Filter>헤더 파일\BufferManager\Buffer</Filter>
@@ -139,37 +130,34 @@
       <Filter>헤더 파일\Texture2D</Filter>
     </ClInclude>
     <ClInclude Include="AShader.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>헤더 파일\PSOManager\Shader</Filter>
     </ClInclude>
     <ClInclude Include="ComputeShader.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>헤더 파일\PSOManager\Shader</Filter>
     </ClInclude>
     <ClInclude Include="DomainShader.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>헤더 파일\PSOManager\Shader</Filter>
     </ClInclude>
     <ClInclude Include="GeometryShader.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>헤더 파일\PSOManager\Shader</Filter>
     </ClInclude>
     <ClInclude Include="HullShader.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>헤더 파일\PSOManager\Shader</Filter>
     </ClInclude>
     <ClInclude Include="PixelShader.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>헤더 파일\PSOManager\Shader</Filter>
     </ClInclude>
     <ClInclude Include="VertexShader.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="IRenderable.h">
-      <Filter>헤더 파일\RenderingManager</Filter>
+      <Filter>헤더 파일\PSOManager\Shader</Filter>
     </ClInclude>
     <ClInclude Include="PSOObject.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager\PSOObject</Filter>
+      <Filter>헤더 파일\PSOManager\PSOObject</Filter>
     </ClInclude>
     <ClInclude Include="ComputePSOObject.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager\PSOObject</Filter>
+      <Filter>헤더 파일\PSOManager\PSOObject</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsPSOObject.h">
-      <Filter>헤더 파일\RenderingManager\PSOManager\PSOObject</Filter>
+      <Filter>헤더 파일\PSOManager\PSOObject</Filter>
     </ClInclude>
     <ClInclude Include="TaskManager.h">
       <Filter>헤더 파일\TaskManager</Filter>
@@ -186,10 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PSOManager.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderingManager.cpp">
-      <Filter>소스 파일\RenderingManager</Filter>
+      <Filter>소스 파일\PSOManager</Filter>
     </ClCompile>
     <ClCompile Include="ABuffer.cpp">
       <Filter>소스 파일\BufferManager\Buffer</Filter>
@@ -225,37 +210,34 @@
       <Filter>소스 파일\Texture2D</Filter>
     </ClCompile>
     <ClCompile Include="AShader.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>소스 파일\PSOManager\Shader</Filter>
     </ClCompile>
     <ClCompile Include="ComputeShader.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>소스 파일\PSOManager\Shader</Filter>
     </ClCompile>
     <ClCompile Include="DomainShader.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>소스 파일\PSOManager\Shader</Filter>
     </ClCompile>
     <ClCompile Include="GeometryShader.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>소스 파일\PSOManager\Shader</Filter>
     </ClCompile>
     <ClCompile Include="HullShader.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>소스 파일\PSOManager\Shader</Filter>
     </ClCompile>
     <ClCompile Include="PixelShader.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
+      <Filter>소스 파일\PSOManager\Shader</Filter>
     </ClCompile>
     <ClCompile Include="VertexShader.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="IRenderable.cpp">
-      <Filter>소스 파일\RenderingManager</Filter>
+      <Filter>소스 파일\PSOManager\Shader</Filter>
     </ClCompile>
     <ClCompile Include="PSOObject.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager\PSOObject</Filter>
+      <Filter>소스 파일\PSOManager\PSOObject</Filter>
     </ClCompile>
     <ClCompile Include="ComputePSOObject.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager\PSOObject</Filter>
+      <Filter>소스 파일\PSOManager\PSOObject</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsPSOObject.cpp">
-      <Filter>소스 파일\RenderingManager\PSOManager\PSOObject</Filter>
+      <Filter>소스 파일\PSOManager\PSOObject</Filter>
     </ClCompile>
     <ClCompile Include="TaskManager.cpp">
       <Filter>소스 파일\TaskManager</Filter>

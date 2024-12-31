@@ -1,8 +1,9 @@
 #pragma once
-#include "mysqlx/xdevapi.h"
 #include "DBErrorHandler.h"
+
 #include <string>
 #include <shared_mutex>
+#include <mysqlx/xdevapi.h>
 
 class SessionManager : public mysqlx::Session, public DBErrorHandler
 {

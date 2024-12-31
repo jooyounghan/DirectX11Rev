@@ -1,9 +1,12 @@
 #pragma once
-#include "IBLMaterialAsset.h"
-#include "StaticMeshAsset.h"
 #include "AComponent.h"
 
 #include <type_traits>
+
+class StaticMeshAsset;
+class IBLMaterialAsset;
+class IStaticMeshProvider;
+class IIBLMaterialProvider;
 
 template <typename T>
 concept ComponentType = std::is_base_of_v<AComponent, T>;
@@ -27,8 +30,8 @@ protected:
 	std::string m_iblMaterialName;
 
 protected:
-	StaticMeshAsset* m_sceneMeshAsset = nullptr;
-	IBLMaterialAsset* m_iblMaterialAsset = nullptr;
+	StaticMeshAsset* m_sceneStaticMeshAsset = nullptr;
+	IBLMaterialAsset* m_sceneIBLMaterialAsset = nullptr;
 
 public:
 	inline const std::string& GetSceneStaticMeshName() { return m_sceneStaticMeshName; }
@@ -37,6 +40,10 @@ public:
 	inline void SetIBLMaterialName(const std::string& iblMaterialName) { m_iblMaterialName = iblMaterialName; }
 	void UpdateSceneMeshAsset(IStaticMeshProvider& staticMeshProvider);
 	void UpdateSceneIBLMaterialAsset(IIBLMaterialProvider& iblMaterialProvider);
+
+public:
+	inline const StaticMeshAsset* const GetSceneMeshAsset() { return m_sceneStaticMeshAsset; }
+	inline const IBLMaterialAsset* const GetIBLMaterialAsset() { return m_sceneIBLMaterialAsset; }
 
 protected:
 	std::vector<AComponent*> m_rootComponentsCached;

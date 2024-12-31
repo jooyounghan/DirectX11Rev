@@ -1,17 +1,20 @@
 #include "GameEngine.h"
 #include "ImGuiInitializer.h"
 
-#include "AssetViewWindow.h"
 #include "SceneWindow.h"
+#include "AssetViewWindow.h"
 
 #include "TaskModal.h"
 #include "MessageBoxModal.h"
+
+// =================================Test==========================
+#include "CameraComponent.h"
+// ===============================================================
 
 #include <future>
 
 using namespace std;
 using namespace D3D11;
-using namespace YHEngine;
 
 Utilities::SColor GameEngine::ClearColor = Utilities::SColor(0.5f, 0.2f, 0.4f, 1.0f);
 
@@ -23,12 +26,17 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 );
 
 GameEngine::GameEngine()
-	: AApplication(), 
-	m_engine(D3D11Engine::GetInstance()), 
+	: AApplication(),
+	m_engine(D3D11Engine::GetInstance()),
 	m_taskManager(TaskManager::GetInstance())
 {
 	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
 	ID3D11DeviceContext** deviceContextAddress = m_engine->GetDeviceContextAddress();
+
+	// =================================Test==========================
+	m_testCamera = new CameraComponent("", NULL, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f));
+	m_testCamera->SetCameraProperties(1000, 1000, 0.1f, 1E6f, 120.f);
+	// ===============================================================
 
 
 	/* Deffered Context */
@@ -51,11 +59,14 @@ GameEngine::GameEngine()
 	m_componentPSOManager = new ComponentPSOManager(deviceAddress);
 
 	/* Window */
-	m_imguiWindows.emplace_back(new AssetViewWindow("AssetManager", m_assetManager));
-	m_imguiWindows.emplace_back(new SceneWindow(
-		"Scene", m_defferedContexts[EDefferedContextType::COMPONENT_RENDER]->GetDefferedContextAddress(), 
-		m_assetManager, m_componentManager, nullptr/* PSOManager */
-	));
+	m_imguiWindows.emplace_back(new AssetViewWindow("AssetViewWindow", m_assetManager));
+
+	SceneWindow* sceneWindow = new SceneWindow(
+		"SceneWindow", m_defferedContexts[EDefferedContextType::COMPONENT_RENDER]->GetDefferedContextAddress(),
+		m_assetManager, m_componentManager, m_componentPSOManager
+	);
+	sceneWindow->SetCameraComponent(m_testCamera);
+	m_imguiWindows.emplace_back(sceneWindow);
 
 	/* Modal */
 	TaskModal* taskModal = new TaskModal("Processing...");
@@ -68,10 +79,10 @@ GameEngine::GameEngine()
 	m_taskManager->OnTaskInserted = bind(&TaskModal::SetTaskCount, taskModal, placeholders::_1);
 	m_taskManager->OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1, placeholders::_2);
 	m_taskManager->OnTasksCompleted = bind(&TaskModal::SetTasksCompleted, taskModal);
-	m_componentManager->OnErrorOccurs = bind(&MessageBoxModal::ModalMessage, errorMessageBoxModal, placeholders::_1);
+	m_componentManager->OnErrorOccurs = bind(&MessageBoxModal::SetMessage, errorMessageBoxModal, placeholders::_1);
 }
 
-YHEngine::GameEngine::~GameEngine()
+GameEngine::~GameEngine()
 {
 	m_taskManager->FinishLaunchingTasks();
 
@@ -144,6 +155,12 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 			m_componentManager->InitComponentManager();
 		}, "Load Component From DB..."
 	);
+
+	m_taskManager->RegisterTask([&, device]()
+		{
+			m_testCamera->InitEntity(device);
+		}, "Test Camera Initializing"
+	);
 }
 
 void GameEngine::Update(const float& deltaTime)
@@ -190,7 +207,7 @@ void GameEngine::Update(const float& deltaTime)
 
 	for (auto& imguiModal : m_imguiModals)
 	{
-		imguiModal->DoModal();
+		imguiModal->DrawNotificator();
 	}
 
 	ImGui::Render();
@@ -223,7 +240,7 @@ void GameEngine::AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-void YHEngine::GameEngine::OnDropFiles(const HDROP& hDrop)
+void GameEngine::OnDropFiles(const HDROP& hDrop)
 {
 	UINT fileCount = DragQueryFileA(hDrop, 0xFFFFFFFF, NULL, 0);
 	for (UINT i = 0; i < fileCount; ++i)

@@ -340,7 +340,7 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadMeshesAnd
                  const string& meshName = mesh->mName.C_Str();
 
                  const uint32_t lodLevel = GetLODLevelFromMeshName(meshName);
-                 MeshPartsData* meshPartsData = meshAsset->GetMeshPartData(lodLevel);
+                 MeshPartsData* meshPartsData = meshAsset->AddMeshPartData(lodLevel);
                  meshAssetWriter.LoadMeshPartData(meshPartsData, isGltf, mesh, currentTransformation);
              }
 

@@ -1,4 +1,8 @@
 #include "ComponentInformer.h"
+
+#include "AssetManager.h"
+#include "ComponentManager.h"
+
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"

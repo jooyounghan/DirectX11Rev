@@ -1,6 +1,8 @@
 #pragma once
-#include "ComponentPSOManager.h"
 #include "IComponentVisitor.h"
+
+struct ID3D11DeviceContext;
+class ComponentPSOManager;
 
 class ASceneRenderer : public IComponentVisitor
 {

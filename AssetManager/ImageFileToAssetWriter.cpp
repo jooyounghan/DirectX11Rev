@@ -14,10 +14,11 @@ using namespace std::filesystem;
 using namespace DirectX;
 
 string ImageFileToAssetWriter::ExrExtension = ".exr";
-string ImageFileToAssetWriter::HdrExtension = ".hdr";
+string ImageFileToAssetWriter::DdsExtension = ".dds";
 string ImageFileToAssetWriter::PngExtension = ".png";
 string ImageFileToAssetWriter::JpegExtension = ".jpeg";
-vector<string> ImageFileToAssetWriter::ImageFileExtensions = { ExrExtension, HdrExtension, PngExtension, JpegExtension };
+
+vector<string> ImageFileToAssetWriter::ImageFileExtensions = { ExrExtension, DdsExtension, PngExtension, JpegExtension };
 
 ImageFileToAssetWriter::ImageFileToAssetWriter(const string& assetSavePath)
 	: AAssetWriter(assetSavePath)
@@ -52,10 +53,10 @@ unordered_map<EAssetType, vector<AAsset*>> ImageFileToAssetWriter::SaveAsAssets(
 
 
 		}
-		else if (extension == HdrExtension)
+		else if (extension == DdsExtension)
 		{
 			isAdded = true;
-			AAsset* scratchTextureAsset = LoadScratchTexureByHDRAsset(filePath, fileName);
+			AAsset* scratchTextureAsset = LoadScratchTexureByDDSAsset(filePath, fileName);
 			writtenAssets[EAssetType::ASSET_TYPE_SCRATCH_TEXTURE].emplace_back(scratchTextureAsset);
 		}
 		else
@@ -129,7 +130,7 @@ AAsset* ImageFileToAssetWriter::LoadScratchTexureByEXRAsset(const string& filePa
 	return result;
 }
 
-AAsset* ImageFileToAssetWriter::LoadScratchTexureByHDRAsset(const string& filePath, const string& fileName) const
+AAsset* ImageFileToAssetWriter::LoadScratchTexureByDDSAsset(const string& filePath, const string& fileName) const
 {
 	ScratchImage scratch;
 	TexMetadata metaData;
