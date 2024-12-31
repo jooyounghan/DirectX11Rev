@@ -12,6 +12,10 @@ concept IsTextureOption = requires (T option, ID3D11Resource * resource, ID3D11D
 
 class ITextureOption
 {
+public:
+	virtual ~ITextureOption() = default;
+
+protected:
 	virtual void InitializeByOption(ID3D11Resource* resource, ID3D11Device* device) = 0;
 };
 

@@ -5,6 +5,7 @@ class DomainShader : public AShader
 {
 public:
 	DomainShader() = default;
+	~DomainShader() override = default;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11DomainShader> m_domainShader;

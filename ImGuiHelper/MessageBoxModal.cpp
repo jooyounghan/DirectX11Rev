@@ -5,10 +5,6 @@ MessageBoxModal::MessageBoxModal(const std::string& modalHeaderName)
 {
 }
 
-MessageBoxModal::~MessageBoxModal()
-{
-}
-
 void MessageBoxModal::SetMessage(const std::string& message)
 {
 	m_message = message;

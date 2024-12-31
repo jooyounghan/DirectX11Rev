@@ -30,7 +30,7 @@ public:
 		const DirectX::XMFLOAT3& angle,
 		const DirectX::XMFLOAT3& scale
 	);
-	virtual ~CameraComponent();
+	~CameraComponent() override;
 
 protected:
 	float m_nearZ;

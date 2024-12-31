@@ -6,6 +6,9 @@
 class ISerializable
 {
 public:
+	virtual ~ISerializable() = default;
+
+public:
 	virtual void Serialize(FILE* fileIn) const = 0;
 	virtual void Deserialize(FILE* fileIn) = 0;
 };

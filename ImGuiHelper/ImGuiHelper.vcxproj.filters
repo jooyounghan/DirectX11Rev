@@ -67,9 +67,6 @@
     <Filter Include="헤더 파일\Notificator\ContextMenu">
       <UniqueIdentifier>{47db954f-ca8b-4c84-88ae-bfc4419620b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Canvas">
-      <UniqueIdentifier>{faef9a32-ef60-4ff8-a09e-93eae43e7593}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Window\Extended">
       <UniqueIdentifier>{54cb20a9-5f5a-4caa-b73a-c73f87a545f8}</UniqueIdentifier>
     </Filter>
@@ -99,6 +96,18 @@
     </Filter>
     <Filter Include="헤더 파일\Utilities">
       <UniqueIdentifier>{d3fc3f18-4492-4095-83c5-250daff64579}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\NodeEditor\Port">
+      <UniqueIdentifier>{de157c66-b03b-45d9-b245-d4db05c00d21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\NodeEditor\Port\VariablePort">
+      <UniqueIdentifier>{26f75e05-f843-4c31-ba80-22b913ec2f03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Control\NodeEditor\Port">
+      <UniqueIdentifier>{0eb19dc4-a48f-4598-8c1e-85c6abde99f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Control\NodeEditor\Port\VariablePort">
+      <UniqueIdentifier>{3d86ca27-2bd2-489a-964a-05bda7dbfad0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +165,7 @@
     <ClCompile Include="ANodeEditorWindow.cpp">
       <Filter>소스 파일\Window\Extended</Filter>
     </ClCompile>
-    <ClCompile Include="ANode.cpp">
+    <ClCompile Include="Node.cpp">
       <Filter>소스 파일\Control\NodeEditor\Node</Filter>
     </ClCompile>
     <ClCompile Include="ZIndexable.cpp">
@@ -170,6 +179,12 @@
     </ClCompile>
     <ClCompile Include="ADrawElement.cpp">
       <Filter>소스 파일\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Port.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Port</Filter>
+    </ClCompile>
+    <ClCompile Include="VariableNode.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Node</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,7 +242,7 @@
     <ClInclude Include="ANodeEditorWindow.h">
       <Filter>헤더 파일\Window\Extended</Filter>
     </ClInclude>
-    <ClInclude Include="ANode.h">
+    <ClInclude Include="Node.h">
       <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
     </ClInclude>
     <ClInclude Include="ZIndexable.h">
@@ -241,6 +256,18 @@
     </ClInclude>
     <ClInclude Include="ADrawElement.h">
       <Filter>헤더 파일\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Port.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port</Filter>
+    </ClInclude>
+    <ClInclude Include="IVariableOutputPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort</Filter>
+    </ClInclude>
+    <ClInclude Include="IVariableInputPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableNode.h">
+      <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

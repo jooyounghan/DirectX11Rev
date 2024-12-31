@@ -6,6 +6,7 @@ class SkeletalMeshPartData : public StaticMeshPartData
 {
 public:
 	SkeletalMeshPartData() = default;
+	~SkeletalMeshPartData() override = default;
 
 protected:
 	std::vector<DirectX::XMFLOAT4> m_blendWeight;
@@ -38,7 +39,7 @@ class SkeletalMeshAsset : public AMeshAsset
 public:
 	SkeletalMeshAsset() = default;
 	SkeletalMeshAsset(const std::string& assetName);
-	virtual ~SkeletalMeshAsset();
+	~SkeletalMeshAsset() override;
 
 protected:
 	std::map<uint32_t, SkeletalMeshPartData*> m_skeletalMeshPartsPerLOD;

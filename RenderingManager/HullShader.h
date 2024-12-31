@@ -5,6 +5,7 @@ class HullShader : public AShader
 {
 public:
 	HullShader() = default;
+	~HullShader() override = default;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11HullShader> m_hullShader;

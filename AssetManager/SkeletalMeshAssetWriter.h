@@ -4,6 +4,9 @@
 class SkeletalMeshAssetWriter : public StaticMeshAssetWriter
 {
 public:
+	~SkeletalMeshAssetWriter() override = default;
+
+public:
 	virtual void LoadMeshPartData(
 		MeshPartsData* meshPartData,
 		const bool& isGltf,

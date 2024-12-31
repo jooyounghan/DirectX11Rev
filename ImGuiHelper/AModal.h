@@ -5,6 +5,7 @@ class AModal : public ANotificator
 {
 public:
 	AModal(const std::string& modalHeaderName);
+	~AModal() override = default;
 
 protected:
 	ImVec2 m_previousWindowPos = ImVec2();

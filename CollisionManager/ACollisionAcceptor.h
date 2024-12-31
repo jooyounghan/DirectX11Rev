@@ -5,6 +5,9 @@ class ICollisionVisitor;
 
 class ACollisionAcceptor
 {
+public:
+	virtual ~ACollisionAcceptor() = default;
+
 public: 
 	virtual bool Accept(
 		ICollisionVisitor& collisionVisitor

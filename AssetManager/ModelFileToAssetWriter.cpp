@@ -27,10 +27,6 @@ ModelFileToAssetWriter::ModelFileToAssetWriter(const string& assetSavePath)
 {
 }
 
-ModelFileToAssetWriter::~ModelFileToAssetWriter()
-{
-}
-
 unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::SaveAsAssets(const string& filePath)
 {
     unordered_map<EAssetType, vector<AAsset*>> result;

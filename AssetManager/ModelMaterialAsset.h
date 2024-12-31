@@ -21,7 +21,7 @@ class ModelMaterialAsset : public AAsset
 public:
 	ModelMaterialAsset() = default;
 	ModelMaterialAsset(const std::string& assetName);
-	virtual ~ModelMaterialAsset();
+	~ModelMaterialAsset() override = default;
 
 protected:
 	std::string m_materialTextureName[ModelMaterialTextureCount];

@@ -7,12 +7,6 @@ DefferedContext::DefferedContext(ID3D11Device** deviceAddress)
 {
 }
 
-DefferedContext::~DefferedContext()
-{
-	m_defferedContext->Release();
-	m_defferedContext = nullptr;
-}
-
 void DefferedContext::InitDefferedContext()
 {
 	(*m_deviceAddressCached)->CreateDeferredContext(NULL, m_defferedContext.GetAddressOf());

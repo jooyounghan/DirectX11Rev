@@ -5,6 +5,7 @@ class ComputeShader : public AShader
 {
 public:
 	ComputeShader() = default;
+	~ComputeShader() override = default;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11ComputeShader> m_computeShader;

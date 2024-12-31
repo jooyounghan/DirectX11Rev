@@ -7,6 +7,7 @@ class ComponentUpdater : public IComponentVisitor
 {
 public:
 	ComponentUpdater(mysqlx::Schema* schema);
+	~ComponentUpdater() override = default;
 
 protected:
 	mysqlx::Schema* m_schemaCached = nullptr;

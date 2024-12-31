@@ -9,6 +9,7 @@ public:
 		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs,
 		const D3D11_PRIMITIVE_TOPOLOGY& topology
 	);
+	~VertexShader() override = default;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader;

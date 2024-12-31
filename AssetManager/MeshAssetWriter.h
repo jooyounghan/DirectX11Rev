@@ -6,6 +6,9 @@ struct aiMesh;
 class MeshAssetWriter
 {
 public:
+	virtual ~MeshAssetWriter() = default;
+
+public:
 	virtual void LoadMeshPartData(
 		MeshPartsData* meshPartData,
 		const bool& isGltf,

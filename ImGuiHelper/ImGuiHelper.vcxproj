@@ -21,8 +21,9 @@
   <ItemGroup>
     <ClCompile Include="ADrawElement.cpp" />
     <ClCompile Include="AInteractable.cpp" />
-    <ClCompile Include="ANode.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="ANodeEditorWindow.cpp" />
+    <ClCompile Include="Port.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="AContextMenu.cpp" />
     <ClCompile Include="ANotificator.cpp" />
@@ -40,14 +41,16 @@
     <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="MouseClickEventArgs.cpp" />
     <ClCompile Include="MouseEventArgs.cpp" />
+    <ClCompile Include="VariableNode.cpp" />
     <ClCompile Include="ZIndexable.cpp" />
     <ClCompile Include="ZIndexComparer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ADrawElement.h" />
     <ClInclude Include="AInteractable.h" />
-    <ClInclude Include="ANode.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="ANodeEditorWindow.h" />
+    <ClInclude Include="Port.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="AContextMenu.h" />
     <ClInclude Include="ANotificator.h" />
@@ -56,6 +59,8 @@
     <ClInclude Include="ImGuiComboBox.h" />
     <ClInclude Include="ImGuiListBox.h" />
     <ClInclude Include="AImGuiSelectable.h" />
+    <ClInclude Include="IVariableInputPort.h" />
+    <ClInclude Include="IVariableOutputPort.h" />
     <ClInclude Include="MessageBoxModal.h" />
     <ClInclude Include="TaskModal.h" />
     <ClInclude Include="AWindow.h" />
@@ -65,6 +70,7 @@
     <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="MouseClickEventArgs.h" />
     <ClInclude Include="MouseEventArgs.h" />
+    <ClInclude Include="VariableNode.h" />
     <ClInclude Include="ZIndexable.h" />
     <ClInclude Include="ZIndexComparer.h" />
   </ItemGroup>

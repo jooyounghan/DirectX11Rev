@@ -12,7 +12,7 @@ class AssetReader
 {
 public:
 	AssetReader(const std::string& assetBasePath);
-	~AssetReader();
+	virtual ~AssetReader() = default;
 
 protected:
 	std::string m_assetBasePath;

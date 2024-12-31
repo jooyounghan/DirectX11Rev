@@ -5,7 +5,7 @@ class ImageFileToAssetWriter : public AAssetWriter
 {
 public:
 	ImageFileToAssetWriter(const std::string& assetSavePath);
-	virtual ~ImageFileToAssetWriter();
+	~ImageFileToAssetWriter() override = default;
 
 protected:
 	static std::string ExrExtension;

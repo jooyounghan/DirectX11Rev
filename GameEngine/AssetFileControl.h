@@ -11,7 +11,8 @@ class AssetFileControl : public AUserControl
 {
 public:
 	AssetFileControl(const EAssetType& assetType, AAsset* asset, ID3D11ShaderResourceView* thumbnailSRV);
-	
+	~AssetFileControl() override = default;
+
 public:
 	static std::string AssetFileControlDragAndDropID;
 

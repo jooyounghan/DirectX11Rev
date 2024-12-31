@@ -9,6 +9,7 @@ class ImGuiInteractionManager
 {
 public:
 	ImGuiInteractionManager() = default;
+    virtual ~ImGuiInteractionManager() = default;
 
 protected:
     std::set<AInteractable*, ZIndexComparer> m_interactables;
@@ -21,15 +22,20 @@ public:
 
 private:
     void IterateInteractablesWithMouseEvent(MouseEventArgs& mouseEventArgs);
-    void IterateInteractablesWithMouseClickEvent(
+    void IterateInteractablesWithInnerMouseClickEvent(
         MouseClickEventArgs& mouseClickedEventArgs, 
-        const std::function<void(AInteractable* const, MouseClickEventArgs&)>& checker
+        const std::function<void(AInteractable* const, MouseClickEventArgs&)>& eventHandler
+    );
+        void IterateInteractablesWithMouseClickEvent(
+        MouseClickEventArgs& mouseClickedEventArgs, 
+        const std::function<void(AInteractable* const, MouseClickEventArgs&)>& eventHandler
     );
 
 private:
-    static void RaiseClickEvent(AInteractable* const interactable, MouseClickEventArgs& args);
-    static void RaiseDoubleClickEvent(AInteractable* const interactable, MouseClickEventArgs& args);
-    static void RaiseDownEvent(AInteractable* const interactable, MouseClickEventArgs& args);
-    static void RaiseReleasedEvent(AInteractable* const interactable, MouseClickEventArgs& args);
+    static void RaiseInnerClickEvent(AInteractable* const interactable, MouseClickEventArgs& args);
+    static void RaiseInnerDoubleClickEvent(AInteractable* const interactable, MouseClickEventArgs& args);
+    static void RaiseInnerDownEvent(AInteractable* const interactable, MouseClickEventArgs& args);
+    static void RaiseInnerUpEvent(AInteractable* const interactable, MouseClickEventArgs& args);
+    static void RaiseDragEndEvent(AInteractable* const interactable, MouseClickEventArgs& args);
 };
 

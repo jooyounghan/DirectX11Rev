@@ -10,7 +10,7 @@ class PSOManager
 {
 public:
 	PSOManager(ID3D11Device** deviceAddress);
-
+	virtual ~PSOManager() = default;
 protected:
 	ID3D11Device** m_deviceAddressCached = nullptr;
 

@@ -8,7 +8,7 @@ class AAsset : public ISerializable
 public:
 	AAsset() = default;
 	AAsset(const std::string& assetName);
-	virtual ~AAsset();
+	~AAsset() override = default;
 
 public:
 	static std::string AssetExtension;

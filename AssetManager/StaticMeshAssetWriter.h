@@ -4,6 +4,9 @@
 class StaticMeshAssetWriter : public MeshAssetWriter
 {
 public:
+	~StaticMeshAssetWriter() override = default;
+
+public:
 	virtual void LoadMeshPartData(
 		MeshPartsData* meshPartData,
 		const bool& isGltf,
@@ -11,7 +14,6 @@ public:
 		const DirectX::XMMATRIX& transformation
 	) override;
 
-public:
 
 };
 

@@ -14,6 +14,9 @@ struct SAnimationKey
 
 class AnimChannel : public ISerializable
 {
+public:
+	~AnimChannel() override = default;
+
 protected:
 	std::vector<SAnimationKey> m_positionKeys;
 	std::vector<SAnimationKey> m_quaternionKeys;
@@ -57,7 +60,7 @@ class AnimationAsset : public AAsset
 public:
 	AnimationAsset() = default;
 	AnimationAsset(const std::string& assetName);
-	virtual ~AnimationAsset();
+	~AnimationAsset() override = default;
 
 protected:
 	float m_duration = 0.f;

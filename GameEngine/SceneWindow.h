@@ -30,6 +30,7 @@ public:
 		ComponentManager* componentManager, 
 		ComponentPSOManager* componentPsoManager
 	);
+	~SceneWindow() override = default;
 
 private:
 	ID3D11DeviceContext** m_deviceContextAddressCached = nullptr;

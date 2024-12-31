@@ -8,10 +8,6 @@ AAssetWriter::AAssetWriter(const string& assetSavePath)
 {
 }
 
-AAssetWriter::~AAssetWriter()
-{
-}
-
 bool AAssetWriter::IsAssetNotLoaded(const std::string& assetName) const
 {
     return m_loadedAssetName.find(assetName) == m_loadedAssetName.end();

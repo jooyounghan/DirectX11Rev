@@ -14,11 +14,6 @@ ATextureAsset::ATextureAsset(
 
 }
 
-ATextureAsset::~ATextureAsset() 
-{
-
-}
-
 vector<pair<uint32_t, vector<uint8_t>>> ATextureAsset::GetCompressedImageBuffers(const vector<vector<uint8_t>>& imageBuffers)
 {
     vector<pair<uint32_t, vector<uint8_t>>> compressedImageBuffersWithOriginSize;

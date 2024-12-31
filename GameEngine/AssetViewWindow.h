@@ -32,6 +32,7 @@ class AssetViewWindow : public AWindow
 {
 public:
 	AssetViewWindow(const std::string& windowID, AssetManager* assetManager);
+	~AssetViewWindow() override = default;
 
 private:
 	AssetManager* m_assetManagerCached = nullptr;

@@ -16,7 +16,7 @@ public:
 		const DirectX::ScratchImage& scratch,
 		const DirectX::TexMetadata& metaData
 	);
-	virtual ~ScratchTextureAsset();
+	~ScratchTextureAsset() override = default;
 
 protected:
 	DXGI_FORMAT m_format;

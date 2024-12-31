@@ -7,8 +7,6 @@ class ACollisionEventReceiver
 {
 public:
     ACollisionEventReceiver() = default;
-
-public:
     virtual ~ACollisionEventReceiver();
 
 protected:

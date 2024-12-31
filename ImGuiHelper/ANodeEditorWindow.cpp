@@ -7,7 +7,7 @@ ANodeEditorWindow::ANodeEditorWindow(const string& windowID)
 	: AWindow(windowID)
 {
 	RegisterInteractable(&m_canvas);
-	m_canvas.AddNode(ImVec2(0.f, 0.f), ImVec2(20.f, 30.f));
+	m_canvas.AddNode(ImVec2(0.f, 0.f), ImVec2(240.f, 120.f));
 }
 
 void ANodeEditorWindow::RenderWindowImpl()

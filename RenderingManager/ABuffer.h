@@ -8,6 +8,7 @@ class ABuffer
 {
 public:
 	ABuffer(const UINT& elementSize, const UINT& arrayCount, void* cpuDataIn);
+	virtual ~ABuffer() = default;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;

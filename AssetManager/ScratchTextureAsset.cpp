@@ -40,10 +40,6 @@ ScratchTextureAsset::ScratchTextureAsset(
 	}
 }
 
-ScratchTextureAsset::~ScratchTextureAsset()
-{
-}
-
 vector<uint32_t> ScratchTextureAsset::GetRowPitchArray()
 {
 	return m_rowPitchPerArray;

@@ -10,6 +10,7 @@ class MeshPartsData : public ISerializable, public AMeshGPUAsset
 {
 public:
 	MeshPartsData() = default;
+	~MeshPartsData() override = default;
 
 protected:
 	std::vector<DirectX::XMFLOAT3> m_positions;
@@ -58,7 +59,7 @@ class AMeshAsset : public AAsset, public IGPUAsset
 public:
 	AMeshAsset() = default;
 	AMeshAsset(const std::string& assetName);
-	virtual ~AMeshAsset();
+	~AMeshAsset() override = default;
 
 protected:
 	std::vector<std::string> m_defaultMaterialNames;

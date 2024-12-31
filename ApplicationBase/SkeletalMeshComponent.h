@@ -14,6 +14,7 @@ public:
 		const DirectX::XMFLOAT3& angle,
 		const DirectX::XMFLOAT3& scale
 	);
+	~SkeletalMeshComponent() override = default;
 
 protected:
 	std::string m_skeletalMeshName;

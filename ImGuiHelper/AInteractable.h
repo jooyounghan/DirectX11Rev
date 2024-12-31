@@ -4,10 +4,12 @@
 #include "MouseClickEventArgs.h"
 #include "ZIndexable.h"
 
+#include <functional>
+
 class AInteractable : public ZIndexable
 {
-protected:
-	ImVec2 m_leftTop;
+public:
+	~AInteractable() override = default;
 
 protected:
 	bool m_isMouseEntered = false;
@@ -26,7 +28,7 @@ public:
 	virtual void OnMouseClicked(MouseClickEventArgs& args) {};
 	virtual void OnMouseDoubleClicked(MouseClickEventArgs& args) {};
 	virtual void OnMouseDown(MouseClickEventArgs& args) {};
-	virtual void OnMouseReleased(MouseClickEventArgs& args) {};
+	virtual void OnMouseUp(MouseClickEventArgs& args) {};
 
 public:
 	virtual void OnMouseEnter(MouseEventArgs& args) {};
@@ -35,6 +37,8 @@ public:
 
 public:
 	virtual void OnBeginDrag() {};
+	virtual void OnDragging(MouseEventArgs& args) {};
+	virtual void OnEndDrag() {};
 
 protected:
 	virtual void AdjustPosition() = 0;

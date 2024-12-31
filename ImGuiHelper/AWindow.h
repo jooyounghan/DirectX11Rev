@@ -7,6 +7,7 @@ class AWindow : public ImGuiInteractionManager
 {
 public:
 	AWindow(const std::string& windowID);
+	~AWindow() override = default;
 
 public:
 	void ShowWindow();

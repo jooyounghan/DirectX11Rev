@@ -8,10 +8,6 @@ TaskModal::TaskModal(const string& modalHeaderName)
 {
 }
 
-TaskModal::~TaskModal()
-{
-}
-
 void TaskModal::SetTaskCount(const size_t& taskLeftCount)
 {
 	m_taskLeftCount = taskLeftCount;

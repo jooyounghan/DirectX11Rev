@@ -15,6 +15,9 @@ class AnimationAsset;
 class IAssetVisitor
 {
 public:
+	virtual ~IAssetVisitor() = default;
+
+public:
 	virtual void Visit(StaticMeshAsset* staticMeshAsset) = 0;
 	virtual void Visit(SkeletalMeshAsset* skeletalMeshAsset) = 0;
 

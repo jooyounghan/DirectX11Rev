@@ -21,8 +21,6 @@ BaseTextureAsset::BaseTextureAsset(
 	m_imageBuffers.emplace_back(move(imageBuffer));
 }
 
-BaseTextureAsset::~BaseTextureAsset() {}
-
 vector<uint32_t> BaseTextureAsset::GetRowPitchArray()
 {
 	return { m_width * 4 };

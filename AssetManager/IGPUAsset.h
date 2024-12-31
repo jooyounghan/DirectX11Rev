@@ -4,6 +4,9 @@
 class IGPUAsset
 {
 public:
+	virtual ~IGPUAsset() = default;
+
+public:
 	virtual void InitializeGPUAsset(
 		ID3D11Device* device,
 		ID3D11DeviceContext* deviceContext

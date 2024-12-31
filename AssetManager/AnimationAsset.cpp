@@ -101,10 +101,6 @@ AnimationAsset::AnimationAsset(const string& assetName)
 {
 }
 
-AnimationAsset::~AnimationAsset()
-{
-}
-
 void AnimationAsset::SetAnimationDuration(const float& durationIn, const float& ticksPerSecond)
 {
 	m_duration = durationIn;

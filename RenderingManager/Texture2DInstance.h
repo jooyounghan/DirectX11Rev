@@ -32,6 +32,8 @@ public:
 		ID3D11Device* device
 	);
 
+	~Texture2DInstance() override = default;
+
 public:
 	static D3D11_BIND_FLAG GetBindFlags()
 	{

@@ -8,7 +8,7 @@ class AMeshGPUAsset : public IGPUAsset
 {
 public:
 	AMeshGPUAsset() = default;
-	virtual ~AMeshGPUAsset();
+	~AMeshGPUAsset() override;
 
 protected:
 	std::vector<ConstantBuffer*>	m_vertexBuffers;

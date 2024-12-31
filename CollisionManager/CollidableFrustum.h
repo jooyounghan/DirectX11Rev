@@ -4,6 +4,9 @@
 class CollidableFrustum : public ACollisionAcceptor, public DirectX::BoundingFrustum
 {
 public:
+	~CollidableFrustum() override = default;
+
+public:
 	virtual bool Accept(
 		ICollisionVisitor& collisionVisitor
 	) const override;

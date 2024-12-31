@@ -153,7 +153,6 @@
     <ClInclude Include="ABuffer.h" />
     <ClInclude Include="D3D11Utilities.h" />
     <ClInclude Include="AUploadableBuffer.h" />
-    <ClInclude Include="ComputePSOObject.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="D3D11Engine.h" />
     <ClInclude Include="DefferedContext.h" />
@@ -163,10 +162,8 @@
     <ClInclude Include="DynamicBuffer.h" />
     <ClInclude Include="AShader.h" />
     <ClInclude Include="GeometryShader.h" />
-    <ClInclude Include="GraphicsPSOObject.h" />
     <ClInclude Include="HullShader.h" />
     <ClInclude Include="PixelShader.h" />
-    <ClInclude Include="PSOObject.h" />
     <ClInclude Include="RTVOption.h" />
     <ClInclude Include="SRVOption.h" />
     <ClInclude Include="ITextureOption.h" />
@@ -182,7 +179,6 @@
     <ClCompile Include="ABuffer.cpp" />
     <ClCompile Include="D3D11Utilities.cpp" />
     <ClCompile Include="AUploadableBuffer.cpp" />
-    <ClCompile Include="ComputePSOObject.cpp" />
     <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="D3D11Engine.cpp" />
     <ClCompile Include="DefferedContext.cpp" />
@@ -191,10 +187,8 @@
     <ClCompile Include="DynamicBuffer.cpp" />
     <ClCompile Include="AShader.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
-    <ClCompile Include="GraphicsPSOObject.cpp" />
     <ClCompile Include="HullShader.cpp" />
     <ClCompile Include="PixelShader.cpp" />
-    <ClCompile Include="PSOObject.cpp" />
     <ClCompile Include="RTVOption.cpp" />
     <ClCompile Include="SRVOption.cpp" />
     <ClCompile Include="ITextureOption.cpp" />

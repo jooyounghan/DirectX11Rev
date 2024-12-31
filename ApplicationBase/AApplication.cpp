@@ -17,9 +17,6 @@ AApplication::AApplication()
 	SetDefaultHandler();
 }
 
-AApplication::~AApplication()
-{
-}
 
 SWindowSize AApplication::LoadMonitorInfo()
 {

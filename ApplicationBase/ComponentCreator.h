@@ -8,6 +8,7 @@ class ComponentCreator : public IComponentVisitor
 {
 public:
 	ComponentCreator(mysqlx::Schema* schema);
+	~ComponentCreator() override = default;
 
 protected:
 	mysqlx::Schema* m_schemaCached = nullptr;

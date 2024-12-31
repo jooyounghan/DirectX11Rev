@@ -105,10 +105,6 @@ AMeshAsset::AMeshAsset(const string& assetName)
 {
 }
 
-AMeshAsset::~AMeshAsset()
-{
-}
-
 void AMeshAsset::UpdateDefaultMaterialAsset(IModelMaterialProvider& provider)
 {
 	m_defaultMaterials.clear();

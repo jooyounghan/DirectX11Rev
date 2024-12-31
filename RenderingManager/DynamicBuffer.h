@@ -5,6 +5,7 @@ class DynamicBuffer : public AUploadableBuffer
 {
 public:
 	DynamicBuffer(const UINT& elementSize, const UINT& arrayCount);
+	~DynamicBuffer() override = default;
 
 public:
 	virtual void Initialize(ID3D11Device* device) override;

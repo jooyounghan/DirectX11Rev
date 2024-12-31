@@ -7,6 +7,7 @@ class ANotificator
 {
 public:
 	ANotificator(const std::string& notificatorName);
+	virtual ~ANotificator() = default;
 
 protected:
 	const std::string m_notificatorName;

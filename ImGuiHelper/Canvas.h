@@ -1,15 +1,15 @@
 #pragma once
 #include "AUserControl.h"
 #include "ImGuiControlManager.h"
-#include "ANode.h"
-
 #include <vector>
+
+class ADrawElement;
 
 class Canvas : public AUserControl, public ImGuiInteractionManager
 {
 public:
 	Canvas();
-	virtual ~Canvas();
+	~Canvas() override;
 
 protected:
 	ImVec2 m_rightBottom;
@@ -23,7 +23,7 @@ public:
 	void AddNode(const ImVec2& leftTop, const ImVec2& size);
 
 private:
-	std::vector<ANode*> m_nodes;
+	std::vector<ADrawElement*> m_drawElements;
 
 protected:
 	virtual void RenderControlImpl() override;

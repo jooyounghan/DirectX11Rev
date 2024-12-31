@@ -5,7 +5,7 @@ class MessageBoxModal : public AModal
 {
 public:
 	MessageBoxModal(const std::string& modalHeaderName);
-	virtual ~MessageBoxModal();
+	~MessageBoxModal() override = default;
 
 protected:
 	std::string m_message;

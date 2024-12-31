@@ -9,8 +9,6 @@ ModelMaterialAsset::ModelMaterialAsset(const string& assetName)
 {
 }
 
-ModelMaterialAsset::~ModelMaterialAsset() {}
-
 void ModelMaterialAsset::UpdateModelBaseTextureAsset(
 	EModelMaterialTexture modelMaterialTextureType,
 	IBaseTextureProvider& provider

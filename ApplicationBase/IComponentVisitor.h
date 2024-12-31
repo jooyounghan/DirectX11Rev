@@ -11,6 +11,9 @@ class Scene;
 class IComponentVisitor
 {
 public:
+	virtual ~IComponentVisitor() = default;
+
+public:
 	virtual void Visit(StaticMeshComponent* staticModelComponent) = 0;
 	virtual void Visit(SkeletalMeshComponent* skeletalModelComponent) = 0;
 

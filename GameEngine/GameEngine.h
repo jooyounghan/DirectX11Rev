@@ -28,7 +28,7 @@ class GameEngine : public App::AApplication
 {
 public:
 	GameEngine();
-	virtual ~GameEngine();
+	~GameEngine() override;
 
 public:
 	virtual void Init(const wchar_t* className, const wchar_t* applicaitonName) override;

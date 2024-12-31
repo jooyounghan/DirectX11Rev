@@ -8,7 +8,7 @@ class AAssetWriter
 {
 public:
 	AAssetWriter(const std::string& assetSavePath);
-	~AAssetWriter();
+	virtual ~AAssetWriter() = default;
 
 protected:
 	std::string m_assetSavePath;

@@ -5,6 +5,7 @@ class StaticMeshPartData : public MeshPartsData
 {
 public:
 	StaticMeshPartData() = default;
+	~StaticMeshPartData() override = default;
 
 protected:
 	std::vector<DirectX::XMFLOAT3> m_tangents;
@@ -32,7 +33,7 @@ class StaticMeshAsset : public AMeshAsset
 public:
 	StaticMeshAsset() = default;
 	StaticMeshAsset(const std::string& assetName);
-	virtual ~StaticMeshAsset();
+	~StaticMeshAsset() override;
 
 protected:
 	std::map<uint32_t, StaticMeshPartData*> m_staticMeshPartsPerLOD;

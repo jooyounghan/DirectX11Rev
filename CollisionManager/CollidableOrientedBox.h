@@ -4,6 +4,9 @@
 class CollidableOrientedBox : public ACollisionAcceptor, public DirectX::BoundingOrientedBox
 {
 public:
+	~CollidableOrientedBox() override = default;
+
+public:
 	virtual bool Accept(
 		ICollisionVisitor& collisionVisitor
 	) const override;

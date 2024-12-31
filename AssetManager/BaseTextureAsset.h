@@ -12,7 +12,7 @@ public:
 		uint8_t* imageBufferIn
 	);
 
-	virtual ~BaseTextureAsset();
+	~BaseTextureAsset() override = default;
 
 public:
 	virtual std::vector<uint32_t> GetRowPitchArray() override;

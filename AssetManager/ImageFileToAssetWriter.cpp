@@ -25,10 +25,6 @@ ImageFileToAssetWriter::ImageFileToAssetWriter(const string& assetSavePath)
 {
 }
 
-ImageFileToAssetWriter::~ImageFileToAssetWriter()
-{
-}
-
 unordered_map<EAssetType, vector<AAsset*>> ImageFileToAssetWriter::SaveAsAssets(const string& filePath)
 {
 	unordered_map<EAssetType, vector<AAsset*>> writtenAssets;

@@ -13,6 +13,7 @@ void ImGuiInteractionManager::CheckMouseControlEvents()
 		imGuiIO.MousePos.x, imGuiIO.MousePos.y,
 		imGuiIO.MouseDelta.x, imGuiIO.MouseDelta.y
 	);
+
 	IterateInteractablesWithMouseEvent(mouseEventArgs);
 
 	for (size_t idx = 0; idx < 3; ++idx)
@@ -38,21 +39,22 @@ void ImGuiInteractionManager::CheckMouseControlEvents()
 			if (imGuiIO.MouseClicked[idx])
 			{				
 				MouseClickEventArgs mouseClickEventArgs(mouseEventArgs, mouseSource, EMouseEvent::CLICKED);
-				IterateInteractablesWithMouseClickEvent(mouseClickEventArgs, bind(&RaiseClickEvent, placeholders::_1, placeholders::_2));
+				IterateInteractablesWithInnerMouseClickEvent(mouseClickEventArgs, bind(&RaiseInnerClickEvent, placeholders::_1, placeholders::_2));
 			}
 			if (imGuiIO.MouseDoubleClicked[idx])
 			{
 				MouseClickEventArgs mouseDoubleClickEventArgs(mouseEventArgs, mouseSource, EMouseEvent::DBL_CLICKED);
-				IterateInteractablesWithMouseClickEvent(mouseDoubleClickEventArgs, bind(&RaiseDoubleClickEvent, placeholders::_1, placeholders::_2));
+				IterateInteractablesWithInnerMouseClickEvent(mouseDoubleClickEventArgs, bind(&RaiseInnerDoubleClickEvent, placeholders::_1, placeholders::_2));
 			}
 
 			MouseClickEventArgs mouseDownEventArgs(mouseEventArgs, mouseSource, EMouseEvent::DOWN, imGuiIO.MouseDownDuration[idx]);
-			IterateInteractablesWithMouseClickEvent(mouseDownEventArgs, bind(&RaiseDownEvent, placeholders::_1, placeholders::_2));
+			IterateInteractablesWithInnerMouseClickEvent(mouseDownEventArgs, bind(&RaiseInnerDownEvent, placeholders::_1, placeholders::_2));
 		}
 		if (imGuiIO.MouseReleased[idx])
 		{
 			MouseClickEventArgs mouseReleasedEventArgs(mouseEventArgs, mouseSource, EMouseEvent::RELEASED);
-			IterateInteractablesWithMouseClickEvent(mouseReleasedEventArgs, bind(&RaiseReleasedEvent, placeholders::_1, placeholders::_2));
+			IterateInteractablesWithInnerMouseClickEvent(mouseReleasedEventArgs, bind(&RaiseInnerUpEvent, placeholders::_1, placeholders::_2));
+			IterateInteractablesWithMouseClickEvent(mouseReleasedEventArgs, bind(&RaiseDragEndEvent, placeholders::_1, placeholders::_2));
 		}
 	}
 
@@ -62,6 +64,11 @@ void ImGuiInteractionManager::IterateInteractablesWithMouseEvent(MouseEventArgs&
 {
 	for (AInteractable* const interactable : m_interactables)
 	{
+		if (interactable->IsMousePressed())
+		{
+			interactable->OnDragging(mouseEventArgs);
+		}
+
 		if (interactable->IsPointIn(mouseEventArgs.m_mousePosX, mouseEventArgs.m_mousePosY))
 		{
 			if (interactable->IsMouseIn())
@@ -85,7 +92,7 @@ void ImGuiInteractionManager::IterateInteractablesWithMouseEvent(MouseEventArgs&
 	}
 }
 
-void ImGuiInteractionManager::IterateInteractablesWithMouseClickEvent(
+void ImGuiInteractionManager::IterateInteractablesWithInnerMouseClickEvent(
 	MouseClickEventArgs& mouseClickedEventArgs, 
 	const std::function<void(AInteractable* const, MouseClickEventArgs&)>& eventHandler
 )
@@ -103,17 +110,34 @@ void ImGuiInteractionManager::IterateInteractablesWithMouseClickEvent(
 	}
 }
 
-void ImGuiInteractionManager::RaiseClickEvent(AInteractable* const interactable, MouseClickEventArgs& args)
+void ImGuiInteractionManager::IterateInteractablesWithMouseClickEvent(
+	MouseClickEventArgs& mouseClickedEventArgs, 
+	const std::function<void(AInteractable* const, MouseClickEventArgs&)>& eventHandler
+)
+{
+	for (AInteractable* const interactable : m_interactables)
+	{
+		eventHandler(interactable, mouseClickedEventArgs);
+		if (mouseClickedEventArgs.m_isHandled)
+		{
+			break;
+		}
+	}
+}
+
+
+
+void ImGuiInteractionManager::RaiseInnerClickEvent(AInteractable* const interactable, MouseClickEventArgs& args)
 {
 	return interactable->OnMouseClicked(args);
 }
 
-void ImGuiInteractionManager::RaiseDoubleClickEvent(AInteractable* const interactable, MouseClickEventArgs& args)
+void ImGuiInteractionManager::RaiseInnerDoubleClickEvent(AInteractable* const interactable, MouseClickEventArgs& args)
 {
 	return interactable->OnMouseDoubleClicked(args);
 }
 
-void ImGuiInteractionManager::RaiseDownEvent(AInteractable* const interactable, MouseClickEventArgs& args)
+void ImGuiInteractionManager::RaiseInnerDownEvent(AInteractable* const interactable, MouseClickEventArgs& args)
 {
 	if (interactable->IsMousePressed())
 	{
@@ -127,8 +151,16 @@ void ImGuiInteractionManager::RaiseDownEvent(AInteractable* const interactable, 
 
 }
 
-void ImGuiInteractionManager::RaiseReleasedEvent(AInteractable* const interactable, MouseClickEventArgs& args)
+void ImGuiInteractionManager::RaiseInnerUpEvent(AInteractable* const interactable, MouseClickEventArgs& args)
 {
-	interactable->SetMousePressed(false);
-	return interactable->OnMouseReleased(args);
+	return interactable->OnMouseUp(args);
+}
+
+void ImGuiInteractionManager::RaiseDragEndEvent(AInteractable* const interactable, MouseClickEventArgs& args)
+{
+	if (interactable->IsMousePressed())
+	{
+		interactable->SetMousePressed(false);
+		return interactable->OnEndDrag();
+	}
 }

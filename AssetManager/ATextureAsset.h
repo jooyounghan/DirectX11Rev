@@ -12,7 +12,7 @@ public:
 		const unsigned int& heightIn,
 		const unsigned int& arraysizeIn
 	);
-	virtual ~ATextureAsset();
+	~ATextureAsset() override = default;
 
 protected:
 	uint32_t m_width = 0;

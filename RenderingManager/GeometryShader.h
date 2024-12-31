@@ -5,6 +5,7 @@ class GeometryShader : public AShader
 {
 public:
 	GeometryShader() = default;
+	~GeometryShader() override = default;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader;

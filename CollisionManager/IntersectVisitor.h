@@ -5,6 +5,7 @@ class IntersectVisitor : public ACollisionVisitor
 {
 public:
 	IntersectVisitor(ACollisionAcceptor* collisionAcceptor);
+	~IntersectVisitor() override = default;
 
 public:
 	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
@@ -16,6 +17,7 @@ class IntersectSphereVisitor : public ACollisionSpecifiedVisitor<CollidableSpher
 {
 public:
 	IntersectSphereVisitor(const CollidableSphere* const collidableSphere);
+	~IntersectSphereVisitor() override = default;
 
 public:
 	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
@@ -27,6 +29,7 @@ class IntersectOrientedBoxVisitor : public ACollisionSpecifiedVisitor<Collidable
 {
 public:
 	IntersectOrientedBoxVisitor(const CollidableOrientedBox* const collidableOrientedBox);
+	~IntersectOrientedBoxVisitor() override = default;
 
 public:
 	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
@@ -39,6 +42,7 @@ class IntersectFrustumVisitor : public ACollisionSpecifiedVisitor<CollidableFrus
 {
 public:
 	IntersectFrustumVisitor(const CollidableFrustum* const collidableFrustum);
+	~IntersectFrustumVisitor() override = default;
 
 public:
 	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;

@@ -10,9 +10,6 @@ AAsset::AAsset(const string& assetName)
 {
 }
 
-AAsset::~AAsset()
-{
-}
 
 void AAsset::Serialize(FILE* fileIn) const
 {

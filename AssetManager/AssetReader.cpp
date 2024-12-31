@@ -43,10 +43,6 @@ AssetReader::AssetReader(const string& assetBasePath)
 	if (!exists(assetBasePathSet) && create_directories(assetBasePathSet)) {/* Do Nothing But Make Directory */ };
 }
 
-AssetReader::~AssetReader()
-{
-}
-
 void AssetReader::UpdatePreloadArgs()
 {
 	m_assetTypeToPreloadArgs.clear();

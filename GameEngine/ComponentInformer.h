@@ -19,6 +19,7 @@ class ComponentInformer : public IComponentVisitor
 {
 public:
 	ComponentInformer(AssetManager* assetManager, ComponentManager* componentManager);
+	~ComponentInformer() override = default;
 
 protected:
 	AssetManager* m_assetManagerCached = nullptr;

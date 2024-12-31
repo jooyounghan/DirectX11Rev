@@ -17,7 +17,7 @@ namespace App
 	{
 	public:
 		AApplication();
-		virtual ~AApplication();
+		virtual ~AApplication() = default;
 
 	public:
 		static AApplication* MainApp;

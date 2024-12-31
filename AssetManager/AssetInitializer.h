@@ -9,6 +9,7 @@ class AssetInitializer : public IAssetVisitor
 {
 public:
 	AssetInitializer(AssetManager* assetManager, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	~AssetInitializer() override = default;
 
 protected:
 	AssetManager* m_assetManager = nullptr;

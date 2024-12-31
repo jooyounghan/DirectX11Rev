@@ -16,6 +16,7 @@ public:
 		const DirectX::XMFLOAT3& relativeAngle,
 		const DirectX::XMFLOAT3& relativeScale	
 	);
+	~AComponent() override = default;
 
 protected:
 	DirectX::XMVECTOR m_relativePosition;

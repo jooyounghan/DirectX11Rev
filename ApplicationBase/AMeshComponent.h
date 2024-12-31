@@ -14,6 +14,7 @@ public:
 		const DirectX::XMFLOAT3& angle,
 		const DirectX::XMFLOAT3& scale	
 	);
+	~AMeshComponent() override = default;
 
 protected:
 	std::vector<std::string> m_modelMaterialNames;

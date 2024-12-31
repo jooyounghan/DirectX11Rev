@@ -5,6 +5,7 @@ class ContainVisitor : public ACollisionVisitor
 {
 public:
 	ContainVisitor(ACollisionAcceptor* collisionAcceptor);
+	~ContainVisitor() override = default;
 
 public:
 	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
@@ -17,6 +18,7 @@ class ContainSphereVisitor : public ACollisionSpecifiedVisitor<CollidableSphere>
 {
 public:
 	ContainSphereVisitor(const CollidableSphere* const collidableSphere);
+	~ContainSphereVisitor() override = default;
 
 public:
 	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
@@ -28,6 +30,8 @@ class ContainOrientedBoxVisitor : public ACollisionSpecifiedVisitor<CollidableOr
 {
 public:
 	ContainOrientedBoxVisitor(const CollidableOrientedBox* const collidableOrientedBox);
+	~ContainOrientedBoxVisitor() override = default;
+
 
 public:
 	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
@@ -40,6 +44,7 @@ class ContainFrustumVisitor : public ACollisionSpecifiedVisitor<CollidableFrustu
 {
 public:
 	ContainFrustumVisitor(const CollidableFrustum* const collidableFrustum);
+	~ContainFrustumVisitor() override = default;
 
 public:
 	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;

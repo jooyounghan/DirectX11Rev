@@ -5,6 +5,7 @@ class PixelShader : public AShader
 {
 public:
 	PixelShader(const UINT& renderTargetCount);
+	~PixelShader() override = default;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader;

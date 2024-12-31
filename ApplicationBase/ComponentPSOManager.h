@@ -5,6 +5,7 @@ class ComponentPSOManager : public PSOManager
 {
 public:
 	ComponentPSOManager(ID3D11Device** deviceAddress);
+	~ComponentPSOManager() override = default;
 
 public:
 	void InitComopnentPSOManager();

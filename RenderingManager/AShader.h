@@ -15,6 +15,9 @@ constexpr UINT ShaderCompileFlag = NULL;
 class AShader
 {
 public:
+	virtual ~AShader() = default;
+
+public:
 	void CreateShader(
 		const std::wstring& shaderPath,  
 		const std::string& entryPoint, 

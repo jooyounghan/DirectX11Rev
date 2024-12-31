@@ -11,6 +11,7 @@ public:
 		ID3D11DeviceContext** deviceContextAddress, 
 		ComponentPSOManager* componentPsoManager
 	);
+	~ASceneRenderer() override = default;
 
 protected:
 	ID3D11DeviceContext** m_deviceContextAddress = nullptr;

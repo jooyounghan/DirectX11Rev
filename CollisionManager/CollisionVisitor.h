@@ -6,6 +6,9 @@
 class ICollisionVisitor
 {
 public:
+	virtual ~ICollisionVisitor() = default;
+
+public:
 	virtual bool Visit(const CollidableSphere* const collidableSphere) const = 0;
 	virtual bool Visit(const CollidableOrientedBox* const collidableSphere) const = 0;
 	virtual bool Visit(const CollidableFrustum* const collidableSphere) const = 0;
@@ -15,6 +18,7 @@ class ACollisionVisitor : public ICollisionVisitor
 {
 public:
 	ACollisionVisitor(ACollisionAcceptor* collisionAcceptor);
+	~ACollisionVisitor() override = default;
 
 protected:
 	ACollisionAcceptor* m_collisionAcceptor;
@@ -25,6 +29,7 @@ class ACollisionSpecifiedVisitor : public ICollisionVisitor
 {
 public:
 	ACollisionSpecifiedVisitor(const T* const specifiedCollisionAcceptor);
+	~ACollisionSpecifiedVisitor() override = default;
 
 public:
 	const T* const  m_specifiedCollisionAccpetor;

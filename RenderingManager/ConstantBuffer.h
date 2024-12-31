@@ -10,6 +10,7 @@ public:
 		const D3D11_BIND_FLAG& bindFlag = D3D11_BIND_CONSTANT_BUFFER,
 		const D3D11_USAGE& usage = D3D11_USAGE_IMMUTABLE
 	);
+	~ConstantBuffer() override = default;
 
 protected:
 	D3D11_USAGE m_usage;

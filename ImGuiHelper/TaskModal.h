@@ -6,7 +6,7 @@ class TaskModal : public AModal
 {
 public:
 	TaskModal(const std::string& modalHeaderName);
-	virtual ~TaskModal();
+	~TaskModal() override = default;
 
 protected:
 	bool m_isTaskProcessing;

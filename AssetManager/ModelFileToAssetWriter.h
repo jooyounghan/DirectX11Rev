@@ -15,7 +15,7 @@ class ModelFileToAssetWriter : public AAssetWriter
 {
 public:
 	ModelFileToAssetWriter(const std::string& assetSavePath);
-	virtual ~ModelFileToAssetWriter();
+	~ModelFileToAssetWriter() override = default;
 
 protected:
 	static std::string FbxExtension;

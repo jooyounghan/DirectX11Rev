@@ -8,6 +8,7 @@ public:
 		ID3D11DeviceContext** deviceContextAddress, 
 		ComponentPSOManager* componentPsoManager
 	);
+	~SceneDefferedRenderer() override = default;
 
 public:
 	virtual void Visit(StaticMeshComponent* staticMeshAsset) override;

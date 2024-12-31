@@ -8,7 +8,7 @@ class DefferedContext
 {
 public:
 	DefferedContext(ID3D11Device** deviceAddress);
-	~DefferedContext();
+	virtual ~DefferedContext() = default;
 
 protected:
 	ID3D11Device** m_deviceAddressCached = nullptr;

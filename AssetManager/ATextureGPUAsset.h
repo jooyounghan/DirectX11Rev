@@ -11,7 +11,7 @@ class ATextureGPUAsset : public IGPUAsset
 {
 public:
 	ATextureGPUAsset() = default;
-	virtual ~ATextureGPUAsset();
+	~ATextureGPUAsset() override;
 
 public:
 	ID3D11Texture2D* GetTexture2D() const;

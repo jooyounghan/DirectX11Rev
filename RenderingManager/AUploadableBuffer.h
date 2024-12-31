@@ -5,6 +5,7 @@ class AUploadableBuffer : public ABuffer
 {
 public:
 	AUploadableBuffer(const UINT& elementSize, const UINT& arrayCount);
+	~AUploadableBuffer() override = default;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_stagingBuffer;

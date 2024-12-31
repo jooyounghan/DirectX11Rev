@@ -14,6 +14,7 @@ public:
 		ID3D11Device** deviceAddress,
 		mysqlx::Schema* schema
 	);
+	~ComponentInitializer() override = default;
 
 protected:
 	AssetManager* m_assetManagerCached = nullptr;

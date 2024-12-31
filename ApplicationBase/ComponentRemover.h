@@ -7,6 +7,7 @@ class ComponentRemover : public IComponentVisitor
 {
 public:
 	ComponentRemover(mysqlx::Schema* schema);
+	~ComponentRemover() override = default;
 
 protected:
 	mysqlx::Schema* m_schemaCached = nullptr;

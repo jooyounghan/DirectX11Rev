@@ -19,6 +19,9 @@ constexpr size_t AssetTypeCount = static_cast<size_t>(EAssetType::ASSET_TYPE_RES
 
 class AssetWrapper : public ISerializable
 {
+public:
+	~AssetWrapper() override = default;
+
 private:
 	EAssetType m_assetType = EAssetType::ASSET_TYPE_NONE;
 

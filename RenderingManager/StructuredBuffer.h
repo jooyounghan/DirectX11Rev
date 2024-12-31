@@ -5,6 +5,7 @@ class StructuredBuffer : public AUploadableBuffer
 {
 public:
 	StructuredBuffer(const UINT& elementSize, const UINT& arrayCount);
+	~StructuredBuffer() override = default;
 
 
 protected:

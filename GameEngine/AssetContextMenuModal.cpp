@@ -10,10 +10,6 @@ AssetContextMenu::AssetContextMenu(const std::string& modalHeaderName)
 {
 }
 
-AssetContextMenu::~AssetContextMenu()
-{
-}
-
 bool AssetContextMenu::OpenCondition()
 {
     const ImVec2 minRect = GetWindowPos();

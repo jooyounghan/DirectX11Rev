@@ -3,6 +3,12 @@
 
 class AUserControl : public AInteractable
 {
+public:
+	~AUserControl() override = default;
+
+protected:
+	ImVec2 m_leftTop;
+
 protected:
 	void* m_dragSource = nullptr;
 

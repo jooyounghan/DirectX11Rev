@@ -30,7 +30,7 @@ public:
 		ID3D11Device** deviceAddress, 
 		ID3D11DeviceContext** deviceContextAddress
 	);
-	virtual ~ComponentManager();
+	~ComponentManager() override;
 
 protected:
 	AssetManager* m_assetManagerCached = nullptr;

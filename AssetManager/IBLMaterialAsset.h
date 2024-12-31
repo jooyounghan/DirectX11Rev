@@ -28,7 +28,7 @@ class IBLMaterialAsset : public AAsset, public IGPUAsset
 public:
 	IBLMaterialAsset();
 	IBLMaterialAsset(const std::string& assetName);
-	virtual ~IBLMaterialAsset();
+	~IBLMaterialAsset() override;
 
 protected:
 	std::string m_materialTextureName[IBLMaterialTextureCount];

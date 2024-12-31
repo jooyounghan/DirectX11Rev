@@ -10,7 +10,7 @@ class Bone : public ISerializable
 {
 public:
 	Bone() = default;
-	~Bone();
+	~Bone() override;
 
 private:
 	uint32_t m_boneIdx = NULL;
@@ -38,7 +38,7 @@ class BoneAsset : public AAsset
 public:
 	BoneAsset() = default;
 	BoneAsset(const std::string& assetName);
-	virtual ~BoneAsset();
+	~BoneAsset() override;
 
 protected:
 	Bone* m_rootBone = nullptr;
