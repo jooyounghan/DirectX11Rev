@@ -8,7 +8,7 @@ ADrawElement::ADrawElement(const ImVec2& referencedOrigin,
 	: m_referencedOrigin(referencedOrigin),
 	m_baseColor(baseColor), m_hoveringColor(hoveringColor), 
 	m_borderColor(borderColor), m_hilightedBorderColor(hilightedBoderColor),
-	m_selectedColor(&m_baseColor), m_selectedBorderColor(&m_borderColor)
+	m_selectedColor(m_baseColor), m_selectedBorderColor(m_borderColor)
 {
 
 }
@@ -26,7 +26,7 @@ void ADrawElement::RemoveFromDrawElementManager(DrawElementManager* drawElementM
 void ADrawElement::SetHilighted(const bool& isHilighted)
 {
 	m_isHilghted = isHilighted;
-	m_selectedBorderColor = m_isHilghted ? &m_hilightedBorderColor : &m_borderColor;
+	m_selectedBorderColor = m_isHilghted ? m_hilightedBorderColor : m_borderColor;
 }
 
 void ADrawElement::Draw(ImDrawList* drawListIn)
@@ -48,10 +48,10 @@ void ADrawElement::OnMouseDown(MouseClickEventArgs& args)
 
 void ADrawElement::OnMouseEnter(MouseEventArgs& args)
 {
-	m_selectedColor = &m_hoveringColor;
+	m_selectedColor = m_hoveringColor;
 }
 
 void ADrawElement::OnMouseLeave(MouseEventArgs& args)
 {
-	m_selectedColor = &m_baseColor;
+	m_selectedColor = m_baseColor;
 }

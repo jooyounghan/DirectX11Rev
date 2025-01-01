@@ -1,5 +1,4 @@
 #include "ANodeEditorWindow.h"
-
 #include "VariableNode.h"
 
 using namespace std;

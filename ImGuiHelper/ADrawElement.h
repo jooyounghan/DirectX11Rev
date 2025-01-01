@@ -15,20 +15,20 @@ public:
 
 protected:
 	const ImVec2& m_referencedOrigin;
-	ImU32 m_baseColor;
-	ImU32 m_hoveringColor;
-	ImU32 m_borderColor;
-	ImU32 m_hilightedBorderColor;
+	const ImU32 m_baseColor;
+	const ImU32 m_hoveringColor;
+	const ImU32 m_borderColor;
+	const ImU32 m_hilightedBorderColor;
 
 protected:
-	ImU32* m_selectedColor;
-	ImU32* m_selectedBorderColor;
+	ImU32 m_selectedColor;
+	ImU32 m_selectedBorderColor;
 
 protected:
 	bool m_isHilghted = false;
 
 public:
-	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager);
+	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager) ;
 	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager);
 
 public:

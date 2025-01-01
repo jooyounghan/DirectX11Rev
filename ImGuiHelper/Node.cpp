@@ -22,8 +22,8 @@ bool Node::IsPointIn(const float& pointX, const float& pointY) const
 void Node::DrawImpl(ImDrawList* drawListIn)
 {
 	const float radius = m_size.x / 20.f;
-	drawListIn->AddRectFilled(m_drawLeftTop, m_drawRightBottom, *m_selectedColor, radius);
-	drawListIn->AddRect(m_drawLeftTop, m_drawRightBottom, *m_selectedBorderColor, radius, NULL, 2.f);
+	drawListIn->AddRectFilled(m_drawLeftTop, m_drawRightBottom, m_selectedColor, radius);
+	drawListIn->AddRect(m_drawLeftTop, m_drawRightBottom, m_selectedBorderColor, radius, NULL, 2.f);
 }
 
 void Node::AdjustPosition()

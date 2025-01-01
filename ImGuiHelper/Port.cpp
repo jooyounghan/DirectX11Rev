@@ -28,8 +28,8 @@ bool Port::IsPointIn(const float& pointX, const float& pointY) const
 
 void Port::DrawImpl(ImDrawList* drawListIn)
 {
-    drawListIn->AddCircleFilled(m_drawCenter, m_radius, *m_selectedColor);
-    drawListIn->AddCircle(m_drawCenter, m_radius, *m_selectedBorderColor, NULL, 2.f);
+    drawListIn->AddCircleFilled(m_drawCenter, m_radius, m_selectedColor);
+    drawListIn->AddCircle(m_drawCenter, m_radius, m_selectedBorderColor, NULL, 2.f);
 
     if (m_isDrawConnection)
     {
@@ -58,6 +58,7 @@ void Port::OnMouseClicked(MouseClickEventArgs& args)
     ADrawElement::OnMouseClicked(args);
 
     connectingPort = this;
+    m_connectionPoint = m_drawCenter;
     m_isDrawConnection = true;
 }
 

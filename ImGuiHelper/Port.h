@@ -27,7 +27,7 @@ protected:
 	float m_radius;
 	 
 public:
-	bool m_isDrawConnection;
+	bool m_isDrawConnection = false;;
 	ImVec2 m_connectionPoint;
 	
 protected:

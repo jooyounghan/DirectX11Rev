@@ -183,11 +183,11 @@
     <ClCompile Include="Port.cpp">
       <Filter>소스 파일\Control\NodeEditor\Port</Filter>
     </ClCompile>
-    <ClCompile Include="VariableNode.cpp">
-      <Filter>소스 파일\Control\NodeEditor\Node</Filter>
-    </ClCompile>
     <ClCompile Include="DrawElementManager.cpp">
       <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="VariablePort.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -263,17 +263,20 @@
     <ClInclude Include="Port.h">
       <Filter>헤더 파일\Control\NodeEditor\Port</Filter>
     </ClInclude>
-    <ClInclude Include="IVariableOutputPort.h">
-      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort</Filter>
+    <ClInclude Include="DrawElementManager.h">
+      <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="IVariableInputPort.h">
-      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort</Filter>
+    <ClInclude Include="VariablePort.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableInputPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableOutputPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
     </ClInclude>
     <ClInclude Include="VariableNode.h">
       <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawElementManager.h">
-      <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

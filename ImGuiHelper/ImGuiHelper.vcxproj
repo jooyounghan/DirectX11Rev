@@ -42,7 +42,7 @@
     <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="MouseClickEventArgs.cpp" />
     <ClCompile Include="MouseEventArgs.cpp" />
-    <ClCompile Include="VariableNode.cpp" />
+    <ClCompile Include="VariablePort.cpp" />
     <ClCompile Include="ZIndexable.cpp" />
     <ClCompile Include="ZIndexComparer.cpp" />
   </ItemGroup>
@@ -61,8 +61,6 @@
     <ClInclude Include="ImGuiComboBox.h" />
     <ClInclude Include="ImGuiListBox.h" />
     <ClInclude Include="AImGuiSelectable.h" />
-    <ClInclude Include="IVariableInputPort.h" />
-    <ClInclude Include="IVariableOutputPort.h" />
     <ClInclude Include="MessageBoxModal.h" />
     <ClInclude Include="TaskModal.h" />
     <ClInclude Include="AWindow.h" />
@@ -72,7 +70,10 @@
     <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="MouseClickEventArgs.h" />
     <ClInclude Include="MouseEventArgs.h" />
+    <ClInclude Include="VariableInputPort.h" />
     <ClInclude Include="VariableNode.h" />
+    <ClInclude Include="VariableOutputPort.h" />
+    <ClInclude Include="VariablePort.h" />
     <ClInclude Include="ZIndexable.h" />
     <ClInclude Include="ZIndexComparer.h" />
   </ItemGroup>
