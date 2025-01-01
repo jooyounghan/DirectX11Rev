@@ -4,6 +4,7 @@
 #include "Node.h"
 #include "Port.h"
 #include <array>
+#include <functional>
 
 template<typename OutputType, typename ...InputTypes>
 class VariableNode : public Node, public IVariableInputPort<InputTypes...>, public IVariableOutputPort<OutputType>
@@ -22,8 +23,6 @@ public:
 
 protected:
 	static constexpr size_t InputCounts = IVariableInputPort<InputTypes...>::GetInputCount();
-
-protected:
 	std::array<Port*, InputCounts> m_inputPorts;
 	Port* m_outputPorts;
 
@@ -50,6 +49,18 @@ private:
 
 public:
 	virtual OutputType GetVariable() const { return OutputType{}; }
+
+public:
+	virtual void RegisterToInteractionManager(InteractionManager* interactionManager);
+	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager);
+	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager);
+	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager);
+
+private:
+	void Test(Port* port) 
+	{
+		bool test = true;
+	}
 };
 
 template<typename OutputType, typename ...InputTypes>
@@ -64,6 +75,7 @@ inline VariableNode<OutputType, InputTypes...>::VariableNode(
 		IM_COL32(0x35, 0xCC, 0x35, 0x88), IM_COL32(0x10, 0xFF, 0x10, 0xFF),
 		IM_COL32(0x46, 0x99, 0x46, 0x88), IM_COL32(0x43, 0x66, 0x43, 0xFF)))
 {
+	m_outputPorts->OnQueryConnectionHandler = std::bind(&VariableNode<OutputType, InputTypes...>::Test, this, std::placeholders::_1);
 }
 
 template<typename OutputType, typename ...InputTypes>
@@ -75,6 +87,50 @@ inline void VariableNode<OutputType, InputTypes...>::DrawImpl(ImDrawList* drawLi
 		inputPort->Draw(drawListIn);
 	}
 	m_outputPorts->Draw(drawListIn);
+}
+
+template<typename OutputType, typename ...InputTypes>
+inline void VariableNode<OutputType, InputTypes...>::RegisterToInteractionManager(InteractionManager* interactionManager)
+{
+	Node::RegisterToInteractionManager(interactionManager);
+	for (Port* inputPort : m_inputPorts)
+	{
+		inputPort->RegisterToInteractionManager(interactionManager);
+	}
+	m_outputPorts->RegisterToInteractionManager(interactionManager);
+}
+
+template<typename OutputType, typename ...InputTypes>
+inline void VariableNode<OutputType, InputTypes...>::DeregisterToInteractionManager(InteractionManager* interactionManager)
+{
+	Node::DeregisterToInteractionManager(interactionManager);
+	for (Port* inputPort : m_inputPorts)
+	{
+		inputPort->DeregisterToInteractionManager(interactionManager);
+	}
+	m_outputPorts->DeregisterToInteractionManager(interactionManager);
+}
+
+template<typename OutputType, typename ...InputTypes>
+inline void VariableNode<OutputType, InputTypes...>::AddToDrawElementManager(DrawElementManager* drawElementManager)
+{
+	Node::AddToDrawElementManager(drawElementManager);
+	for (Port* inputPort : m_inputPorts)
+	{
+		inputPort->AddToDrawElementManager(drawElementManager);
+	}
+	m_outputPorts->AddToDrawElementManager(drawElementManager);
+}
+
+template<typename OutputType, typename ...InputTypes>
+inline void VariableNode<OutputType, InputTypes...>::RemoveFromDrawElementManager(DrawElementManager* drawElementManager)
+{
+	Node::RemoveFromDrawElementManager(drawElementManager);
+	for (Port* inputPort : m_inputPorts)
+	{
+		inputPort->RemoveFromDrawElementManager(drawElementManager);
+	}
+	m_outputPorts->RemoveFromDrawElementManager(drawElementManager);
 }
 
 

@@ -1,15 +1,15 @@
 #pragma once
 #include "AUserControl.h"
-#include "ImGuiControlManager.h"
-#include <vector>
+#include "InteractionManager.h"
+#include "DrawElementManager.h"
 
 class ADrawElement;
 
-class Canvas : public AUserControl, public ImGuiInteractionManager
+class Canvas : public AUserControl, public InteractionManager, public DrawElementManager
 {
 public:
 	Canvas();
-	~Canvas() override;
+	~Canvas() override = default;
 
 protected:
 	ImVec2 m_rightBottom;
@@ -20,10 +20,7 @@ protected:
 	ImVec2 m_scrollingPosition = ImVec2(0.f, 0.f);
 
 public:
-	void AddNode(const ImVec2& leftTop, const ImVec2& size);
-
-private:
-	std::vector<ADrawElement*> m_drawElements;
+	inline const ImVec2& GetOriginPosition() { return m_originPosition; }
 
 protected:
 	virtual void RenderControlImpl() override;

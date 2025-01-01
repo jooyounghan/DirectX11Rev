@@ -132,7 +132,7 @@
     <ClCompile Include="MouseClickEventArgs.cpp">
       <Filter>소스 파일\Event</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiControlManager.cpp">
+    <ClCompile Include="InteractionManager.cpp">
       <Filter>소스 파일\Manager</Filter>
     </ClCompile>
     <ClCompile Include="AModal.cpp">
@@ -186,6 +186,9 @@
     <ClCompile Include="VariableNode.cpp">
       <Filter>소스 파일\Control\NodeEditor\Node</Filter>
     </ClCompile>
+    <ClCompile Include="DrawElementManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui_impl_dx11.h">
@@ -209,7 +212,7 @@
     <ClInclude Include="MouseClickEventArgs.h">
       <Filter>헤더 파일\Event</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuiControlManager.h">
+    <ClInclude Include="InteractionManager.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
     <ClInclude Include="AModal.h">
@@ -268,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="VariableNode.h">
       <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawElementManager.h">
+      <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

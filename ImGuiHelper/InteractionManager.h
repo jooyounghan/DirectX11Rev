@@ -1,23 +1,29 @@
 #pragma once
-#include "AInteractable.h"
 #include "ZIndexComparer.h"
+#include "AInteractable.h"
 
 #include <set>
 #include <functional>
 
-class ImGuiInteractionManager
+class InteractionManager
 {
-public:
-	ImGuiInteractionManager() = default;
-    virtual ~ImGuiInteractionManager() = default;
+    friend class AInteractable;
 
-protected:
+public:
+	InteractionManager() = default;
+    virtual ~InteractionManager() = default;
+
+private:
     std::set<AInteractable*, ZIndexComparer> m_interactables;
 
-public:
+private:
     inline void RegisterInteractable(AInteractable* interactable) { m_interactables.insert(interactable); }
     inline void DeregisterInteractable(AInteractable* interactable) { m_interactables.erase(interactable); }
+
+protected:
     inline void ClearRegisteredInteractables() { m_interactables.clear(); }
+
+protected:
     void CheckMouseControlEvents();
 
 private:

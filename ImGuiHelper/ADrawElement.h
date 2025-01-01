@@ -1,6 +1,8 @@
 #pragma once
 #include "AInteractable.h"
 
+class DrawElementManager;
+
 class ADrawElement : public AInteractable
 {
 public:
@@ -26,6 +28,10 @@ protected:
 	bool m_isHilghted = false;
 
 public:
+	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager);
+	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager);
+
+public:
 	void SetHilighted(const bool& isHilighted);
 
 public:
@@ -36,6 +42,7 @@ protected:
 
 public:
 	virtual void OnMouseClicked(MouseClickEventArgs& args) override;
+	virtual void OnMouseDown(MouseClickEventArgs& args) override;
 
 public:
 	virtual void OnMouseEnter(MouseEventArgs& args) override;

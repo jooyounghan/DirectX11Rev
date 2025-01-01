@@ -25,6 +25,16 @@ protected:
 	ImVec2 m_center = ImVec2(0.f, 0.f);
 	ImVec2 m_drawCenter = ImVec2(0.f, 0.f);
 	float m_radius;
+	 
+public:
+	bool m_isDrawConnection;
+	ImVec2 m_connectionPoint;
+	
+protected:
+	static Port* connectingPort;
+
+public:
+	std::function<void(Port*)> OnQueryConnectionHandler = [&](Port*){};
 
 public:
 	virtual bool IsPointIn(const float& pointX, const float& pointY) const override;
@@ -32,5 +42,11 @@ public:
 protected:
 	virtual void DrawImpl(ImDrawList* drawListIn) override;
 	virtual void AdjustPosition() override;
+
+protected:
+	virtual void OnMouseClicked(MouseClickEventArgs& args) override;
+	virtual void OnDragging(MouseEventArgs& args) override;
+	virtual void OnEndDrag() override;
+	virtual void OnMouseUp(MouseClickEventArgs& args) override;
 };
 

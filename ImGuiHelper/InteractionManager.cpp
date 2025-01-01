@@ -1,11 +1,9 @@
-#include "ImGuiControlManager.h"
-#include "MouseEventArgs.h"
-#include "MouseClickEventArgs.h"
+#include "InteractionManager.h"
 
 using namespace std;
 using namespace ImGui;
 
-void ImGuiInteractionManager::CheckMouseControlEvents()
+void InteractionManager::CheckMouseControlEvents()
 {
 	ImGuiIO& imGuiIO = ImGui::GetIO();
 
@@ -60,7 +58,7 @@ void ImGuiInteractionManager::CheckMouseControlEvents()
 
 }
 
-void ImGuiInteractionManager::IterateInteractablesWithMouseEvent(MouseEventArgs& mouseEventArgs)
+void InteractionManager::IterateInteractablesWithMouseEvent(MouseEventArgs& mouseEventArgs)
 {
 	for (AInteractable* const interactable : m_interactables)
 	{
@@ -92,7 +90,7 @@ void ImGuiInteractionManager::IterateInteractablesWithMouseEvent(MouseEventArgs&
 	}
 }
 
-void ImGuiInteractionManager::IterateInteractablesWithInnerMouseClickEvent(
+void InteractionManager::IterateInteractablesWithInnerMouseClickEvent(
 	MouseClickEventArgs& mouseClickedEventArgs, 
 	const std::function<void(AInteractable* const, MouseClickEventArgs&)>& eventHandler
 )
@@ -110,7 +108,7 @@ void ImGuiInteractionManager::IterateInteractablesWithInnerMouseClickEvent(
 	}
 }
 
-void ImGuiInteractionManager::IterateInteractablesWithMouseClickEvent(
+void InteractionManager::IterateInteractablesWithMouseClickEvent(
 	MouseClickEventArgs& mouseClickedEventArgs, 
 	const std::function<void(AInteractable* const, MouseClickEventArgs&)>& eventHandler
 )
@@ -127,40 +125,48 @@ void ImGuiInteractionManager::IterateInteractablesWithMouseClickEvent(
 
 
 
-void ImGuiInteractionManager::RaiseInnerClickEvent(AInteractable* const interactable, MouseClickEventArgs& args)
+void InteractionManager::RaiseInnerClickEvent(AInteractable* const interactable, MouseClickEventArgs& args)
 {
+	interactable->SetFocused(true);
 	return interactable->OnMouseClicked(args);
 }
 
-void ImGuiInteractionManager::RaiseInnerDoubleClickEvent(AInteractable* const interactable, MouseClickEventArgs& args)
+void InteractionManager::RaiseInnerDoubleClickEvent(AInteractable* const interactable, MouseClickEventArgs& args)
 {
 	return interactable->OnMouseDoubleClicked(args);
 }
 
-void ImGuiInteractionManager::RaiseInnerDownEvent(AInteractable* const interactable, MouseClickEventArgs& args)
+void InteractionManager::RaiseInnerDownEvent(AInteractable* const interactable, MouseClickEventArgs& args)
 {
-	if (interactable->IsMousePressed())
+	if (interactable->IsFocused())
 	{
-		return interactable->OnMouseDown(args);
+		if (interactable->IsMousePressed())
+		{
+			return interactable->OnMouseDown(args);
+		}
+		else
+		{
+			interactable->SetMousePressed(true);
+			return interactable->OnBeginDrag();
+		}
 	}
-	else
-	{
-		interactable->SetMousePressed(true);
-		return interactable->OnBeginDrag();
-	}
-
 }
 
-void ImGuiInteractionManager::RaiseInnerUpEvent(AInteractable* const interactable, MouseClickEventArgs& args)
+void InteractionManager::RaiseInnerUpEvent(AInteractable* const interactable, MouseClickEventArgs& args)
 {
 	return interactable->OnMouseUp(args);
 }
 
-void ImGuiInteractionManager::RaiseDragEndEvent(AInteractable* const interactable, MouseClickEventArgs& args)
+void InteractionManager::RaiseDragEndEvent(AInteractable* const interactable, MouseClickEventArgs& args)
 {
 	if (interactable->IsMousePressed())
 	{
 		interactable->SetMousePressed(false);
-		return interactable->OnEndDrag();
+		interactable->OnEndDrag();
+	}
+
+	if (interactable->IsFocused())
+	{
+		interactable->SetFocused(false);
 	}
 }

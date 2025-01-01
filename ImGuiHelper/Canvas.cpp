@@ -1,29 +1,11 @@
 #include "Canvas.h"
 #include <math.h>
 
-#include "VariableNode.h"
-#include <string>
-
 using namespace std;
 using namespace ImGui;
 
 Canvas::Canvas()
 {
-}
-
-Canvas::~Canvas()
-{
-    for (ADrawElement* drawElement : m_drawElements)
-    {
-        delete drawElement;
-    }
-}
-
-void Canvas::AddNode(const ImVec2& leftTop, const ImVec2& size)
-{
-    Node* node = new VariableNode<float, double, char, int, string>(leftTop, size, 10.f, m_originPosition);
-    RegisterInteractable(node);
-    m_drawElements.emplace_back(node);
 }
 
 void Canvas::RenderControlImpl()
@@ -43,11 +25,7 @@ void Canvas::RenderControlImpl()
     ImDrawList* drawList = GetWindowDrawList();
     m_originPosition = ImVec2(m_leftTop.x + m_scrollingPosition.x, m_leftTop.y + m_scrollingPosition.y);
 
-    for (ADrawElement* drawElement : m_drawElements)
-    {
-        drawElement->Draw(drawList);
-    }
-
+    DrawElements(drawList);
     CheckMouseControlEvents();
 }
 

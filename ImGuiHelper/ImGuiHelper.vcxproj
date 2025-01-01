@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="ADrawElement.cpp" />
     <ClCompile Include="AInteractable.cpp" />
+    <ClCompile Include="DrawElementManager.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="ANodeEditorWindow.cpp" />
     <ClCompile Include="Port.cpp" />
@@ -35,7 +36,7 @@
     <ClCompile Include="MessageBoxModal.cpp" />
     <ClCompile Include="TaskModal.cpp" />
     <ClCompile Include="AWindow.cpp" />
-    <ClCompile Include="ImGuiControlManager.cpp" />
+    <ClCompile Include="InteractionManager.cpp" />
     <ClCompile Include="ImGuiInitializer.cpp" />
     <ClCompile Include="imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
@@ -48,6 +49,7 @@
   <ItemGroup>
     <ClInclude Include="ADrawElement.h" />
     <ClInclude Include="AInteractable.h" />
+    <ClInclude Include="DrawElementManager.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="ANodeEditorWindow.h" />
     <ClInclude Include="Port.h" />
@@ -64,7 +66,7 @@
     <ClInclude Include="MessageBoxModal.h" />
     <ClInclude Include="TaskModal.h" />
     <ClInclude Include="AWindow.h" />
-    <ClInclude Include="ImGuiControlManager.h" />
+    <ClInclude Include="InteractionManager.h" />
     <ClInclude Include="ImGuiInitializer.h" />
     <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="imgui_impl_win32.h" />

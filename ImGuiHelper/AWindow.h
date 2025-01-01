@@ -1,9 +1,10 @@
 #pragma once
-#include "ImGuiControlManager.h"
+#include "InteractionManager.h"
+#include "imgui.h"
 
 #include <string>
 
-class AWindow : public ImGuiInteractionManager
+class AWindow : public InteractionManager
 {
 public:
 	AWindow(const std::string& windowID);

@@ -6,6 +6,8 @@
 
 #include <functional>
 
+class InteractionManager;
+
 class AInteractable : public ZIndexable
 {
 public:
@@ -14,6 +16,11 @@ public:
 protected:
 	bool m_isMouseEntered = false;
 	bool m_isMousePressed = false;
+	bool m_isFocused = false;
+
+public:
+	virtual void RegisterToInteractionManager(InteractionManager* interactionManager);
+	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager);
 
 public:
 	virtual bool IsPointIn(const float& pointX, const float& pointY) const = 0;
@@ -23,6 +30,10 @@ public:
 public:
 	inline const bool& IsMousePressed() { return m_isMousePressed; }
 	inline void SetMousePressed(const bool& isPressed) { m_isMousePressed = isPressed; }
+
+public:
+	inline const bool& IsFocused() { return m_isFocused; }
+	inline void SetFocused(const bool& isFocused) { m_isFocused = isFocused; }
 
 public:
 	virtual void OnMouseClicked(MouseClickEventArgs& args) {};

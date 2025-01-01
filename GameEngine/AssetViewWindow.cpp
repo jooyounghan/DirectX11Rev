@@ -134,9 +134,10 @@ void AssetViewWindow::RenderAssetFolderStructureByRecursive(const string& folder
         m_selectedFolders = assetFolder;
 
         ClearRegisteredInteractables();
+
         for (auto& assetControl : m_selectedFolders->m_assetControls)
         {
-            RegisterInteractable(assetControl.get());
+            assetControl->RegisterToInteractionManager(this);
         }
     }
 
