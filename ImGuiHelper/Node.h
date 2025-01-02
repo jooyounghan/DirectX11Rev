@@ -1,10 +1,12 @@
 #pragma once
 #include "ADrawElement.h"
+#include <string>
 
 class Node : public ADrawElement
 {
 public:
 	Node(
+		const std::string& nodeName,
 		const ImVec2& leftTop, const ImVec2& size, 
 		const ImVec2& referencedOrigin,
 		const ImU32& baseColor, const ImU32& hoveringColor,
@@ -13,6 +15,7 @@ public:
 	~Node() override = default;
 
 protected:
+	std::string m_nodeName;
 	ImVec2 m_leftTop;
 	ImVec2 m_rightBottom;
 	ImVec2 m_size;

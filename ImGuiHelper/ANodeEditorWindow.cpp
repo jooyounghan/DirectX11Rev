@@ -10,8 +10,9 @@ ANodeEditorWindow::ANodeEditorWindow(const string& windowID)
 	m_canvas.RegisterToInteractionManager(this);
 	for (size_t idx = 0; idx < 3; ++idx)
 	{
-		auto variableNode = new VariableNode<float, double, char, int, string>(
-			ImVec2(100.f * idx, 0.f), ImVec2(240.f, 120.f), 10.f, m_canvas.GetOriginPosition()
+		auto variableNode = new VariableNode<float, double, char, float, string>(
+			"Test Node", ImVec2(100.f * idx, 0.f), 
+			ImVec2(240.f, 120.f), 10.f, m_canvas.GetOriginPosition()
 		);
 		variableNode->AddToDrawElementManager(&m_canvas);
 		variableNode->RegisterToInteractionManager(&m_canvas);

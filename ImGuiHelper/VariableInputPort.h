@@ -24,7 +24,11 @@ public:
 	inline void SetConnectedOutputPort(VariableOutputPort<InputType>* outputPort);
 
 protected:
+	virtual void DrawImpl(ImDrawList* drawListIn) override;
 	virtual void DrawPortConnection(ImDrawList* drawListIn) override;
+
+public:
+	virtual void OnMouseUp(MouseClickEventArgs& args) override;
 
 public:
 	virtual void OnBeginDrag() override;
@@ -48,6 +52,17 @@ inline void VariableInputPort<InputType>::SetConnectedOutputPort(VariableOutputP
 }
 
 template<typename InputType>
+inline void VariableInputPort<InputType>::DrawImpl(ImDrawList* drawListIn)
+{
+	VP::DrawImpl(drawListIn);
+
+	std::string baseTypeName = GetBaseTypeName(typeid(InputType).name()).c_str();
+	ImVec2 textSize = ImGui::CalcTextSize(baseTypeName.c_str());
+	ImVec2 textDrawPosition = ImVec2(VP::m_drawCenter.x + VP::m_radius, VP::m_drawCenter.y - textSize.y / 2.f);
+	drawListIn->AddText(textDrawPosition, IM_COL32(0x00, 0x00, 0x00, 0xFF), baseTypeName.c_str());
+}
+
+template<typename InputType>
 inline void VariableInputPort<InputType>::DrawPortConnection(ImDrawList* drawListIn)
 {
 	if (m_connectedPort != nullptr || VP::m_isConnecting)
@@ -58,6 +73,20 @@ inline void VariableInputPort<InputType>::DrawPortConnection(ImDrawList* drawLis
 		}
 
 		VP::DrawBezierForConnection(drawListIn, VP::m_drawCenter, VP::m_mousePositionDuringConnect);
+	}
+}
+
+template<typename InputType>
+inline void VariableInputPort<InputType>::OnMouseUp(MouseClickEventArgs& args)
+{
+	VP::OnMouseUp(args);
+
+	if (VP::m_connectingOutputPort != nullptr)
+	{
+		if (VP::m_connectingOutputPort->IsConnectable(this))
+		{
+			SetConnectedOutputPort((VariableOutputPort<InputType>*)VP::m_connectingOutputPort);
+		}
 	}
 }
 
@@ -73,13 +102,6 @@ template<typename InputType>
 inline void VariableInputPort<InputType>::OnEndDrag()
 {
 	VP::OnEndDrag();
+	VP::m_connectingInputPort = nullptr;
 
-	if (VP::m_connectingOutputPort != nullptr)
-	{
-		if (VP::m_connectingOutputPort->IsConnectable(this))
-		{
-			SetConnectedOutputPort((VariableOutputPort<InputType>*)VP::m_connectingOutputPort);
-		}
-	}
-	VP::m_connectingOutputPort = nullptr;
 }

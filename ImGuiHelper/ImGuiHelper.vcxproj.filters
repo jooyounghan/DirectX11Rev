@@ -109,6 +109,12 @@
     <Filter Include="헤더 파일\Control\NodeEditor\Port\VariablePort">
       <UniqueIdentifier>{3d86ca27-2bd2-489a-964a-05bda7dbfad0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Control\Visitor">
+      <UniqueIdentifier>{ec5268be-f2e3-4b32-8bb9-610d22f6dd89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\NodeEditor\Visitor">
+      <UniqueIdentifier>{130443d6-0485-4e15-a496-e2780750908b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui_impl_dx11.cpp">
@@ -187,7 +193,10 @@
       <Filter>소스 파일\Manager</Filter>
     </ClCompile>
     <ClCompile Include="VariablePort.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Control\NodeEditor\Port\VariablePort</Filter>
+    </ClCompile>
+    <ClCompile Include="IPortVisitor.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Visitor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -266,17 +275,20 @@
     <ClInclude Include="DrawElementManager.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="VariablePort.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="VariableInputPort.h">
-      <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
-    </ClInclude>
-    <ClInclude Include="VariableOutputPort.h">
-      <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
-    </ClInclude>
     <ClInclude Include="VariableNode.h">
       <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableInputPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableOutputPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort</Filter>
+    </ClInclude>
+    <ClInclude Include="IPortVisitor.h">
+      <Filter>헤더 파일\Control\Visitor</Filter>
+    </ClInclude>
+    <ClInclude Include="VariablePort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

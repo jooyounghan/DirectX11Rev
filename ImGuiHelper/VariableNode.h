@@ -9,7 +9,7 @@ template<typename OutputType, typename ...InputTypes>
 class VariableNode : public Node
 {
 public:
-	VariableNode(const ImVec2& leftTop, const ImVec2& size, const float& radius, const ImVec2& referencedOrigin);
+	VariableNode(const std::string& nodeName, const ImVec2& leftTop, const ImVec2& size, const float& radius, const ImVec2& referencedOrigin);
 	~VariableNode() override = default;
 	
 protected:
@@ -30,11 +30,11 @@ private:
 
 template<typename OutputType, typename ...InputTypes>
 inline VariableNode<OutputType, InputTypes...>::VariableNode(
-	const ImVec2& leftTop, const ImVec2& size, 
+	const std::string& nodeName, const ImVec2& leftTop, const ImVec2& size,
 	const float& radius, const ImVec2& referencedOrigin
 )
 	: Node(
-		leftTop, size, referencedOrigin, 
+		nodeName, leftTop, size, referencedOrigin,
 		IM_COL32(0x35, 0xCC, 0x35, 0x88), IM_COL32(0x10, 0xFF, 0x10, 0xFF),
 		IM_COL32(0x46, 0x99, 0x46, 0x88), IM_COL32(0x43, 0x66, 0x43, 0xFF)
 	),

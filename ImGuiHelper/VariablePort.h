@@ -1,5 +1,8 @@
 #pragma once
 #include "APort.h"
+#include <string>
+
+std::string GetBaseTypeName(std::string typeName);
 
 template<typename T>
 class VariablePort : public APort
@@ -48,11 +51,13 @@ inline VariablePort<T>::VariablePort(
 	)
 {
 }
+
 template<typename T>
 inline void VariablePort<T>::OnBeginDrag()
 {
 	APort::OnBeginDrag();
 	m_isConnecting = true;
+	m_mousePositionDuringConnect = m_drawCenter;
 }
 
 template<typename T>
@@ -66,13 +71,14 @@ template<typename T>
 inline void VariablePort<T>::OnEndDrag()
 {
 	APort::OnEndDrag();
-	m_mousePositionDuringConnect = m_center;
 	m_isConnecting = false;
 }
+
+
 
 template<typename T>
 template<typename U>
 inline bool VariablePort<T>::IsConnectable(VariablePort<U>* targetPort)
 {
-	return std::is_base_of_v<U, T>;
+	return std::is_same_v<U, T> || std::is_base_of_v<U, T>;
 }

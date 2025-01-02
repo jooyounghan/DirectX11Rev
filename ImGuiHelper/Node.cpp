@@ -1,6 +1,10 @@
 #include "Node.h"
 
+using namespace std;
+using namespace ImGui;
+
 Node::Node(
+	const string& nodeName,
 	const ImVec2& leftTop, const ImVec2& size,
 	const ImVec2& referencedOrigin,
 	const ImU32& baseColor, const ImU32& hoveringColor,
@@ -10,7 +14,7 @@ Node::Node(
 		referencedOrigin, 
 		baseColor, hoveringColor, 
 		borderColor, hilightedBoderColor
-	), m_leftTop(leftTop), m_size(size)
+	), m_nodeName(nodeName), m_leftTop(leftTop), m_size(size)
 {
 }
 
@@ -22,8 +26,15 @@ bool Node::IsPointIn(const float& pointX, const float& pointY) const
 void Node::DrawImpl(ImDrawList* drawListIn)
 {
 	const float radius = m_size.x / 20.f;
+	const ImVec2 nodeNameSize = CalcTextSize(m_nodeName.c_str());
+	const ImVec2 nodePosition = ImVec2(
+		(m_drawRightBottom.x - m_drawLeftTop.x) / 2.f + m_drawLeftTop.x - nodeNameSize.x / 2.f,
+		(m_drawRightBottom.y - m_drawLeftTop.y) / 2.f + m_drawLeftTop.y - nodeNameSize.y / 2.f
+	);
+
 	drawListIn->AddRectFilled(m_drawLeftTop, m_drawRightBottom, m_selectedColor, radius);
 	drawListIn->AddRect(m_drawLeftTop, m_drawRightBottom, m_selectedBorderColor, radius, NULL, 2.f);
+	drawListIn->AddText(nodePosition, IM_COL32(0x00, 0x00, 0x00, 0xFF), m_nodeName.c_str());
 }
 
 void Node::AdjustPosition()

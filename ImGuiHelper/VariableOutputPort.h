@@ -25,6 +25,9 @@ public:
 	virtual OutputType GetVariable() const { return OutputType(); }
 
 public:
+	virtual void OnMouseUp(MouseClickEventArgs& args) override;
+
+public:
 	virtual void OnBeginDrag() override;
 	virtual void OnEndDrag() override;
 };
@@ -50,6 +53,19 @@ inline void VariableOutputPort<OutputType>::DrawPortConnection(ImDrawList* drawL
 }
 
 template<typename OutputType>
+inline void VariableOutputPort<OutputType>::OnMouseUp(MouseClickEventArgs& args)
+{
+	VP::OnMouseUp(args);
+
+	if (VP::m_connectingInputPort != nullptr)
+	{
+		VP::m_connectingOutputPort = this;
+		VP::m_connectingInputPort->OnMouseUp(args);
+		VP::m_connectingOutputPort = nullptr;
+	}
+}
+
+template<typename OutputType>
 inline void VariableOutputPort<OutputType>::OnBeginDrag()
 {
 	VP::OnBeginDrag();
@@ -59,7 +75,6 @@ inline void VariableOutputPort<OutputType>::OnBeginDrag()
 template<typename OutputType>
 inline void VariableOutputPort<OutputType>::OnEndDrag()
 {
-	VP::m_connectingOutputPort = this;
-	VP::m_connectingInputPort->OnEndDrag();
-	VP::m_connectingInputPort = nullptr;
+	VP::OnEndDrag();
+	VP::m_connectingOutputPort = nullptr;
 }
