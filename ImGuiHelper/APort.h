@@ -3,17 +3,17 @@
 
 class Node;
 
-class Port : public ADrawElement
+class APort : public ADrawElement
 {
 public:
-	Port(
+	APort(
 		Node* parentNode, const bool& isLeft,
 		size_t indexCount, size_t portIndex,
 		const float& radius, const ImVec2& referencedOrigin,
 		const ImU32& baseColor, const ImU32& hoveringColor,
 		const ImU32& borderColor, const ImU32& hilightedBoderColor
 	);
-	~Port() override = default;
+	~APort() override = default;
 
 protected:
 	Node* m_parentNode;
@@ -27,14 +27,8 @@ protected:
 	float m_radius;
 	 
 public:
-	bool m_isDrawConnection = false;;
-	ImVec2 m_connectionPoint;
-	
-protected:
-	static Port* connectingPort;
-
-public:
-	std::function<void(Port*)> OnQueryConnectionHandler = [&](Port*){};
+	inline const ImVec2& GetCenter() { return m_center; }
+	inline const ImVec2& GetDrawCenter() { return m_drawCenter; }
 
 public:
 	virtual bool IsPointIn(const float& pointX, const float& pointY) const override;
@@ -42,11 +36,9 @@ public:
 protected:
 	virtual void DrawImpl(ImDrawList* drawListIn) override;
 	virtual void AdjustPosition() override;
+	void DrawBezierForConnection(ImDrawList* drawListIn, const ImVec2& start, const ImVec2& end);
 
 protected:
-	virtual void OnMouseClicked(MouseClickEventArgs& args) override;
-	virtual void OnDragging(MouseEventArgs& args) override;
-	virtual void OnEndDrag() override;
-	virtual void OnMouseUp(MouseClickEventArgs& args) override;
+	virtual void DrawPortConnection(ImDrawList* drawListIn) = 0;
 };
 

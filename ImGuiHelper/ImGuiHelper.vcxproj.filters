@@ -180,7 +180,7 @@
     <ClCompile Include="ADrawElement.cpp">
       <Filter>소스 파일\Control</Filter>
     </ClCompile>
-    <ClCompile Include="Port.cpp">
+    <ClCompile Include="APort.cpp">
       <Filter>소스 파일\Control\NodeEditor\Port</Filter>
     </ClCompile>
     <ClCompile Include="DrawElementManager.cpp">
@@ -260,7 +260,7 @@
     <ClInclude Include="ADrawElement.h">
       <Filter>헤더 파일\Control</Filter>
     </ClInclude>
-    <ClInclude Include="Port.h">
+    <ClInclude Include="APort.h">
       <Filter>헤더 파일\Control\NodeEditor\Port</Filter>
     </ClInclude>
     <ClInclude Include="DrawElementManager.h">

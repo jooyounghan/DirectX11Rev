@@ -24,7 +24,7 @@
     <ClCompile Include="DrawElementManager.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="ANodeEditorWindow.cpp" />
-    <ClCompile Include="Port.cpp" />
+    <ClCompile Include="APort.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="AContextMenu.cpp" />
     <ClCompile Include="ANotificator.cpp" />
@@ -52,7 +52,7 @@
     <ClInclude Include="DrawElementManager.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="ANodeEditorWindow.h" />
-    <ClInclude Include="Port.h" />
+    <ClInclude Include="APort.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="AContextMenu.h" />
     <ClInclude Include="ANotificator.h" />

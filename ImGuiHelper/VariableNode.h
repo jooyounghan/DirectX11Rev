@@ -22,7 +22,6 @@ public:
 	virtual void RegisterToInteractionManager(InteractionManager* interactionManager);
 	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager);
 
-
 private:
 	template<std::size_t... Indices>
 	std::tuple<VariableInputPort<InputTypes>...> CreateVariableInputPorts(
