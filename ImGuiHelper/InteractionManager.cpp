@@ -1,7 +1,22 @@
 #include "InteractionManager.h"
+#include <algorithm>
 
 using namespace std;
 using namespace ImGui;
+
+void InteractionManager::RegisterInteractable(AInteractable* interactable) { m_interactables.emplace_front(interactable); }
+
+void InteractionManager::DeregisterInteractable(AInteractable* interactable)
+{
+	m_interactables.erase(std::remove(m_interactables.begin(), m_interactables.end(), interactable), m_interactables.end());
+}
+
+void InteractionManager::BringInteractableToFront(AInteractable* interactable)
+{
+	stable_partition(m_interactables.begin(), m_interactables.end(), [&](AInteractable* i) { return i == interactable; });
+}
+
+void InteractionManager::ClearRegisteredInteractables() { m_interactables.clear(); }
 
 void InteractionManager::CheckMouseControlEvents()
 {
@@ -34,6 +49,8 @@ void InteractionManager::CheckMouseControlEvents()
 
 		if (imGuiIO.MouseDown[idx])
 		{
+			if (!imGuiIO.WantCaptureMouse) return;
+
 			if (imGuiIO.MouseClicked[idx])
 			{				
 				MouseClickEventArgs mouseClickEventArgs(mouseEventArgs, mouseSource, EMouseEvent::CLICKED);
@@ -122,7 +139,6 @@ void InteractionManager::IterateInteractablesWithMouseClickEvent(
 		}
 	}
 }
-
 
 
 void InteractionManager::RaiseInnerClickEvent(AInteractable* const interactable, MouseClickEventArgs& args)

@@ -25,12 +25,13 @@ protected:
 	static float nodeMinHeight;
 
 protected:
-	ImVec2 m_drawLeftTop;
-	ImVec2 m_drawNodeHeaderPos;
-	ImVec2 m_drawNodeFieldPos;
-	ImVec2 m_nodeHeaderSize;
-	ImVec2 m_nodeFieldSize;
-	ImVec2 m_totalSize;
+	ImVec2 m_drawLeftTop = ImVec2(0.f, 0.f);
+	ImVec2 m_drawNodeHeaderPos = ImVec2(0.f, 0.f);
+	ImVec2 m_drawNodeFieldPos = ImVec2(0.f, 0.f);
+	ImVec2 m_nodeHeaderSize = ImVec2(0.f, 0.f);
+	ImVec2 m_nodeFieldSize = ImVec2(0.f, 0.f);
+	ImVec2 m_totalSize = ImVec2(0.f, 0.f);
+	ImVec2 m_offsetFromLeftTop = ImVec2(0.f, 0.f);
 
 public:
 	const ImVec2& GetDrawNodeHeaderPos() { return m_drawNodeHeaderPos; }
@@ -40,9 +41,6 @@ public:
 
 protected:
 	bool m_isDragging = false;
-
-public:
-	std::function<void(Node*)> OnMouseClickedHandler = [&](Node* node) {};
 
 public:
 	virtual bool IsPointIn(const float& pointX, const float& pointY) const override;

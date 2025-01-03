@@ -2,16 +2,15 @@
 #include "imgui.h"
 #include "MouseEventArgs.h"
 #include "MouseClickEventArgs.h"
-#include "ZIndexable.h"
 
 #include <functional>
 
 class InteractionManager;
 
-class AInteractable : public ZIndexable
+class AInteractable
 {
 public:
-	~AInteractable() override = default;
+	virtual ~AInteractable() = default;
 
 protected:
 	bool m_isMouseEntered = false;

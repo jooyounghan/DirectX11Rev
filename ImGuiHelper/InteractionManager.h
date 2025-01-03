@@ -1,8 +1,7 @@
 #pragma once
-#include "ZIndexComparer.h"
 #include "AInteractable.h"
 
-#include <set>
+#include <deque>   
 #include <functional>
 
 class InteractionManager
@@ -14,16 +13,13 @@ public:
     virtual ~InteractionManager() = default;
 
 private:
-    std::set<AInteractable*, ZIndexComparer> m_interactables;
-
-private:
-    inline void RegisterInteractable(AInteractable* interactable) { m_interactables.insert(interactable); }
-    inline void DeregisterInteractable(AInteractable* interactable) { m_interactables.erase(interactable); }
+    std::deque<AInteractable*> m_interactables;
 
 protected:
-    inline void ClearRegisteredInteractables() { m_interactables.clear(); }
-
-protected:
+    void RegisterInteractable(AInteractable* interactable);
+    void DeregisterInteractable(AInteractable* interactable);
+    void BringInteractableToFront(AInteractable* interactable);
+    void ClearRegisteredInteractables();
     void CheckMouseControlEvents();
 
 private:

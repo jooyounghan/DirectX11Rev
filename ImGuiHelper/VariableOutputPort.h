@@ -21,8 +21,7 @@ protected:
 	virtual void DrawPortConnection(ImDrawList* drawListIn) override;
 
 public:
-	// TODO : TO BE Interface
-	virtual OutputType GetVariable() const { return OutputType(); }
+	virtual OutputType GetVariable() const = 0;
 
 public:
 	virtual void OnMouseUp(MouseClickEventArgs& args) override;
@@ -32,6 +31,10 @@ public:
 	virtual void OnEndDrag() override;
 };
 
+template<typename OutputType, typename Derived>
+concept VariableOutPortType = std::is_base_of_v<VariableOutputPort<OutputType>, Derived>;
+
+
 template<typename OutputType>
 inline VariableOutputPort<OutputType>::VariableOutputPort(
 	Node* parentNode, size_t indexCount,
@@ -40,8 +43,6 @@ inline VariableOutputPort<OutputType>::VariableOutputPort(
 	: VP(parentNode, false, indexCount, portIndex, radius, referencedOrigin)
 {
 }
-
-
 
 template<typename OutputType>
 inline void VariableOutputPort<OutputType>::DrawPortConnection(ImDrawList* drawListIn)

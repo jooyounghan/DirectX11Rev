@@ -19,9 +19,10 @@ void ADrawElement::RemoveFromDrawElementManager(DrawElementManager* drawElementM
 	drawElementManager->RemoveDrawElement(this);
 }
 
-void ADrawElement::SetHilighted(const bool& isHilighted)
+void ADrawElement::SetFocused(const bool& isFocused)
 {
-	m_isHilghted = isHilighted;
+	m_isFocused = isFocused;
+	if (m_isFocused) OnFocused(this);
 }
 
 void ADrawElement::Draw(ImDrawList* drawListIn)
@@ -32,7 +33,7 @@ void ADrawElement::Draw(ImDrawList* drawListIn)
 
 void ADrawElement::OnMouseClicked(MouseClickEventArgs& args)
 {
-	SetHilighted(true);
+	SetFocused(true);
 	args.m_isHandled = true;
 }
 

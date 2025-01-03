@@ -1,4 +1,5 @@
 #include "DrawElementManager.h"
+#include <algorithm>
 
 DrawElementManager::~DrawElementManager()
 {
@@ -19,6 +20,11 @@ void DrawElementManager::RemoveDrawElement(ADrawElement* drawElement)
 		std::remove(m_drawElements.begin(), m_drawElements.end(), drawElement),
 		m_drawElements.end()
 	);
+}
+
+void DrawElementManager::BringDrawElementToFront(ADrawElement* drawElement)
+{
+	stable_partition(m_drawElements.begin(), m_drawElements.end(), [&](ADrawElement* i) { return i != drawElement; });
 }
 
 void DrawElementManager::DrawElements(ImDrawList* drawList)

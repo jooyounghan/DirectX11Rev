@@ -13,16 +13,20 @@ protected:
 	const ImVec2& m_referencedOrigin;
 	const ImU32 m_baseColor;
 	ImU32 m_selectedBorderFill;
+	bool m_isFocused = false;
 
-protected:
-	bool m_isHilghted = false;
+public:
+	std::function<void(ADrawElement*)> OnFocused = [&](ADrawElement*) {};
+
+public:
+	const ImVec2& GetReferencedOrigin() { return m_referencedOrigin; }
 
 public:
 	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager) ;
 	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager);
 
 public:
-	void SetHilighted(const bool& isHilighted);
+	void SetFocused(const bool& isFocused);
 
 public:
 	void Draw(ImDrawList* drawListIn);
@@ -37,7 +41,5 @@ public:
 public:
 	virtual void OnMouseEnter(MouseEventArgs& args) override;
 	virtual void OnMouseLeave(MouseEventArgs& args) override;
-
-
 };
 

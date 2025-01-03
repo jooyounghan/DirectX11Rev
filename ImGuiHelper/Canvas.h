@@ -23,6 +23,7 @@ public:
 	inline const ImVec2& GetOriginPosition() { return m_originPosition; }
 
 protected:
+	virtual void AddDrawElement(ADrawElement* drawElement);
 	virtual void RenderControlImpl() override;
 	virtual void AdjustPosition() override;
 

@@ -91,12 +91,6 @@
     <Filter Include="헤더 파일\Control\NodeEditor\Node">
       <UniqueIdentifier>{04f4a747-bfb2-488b-830e-4886efdaf915}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Utilties">
-      <UniqueIdentifier>{22720d49-ed01-47c2-a846-7d0923bee948}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Utilities">
-      <UniqueIdentifier>{d3fc3f18-4492-4095-83c5-250daff64579}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Control\NodeEditor\Port">
       <UniqueIdentifier>{de157c66-b03b-45d9-b245-d4db05c00d21}</UniqueIdentifier>
     </Filter>
@@ -108,6 +102,15 @@
     </Filter>
     <Filter Include="헤더 파일\Control\NodeEditor\Port\VariablePort">
       <UniqueIdentifier>{3d86ca27-2bd2-489a-964a-05bda7dbfad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Control\NodeEditor\Port\VariablePort\Extended">
+      <UniqueIdentifier>{b2256e78-fb78-4968-a34b-ee4ae4d7a44d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Control\NodeEditor\Node\Extended">
+      <UniqueIdentifier>{a649a35e-a0f3-46be-9906-9899a29c06f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\NodeEditor\Node\Extended">
+      <UniqueIdentifier>{2c45ece1-2ce1-4ed2-9652-c3eae0a2d82b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -168,12 +171,6 @@
     <ClCompile Include="Node.cpp">
       <Filter>소스 파일\Control\NodeEditor\Node</Filter>
     </ClCompile>
-    <ClCompile Include="ZIndexable.cpp">
-      <Filter>소스 파일\Utilties</Filter>
-    </ClCompile>
-    <ClCompile Include="ZIndexComparer.cpp">
-      <Filter>소스 파일\Utilties</Filter>
-    </ClCompile>
     <ClCompile Include="AInteractable.cpp">
       <Filter>소스 파일\Control</Filter>
     </ClCompile>
@@ -188,6 +185,15 @@
     </ClCompile>
     <ClCompile Include="VariablePort.cpp">
       <Filter>소스 파일\Control\NodeEditor\Port\VariablePort</Filter>
+    </ClCompile>
+    <ClCompile Include="StringVariableOutputPort.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Port\VariablePort</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatVariableNode.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Node\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="StringVariableNode.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Node\Extended</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -248,12 +254,6 @@
     <ClInclude Include="Node.h">
       <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
     </ClInclude>
-    <ClInclude Include="ZIndexable.h">
-      <Filter>헤더 파일\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="ZIndexComparer.h">
-      <Filter>헤더 파일\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="AInteractable.h">
       <Filter>헤더 파일\Control</Filter>
     </ClInclude>
@@ -279,6 +279,21 @@
       <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort</Filter>
     </ClInclude>
     <ClInclude Include="DrawElementColor.h">
+      <Filter>헤더 파일\Control\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="FundamentalVariableOutputPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatVariableNode.h">
+      <Filter>헤더 파일\Control\NodeEditor\Node\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="StringVariableOutputPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="StringVariableNode.h">
+      <Filter>헤더 파일\Control\NodeEditor\Node\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeConstant.h">
       <Filter>헤더 파일\Control\NodeEditor</Filter>
     </ClInclude>
   </ItemGroup>

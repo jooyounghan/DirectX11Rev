@@ -8,6 +8,16 @@ Canvas::Canvas()
 {
 }
 
+void Canvas::AddDrawElement(ADrawElement* drawElement)
+{
+    DrawElementManager::AddDrawElement(drawElement);
+    drawElement->OnFocused = [&](ADrawElement* d)
+        {
+            BringDrawElementToFront(d);
+            BringInteractableToFront(d);
+        };
+}
+
 void Canvas::RenderControlImpl()
 {
     ImGuiIO& io = GetIO();
@@ -24,6 +34,7 @@ void Canvas::RenderControlImpl()
 
     ImDrawList* drawList = GetWindowDrawList();
     m_originPosition = ImVec2(m_leftTop.x + m_scrollingPosition.x, m_leftTop.y + m_scrollingPosition.y);
+
 
     DrawElements(drawList);
     CheckMouseControlEvents();

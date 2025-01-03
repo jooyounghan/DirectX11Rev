@@ -32,7 +32,7 @@ void Node::DrawImpl(ImDrawList* drawListIn)
 	const float radius = m_totalSize.x / 20.f;
 
 	const ImVec2 nodeRightBottom = ImVec2(m_drawLeftTop.x + m_totalSize.x, m_drawLeftTop.y + m_totalSize.y);
-	drawListIn->AddRectFilled(m_drawLeftTop, nodeRightBottom, m_isHilghted ? borderFillHilighted : borderFill, radius, NULL);
+	drawListIn->AddRectFilled(m_drawLeftTop, nodeRightBottom, m_selectedBorderFill, radius, NULL);
 	drawListIn->AddRect(m_drawLeftTop, nodeRightBottom, borderFillHilighted, radius, NULL, 2.f);
 
 	// Draw Node Name
@@ -63,16 +63,18 @@ void Node::AdjustPosition()
 void Node::OnMouseClicked(MouseClickEventArgs& args)
 {
 	ADrawElement::OnMouseClicked(args);
-	OnMouseClickedHandler(this);
-	args.m_isHandled = true;
+	m_offsetFromLeftTop = ImVec2(
+		args.m_mousePosX - m_drawLeftTop.x,
+		args.m_mousePosY - m_drawLeftTop.y
+	);
 }
 
 void Node::OnDragging(MouseEventArgs& args)
 {
 	ADrawElement::OnDragging(args);
 	m_leftTop = ImVec2(
-		args.m_mousePosX - m_totalSize.x / 2.f - m_referencedOrigin.x,
-		args.m_mousePosY - m_totalSize.y / 2.f - m_referencedOrigin.y
+		args.m_mousePosX - m_referencedOrigin.x - m_offsetFromLeftTop.x,
+		args.m_mousePosY - m_referencedOrigin.y - m_offsetFromLeftTop.y
 	);
 }
 

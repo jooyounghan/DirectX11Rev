@@ -6,7 +6,8 @@
 
 #include <tuple>
 
-template<typename OutputType, typename ...InputTypes>
+template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
+	requires VariableOutPortType<OutputType, DerivedOutputPort>
 class VariableNode : public Node
 {
 public:
@@ -15,7 +16,7 @@ public:
 	
 protected:
 	std::tuple<VariableInputPort<InputTypes>...> m_variableInputPorts;
-	VariableOutputPort<OutputType> m_variableOutputPort;
+	DerivedOutputPort m_variableOutputPort;
 
 public:
 	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager);
@@ -32,8 +33,9 @@ private:
 		Node* parentNode, const float& radius, const ImVec2& referencedOrigin, std::index_sequence<Indices...>);
 };
 
-template<typename OutputType, typename ...InputTypes>
-inline VariableNode<OutputType, InputTypes...>::VariableNode(
+template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
+	requires VariableOutPortType<OutputType, DerivedOutputPort>
+inline VariableNode<OutputType, DerivedOutputPort, InputTypes...>::VariableNode(
 	const std::string& nodeName, const ImVec2& leftTop,
 	const float& radius, const ImVec2& referencedOrigin
 )
@@ -44,40 +46,45 @@ inline VariableNode<OutputType, InputTypes...>::VariableNode(
 
 }
 
-template<typename OutputType, typename ...InputTypes>
-inline void VariableNode<OutputType, InputTypes...>::AddToDrawElementManager(DrawElementManager* drawElementManager)
+template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
+	requires VariableOutPortType<OutputType, DerivedOutputPort>
+inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::AddToDrawElementManager(DrawElementManager* drawElementManager)
 {
 	Node::AddToDrawElementManager(drawElementManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.AddToDrawElementManager(drawElementManager)); }, m_variableInputPorts);
 	m_variableOutputPort.AddToDrawElementManager(drawElementManager);
 }
 
-template<typename OutputType, typename ...InputTypes>
-inline void VariableNode<OutputType, InputTypes...>::RemoveFromDrawElementManager(DrawElementManager* drawElementManager)
+template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
+	requires VariableOutPortType<OutputType, DerivedOutputPort>
+inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::RemoveFromDrawElementManager(DrawElementManager* drawElementManager)
 {
 	Node::RemoveFromDrawElementManager(drawElementManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.RemoveFromDrawElementManager(drawElementManager)); }, m_variableInputPorts);
 	m_variableOutputPort.RemoveFromDrawElementManager(drawElementManager);
 }
 
-template<typename OutputType, typename ...InputTypes>
-inline void VariableNode<OutputType, InputTypes...>::RegisterToInteractionManager(InteractionManager* interactionManager)
+template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
+	requires VariableOutPortType<OutputType, DerivedOutputPort>
+inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::RegisterToInteractionManager(InteractionManager* interactionManager)
 {
 	Node::RegisterToInteractionManager(interactionManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.RegisterToInteractionManager(interactionManager)); }, m_variableInputPorts);
 	m_variableOutputPort.RegisterToInteractionManager(interactionManager);
 }
 
-template<typename OutputType, typename ...InputTypes>
-inline void VariableNode<OutputType, InputTypes...>::DeregisterToInteractionManager(InteractionManager* interactionManager)
+template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
+	requires VariableOutPortType<OutputType, DerivedOutputPort>
+inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::DeregisterToInteractionManager(InteractionManager* interactionManager)
 {	
 	Node::DeregisterToInteractionManager(interactionManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.DeregisterToInteractionManager(interactionManager)); }, m_variableInputPorts);
 	m_variableOutputPort.DeregisterToInteractionManager(interactionManager);
 }
 
-template<typename OutputType, typename ...InputTypes>
-inline ImVec2 VariableNode<OutputType, InputTypes...>::GetInternalNodeSize()
+template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
+	requires VariableOutPortType<OutputType, DerivedOutputPort>
+inline ImVec2 VariableNode<OutputType, DerivedOutputPort, InputTypes...>::GetInternalNodeSize()
 {
 	float totalWidth = 0.f;
 	float totalHeight = 0.f;
@@ -94,9 +101,10 @@ inline ImVec2 VariableNode<OutputType, InputTypes...>::GetInternalNodeSize()
 	);
 }
 
-template<typename OutputType, typename ...InputTypes>
+template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
+	requires VariableOutPortType<OutputType, DerivedOutputPort>
 template<std::size_t ...Indices>
-inline std::tuple<VariableInputPort<InputTypes>...> VariableNode<OutputType, InputTypes...>::CreateVariableInputPorts(Node* parentNode, const float& radius, const ImVec2& referencedOrigin, std::index_sequence<Indices...>)
+inline std::tuple<VariableInputPort<InputTypes>...> VariableNode<OutputType, DerivedOutputPort, InputTypes...>::CreateVariableInputPorts(Node* parentNode, const float& radius, const ImVec2& referencedOrigin, std::index_sequence<Indices...>)
 {
 	return std::make_tuple(
 		VariableInputPort<InputTypes>(parentNode, sizeof...(InputTypes), Indices, radius, referencedOrigin)...

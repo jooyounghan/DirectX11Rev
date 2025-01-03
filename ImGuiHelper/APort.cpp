@@ -11,7 +11,6 @@ APort::APort(
     : ADrawElement(referencedOrigin, baseColor), m_radius(radius), m_parentNode(parentNode),
     m_isLeft(isLeft), m_indexCount(indexCount), m_portIndex(portIndex), m_hilightedColor(hoveringColor)
 {
-    SetZIndex(parentNode->GetZIndex() + 1);
 }
 
 bool APort::IsPointIn(const float& pointX, const float& pointY) const
@@ -22,7 +21,7 @@ bool APort::IsPointIn(const float& pointX, const float& pointY) const
 
 void APort::DrawImpl(ImDrawList* drawListIn)
 {
-    drawListIn->AddCircleFilled(m_drawCenter, m_radius, m_isHilghted ? m_hilightedColor : m_baseColor);
+    drawListIn->AddCircleFilled(m_drawCenter, m_radius, m_isFocused ? m_hilightedColor : m_baseColor);
     drawListIn->AddCircle(m_drawCenter, m_radius, borderLineColor, NULL, 2.f);
     DrawPortConnection(drawListIn);
 }

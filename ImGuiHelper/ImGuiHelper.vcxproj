@@ -22,6 +22,7 @@
     <ClCompile Include="ADrawElement.cpp" />
     <ClCompile Include="AInteractable.cpp" />
     <ClCompile Include="DrawElementManager.cpp" />
+    <ClCompile Include="FloatVariableNode.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="ANodeEditorWindow.cpp" />
     <ClCompile Include="APort.cpp" />
@@ -34,6 +35,8 @@
     <ClCompile Include="ImGuiListBox.cpp" />
     <ClCompile Include="AImGuiSelectable.cpp" />
     <ClCompile Include="MessageBoxModal.cpp" />
+    <ClCompile Include="StringVariableNode.cpp" />
+    <ClCompile Include="StringVariableOutputPort.cpp" />
     <ClCompile Include="TaskModal.cpp" />
     <ClCompile Include="AWindow.cpp" />
     <ClCompile Include="InteractionManager.cpp" />
@@ -43,14 +46,15 @@
     <ClCompile Include="MouseClickEventArgs.cpp" />
     <ClCompile Include="MouseEventArgs.cpp" />
     <ClCompile Include="VariablePort.cpp" />
-    <ClCompile Include="ZIndexable.cpp" />
-    <ClCompile Include="ZIndexComparer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ADrawElement.h" />
     <ClInclude Include="AInteractable.h" />
     <ClInclude Include="DrawElementColor.h" />
     <ClInclude Include="DrawElementManager.h" />
+    <ClInclude Include="FloatVariableNode.h" />
+    <ClInclude Include="NodeConstant.h" />
+    <ClInclude Include="FundamentalVariableOutputPort.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="ANodeEditorWindow.h" />
     <ClInclude Include="APort.h" />
@@ -63,6 +67,8 @@
     <ClInclude Include="ImGuiListBox.h" />
     <ClInclude Include="AImGuiSelectable.h" />
     <ClInclude Include="MessageBoxModal.h" />
+    <ClInclude Include="StringVariableNode.h" />
+    <ClInclude Include="StringVariableOutputPort.h" />
     <ClInclude Include="TaskModal.h" />
     <ClInclude Include="AWindow.h" />
     <ClInclude Include="InteractionManager.h" />
@@ -75,8 +81,6 @@
     <ClInclude Include="VariableNode.h" />
     <ClInclude Include="VariableOutputPort.h" />
     <ClInclude Include="VariablePort.h" />
-    <ClInclude Include="ZIndexable.h" />
-    <ClInclude Include="ZIndexComparer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
