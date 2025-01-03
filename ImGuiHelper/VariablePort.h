@@ -1,5 +1,7 @@
 #pragma once
 #include "APort.h"
+#include "DrawElementColor.h"
+
 #include <string>
 
 std::string GetBaseTypeName(std::string typeName);
@@ -45,10 +47,7 @@ inline VariablePort<T>::VariablePort(
 	size_t indexCount, size_t portIndex,
 	const float& radius, const ImVec2& referencedOrigin
 )
-	: APort(parentNode, isLeft, indexCount, portIndex, radius, referencedOrigin,
-		IM_COL32(0x35, 0xCC, 0x35, 0x88), IM_COL32(0x10, 0xFF, 0x10, 0xFF),
-		IM_COL32(0x46, 0x99, 0x46, 0x88), IM_COL32(0x43, 0x66, 0x43, 0xFF)
-	)
+	: APort(parentNode, isLeft, indexCount, portIndex, radius, referencedOrigin, variableTypeColor, variableTypeHilightColor)
 {
 }
 

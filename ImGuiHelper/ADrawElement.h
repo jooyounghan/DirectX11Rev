@@ -6,23 +6,13 @@ class DrawElementManager;
 class ADrawElement : public AInteractable
 {
 public:
-	ADrawElement(
-		const ImVec2& referencedOrigin,
-		const ImU32& baseColor, const ImU32& hoveringColor,
-		const ImU32& borderColor, const ImU32& hilightedBoderColor
-	);
+	ADrawElement(const ImVec2& referencedOrigin, const ImU32& baseColor);
 	~ADrawElement() override = default;
 
 protected:
 	const ImVec2& m_referencedOrigin;
 	const ImU32 m_baseColor;
-	const ImU32 m_hoveringColor;
-	const ImU32 m_borderColor;
-	const ImU32 m_hilightedBorderColor;
-
-protected:
-	ImU32 m_selectedColor;
-	ImU32 m_selectedBorderColor;
+	ImU32 m_selectedBorderFill;
 
 protected:
 	bool m_isHilghted = false;

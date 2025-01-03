@@ -1,14 +1,10 @@
 #include "ADrawElement.h"
 #include "DrawElementManager.h"
+#include "DrawElementColor.h"
 
-ADrawElement::ADrawElement(const ImVec2& referencedOrigin,
-	const ImU32& baseColor, const ImU32& hoveringColor,
-	const ImU32& borderColor, const ImU32& hilightedBoderColor
-)
+ADrawElement::ADrawElement(const ImVec2& referencedOrigin, const ImU32& baseColor)
 	: m_referencedOrigin(referencedOrigin),
-	m_baseColor(baseColor), m_hoveringColor(hoveringColor), 
-	m_borderColor(borderColor), m_hilightedBorderColor(hilightedBoderColor),
-	m_selectedColor(m_baseColor), m_selectedBorderColor(m_borderColor)
+	m_baseColor(baseColor), m_selectedBorderFill(borderFill)
 {
 
 }
@@ -26,7 +22,6 @@ void ADrawElement::RemoveFromDrawElementManager(DrawElementManager* drawElementM
 void ADrawElement::SetHilighted(const bool& isHilighted)
 {
 	m_isHilghted = isHilighted;
-	m_selectedBorderColor = m_isHilghted ? m_hilightedBorderColor : m_borderColor;
 }
 
 void ADrawElement::Draw(ImDrawList* drawListIn)
@@ -48,10 +43,10 @@ void ADrawElement::OnMouseDown(MouseClickEventArgs& args)
 
 void ADrawElement::OnMouseEnter(MouseEventArgs& args)
 {
-	m_selectedColor = m_hoveringColor;
+	m_selectedBorderFill = borderFillHilighted;
 }
 
 void ADrawElement::OnMouseLeave(MouseEventArgs& args)
 {
-	m_selectedColor = m_baseColor;
+	m_selectedBorderFill = borderFill;
 }

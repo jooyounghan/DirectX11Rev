@@ -2,6 +2,7 @@
 #include "VariableInputPort.h"
 #include "VariableOutputPort.h"
 #include "Node.h"
+#include "DrawElementColor.h"
 
 #include <tuple>
 
@@ -9,7 +10,7 @@ template<typename OutputType, typename ...InputTypes>
 class VariableNode : public Node
 {
 public:
-	VariableNode(const std::string& nodeName, const ImVec2& leftTop, const ImVec2& size, const float& radius, const ImVec2& referencedOrigin);
+	VariableNode(const std::string& nodeName, const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin);
 	~VariableNode() override = default;
 	
 protected:
@@ -22,6 +23,9 @@ public:
 	virtual void RegisterToInteractionManager(InteractionManager* interactionManager);
 	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager);
 
+protected:
+	virtual ImVec2 GetInternalNodeSize() override;
+
 private:
 	template<std::size_t... Indices>
 	std::tuple<VariableInputPort<InputTypes>...> CreateVariableInputPorts(
@@ -30,17 +34,14 @@ private:
 
 template<typename OutputType, typename ...InputTypes>
 inline VariableNode<OutputType, InputTypes...>::VariableNode(
-	const std::string& nodeName, const ImVec2& leftTop, const ImVec2& size,
+	const std::string& nodeName, const ImVec2& leftTop,
 	const float& radius, const ImVec2& referencedOrigin
 )
-	: Node(
-		nodeName, leftTop, size, referencedOrigin,
-		IM_COL32(0x35, 0xCC, 0x35, 0x88), IM_COL32(0x10, 0xFF, 0x10, 0xFF),
-		IM_COL32(0x46, 0x99, 0x46, 0x88), IM_COL32(0x43, 0x66, 0x43, 0xFF)
-	),
+	: Node(nodeName, leftTop, referencedOrigin, variableTypeColor),
 	m_variableInputPorts(CreateVariableInputPorts(this, radius, referencedOrigin, std::index_sequence_for<InputTypes...>{})),
 	m_variableOutputPort(this, 1, 0, radius, referencedOrigin)
 {
+
 }
 
 template<typename OutputType, typename ...InputTypes>
@@ -73,6 +74,24 @@ inline void VariableNode<OutputType, InputTypes...>::DeregisterToInteractionMana
 	Node::DeregisterToInteractionManager(interactionManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.DeregisterToInteractionManager(interactionManager)); }, m_variableInputPorts);
 	m_variableOutputPort.DeregisterToInteractionManager(interactionManager);
+}
+
+template<typename OutputType, typename ...InputTypes>
+inline ImVec2 VariableNode<OutputType, InputTypes...>::GetInternalNodeSize()
+{
+	float totalWidth = 0.f;
+	float totalHeight = 0.f;
+
+	std::apply([&](auto&... inputPorts) 
+		{
+			((totalWidth = std::max(inputPorts.GetTypeTextSize().x, totalWidth)), ...);
+			((totalHeight += inputPorts.GetTypeTextSize().y), ...);
+		}, m_variableInputPorts);
+
+	return ImVec2(
+		std::max({ totalWidth * 2.f, GetDrawNodeHeaderSize().x, nodeMinWidth }),
+		std::max(totalHeight * 2.f, nodeMinHeight)
+	);
 }
 
 template<typename OutputType, typename ...InputTypes>

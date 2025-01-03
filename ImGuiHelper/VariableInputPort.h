@@ -20,8 +20,12 @@ public:
 protected:
 	VariableOutputPort<InputType>* m_connectedPort = nullptr;
 
+protected:
+	ImVec2 m_typeTextSize;
+
 public:
 	inline void SetConnectedOutputPort(VariableOutputPort<InputType>* outputPort);
+	inline const ImVec2& GetTypeTextSize() { return m_typeTextSize; }
 
 protected:
 	virtual void DrawImpl(ImDrawList* drawListIn) override;
@@ -57,9 +61,9 @@ inline void VariableInputPort<InputType>::DrawImpl(ImDrawList* drawListIn)
 	VP::DrawImpl(drawListIn);
 
 	std::string baseTypeName = GetBaseTypeName(typeid(InputType).name()).c_str();
-	ImVec2 textSize = ImGui::CalcTextSize(baseTypeName.c_str());
-	ImVec2 textDrawPosition = ImVec2(VP::m_drawCenter.x + VP::m_radius, VP::m_drawCenter.y - textSize.y / 2.f);
-	drawListIn->AddText(textDrawPosition, IM_COL32(0x00, 0x00, 0x00, 0xFF), baseTypeName.c_str());
+	m_typeTextSize = ImGui::CalcTextSize(baseTypeName.c_str());
+	ImVec2 textDrawPosition = ImVec2(VP::m_drawCenter.x + VP::m_radius, VP::m_drawCenter.y - m_typeTextSize.y / 2.f);
+	drawListIn->AddText(textDrawPosition, textColor, baseTypeName.c_str());
 }
 
 template<typename InputType>

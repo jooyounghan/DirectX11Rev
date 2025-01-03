@@ -22,7 +22,6 @@
     <ClCompile Include="ADrawElement.cpp" />
     <ClCompile Include="AInteractable.cpp" />
     <ClCompile Include="DrawElementManager.cpp" />
-    <ClCompile Include="IPortVisitor.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="ANodeEditorWindow.cpp" />
     <ClCompile Include="APort.cpp" />
@@ -50,8 +49,8 @@
   <ItemGroup>
     <ClInclude Include="ADrawElement.h" />
     <ClInclude Include="AInteractable.h" />
+    <ClInclude Include="DrawElementColor.h" />
     <ClInclude Include="DrawElementManager.h" />
-    <ClInclude Include="IPortVisitor.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="ANodeEditorWindow.h" />
     <ClInclude Include="APort.h" />

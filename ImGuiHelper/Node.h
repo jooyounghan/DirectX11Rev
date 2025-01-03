@@ -6,27 +6,37 @@ class Node : public ADrawElement
 {
 public:
 	Node(
-		const std::string& nodeName,
-		const ImVec2& leftTop, const ImVec2& size, 
-		const ImVec2& referencedOrigin,
-		const ImU32& baseColor, const ImU32& hoveringColor,
-		const ImU32& borderColor, const ImU32& hilightedBoderColor
+		const std::string& nodeName, const ImVec2& leftTop, 
+		const ImVec2& referencedOrigin, const ImU32& baseColor
 	);
 	~Node() override = default;
 
 protected:
 	std::string m_nodeName;
+
+protected:
 	ImVec2 m_leftTop;
-	ImVec2 m_rightBottom;
-	ImVec2 m_size;
 
 public:
 	inline const ImVec2& GetLeftTop() { return m_leftTop; }
-	inline const ImVec2& GetRightBottom() { return m_rightBottom; }
+
+protected:
+	static float nodeMinWidth;
+	static float nodeMinHeight;
 
 protected:
 	ImVec2 m_drawLeftTop;
-	ImVec2 m_drawRightBottom;
+	ImVec2 m_drawNodeHeaderPos;
+	ImVec2 m_drawNodeFieldPos;
+	ImVec2 m_nodeHeaderSize;
+	ImVec2 m_nodeFieldSize;
+	ImVec2 m_totalSize;
+
+public:
+	const ImVec2& GetDrawNodeHeaderPos() { return m_drawNodeHeaderPos; }
+	const ImVec2& GetDrawNodeFieldPos() { return m_drawNodeFieldPos; }
+	const ImVec2& GetDrawNodeHeaderSize() { return m_nodeHeaderSize; }
+	const ImVec2& GetDrawNodeFieldSize() { return m_nodeFieldSize; }
 
 protected:
 	bool m_isDragging = false;
@@ -40,6 +50,7 @@ public:
 protected:
 	virtual void DrawImpl(ImDrawList* drawListIn) override;
 	virtual void AdjustPosition() override;
+	virtual ImVec2 GetInternalNodeSize() = 0;
 
 public:
 	virtual void OnMouseClicked(MouseClickEventArgs& args) override;
