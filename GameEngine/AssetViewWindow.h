@@ -1,7 +1,5 @@
 #pragma once
 #include "AWindow.h"
-#include "AssetContextMenu.h"
-
 #include <memory>
 
 enum class EAssetThumbnailType
@@ -21,6 +19,8 @@ class AssetManager;
 class AssetFileControl;
 enum class EAssetType;
 
+class AssetContextMenu;
+
 struct SAssetFolder
 {
 	std::vector<std::unique_ptr<AssetFileControl>> m_assetControls;
@@ -32,7 +32,7 @@ class AssetViewWindow : public AWindow
 {
 public:
 	AssetViewWindow(const std::string& windowID, AssetManager* assetManager);
-	~AssetViewWindow() override = default;
+	~AssetViewWindow() override;
 
 private:
 	AssetManager* m_assetManagerCached = nullptr;
@@ -40,7 +40,8 @@ private:
 	const SAssetFolder* m_selectedFolders = nullptr;
 
 private:
-	AssetContextMenu m_assetContextMenuModal;
+	AssetContextMenu* m_assetContextMenuModal = nullptr;
+	std::vector<AWindow*> m_assetNodeEditorWindows;
 
 private:
 	static std::string AnimationAssetTN;

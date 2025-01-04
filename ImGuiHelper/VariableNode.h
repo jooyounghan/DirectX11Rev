@@ -21,10 +21,12 @@ protected:
 public:
 	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager);
 	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager);
+
 	virtual void RegisterToInteractionManager(InteractionManager* interactionManager);
 	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager);
 
 protected:
+	virtual void SetFocused(const bool& isFocused);
 	virtual ImVec2 GetInternalNodeSize() override;
 
 private:
@@ -80,6 +82,15 @@ inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::Deregist
 	Node::DeregisterToInteractionManager(interactionManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.DeregisterToInteractionManager(interactionManager)); }, m_variableInputPorts);
 	m_variableOutputPort.DeregisterToInteractionManager(interactionManager);
+}
+
+template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
+	requires VariableOutPortType<OutputType, DerivedOutputPort>
+inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::SetFocused(const bool& isFocused)
+{
+	Node::SetFocused(isFocused);
+	std::apply([&](auto&... inputPorts) { (..., inputPorts.SetFocused(isFocused)); }, m_variableInputPorts);
+	m_variableOutputPort.SetFocused(isFocused);
 }
 
 template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>

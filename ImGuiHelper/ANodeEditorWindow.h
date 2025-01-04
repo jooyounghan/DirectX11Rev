@@ -5,14 +5,14 @@
 class ANodeEditorWindow : public AWindow
 {
 public:
-	ANodeEditorWindow(const std::string& windowID);
+	ANodeEditorWindow(const std::string& windowID, bool* openFlag);
 	~ANodeEditorWindow() override = default;
 
-public:
-	virtual void PrepareWindow() override {};
-
-private:
+protected:
 	virtual void RenderWindowImpl() override;
+
+//protected:
+//	FlowEndNode m_flowEndNode;
 
 protected:
 	Canvas m_canvas;

@@ -23,6 +23,10 @@
     <ClCompile Include="AInteractable.cpp" />
     <ClCompile Include="DrawElementManager.cpp" />
     <ClCompile Include="FloatVariableNode.cpp" />
+    <ClCompile Include="FlowEndNode.cpp" />
+    <ClCompile Include="FlowInputPort.cpp" />
+    <ClCompile Include="FlowOutputPort.cpp" />
+    <ClCompile Include="FlowPort.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="ANodeEditorWindow.cpp" />
     <ClCompile Include="APort.cpp" />
@@ -53,6 +57,11 @@
     <ClInclude Include="DrawElementColor.h" />
     <ClInclude Include="DrawElementManager.h" />
     <ClInclude Include="FloatVariableNode.h" />
+    <ClInclude Include="FlowEndNode.h" />
+    <ClInclude Include="FlowInputPort.h" />
+    <ClInclude Include="FlowNode.h" />
+    <ClInclude Include="FlowOutputPort.h" />
+    <ClInclude Include="FlowPort.h" />
     <ClInclude Include="NodeConstant.h" />
     <ClInclude Include="FundamentalVariableOutputPort.h" />
     <ClInclude Include="Node.h" />

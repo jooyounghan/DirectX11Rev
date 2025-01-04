@@ -26,7 +26,7 @@ public:
 	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager);
 
 public:
-	void SetFocused(const bool& isFocused);
+	virtual void SetFocused(const bool& isFocused);
 
 public:
 	void Draw(ImDrawList* drawListIn);

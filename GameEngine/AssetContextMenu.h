@@ -10,5 +10,13 @@ public:
 protected:
 	virtual bool OpenCondition() override;
 	virtual void RenderNotification() override;
+
+protected:
+	bool m_createIBLMaterialOpenFlag = false;
+
+
+public:
+	bool* GetCreateIBLMaterialOpenFlag() { return &m_createIBLMaterialOpenFlag; }
+
 };
 

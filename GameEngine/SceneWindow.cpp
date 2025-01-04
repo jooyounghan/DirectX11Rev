@@ -20,7 +20,7 @@ SceneWindow::SceneWindow(
     ComponentManager* componentManager,
     ComponentPSOManager* componentPsoManager
 )
-    : AWindow(windowID), m_deviceContextAddressCached(deviceConextAddress),
+    : AWindow(windowID, true, nullptr), m_deviceContextAddressCached(deviceConextAddress),
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
     m_componentInformer(assetManager, componentManager),

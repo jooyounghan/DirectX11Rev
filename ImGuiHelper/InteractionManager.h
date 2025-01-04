@@ -19,6 +19,8 @@ protected:
     void RegisterInteractable(AInteractable* interactable);
     void DeregisterInteractable(AInteractable* interactable);
     void BringInteractableToFront(AInteractable* interactable);
+
+protected:
     void ClearRegisteredInteractables();
     void CheckMouseControlEvents();
 

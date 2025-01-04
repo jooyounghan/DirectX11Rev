@@ -6,6 +6,9 @@
 #include "Texture2DInstance.h"
 #include "SRVOption.h"
 
+#include "AssetContextMenu.h"
+#include "CreateIBLMaterialWithNodeEditorWindow.h"
+
 #include <filesystem>
 
 using namespace std;
@@ -21,9 +24,21 @@ string AssetViewWindow::MapAssetTN = "MAPASSETTN";
 string AssetViewWindow::MaterialAssetTN = "MATERIALASSETTN";
 
 AssetViewWindow::AssetViewWindow(const std::string& windowID, AssetManager* assetManager)
-	: AWindow(windowID), m_assetManagerCached(assetManager), m_assetContextMenuModal("Asset Context Menu")
+	: AWindow(windowID, true, nullptr), m_assetManagerCached(assetManager)
 {
     m_assetManagerCached->RegisterAssetLoadedHandler("AddAssetControl", bind(&AssetViewWindow::AddAssetControl, this, placeholders::_1, placeholders::_2, placeholders::_3));
+    
+    m_assetContextMenuModal = new AssetContextMenu("Asset Context Menu");
+    m_assetNodeEditorWindows.emplace_back(new CreateIBLMaterialWithNodeEditorWindow("Create IBL Material Asset", m_assetContextMenuModal->GetCreateIBLMaterialOpenFlag()));
+}
+
+AssetViewWindow::~AssetViewWindow()
+{
+    for (AWindow* assetNodeEditorWindow : m_assetNodeEditorWindows)
+    {
+        delete assetNodeEditorWindow;
+    }
+    delete m_assetContextMenuModal;
 }
 
 void AssetViewWindow::PrepareWindow()
@@ -49,7 +64,11 @@ void AssetViewWindow::RenderWindowImpl()
     PopID();
     EndGroup();
 
-    m_assetContextMenuModal.DrawNotificator();
+    for (AWindow* assetNodeEditorWindow : m_assetNodeEditorWindows)
+    {
+        assetNodeEditorWindow->ShowWindow();
+    }
+    m_assetContextMenuModal->DrawNotificator();
 }
 
 void AssetViewWindow::AddAssetControl(const EAssetType& assetType, const string& assetPath, AAsset* asset)

@@ -1,7 +1,5 @@
 #include "AssetContextMenu.h"
 
-#include "ANodeEditorWindow.h"
-
 using namespace std;
 using namespace ImGui;
 
@@ -20,9 +18,6 @@ bool AssetContextMenu::OpenCondition()
 
 void AssetContextMenu::RenderNotification()
 {
-    static ANodeEditorWindow test("tttttt");
-    test.ShowWindow();
-
     if (BeginMenu("Create Asset"))
     {
         if (MenuItem("Mesh Asset(Static / Skeletal)"))
@@ -39,7 +34,7 @@ void AssetContextMenu::RenderNotification()
         }
         if (MenuItem("IBL Material"))
         {
-
+            m_createIBLMaterialOpenFlag = true;
         }
         if (MenuItem("Animtion"))
         {

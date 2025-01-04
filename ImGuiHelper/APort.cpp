@@ -44,4 +44,21 @@ void APort::DrawBezierForConnection(ImDrawList* drawListIn, const ImVec2& start,
     drawListIn->AddBezierCubic(start, control1, control2, end, m_baseColor, 5.f);
 }
 
+void APort::OnBeginDrag()
+{
+    ADrawElement::OnBeginDrag();
+    m_isConnecting = true;
+    m_mousePositionDuringConnect = m_drawCenter;
+}
 
+void APort::OnDragging(MouseEventArgs& args)
+{
+    ADrawElement::OnDragging(args);
+    m_mousePositionDuringConnect = ImVec2(args.m_mousePosX, args.m_mousePosY);
+}
+
+void APort::OnEndDrag()
+{
+    ADrawElement::OnEndDrag();
+    m_isConnecting = false;
+}

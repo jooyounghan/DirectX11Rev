@@ -52,6 +52,39 @@
     <Filter Include="헤더 파일\GUI\Modal\CreateAsset">
       <UniqueIdentifier>{f2e7584e-c78c-4979-9bee-43c174215690}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GUI\NodeEditor">
+      <UniqueIdentifier>{a55cbb82-62c4-49e1-a320-8f6007bb5cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\NodeEditor">
+      <UniqueIdentifier>{d6bbcf23-53a5-4a3d-bdb9-e2feab0464d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GUI\ContextMenu">
+      <UniqueIdentifier>{b313389b-c169-4fbc-91be-27eff94331b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\NodeEditor\Port">
+      <UniqueIdentifier>{5dbb4959-c338-4f27-9d04-961f24f06e62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\NodeEditor\Node">
+      <UniqueIdentifier>{8fed41f3-6e08-4b00-86b7-c066e607a5b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GUI\NodeEditor\Port">
+      <UniqueIdentifier>{99fce0a5-7021-4902-ad8b-e498e8a2a384}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GUI\NodeEditor\Node">
+      <UniqueIdentifier>{d56ee992-a8e7-4529-96e0-ec4e8bbd6f25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\Window\NodeEditor">
+      <UniqueIdentifier>{1148f3a3-8cc7-48a2-8b3c-d91ce67e1ca6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\Window\NodeEditor\CreateAsset">
+      <UniqueIdentifier>{17e9293a-16af-46ea-ae46-1afa24c9d187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GUI\Window\NodeEditor">
+      <UniqueIdentifier>{c895d350-706a-4433-b570-34e66f2b42e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GUI\Window\NodeEditor\CreateAsset">
+      <UniqueIdentifier>{c07cd214-a1b5-43af-9c45-e8c8140e6f44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -73,7 +106,19 @@
       <Filter>소스 파일\GUI\Child</Filter>
     </ClCompile>
     <ClCompile Include="AssetContextMenuModal.cpp">
-      <Filter>소스 파일\GUI\Modal</Filter>
+      <Filter>소스 파일\GUI\ContextMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="IBLMaterialAssetCreateFlowNode.cpp">
+      <Filter>소스 파일\GUI\NodeEditor\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="ScratchTextureAssetOutputPort.cpp">
+      <Filter>소스 파일\GUI\NodeEditor\Port</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTextureAssetOutputPort.cpp">
+      <Filter>소스 파일\GUI\NodeEditor\Port</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateIBLMaterialWithNodeEditorWindow.cpp">
+      <Filter>소스 파일\GUI\Window\NodeEditor\CreateAsset</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +142,18 @@
     </ClInclude>
     <ClInclude Include="AssetContextMenu.h">
       <Filter>헤더 파일\GUI\ContextMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="IBLMaterialAssetCreateFlowNode.h">
+      <Filter>헤더 파일\GUI\NodeEditor\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="ScratchTextureAssetOutputPort.h">
+      <Filter>헤더 파일\GUI\NodeEditor\Port</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTextureAssetOutputPort.h">
+      <Filter>헤더 파일\GUI\NodeEditor\Port</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateIBLMaterialWithNodeEditorWindow.h">
+      <Filter>헤더 파일\GUI\Window\NodeEditor\CreateAsset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

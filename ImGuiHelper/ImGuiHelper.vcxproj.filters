@@ -106,11 +106,23 @@
     <Filter Include="헤더 파일\Control\NodeEditor\Port\VariablePort\Extended">
       <UniqueIdentifier>{b2256e78-fb78-4968-a34b-ee4ae4d7a44d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Control\NodeEditor\Node\Extended">
+    <Filter Include="헤더 파일\Control\NodeEditor\Node\VariableNode">
       <UniqueIdentifier>{a649a35e-a0f3-46be-9906-9899a29c06f5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Control\NodeEditor\Node\Extended">
+    <Filter Include="헤더 파일\Control\NodeEditor\Node\FlowNode">
+      <UniqueIdentifier>{67eb7bb8-cc3a-4c3e-9145-f959e623fa37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\NodeEditor\Node\VariableNode">
       <UniqueIdentifier>{2c45ece1-2ce1-4ed2-9652-c3eae0a2d82b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\NodeEditor\Node\FlowNode">
+      <UniqueIdentifier>{1b162168-273f-4cc7-a4e7-79f914712545}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Control\NodeEditor\Port\FlowPort">
+      <UniqueIdentifier>{0f75d54b-6d94-4dec-9401-c75b8e43bc99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Control\NodeEditor\Port\FlowPort">
+      <UniqueIdentifier>{eda49915-6460-4148-839e-e67d889d7e3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -190,10 +202,22 @@
       <Filter>소스 파일\Control\NodeEditor\Port\VariablePort</Filter>
     </ClCompile>
     <ClCompile Include="FloatVariableNode.cpp">
-      <Filter>소스 파일\Control\NodeEditor\Node\Extended</Filter>
+      <Filter>소스 파일\Control\NodeEditor\Node\VariableNode</Filter>
     </ClCompile>
     <ClCompile Include="StringVariableNode.cpp">
-      <Filter>소스 파일\Control\NodeEditor\Node\Extended</Filter>
+      <Filter>소스 파일\Control\NodeEditor\Node\VariableNode</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowPort.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Port\FlowPort</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowInputPort.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Port\FlowPort</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowOutputPort.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Port\FlowPort</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowEndNode.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -266,9 +290,6 @@
     <ClInclude Include="DrawElementManager.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="VariableNode.h">
-      <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
-    </ClInclude>
     <ClInclude Include="VariableInputPort.h">
       <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort</Filter>
     </ClInclude>
@@ -285,16 +306,34 @@
       <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort\Extended</Filter>
     </ClInclude>
     <ClInclude Include="FloatVariableNode.h">
-      <Filter>헤더 파일\Control\NodeEditor\Node\Extended</Filter>
+      <Filter>헤더 파일\Control\NodeEditor\Node\VariableNode</Filter>
     </ClInclude>
     <ClInclude Include="StringVariableOutputPort.h">
       <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort\Extended</Filter>
     </ClInclude>
     <ClInclude Include="StringVariableNode.h">
-      <Filter>헤더 파일\Control\NodeEditor\Node\Extended</Filter>
+      <Filter>헤더 파일\Control\NodeEditor\Node\VariableNode</Filter>
     </ClInclude>
     <ClInclude Include="NodeConstant.h">
       <Filter>헤더 파일\Control\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableNode.h">
+      <Filter>헤더 파일\Control\NodeEditor\Node\VariableNode</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowNode.h">
+      <Filter>헤더 파일\Control\NodeEditor\Node\FlowNode</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port\FlowPort</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowInputPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port\FlowPort</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowOutputPort.h">
+      <Filter>헤더 파일\Control\NodeEditor\Port\FlowPort</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowEndNode.h">
+      <Filter>헤더 파일\Control\NodeEditor\Node\FlowNode</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

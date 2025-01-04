@@ -23,11 +23,12 @@ protected:
 protected:
 	const ImU32 m_hilightedColor;
 
-
 protected:
 	ImVec2 m_drawCenter = ImVec2(0.f, 0.f);
+	ImVec2 m_mousePositionDuringConnect = ImVec2(0.f, 0.f);
 	float m_radius;
-	 
+	bool m_isConnecting = false;
+
 public:
 	inline const ImVec2& GetDrawCenter() { return m_drawCenter; }
 	inline const float& GetRadius() { return m_radius; }
@@ -41,5 +42,10 @@ protected:
 
 protected:
 	virtual void DrawPortConnection(ImDrawList* drawListIn) = 0;
+
+public:
+	virtual void OnBeginDrag() override;
+	virtual void OnDragging(MouseEventArgs& args) override;
+	virtual void OnEndDrag() override;
 };
 

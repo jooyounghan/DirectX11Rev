@@ -15,10 +15,10 @@ private:
 
 protected:
 	virtual void AddDrawElement(ADrawElement* drawElement);
-
-protected:
 	void RemoveDrawElement(ADrawElement* drawElement);
 	void BringDrawElementToFront(ADrawElement* drawElement);
+
+protected:
 	void DrawElements(ImDrawList* drawList);
 };
 
