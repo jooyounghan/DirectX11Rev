@@ -39,6 +39,7 @@
     <ClCompile Include="ImGuiListBox.cpp" />
     <ClCompile Include="AImGuiSelectable.cpp" />
     <ClCompile Include="MessageBoxModal.cpp" />
+    <ClCompile Include="NodeExecuteContextMenu.cpp" />
     <ClCompile Include="StringVariableNode.cpp" />
     <ClCompile Include="StringVariableOutputPort.cpp" />
     <ClCompile Include="TaskModal.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="ImGuiListBox.h" />
     <ClInclude Include="AImGuiSelectable.h" />
     <ClInclude Include="MessageBoxModal.h" />
+    <ClInclude Include="NodeExecuteContextMenu.h" />
     <ClInclude Include="StringVariableNode.h" />
     <ClInclude Include="StringVariableOutputPort.h" />
     <ClInclude Include="TaskModal.h" />

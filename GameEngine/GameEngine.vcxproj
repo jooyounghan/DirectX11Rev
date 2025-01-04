@@ -144,7 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AssetContextMenuModal.cpp" />
+    <ClCompile Include="AssetContextMenu.cpp" />
     <ClCompile Include="AssetViewWindow.cpp" />
     <ClCompile Include="AssetFileControl.cpp" />
     <ClCompile Include="BaseTextureAssetOutputPort.cpp" />

@@ -105,7 +105,7 @@
     <ClCompile Include="ComponentInformer.cpp">
       <Filter>소스 파일\GUI\Child</Filter>
     </ClCompile>
-    <ClCompile Include="AssetContextMenuModal.cpp">
+    <ClCompile Include="AssetContextMenu.cpp">
       <Filter>소스 파일\GUI\ContextMenu</Filter>
     </ClCompile>
     <ClCompile Include="IBLMaterialAssetCreateFlowNode.cpp">
