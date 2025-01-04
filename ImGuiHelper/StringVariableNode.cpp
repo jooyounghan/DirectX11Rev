@@ -8,7 +8,7 @@ using namespace ImGui;
 
 
 StringVariableNode::StringVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
-	: VariableNode<string, StringVariableOutputPort>(
+	: VariableNode<string>(
 		"String", leftTop, radius, referencedOrigin
 	)
 {
@@ -16,7 +16,7 @@ StringVariableNode::StringVariableNode(const ImVec2& leftTop, const float& radiu
 
 void StringVariableNode::DrawImpl(ImDrawList* drawListIn)
 {
-	VariableNode<string, StringVariableOutputPort>::DrawImpl(drawListIn);
+	VariableNode<string>::DrawImpl(drawListIn);
 
 	const ImVec2& drawNodeFieldPos = GetDrawNodeFieldPos();
 	const ImVec2& drawNodeFieldSize = GetDrawNodeFieldSize();
@@ -32,15 +32,16 @@ void StringVariableNode::DrawImpl(ImDrawList* drawListIn)
 	InputText("", buffer, 1024);
 	if (IsItemActive()) io.WantCaptureMouse = false;
 	string str(buffer);
-	m_variableOutputPort.SetString(str);
-	m_textInputSize = CalcTextSize(str.c_str());
 	PopID();
 	PopItemWidth();
+
+	m_textInputSize = CalcTextSize(str.c_str());
+	m_string = str;
 }
 
 ImVec2 StringVariableNode::GetInternalNodeSize()
 {
-	const ImVec2 internalNodeSize = VariableNode<string, StringVariableOutputPort>::GetInternalNodeSize();
+	const ImVec2 internalNodeSize = VariableNode<string>::GetInternalNodeSize();
 
 	return ImVec2(
 		max(m_textInputSize.x + nodeMargin * 2.f, internalNodeSize.x),

@@ -7,7 +7,7 @@ using namespace std;
 using namespace ImGui;
 
 FloatVariableNode::FloatVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
-	: VariableNode<float, FundamentalVariableOutputPort<float>>(
+	: VariableNode<float>(
 		"Float", leftTop, radius, referencedOrigin
 	)
 {
@@ -15,7 +15,7 @@ FloatVariableNode::FloatVariableNode(const ImVec2& leftTop, const float& radius,
 
 void FloatVariableNode::DrawImpl(ImDrawList* drawListIn)
 {
-	VariableNode<float, FundamentalVariableOutputPort<float>>::DrawImpl(drawListIn);
+	VariableNode<float>::DrawImpl(drawListIn);
 
 	const ImVec2& drawNodeFieldPos = GetDrawNodeFieldPos();
 	const ImVec2 drawMarginedFieldPos = ImVec2(drawNodeFieldPos.x + nodeMargin, drawNodeFieldPos.y + nodeMargin);
@@ -26,9 +26,8 @@ void FloatVariableNode::DrawImpl(ImDrawList* drawListIn)
 	SetNextItemAllowOverlap();
 	PushItemWidth(fundamentalNodeItemWidth);
 	PushID(format("{}", (uint64_t)this).c_str());
-	DragFloat("", m_variableOutputPort.GetVariableAddress());
-	if (IsItemActive())
-		io.WantCaptureMouse = false;
+	DragFloat("", &m_float);
+	if (IsItemActive()) io.WantCaptureMouse = false;
 	PopID();
 	PopItemWidth();
 
@@ -37,7 +36,7 @@ void FloatVariableNode::DrawImpl(ImDrawList* drawListIn)
 
 ImVec2 FloatVariableNode::GetInternalNodeSize()
 {
-	const ImVec2 internalNodeSize = VariableNode<float, FundamentalVariableOutputPort<float>>::GetInternalNodeSize();
+	const ImVec2 internalNodeSize = VariableNode<float>::GetInternalNodeSize();
 
 	return ImVec2(
 		max(m_dragFloatItemSize.x + nodeMargin * 2.f, internalNodeSize.x),

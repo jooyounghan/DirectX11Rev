@@ -19,12 +19,11 @@ public:
 
 protected:
 	VariableOutputPort<InputType>* m_connectedPort = nullptr;
-
-protected:
 	ImVec2 m_typeTextSize;
 
 public:
 	inline void SetConnectedOutputPort(VariableOutputPort<InputType>* outputPort);
+	inline VariableOutputPort<InputType>* GetConnectedOutputPort() const { return m_connectedPort; }
 	inline const ImVec2& GetTypeTextSize() { return m_typeTextSize; }
 
 protected:
@@ -38,7 +37,6 @@ public:
 	virtual void OnBeginDrag() override;
 	virtual void OnEndDrag() override;
 };
-
 
 template<typename InputType>
 inline VariableInputPort<InputType>::VariableInputPort(
@@ -109,3 +107,4 @@ inline void VariableInputPort<InputType>::OnEndDrag()
 	VP::m_connectingInputPort = nullptr;
 
 }
+

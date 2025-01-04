@@ -2,6 +2,9 @@
 #include "VariablePort.h"
 #include <type_traits>
 
+template<typename OutputType, typename... InputTypes>
+class VariableNode;
+
 template <typename OutputType>
 class VariableInputPort;
 
@@ -11,17 +14,19 @@ class VariableOutputPort : public VariablePort<OutputType>
 	using VP = VariablePort<OutputType>;
 
 public:
+	template<typename... InputTypes>
 	VariableOutputPort(
-		Node* parentNode, size_t indexCount, size_t portIndex,
+		VariableNode<OutputType, InputTypes...>* parentNode, size_t indexCount, size_t portIndex,
 		const float& radius, const ImVec2& referencedOrigin
 	);
 	~VariableOutputPort() override = default;
 
+public:
+	template<typename... InputTypes>
+	VariableNode<OutputType, InputTypes...>* GetParentVariableNode();
+
 protected:
 	virtual void DrawPortConnection(ImDrawList* drawListIn) override;
-
-public:
-	virtual OutputType GetVariable() const = 0;
 
 public:
 	virtual void OnMouseUp(MouseClickEventArgs& args) override;
@@ -31,18 +36,19 @@ public:
 	virtual void OnEndDrag() override;
 };
 
-template<typename OutputType, typename Derived>
-concept VariableOutPortType = std::is_base_of_v<VariableOutputPort<OutputType>, Derived>;
-
-
 template<typename OutputType>
+template<typename ...InputTypes>
 inline VariableOutputPort<OutputType>::VariableOutputPort(
-	Node* parentNode, size_t indexCount,
+	VariableNode<OutputType, InputTypes...>* parentNode, size_t indexCount, 
 	size_t portIndex, const float& radius, const ImVec2& referencedOrigin
 )
 	: VP(parentNode, false, indexCount, portIndex, radius, referencedOrigin)
 {
 }
+
+template<typename OutputType>
+template<typename ...InputTypes>
+inline VariableNode<OutputType, InputTypes...>* VariableOutputPort<OutputType>::GetParentVariableNode() { return (VariableNode<OutputType, InputTypes...>*)VP::m_parentNode; }
 
 template<typename OutputType>
 inline void VariableOutputPort<OutputType>::DrawPortConnection(ImDrawList* drawListIn)

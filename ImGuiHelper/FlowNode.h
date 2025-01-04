@@ -1,18 +1,15 @@
 #pragma once
-#include "Node.h"
-#include "VariableInputPort.h"
-#include "VariableOutputPort.h"
+#include "VariableNode.h"
 #include "FlowInputPort.h"
 #include "FlowOutputPort.h"
-#include "DrawElementColor.h"
-#include <tuple>
+
 
 template<typename ...InputTypes>
 class FlowNode : public Node
 {
 public:
 	FlowNode(
-		const std::string& nodeName, const ImVec2& leftTop, 
+		const std::string& nodeName, const ImVec2& leftTop,
 		const float& radius, const ImVec2& referencedOrigin
 	);
 	~FlowNode() override = default;
@@ -34,21 +31,16 @@ protected:
 
 public:
 	void Execute();
+	std::tuple<InputTypes...> GetVariables() { return GetVariablesFromInput(m_variableInputPorts, std::index_sequence_for<InputTypes...>{}); }
 
 protected:
 	virtual void ExecuteImpl() = 0;
-
-private:
-	template<std::size_t... Indices>
-	std::tuple<VariableInputPort<InputTypes>...> CreateVariableInputPorts(
-		Node* parentNode, const float& radius, const ImVec2& referencedOrigin, std::index_sequence<Indices...>);
-
 };
 
 template<typename ...InputTypes>
 inline FlowNode<InputTypes...>::FlowNode(const std::string& nodeName, const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
 	: Node(nodeName, leftTop, referencedOrigin, flowTypeColor),
-	m_variableInputPorts(CreateVariableInputPorts(this, radius, referencedOrigin, std::index_sequence_for<InputTypes...>{})),
+	m_variableInputPorts(CreateVariableInputPorts<InputTypes...>(this, radius, referencedOrigin, 1, std::index_sequence_for<InputTypes...>{})),
 	m_flowInputPort(this, sizeof...(InputTypes) + 1, 0, radius, referencedOrigin),
 	m_flowOutputPort(this, 1, 0, radius, referencedOrigin)
 {
@@ -133,13 +125,4 @@ inline void FlowNode<InputTypes...>::Execute()
 		}
 	}
 	ExecuteImpl();
-}
-
-template<typename ...InputTypes>
-template<std::size_t ...Indices>
-inline std::tuple<VariableInputPort<InputTypes>...> FlowNode<InputTypes...>::CreateVariableInputPorts(Node* parentNode, const float& radius, const ImVec2& referencedOrigin, std::index_sequence<Indices...>)
-{
-	return std::make_tuple(
-		VariableInputPort<InputTypes>(parentNode, sizeof...(InputTypes) + 1, Indices + 1, radius, referencedOrigin)...
-	);
 }

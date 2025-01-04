@@ -103,9 +103,6 @@
     <Filter Include="헤더 파일\Control\NodeEditor\Port\VariablePort">
       <UniqueIdentifier>{3d86ca27-2bd2-489a-964a-05bda7dbfad0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Control\NodeEditor\Port\VariablePort\Extended">
-      <UniqueIdentifier>{b2256e78-fb78-4968-a34b-ee4ae4d7a44d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Control\NodeEditor\Node\VariableNode">
       <UniqueIdentifier>{a649a35e-a0f3-46be-9906-9899a29c06f5}</UniqueIdentifier>
     </Filter>
@@ -198,9 +195,6 @@
     <ClCompile Include="VariablePort.cpp">
       <Filter>소스 파일\Control\NodeEditor\Port\VariablePort</Filter>
     </ClCompile>
-    <ClCompile Include="StringVariableOutputPort.cpp">
-      <Filter>소스 파일\Control\NodeEditor\Port\VariablePort</Filter>
-    </ClCompile>
     <ClCompile Include="FloatVariableNode.cpp">
       <Filter>소스 파일\Control\NodeEditor\Node\VariableNode</Filter>
     </ClCompile>
@@ -221,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="NodeExecuteContextMenu.cpp">
       <Filter>소스 파일\Notificator\ContextMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatSumVariableNode.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -305,14 +302,8 @@
     <ClInclude Include="DrawElementColor.h">
       <Filter>헤더 파일\Control\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="FundamentalVariableOutputPort.h">
-      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort\Extended</Filter>
-    </ClInclude>
     <ClInclude Include="FloatVariableNode.h">
       <Filter>헤더 파일\Control\NodeEditor\Node\VariableNode</Filter>
-    </ClInclude>
-    <ClInclude Include="StringVariableOutputPort.h">
-      <Filter>헤더 파일\Control\NodeEditor\Port\VariablePort\Extended</Filter>
     </ClInclude>
     <ClInclude Include="StringVariableNode.h">
       <Filter>헤더 파일\Control\NodeEditor\Node\VariableNode</Filter>
@@ -340,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="NodeExecuteContextMenu.h">
       <Filter>헤더 파일\Notificator\ContextMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatSumVariableNode.h">
+      <Filter>헤더 파일\Control\NodeEditor\Node\VariableNode</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

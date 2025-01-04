@@ -16,14 +16,13 @@ public:
 	);
 	~FlowPort() override = default;
 
-public:
-	template<typename ...InputTypes>
-	inline FlowNode<InputTypes...>* GetParentFlowNode() { return (FlowNode<InputTypes...>*)m_parentNode; }
-
 protected:
 	static FlowPort* m_connectingInputPort;
 	static FlowPort* m_connectingOutputPort;
 
+public:
+	template<typename ...InputTypes>
+	inline FlowNode<InputTypes...>* GetParentFlowNode() { return (FlowNode<InputTypes...>*)m_parentNode; }
 };
 
 template<typename ...InputTypes>

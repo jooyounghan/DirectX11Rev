@@ -1,13 +1,13 @@
 #pragma once
+#include "Node.h"
 #include "VariableInputPort.h"
 #include "VariableOutputPort.h"
-#include "Node.h"
 #include "DrawElementColor.h"
 
 #include <tuple>
+#include <exception>
 
-template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
-	requires VariableOutPortType<OutputType, DerivedOutputPort>
+template<typename OutputType, typename ...InputTypes>
 class VariableNode : public Node
 {
 public:
@@ -16,12 +16,11 @@ public:
 	
 protected:
 	std::tuple<VariableInputPort<InputTypes>...> m_variableInputPorts;
-	DerivedOutputPort m_variableOutputPort;
+	VariableOutputPort<OutputType> m_variableOutputPort;
 
 public:
 	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager);
 	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager);
-
 	virtual void RegisterToInteractionManager(InteractionManager* interactionManager);
 	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager);
 
@@ -29,73 +28,75 @@ protected:
 	virtual void SetFocused(const bool& isFocused);
 	virtual ImVec2 GetInternalNodeSize() override;
 
-private:
-	template<std::size_t... Indices>
-	std::tuple<VariableInputPort<InputTypes>...> CreateVariableInputPorts(
-		Node* parentNode, const float& radius, const ImVec2& referencedOrigin, std::index_sequence<Indices...>);
+public:
+	virtual OutputType GetVariable();
+
+protected:
+	virtual OutputType GetVariableImpl(const std::tuple<InputTypes...>& variables) = 0;
 };
 
-template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
-	requires VariableOutPortType<OutputType, DerivedOutputPort>
-inline VariableNode<OutputType, DerivedOutputPort, InputTypes...>::VariableNode(
-	const std::string& nodeName, const ImVec2& leftTop,
+template<typename... InputTypes, std::size_t... Indices>
+std::tuple<VariableInputPort<InputTypes>...> CreateVariableInputPorts(
+	Node* parentNode, const float& radius, const ImVec2& referencedOrigin, const size_t& offset, std::index_sequence<Indices...>);
+
+template<typename... InputTypes, std::size_t... Indices>
+std::tuple<InputTypes...> GetVariablesFromInput(const std::tuple<VariableInputPort<InputTypes>...>& inputPorts, std::index_sequence<Indices...>);
+
+
+template<typename OutputType, typename ...InputTypes>
+inline VariableNode<OutputType, InputTypes...>::VariableNode(
+	const std::string& nodeName, const ImVec2& leftTop, 
 	const float& radius, const ImVec2& referencedOrigin
 )
 	: Node(nodeName, leftTop, referencedOrigin, variableTypeColor),
-	m_variableInputPorts(CreateVariableInputPorts(this, radius, referencedOrigin, std::index_sequence_for<InputTypes...>{})),
+	m_variableInputPorts(CreateVariableInputPorts<InputTypes...>(this, radius, referencedOrigin, 0, std::index_sequence_for<InputTypes...>{})),
 	m_variableOutputPort(this, 1, 0, radius, referencedOrigin)
 {
 
 }
 
-template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
-	requires VariableOutPortType<OutputType, DerivedOutputPort>
-inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::AddToDrawElementManager(DrawElementManager* drawElementManager)
+template<typename OutputType, typename ...InputTypes>
+inline void VariableNode<OutputType, InputTypes...>::AddToDrawElementManager(DrawElementManager* drawElementManager)
 {
 	Node::AddToDrawElementManager(drawElementManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.AddToDrawElementManager(drawElementManager)); }, m_variableInputPorts);
 	m_variableOutputPort.AddToDrawElementManager(drawElementManager);
 }
 
-template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
-	requires VariableOutPortType<OutputType, DerivedOutputPort>
-inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::RemoveFromDrawElementManager(DrawElementManager* drawElementManager)
+template<typename OutputType, typename ...InputTypes>
+inline void VariableNode<OutputType, InputTypes...>::RemoveFromDrawElementManager(DrawElementManager* drawElementManager)
 {
 	Node::RemoveFromDrawElementManager(drawElementManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.RemoveFromDrawElementManager(drawElementManager)); }, m_variableInputPorts);
 	m_variableOutputPort.RemoveFromDrawElementManager(drawElementManager);
 }
 
-template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
-	requires VariableOutPortType<OutputType, DerivedOutputPort>
-inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::RegisterToInteractionManager(InteractionManager* interactionManager)
+template<typename OutputType, typename ...InputTypes>
+inline void VariableNode<OutputType, InputTypes...>::RegisterToInteractionManager(InteractionManager* interactionManager)
 {
 	Node::RegisterToInteractionManager(interactionManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.RegisterToInteractionManager(interactionManager)); }, m_variableInputPorts);
 	m_variableOutputPort.RegisterToInteractionManager(interactionManager);
 }
 
-template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
-	requires VariableOutPortType<OutputType, DerivedOutputPort>
-inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::DeregisterToInteractionManager(InteractionManager* interactionManager)
+template<typename OutputType, typename ...InputTypes>
+inline void VariableNode<OutputType, InputTypes...>::DeregisterToInteractionManager(InteractionManager* interactionManager)
 {	
 	Node::DeregisterToInteractionManager(interactionManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.DeregisterToInteractionManager(interactionManager)); }, m_variableInputPorts);
 	m_variableOutputPort.DeregisterToInteractionManager(interactionManager);
 }
 
-template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
-	requires VariableOutPortType<OutputType, DerivedOutputPort>
-inline void VariableNode<OutputType, DerivedOutputPort, InputTypes...>::SetFocused(const bool& isFocused)
+template<typename OutputType, typename ...InputTypes>
+inline void VariableNode<OutputType, InputTypes...>::SetFocused(const bool& isFocused)
 {
 	Node::SetFocused(isFocused);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.SetFocused(isFocused)); }, m_variableInputPorts);
 	m_variableOutputPort.SetFocused(isFocused);
 }
 
-template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
-	requires VariableOutPortType<OutputType, DerivedOutputPort>
-inline ImVec2 VariableNode<OutputType, DerivedOutputPort, InputTypes...>::GetInternalNodeSize()
+template<typename OutputType, typename ...InputTypes>
+inline ImVec2 VariableNode<OutputType, InputTypes...>::GetInternalNodeSize()
 {
 	float totalWidth = 0.f;
 	float totalHeight = 0.f;
@@ -112,12 +113,32 @@ inline ImVec2 VariableNode<OutputType, DerivedOutputPort, InputTypes...>::GetInt
 	);
 }
 
-template<typename OutputType, typename DerivedOutputPort, typename ...InputTypes>
-	requires VariableOutPortType<OutputType, DerivedOutputPort>
-template<std::size_t ...Indices>
-inline std::tuple<VariableInputPort<InputTypes>...> VariableNode<OutputType, DerivedOutputPort, InputTypes...>::CreateVariableInputPorts(Node* parentNode, const float& radius, const ImVec2& referencedOrigin, std::index_sequence<Indices...>)
+template<typename OutputType, typename ...InputTypes>
+inline OutputType VariableNode<OutputType, InputTypes...>::GetVariable()
+{
+	return GetVariableImpl(GetVariablesFromInput(m_variableInputPorts, std::index_sequence_for<InputTypes...>{}));
+}
+
+template<typename ...InputTypes, std::size_t ...Indices>
+inline std::tuple<VariableInputPort<InputTypes>...> CreateVariableInputPorts(Node* parentNode, const float& radius, const ImVec2& referencedOrigin, const size_t& offset, std::index_sequence<Indices...>)
 {
 	return std::make_tuple(
-		VariableInputPort<InputTypes>(parentNode, sizeof...(InputTypes), Indices, radius, referencedOrigin)...
+		VariableInputPort<InputTypes>(parentNode, sizeof...(InputTypes) + offset, Indices + offset, radius, referencedOrigin)...
+	);
+}
+
+template<typename ...InputTypes, std::size_t ...Indices>
+inline std::tuple<InputTypes...> GetVariablesFromInput(const std::tuple<VariableInputPort<InputTypes>...>& inputPorts, std::index_sequence<Indices...>)
+{
+	return std::make_tuple(
+		(
+			[&]() -> InputTypes 
+			{
+				auto* connectedOutputPort = std::get<Indices>(inputPorts).GetConnectedOutputPort();
+				return connectedOutputPort
+					? connectedOutputPort->GetParentVariableNode()->GetVariable()
+					: throw std::exception("Variable Input are Not Connected");
+			}()
+		)...
 	);
 }

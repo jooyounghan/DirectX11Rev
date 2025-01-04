@@ -1,5 +1,6 @@
 #include "CreateIBLMaterialWithNodeEditorWindow.h"
 
+#include "FloatSumVariableNode.h"
 #include "FloatVariableNode.h"
 #include "StringVariableNode.h"
 #include "IBLMaterialAssetCreateFlowNode.h"
@@ -12,21 +13,20 @@ CreateIBLMaterialWithNodeEditorWindow::CreateIBLMaterialWithNodeEditorWindow(
 )
 	: ANodeEditorWindow(windowID, openFlag)
 {	
-	for (size_t idx = 0; idx < 2; ++idx)
+	for (size_t idx = 0; idx < 4; ++idx)
 	{
-		auto variableNode1 = new FloatVariableNode(
+		auto variableNode = new FloatVariableNode(
 			ImVec2(100.f, 100.f), 10.f, m_canvas.GetOriginPosition()
 		);
-		variableNode1->AddToDrawElementManager(&m_canvas);
-		variableNode1->RegisterToInteractionManager(&m_canvas);
-
-		auto variableNode2 = new StringVariableNode(
-			ImVec2(240.f, 120.f), 10.f, m_canvas.GetOriginPosition()
-		);
-		variableNode2->AddToDrawElementManager(&m_canvas);
-		variableNode2->RegisterToInteractionManager(&m_canvas);
-
+		variableNode->AddToDrawElementManager(&m_canvas);
+		variableNode->RegisterToInteractionManager(&m_canvas);
 	}
+
+	auto floatSum = new  FloatSumVariableNode(
+		ImVec2(100.f, 100.f), 10.f, m_canvas.GetOriginPosition()
+	);
+	floatSum->AddToDrawElementManager(&m_canvas);
+	floatSum->RegisterToInteractionManager(&m_canvas);
 
 	auto flowNode1 = new IBLMaterialAssetCreateFlowNode(
 		ImVec2(240.f, 240.f), 10.f, m_canvas.GetOriginPosition()

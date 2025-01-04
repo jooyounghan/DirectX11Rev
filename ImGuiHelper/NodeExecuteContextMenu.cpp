@@ -1,5 +1,7 @@
 #include "NodeExecuteContextMenu.h"
+#include <exception>
 
+using namespace std;
 using namespace ImGui;
 
 NodeExecuteContextMenu::NodeExecuteContextMenu()
@@ -20,6 +22,13 @@ void NodeExecuteContextMenu::RenderNotification()
 {
     if (MenuItem("Execute"))
     {
-        m_onExecuteHandler();
+        try
+        {
+            m_onExecuteHandler();
+        }
+        catch (const exception& e)
+        {
+            bool test = true;
+        }
     }
 }

@@ -7,4 +7,6 @@ IBLMaterialAssetCreateFlowNode::IBLMaterialAssetCreateFlowNode(const ImVec2& lef
 
 void IBLMaterialAssetCreateFlowNode::ExecuteImpl()
 {
+	auto test = GetVariables();
+	bool test1 = true;
 }
