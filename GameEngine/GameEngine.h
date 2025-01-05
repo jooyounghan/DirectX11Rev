@@ -46,6 +46,9 @@ private:
 	void CreateAssetManager();
 	void CreateComponentManager();
 	void CreatePSOManager();
+	void CreateWindows();
+
+private:
 	void InitializeWindows();
 	void InitializeModals();
 

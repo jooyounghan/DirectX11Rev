@@ -1,14 +1,19 @@
 #pragma once
 #include "ANodeEditorWindow.h"
 
-class CreateIBLMaterialWithNodeEditorWindow : public ANodeEditorWindow<3>
+class AssetManager;
+
+class CreateIBLMaterialWithNodeEditorWindow : public ANodeEditorWindow
 {
 public:
-	CreateIBLMaterialWithNodeEditorWindow(const std::string& windowID, bool* openFlag);
+	CreateIBLMaterialWithNodeEditorWindow(AssetManager* assetManager, const std::string& windowID, bool* openFlag);
 	~CreateIBLMaterialWithNodeEditorWindow() override = default;
 
+protected:
+	AssetManager* m_assetManagerCached = nullptr;
+
 public:
-	virtual void PrepareWindow() override {};
+	virtual void InitWindow() override;
 
 private:
 	virtual void RenderWindowImpl() override;

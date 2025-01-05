@@ -3,6 +3,10 @@
 IBLMaterialAssetCreateFlowNode::IBLMaterialAssetCreateFlowNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
 	: FlowNode("Create IBL Asset", leftTop, radius, referencedOrigin)
 {
+	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
+		{
+			return GetMinNodeSize();
+		});
 }
 
 void IBLMaterialAssetCreateFlowNode::ExecuteImpl()

@@ -41,6 +41,7 @@ GameEngine::GameEngine()
 	CreateAssetManager();
 	CreateComponentManager();
 	CreatePSOManager();
+	CreateWindows();
 ;
 	/* Bind Event Handler */
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { m_engine->ResizeSwapChain(widthIn, heightIn); };
@@ -264,7 +265,7 @@ void GameEngine::CreatePSOManager()
 	m_componentPSOManager = new ComponentPSOManager(deviceAddress);
 }
 
-void GameEngine::InitializeWindows()
+void GameEngine::CreateWindows()
 {
 	m_imguiWindows.emplace_back(new AssetViewWindow("AssetViewWindow", m_assetManager));
 
@@ -274,6 +275,14 @@ void GameEngine::InitializeWindows()
 	);
 	sceneWindow->SetCameraComponent(m_testCamera);
 	m_imguiWindows.emplace_back(sceneWindow);
+}
+
+void GameEngine::InitializeWindows()
+{
+	for (AWindow* imguiWindow : m_imguiWindows)
+	{
+		imguiWindow->InitWindow();
+	}
 }
 
 void GameEngine::InitializeModals()

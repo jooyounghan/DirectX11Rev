@@ -1,27 +1,34 @@
 #include "CreateIBLMaterialWithNodeEditorWindow.h"
 
-#include "FloatSumVariableNode.h"
 #include "FloatVariableNode.h"
-#include "StringVariableNode.h"
+#include "ScratchTextureAssetNode.h"
 #include "IBLMaterialAssetCreateFlowNode.h"
 
 using namespace std;
 using namespace ImGui;
 
 CreateIBLMaterialWithNodeEditorWindow::CreateIBLMaterialWithNodeEditorWindow(
-	const std::string& windowID, bool* openFlag
+	AssetManager* assetManager, const std::string& windowID, bool* openFlag
 )
-	: ANodeEditorWindow(windowID, openFlag)
+	: ANodeEditorWindow(windowID, openFlag, 3), m_assetManagerCached(assetManager)
 {	
+
+}
+
+void CreateIBLMaterialWithNodeEditorWindow::InitWindow()
+{
+	ANodeEditorWindow::InitWindow();
+
 	for (size_t idx = 0; idx < 2; ++idx)
 	{
-		AddNode<0, FloatVariableNode>(10.f);
+		AddNode<FloatVariableNode>(0);
 	}
-	AddNode<0, StringVariableNode>(10.f);
+	for (size_t idx = 0; idx < 4; ++idx)
+	{
+		AddNode<ScratchTextureAssetNode>(0, m_assetManagerCached);
+	}
 
-	AddNode<0, FloatSumVariableNode>(10.f);
-	AddNode<1, IBLMaterialAssetCreateFlowNode>(10.f);
-	AdjustNodesLayout();
+	AddNode<IBLMaterialAssetCreateFlowNode>(1);
 }
 
 void CreateIBLMaterialWithNodeEditorWindow::RenderWindowImpl()

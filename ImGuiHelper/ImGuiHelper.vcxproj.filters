@@ -210,14 +210,14 @@
     <ClCompile Include="FlowOutputPort.cpp">
       <Filter>소스 파일\Control\NodeEditor\Port\FlowPort</Filter>
     </ClCompile>
-    <ClCompile Include="FlowEndNode.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="NodeExecuteContextMenu.cpp">
       <Filter>소스 파일\Notificator\ContextMenu</Filter>
     </ClCompile>
+    <ClCompile Include="FlowEndNode.cpp">
+      <Filter>소스 파일\Control\NodeEditor\Node</Filter>
+    </ClCompile>
     <ClCompile Include="FloatSumVariableNode.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\Control\NodeEditor\Node\VariableNode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

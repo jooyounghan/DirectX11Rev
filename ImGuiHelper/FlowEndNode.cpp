@@ -1,21 +1,15 @@
 #include "FlowEndNode.h"
 #include "FlowOutputPort.h"
+#include "NodeConstant.h"
 
 FlowEndNode::FlowEndNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
 	: FlowNode("End", leftTop, radius, referencedOrigin)
 {
-}
-
-void FlowEndNode::AddToDrawElementManager(DrawElementManager* drawElementManager)
-{
-	Node::AddToDrawElementManager(drawElementManager);
-	m_flowInputPort.AddToDrawElementManager(drawElementManager);
-}
-
-void FlowEndNode::RemoveFromDrawElementManager(DrawElementManager* drawElementManager)
-{
-	Node::RemoveFromDrawElementManager(drawElementManager);
-	m_flowInputPort.RemoveFromDrawElementManager(drawElementManager);
+	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
+		{			
+			return ImVec2(defaultNodeWidth, defaultNodeHeight);
+		}
+	);
 }
 
 void FlowEndNode::RegisterToInteractionManager(InteractionManager* interactionManager)

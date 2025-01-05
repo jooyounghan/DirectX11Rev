@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)ApplicationBase;$(SolutionDir)AssetManager;$(SolutionDir)CollisionManager;$(SolutionDir)RenderingManager;$(SolutionDir)ImGuiHelper;$(SolutionDir)DBManager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -147,27 +147,25 @@
     <ClCompile Include="AssetContextMenu.cpp" />
     <ClCompile Include="AssetViewWindow.cpp" />
     <ClCompile Include="AssetFileControl.cpp" />
-    <ClCompile Include="BaseTextureAssetOutputPort.cpp" />
     <ClCompile Include="ComponentInformer.cpp" />
     <ClCompile Include="CreateIBLMaterialWithNodeEditorWindow.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="IBLMaterialAssetCreateFlowNode.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
-    <ClCompile Include="ScratchTextureAssetOutputPort.cpp" />
+    <ClCompile Include="ScratchTextureAssetNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetContextMenu.h" />
     <ClInclude Include="AssetViewWindow.h" />
     <ClInclude Include="AssetFileControl.h" />
-    <ClInclude Include="BaseTextureAssetOutputPort.h" />
     <ClInclude Include="ComponentInformer.h" />
     <ClInclude Include="CreateIBLMaterialWithNodeEditorWindow.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="IBLMaterialAssetCreateFlowNode.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneWindow.h" />
-    <ClInclude Include="ScratchTextureAssetOutputPort.h" />
+    <ClInclude Include="ScratchTextureAssetNode.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">

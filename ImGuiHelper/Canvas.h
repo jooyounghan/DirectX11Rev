@@ -21,16 +21,14 @@ protected:
 
 public:
 	inline const ImVec2& GetOriginPosition() { return m_originPosition; }
-
-protected:
+	virtual bool IsPointIn(const float& pointX, const float& pointY) const override;
 	virtual void AddDrawElement(ADrawElement* drawElement);
 	virtual void RenderControlImpl() override;
+
+protected:
 	virtual void AdjustPosition() override;
 
 private:
 	void RenderGridStep(const float& gridStepSize);
-
-public:
-	virtual bool IsPointIn(const float& pointX, const float& pointY) const override;
 };
 

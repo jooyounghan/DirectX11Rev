@@ -15,6 +15,7 @@ protected:
 	virtual void DrawPortConnection(ImDrawList* drawListIn) override;
 
 public:
+	virtual void Draw(ImDrawList* drawListIn) override;
 	virtual void OnMouseUp(MouseClickEventArgs& args) override;
 	virtual void OnBeginDrag() override;
 	virtual void OnEndDrag() override;

@@ -15,7 +15,6 @@ public:
 
 protected:
 	FlowOutputPort* m_connectedPort = nullptr;
-	ImVec2 m_typeTextSize;
 
 public:
 	inline void SetConnectedOutputPort(FlowOutputPort* outputPort) { m_connectedPort = outputPort; }
@@ -25,6 +24,7 @@ protected:
 	virtual void DrawPortConnection(ImDrawList* drawListIn) override;
 
 public:
+	virtual void Draw(ImDrawList* drawListIn) override;
 	virtual void OnMouseUp(MouseClickEventArgs& args) override;
 	virtual void OnBeginDrag() override;
 	virtual void OnEndDrag() override;

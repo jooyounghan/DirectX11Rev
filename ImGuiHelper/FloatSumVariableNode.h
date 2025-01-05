@@ -4,9 +4,7 @@
 class FloatSumVariableNode : public VariableNode<float, float, float>
 {
 public:
-	FloatSumVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
-		: VariableNode("Sum Float", leftTop, radius, referencedOrigin) {
-	}
+	FloatSumVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin);
 	~FloatSumVariableNode() override = default;
 
 protected:

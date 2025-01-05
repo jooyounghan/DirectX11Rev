@@ -28,10 +28,10 @@ public:
 	inline const ImVec2& GetTypeTextSize() { return m_typeTextSize; }
 
 protected:
-	virtual void DrawImpl(ImDrawList* drawListIn) override;
 	virtual void DrawPortConnection(ImDrawList* drawListIn) override;
 
 public:
+	virtual void Draw(ImDrawList* drawListIn) override;
 	virtual void OnMouseUp(MouseClickEventArgs& args) override;
 	virtual void OnBeginDrag() override;
 	virtual void OnEndDrag() override;
@@ -49,9 +49,9 @@ inline VariableInputPort<InputType>::VariableInputPort(
 }
 
 template<typename InputType>
-inline void VariableInputPort<InputType>::DrawImpl(ImDrawList* drawListIn)
+inline void VariableInputPort<InputType>::Draw(ImDrawList* drawListIn)
 {
-	VP::DrawImpl(drawListIn);
+	VP::Draw(drawListIn);
 	ImVec2 textDrawPosition = ImVec2(VP::m_drawCenter.x + VP::m_radius, VP::m_drawCenter.y - m_typeTextSize.y / 2.f);
 	drawListIn->AddText(textDrawPosition, textColor, m_typeText.c_str());
 }

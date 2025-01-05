@@ -8,8 +8,6 @@ public:
 	~FlowEndNode() override = default;
 
 public:
-	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager) override;
-	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager) override;
 	virtual void RegisterToInteractionManager(InteractionManager* interactionManager) override;
 	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager) override;
 

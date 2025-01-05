@@ -29,7 +29,9 @@ AssetViewWindow::AssetViewWindow(const std::string& windowID, AssetManager* asse
     m_assetManagerCached->RegisterAssetLoadedHandler("AddAssetControl", bind(&AssetViewWindow::AddAssetControl, this, placeholders::_1, placeholders::_2, placeholders::_3));
     
     m_assetContextMenuModal = new AssetContextMenu("Asset Context Menu");
-    m_assetNodeEditorWindows.emplace_back(new CreateIBLMaterialWithNodeEditorWindow("Create IBL Material Asset", m_assetContextMenuModal->GetCreateIBLMaterialOpenFlag()));
+    m_assetNodeEditorWindows.emplace_back(new CreateIBLMaterialWithNodeEditorWindow(
+        m_assetManagerCached, "Create IBL Material Asset", m_assetContextMenuModal->GetCreateIBLMaterialOpenFlag()
+    ));
 }
 
 AssetViewWindow::~AssetViewWindow()
@@ -39,6 +41,14 @@ AssetViewWindow::~AssetViewWindow()
         delete assetNodeEditorWindow;
     }
     delete m_assetContextMenuModal;
+}
+
+void AssetViewWindow::InitWindow()
+{
+    for (AWindow* assetNodeEditorWindow : m_assetNodeEditorWindows)
+    {
+        assetNodeEditorWindow->InitWindow();
+    }
 }
 
 void AssetViewWindow::PrepareWindow()

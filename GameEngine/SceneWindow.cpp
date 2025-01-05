@@ -31,6 +31,10 @@ SceneWindow::SceneWindow(
     m_rendererComboBox.OnSelChanged = [&](const size_t& idx, const string& text) {m_selectedRendererType = static_cast<ERendererType>(idx); };
 }
 
+void SceneWindow::InitWindow()
+{
+}
+
 void SceneWindow::PrepareWindow()
 {
     if (m_selectedScene != nullptr && m_selectedCamera != nullptr)

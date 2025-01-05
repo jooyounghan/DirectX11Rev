@@ -22,41 +22,35 @@ public:
 	inline void SetLeftTop(const ImVec2& leftTop) { m_leftTop = leftTop; }
 
 protected:
-	static float nodeMinWidth;
-	static float nodeMinHeight;
-
-protected:
 	ImVec2 m_drawLeftTop = ImVec2(0.f, 0.f);
-	ImVec2 m_drawNodeHeaderPos = ImVec2(0.f, 0.f);
-	ImVec2 m_drawNodeFieldPos = ImVec2(0.f, 0.f);
-	ImVec2 m_nodeHeaderSize = ImVec2(0.f, 0.f);
-	ImVec2 m_nodeFieldSize = ImVec2(0.f, 0.f);
-	ImVec2 m_totalSize = ImVec2(0.f, 0.f);
 	ImVec2 m_offsetFromLeftTop = ImVec2(0.f, 0.f);
+	ImVec2 m_headerTextSize = ImVec2(0.f, 0.f);
+	ImVec2 m_headerSize = ImVec2(0.f, 0.f);
+	ImVec2 m_totalSize = ImVec2(0.f, 0.f);
 
 public:
-	const ImVec2& GetDrawNodeHeaderPos() { return m_drawNodeHeaderPos; }
-	const ImVec2& GetDrawNodeFieldPos() { return m_drawNodeFieldPos; }
-	const ImVec2& GetDrawNodeHeaderSize() { return m_nodeHeaderSize; }
-	const ImVec2& GetDrawNodeFieldSize() { return m_nodeFieldSize; }
+	ImVec2 GetFieldDrawLeftTopPos() { return ImVec2(m_drawLeftTop.x, m_drawLeftTop.y + m_headerSize.y); }
+	ImVec2 GetFieldDrawRightBottomPos() { return ImVec2(m_drawLeftTop.x + m_totalSize.x, m_drawLeftTop.y + m_totalSize.y - m_headerSize.y); }
+	ImVec2 GetFieldSize() { return ImVec2(m_totalSize.x, m_totalSize.y - m_headerSize.y); }
+	const ImVec2& GetTotalSize() { return m_totalSize; }
 
 protected:
 	bool m_isDragging = false;
 
 public:
 	virtual bool IsPointIn(const float& pointX, const float& pointY) const override;
-	inline ImVec2 GetTotalSize() { return m_totalSize; }
 
 protected:
-	virtual void DrawImpl(ImDrawList* drawListIn) override;
-	virtual void AdjustPosition() override;
+	virtual void Draw(ImDrawList* drawListIn) override;
 	
-public:
-	void UpdateNodeSize();
+protected:
+	using ImGuiDrawFunction = std::function<ImVec2(const ImVec2&, ImDrawList*)>;
+	std::vector<std::vector<ImGuiDrawFunction>> m_drawsCommands;
 
 protected:
-	virtual void UpdateFieldSize() = 0;
-
+	void AddDrawCommand(const ImGuiDrawFunction& drawCommand);
+	void AddDrawCommandSameLine(const ImGuiDrawFunction& drawCommand);
+	
 public:
 	virtual void OnMouseClicked(MouseClickEventArgs& args) override;
 	virtual void OnDragging(MouseEventArgs& args) override;

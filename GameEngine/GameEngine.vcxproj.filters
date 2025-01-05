@@ -85,6 +85,18 @@
     <Filter Include="소스 파일\GUI\Window\NodeEditor\CreateAsset">
       <UniqueIdentifier>{c07cd214-a1b5-43af-9c45-e8c8140e6f44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\GUI\NodeEditor\Node\Flow">
+      <UniqueIdentifier>{cd5d5f4f-bc5d-4ee5-9ccd-8d38cc00f84c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GUI\NodeEditor\Node\Variable">
+      <UniqueIdentifier>{ac3142a6-bdae-4bd1-ae47-6cc0e754ebc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GUI\NodeEditor\Node\Flow">
+      <UniqueIdentifier>{0f1cb45e-8e04-4b7b-830a-d1851f9e7556}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GUI\NodeEditor\Node\Variable">
+      <UniqueIdentifier>{7dab8f96-a719-4dd3-b359-4de50954e2e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -108,17 +120,14 @@
     <ClCompile Include="AssetContextMenu.cpp">
       <Filter>소스 파일\GUI\ContextMenu</Filter>
     </ClCompile>
-    <ClCompile Include="IBLMaterialAssetCreateFlowNode.cpp">
-      <Filter>소스 파일\GUI\NodeEditor\Node</Filter>
-    </ClCompile>
-    <ClCompile Include="ScratchTextureAssetOutputPort.cpp">
-      <Filter>소스 파일\GUI\NodeEditor\Port</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseTextureAssetOutputPort.cpp">
-      <Filter>소스 파일\GUI\NodeEditor\Port</Filter>
-    </ClCompile>
     <ClCompile Include="CreateIBLMaterialWithNodeEditorWindow.cpp">
       <Filter>소스 파일\GUI\Window\NodeEditor\CreateAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="IBLMaterialAssetCreateFlowNode.cpp">
+      <Filter>소스 파일\GUI\NodeEditor\Node\Flow</Filter>
+    </ClCompile>
+    <ClCompile Include="ScratchTextureAssetNode.cpp">
+      <Filter>소스 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,17 +152,14 @@
     <ClInclude Include="AssetContextMenu.h">
       <Filter>헤더 파일\GUI\ContextMenu</Filter>
     </ClInclude>
-    <ClInclude Include="IBLMaterialAssetCreateFlowNode.h">
-      <Filter>헤더 파일\GUI\NodeEditor\Node</Filter>
-    </ClInclude>
-    <ClInclude Include="ScratchTextureAssetOutputPort.h">
-      <Filter>헤더 파일\GUI\NodeEditor\Port</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseTextureAssetOutputPort.h">
-      <Filter>헤더 파일\GUI\NodeEditor\Port</Filter>
-    </ClInclude>
     <ClInclude Include="CreateIBLMaterialWithNodeEditorWindow.h">
       <Filter>헤더 파일\GUI\Window\NodeEditor\CreateAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="IBLMaterialAssetCreateFlowNode.h">
+      <Filter>헤더 파일\GUI\NodeEditor\Node\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="ScratchTextureAssetNode.h">
+      <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

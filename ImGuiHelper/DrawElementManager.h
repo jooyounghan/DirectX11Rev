@@ -13,12 +13,12 @@ public:
 private:
 	std::vector<ADrawElement*> m_drawElements;
 
-protected:
+public:
 	virtual void AddDrawElement(ADrawElement* drawElement);
 	void RemoveDrawElement(ADrawElement* drawElement);
-	void BringDrawElementToFront(ADrawElement* drawElement);
 
 protected:
+	void BringDrawElementToFront(ADrawElement* drawElement);
 	void DrawElements(ImDrawList* drawList);
 };
 

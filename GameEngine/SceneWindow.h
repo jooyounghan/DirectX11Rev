@@ -42,6 +42,7 @@ private:
 
 public:
 	inline void SetCameraComponent(CameraComponent* cameraComponent) { m_selectedCamera = cameraComponent; }
+	virtual void InitWindow() override;
 	virtual void PrepareWindow() override;
 
 private:

@@ -9,6 +9,7 @@ public:
 
 public:
 	std::function<void()> m_onExecuteHandler = [&]() {};
+	std::function<void()> m_onToggleHoldHandler = [&]() {};
 
 protected:
 	virtual bool OpenCondition() override;

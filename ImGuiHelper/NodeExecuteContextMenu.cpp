@@ -28,7 +28,12 @@ void NodeExecuteContextMenu::RenderNotification()
         }
         catch (const exception& e)
         {
+            // 안될 경우!
             bool test = true;
         }
+    }
+    if (MenuItem("Toggle Adjusting Node Position"))
+    {
+        m_onToggleHoldHandler();
     }
 }

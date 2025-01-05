@@ -21,19 +21,15 @@ public:
 	std::function<void(ADrawElement*)> OnFocused = [&](ADrawElement*) {};
 
 public:
-	void Draw(ImDrawList* drawListIn);
 	const ImVec2& GetReferencedOrigin() { return m_referencedOrigin; }
+	static void ConsumeMouseCaptureForItem();
 
 public:
-	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager) ;
-	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager);
+	virtual void Draw(ImDrawList* drawListIn) = 0;
 	virtual void SetFocused(const bool& isFocused);
 	virtual void OnMouseClicked(MouseClickEventArgs& args) override;
 	virtual void OnMouseDown(MouseClickEventArgs& args) override;
 	virtual void OnMouseEnter(MouseEventArgs& args) override;
 	virtual void OnMouseLeave(MouseEventArgs& args) override;
-
-protected:
-	virtual void DrawImpl(ImDrawList* drawListIn) = 0;
 };
 

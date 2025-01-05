@@ -49,8 +49,5 @@ public:
 	virtual void OnBeginDrag() {};
 	virtual void OnDragging(MouseEventArgs& args) {};
 	virtual void OnEndDrag() {};
-
-protected:
-	virtual void AdjustPosition() = 0;
 };
 

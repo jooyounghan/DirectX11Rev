@@ -1,6 +1,7 @@
 #include "APort.h"
 #include "Node.h"
 #include "DrawElementColor.h"
+#include "NodeConstant.h"
 
 APort::APort(
     Node* parentNode, const bool& isLeft,
@@ -19,21 +20,18 @@ bool APort::IsPointIn(const float& pointX, const float& pointY) const
         (m_drawCenter.y - pointY) * (m_drawCenter.y - pointY));
 }
 
-void APort::DrawImpl(ImDrawList* drawListIn)
+void APort::Draw(ImDrawList* drawListIn)
 {
-    drawListIn->AddCircleFilled(m_drawCenter, m_radius, m_isFocused ? m_hilightedColor : m_baseColor);
-    drawListIn->AddCircle(m_drawCenter, m_radius, borderLineColor, NULL, 2.f);
-    DrawPortConnection(drawListIn);
-}
-
-void APort::AdjustPosition()
-{
-    const ImVec2 nodeFieldSize = m_parentNode->GetDrawNodeFieldSize();
-    const ImVec2 nodeDrawFieldLeftTop = m_parentNode->GetDrawNodeFieldPos();
-    const ImVec2 nodeDrawFieldRightBottom = ImVec2(nodeDrawFieldLeftTop.x + nodeFieldSize.x, nodeDrawFieldLeftTop.y + nodeFieldSize.y);
+    const ImVec2 nodeFieldSize = m_parentNode->GetFieldSize();
+    const ImVec2 nodeDrawFieldLeftTop = m_parentNode->GetFieldDrawLeftTopPos();
+    const ImVec2 nodeDrawFieldRightBottom = m_parentNode->GetFieldDrawRightBottomPos();
 
     m_drawCenter.x = m_isLeft ? nodeDrawFieldLeftTop.x : nodeDrawFieldRightBottom.x;
     m_drawCenter.y = nodeFieldSize.y * ((m_portIndex + 1) / static_cast<float>(m_indexCount + 1)) + nodeDrawFieldLeftTop.y;
+
+    drawListIn->AddCircleFilled(m_drawCenter, m_radius, m_isFocused ? m_hilightedColor : m_baseColor);
+    drawListIn->AddCircle(m_drawCenter, m_radius, borderLineColor, NULL, borederThickness);
+    DrawPortConnection(drawListIn);
 }
 
 void APort::DrawBezierForConnection(ImDrawList* drawListIn, const ImVec2& start, const ImVec2& end)

@@ -19,14 +19,12 @@ protected:
 	VariableOutputPort<OutputType> m_variableOutputPort;
 
 public:
-	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager);
-	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager);
 	virtual void RegisterToInteractionManager(InteractionManager* interactionManager);
 	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager);
 
 protected:
-	virtual void SetFocused(const bool& isFocused);
-	virtual void UpdateFieldSize() override;
+	virtual void SetFocused(const bool& isFocused);protected:
+	virtual void Draw(ImDrawList* drawListIn) override final;
 
 public:
 	virtual OutputType GetVariable();
@@ -56,22 +54,6 @@ inline VariableNode<OutputType, InputTypes...>::VariableNode(
 }
 
 template<typename OutputType, typename ...InputTypes>
-inline void VariableNode<OutputType, InputTypes...>::AddToDrawElementManager(DrawElementManager* drawElementManager)
-{
-	Node::AddToDrawElementManager(drawElementManager);
-	std::apply([&](auto&... inputPorts) { (..., inputPorts.AddToDrawElementManager(drawElementManager)); }, m_variableInputPorts);
-	m_variableOutputPort.AddToDrawElementManager(drawElementManager);
-}
-
-template<typename OutputType, typename ...InputTypes>
-inline void VariableNode<OutputType, InputTypes...>::RemoveFromDrawElementManager(DrawElementManager* drawElementManager)
-{
-	Node::RemoveFromDrawElementManager(drawElementManager);
-	std::apply([&](auto&... inputPorts) { (..., inputPorts.RemoveFromDrawElementManager(drawElementManager)); }, m_variableInputPorts);
-	m_variableOutputPort.RemoveFromDrawElementManager(drawElementManager);
-}
-
-template<typename OutputType, typename ...InputTypes>
 inline void VariableNode<OutputType, InputTypes...>::RegisterToInteractionManager(InteractionManager* interactionManager)
 {
 	Node::RegisterToInteractionManager(interactionManager);
@@ -96,22 +78,13 @@ inline void VariableNode<OutputType, InputTypes...>::SetFocused(const bool& isFo
 }
 
 template<typename OutputType, typename ...InputTypes>
-inline void VariableNode<OutputType, InputTypes...>::UpdateFieldSize()
+inline void VariableNode<OutputType, InputTypes...>::Draw(ImDrawList* drawListIn)
 {
-	float totalWidth = 0.f;
-	float totalHeight = 0.f;
-
-	std::apply([&](auto&... inputPorts)
-		{
-			((totalWidth = std::max(inputPorts.GetTypeTextSize().x, totalWidth)), ...);
-			((totalHeight += inputPorts.GetTypeTextSize().y), ...);
-		}, m_variableInputPorts);
-
-	m_nodeFieldSize = ImVec2(
-		std::max({ totalWidth * 2.f, GetDrawNodeHeaderSize().x, nodeMinWidth }),
-		std::max(totalHeight * 2.f, nodeMinHeight)
-	);
+	Node::Draw(drawListIn);
+	std::apply([&](auto&... inputPorts){ (..., inputPorts.Draw(drawListIn)); }, m_variableInputPorts);
+	m_variableOutputPort.Draw(drawListIn);
 }
+
 
 template<typename OutputType, typename ...InputTypes>
 inline OutputType VariableNode<OutputType, InputTypes...>::GetVariable()

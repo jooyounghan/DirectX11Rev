@@ -2,7 +2,7 @@
 #include "VariableNode.h"
 #include "FlowInputPort.h"
 #include "FlowOutputPort.h"
-
+#include "NodeConstant.h"
 
 template<typename ...InputTypes>
 class FlowNode : public Node
@@ -20,18 +20,17 @@ protected:
 	FlowOutputPort m_flowOutputPort;
 
 public:
-	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager) override;
-	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager) override;
 	virtual void RegisterToInteractionManager(InteractionManager* interactionManager) override;
 	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager) override;
 
 protected:
 	virtual void SetFocused(const bool& isFocused) override;
-	virtual void UpdateFieldSize() override;
+	virtual void Draw(ImDrawList* drawListIn) override final;
 
 public:
 	void Execute();
 	std::tuple<InputTypes...> GetVariables() { return GetVariablesFromInput(m_variableInputPorts, std::index_sequence_for<InputTypes...>{}); }
+	ImVec2 GetMinNodeSize();
 
 protected:
 	virtual void ExecuteImpl() = 0;
@@ -45,24 +44,6 @@ inline FlowNode<InputTypes...>::FlowNode(const std::string& nodeName, const ImVe
 	m_flowOutputPort(this, 1, 0, radius, referencedOrigin)
 {
 
-}
-
-template<typename ...InputTypes>
-inline void FlowNode<InputTypes...>::AddToDrawElementManager(DrawElementManager* drawElementManager)
-{
-	Node::AddToDrawElementManager(drawElementManager);
-	std::apply([&](auto&... inputPorts) { (..., inputPorts.AddToDrawElementManager(drawElementManager)); }, m_variableInputPorts);
-	m_flowInputPort.AddToDrawElementManager(drawElementManager);
-	m_flowOutputPort.AddToDrawElementManager(drawElementManager);
-}
-
-template<typename ...InputTypes>
-inline void FlowNode<InputTypes...>::RemoveFromDrawElementManager(DrawElementManager* drawElementManager)
-{
-	Node::RemoveFromDrawElementManager(drawElementManager);
-	std::apply([&](auto&... inputPorts) { (..., inputPorts.RemoveFromDrawElementManager(drawElementManager)); }, m_variableInputPorts);
-	m_flowInputPort.RemoveFromDrawElementManager(drawElementManager);
-	m_flowOutputPort.RemoveFromDrawElementManager(drawElementManager);
 }
 
 template<typename ...InputTypes>
@@ -93,22 +74,14 @@ inline void FlowNode<InputTypes...>::SetFocused(const bool& isFocused)
 }
 
 template<typename ...InputTypes>
-inline void FlowNode<InputTypes...>::UpdateFieldSize()
+inline void FlowNode<InputTypes...>::Draw(ImDrawList* drawListIn)
 {
-	float totalWidth = 0.f;
-	float totalHeight = 0.f;
-
-	std::apply([&](auto&... inputPorts)
-		{
-			((totalWidth = std::max(inputPorts.GetTypeTextSize().x, totalWidth)), ...);
-			((totalHeight += inputPorts.GetTypeTextSize().y), ...);
-		}, m_variableInputPorts);
-
-	m_nodeFieldSize = ImVec2(
-		std::max({ totalWidth * 2.f, GetDrawNodeHeaderSize().x, nodeMinWidth }),
-		std::max((totalHeight + m_flowInputPort.GetRadius() * 2.f) * 2.f, nodeMinHeight)
-	);
+	Node::Draw(drawListIn);
+	std::apply([&](auto&... inputPorts) { (..., inputPorts.Draw(drawListIn)); }, m_variableInputPorts);
+	m_flowInputPort.Draw(drawListIn);
+	m_flowOutputPort.Draw(drawListIn);
 }
+
 
 template<typename ...InputTypes>
 inline void FlowNode<InputTypes...>::Execute()
@@ -125,4 +98,23 @@ inline void FlowNode<InputTypes...>::Execute()
 		}
 	}
 	ExecuteImpl();
+}
+
+template<typename ...InputTypes>
+inline ImVec2 FlowNode<InputTypes...>::GetMinNodeSize()
+{
+	ImVec2 minNodeSize = ImVec2(0.f, 0.f);
+	minNodeSize.y += (m_flowInputPort.GetRadius() * 2.f + nodeInternalMargin);
+	std::apply([&](auto&... variableInputPorts) 
+		{
+			(..., [&]() 
+				{
+					const ImVec2 typeTextSize = variableInputPorts.GetTypeTextSize();
+					minNodeSize.x = std::max(minNodeSize.x, variableInputPorts.GetRadius() * 2.f + nodeInternalMargin + typeTextSize.x);
+					minNodeSize.y += (typeTextSize.y + nodeInternalMargin);
+				}());
+		}, m_variableInputPorts
+	);
+
+	return minNodeSize;
 }

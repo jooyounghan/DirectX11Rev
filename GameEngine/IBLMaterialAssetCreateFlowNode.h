@@ -3,10 +3,10 @@
 #include "ScratchTextureAsset.h"
 
 class IBLMaterialAssetCreateFlowNode : public FlowNode<
-	ScratchTextureAsset, 
-	ScratchTextureAsset, 
-	ScratchTextureAsset,
-	ScratchTextureAsset,
+	ScratchTextureAsset*, 
+	ScratchTextureAsset*, 
+	ScratchTextureAsset*,
+	ScratchTextureAsset*,
 	float,
 	float
 >

@@ -32,12 +32,10 @@ protected:
 public:
 	inline const ImVec2& GetDrawCenter() { return m_drawCenter; }
 	inline const float& GetRadius() { return m_radius; }
-public:
 	virtual bool IsPointIn(const float& pointX, const float& pointY) const override;
+	virtual void Draw(ImDrawList* drawListIn) override;
 
 protected:
-	virtual void DrawImpl(ImDrawList* drawListIn) override;
-	virtual void AdjustPosition() override;
 	void DrawBezierForConnection(ImDrawList* drawListIn, const ImVec2& start, const ImVec2& end);
 
 protected:

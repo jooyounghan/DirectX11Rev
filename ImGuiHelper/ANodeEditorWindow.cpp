@@ -1,40 +1,38 @@
 #include "ANodeEditorWindow.h"
 #include "FlowEndNode.h"
-#include "NodeConstant.h"
 
 using namespace std;
 using namespace ImGui;
 
-template<size_t NodeLineCount>
-ANodeEditorWindow<NodeLineCount>::ANodeEditorWindow(const std::string& windowID, bool* openFlag)
-	: AWindow(windowID, false, openFlag)
+ANodeEditorWindow::ANodeEditorWindow(const std::string& windowID, bool* openFlag, const size_t& lineCount)
+	: AWindow(windowID, false, openFlag), m_lineCount(lineCount)
+{
+	m_nodesWithLines.resize(lineCount);
+}
+
+ANodeEditorWindow::~ANodeEditorWindow()
+{
+	// m_nodesWithLines는 Canvas에서 해제
+}
+
+void ANodeEditorWindow::InitWindow()
 {
 	m_canvas.RegisterToInteractionManager(this);
-	m_flowEndNode = AddNode<NodeLineCount - 1, FlowEndNode>(defaultPortRadius);
+	m_flowEndNode = AddNode<FlowEndNode>(m_lineCount - 1);
 	m_nodeExecuteContextMenu.m_onExecuteHandler = bind(&FlowEndNode::Execute, m_flowEndNode);
+	m_nodeExecuteContextMenu.m_onToggleHoldHandler = [&]() {m_isAdjustNodeLayout = !m_isAdjustNodeLayout; };
+	AdjustNodesLayout();
 }
 
-template<size_t NodeLineCount>
-ANodeEditorWindow<NodeLineCount>::~ANodeEditorWindow()
+void ANodeEditorWindow::RenderWindowImpl()
 {
-	for (std::vector<Node*>& nodes : m_nodesWithLines)
-	{
-		for (Node* node : nodes)
-		{
-			delete node;
-		}
-	}
-}
+	if (m_isAdjustNodeLayout) AdjustNodesLayout();
 
-template<size_t NodeLineCount>
-void ANodeEditorWindow<NodeLineCount>::RenderWindowImpl()
-{
 	m_canvas.RenderControl();
 	m_nodeExecuteContextMenu.DrawNotificator();
 }
 
-template<size_t NodeLineCount>
-void ANodeEditorWindow<NodeLineCount>::AdjustNodesLayout()
+void ANodeEditorWindow::AdjustNodesLayout()
 {
 	float nextLeft = nodeExternalWidthMargin;
 	for (vector<Node*>& nodes : m_nodesWithLines)
@@ -43,12 +41,8 @@ void ANodeEditorWindow<NodeLineCount>::AdjustNodesLayout()
 		float nextTop = nodeExternalHeightMargin;
 		for (Node* node : nodes)
 		{
-			node->UpdateNodeSize();
-
 			float currentTop = nextTop;
 			node->SetLeftTop(ImVec2(currentLeft, currentTop));
-			
-			
 			const ImVec2 nodeTotalSize = node->GetTotalSize();
 
 			nextTop += nodeTotalSize.y + nodeExternalHeightMargin;
@@ -56,14 +50,3 @@ void ANodeEditorWindow<NodeLineCount>::AdjustNodesLayout()
 		}
 	}
 }
-
-template class ANodeEditorWindow<1>;
-template class ANodeEditorWindow<2>;
-template class ANodeEditorWindow<3>;
-template class ANodeEditorWindow<4>;
-template class ANodeEditorWindow<5>;
-template class ANodeEditorWindow<6>;
-template class ANodeEditorWindow<7>;
-template class ANodeEditorWindow<8>;
-template class ANodeEditorWindow<9>;
-template class ANodeEditorWindow<10>;

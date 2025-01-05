@@ -12,10 +12,6 @@ protected:
 	std::string m_string;
 
 protected:
-	virtual void DrawImpl(ImDrawList* drawListIn) override;
-	virtual void UpdateFieldSize() override;
-
-protected:
 	virtual std::string GetVariableImpl(const std::tuple<>& variables) override { return m_string; }
 };
 

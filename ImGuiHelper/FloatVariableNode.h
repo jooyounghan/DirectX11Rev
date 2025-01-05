@@ -8,12 +8,10 @@ public:
 	~FloatVariableNode() override = default;
 
 protected:
-	ImVec2 m_dragFloatItemSize = ImVec2(0.f, 0.f);
 	float m_float = 0.f;
 
-protected:
-	virtual void DrawImpl(ImDrawList* drawListIn) override;
-	virtual void UpdateFieldSize() override;
+private:
+	void DrawDragFloat();
 
 protected:
 	virtual float GetVariableImpl(const std::tuple<>& variables) override { return m_float; }

@@ -17,6 +17,6 @@ public:
 
 protected:
 	virtual void RenderControlImpl() = 0;
-	virtual void AdjustPosition() override;
+	virtual void AdjustPosition();
 };
 
