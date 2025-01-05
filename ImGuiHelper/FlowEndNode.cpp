@@ -35,8 +35,3 @@ void FlowEndNode::SetFocused(const bool& isFocused)
 	Node::SetFocused(isFocused);
 	m_flowInputPort.SetFocused(isFocused);
 }
-
-ImVec2 FlowEndNode::GetInternalNodeSize()
-{
-	return ImVec2(nodeMinWidth, nodeMinHeight);
-}

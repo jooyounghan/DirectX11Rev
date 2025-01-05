@@ -19,10 +19,11 @@ public:
 
 protected:
 	VariableOutputPort<InputType>* m_connectedPort = nullptr;
+	std::string m_typeText;
 	ImVec2 m_typeTextSize;
 
 public:
-	inline void SetConnectedOutputPort(VariableOutputPort<InputType>* outputPort);
+	inline void SetConnectedOutputPort(VariableOutputPort<InputType>* outputPort) { m_connectedPort = outputPort; };
 	inline VariableOutputPort<InputType>* GetConnectedOutputPort() const { return m_connectedPort; }
 	inline const ImVec2& GetTypeTextSize() { return m_typeTextSize; }
 
@@ -32,8 +33,6 @@ protected:
 
 public:
 	virtual void OnMouseUp(MouseClickEventArgs& args) override;
-
-public:
 	virtual void OnBeginDrag() override;
 	virtual void OnEndDrag() override;
 };
@@ -45,23 +44,16 @@ inline VariableInputPort<InputType>::VariableInputPort(
 )
 	: VP(parentNode, true, indexCount, portIndex, radius, referencedOrigin)
 {
-}
-
-template<typename InputType>
-inline void VariableInputPort<InputType>::SetConnectedOutputPort(VariableOutputPort<InputType>* outputPort)
-{
-	m_connectedPort = outputPort; 
+	m_typeText = GetBaseTypeName(typeid(InputType).name());
+	m_typeTextSize = ImGui::CalcTextSize(m_typeText.c_str());
 }
 
 template<typename InputType>
 inline void VariableInputPort<InputType>::DrawImpl(ImDrawList* drawListIn)
 {
 	VP::DrawImpl(drawListIn);
-
-	std::string baseTypeName = GetBaseTypeName(typeid(InputType).name()).c_str();
-	m_typeTextSize = ImGui::CalcTextSize(baseTypeName.c_str());
 	ImVec2 textDrawPosition = ImVec2(VP::m_drawCenter.x + VP::m_radius, VP::m_drawCenter.y - m_typeTextSize.y / 2.f);
-	drawListIn->AddText(textDrawPosition, textColor, baseTypeName.c_str());
+	drawListIn->AddText(textDrawPosition, textColor, m_typeText.c_str());
 }
 
 template<typename InputType>
@@ -77,6 +69,7 @@ inline void VariableInputPort<InputType>::DrawPortConnection(ImDrawList* drawLis
 		VP::DrawBezierForConnection(drawListIn, VP::m_drawCenter, VP::m_mousePositionDuringConnect);
 	}
 }
+
 
 template<typename InputType>
 inline void VariableInputPort<InputType>::OnMouseUp(MouseClickEventArgs& args)

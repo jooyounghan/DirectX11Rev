@@ -16,8 +16,6 @@ protected:
 
 public:
 	virtual void OnMouseUp(MouseClickEventArgs& args) override;
-
-public:
 	virtual void OnBeginDrag() override;
 	virtual void OnEndDrag() override;
 };

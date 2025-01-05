@@ -19,6 +19,7 @@ protected:
 
 public:
 	inline const ImVec2& GetLeftTop() { return m_leftTop; }
+	inline void SetLeftTop(const ImVec2& leftTop) { m_leftTop = leftTop; }
 
 protected:
 	static float nodeMinWidth;
@@ -44,11 +45,17 @@ protected:
 
 public:
 	virtual bool IsPointIn(const float& pointX, const float& pointY) const override;
+	inline ImVec2 GetTotalSize() { return m_totalSize; }
 
 protected:
 	virtual void DrawImpl(ImDrawList* drawListIn) override;
 	virtual void AdjustPosition() override;
-	virtual ImVec2 GetInternalNodeSize() = 0;
+	
+public:
+	void UpdateNodeSize();
+
+protected:
+	virtual void UpdateFieldSize() = 0;
 
 public:
 	virtual void OnMouseClicked(MouseClickEventArgs& args) override;

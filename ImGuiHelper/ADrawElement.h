@@ -1,6 +1,8 @@
 #pragma once
 #include "AInteractable.h"
 
+#include <string>
+
 class DrawElementManager;
 
 class ADrawElement : public AInteractable
@@ -19,27 +21,19 @@ public:
 	std::function<void(ADrawElement*)> OnFocused = [&](ADrawElement*) {};
 
 public:
+	void Draw(ImDrawList* drawListIn);
 	const ImVec2& GetReferencedOrigin() { return m_referencedOrigin; }
 
 public:
 	virtual void AddToDrawElementManager(DrawElementManager* drawElementManager) ;
 	virtual void RemoveFromDrawElementManager(DrawElementManager* drawElementManager);
-
-public:
 	virtual void SetFocused(const bool& isFocused);
-
-public:
-	void Draw(ImDrawList* drawListIn);
+	virtual void OnMouseClicked(MouseClickEventArgs& args) override;
+	virtual void OnMouseDown(MouseClickEventArgs& args) override;
+	virtual void OnMouseEnter(MouseEventArgs& args) override;
+	virtual void OnMouseLeave(MouseEventArgs& args) override;
 
 protected:
 	virtual void DrawImpl(ImDrawList* drawListIn) = 0;
-
-public:
-	virtual void OnMouseClicked(MouseClickEventArgs& args) override;
-	virtual void OnMouseDown(MouseClickEventArgs& args) override;
-
-public:
-	virtual void OnMouseEnter(MouseEventArgs& args) override;
-	virtual void OnMouseLeave(MouseEventArgs& args) override;
 };
 

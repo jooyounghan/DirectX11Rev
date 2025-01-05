@@ -13,27 +13,15 @@ CreateIBLMaterialWithNodeEditorWindow::CreateIBLMaterialWithNodeEditorWindow(
 )
 	: ANodeEditorWindow(windowID, openFlag)
 {	
-	for (size_t idx = 0; idx < 4; ++idx)
+	for (size_t idx = 0; idx < 2; ++idx)
 	{
-		auto variableNode = new FloatVariableNode(
-			ImVec2(100.f, 100.f), 10.f, m_canvas.GetOriginPosition()
-		);
-		variableNode->AddToDrawElementManager(&m_canvas);
-		variableNode->RegisterToInteractionManager(&m_canvas);
+		AddNode<0, FloatVariableNode>(10.f);
 	}
+	AddNode<0, StringVariableNode>(10.f);
 
-	auto floatSum = new  FloatSumVariableNode(
-		ImVec2(100.f, 100.f), 10.f, m_canvas.GetOriginPosition()
-	);
-	floatSum->AddToDrawElementManager(&m_canvas);
-	floatSum->RegisterToInteractionManager(&m_canvas);
-
-	auto flowNode1 = new IBLMaterialAssetCreateFlowNode(
-		ImVec2(240.f, 240.f), 10.f, m_canvas.GetOriginPosition()
-	);
-	flowNode1->AddToDrawElementManager(&m_canvas);
-	flowNode1->RegisterToInteractionManager(&m_canvas);
-
+	AddNode<0, FloatSumVariableNode>(10.f);
+	AddNode<1, IBLMaterialAssetCreateFlowNode>(10.f);
+	AdjustNodesLayout();
 }
 
 void CreateIBLMaterialWithNodeEditorWindow::RenderWindowImpl()

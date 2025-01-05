@@ -40,6 +40,15 @@ protected:
 protected:
 	void OnDropFiles(const HDROP& hDrop);
 
+private:
+	void CreateDefferedContext();
+	void CreateSessionManager();
+	void CreateAssetManager();
+	void CreateComponentManager();
+	void CreatePSOManager();
+	void InitializeWindows();
+	void InitializeModals();
+
 protected:
 	D3D11::D3D11Engine* m_engine;
 	std::unordered_map<EDefferedContextType, DefferedContext*> m_defferedContexts;

@@ -5,9 +5,6 @@
 template<typename OutputType, typename... InputTypes>
 class VariableNode;
 
-template <typename OutputType>
-class VariableInputPort;
-
 template<typename OutputType>
 class VariableOutputPort : public VariablePort<OutputType>
 {
@@ -16,8 +13,8 @@ class VariableOutputPort : public VariablePort<OutputType>
 public:
 	template<typename... InputTypes>
 	VariableOutputPort(
-		VariableNode<OutputType, InputTypes...>* parentNode, size_t indexCount, size_t portIndex,
-		const float& radius, const ImVec2& referencedOrigin
+		VariableNode<OutputType, InputTypes...>* parentNode, size_t indexCount, 
+		size_t portIndex, const float& radius, const ImVec2& referencedOrigin
 	);
 	~VariableOutputPort() override = default;
 
@@ -30,8 +27,6 @@ protected:
 
 public:
 	virtual void OnMouseUp(MouseClickEventArgs& args) override;
-
-public:
 	virtual void OnBeginDrag() override;
 	virtual void OnEndDrag() override;
 };

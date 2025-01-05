@@ -14,7 +14,6 @@ protected:
 protected:
 	bool m_createIBLMaterialOpenFlag = false;
 
-
 public:
 	bool* GetCreateIBLMaterialOpenFlag() { return &m_createIBLMaterialOpenFlag; }
 

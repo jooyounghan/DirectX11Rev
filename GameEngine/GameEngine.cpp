@@ -30,56 +30,20 @@ GameEngine::GameEngine()
 	m_engine(D3D11Engine::GetInstance()),
 	m_taskManager(TaskManager::GetInstance())
 {
-	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
-	ID3D11DeviceContext** deviceContextAddress = m_engine->GetDeviceContextAddress();
 
 	// =================================Test==========================
 	m_testCamera = new CameraComponent("", NULL, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f));
 	m_testCamera->SetCameraProperties(1000, 1000, 0.1f, 1E6f, 120.f);
 	// ===============================================================
 
-
-	/* Deffered Context */
-	m_defferedContexts[EDefferedContextType::ASSETS_LOAD] = new DefferedContext(deviceAddress);
-	m_defferedContexts[EDefferedContextType::COMPONENT_UPDATE] = new DefferedContext(deviceAddress);
-	m_defferedContexts[EDefferedContextType::COMPONENT_RENDER] = new DefferedContext(deviceAddress);
-
-	/* Session Manager */
-	m_sessionManager = new SessionManager("localhost", 33060, "gameEngineSession", "YHengine12!@");
-
-	/* Asset Manager*/
-	m_assetManager = new AssetManager();
-	m_assetManager->RegisterAssetReadPath("./Assets");
-	m_assetManager->RegisterAssetWritePath("./Assets");
-
-	/* Component Manager*/
-	m_componentManager = new ComponentManager(m_sessionManager, m_assetManager, deviceAddress, deviceContextAddress);
-
-	/* PSO Manager */
-	m_componentPSOManager = new ComponentPSOManager(deviceAddress);
-
-	/* Window */
-	m_imguiWindows.emplace_back(new AssetViewWindow("AssetViewWindow", m_assetManager));
-
-	SceneWindow* sceneWindow = new SceneWindow(
-		"SceneWindow", m_defferedContexts[EDefferedContextType::COMPONENT_RENDER]->GetDefferedContextAddress(),
-		m_assetManager, m_componentManager, m_componentPSOManager
-	);
-	sceneWindow->SetCameraComponent(m_testCamera);
-	m_imguiWindows.emplace_back(sceneWindow);
-
-	/* Modal */
-	TaskModal* taskModal = new TaskModal("Processing...");
-	MessageBoxModal* errorMessageBoxModal = new MessageBoxModal("Error!");
-	m_imguiModals.emplace_back(taskModal);
-	m_imguiModals.emplace_back(errorMessageBoxModal);
-
+	CreateDefferedContext();
+	CreateSessionManager();
+	CreateAssetManager();
+	CreateComponentManager();
+	CreatePSOManager();
+;
 	/* Bind Event Handler */
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { m_engine->ResizeSwapChain(widthIn, heightIn); };
-	m_taskManager->OnTaskInserted = bind(&TaskModal::SetTaskCount, taskModal, placeholders::_1);
-	m_taskManager->OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1, placeholders::_2);
-	m_taskManager->OnTasksCompleted = bind(&TaskModal::SetTasksCompleted, taskModal);
-	m_componentManager->OnErrorOccurs = bind(&MessageBoxModal::SetMessage, errorMessageBoxModal, placeholders::_1);
 }
 
 GameEngine::~GameEngine()
@@ -121,6 +85,9 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 
 	ImGuiInitializer::InitImGui(m_mainWindow, device, deviceContext);
 	OnWindowSizeMove();
+
+	InitializeWindows();
+	InitializeModals();
 
 	m_taskManager->StartLaunchingTasks();
 
@@ -262,4 +229,62 @@ void GameEngine::OnDropFiles(const HDROP& hDrop)
 		}
 	}
 	DragFinish(hDrop);
+}
+
+void GameEngine::CreateDefferedContext()
+{
+	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
+	m_defferedContexts[EDefferedContextType::ASSETS_LOAD] = new DefferedContext(deviceAddress);
+	m_defferedContexts[EDefferedContextType::COMPONENT_UPDATE] = new DefferedContext(deviceAddress);
+	m_defferedContexts[EDefferedContextType::COMPONENT_RENDER] = new DefferedContext(deviceAddress);
+}
+
+void GameEngine::CreateSessionManager()
+{
+	m_sessionManager = new SessionManager("localhost", 33060, "gameEngineSession", "YHengine12!@");
+}
+
+void GameEngine::CreateAssetManager()
+{
+	m_assetManager = new AssetManager();
+	m_assetManager->RegisterAssetReadPath("./Assets");
+	m_assetManager->RegisterAssetWritePath("./Assets");
+}
+
+void GameEngine::CreateComponentManager()
+{
+	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
+	ID3D11DeviceContext** deviceContextAddress = m_engine->GetDeviceContextAddress();
+	m_componentManager = new ComponentManager(m_sessionManager, m_assetManager, deviceAddress, deviceContextAddress);
+}
+
+void GameEngine::CreatePSOManager()
+{
+	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
+	m_componentPSOManager = new ComponentPSOManager(deviceAddress);
+}
+
+void GameEngine::InitializeWindows()
+{
+	m_imguiWindows.emplace_back(new AssetViewWindow("AssetViewWindow", m_assetManager));
+
+	SceneWindow* sceneWindow = new SceneWindow(
+		"SceneWindow", m_defferedContexts[EDefferedContextType::COMPONENT_RENDER]->GetDefferedContextAddress(),
+		m_assetManager, m_componentManager, m_componentPSOManager
+	);
+	sceneWindow->SetCameraComponent(m_testCamera);
+	m_imguiWindows.emplace_back(sceneWindow);
+}
+
+void GameEngine::InitializeModals()
+{
+	TaskModal* taskModal = new TaskModal("Processing...");
+	MessageBoxModal* errorMessageBoxModal = new MessageBoxModal("Error!");
+	m_imguiModals.emplace_back(taskModal);
+	m_imguiModals.emplace_back(errorMessageBoxModal);
+
+	m_taskManager->OnTaskInserted = bind(&TaskModal::SetTaskCount, taskModal, placeholders::_1);
+	m_taskManager->OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1, placeholders::_2);
+	m_taskManager->OnTasksCompleted = bind(&TaskModal::SetTasksCompleted, taskModal);
+	m_componentManager->OnErrorOccurs = bind(&MessageBoxModal::SetMessage, errorMessageBoxModal, placeholders::_1);
 }

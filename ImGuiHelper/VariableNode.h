@@ -26,7 +26,7 @@ public:
 
 protected:
 	virtual void SetFocused(const bool& isFocused);
-	virtual ImVec2 GetInternalNodeSize() override;
+	virtual void UpdateFieldSize() override;
 
 public:
 	virtual OutputType GetVariable();
@@ -96,18 +96,18 @@ inline void VariableNode<OutputType, InputTypes...>::SetFocused(const bool& isFo
 }
 
 template<typename OutputType, typename ...InputTypes>
-inline ImVec2 VariableNode<OutputType, InputTypes...>::GetInternalNodeSize()
+inline void VariableNode<OutputType, InputTypes...>::UpdateFieldSize()
 {
 	float totalWidth = 0.f;
 	float totalHeight = 0.f;
 
-	std::apply([&](auto&... inputPorts) 
+	std::apply([&](auto&... inputPorts)
 		{
 			((totalWidth = std::max(inputPorts.GetTypeTextSize().x, totalWidth)), ...);
 			((totalHeight += inputPorts.GetTypeTextSize().y), ...);
 		}, m_variableInputPorts);
 
-	return ImVec2(
+	m_nodeFieldSize = ImVec2(
 		std::max({ totalWidth * 2.f, GetDrawNodeHeaderSize().x, nodeMinWidth }),
 		std::max(totalHeight * 2.f, nodeMinHeight)
 	);

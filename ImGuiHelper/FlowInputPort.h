@@ -15,8 +15,6 @@ public:
 
 protected:
 	FlowOutputPort* m_connectedPort = nullptr;
-
-protected:
 	ImVec2 m_typeTextSize;
 
 public:
@@ -28,8 +26,6 @@ protected:
 
 public:
 	virtual void OnMouseUp(MouseClickEventArgs& args) override;
-
-public:
 	virtual void OnBeginDrag() override;
 	virtual void OnEndDrag() override;
 

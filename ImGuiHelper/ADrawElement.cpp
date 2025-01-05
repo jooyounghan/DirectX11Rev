@@ -2,6 +2,8 @@
 #include "DrawElementManager.h"
 #include "DrawElementColor.h"
 
+using namespace std;
+
 ADrawElement::ADrawElement(const ImVec2& referencedOrigin, const ImU32& baseColor)
 	: m_referencedOrigin(referencedOrigin),
 	m_baseColor(baseColor), m_selectedBorderFill(borderFill)

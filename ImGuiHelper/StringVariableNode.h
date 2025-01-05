@@ -13,7 +13,7 @@ protected:
 
 protected:
 	virtual void DrawImpl(ImDrawList* drawListIn) override;
-	virtual ImVec2 GetInternalNodeSize() override;
+	virtual void UpdateFieldSize() override;
 
 protected:
 	virtual std::string GetVariableImpl(const std::tuple<>& variables) override { return m_string; }

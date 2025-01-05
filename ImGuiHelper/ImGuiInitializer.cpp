@@ -15,4 +15,10 @@ void ImGuiInitializer::InitImGui(void* hWnd,ID3D11Device* device, ID3D11DeviceCo
 
 	ImGui_ImplWin32_Init(hWnd);
 	ImGui_ImplDX11_Init(device, context);
+
+	// ImGuiIO, Font Initializing
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	ImGui::EndFrame();
 }

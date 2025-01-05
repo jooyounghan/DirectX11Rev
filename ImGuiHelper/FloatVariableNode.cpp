@@ -18,13 +18,14 @@ void FloatVariableNode::DrawImpl(ImDrawList* drawListIn)
 	VariableNode<float>::DrawImpl(drawListIn);
 
 	const ImVec2& drawNodeFieldPos = GetDrawNodeFieldPos();
-	const ImVec2 drawMarginedFieldPos = ImVec2(drawNodeFieldPos.x + nodeMargin, drawNodeFieldPos.y + nodeMargin);
+	const ImVec2& drawNodeFieldSize = GetDrawNodeFieldSize();
+	const ImVec2 drawMarginedFieldPos = ImVec2(drawNodeFieldPos.x + nodeInternalMargin, drawNodeFieldPos.y + nodeInternalMargin);
 	SetCursorScreenPos(drawMarginedFieldPos);
 
 	ImGuiIO& io = ImGui::GetIO();
 
 	SetNextItemAllowOverlap();
-	PushItemWidth(fundamentalNodeItemWidth);
+	PushItemWidth(drawNodeFieldSize.x - 2.f * nodeInternalMargin);
 	PushID(format("{}", (uint64_t)this).c_str());
 	DragFloat("", &m_float);
 	if (IsItemActive()) io.WantCaptureMouse = false;
@@ -34,12 +35,11 @@ void FloatVariableNode::DrawImpl(ImDrawList* drawListIn)
 	m_dragFloatItemSize = GetItemRectSize();
 }
 
-ImVec2 FloatVariableNode::GetInternalNodeSize()
+void FloatVariableNode::UpdateFieldSize()
 {
-	const ImVec2 internalNodeSize = VariableNode<float>::GetInternalNodeSize();
-
-	return ImVec2(
-		max(m_dragFloatItemSize.x + nodeMargin * 2.f, internalNodeSize.x),
-		max(m_dragFloatItemSize.y + nodeMargin * 2.f, internalNodeSize.y)
+	VariableNode<float>::UpdateFieldSize();
+	m_nodeFieldSize = ImVec2(
+		max(m_dragFloatItemSize.x + nodeInternalMargin * 2.f, m_nodeFieldSize.x),
+		max(m_dragFloatItemSize.y + nodeInternalMargin * 2.f, m_nodeFieldSize.y)
 	);
 }

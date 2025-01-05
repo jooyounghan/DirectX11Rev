@@ -1,7 +1,7 @@
 #pragma once
 #include "ANodeEditorWindow.h"
 
-class CreateIBLMaterialWithNodeEditorWindow : public ANodeEditorWindow
+class CreateIBLMaterialWithNodeEditorWindow : public ANodeEditorWindow<3>
 {
 public:
 	CreateIBLMaterialWithNodeEditorWindow(const std::string& windowID, bool* openFlag);

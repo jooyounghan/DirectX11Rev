@@ -15,7 +15,6 @@ public:
 
 protected:
 	virtual void SetFocused(const bool& isFocused) override;
-	virtual ImVec2 GetInternalNodeSize() override;
 
 protected:
 	virtual void ExecuteImpl() override {};

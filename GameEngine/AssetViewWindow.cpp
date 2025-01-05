@@ -43,6 +43,10 @@ AssetViewWindow::~AssetViewWindow()
 
 void AssetViewWindow::PrepareWindow()
 {
+    for (AWindow* assetNodeEditorWindow : m_assetNodeEditorWindows)
+    {
+        assetNodeEditorWindow->PrepareWindow();
+    }
 }
 
 void AssetViewWindow::RenderWindowImpl()

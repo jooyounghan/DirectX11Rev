@@ -14,6 +14,7 @@ Node::Node(
 	: ADrawElement(referencedOrigin, baseColor),
 	m_nodeName(nodeName), m_leftTop(leftTop)
 {
+	m_nodeHeaderSize = CalcTextSize(m_nodeName.c_str());
 }
 
 bool Node::IsPointIn(const float& pointX, const float& pointY) const
@@ -36,7 +37,7 @@ void Node::DrawImpl(ImDrawList* drawListIn)
 	drawListIn->AddRect(m_drawLeftTop, nodeRightBottom, borderFillHilighted, radius, NULL, 2.f);
 
 	// Draw Node Name
-	const ImVec2 nodeNameRightBottom = ImVec2(m_drawLeftTop.x + m_nodeHeaderSize.x, m_drawLeftTop.y + m_nodeHeaderSize.y);
+	const ImVec2 nodeNameRightBottom = ImVec2(m_drawLeftTop.x + m_totalSize.x, m_drawLeftTop.y + m_nodeHeaderSize.y);
 	drawListIn->AddRectFilled(m_drawLeftTop, nodeNameRightBottom, m_baseColor, radius);
 	drawListIn->AddText(m_drawNodeHeaderPos, textColor, m_nodeName.c_str());
 }
@@ -45,19 +46,14 @@ void Node::AdjustPosition()
 {
 	m_drawLeftTop = ImVec2(m_leftTop.x + m_referencedOrigin.x, m_leftTop.y + m_referencedOrigin.y);
 
-	m_nodeHeaderSize = CalcTextSize(m_nodeName.c_str());
-	m_nodeFieldSize = GetInternalNodeSize();
-
-	m_totalSize = ImVec2(
-		std::max(m_nodeHeaderSize.x, m_nodeFieldSize.x),
-		m_nodeHeaderSize.y + m_nodeFieldSize.y
-	);
-
 	m_drawNodeHeaderPos = ImVec2(m_drawLeftTop.x + (m_totalSize.x - m_nodeHeaderSize.x) / 2.f, m_drawLeftTop.y);
 	m_drawNodeFieldPos = ImVec2(m_drawLeftTop.x, m_drawLeftTop.y + m_nodeHeaderSize.y);
+}
 
-	m_nodeHeaderSize.x = m_totalSize.x;
-	m_nodeFieldSize.x = m_totalSize.x;
+void Node::UpdateNodeSize()
+{
+	UpdateFieldSize();
+	m_totalSize = ImVec2(m_nodeFieldSize.x, m_nodeHeaderSize.y + m_nodeFieldSize.y);
 }
 
 void Node::OnMouseClicked(MouseClickEventArgs& args)
