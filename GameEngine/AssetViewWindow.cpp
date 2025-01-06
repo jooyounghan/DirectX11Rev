@@ -43,14 +43,6 @@ AssetViewWindow::~AssetViewWindow()
     delete m_assetContextMenuModal;
 }
 
-void AssetViewWindow::InitWindow()
-{
-    for (AWindow* assetNodeEditorWindow : m_assetNodeEditorWindows)
-    {
-        assetNodeEditorWindow->InitWindow();
-    }
-}
-
 void AssetViewWindow::PrepareWindow()
 {
     for (AWindow* assetNodeEditorWindow : m_assetNodeEditorWindows)

@@ -32,6 +32,19 @@ AssetManager::~AssetManager()
 	;
 }
 
+const vector<string> AssetManager::GetAssetNames(const EAssetType& assetType)
+{
+	vector<string> result;
+	const unordered_map<string, AAsset*>& assetNameWithAssets = m_assetNameToAssets[assetType];
+
+	result.reserve(assetNameWithAssets.size());
+	for (const auto& pair : assetNameWithAssets)
+	{
+		result.push_back(pair.first);
+	}
+	return result;
+}
+
 void AssetManager::RegisterAssetReadPath(const std::string& readPath)
 {
 	if (m_assetReadersWithPath.find(readPath) == m_assetReadersWithPath.end())
@@ -119,8 +132,8 @@ void AssetManager::AddAssetHelper(ID3D11Device* device, ID3D11DeviceContext* dev
 	AssetInitializer assetGPUInitializer(this, device, deviceContext);
 	asset->Accept(&assetGPUInitializer);
 
-	InvokeAssetLoadedHandler(assetType, assetPath, asset);
 	m_assetNameToAssets[assetType][asset->GetAssetName()] = asset;
+	InvokeAssetLoadedHandler(assetType, assetPath, asset);
 }
 
 void AssetManager::RegisterAssetLoadedHandler(const std::string& handlerName, const std::function<void(const EAssetType&, std::string, AAsset*)>& handler)

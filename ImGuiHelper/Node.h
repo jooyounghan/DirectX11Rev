@@ -40,6 +40,11 @@ protected:
 public:
 	virtual bool IsPointIn(const float& pointX, const float& pointY) const override;
 
+public:
+	static void SetItemCursorWithInternalMargin(const ImVec2& drawLeftTop);
+	static ImVec2 GetItemRectWithInternalMargin();
+	static float GetDynamicWidthWithoutInternalMargin(const float& referenceWidth);
+
 protected:
 	virtual void Draw(ImDrawList* drawListIn) override;
 	

@@ -26,14 +26,12 @@ SceneWindow::SceneWindow(
     m_componentInformer(assetManager, componentManager),
     m_forwardRenderer(deviceConextAddress, m_componentPsoManageCached),
     m_defferedRenderer(deviceConextAddress, m_componentPsoManageCached),
-    m_rendererComboBox({ "Forward Renderer", "Deffered Renderer" }, "RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
+    m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
+    m_rendererComboBox.SetSelectableItems({ "Forward Renderer", "Deffered Renderer" });
     m_rendererComboBox.OnSelChanged = [&](const size_t& idx, const string& text) {m_selectedRendererType = static_cast<ERendererType>(idx); };
 }
 
-void SceneWindow::InitWindow()
-{
-}
 
 void SceneWindow::PrepareWindow()
 {

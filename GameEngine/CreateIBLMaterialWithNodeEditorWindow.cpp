@@ -12,13 +12,6 @@ CreateIBLMaterialWithNodeEditorWindow::CreateIBLMaterialWithNodeEditorWindow(
 )
 	: ANodeEditorWindow(windowID, openFlag, 3), m_assetManagerCached(assetManager)
 {	
-
-}
-
-void CreateIBLMaterialWithNodeEditorWindow::InitWindow()
-{
-	ANodeEditorWindow::InitWindow();
-
 	for (size_t idx = 0; idx < 2; ++idx)
 	{
 		AddNode<FloatVariableNode>(0);
@@ -30,6 +23,7 @@ void CreateIBLMaterialWithNodeEditorWindow::InitWindow()
 
 	AddNode<IBLMaterialAssetCreateFlowNode>(1);
 }
+
 
 void CreateIBLMaterialWithNodeEditorWindow::RenderWindowImpl()
 {

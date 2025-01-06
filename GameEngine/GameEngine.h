@@ -47,10 +47,7 @@ private:
 	void CreateComponentManager();
 	void CreatePSOManager();
 	void CreateWindows();
-
-private:
-	void InitializeWindows();
-	void InitializeModals();
+	void CreateModals();
 
 protected:
 	D3D11::D3D11Engine* m_engine;

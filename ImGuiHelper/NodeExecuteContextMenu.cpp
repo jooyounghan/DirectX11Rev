@@ -4,8 +4,8 @@
 using namespace std;
 using namespace ImGui;
 
-NodeExecuteContextMenu::NodeExecuteContextMenu()
-    : AContextMenu("Execute Nodes")
+NodeExecuteContextMenu::NodeExecuteContextMenu(bool* isEnableAutoPlacement)
+    : AContextMenu("Execute Nodes"), m_isEnableAutoPlacement(isEnableAutoPlacement)
 {
 }
 
@@ -20,6 +20,7 @@ bool NodeExecuteContextMenu::OpenCondition()
 
 void NodeExecuteContextMenu::RenderNotification()
 {
+    bool& isEnableAutoPlacement = *m_isEnableAutoPlacement;
     if (MenuItem("Execute"))
     {
         try
@@ -32,8 +33,8 @@ void NodeExecuteContextMenu::RenderNotification()
             bool test = true;
         }
     }
-    if (MenuItem("Toggle Adjusting Node Position"))
+    if (MenuItem(isEnableAutoPlacement ? "Disenable Auto Placement" : "Enable Auto Placement"))
     {
-        m_onToggleHoldHandler();
+        isEnableAutoPlacement = !(isEnableAutoPlacement);
     }
 }

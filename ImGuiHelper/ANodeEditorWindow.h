@@ -16,7 +16,6 @@ public:
 	~ANodeEditorWindow() override;
 
 protected:
-	virtual void InitWindow() override;
 	virtual void PrepareWindow() override {};
 	virtual void RenderWindowImpl() override;
 	
@@ -28,7 +27,7 @@ protected:
 protected:
 	std::vector<std::vector<Node*>> m_nodesWithLines;
 	Canvas m_canvas;
-	bool m_isAdjustNodeLayout = true;
+	bool m_isEnableAutoPlacement = true;
 
 public:
 	void AdjustNodesLayout();

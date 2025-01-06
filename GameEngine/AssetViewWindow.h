@@ -53,7 +53,6 @@ private:
 	static std::string MaterialAssetTN;
 
 public:
-	virtual void InitWindow() override;
 	virtual void PrepareWindow() override;
 
 private:

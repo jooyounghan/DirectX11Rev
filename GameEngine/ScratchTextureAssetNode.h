@@ -1,8 +1,13 @@
 #pragma once
 #include "VariableNode.h"
+#include "ImGuiComboBox.h"
 
+enum class EAssetType;
+
+class AAsset;
 class AssetManager;
 class ScratchTextureAsset;
+class ImGuiComboBox;
 
 class ScratchTextureAssetNode : public VariableNode<ScratchTextureAsset*>
 {
@@ -17,8 +22,12 @@ protected:
 	ScratchTextureAsset* m_selectedScratchTextureAsset = nullptr;
 
 protected:
-	ImVec2 m_imageSize = ImVec2(0.f, 0.f);
-	ImVec2 m_comboSize = ImVec2(0.f, 0.f);
+	ImGuiComboBox m_scratchTextureAssetComboBox;
+
+private:
+	void DrawDrawImage();
+	void DrawScratchAssetSelectCombo();
+	void UpdateScratchAssetSelectables(const EAssetType&, std::string, AAsset*);
 
 protected:
 	virtual ScratchTextureAsset* GetVariableImpl(const std::tuple<>& variables) override;

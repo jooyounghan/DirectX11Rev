@@ -5,20 +5,22 @@
 #include <vector>
 #include <functional>
 
+constexpr size_t NotSelected = ~0;
+
 class AImGuiSelectable
 {
 public:
-	AImGuiSelectable(
-		const std::vector<std::string>& items,
-		const std::string& id
-	);
+	AImGuiSelectable(const std::string& id);
 
 protected:
 	const std::string m_id;
-	const std::vector<std::string> m_items;
+	std::vector<std::string> m_selectableItems;
+
+public:
+	inline void SetSelectableItems(const std::vector<std::string>& selectableItems) { m_selectableItems = selectableItems; }
 
 protected:
-	size_t m_selectedIdx = 0;
+	size_t m_selectedIdx = NotSelected;
 
 public:
 	std::function<void(const size_t&, const std::string&)> OnSelChanged = [&](const size_t&, const std::string&) {};

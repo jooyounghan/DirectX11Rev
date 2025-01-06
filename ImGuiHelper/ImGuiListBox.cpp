@@ -3,32 +3,30 @@
 using namespace std;
 using namespace ImGui;
 
-ImGuiListBox::ImGuiListBox(
-	const vector<string>& items, 
-	const string& id, 
-	const ImVec2& size
-)
-	: AImGuiSelectable(items, id), m_size(size)
+ImGuiListBox::ImGuiListBox(const string& id, const ImVec2& size)
+	: AImGuiSelectable(id), m_size(size)
 {
 }
 
 void ImGuiListBox::Draw()
 {
-    if (BeginListBox(m_id.c_str(), m_size))
+    if (m_selectableItems.size() > 0)
     {
-        for (size_t idx = 0; idx < m_items.size(); ++idx)
+        if (BeginListBox(m_id.c_str(), m_size))
         {
-            const bool is_selected = (m_selectedIdx == idx);
-            if (Selectable(m_items[idx].c_str(), is_selected))
+            for (size_t idx = 0; idx < m_selectableItems.size(); ++idx)
             {
-                m_selectedIdx = idx;
-                OnSelChanged(m_selectedIdx, m_items[m_selectedIdx]);
+                const bool is_selected = (m_selectedIdx == idx);
+                if (Selectable(m_selectableItems[idx].c_str(), is_selected))
+                {
+                    m_selectedIdx = idx;
+                    OnSelChanged(m_selectedIdx, m_selectableItems[m_selectedIdx]);
+                }
+
+                if (is_selected)
+                    SetItemDefaultFocus();
             }
-
-            if (is_selected)
-                SetItemDefaultFocus();
+            EndListBox();
         }
-        EndListBox();
     }
-
 }

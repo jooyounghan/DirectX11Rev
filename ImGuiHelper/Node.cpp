@@ -38,6 +38,19 @@ bool Node::IsPointIn(const float& pointX, const float& pointY) const
 		inRange(pointY, m_drawLeftTop.y, m_drawLeftTop.y + m_totalSize.y);
 }
 
+void Node::SetItemCursorWithInternalMargin(const ImVec2& drawLeftTop)
+{
+	SetCursorScreenPos(ImVec2(drawLeftTop.x + nodeInternalMargin, drawLeftTop.y + nodeInternalMargin));
+}
+
+ImVec2 Node::GetItemRectWithInternalMargin()
+{
+	const ImVec2 itemSizeWithoutMargin = GetItemRectSize();
+	return ImVec2(itemSizeWithoutMargin.x + 2.f * nodeInternalMargin, itemSizeWithoutMargin.y + 2.f * nodeInternalMargin);
+}
+
+float Node::GetDynamicWidthWithoutInternalMargin(const float& referenceWidth) { return  referenceWidth - (2.f * nodeInternalMargin); }
+
 void Node::Draw(ImDrawList* drawListIn)
 {
 	m_drawLeftTop = ImVec2(m_leftTop.x + m_referencedOrigin.x, m_leftTop.y + m_referencedOrigin.y);

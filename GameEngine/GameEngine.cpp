@@ -41,8 +41,7 @@ GameEngine::GameEngine()
 	CreateAssetManager();
 	CreateComponentManager();
 	CreatePSOManager();
-	CreateWindows();
-;
+	
 	/* Bind Event Handler */
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { m_engine->ResizeSwapChain(widthIn, heightIn); };
 }
@@ -87,8 +86,8 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 	ImGuiInitializer::InitImGui(m_mainWindow, device, deviceContext);
 	OnWindowSizeMove();
 
-	InitializeWindows();
-	InitializeModals();
+	CreateWindows();
+	CreateModals();
 
 	m_taskManager->StartLaunchingTasks();
 
@@ -277,15 +276,7 @@ void GameEngine::CreateWindows()
 	m_imguiWindows.emplace_back(sceneWindow);
 }
 
-void GameEngine::InitializeWindows()
-{
-	for (AWindow* imguiWindow : m_imguiWindows)
-	{
-		imguiWindow->InitWindow();
-	}
-}
-
-void GameEngine::InitializeModals()
+void GameEngine::CreateModals()
 {
 	TaskModal* taskModal = new TaskModal("Processing...");
 	MessageBoxModal* errorMessageBoxModal = new MessageBoxModal("Error!");

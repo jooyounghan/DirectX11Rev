@@ -12,7 +12,6 @@ public:
 
 public:
 	void ShowWindow();
-	virtual void InitWindow() = 0;
 	virtual void PrepareWindow() = 0;
 
 protected:

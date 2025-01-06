@@ -20,10 +20,16 @@ bool ComponentInformer::isScaleAbsolute = true;
 
 ComponentInformer::ComponentInformer(AssetManager* assetManager, ComponentManager* componentManager)
 	: m_assetManagerCached(assetManager), m_componentManagerCached(componentManager),
-	m_absRelativeComboPosition({"Absolute", "Relative"}, "AbsRelativePositionCombo", "", ImGuiComboFlags_WidthFitPreview),
-	m_absRelativeComboAngle({ "Absolute", "Relative" }, "AbsRelativeAngleCombo", "", ImGuiComboFlags_WidthFitPreview),
-	m_absRelativeComboScale({ "Absolute", "Relative" }, "AbsRelativeScaleCombo", "", ImGuiComboFlags_WidthFitPreview)
+	m_absRelativeComboPosition("AbsRelativePositionCombo", "", ImGuiComboFlags_WidthFitPreview),
+	m_absRelativeComboAngle("AbsRelativeAngleCombo", "", ImGuiComboFlags_WidthFitPreview),
+	m_absRelativeComboScale("AbsRelativeScaleCombo", "", ImGuiComboFlags_WidthFitPreview)
 {
+	const vector<string> absRelativeStrings = { "Absolute", "Relative" };
+
+	m_absRelativeComboPosition.SetSelectableItems(absRelativeStrings);
+	m_absRelativeComboAngle.SetSelectableItems(absRelativeStrings);
+	m_absRelativeComboScale.SetSelectableItems(absRelativeStrings);
+
 	m_absRelativeComboPosition.OnSelChanged = [&](const size_t& idx, const string&) { isPositionAbsolute = !static_cast<bool>(idx); };
 	m_absRelativeComboAngle.OnSelChanged = [&](const size_t& idx, const string&) { isAngleAbsolute = !static_cast<bool>(idx); };
 	m_absRelativeComboScale.OnSelChanged = [&](const size_t& idx, const string&) { isScaleAbsolute = !static_cast<bool>(idx); };

@@ -14,43 +14,68 @@ ScratchTextureAssetNode::ScratchTextureAssetNode(
 	const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin, AssetManager* assetManager
 )
 	: m_assetMangerCached(assetManager), 
-	VariableNode<ScratchTextureAsset*>("Scratch Asset", leftTop, radius, referencedOrigin)
+	VariableNode<ScratchTextureAsset*>("Scratch Asset", leftTop, radius, referencedOrigin),
+	m_scratchTextureAssetComboBox(format("{}", (uint64_t)this), "", NULL)
 {
+	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
+		{
+			SetItemCursorWithInternalMargin(drawLeftTop);
+			DrawDrawImage();
+			return GetItemRectWithInternalMargin();
+		}
+	);
+	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
+		{
+			SetItemCursorWithInternalMargin(drawLeftTop);
+			DrawScratchAssetSelectCombo();
+			return GetItemRectWithInternalMargin();
+		}
+	);
 
+	m_assetMangerCached->RegisterAssetLoadedHandler(
+		format("UpdateScratchAssetNode{}", (uint64_t)this), 
+		bind(&ScratchTextureAssetNode::UpdateScratchAssetSelectables, this, placeholders::_1, placeholders::_2, placeholders::_3)
+	);
+
+	m_scratchTextureAssetComboBox.OnSelChanged = [&](const size_t& idx, const string& selectedAssetName) 
+		{
+			m_selectedScratchTextureAsset = m_assetMangerCached->GetScratchTextureAsset(selectedAssetName);
+		};
 }
-//
-//void ScratchTextureAssetNode::DrawImpl(ImDrawList* drawListIn)
-//{
-//	VariableNode<ScratchTextureAsset*>::DrawImpl(drawListIn);
-//
-//	const ImVec2& drawNodeFieldPos = GetDrawNodeFieldPos();
-//	const ImVec2& drawNodeFieldSize = GetDrawNodeFieldSize();
-//	ImVec2 drawMarginedFieldPos = ImVec2(drawNodeFieldPos.x + nodeInternalMargin, drawNodeFieldPos.y + nodeInternalMargin);
-//	SetCursorScreenPos(drawMarginedFieldPos);
-//
-//	drawListIn->AddCircle(drawMarginedFieldPos, 5.f, IM_COL32(255, 0, 0, 255));
-//
-//	const float imageSize = drawNodeFieldSize.x - 2.f * nodeInternalMargin;
-//	m_imageSize = ImVec2(imageSize, imageSize);
-//
-//	PushID(format("{}", (uint64_t)this).c_str());
-//	SetNextItemAllowOverlap();
-//	Image((ImU64)(m_selectedScratchTextureAsset == nullptr ? NULL : m_selectedScratchTextureAsset->GetSRV()), m_imageSize);
-//	drawMarginedFieldPos.y += imageSize;
-//	SetCursorScreenPos(drawMarginedFieldPos);
-//	drawListIn->AddCircle(drawMarginedFieldPos, 5.f, IM_COL32(255, 0, 0, 255));
-//
-//	Text("Testasdasdasdasdsad");
-//
-//	ImGuiIO& io = ImGui::GetIO();
-//	if (IsItemActive()) io.WantCaptureMouse = false;
-//	m_comboSize = GetItemRectSize();
-//
-//	PopID();
-//}
 
+void ScratchTextureAssetNode::DrawDrawImage()
+{
+	SetNextItemAllowOverlap();
+
+	const float dynamicWidth = GetDynamicWidthWithoutInternalMargin(m_totalSize.x);
+
+	PushItemWidth(dynamicWidth > defaultImageSize ? dynamicWidth : defaultImageSize);
+	Image((ImU64)(m_selectedScratchTextureAsset == nullptr ? NULL : m_selectedScratchTextureAsset->GetSRV()), ImVec2(dynamicWidth, dynamicWidth));
+	ConsumeMouseCaptureForItem();
+	PopItemWidth();
+}
+
+void ScratchTextureAssetNode::DrawScratchAssetSelectCombo()
+{
+	const float dynamicWidth = GetDynamicWidthWithoutInternalMargin(m_totalSize.x);
+
+	PushItemWidth(dynamicWidth > defaultTextSize ? dynamicWidth : defaultTextSize);
+	PushID(format("{}", (uint64_t)this).c_str());
+	m_scratchTextureAssetComboBox.Draw();
+	ConsumeMouseCaptureForItem();
+	PopID();
+	PopItemWidth();
+}
+
+void ScratchTextureAssetNode::UpdateScratchAssetSelectables(const EAssetType& assetType, std::string s, AAsset* a)
+{
+	if (assetType == EAssetType::ASSET_TYPE_SCRATCH_TEXTURE)
+	{
+		m_scratchTextureAssetComboBox.SetSelectableItems(m_assetMangerCached->GetAssetNames(EAssetType::ASSET_TYPE_SCRATCH_TEXTURE));
+	}
+}
 
 ScratchTextureAsset* ScratchTextureAssetNode::GetVariableImpl(const std::tuple<>& variables)
 {
-	return nullptr;
+	return m_selectedScratchTextureAsset;
 }

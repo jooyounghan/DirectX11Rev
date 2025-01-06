@@ -12,9 +12,6 @@ public:
 protected:
 	AssetManager* m_assetManagerCached = nullptr;
 
-public:
-	virtual void InitWindow() override;
-
 private:
 	virtual void RenderWindowImpl() override;
 };
