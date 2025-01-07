@@ -21,6 +21,9 @@ enum class EAssetType;
 
 class AssetContextMenu;
 
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+
 struct SAssetFolder
 {
 	std::vector<std::unique_ptr<AssetFileControl>> m_assetControls;
@@ -31,7 +34,12 @@ struct SAssetFolder
 class AssetViewWindow : public AWindow
 {
 public:
-	AssetViewWindow(const std::string& windowID, AssetManager* assetManager);
+	AssetViewWindow(
+		const std::string& windowID, 
+		ID3D11Device** deviceAddress, 
+		ID3D11DeviceContext** deviceContextAddress, 
+		AssetManager* assetManager
+	);
 	~AssetViewWindow() override;
 
 private:

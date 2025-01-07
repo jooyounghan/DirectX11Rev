@@ -28,14 +28,14 @@ std::string AAssetWriter::GetRelativePathFromSavePath(const std::string& path) c
     return m_assetSavePath + path.substr(pos + basePathMarker.length());
 }
 
-void AAssetWriter::SaveAssets(const EAssetType& assetType, const vector<AAsset*>& assets) const
+void AAssetWriter::SaveAssets(const std::string& assetSavePath, const EAssetType& assetType, const std::vector<AAsset*>& assets)
 {
     AssetWrapper assetWrapper;
     assetWrapper.SetAssetType(assetType);
     for (const AAsset* const asset : assets)
     {
         FILE* fileIn = nullptr;
-        const string assetPathStr = m_assetSavePath + "\\" + asset->GetAssetName() + AAsset::AssetExtension;
+        const string assetPathStr = assetSavePath + "\\" + asset->GetAssetName() + AAsset::AssetExtension;
 
         fopen_s(&fileIn, assetPathStr.c_str(), "wb");
         if (fileIn != nullptr)

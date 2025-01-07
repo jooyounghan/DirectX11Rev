@@ -67,7 +67,7 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::SaveAsAssets(
             const EAssetType& assetType = writtenAsset.first;
             const vector<AAsset*>& assets = writtenAsset.second;
 
-            SaveAssets(assetType, assets);
+            SaveAssets(m_assetSavePath, assetType, assets);
 
             result[assetType].insert(result[assetType].end(), assets.begin(), assets.end());
         }

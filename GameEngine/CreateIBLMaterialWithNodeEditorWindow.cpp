@@ -6,14 +6,18 @@
 #include "FloatVariableNode.h"
 #include "IBLMaterialAssetCreateFlowNode.h"
 
+#include <d3d11.h>
+
 using namespace std;
 using namespace ImGui;
 
+
 CreateIBLMaterialWithNodeEditorWindow::CreateIBLMaterialWithNodeEditorWindow(
+	ID3D11Device** deviceAddress, ID3D11DeviceContext** deviceContextAddress,
 	AssetManager* assetManager, const std::string& windowID, bool* openFlag
 )
 	: ANodeEditorWindow(windowID, openFlag, 3), m_assetManagerCached(assetManager)
-{	
+{
 	AddNode<AssetWriterPathNode>(0, m_assetManagerCached);
 	AddNode<StringVariableNode>(0);
 	for (size_t idx = 0; idx < 4; ++idx)
@@ -26,9 +30,8 @@ CreateIBLMaterialWithNodeEditorWindow::CreateIBLMaterialWithNodeEditorWindow(
 		AddNode<FloatVariableNode>(1);
 	}
 
-	AddNode<IBLMaterialAssetCreateFlowNode>(1);
+	AddNode<IBLMaterialAssetCreateFlowNode>(1, deviceAddress, deviceContextAddress, assetManager);
 }
-
 
 void CreateIBLMaterialWithNodeEditorWindow::RenderWindowImpl()
 {

@@ -23,14 +23,20 @@ string AssetViewWindow::StaticMeshAssetTN = "STATICMESHASSETTN";
 string AssetViewWindow::MapAssetTN = "MAPASSETTN";
 string AssetViewWindow::MaterialAssetTN = "MATERIALASSETTN";
 
-AssetViewWindow::AssetViewWindow(const std::string& windowID, AssetManager* assetManager)
+AssetViewWindow::AssetViewWindow(
+    const std::string& windowID, 
+    ID3D11Device** deviceAddress,
+    ID3D11DeviceContext** deviceContextAddress,
+    AssetManager* assetManager
+)
 	: AWindow(windowID, true, nullptr), m_assetManagerCached(assetManager)
 {
     m_assetManagerCached->RegisterAssetLoadedHandler("AddAssetControl", bind(&AssetViewWindow::AddAssetControl, this, placeholders::_1, placeholders::_2, placeholders::_3));
     
     m_assetContextMenuModal = new AssetContextMenu("Asset Context Menu");
     m_assetNodeEditorWindows.emplace_back(new CreateIBLMaterialWithNodeEditorWindow(
-        m_assetManagerCached, "Create IBL Material Asset", m_assetContextMenuModal->GetCreateIBLMaterialOpenFlag()
+        deviceAddress, deviceContextAddress, m_assetManagerCached, "Create IBL Material Asset",
+        m_assetContextMenuModal->GetCreateIBLMaterialOpenFlag()
     ));
 }
 

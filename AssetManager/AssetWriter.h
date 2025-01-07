@@ -24,7 +24,7 @@ public:
 public:
 	std::string GetRelativePathFromSavePath(const std::string& path) const;
 
-protected:
-	void SaveAssets(const EAssetType& assetType, const std::vector<AAsset*>& assets) const;
+public:
+	static void SaveAssets(const std::string& assetSavePath, const EAssetType& assetType, const std::vector<AAsset*>& assets);
 };
 

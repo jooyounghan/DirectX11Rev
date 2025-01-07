@@ -266,7 +266,13 @@ void GameEngine::CreatePSOManager()
 
 void GameEngine::CreateWindows()
 {
-	m_imguiWindows.emplace_back(new AssetViewWindow("AssetViewWindow", m_assetManager));
+	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
+
+	m_imguiWindows.emplace_back(new AssetViewWindow(
+		"AssetViewWindow", deviceAddress, 
+		m_defferedContexts[EDefferedContextType::ASSETS_LOAD]->GetDefferedContextAddress(),
+		m_assetManager)
+	);
 
 	SceneWindow* sceneWindow = new SceneWindow(
 		"SceneWindow", m_defferedContexts[EDefferedContextType::COMPONENT_RENDER]->GetDefferedContextAddress(),

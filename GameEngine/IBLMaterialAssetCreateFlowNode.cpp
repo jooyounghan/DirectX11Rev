@@ -1,13 +1,22 @@
 #include "IBLMaterialAssetCreateFlowNode.h"
+
+#include "AssetManager.h"
 #include "AssetWrapper.h"
 #include "IBLMaterialAsset.h"
 
 using namespace std;
 
-IBLMaterialAssetCreateFlowNode::IBLMaterialAssetCreateFlowNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
+IBLMaterialAssetCreateFlowNode::IBLMaterialAssetCreateFlowNode(
+	const ImVec2& leftTop, const float& radius, 
+	const ImVec2& referencedOrigin, 
+	ID3D11Device** deviceAddress,
+	ID3D11DeviceContext** deviceContextAddress,
+	AssetManager* assetManager
+)
 	: FlowNode(
 		"Create IBL Asset", leftTop, radius, referencedOrigin, 
-		{"Asset Path", "File Name", "Background", "BRDR", "Specular Cube Map", "Diffuse Cube Map", "Exposure", "Gamma"})
+		{"Asset Path", "File Name", "Background", "BRDR", "Specular Cube Map", "Diffuse Cube Map", "Exposure", "Gamma"}),
+	m_deviceAddressCached(deviceAddress), m_deviceContextAddressCached(deviceContextAddress), m_assetManagerCached(assetManager)
 {
 	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
 		{
@@ -18,6 +27,7 @@ IBLMaterialAssetCreateFlowNode::IBLMaterialAssetCreateFlowNode(const ImVec2& lef
 void IBLMaterialAssetCreateFlowNode::ExecuteImpl()
 {
 	auto inputVariables = GetInputVariables();
+
 	const string& assetPath = get<0>(inputVariables);
 	const string& assetName = get<1>(inputVariables);
 	ScratchTextureAsset* background = get<2>(inputVariables);
@@ -27,5 +37,14 @@ void IBLMaterialAssetCreateFlowNode::ExecuteImpl()
 	const float& exposure = get<6>(inputVariables);
 	const float& gamma = get<7>(inputVariables);
 
-	bool test1 = true;
+	IBLMaterialAsset* iblMaterialAsset = new IBLMaterialAsset(assetName);
+	iblMaterialAsset->SetIBLMaterialTexture(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BACKGROUND, background);
+	iblMaterialAsset->SetIBLMaterialTexture(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BACKGROUND, brdf);
+	iblMaterialAsset->SetIBLMaterialTexture(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BACKGROUND, specular);
+	iblMaterialAsset->SetIBLMaterialTexture(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BACKGROUND, diffuse);
+	m_assetManagerCached->AddAssetHelper(*m_deviceAddressCached, *m_deviceContextAddressCached,
+		EAssetType::ASSET_TYPE_IBL_MATERIAL, assetPath + "/" + assetName, iblMaterialAsset
+	);
+	iblMaterialAsset->UpdateIBLToneMappingConstant(*m_deviceAddressCached, *m_deviceContextAddressCached, exposure, gamma);
+	AAssetWriter::SaveAssets(assetPath, EAssetType::ASSET_TYPE_IBL_MATERIAL, { iblMaterialAsset });
 }

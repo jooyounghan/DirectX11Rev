@@ -45,7 +45,7 @@ public:
 	void PreloadFromDirectories(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	void WrtieFileAsAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const std::string filePath);
 
-private:
+public:
 	void AddAssetHelper(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const EAssetType& assetType, std::string assetPath, AAsset* asset);
 
 private:

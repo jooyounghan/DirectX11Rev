@@ -54,6 +54,16 @@ void IBLMaterialAsset::SetIBLMaterialTexture(EIBLMaterialTexture iblMaterialText
 }
 
 
+void IBLMaterialAsset::UpdateIBLToneMappingConstant(
+	ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
+	const float& exposure, const float& gamma
+)
+{
+	m_iblToneMappingConstants.m_exposure = exposure;
+	m_iblToneMappingConstants.m_gamma = gamma;
+	m_iblToneMappingBuffer->Upload(device, deviceContext, sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants);
+}
+
 void IBLMaterialAsset::Serialize(FILE* fileIn) const
 {
 	AAsset::Serialize(fileIn);

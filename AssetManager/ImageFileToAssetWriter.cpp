@@ -72,7 +72,7 @@ unordered_map<EAssetType, vector<AAsset*>> ImageFileToAssetWriter::SaveAsAssets(
 		const EAssetType& assetType = writtenAsset.first;
 		const vector<AAsset*>& assets = writtenAsset.second;
 
-		SaveAssets(assetType, assets);
+		SaveAssets(m_assetSavePath, assetType, assets);
 	}
 	return writtenAssets;
 }

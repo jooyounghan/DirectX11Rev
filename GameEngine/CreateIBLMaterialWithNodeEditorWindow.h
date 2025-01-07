@@ -6,7 +6,10 @@ class AssetManager;
 class CreateIBLMaterialWithNodeEditorWindow : public ANodeEditorWindow
 {
 public:
-	CreateIBLMaterialWithNodeEditorWindow(AssetManager* assetManager, const std::string& windowID, bool* openFlag);
+	CreateIBLMaterialWithNodeEditorWindow(
+		ID3D11Device** deviceAddress, ID3D11DeviceContext** deviceContextAddress,
+		AssetManager* assetManager, const std::string& windowID, bool* openFlag
+	);
 	~CreateIBLMaterialWithNodeEditorWindow() override = default;
 
 protected:

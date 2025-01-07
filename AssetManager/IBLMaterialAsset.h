@@ -32,7 +32,7 @@ public:
 
 protected:
 	std::string m_materialTextureName[IBLMaterialTextureCount];
-	ScratchTextureAsset* m_materialTexture[IBLMaterialTextureCount];
+	ScratchTextureAsset* m_materialTexture[IBLMaterialTextureCount]{ nullptr, nullptr, nullptr, nullptr };
 
 public:
 	const ScratchTextureAsset* const GetScratchTextureAsset(const EIBLMaterialTexture& iblMaterialTexture) const;
@@ -57,6 +57,13 @@ protected:
 	DynamicBuffer* m_iblToneMappingBuffer;
 
 public:
+	void UpdateIBLToneMappingConstant(
+		ID3D11Device* device,
+		ID3D11DeviceContext* deviceContext,
+		const float& exposure,
+		const float& gamma
+	);
+
 	const DynamicBuffer* GetIBLToneMappingBuffer() const { return m_iblToneMappingBuffer; }
 
 public:
@@ -68,7 +75,7 @@ public:
 
 public:
 	virtual void InitializeGPUAsset(
-ID3D11Device* device,
+		ID3D11Device* device,
 		ID3D11DeviceContext* deviceContext
 	) override;
 };

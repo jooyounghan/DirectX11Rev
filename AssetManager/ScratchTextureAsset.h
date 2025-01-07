@@ -19,7 +19,7 @@ public:
 	~ScratchTextureAsset() override = default;
 
 protected:
-	DXGI_FORMAT m_format;
+	DXGI_FORMAT m_format = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
 	std::vector<UINT> m_rowPitchPerArray;
 
 public:
