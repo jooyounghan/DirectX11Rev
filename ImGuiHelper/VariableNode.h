@@ -6,12 +6,15 @@
 
 #include <tuple>
 #include <exception>
+#include <array>
 
 template<typename OutputType, typename ...InputTypes>
 class VariableNode : public Node
 {
 public:
-	VariableNode(const std::string& nodeName, const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin);
+	VariableNode(
+		const std::string& nodeName, const ImVec2& leftTop, const float& radius, 
+		const ImVec2& referencedOrigin, const std::array<std::string, sizeof...(InputTypes)>& inputDescriptions);
 	~VariableNode() override = default;
 	
 protected:
@@ -21,6 +24,7 @@ protected:
 public:
 	virtual void RegisterToInteractionManager(InteractionManager* interactionManager);
 	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager);
+	virtual void BringFrontToInteractionManager(InteractionManager* interactionManager);
 
 protected:
 	virtual void SetFocused(const bool& isFocused);protected:
@@ -35,7 +39,9 @@ protected:
 
 template<typename... InputTypes, std::size_t... Indices>
 std::tuple<VariableInputPort<InputTypes>...> CreateVariableInputPorts(
-	Node* parentNode, const float& radius, const ImVec2& referencedOrigin, const size_t& offset, std::index_sequence<Indices...>);
+	Node* parentNode, const float& radius, const ImVec2& referencedOrigin, const size_t& offset, 
+	const std::array<std::string, sizeof...(InputTypes)>& inputDescriptions, std::index_sequence<Indices...>
+);
 
 template<typename... InputTypes, std::size_t... Indices>
 std::tuple<InputTypes...> GetVariablesFromInput(const std::tuple<VariableInputPort<InputTypes>...>& inputPorts, std::index_sequence<Indices...>);
@@ -43,11 +49,11 @@ std::tuple<InputTypes...> GetVariablesFromInput(const std::tuple<VariableInputPo
 
 template<typename OutputType, typename ...InputTypes>
 inline VariableNode<OutputType, InputTypes...>::VariableNode(
-	const std::string& nodeName, const ImVec2& leftTop, 
-	const float& radius, const ImVec2& referencedOrigin
+	const std::string& nodeName, const ImVec2& leftTop, const float& radius, 
+	const ImVec2& referencedOrigin, const std::array<std::string, sizeof...(InputTypes)>& inputDescriptions
 )
 	: Node(nodeName, leftTop, referencedOrigin, variableTypeColor),
-	m_variableInputPorts(CreateVariableInputPorts<InputTypes...>(this, radius, referencedOrigin, 0, std::index_sequence_for<InputTypes...>{})),
+	m_variableInputPorts(CreateVariableInputPorts<InputTypes...>(this, radius, referencedOrigin, 0, inputDescriptions, std::index_sequence_for<InputTypes...>{})),
 	m_variableOutputPort(this, 1, 0, radius, referencedOrigin)
 {
 
@@ -67,6 +73,14 @@ inline void VariableNode<OutputType, InputTypes...>::DeregisterToInteractionMana
 	Node::DeregisterToInteractionManager(interactionManager);
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.DeregisterToInteractionManager(interactionManager)); }, m_variableInputPorts);
 	m_variableOutputPort.DeregisterToInteractionManager(interactionManager);
+}
+
+template<typename OutputType, typename ...InputTypes>
+inline void VariableNode<OutputType, InputTypes...>::BringFrontToInteractionManager(InteractionManager* interactionManager)
+{
+	Node::BringFrontToInteractionManager(interactionManager);
+	std::apply([&](auto&... inputPorts) { (..., inputPorts.BringFrontToInteractionManager(interactionManager)); }, m_variableInputPorts);
+	m_variableOutputPort.BringFrontToInteractionManager(interactionManager);
 }
 
 template<typename OutputType, typename ...InputTypes>
@@ -93,10 +107,13 @@ inline OutputType VariableNode<OutputType, InputTypes...>::GetVariable()
 }
 
 template<typename ...InputTypes, std::size_t ...Indices>
-inline std::tuple<VariableInputPort<InputTypes>...> CreateVariableInputPorts(Node* parentNode, const float& radius, const ImVec2& referencedOrigin, const size_t& offset, std::index_sequence<Indices...>)
+inline std::tuple<VariableInputPort<InputTypes>...> CreateVariableInputPorts(
+	Node* parentNode, const float& radius, const ImVec2& referencedOrigin, const size_t& offset, 
+	const std::array<std::string, sizeof...(InputTypes)>& inputDescriptions, std::index_sequence<Indices...>
+)
 {
 	return std::make_tuple(
-		VariableInputPort<InputTypes>(parentNode, sizeof...(InputTypes) + offset, Indices + offset, radius, referencedOrigin)...
+		VariableInputPort<InputTypes>(parentNode, sizeof...(InputTypes) + offset, Indices + offset, radius, referencedOrigin, inputDescriptions.at(Indices))...
 	);
 }
 

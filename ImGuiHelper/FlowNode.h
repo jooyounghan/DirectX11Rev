@@ -9,8 +9,9 @@ class FlowNode : public Node
 {
 public:
 	FlowNode(
-		const std::string& nodeName, const ImVec2& leftTop,
-		const float& radius, const ImVec2& referencedOrigin
+		const std::string& nodeName, const ImVec2& leftTop, const float& radius, 
+		const ImVec2& referencedOrigin, 
+		const std::array<std::string, sizeof...(InputTypes)>& inputDescriptions
 	);
 	~FlowNode() override = default;
 
@@ -22,6 +23,7 @@ protected:
 public:
 	virtual void RegisterToInteractionManager(InteractionManager* interactionManager) override;
 	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager) override;
+	virtual void BringFrontToInteractionManager(InteractionManager* interactionManager);
 
 protected:
 	virtual void SetFocused(const bool& isFocused) override;
@@ -29,7 +31,7 @@ protected:
 
 public:
 	void Execute();
-	std::tuple<InputTypes...> GetVariables() { return GetVariablesFromInput(m_variableInputPorts, std::index_sequence_for<InputTypes...>{}); }
+	std::tuple<InputTypes...> GetInputVariables() { return GetVariablesFromInput(m_variableInputPorts, std::index_sequence_for<InputTypes...>{}); }
 	ImVec2 GetMinNodeSize();
 
 protected:
@@ -37,9 +39,12 @@ protected:
 };
 
 template<typename ...InputTypes>
-inline FlowNode<InputTypes...>::FlowNode(const std::string& nodeName, const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
+inline FlowNode<InputTypes...>::FlowNode(
+	const std::string& nodeName, const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin,
+	const std::array<std::string, sizeof...(InputTypes)>& inputDescriptions
+)
 	: Node(nodeName, leftTop, referencedOrigin, flowTypeColor),
-	m_variableInputPorts(CreateVariableInputPorts<InputTypes...>(this, radius, referencedOrigin, 1, std::index_sequence_for<InputTypes...>{})),
+	m_variableInputPorts(CreateVariableInputPorts<InputTypes...>(this, radius, referencedOrigin, 1, inputDescriptions, std::index_sequence_for<InputTypes...>{})),
 	m_flowInputPort(this, sizeof...(InputTypes) + 1, 0, radius, referencedOrigin),
 	m_flowOutputPort(this, 1, 0, radius, referencedOrigin)
 {
@@ -62,6 +67,15 @@ inline void FlowNode<InputTypes...>::DeregisterToInteractionManager(InteractionM
 	std::apply([&](auto&... inputPorts) { (..., inputPorts.DeregisterToInteractionManager(interactionManager)); }, m_variableInputPorts);
 	m_flowInputPort.DeregisterToInteractionManager(interactionManager);
 	m_flowOutputPort.DeregisterToInteractionManager(interactionManager);
+}
+
+template<typename ...InputTypes>
+inline void FlowNode<InputTypes...>::BringFrontToInteractionManager(InteractionManager* interactionManager)
+{
+	Node::BringFrontToInteractionManager(interactionManager);
+	std::apply([&](auto&... inputPorts) { (..., inputPorts.BringFrontToInteractionManager(interactionManager)); }, m_variableInputPorts);
+	m_flowInputPort.BringFrontToInteractionManager(interactionManager);
+	m_flowOutputPort.BringFrontToInteractionManager(interactionManager);
 }
 
 template<typename ...InputTypes>

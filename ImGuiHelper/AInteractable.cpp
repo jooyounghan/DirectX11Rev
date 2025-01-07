@@ -10,3 +10,8 @@ void AInteractable::DeregisterToInteractionManager(InteractionManager* interacti
 {
 	interactionManager->DeregisterInteractable(this);
 }
+
+void AInteractable::BringFrontToInteractionManager(InteractionManager* interactionManager)
+{
+	interactionManager->BringInteractableToFront(this);
+}

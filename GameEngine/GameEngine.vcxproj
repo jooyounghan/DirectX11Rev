@@ -147,25 +147,31 @@
     <ClCompile Include="AssetContextMenu.cpp" />
     <ClCompile Include="AssetViewWindow.cpp" />
     <ClCompile Include="AssetFileControl.cpp" />
+    <ClCompile Include="AssetWriterPathNode.cpp" />
+    <ClCompile Include="ATextureAssetVariableNode.cpp" />
+    <ClCompile Include="BaseTextureAssetVariableNode.cpp" />
     <ClCompile Include="ComponentInformer.cpp" />
     <ClCompile Include="CreateIBLMaterialWithNodeEditorWindow.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="IBLMaterialAssetCreateFlowNode.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
-    <ClCompile Include="ScratchTextureAssetNode.cpp" />
+    <ClCompile Include="ScratchTextureAssetVariableNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetContextMenu.h" />
     <ClInclude Include="AssetViewWindow.h" />
     <ClInclude Include="AssetFileControl.h" />
+    <ClInclude Include="AssetWriterPathNode.h" />
+    <ClInclude Include="ATextureAssetVariableNode.h" />
+    <ClInclude Include="BaseTextureAssetVariableNode.h" />
     <ClInclude Include="ComponentInformer.h" />
     <ClInclude Include="CreateIBLMaterialWithNodeEditorWindow.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="IBLMaterialAssetCreateFlowNode.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneWindow.h" />
-    <ClInclude Include="ScratchTextureAssetNode.h" />
+    <ClInclude Include="ScratchTextureAssetVariableNode.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">

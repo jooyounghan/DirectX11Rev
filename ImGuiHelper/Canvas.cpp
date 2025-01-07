@@ -14,7 +14,7 @@ void Canvas::AddDrawElement(ADrawElement* drawElement)
     drawElement->OnFocused = [&](ADrawElement* d)
         {
             BringDrawElementToFront(d);
-            BringInteractableToFront(d);
+            d->BringFrontToInteractionManager(this);
         };
 }
 

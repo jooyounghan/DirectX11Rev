@@ -7,7 +7,7 @@ using namespace std;
 using namespace ImGui;
 
 FloatVariableNode::FloatVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
-	: VariableNode<float>("Float", leftTop, radius, referencedOrigin)
+	: VariableNode<float>("Float", leftTop, radius, referencedOrigin, {})
 {
 	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
 		{

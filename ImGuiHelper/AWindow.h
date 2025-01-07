@@ -7,7 +7,7 @@
 class AWindow : public InteractionManager
 {
 public:
-	AWindow(const std::string& windowID, const bool& isAlwaysOpen, bool* openFlag);
+	AWindow(const std::string& windowID, const bool& isAlwaysOpen, bool* openFlag, ImGuiWindowFlags_ windowFlag = ImGuiWindowFlags_::ImGuiWindowFlags_None);
 	~AWindow() override = default;
 
 public:
@@ -24,5 +24,6 @@ protected:
 	const std::string m_windowID;
 	const bool m_isAlwaysOpen;
 	bool* m_openFlag;
+	ImGuiWindowFlags_ m_windowFlag;
 };
 

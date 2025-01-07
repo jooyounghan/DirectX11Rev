@@ -5,7 +5,10 @@ using namespace std;
 using namespace ImGui;
 
 ANodeEditorWindow::ANodeEditorWindow(const std::string& windowID, bool* openFlag, const size_t& lineCount)
-	: AWindow(windowID, false, openFlag), m_lineCount(lineCount), m_nodeExecuteContextMenu(&m_isEnableAutoPlacement)
+	: AWindow(
+		windowID, false, openFlag, 
+		ImGuiWindowFlags_(ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)),
+	m_lineCount(lineCount), m_nodeExecuteContextMenu(&m_isEnableAutoPlacement)
 {
 	m_canvas.RegisterToInteractionManager(this);
 

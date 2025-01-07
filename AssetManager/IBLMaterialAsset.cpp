@@ -46,6 +46,13 @@ void IBLMaterialAsset::SetIBLMaterialTexture(
 	m_isModified = true;
 }
 
+void IBLMaterialAsset::SetIBLMaterialTexture(EIBLMaterialTexture iblMaterialTextureType, ScratchTextureAsset* scratchTextureAsset)
+{
+	const size_t& materialTextureIdx = static_cast<size_t>(iblMaterialTextureType);
+	m_materialTextureName[materialTextureIdx] = scratchTextureAsset->GetAssetName();
+	m_materialTexture[materialTextureIdx] = scratchTextureAsset;
+}
+
 
 void IBLMaterialAsset::Serialize(FILE* fileIn) const
 {

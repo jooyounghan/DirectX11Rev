@@ -20,6 +20,7 @@ protected:
 public:
 	virtual void RegisterToInteractionManager(InteractionManager* interactionManager);
 	virtual void DeregisterToInteractionManager(InteractionManager* interactionManager);
+	virtual void BringFrontToInteractionManager(InteractionManager* interactionManager);
 
 public:
 	virtual bool IsPointIn(const float& pointX, const float& pointY) const = 0;

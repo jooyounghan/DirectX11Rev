@@ -45,7 +45,7 @@ unordered_map<EAssetType, vector<AAsset*>> ImageFileToAssetWriter::SaveAsAssets(
 		{
 			isAdded = true;
 			AAsset* scratchTextureAsset = LoadScratchTexureByEXRAsset(filePath, fileName);
-			writtenAssets[EAssetType::ASSET_TYPE_BASE_TEXTURE].emplace_back(scratchTextureAsset);
+			writtenAssets[EAssetType::ASSET_TYPE_SCRATCH_TEXTURE].emplace_back(scratchTextureAsset);
 
 
 		}

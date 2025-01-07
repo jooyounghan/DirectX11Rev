@@ -126,7 +126,16 @@
     <ClCompile Include="IBLMaterialAssetCreateFlowNode.cpp">
       <Filter>소스 파일\GUI\NodeEditor\Node\Flow</Filter>
     </ClCompile>
-    <ClCompile Include="ScratchTextureAssetNode.cpp">
+    <ClCompile Include="ScratchTextureAssetVariableNode.cpp">
+      <Filter>소스 파일\GUI\NodeEditor\Node\Variable</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetWriterPathNode.cpp">
+      <Filter>소스 파일\GUI\NodeEditor\Node\Variable</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTextureAssetVariableNode.cpp">
+      <Filter>소스 파일\GUI\NodeEditor\Node\Variable</Filter>
+    </ClCompile>
+    <ClCompile Include="ATextureAssetVariableNode.cpp">
       <Filter>소스 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -158,7 +167,16 @@
     <ClInclude Include="IBLMaterialAssetCreateFlowNode.h">
       <Filter>헤더 파일\GUI\NodeEditor\Node\Flow</Filter>
     </ClInclude>
-    <ClInclude Include="ScratchTextureAssetNode.h">
+    <ClInclude Include="ScratchTextureAssetVariableNode.h">
+      <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetWriterPathNode.h">
+      <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTextureAssetVariableNode.h">
+      <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="ATextureAssetVariableNode.h">
       <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,8 +8,10 @@ public:
 	~StringVariableNode() override = default;
 
 protected:
-	ImVec2 m_textInputSize = ImVec2(0.f, 0.f);
 	std::string m_string;
+
+private:
+	void DrawStringEdit();
 
 protected:
 	virtual std::string GetVariableImpl(const std::tuple<>& variables) override { return m_string; }

@@ -27,11 +27,14 @@ protected:
 	std::unordered_map<std::string, std::vector<AAssetWriter*>> m_assetWritersWithPath;
 	ResourceManager m_resourceManager;
 
+public:
+	std::vector<std::string> GetAssetWriterPaths();
+
 protected:
 	std::unordered_map<EAssetType, std::unordered_map<std::string, AAsset*>> m_assetNameToAssets;
 	
 public:
-	const std::vector<std::string> GetAssetNames(const EAssetType& assetType);
+	std::vector<std::string> GetAssetNames(const EAssetType& assetType);
 
 public:
 	void RegisterAssetReadPath(const std::string& readPath);

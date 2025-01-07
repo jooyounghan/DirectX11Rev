@@ -32,7 +32,6 @@ void AAssetWriter::SaveAssets(const EAssetType& assetType, const vector<AAsset*>
 {
     AssetWrapper assetWrapper;
     assetWrapper.SetAssetType(assetType);
-
     for (const AAsset* const asset : assets)
     {
         FILE* fileIn = nullptr;

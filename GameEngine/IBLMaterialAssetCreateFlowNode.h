@@ -3,6 +3,8 @@
 #include "ScratchTextureAsset.h"
 
 class IBLMaterialAssetCreateFlowNode : public FlowNode<
+	std::string,
+	std::string,
 	ScratchTextureAsset*, 
 	ScratchTextureAsset*, 
 	ScratchTextureAsset*,

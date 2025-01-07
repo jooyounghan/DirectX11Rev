@@ -3,7 +3,7 @@
 #include "NodeConstant.h"
 
 FlowEndNode::FlowEndNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
-	: FlowNode("End", leftTop, radius, referencedOrigin)
+	: FlowNode("End", leftTop, radius, referencedOrigin, {})
 {
 	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
 		{			

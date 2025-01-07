@@ -32,7 +32,19 @@ AssetManager::~AssetManager()
 	;
 }
 
-const vector<string> AssetManager::GetAssetNames(const EAssetType& assetType)
+std::vector<std::string> AssetManager::GetAssetWriterPaths()
+{
+	vector<string> result;
+
+	result.reserve(m_assetWritersWithPath.size());
+	for (const auto& pair : m_assetWritersWithPath)
+	{
+		result.push_back(pair.first);
+	}
+	return result;
+}
+
+vector<string> AssetManager::GetAssetNames(const EAssetType& assetType)
 {
 	vector<string> result;
 	const unordered_map<string, AAsset*>& assetNameWithAssets = m_assetNameToAssets[assetType];

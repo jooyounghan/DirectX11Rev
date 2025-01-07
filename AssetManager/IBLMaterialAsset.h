@@ -47,6 +47,10 @@ public:
 		const std::string& iblmaterialTextureIn,
 		IScratchTextureProvider& provider
 	);
+	void SetIBLMaterialTexture(
+		EIBLMaterialTexture iblMaterialTextureType,
+		ScratchTextureAsset* scratchTextureAsset
+	);
 
 protected:
 	SIBLToneMapping m_iblToneMappingConstants;

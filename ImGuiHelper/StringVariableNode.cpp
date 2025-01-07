@@ -8,33 +8,29 @@ using namespace ImGui;
 
 
 StringVariableNode::StringVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
-	: VariableNode<string>(
-		"String", leftTop, radius, referencedOrigin
-	)
+	: VariableNode<string>("String", leftTop, radius, referencedOrigin, {})
 {
+	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
+		{
+			SetItemCursorWithInternalMargin(drawLeftTop);
+			DrawStringEdit();
+			return GetItemRectWithInternalMargin();
+		}
+	);
 }
-//
-//void StringVariableNode::Draw(ImDrawList* drawListIn)
-//{
-//	VariableNode<string>::DrawImpl(drawListIn);
-//
-//	const ImVec2& drawNodeFieldPos = GetDrawNodeFieldPos();
-//	const ImVec2& drawNodeFieldSize = GetDrawNodeFieldSize();
-//	const ImVec2 drawMarginedFieldPos = ImVec2(drawNodeFieldPos.x + nodeInternalMargin, drawNodeFieldPos.y + nodeInternalMargin);
-//	SetCursorScreenPos(drawMarginedFieldPos);
-//
-//	ImGuiIO& io = ImGui::GetIO();
-//
-//	static char buffer[1024];
-//	SetNextItemAllowOverlap();
-//	PushItemWidth(drawNodeFieldSize.x - 2.f * nodeInternalMargin);
-//	PushID(format("{}", (uint64_t)this).c_str());
-//	InputText("", buffer, 1024);
-//	if (IsItemActive()) io.WantCaptureMouse = false;
-//	string str(buffer);
-//	PopID();
-//	PopItemWidth();
-//
-//	m_textInputSize = CalcTextSize(str.c_str());
-//	m_string = str;
-//}
+void StringVariableNode::DrawStringEdit()
+{
+	static char buffer[1024];
+
+	SetNextItemAllowOverlap();
+	const float dynamicWidth = GetDynamicWidthWithoutInternalMargin(m_totalSize.x);
+
+	PushItemWidth(dynamicWidth > defaultTextSize ? dynamicWidth : defaultTextSize);
+	PushID(format("{}", (uint64_t)this).c_str());
+	InputText("", buffer, 1024);
+	ConsumeMouseCaptureForItem();
+	PopID();
+	PopItemWidth();
+
+	m_string = string(buffer);
+}

@@ -1,7 +1,8 @@
 #include "FloatSumVariableNode.h"
+#include <array>
 
 FloatSumVariableNode::FloatSumVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
-	: VariableNode("Sum Float", leftTop, radius, referencedOrigin) 
+	: VariableNode("Sum Float", leftTop, radius, referencedOrigin, {"Float, Float"})
 {
 }
 
