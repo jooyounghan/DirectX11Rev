@@ -37,16 +37,7 @@
     <ClInclude Include="ComponentManager.h">
       <Filter>헤더 파일\Component</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCreator.h">
-      <Filter>헤더 파일\Component\Visitor\Database</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentInitializer.h">
-      <Filter>헤더 파일\Component\Visitor\Database</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentRemover.h">
-      <Filter>헤더 파일\Component\Visitor\Database</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentUpdater.h">
       <Filter>헤더 파일\Component\Visitor\Database</Filter>
     </ClInclude>
     <ClInclude Include="SceneForwardRenderer.h">
@@ -60,6 +51,15 @@
     </ClInclude>
     <ClInclude Include="ComponentPSOManager.h">
       <Filter>헤더 파일\PSOManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCreator.h">
+      <Filter>헤더 파일\Component\Visitor\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentRemover.h">
+      <Filter>헤더 파일\Component\Visitor\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentUpdater.h">
+      <Filter>헤더 파일\Component\Visitor\Database</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -176,18 +176,6 @@
     <ClCompile Include="AInstancedModelComponent.cpp">
       <Filter>소스 파일\Component\Model</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCreator.cpp">
-      <Filter>소스 파일\Component\Visitor\Database</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentInitializer.cpp">
-      <Filter>소스 파일\Component\Visitor\Database</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentRemover.cpp">
-      <Filter>소스 파일\Component\Visitor\Database</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentUpdater.cpp">
-      <Filter>소스 파일\Component\Visitor\Database</Filter>
-    </ClCompile>
     <ClCompile Include="SceneForwardRenderer.cpp">
       <Filter>소스 파일\Component\Visitor\Rendering</Filter>
     </ClCompile>
@@ -202,6 +190,18 @@
     </ClCompile>
     <ClCompile Include="ComponentPSOManager.cpp">
       <Filter>소스 파일\PSOManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentInitializer.cpp">
+      <Filter>소스 파일\Component\Visitor\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCreator.cpp">
+      <Filter>소스 파일\Component\Visitor\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRemover.cpp">
+      <Filter>소스 파일\Component\Visitor\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentUpdater.cpp">
+      <Filter>소스 파일\Component\Visitor\Database</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

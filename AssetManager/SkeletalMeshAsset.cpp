@@ -82,9 +82,14 @@ std::vector<UINT> SkeletalMeshPartData::GetOffsets()
 void SkeletalMeshPartData::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	StaticMeshPartData::InitializeGPUAsset(device, deviceContext);
-
-	m_vertexBuffers.emplace_back(new ConstantBuffer(sizeof(XMFLOAT4), static_cast<UINT>(m_blendWeight.size()), m_blendWeight.data(), D3D11_BIND_VERTEX_BUFFER));
-	m_vertexBuffers.emplace_back(new ConstantBuffer(sizeof(XMINT4), static_cast<UINT>(m_blendIndex.size()), m_blendIndex.data(), D3D11_BIND_VERTEX_BUFFER));
+	ConstantBuffer* blendWeightBuffer = new ConstantBuffer(sizeof(XMFLOAT4), static_cast<UINT>(m_blendWeight.size()), m_blendWeight.data(), D3D11_BIND_VERTEX_BUFFER);
+	ConstantBuffer* blendIndexBuffer = new ConstantBuffer(sizeof(XMINT4), static_cast<UINT>(m_blendIndex.size()), m_blendIndex.data(), D3D11_BIND_VERTEX_BUFFER);
+	
+	blendWeightBuffer->Initialize(device);	
+	blendIndexBuffer->Initialize(device);	
+	
+	m_vertexBuffers.emplace_back(blendWeightBuffer);
+	m_vertexBuffers.emplace_back(blendIndexBuffer);
 }
 
 

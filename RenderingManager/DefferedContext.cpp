@@ -2,7 +2,7 @@
 
 using namespace Microsoft::WRL;
 
-DefferedContext::DefferedContext(ID3D11Device** deviceAddress)
+DefferedContext::DefferedContext(ID3D11Device* const* deviceAddress)
 	: m_deviceAddressCached(deviceAddress)
 {
 }

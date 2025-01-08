@@ -5,7 +5,7 @@ class SceneDefferedRenderer : public ASceneRenderer
 {
 public:
 	SceneDefferedRenderer(
-		ID3D11DeviceContext** deviceContextAddress, 
+		ID3D11DeviceContext* const* deviceContextAddress,
 		ComponentPSOManager* componentPsoManager
 	);
 	~SceneDefferedRenderer() override = default;

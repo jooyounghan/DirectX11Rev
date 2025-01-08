@@ -7,11 +7,11 @@
 class DefferedContext
 {
 public:
-	DefferedContext(ID3D11Device** deviceAddress);
+	DefferedContext(ID3D11Device* const* deviceAddress);
 	virtual ~DefferedContext() = default;
 
 protected:
-	ID3D11Device** m_deviceAddressCached = nullptr;
+	ID3D11Device* const* m_deviceAddressCached = nullptr;
 
 public:
 	void InitDefferedContext();
@@ -22,7 +22,7 @@ protected:
 
 public:
 	inline ID3D11DeviceContext* GetDefferedContext() { return m_defferedContext.Get(); }
-	inline ID3D11DeviceContext** GetDefferedContextAddress() { return m_defferedContext.GetAddressOf(); }
+	inline ID3D11DeviceContext* const* GetDefferedContextAddress() { return m_defferedContext.GetAddressOf(); }
 
 public:
 	void RecordToCommandList();

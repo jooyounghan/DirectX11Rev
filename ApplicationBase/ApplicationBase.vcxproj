@@ -181,10 +181,10 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="ComponentCreator.cpp" />
     <ClCompile Include="ComponentPSOManager.cpp" />
-    <ClCompile Include="ComponentRemover.cpp" />
     <ClCompile Include="ComponentInitializer.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="ComponentEntity.cpp" />
+    <ClCompile Include="ComponentRemover.cpp" />
     <ClCompile Include="ComponentUpdater.cpp" />
     <ClCompile Include="SceneDefferedRenderer.cpp" />
     <ClCompile Include="SceneForwardRenderer.cpp" />
@@ -201,9 +201,9 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="ComponentCreator.h" />
     <ClInclude Include="ComponentPSOManager.h" />
-    <ClInclude Include="ComponentRemover.h" />
     <ClInclude Include="ComponentInitializer.h" />
     <ClInclude Include="ComponentManager.h" />
+    <ClInclude Include="ComponentRemover.h" />
     <ClInclude Include="ComponentType.h" />
     <ClInclude Include="ComponentUpdater.h" />
     <ClInclude Include="SceneDefferedRenderer.h" />

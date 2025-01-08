@@ -54,14 +54,11 @@ void IBLMaterialAsset::SetIBLMaterialTexture(EIBLMaterialTexture iblMaterialText
 }
 
 
-void IBLMaterialAsset::UpdateIBLToneMappingConstant(
-	ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
-	const float& exposure, const float& gamma
-)
+void IBLMaterialAsset::UpdateIBLToneMappingConstant(ID3D11DeviceContext* deviceContext, const float& exposure, const float& gamma)
 {
 	m_iblToneMappingConstants.m_exposure = exposure;
 	m_iblToneMappingConstants.m_gamma = gamma;
-	m_iblToneMappingBuffer->Upload(device, deviceContext, sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants);
+	m_iblToneMappingBuffer->Upload(deviceContext, sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants);
 }
 
 void IBLMaterialAsset::Serialize(FILE* fileIn) const
@@ -96,6 +93,6 @@ void IBLMaterialAsset::Accept(IAssetVisitor* visitor)
 void IBLMaterialAsset::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	m_iblToneMappingBuffer->Initialize(device);
-	m_iblToneMappingBuffer->Upload(device, deviceContext, sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants);
+	m_iblToneMappingBuffer->Upload(deviceContext, sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants);
 }
 

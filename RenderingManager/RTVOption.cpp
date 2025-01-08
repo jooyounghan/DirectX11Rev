@@ -3,4 +3,5 @@
 
 void RTVOption::InitializeByOption(ID3D11Resource* resource, ID3D11Device* device)
 {
+	device->CreateRenderTargetView(resource, NULL, &m_rtv);
 }

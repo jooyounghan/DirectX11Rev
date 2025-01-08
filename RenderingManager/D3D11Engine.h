@@ -42,15 +42,17 @@ namespace D3D11
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_backBufferRTV;
 
 	public:
-		inline ID3D11Device*			GetDevice() { return m_device.Get(); }
-		inline ID3D11DeviceContext*		GetDeviceContext() { return m_deviceContext.Get(); }
-		inline ID3D11Device**			GetDeviceAddress() { return m_device.GetAddressOf(); }
-		inline ID3D11DeviceContext**	GetDeviceContextAddress() { return m_deviceContext.GetAddressOf(); }
-		inline IDXGISwapChain*			GetSwapChain() { return m_swapChain.Get(); }
+		inline ID3D11Device*			GetDevice() const { return m_device.Get(); }
+		inline ID3D11DeviceContext*		GetDeviceContext() const { return m_deviceContext.Get(); }
+		inline ID3D11Device* const*			GetDeviceAddress() const { return m_device.GetAddressOf(); }
+		inline ID3D11DeviceContext* const*	GetDeviceContextAddress() const { return m_deviceContext.GetAddressOf(); }
+		inline IDXGISwapChain*			GetSwapChain() const { return m_swapChain.Get(); }
 
 	public:
-		inline ID3D11Texture2D*			GetBackBufferTexture() { return m_backBufferTexture.Get(); }
-		inline ID3D11RenderTargetView*	GetBackBufferRTV() { return m_backBufferRTV.Get(); }
+		inline ID3D11Texture2D*			GetBackBufferTexture() const { return m_backBufferTexture.Get(); }
+		inline ID3D11RenderTargetView*	GetBackBufferRTV() const { return m_backBufferRTV.Get(); }
+		inline ID3D11Texture2D* const*		GetBackBufferTextureAddress() const { return m_backBufferTexture.GetAddressOf(); }
+		inline ID3D11RenderTargetView* const* GetBackBufferRTVAddress() const { return m_backBufferRTV.GetAddressOf(); }
 
 	public:
 		void InitEngine(const UINT& widthIn, const UINT& heightIn, HWND wndHandle);

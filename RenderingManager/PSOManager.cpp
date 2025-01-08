@@ -14,7 +14,7 @@
 using namespace std;
 using namespace Microsoft::WRL;
 
-PSOManager::PSOManager(ID3D11Device** deviceAddress) : m_deviceAddressCached(deviceAddress)
+PSOManager::PSOManager(ID3D11Device* const* deviceAddress) : m_deviceAddressCached(deviceAddress)
 {
 }
 
@@ -119,6 +119,7 @@ void PSOManager::RegisterRasterizerState(
 	const string& stateName, 
 	const D3D11_FILL_MODE& fillMode, 
 	const D3D11_CULL_MODE& cullMode, 
+	const BOOL& frontCounterClockwise,
 	const DXGI_SAMPLE_DESC& sampleDesc
 )
 {
@@ -128,7 +129,7 @@ void PSOManager::RegisterRasterizerState(
 	AutoZeroMemory(rasterizerStateDesc);
 	rasterizerStateDesc.FillMode = fillMode;
 	rasterizerStateDesc.CullMode = cullMode;
-	rasterizerStateDesc.FrontCounterClockwise = FALSE;
+	rasterizerStateDesc.FrontCounterClockwise = frontCounterClockwise;
 	rasterizerStateDesc.DepthClipEnable = TRUE;
 	rasterizerStateDesc.MultisampleEnable = sampleDesc.Count > 1 ? TRUE : FALSE;
 	rasterizerStateDesc.AntialiasedLineEnable = FALSE;

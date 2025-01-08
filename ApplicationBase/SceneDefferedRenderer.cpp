@@ -1,7 +1,7 @@
 #include "SceneDefferedRenderer.h"
 
 SceneDefferedRenderer::SceneDefferedRenderer(
-	ID3D11DeviceContext** deviceContextAddress, 
+	ID3D11DeviceContext* const* deviceContextAddress, 
 	ComponentPSOManager* componentPsoManager
 )
 	: ASceneRenderer(deviceContextAddress, componentPsoManager)

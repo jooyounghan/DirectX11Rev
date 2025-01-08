@@ -6,14 +6,19 @@
 
 #include "nlohmann/json.hpp"
 
+#include <d3d11.h>
+
 using namespace std;
 using namespace mysqlx;
 using namespace DirectX;
 
 using json = nlohmann::json;
 
-ComponentUpdater::ComponentUpdater(Schema* schema)
-	: m_schemaCached(schema)
+ComponentUpdater::ComponentUpdater(
+	ID3D11DeviceContext* const* deviceContextAddress, 
+	Schema* schema
+)
+	: m_deviceContextAddress(deviceContextAddress), m_schemaCached(schema)
 {
 }
 
@@ -28,6 +33,8 @@ void ComponentUpdater::Visit(StaticMeshComponent* staticMeshComponent)
 		.set("static_mesh_name", staticMeshComponent->GetStaticMeshName())
 		.where("static_mesh_component_id = :static_mesh_component_id")
 		.bind("static_mesh_component_id", componentID).execute();
+
+	staticMeshComponent->UpdateEntity(*m_deviceContextAddress);
 }
 
 void ComponentUpdater::Visit(SkeletalMeshComponent* skeletalMeshComponent)
@@ -41,6 +48,8 @@ void ComponentUpdater::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 		.set("skeletal_mesh_name", skeletalMeshComponent->GetSkeletalMeshName())
 		.where("skeletal_mesh_component_id = :skeletal_mesh_component_id")
 		.bind("skeletal_mesh_component_id", componentID).execute();
+
+	skeletalMeshComponent->UpdateEntity(*m_deviceContextAddress);
 }
 
 void ComponentUpdater::Visit(CameraComponent* cameraComponent)
@@ -58,6 +67,8 @@ void ComponentUpdater::Visit(CameraComponent* cameraComponent)
 		.set("fov_angle", cameraComponent->GetFovAngle())
 		.where("camera_component_id = :camera_component_id")
 		.bind("camera_component_id", componentID).execute();
+
+	cameraComponent->UpdateEntity(*m_deviceContextAddress);
 }
 
 void ComponentUpdater::UpdateComponent(AComponent* component)

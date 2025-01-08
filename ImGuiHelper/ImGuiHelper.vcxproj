@@ -41,6 +41,7 @@
     <ClCompile Include="AImGuiSelectable.cpp" />
     <ClCompile Include="MessageBoxModal.cpp" />
     <ClCompile Include="NodeExecuteContextMenu.cpp" />
+    <ClCompile Include="PerformanceWindow.cpp" />
     <ClCompile Include="StringVariableNode.cpp" />
     <ClCompile Include="TaskModal.cpp" />
     <ClCompile Include="AWindow.cpp" />
@@ -78,6 +79,7 @@
     <ClInclude Include="AImGuiSelectable.h" />
     <ClInclude Include="MessageBoxModal.h" />
     <ClInclude Include="NodeExecuteContextMenu.h" />
+    <ClInclude Include="PerformanceWindow.h" />
     <ClInclude Include="StringVariableNode.h" />
     <ClInclude Include="TaskModal.h" />
     <ClInclude Include="AWindow.h" />

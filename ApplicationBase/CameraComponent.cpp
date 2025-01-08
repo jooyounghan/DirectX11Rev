@@ -3,6 +3,7 @@
 #include "RTVOption.h"
 #include "SRVOption.h"
 #include "UAVOption.h"
+#include "DSVOption.h"
 #include "DynamicBuffer.h"
 
 using namespace std;
@@ -62,20 +63,27 @@ void CameraComponent::InitEntity(ID3D11Device* device)
 {
 	AComponent::InitEntity(device);
 	m_viewProjBuffer->Initialize(device);
+
 	m_film = new Texture2DInstance<SRVOption, RTVOption, UAVOption>(
-		static_cast<uint32_t>(Width), static_cast<uint32_t>(Height), 1, NULL, NULL,
-		D3D11_USAGE_DEFAULT, 
-		DXGI_FORMAT_R8G8B8A8_UNORM, 
+		static_cast<uint32_t>(Width), static_cast<uint32_t>(Height), 1, NULL, D3D11_USAGE_DEFAULT,
+		D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM, 
+		device
+	);
+
+	m_depthStencilViewBuffer = new Texture2DInstance<DSVOption>(
+		static_cast<uint32_t>(Width), static_cast<uint32_t>(Height), 1, NULL, D3D11_USAGE_DEFAULT,
+		D3D11_USAGE_DEFAULT, DXGI_FORMAT_D24_UNORM_S8_UINT,
 		device
 	);
 }
 
-void CameraComponent::UpdateEntity(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+void CameraComponent::UpdateEntity(ID3D11DeviceContext* deviceContext)
 {
-	AComponent::UpdateEntity(device, deviceContext);
+	AComponent::UpdateEntity(deviceContext);
+
 	m_viewElement.m_viewProj = GetViewMatrix() * GetProjectionMatrix();
 	m_viewElement.m_invViewProj = XMMatrixInverse(nullptr, m_viewElement.m_viewProj);
-	m_viewProjBuffer->Upload(device, deviceContext, sizeof(SViewElement), 1, &m_viewElement);
+	m_viewProjBuffer->Upload(deviceContext, sizeof(SViewElement), 1, &m_viewElement);
 }
 
 void CameraComponent::Accept(IComponentVisitor* visitor)

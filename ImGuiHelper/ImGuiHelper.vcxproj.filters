@@ -174,9 +174,6 @@
     <ClCompile Include="Canvas.cpp">
       <Filter>소스 파일\Control\NodeEditor\Canvas</Filter>
     </ClCompile>
-    <ClCompile Include="ANodeEditorWindow.cpp">
-      <Filter>소스 파일\Window\Extended</Filter>
-    </ClCompile>
     <ClCompile Include="Node.cpp">
       <Filter>소스 파일\Control\NodeEditor\Node</Filter>
     </ClCompile>
@@ -218,6 +215,12 @@
     </ClCompile>
     <ClCompile Include="FloatSumVariableNode.cpp">
       <Filter>소스 파일\Control\NodeEditor\Node\VariableNode</Filter>
+    </ClCompile>
+    <ClCompile Include="ANodeEditorWindow.cpp">
+      <Filter>소스 파일\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="PerformanceWindow.cpp">
+      <Filter>소스 파일\Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,9 +274,6 @@
     </ClInclude>
     <ClInclude Include="Canvas.h">
       <Filter>헤더 파일\Control\NodeEditor\Canvas</Filter>
-    </ClInclude>
-    <ClInclude Include="ANodeEditorWindow.h">
-      <Filter>헤더 파일\Window\Extended</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
       <Filter>헤더 파일\Control\NodeEditor\Node</Filter>
@@ -334,6 +334,12 @@
     </ClInclude>
     <ClInclude Include="FloatSumVariableNode.h">
       <Filter>헤더 파일\Control\NodeEditor\Node\VariableNode</Filter>
+    </ClInclude>
+    <ClInclude Include="ANodeEditorWindow.h">
+      <Filter>헤더 파일\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="PerformanceWindow.h">
+      <Filter>헤더 파일\Window</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

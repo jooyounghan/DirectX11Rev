@@ -48,6 +48,6 @@ public:
 
 public:
 	virtual void InitEntity(ID3D11Device* device);
-	virtual void UpdateEntity(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext);
 };
 

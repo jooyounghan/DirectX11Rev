@@ -58,7 +58,6 @@ protected:
 
 public:
 	void UpdateIBLToneMappingConstant(
-		ID3D11Device* device,
 		ID3D11DeviceContext* deviceContext,
 		const float& exposure,
 		const float& gamma

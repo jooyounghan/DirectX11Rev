@@ -1,28 +1,28 @@
 #include "ComponentManager.h"
 
 #include "AssetManager.h"
+#include "DefferedContext.h"
 
 #include "Scene.h"
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
-
 using namespace std;
 using namespace mysqlx;
 using namespace DirectX;
 
 ComponentManager::ComponentManager(
-	SessionManager* sessionManager,
-	AssetManager* assetManager,
-	ID3D11Device** deviceAddress,
-	ID3D11DeviceContext** deviceContextAddress
-)
+	SessionManager* sessionManager, 
+	AssetManager* assetManager, 
+	ID3D11Device* const* deviceAddress, 
+	DefferedContext* defferedContext)
 	: SchemaManager(sessionManager, "component_db"),
 	m_assetManagerCached(assetManager),
 	m_componentInitializer(assetManager, deviceAddress, this),
-	m_componentUpdater(this),
+	m_componentUpdater(defferedContext->GetDefferedContextAddress(), this),
 	m_componentRemover(this),
-	m_componentCreator(this)
+	m_componentCreator(this),
+	m_defferedContext(defferedContext)
 {
 }
 
@@ -130,6 +130,7 @@ void ComponentManager::LoadComponents()
 		if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
 		{
 			AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
+			addedComponent->SetIsModified(true);
 			m_componentIDsToComponent.emplace(componentID, addedComponent);
 
 			componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));
@@ -277,6 +278,7 @@ void ComponentManager::LaunchComponentDBMonitor()
 						{
 							m_componentIDToComponent.second->Accept(&m_componentUpdater);
 						}
+						m_defferedContext->RecordToCommandList();
 					}
 				}
 

@@ -9,8 +9,8 @@ using namespace std;
 IBLMaterialAssetCreateFlowNode::IBLMaterialAssetCreateFlowNode(
 	const ImVec2& leftTop, const float& radius, 
 	const ImVec2& referencedOrigin, 
-	ID3D11Device** deviceAddress,
-	ID3D11DeviceContext** deviceContextAddress,
+	ID3D11Device* const* deviceAddress,
+	ID3D11DeviceContext* const* deviceContextAddress,
 	AssetManager* assetManager
 )
 	: FlowNode(
@@ -45,6 +45,6 @@ void IBLMaterialAssetCreateFlowNode::ExecuteImpl()
 	m_assetManagerCached->AddAssetHelper(*m_deviceAddressCached, *m_deviceContextAddressCached,
 		EAssetType::ASSET_TYPE_IBL_MATERIAL, assetPath + "/" + assetName, iblMaterialAsset
 	);
-	iblMaterialAsset->UpdateIBLToneMappingConstant(*m_deviceAddressCached, *m_deviceContextAddressCached, exposure, gamma);
+	iblMaterialAsset->UpdateIBLToneMappingConstant(*m_deviceContextAddressCached, exposure, gamma);
 	AAssetWriter::SaveAssets(assetPath, EAssetType::ASSET_TYPE_IBL_MATERIAL, { iblMaterialAsset });
 }

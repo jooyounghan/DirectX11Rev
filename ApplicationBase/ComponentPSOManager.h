@@ -4,7 +4,7 @@
 class ComponentPSOManager : public PSOManager
 {
 public:
-	ComponentPSOManager(ID3D11Device** deviceAddress);
+	ComponentPSOManager(ID3D11Device* const* deviceAddress);
 	~ComponentPSOManager() override = default;
 
 public:
@@ -52,8 +52,10 @@ public:
 
 	enum class EComponentPSORasterizerState
 	{
-		CULLBACK_SOLID_SS,
-		CULLBACK_WIREFRAME_SS
+		CW_SOLID_SS,
+		CW_WIREFRAME_SS,
+		CCW_SOLID_SS,
+		CCW_WIREFRAME_SS
 	};
 
 	enum class EComponentPSOSamplerState

@@ -16,7 +16,7 @@ using json = nlohmann::json;
 
 ComponentInitializer::ComponentInitializer(
 	AssetManager* assetManager,
-	ID3D11Device** deviceAdress,
+	ID3D11Device* const* deviceAdress,
 	mysqlx::Schema* schema
 )
 	: m_assetManagerCached(assetManager), m_deviceAdressCached(deviceAdress), m_schemaCached(schema)
@@ -82,10 +82,10 @@ void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 	if (!row.isNull())
 	{
 		const uint32_t width = row[0].get<uint32_t>();
-		const uint32_t height = row[0].get<uint32_t>();
-		const float near_z = row[0].get<float>();
-		const float far_z = row[0].get<float>();
-		const float fov_angle = row[0].get<float>();
+		const uint32_t height = row[1].get<uint32_t>();
+		const float near_z = row[2].get<float>();
+		const float far_z = row[3].get<float>();
+		const float fov_angle = row[4].get<float>();
 		cameraComponent->SetCameraProperties(width, height, near_z, far_z, fov_angle);
 	}
 	cameraComponent->InitEntity(*m_deviceAdressCached);

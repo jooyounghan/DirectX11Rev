@@ -102,17 +102,13 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 	m_taskManager->RegisterTask([&, device, assetsLoadDefferedContext]() 
 		{ 
 			m_assetManager->PreloadFromResources(device, assetsLoadDefferedContext->GetDefferedContext());
+			assetsLoadDefferedContext->RecordToCommandList();
 		}, "Load Asset From Resources..."
 	);
 
 	m_taskManager->RegisterTask([&, device, assetsLoadDefferedContext]()
 		{ 
 			m_assetManager->PreloadFromDirectories(device, assetsLoadDefferedContext->GetDefferedContext());
-		}, "Load Asset From Directories..."
-	);
-
-	m_taskManager->RegisterTask([&, assetsLoadDefferedContext]()
-		{
 			assetsLoadDefferedContext->RecordToCommandList();
 		}, "Load Asset From Directories..."
 	);
@@ -123,9 +119,11 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 		}, "Load Component From DB..."
 	);
 
-	m_taskManager->RegisterTask([&, device]()
+	m_taskManager->RegisterTask([&, device, assetsLoadDefferedContext]()
 		{
 			m_testCamera->InitEntity(device);
+			m_testCamera->UpdateEntity(assetsLoadDefferedContext->GetDefferedContext());
+			assetsLoadDefferedContext->RecordToCommandList();
 		}, "Test Camera Initializing"
 	);
 }
@@ -154,9 +152,12 @@ void GameEngine::Update(const float& deltaTime)
 		imguiWindow->PrepareWindow();
 	}
 
+
+
 	future<void> componentRenderGPUTask = async(launch::deferred, [&, immediateContext]()
 		{
 			DefferedContext* componentRenderDefferedContext = m_defferedContexts[EDefferedContextType::COMPONENT_RENDER];
+			componentRenderDefferedContext->RecordToCommandList();
 			componentRenderDefferedContext->TryExecuteCommandList(immediateContext);
 		});
 
@@ -233,7 +234,7 @@ void GameEngine::OnDropFiles(const HDROP& hDrop)
 
 void GameEngine::CreateDefferedContext()
 {
-	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
+	ID3D11Device* const* deviceAddress = m_engine->GetDeviceAddress();
 	m_defferedContexts[EDefferedContextType::ASSETS_LOAD] = new DefferedContext(deviceAddress);
 	m_defferedContexts[EDefferedContextType::COMPONENT_UPDATE] = new DefferedContext(deviceAddress);
 	m_defferedContexts[EDefferedContextType::COMPONENT_RENDER] = new DefferedContext(deviceAddress);
@@ -253,20 +254,22 @@ void GameEngine::CreateAssetManager()
 
 void GameEngine::CreateComponentManager()
 {
-	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
-	ID3D11DeviceContext** deviceContextAddress = m_engine->GetDeviceContextAddress();
-	m_componentManager = new ComponentManager(m_sessionManager, m_assetManager, deviceAddress, deviceContextAddress);
+	ID3D11Device* const* deviceAddress = m_engine->GetDeviceAddress();
+	m_componentManager = new ComponentManager(
+		m_sessionManager, m_assetManager, deviceAddress, 
+		m_defferedContexts[EDefferedContextType::COMPONENT_UPDATE]
+	);
 }
 
 void GameEngine::CreatePSOManager()
 {
-	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
+	ID3D11Device* const* deviceAddress = m_engine->GetDeviceAddress();
 	m_componentPSOManager = new ComponentPSOManager(deviceAddress);
 }
 
 void GameEngine::CreateWindows()
 {
-	ID3D11Device** deviceAddress = m_engine->GetDeviceAddress();
+	ID3D11Device* const* deviceAddress = m_engine->GetDeviceAddress();
 
 	m_imguiWindows.emplace_back(new AssetViewWindow(
 		"AssetViewWindow", deviceAddress, 

@@ -47,11 +47,11 @@ void ComponentEntity::InitEntity(ID3D11Device* device)
 	m_transformationBuffer->Initialize(device);
 }
 
-void ComponentEntity::UpdateEntity(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+void ComponentEntity::UpdateEntity(ID3D11DeviceContext* deviceContext)
 {
 	m_transformation.m_transformation = GetTranformation();
 	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
 
-	m_transformationBuffer->Upload(device, deviceContext, sizeof(STransformation), 1, &m_transformation);
+	m_transformationBuffer->Upload(deviceContext, sizeof(STransformation), 1, &m_transformation);
 }
 

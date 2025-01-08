@@ -23,11 +23,11 @@ protected:
 	std::vector<uint32_t> m_indices;
 	
 protected:
-	std::vector<uint32_t> m_partVertexOffsets;
-	std::vector<uint32_t> m_partIndexOffsets;
+	std::vector<uint32_t> m_vertexPartOffsets;
+	std::vector<uint32_t> m_indexPartOffsets;
 
 public:
-	size_t GetPartsCount() { return m_partIndexOffsets.size(); }
+	size_t GetPartsCount() { return m_indexPartOffsets.size(); }
 
 public:
 	const DirectX::XMFLOAT3& GetPosition(const size_t& index);
@@ -46,7 +46,7 @@ public:
 	const std::vector<uint32_t>& GetIndices();
 
 public:
-	const std::vector<uint32_t>& GetVertexOffsets();
+	const std::vector<uint32_t>& GetVertexPartOffsets();
 	const std::vector<uint32_t>& GetIndexOffsets();
 
 public:

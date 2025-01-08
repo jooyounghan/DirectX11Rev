@@ -8,6 +8,11 @@
 #include "ComponentPSOManager.h"
 
 #include "DynamicBuffer.h"
+#include "Texture2DInstance.h"
+#include "SRVOption.h"
+#include "RTVOption.h"
+#include "UAVOption.h"
+#include "DSVOption.h"
 
 using namespace std;
 using namespace ImGui;
@@ -15,12 +20,13 @@ using namespace DirectX;
 
 SceneWindow::SceneWindow(
     const string& windowID,
-    ID3D11DeviceContext** deviceConextAddress,
+    ID3D11DeviceContext* const* deviceConextAddress,
     AssetManager* assetManager,
     ComponentManager* componentManager,
     ComponentPSOManager* componentPsoManager
 )
-    : AWindow(windowID, true, nullptr), m_deviceContextAddressCached(deviceConextAddress),
+    : AWindow(windowID, true, nullptr),
+    m_deviceContextAddressCached(deviceConextAddress),
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
     m_componentInformer(assetManager, componentManager),
@@ -61,12 +67,22 @@ void SceneWindow::RenderScene()
 {
     ID3D11DeviceContext* deviceContext = *m_deviceContextAddressCached;
     
-    AShader* sceneVertexShader = m_componentPsoManageCached->GetComponentPSOVertexShader(ComponentPSOManager::EComponentPSOVertexShader::SCENE);
-    AShader* scenePixelShader = m_componentPsoManageCached->GetComponentPSOPixelShader(ComponentPSOManager::EComponentPSOPixelShader::FORWARD_SCENE);
-    ID3D11SamplerState* wrapSamplerState = m_componentPsoManageCached->GetComponentPSOSamplerState(ComponentPSOManager::EComponentPSOSamplerState::WRAP);
-
+    AShader* const sceneVertexShader = m_componentPsoManageCached->GetComponentPSOVertexShader(ComponentPSOManager::EComponentPSOVertexShader::SCENE);
+    AShader* const scenePixelShader = m_componentPsoManageCached->GetComponentPSOPixelShader(ComponentPSOManager::EComponentPSOPixelShader::FORWARD_SCENE);
+    ID3D11SamplerState* const wrapSamplerState = m_componentPsoManageCached->GetComponentPSOSamplerState(ComponentPSOManager::EComponentPSOSamplerState::WRAP);
+    ID3D11DepthStencilState* const lessDepthStencilState = m_componentPsoManageCached->GetComponentPSODepthStencilState(ComponentPSOManager::EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS);
+    ID3D11RasterizerState* const ccwSolidSSRasterizerState = m_componentPsoManageCached->GetComponentPSORasterizerState(ComponentPSOManager::EComponentPSORasterizerState::CCW_SOLID_SS);
     const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = m_selectedCamera->GetFilm();
+    const Texture2DInstance<DSVOption>* const depthStencilView = m_selectedCamera->GetDepthStencilViewBuffer();
+
+    vector<ID3D11RenderTargetView*> rtvs{ film->GetRTV() };
+
+    deviceContext->OMSetRenderTargets(1, rtvs.data(), depthStencilView->GetDSV());
+    deviceContext->OMSetDepthStencilState(lessDepthStencilState, 0);
     
+    deviceContext->RSSetState(ccwSolidSSRasterizerState);
+    deviceContext->RSSetViewports(1, m_selectedCamera);
+
     const StaticMeshAsset* const staticMeshAsset = m_selectedScene->GetSceneMeshAsset();
     MeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(NULL);
 
@@ -77,7 +93,7 @@ void SceneWindow::RenderScene()
     const vector<UINT>& indicesOffsets = meshPartsData->GetIndexOffsets();
     const vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetVertexBuffers();
     const vector<UINT>& strides = meshPartsData->GetStrides();
-    const vector<UINT>& verticesOffsets = meshPartsData->GetVertexOffsets();
+    const vector<UINT>& verticesOffsets = meshPartsData->GetOffsets();
     const UINT& totalIndicesCount = static_cast<UINT>(meshPartsData->GetIndices().size());
 
     for (size_t idx = 0; idx < meshPartCount; ++idx)
@@ -85,6 +101,8 @@ void SceneWindow::RenderScene()
         const UINT indexCount = (idx + 1 == meshPartCount ? totalIndicesCount : indicesOffsets[idx + 1]) - indicesOffsets[idx];
 
         sceneVertexShader->SetShader(deviceContext);
+        scenePixelShader->SetShader(deviceContext);
+
         deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
         deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, indicesOffsets[idx]);
 
@@ -98,7 +116,6 @@ void SceneWindow::RenderScene()
 
         deviceContext->DrawIndexed(indexCount, NULL, NULL);
     }
-
 }
 
 void SceneWindow::RenderComponentRecursive(ASceneRenderer* const renderer, const vector<AComponent*>& components)
@@ -161,7 +178,8 @@ void SceneWindow::DrawRendererSelector()
 
 void SceneWindow::DrawScene()
 {
-    Image((ImU64)nullptr, GetContentRegionAvail());
+    const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = m_selectedCamera->GetFilm();
+    Image((ImU64)(film != nullptr ? film->GetSRV() : nullptr), GetContentRegionAvail());
 }
 
 void SceneWindow::DrawComponentTree()

@@ -6,6 +6,7 @@ class Texture2DInstance;
 class RTVOption;
 class SRVOption;
 class UAVOption;
+class DSVOption;
 
 constexpr DirectX::XMVECTOR GDefaultForward = DirectX::XMVECTOR{ 0.f, 0.f, 1.f, 0.f };
 constexpr DirectX::XMVECTOR GDefaultUp = DirectX::XMVECTOR{ 0.f, 1.f, 0.f, 0.f };
@@ -61,13 +62,16 @@ public:
 
 protected:
 	Texture2DInstance<SRVOption, RTVOption, UAVOption>* m_film = nullptr;
+	Texture2DInstance<DSVOption>* m_depthStencilViewBuffer = nullptr;
 
 public:
 	const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const GetFilm() { return m_film; }
+	const Texture2DInstance<DSVOption>* const GetDepthStencilViewBuffer() { return m_depthStencilViewBuffer; }
+
 
 public:
 	virtual void InitEntity(ID3D11Device* device) override;
-	virtual void UpdateEntity(ID3D11Device* device, ID3D11DeviceContext* deviceContext) override;
+	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext) override;
 
 public:
 	virtual void Accept(IComponentVisitor* visitor) override;

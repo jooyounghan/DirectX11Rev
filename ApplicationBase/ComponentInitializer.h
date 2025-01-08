@@ -11,14 +11,14 @@ class ComponentInitializer : public IComponentVisitor
 public:
 	ComponentInitializer(
 		AssetManager* assetManager,
-		ID3D11Device** deviceAddress,
+		ID3D11Device* const* deviceAddress,
 		mysqlx::Schema* schema
 	);
 	~ComponentInitializer() override = default;
 
 protected:
 	AssetManager* m_assetManagerCached = nullptr;
-	ID3D11Device** m_deviceAdressCached = nullptr;
+	ID3D11Device* const* m_deviceAdressCached = nullptr;
 	mysqlx::Schema* m_schemaCached = nullptr;
 
 public:

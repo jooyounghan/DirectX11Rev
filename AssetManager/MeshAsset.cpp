@@ -49,8 +49,8 @@ void MeshPartsData::AddNormal(const float& x, const float& y, const float& z)
 
 void MeshPartsData::AddPartOffsets(const uint32_t& vertexOffset, const uint32_t& indexOffset)
 {
-	m_partVertexOffsets.emplace_back(vertexOffset);
-	m_partIndexOffsets.emplace_back(indexOffset);
+	m_vertexPartOffsets.emplace_back(vertexOffset);
+	m_indexPartOffsets.emplace_back(indexOffset);
 }
 
 
@@ -59,9 +59,9 @@ void MeshPartsData::AddIndex(const uint32_t& offset, const uint32_t index)
 	m_indices.emplace_back(offset + index);
 }
 
-const std::vector<uint32_t>& MeshPartsData::GetVertexOffsets()
+const std::vector<uint32_t>& MeshPartsData::GetVertexPartOffsets()
 {
-	return m_partVertexOffsets;
+	return m_vertexPartOffsets;
 }
 
 const std::vector<DirectX::XMFLOAT3>& MeshPartsData::GetPositions()
@@ -77,7 +77,7 @@ const std::vector<uint32_t>& MeshPartsData::GetIndices()
 
 const vector<uint32_t>& MeshPartsData::GetIndexOffsets()
 {
-	return m_partIndexOffsets;
+	return m_indexPartOffsets;
 }
 
 void MeshPartsData::Serialize(FILE* fileIn) const
@@ -86,8 +86,8 @@ void MeshPartsData::Serialize(FILE* fileIn) const
 	SerializeHelper::SerializeSequenceContainer(m_uvTextures, fileIn);
 	SerializeHelper::SerializeSequenceContainer(m_normals, fileIn);
 	SerializeHelper::SerializeSequenceContainer(m_indices, fileIn);
-	SerializeHelper::SerializeSequenceContainer(m_partVertexOffsets, fileIn);
-	SerializeHelper::SerializeSequenceContainer(m_partIndexOffsets, fileIn);
+	SerializeHelper::SerializeSequenceContainer(m_vertexPartOffsets, fileIn);
+	SerializeHelper::SerializeSequenceContainer(m_indexPartOffsets, fileIn);
 }
 
 void MeshPartsData::Deserialize(FILE* fileIn)
@@ -96,8 +96,8 @@ void MeshPartsData::Deserialize(FILE* fileIn)
 	m_uvTextures = DeserializeHelper::DeserializeSequenceContainer<vector<XMFLOAT2>>(fileIn);
 	m_normals = DeserializeHelper::DeserializeSequenceContainer<vector<XMFLOAT3>>(fileIn);
 	m_indices = DeserializeHelper::DeserializeSequenceContainer<vector<uint32_t>>(fileIn);
-	m_partVertexOffsets = DeserializeHelper::DeserializeSequenceContainer<vector<uint32_t>>(fileIn);
-	m_partIndexOffsets = DeserializeHelper::DeserializeSequenceContainer<vector<uint32_t>>(fileIn);
+	m_vertexPartOffsets = DeserializeHelper::DeserializeSequenceContainer<vector<uint32_t>>(fileIn);
+	m_indexPartOffsets = DeserializeHelper::DeserializeSequenceContainer<vector<uint32_t>>(fileIn);
 }
 
 AMeshAsset::AMeshAsset(const string& assetName)

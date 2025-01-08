@@ -13,7 +13,7 @@ using namespace ImGui;
 
 
 CreateIBLMaterialWithNodeEditorWindow::CreateIBLMaterialWithNodeEditorWindow(
-	ID3D11Device** deviceAddress, ID3D11DeviceContext** deviceContextAddress,
+	ID3D11Device* const* deviceAddress, ID3D11DeviceContext* const* deviceContextAddress,
 	AssetManager* assetManager, const std::string& windowID, bool* openFlag
 )
 	: ANodeEditorWindow(windowID, openFlag, 3), m_assetManagerCached(assetManager)

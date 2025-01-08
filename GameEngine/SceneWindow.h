@@ -20,12 +20,15 @@ class AssetManager;
 class ComponentManager;
 class ComponentPSOManager;
 
+struct ID3D11DeviceContext;
+struct ID3D11Texture2D;
+
 class SceneWindow : public AWindow
 {
 public:
 	SceneWindow(
 		const std::string& windowID,
-		ID3D11DeviceContext** deviceConextAddress,
+		ID3D11DeviceContext* const* deviceConextAddress,
 		AssetManager* assetManager,
 		ComponentManager* componentManager, 
 		ComponentPSOManager* componentPsoManager
@@ -33,7 +36,7 @@ public:
 	~SceneWindow() override = default;
 
 private:
-	ID3D11DeviceContext** m_deviceContextAddressCached = nullptr;
+	ID3D11DeviceContext* const* m_deviceContextAddressCached = nullptr;
 	Scene* m_selectedScene = nullptr;
 	ComponentManager* m_componentManagerCached = nullptr;
 	ComponentPSOManager* m_componentPsoManageCached = nullptr;

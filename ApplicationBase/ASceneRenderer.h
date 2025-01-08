@@ -8,13 +8,13 @@ class ASceneRenderer : public IComponentVisitor
 {
 public:
 	ASceneRenderer(
-		ID3D11DeviceContext** deviceContextAddress, 
+		ID3D11DeviceContext* const* deviceContextAddress, 
 		ComponentPSOManager* componentPsoManager
 	);
 	~ASceneRenderer() override = default;
 
 protected:
-	ID3D11DeviceContext** m_deviceContextAddress = nullptr;
+	ID3D11DeviceContext* const* m_deviceContextAddress = nullptr;
 	ComponentPSOManager* m_componentPsoManagerCached = nullptr;
 
 public:

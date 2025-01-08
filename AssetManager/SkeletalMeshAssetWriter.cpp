@@ -20,7 +20,7 @@ void SkeletalMeshAssetWriter::LoadMeshPartData(
         const uint32_t verticesCount = static_cast<uint32_t>(skeletalMeshPartData->GetPositions().size());
         skeletalMeshPartData->ResizeBlendProperties(verticesCount);
 
-        const vector<uint32_t> vertexOffsets = skeletalMeshPartData->GetVertexOffsets();
+        const vector<uint32_t> vertexOffsets = skeletalMeshPartData->GetVertexPartOffsets();
         const uint32_t vertexOffset = vertexOffsets.empty() ? 0 : vertexOffsets[vertexOffsets.size() - 1];
         
         for (uint32_t boneIdx = 0; boneIdx < mesh->mNumBones; ++boneIdx)

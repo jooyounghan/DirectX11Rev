@@ -2,7 +2,7 @@
 
 using namespace std;
 
-ComponentPSOManager::ComponentPSOManager(ID3D11Device** deviceAddress)
+ComponentPSOManager::ComponentPSOManager(ID3D11Device* const* deviceAddress)
 	: PSOManager(deviceAddress)
 {
 }
@@ -89,8 +89,10 @@ ID3D11RasterizerState* const  ComponentPSOManager::GetComponentPSORasterizerStat
 {
 	static unordered_map<EComponentPSORasterizerState, string> rasterizerStateEnumToString
 	{
-		{ EComponentPSORasterizerState::CULLBACK_SOLID_SS, "CullBackSolidSS"},
-		{ EComponentPSORasterizerState::CULLBACK_WIREFRAME_SS, "CullBackWireframeSS"}
+		{ EComponentPSORasterizerState::CW_SOLID_SS, "ClockWiseSolidSS"},
+		{ EComponentPSORasterizerState::CW_WIREFRAME_SS, "ClockWiseWireframeSS"},
+		{ EComponentPSORasterizerState::CCW_SOLID_SS, "CounterClockWiseSolidSS" },
+		{ EComponentPSORasterizerState::CCW_WIREFRAME_SS, "CounterClockWiseWireframeSS" }
 	};
 
 	return GetRasterizerState(rasterizerStateEnumToString[rsEnum]);
@@ -135,8 +137,10 @@ void ComponentPSOManager::RegisterRasterizerStateForComponent()
 	DXGI_SAMPLE_DESC singleSampleDesc;
 	singleSampleDesc.Count = 1;
 	singleSampleDesc.Quality = 0;
-	RegisterRasterizerState("CullBackSolidSS", D3D11_FILL_SOLID, D3D11_CULL_BACK, singleSampleDesc);
-	RegisterRasterizerState("CullBackWireframeSS", D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, singleSampleDesc);
+	RegisterRasterizerState("ClockWiseSolidSS", D3D11_FILL_SOLID, D3D11_CULL_BACK, FALSE, singleSampleDesc);
+	RegisterRasterizerState("ClockWiseWireframeSS", D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, FALSE, singleSampleDesc);
+	RegisterRasterizerState("CounterClockWiseSolidSS", D3D11_FILL_SOLID, D3D11_CULL_FRONT, TRUE, singleSampleDesc);
+	RegisterRasterizerState("CounterClockWiseWireframeSS", D3D11_FILL_WIREFRAME, D3D11_CULL_FRONT, TRUE, singleSampleDesc);
 }
 
 void ComponentPSOManager::RegisterSamplerStateForComponent()

@@ -9,10 +9,10 @@ concept ShaderType = std::is_base_of_v<AShader, T>;
 class PSOManager
 {
 public:
-	PSOManager(ID3D11Device** deviceAddress);
+	PSOManager(ID3D11Device* const* deviceAddress);
 	virtual ~PSOManager() = default;
 protected:
-	ID3D11Device** m_deviceAddressCached = nullptr;
+	ID3D11Device* const* m_deviceAddressCached = nullptr;
 
 protected:
 	std::unordered_map<std::string, std::unique_ptr<AShader>> m_registeredShaders;
@@ -61,6 +61,7 @@ protected:
 		const std::string& stateName,
 		const D3D11_FILL_MODE& fillMode,
 		const D3D11_CULL_MODE& cullMode,
+		const BOOL& frontCounterClockwise,
 		const DXGI_SAMPLE_DESC& sampleDesc
 	);
 	void RegisterSamplerState(
