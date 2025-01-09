@@ -14,14 +14,14 @@ void StaticMeshPartData::Serialize(FILE* fileIn) const
 {
 	MeshPartsData::Serialize(fileIn);
 
-	SerializeHelper::SerializeSequenceContainer(m_tangents, fileIn);
+	SerializeHelper::SerializeVectorContainer(m_tangents, fileIn);
 }
 
 void StaticMeshPartData::Deserialize(FILE* fileIn)
 {
 	MeshPartsData::Deserialize(fileIn);
 
-	m_tangents = DeserializeHelper::DeserializeSequenceContainer<vector<XMFLOAT3>>(fileIn);
+	m_tangents = DeserializeHelper::DeserializeVectorContainer<vector<XMFLOAT3>>(fileIn);
 }
 
 vector<UINT> StaticMeshPartData::GetStrides()

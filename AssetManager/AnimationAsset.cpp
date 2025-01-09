@@ -82,18 +82,18 @@ DirectX::XMMATRIX AnimChannel::GetLocalTransformation(const float& timeIn) const
 
 void AnimChannel::Serialize(FILE* fileIn) const
 {
-	SerializeHelper::SerializeSequenceContainer(m_positionKeys, fileIn);
-	SerializeHelper::SerializeSequenceContainer(m_quaternionKeys, fileIn);
-	SerializeHelper::SerializeSequenceContainer(m_scaleKeys, fileIn);
-	SerializeHelper::SerializeSequenceContainer(m_timeTable, fileIn);
+	SerializeHelper::SerializeVectorContainer(m_positionKeys, fileIn);
+	SerializeHelper::SerializeVectorContainer(m_quaternionKeys, fileIn);
+	SerializeHelper::SerializeVectorContainer(m_scaleKeys, fileIn);
+	SerializeHelper::SerializeIterableContainer(m_timeTable, fileIn);
 }
 
 void AnimChannel::Deserialize(FILE* fileIn)
 {
-	m_positionKeys = DeserializeHelper::DeserializeSequenceContainer<vector<SAnimationKey>>(fileIn);
-	m_quaternionKeys = DeserializeHelper::DeserializeSequenceContainer<vector<SAnimationKey>>(fileIn);
-	m_scaleKeys = DeserializeHelper::DeserializeSequenceContainer<vector<SAnimationKey>>(fileIn);
-	m_timeTable = DeserializeHelper::DeserializeSequenceContainer<set<float>>(fileIn);
+	m_positionKeys = DeserializeHelper::DeserializeVectorContainer<vector<SAnimationKey>>(fileIn);
+	m_quaternionKeys = DeserializeHelper::DeserializeVectorContainer<vector<SAnimationKey>>(fileIn);
+	m_scaleKeys = DeserializeHelper::DeserializeVectorContainer<vector<SAnimationKey>>(fileIn);
+	m_timeTable = DeserializeHelper::DeserializeIterableContainer<set<float>>(fileIn);
 }
 
 AnimationAsset::AnimationAsset(const string& assetName)

@@ -69,7 +69,7 @@ void ATextureAsset::Serialize(FILE* fileIn) const
     for (auto& compressedImageBufferWithSize : compressedImageBuffersWithSize)
     {
         SerializeHelper::SerializeElement(compressedImageBufferWithSize.first, fileIn);
-        SerializeHelper::SerializeSequenceContainer(compressedImageBufferWithSize.second, fileIn);
+        SerializeHelper::SerializeVectorContainer(compressedImageBufferWithSize.second, fileIn);
     }
 }
 
@@ -88,7 +88,7 @@ void ATextureAsset::Deserialize(FILE* fileIn)
         uint32_t imageBufferSize = DeserializeHelper::DeserializeElement<uint32_t>(fileIn);
 
         compressedImageBuffersWithSize.emplace_back(make_pair(imageBufferSize,
-            DeserializeHelper::DeserializeSequenceContainer<vector<uint8_t>>(fileIn)
+            DeserializeHelper::DeserializeVectorContainer<vector<uint8_t>>(fileIn)
         ));
     }
     m_imageBuffers = DecompressedImageBuffers(compressedImageBuffersWithSize);

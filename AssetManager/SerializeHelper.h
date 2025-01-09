@@ -56,7 +56,9 @@ public:
 	static void SerializeString(const std::string& textIn, FILE* fileIn);
 
 	template <SequenceContainer Container>
-	static void SerializeSequenceContainer(const Container& container, FILE* fileIn);
+	static void SerializeVectorContainer(const Container& container, FILE* fileIn);
+	template <SequenceContainer Container>
+	static void SerializeIterableContainer(const Container& container, FILE* fileIn);
 
 public:
 	template <KeyValueContainer Container>
@@ -78,7 +80,9 @@ public:
 
 public:
 	template <SequenceContainer Container>
-	static Container DeserializeSequenceContainer(FILE* fileIn);
+	static Container DeserializeVectorContainer(FILE* fileIn);
+	template <SequenceContainer Container>
+	static Container DeserializeIterableContainer(FILE* fileIn);
 
 public:
 	template <KeyValueContainer Container>
@@ -103,7 +107,17 @@ inline T DeserializeHelper::DeserializeElement(FILE* fileIn)
 }
 
 template<SequenceContainer Container>
-inline void SerializeHelper::SerializeSequenceContainer(const Container& container, FILE* fileIn)
+inline void SerializeHelper::SerializeVectorContainer(const Container& container, FILE* fileIn)
+{
+	using ValueType = typename Container::value_type;
+
+	const size_t containerSize = container.size();
+	SerializeHelper::SerializeElement(containerSize, fileIn);
+	fwrite(container.data(), sizeof(ValueType), containerSize, fileIn);
+}
+
+template<SequenceContainer Container>
+inline void SerializeHelper::SerializeIterableContainer(const Container& container, FILE* fileIn)
 {
 	using ValueType = typename Container::value_type;
 
@@ -117,7 +131,20 @@ inline void SerializeHelper::SerializeSequenceContainer(const Container& contain
 }
 
 template<SequenceContainer Container>
-inline Container DeserializeHelper::DeserializeSequenceContainer(FILE* fileIn)
+inline Container DeserializeHelper::DeserializeVectorContainer(FILE* fileIn)
+{
+	using ValueType = typename Container::value_type;
+
+	size_t containerSize = DeserializeElement<size_t>(fileIn);
+
+	Container result;
+	result.resize(containerSize);
+	fread(result.data(), sizeof(ValueType), containerSize, fileIn);
+	return result;
+}
+
+template<SequenceContainer Container>
+inline Container DeserializeHelper::DeserializeIterableContainer(FILE* fileIn)
 {
 	using ValueType = typename Container::value_type;
 

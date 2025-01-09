@@ -61,14 +61,14 @@ void ScratchTextureAsset::Serialize(FILE* fileIn) const
 {
 	ATextureAsset::Serialize(fileIn);
 	SerializeHelper::SerializeElement(m_format, fileIn);
-	SerializeHelper::SerializeSequenceContainer(m_rowPitchPerArray, fileIn);
+	SerializeHelper::SerializeVectorContainer(m_rowPitchPerArray, fileIn);
 }
 
 void ScratchTextureAsset::Deserialize(FILE* fileIn)
 {
 	ATextureAsset::Deserialize(fileIn);
 	m_format = DeserializeHelper::DeserializeElement<DXGI_FORMAT>(fileIn);
-	m_rowPitchPerArray = DeserializeHelper::DeserializeSequenceContainer<vector<UINT>>(fileIn);
+	m_rowPitchPerArray = DeserializeHelper::DeserializeVectorContainer<vector<UINT>>(fileIn);
 }
 
 void ScratchTextureAsset::Accept(IAssetVisitor* visitor)

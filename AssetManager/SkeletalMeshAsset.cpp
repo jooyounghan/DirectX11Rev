@@ -49,16 +49,16 @@ void SkeletalMeshPartData::Serialize(FILE* fileIn) const
 {
 	StaticMeshPartData::Serialize(fileIn);
 
-	SerializeHelper::SerializeSequenceContainer(m_blendWeight, fileIn);
-	SerializeHelper::SerializeSequenceContainer(m_blendIndex, fileIn);
+	SerializeHelper::SerializeVectorContainer(m_blendWeight, fileIn);
+	SerializeHelper::SerializeVectorContainer(m_blendIndex, fileIn);
 }
 
 void SkeletalMeshPartData::Deserialize(FILE* fileIn)
 {
 	StaticMeshPartData::Deserialize(fileIn);
 
-	m_blendWeight = DeserializeHelper::DeserializeSequenceContainer<vector<XMFLOAT4>>(fileIn);
-	m_blendIndex = DeserializeHelper::DeserializeSequenceContainer<vector<XMINT4>>(fileIn);
+	m_blendWeight = DeserializeHelper::DeserializeVectorContainer<vector<XMFLOAT4>>(fileIn);
+	m_blendIndex = DeserializeHelper::DeserializeVectorContainer<vector<XMINT4>>(fileIn);
 }
 
 
