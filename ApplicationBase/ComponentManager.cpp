@@ -224,7 +224,7 @@ void ComponentManager::LaunchComponentDBMonitor()
 			{
 				m_sessionManager->startTransaction();
 				{
-					{
+					{ // Insert Root Component =============================================
 						unique_lock writeLock(m_insertToSceneQueueMutex);
 
 						while (!m_insertToSceneQueue.empty())
@@ -239,9 +239,9 @@ void ComponentManager::LaunchComponentDBMonitor()
 							m_componentCreator.AddComponent(scene, nullptr, component);
 							component->Accept(&m_componentCreator);
 						}
-					}
+					} // =======================================================================
 					
-					{
+					{ // Insert Child Component ================================================
 						unique_lock writeLock(m_insertToComponentQueueMutex);
 
 						while (!m_insertToComponentQueue.empty())
@@ -256,9 +256,9 @@ void ComponentManager::LaunchComponentDBMonitor()
 							m_componentCreator.AddComponent(nullptr, parentComponent, component);
 							component->Accept(&m_componentCreator);
 						}
-					}
+					} // =======================================================================
 
-					{
+					{ // Delete ================================================================
 						unique_lock writeLock(m_removeQueueMutex);
 
 						while (!m_removeQueue.empty())
@@ -267,10 +267,10 @@ void ComponentManager::LaunchComponentDBMonitor()
 							m_removeQueue.pop();
 							tempRemoveQueue.back()->Accept(&m_componentRemover);
 						}
-					}
+					} // =======================================================================
 				}
 
-				{
+				{ // Update ===================================================================
 					shared_lock readLock(m_componentMutex);
 					for (auto& m_componentIDToComponent : m_componentIDsToComponent)
 					{
@@ -280,7 +280,7 @@ void ComponentManager::LaunchComponentDBMonitor()
 						}
 						m_defferedContext->RecordToCommandList();
 					}
-				}
+				} // ==========================================================================
 
 				m_sessionManager->commit();
 

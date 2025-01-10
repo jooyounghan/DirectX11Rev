@@ -206,6 +206,7 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="ComponentRemover.h" />
     <ClInclude Include="ComponentType.h" />
     <ClInclude Include="ComponentUpdater.h" />
+    <ClInclude Include="ISceneVisitor.h" />
     <ClInclude Include="SceneDefferedRenderer.h" />
     <ClInclude Include="SceneForwardRenderer.h" />
     <ClInclude Include="IComponentVisitor.h" />

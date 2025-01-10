@@ -4,6 +4,8 @@
 
 #include <mysqlx/xdevapi.h>
 
+class Scene;
+
 class ComponentCreator : public IComponentVisitor
 {
 public:

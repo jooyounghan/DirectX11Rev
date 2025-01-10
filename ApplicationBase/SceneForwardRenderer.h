@@ -6,7 +6,8 @@ class SceneForwardRenderer : public ASceneRenderer
 public:
 	SceneForwardRenderer(
 		ID3D11DeviceContext* const* deviceContextAddress,
-		ComponentPSOManager* componentPsoManager
+		ComponentPSOManager* componentPsoManager,
+		CameraComponent* const* cameraComponentAddress
 	);
 	~SceneForwardRenderer() override = default;
 

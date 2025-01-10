@@ -11,6 +11,7 @@ public:
 		const UINT& width, 
 		const UINT& height,
 		const UINT& arraySize,
+		const UINT& mipLevels,
 		const std::vector<std::vector<uint8_t>>& textureDataPerArray,
 		const std::vector<UINT>& textureRowPitchPerArray,
 		const UINT& cpuAccessFlag,
@@ -25,6 +26,7 @@ public:
 		const UINT& width,
 		const UINT& height,
 		const UINT& arraySize,
+		const UINT& mipLevels,
 		const UINT& cpuAccessFlag,
 		const UINT& miscFlagIn,
 		const D3D11_USAGE& usage,
@@ -55,6 +57,7 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	const UINT& width,
 	const UINT& height,
 	const UINT& arraySize,
+	const UINT& mipLevels,
 	const std::vector<std::vector<uint8_t>>& textureDataPerArray,
 	const std::vector<UINT>& textureRowPitchPerArray,
 	const UINT& cpuAccessFlag,
@@ -70,7 +73,7 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	texture2DDesc.Width = width;
 	texture2DDesc.Height = height;
 	texture2DDesc.ArraySize = arraySize;
-	texture2DDesc.MipLevels = 0;
+	texture2DDesc.MipLevels = mipLevels;
 	texture2DDesc.BindFlags = Texture2DInstance<IsTextureOption...>::GetBindFlags();
 	texture2DDesc.CPUAccessFlags = cpuAccessFlag;
 	texture2DDesc.MiscFlags = miscFlagIn;
@@ -83,8 +86,9 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	for (size_t arrayIdx = 0; arrayIdx < textureDataPerArray.size(); ++arrayIdx)
 	{
 		const uint8_t* imageBuffer = textureDataPerArray[arrayIdx].data();
+		UINT test = D3D11CalcSubresource(0, static_cast<UINT>(arrayIdx), texture2DDesc.MipLevels);
 		deviceContext->UpdateSubresource(
-			m_texture2D.Get(), D3D11CalcSubresource(0, static_cast<UINT>(arrayIdx), texture2DDesc.MipLevels), nullptr,
+			m_texture2D.Get(), test, nullptr,
 			imageBuffer, textureRowPitchPerArray[arrayIdx], NULL
 		);
 	}
@@ -96,7 +100,8 @@ template<typename ...IsTextureOption>
 inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	const UINT& width,
 	const UINT& height,
-	const UINT& arraySize, 
+	const UINT& arraySize,
+	const UINT& mipLevels,
 	const UINT& cpuAccessFlag,
 	const UINT& miscFlagIn, 
 	const D3D11_USAGE& usage,
@@ -109,7 +114,7 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	texture2DDesc.Width = width;
 	texture2DDesc.Height = height;
 	texture2DDesc.ArraySize = arraySize;
-	texture2DDesc.MipLevels = 0;
+	texture2DDesc.MipLevels = mipLevels;
 	texture2DDesc.BindFlags = Texture2DInstance<IsTextureOption...>::GetBindFlags();
 	texture2DDesc.CPUAccessFlags = cpuAccessFlag;
 	texture2DDesc.MiscFlags = miscFlagIn;

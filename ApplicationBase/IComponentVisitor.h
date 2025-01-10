@@ -6,8 +6,6 @@ class StaticMeshComponent;
 class SkeletalMeshComponent;
 class CameraComponent;
 
-class Scene;
-
 class IComponentVisitor
 {
 public:

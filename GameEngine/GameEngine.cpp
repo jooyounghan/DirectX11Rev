@@ -32,8 +32,8 @@ GameEngine::GameEngine()
 {
 
 	// =================================Test==========================
-	m_testCamera = new CameraComponent("", NULL, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f));
-	m_testCamera->SetCameraProperties(1000, 1000, 0.1f, 1E6f, 120.f);
+	m_testCamera = new CameraComponent("", NULL, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(1.f, 1.f, 1.f));
+	m_testCamera->SetCameraProperties(1200, 800, 0.1f, 1E6f, 120.f);
 	// ===============================================================
 
 	CreateDefferedContext();
@@ -151,8 +151,6 @@ void GameEngine::Update(const float& deltaTime)
 	{
 		imguiWindow->PrepareWindow();
 	}
-
-
 
 	future<void> componentRenderGPUTask = async(launch::deferred, [&, immediateContext]()
 		{

@@ -2,12 +2,8 @@
 
 #include "Scene.h"
 #include "CameraComponent.h"
-
-#include "AssetManager.h"
 #include "ComponentManager.h"
-#include "ComponentPSOManager.h"
 
-#include "DynamicBuffer.h"
 #include "Texture2DInstance.h"
 #include "SRVOption.h"
 #include "RTVOption.h"
@@ -30,93 +26,40 @@ SceneWindow::SceneWindow(
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
     m_componentInformer(assetManager, componentManager),
-    m_forwardRenderer(deviceConextAddress, m_componentPsoManageCached),
-    m_defferedRenderer(deviceConextAddress, m_componentPsoManageCached),
+    m_forwardRenderer(deviceConextAddress, m_componentPsoManageCached, &m_selectedCamera),
+    m_defferedRenderer(deviceConextAddress, m_componentPsoManageCached, &m_selectedCamera),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
     m_rendererComboBox.SetSelectableItems({ "Forward Renderer", "Deffered Renderer" });
-    m_rendererComboBox.OnSelChanged = [&](const size_t& idx, const string& text) {m_selectedRendererType = static_cast<ERendererType>(idx); };
+    m_rendererComboBox.OnSelChanged = [&](const size_t& idx, const string& text) 
+        {
+            ERendererType renderType = static_cast<ERendererType>(idx);
+            switch (renderType)
+            {
+            case ERendererType::FORWARD_RENDERING:
+                m_selectedRenderer = &m_forwardRenderer;
+                break;
+            case ERendererType::DEFFERED_RENDERING:
+                m_selectedRenderer = &m_defferedRenderer;
+                break;
+            default:
+                break;
+            }
+        };
 }
 
 
 void SceneWindow::PrepareWindow()
 {
-    if (m_selectedScene != nullptr && m_selectedCamera != nullptr)
+    if (m_selectedScene != nullptr && m_selectedCamera != nullptr && m_selectedRenderer != nullptr)
     {
-        ASceneRenderer* sceneRenderer = nullptr;
-        switch (m_selectedRendererType)
-        {
-        case ERendererType::FORWARD_RENDERING:
-            sceneRenderer = &m_forwardRenderer;
-            break;
-        case ERendererType::DEFFERED_RENDERING:
-            sceneRenderer = &m_defferedRenderer;
-            break;
-        default:
-            throw invalid_argument("Invalid entity type");
-        }
-
-        RenderScene();
+        m_selectedScene->Accept(m_selectedRenderer);
 
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
-        RenderComponentRecursive(sceneRenderer, sceneRootComponents);
+        RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);
     }
 }
 
-void SceneWindow::RenderScene()
-{
-    ID3D11DeviceContext* deviceContext = *m_deviceContextAddressCached;
-    
-    AShader* const sceneVertexShader = m_componentPsoManageCached->GetComponentPSOVertexShader(ComponentPSOManager::EComponentPSOVertexShader::SCENE);
-    AShader* const scenePixelShader = m_componentPsoManageCached->GetComponentPSOPixelShader(ComponentPSOManager::EComponentPSOPixelShader::FORWARD_SCENE);
-    ID3D11SamplerState* const wrapSamplerState = m_componentPsoManageCached->GetComponentPSOSamplerState(ComponentPSOManager::EComponentPSOSamplerState::WRAP);
-    ID3D11DepthStencilState* const lessDepthStencilState = m_componentPsoManageCached->GetComponentPSODepthStencilState(ComponentPSOManager::EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS);
-    ID3D11RasterizerState* const ccwSolidSSRasterizerState = m_componentPsoManageCached->GetComponentPSORasterizerState(ComponentPSOManager::EComponentPSORasterizerState::CCW_SOLID_SS);
-    const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = m_selectedCamera->GetFilm();
-    const Texture2DInstance<DSVOption>* const depthStencilView = m_selectedCamera->GetDepthStencilViewBuffer();
-
-    vector<ID3D11RenderTargetView*> rtvs{ film->GetRTV() };
-
-    deviceContext->OMSetRenderTargets(1, rtvs.data(), depthStencilView->GetDSV());
-    deviceContext->OMSetDepthStencilState(lessDepthStencilState, 0);
-    
-    deviceContext->RSSetState(ccwSolidSSRasterizerState);
-    deviceContext->RSSetViewports(1, m_selectedCamera);
-
-    const StaticMeshAsset* const staticMeshAsset = m_selectedScene->GetSceneMeshAsset();
-    MeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(NULL);
-
-    const IBLMaterialAsset* const iblMaterialAsset = m_selectedScene->GetIBLMaterialAsset();
-    const ScratchTextureAsset* const backgroundTextureAsset = iblMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BACKGROUND);
-
-    const size_t& meshPartCount = meshPartsData->GetPartsCount();
-    const vector<UINT>& indicesOffsets = meshPartsData->GetIndexOffsets();
-    const vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetVertexBuffers();
-    const vector<UINT>& strides = meshPartsData->GetStrides();
-    const vector<UINT>& verticesOffsets = meshPartsData->GetOffsets();
-    const UINT& totalIndicesCount = static_cast<UINT>(meshPartsData->GetIndices().size());
-
-    for (size_t idx = 0; idx < meshPartCount; ++idx)
-    {
-        const UINT indexCount = (idx + 1 == meshPartCount ? totalIndicesCount : indicesOffsets[idx + 1]) - indicesOffsets[idx];
-
-        sceneVertexShader->SetShader(deviceContext);
-        scenePixelShader->SetShader(deviceContext);
-
-        deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
-        deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, indicesOffsets[idx]);
-
-        vector<ID3D11Buffer*> vsConstantBuffers{ m_selectedCamera->GetViewProjMatrixBuffer()->GetBuffer() };
-        vector<ID3D11Buffer*> psConstantBuffers{ iblMaterialAsset->GetIBLToneMappingBuffer()->GetBuffer() };
-        vector<ID3D11ShaderResourceView*> psSRVs{ backgroundTextureAsset->GetSRV() };
-
-        deviceContext->VSSetConstantBuffers(0, 1, vsConstantBuffers.data());
-        deviceContext->PSSetConstantBuffers(0, 1, psConstantBuffers.data());
-        deviceContext->PSSetShaderResources(0, 1, psSRVs.data());
-
-        deviceContext->DrawIndexed(indexCount, NULL, NULL);
-    }
-}
 
 void SceneWindow::RenderComponentRecursive(ASceneRenderer* const renderer, const vector<AComponent*>& components)
 {

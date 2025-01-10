@@ -26,7 +26,7 @@ public:
 	ComponentEntity(const uint32_t& componentID);
 	virtual ~ComponentEntity();
 
-protected:
+public:
 	DirectX::XMVECTOR m_absolutePosition;
 	DirectX::XMVECTOR m_absoluteAngle;
 	DirectX::XMVECTOR m_absoluteScale;

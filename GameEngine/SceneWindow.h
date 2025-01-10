@@ -48,7 +48,6 @@ public:
 	virtual void PrepareWindow() override;
 
 private:
-	void RenderScene();
 	void RenderComponentRecursive(ASceneRenderer* const renderer, const std::vector<AComponent*>& components);
 
 private:
@@ -61,7 +60,7 @@ private:
 private:
 	SceneForwardRenderer m_forwardRenderer;
 	SceneDefferedRenderer m_defferedRenderer;
-	ERendererType m_selectedRendererType = ERendererType::FORWARD_RENDERING;
+	ASceneRenderer* m_selectedRenderer;
 
 private:
 	ImGuiComboBox m_rendererComboBox;

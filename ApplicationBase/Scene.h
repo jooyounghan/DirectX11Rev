@@ -1,15 +1,15 @@
 #pragma once
-#include "AComponent.h"
+#include "ISceneVisitor.h"
 
+#include <string>
+#include <vector>
 #include <type_traits>
 
+class AComponent;
 class StaticMeshAsset;
 class IBLMaterialAsset;
 class IStaticMeshProvider;
 class IIBLMaterialProvider;
-
-template <typename T>
-concept ComponentType = std::is_base_of_v<AComponent, T>;
 
 class Scene
 {
@@ -53,4 +53,7 @@ public:
 
 public:
 	inline const std::vector<AComponent*>& GetRootComponents() { return m_rootComponentsCached; }
+
+public:
+	void Accept(ISceneVisitor* visitor);
 };

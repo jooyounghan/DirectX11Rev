@@ -16,3 +16,8 @@ void Scene::UpdateSceneIBLMaterialAsset(IIBLMaterialProvider& iblMaterialProvide
 {
 	m_sceneIBLMaterialAsset = iblMaterialProvider.GetIBLMaterialAsset(m_iblMaterialName);
 }
+
+void Scene::Accept(ISceneVisitor* visitor)
+{
+	visitor->Visit(this);
+}

@@ -17,7 +17,7 @@ ScratchTextureAsset::ScratchTextureAsset(
 		static_cast<unsigned int>(metaData.width), 
 		static_cast<unsigned int>(metaData.height),
 		static_cast<unsigned int>(metaData.arraySize)
-	), m_format(metaData.format)
+	), m_mipLevels(static_cast<UINT>(metaData.mipLevels)), m_miscFlag(metaData.miscFlags), m_format(metaData.format)
 {
 	for (size_t ArrayIdx = 0; ArrayIdx < m_arraySize; ++ArrayIdx)
 	{
@@ -51,8 +51,8 @@ void ScratchTextureAsset::InitializeGPUAsset(
 )
 {
 	m_resource = new Texture2DInstance<SRVOption, RTVOption>(
-		m_width, m_height, m_arraySize, m_imageBuffers, GetRowPitchArray(),
-		NULL, D3D11_RESOURCE_MISC_GENERATE_MIPS, D3D11_USAGE_DEFAULT, m_format,
+		m_width, m_height, m_arraySize, m_mipLevels,  m_imageBuffers, GetRowPitchArray(),
+		NULL, m_miscFlag, D3D11_USAGE_DEFAULT, m_format,
 		device, deviceContext
 	);
 }
@@ -60,6 +60,8 @@ void ScratchTextureAsset::InitializeGPUAsset(
 void ScratchTextureAsset::Serialize(FILE* fileIn) const
 {
 	ATextureAsset::Serialize(fileIn);
+	SerializeHelper::SerializeElement<UINT>(m_mipLevels, fileIn);
+	SerializeHelper::SerializeElement<UINT>(m_miscFlag, fileIn);
 	SerializeHelper::SerializeElement(m_format, fileIn);
 	SerializeHelper::SerializeVectorContainer(m_rowPitchPerArray, fileIn);
 }
@@ -67,6 +69,8 @@ void ScratchTextureAsset::Serialize(FILE* fileIn) const
 void ScratchTextureAsset::Deserialize(FILE* fileIn)
 {
 	ATextureAsset::Deserialize(fileIn);
+	m_mipLevels = DeserializeHelper::DeserializeElement<UINT>(fileIn);
+	m_miscFlag = DeserializeHelper::DeserializeElement<UINT>(fileIn);
 	m_format = DeserializeHelper::DeserializeElement<DXGI_FORMAT>(fileIn);
 	m_rowPitchPerArray = DeserializeHelper::DeserializeVectorContainer<vector<UINT>>(fileIn);
 }
