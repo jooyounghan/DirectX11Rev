@@ -11,8 +11,8 @@ class DSVOption;
 constexpr DirectX::XMVECTOR GDefaultForward = DirectX::XMVECTOR{ 0.f, 0.f, 1.f, 0.f };
 constexpr DirectX::XMVECTOR GDefaultUp = DirectX::XMVECTOR{ 0.f, 1.f, 0.f, 0.f };
 constexpr DirectX::XMVECTOR GDefaultRight = DirectX::XMVECTOR{ 1.f, 0.f, 0.f, 0.f };
-constexpr float GDefaultNearZ = 0.1f;
-constexpr float GDefaultFarZ = 1E9f;
+constexpr float GDefaultNearZ = 0.01f;
+constexpr float GDefaultFarZ = 1E6f;
 constexpr float GDefaultFovAngle = 120.f;
 
 struct SViewElement

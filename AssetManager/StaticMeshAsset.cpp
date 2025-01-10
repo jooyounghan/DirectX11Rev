@@ -20,13 +20,6 @@ void StaticMeshPartData::Serialize(FILE* fileIn) const
 void StaticMeshPartData::Deserialize(FILE* fileIn)
 {
 	MeshPartsData::Deserialize(fileIn);
-	for (auto& t : m_positions)
-	{
-		t.x *= 1000.f;
-		t.y *= 1000.f;
-		t.z *= 1000.f;
-	}
-
 	m_tangents = DeserializeHelper::DeserializeVectorContainer<vector<XMFLOAT3>>(fileIn);
 }
 

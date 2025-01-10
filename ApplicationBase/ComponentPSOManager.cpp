@@ -139,8 +139,8 @@ void ComponentPSOManager::RegisterRasterizerStateForComponent()
 	singleSampleDesc.Quality = 0;
 	RegisterRasterizerState("ClockWiseSolidSS", D3D11_FILL_SOLID, D3D11_CULL_BACK, FALSE, singleSampleDesc);
 	RegisterRasterizerState("ClockWiseWireframeSS", D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, FALSE, singleSampleDesc);
-	RegisterRasterizerState("CounterClockWiseSolidSS", D3D11_FILL_SOLID, D3D11_CULL_FRONT, TRUE, singleSampleDesc);
-	RegisterRasterizerState("CounterClockWiseWireframeSS", D3D11_FILL_WIREFRAME, D3D11_CULL_FRONT, TRUE, singleSampleDesc);
+	RegisterRasterizerState("CounterClockWiseSolidSS", D3D11_FILL_SOLID, D3D11_CULL_BACK, TRUE, singleSampleDesc);
+	RegisterRasterizerState("CounterClockWiseWireframeSS", D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, TRUE, singleSampleDesc);
 }
 
 void ComponentPSOManager::RegisterSamplerStateForComponent()

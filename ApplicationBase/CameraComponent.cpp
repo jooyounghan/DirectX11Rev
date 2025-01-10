@@ -79,10 +79,10 @@ void CameraComponent::InitEntity(ID3D11Device* device)
 
 void CameraComponent::UpdateEntity(ID3D11DeviceContext* deviceContext)
 {
-	AComponent::UpdateEntity(deviceContext);
-
+	UpdateAbsoluteEntities();
 	m_viewElement.m_viewProj = GetViewMatrix() * GetProjectionMatrix();
 	m_viewElement.m_invViewProj = XMMatrixInverse(nullptr, m_viewElement.m_viewProj);
+	m_viewElement.m_viewProj = XMMatrixTranspose(m_viewElement.m_viewProj);
 	m_viewProjBuffer->Upload(deviceContext, sizeof(SViewElement), 1, &m_viewElement);
 }
 

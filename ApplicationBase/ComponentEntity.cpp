@@ -36,9 +36,9 @@ XMMATRIX ComponentEntity::GetTranformation()
 XMVECTOR ComponentEntity::GetQuaternion()
 {
 	return XMQuaternionRotationRollPitchYaw(
-		XMVectorGetX(m_absoluteAngle),
-		XMVectorGetY(m_absoluteAngle),
-		XMVectorGetZ(m_absoluteAngle)
+		XMConvertToRadians(XMVectorGetX(m_absoluteAngle)),
+		XMConvertToRadians(XMVectorGetY(m_absoluteAngle)),
+		XMConvertToRadians(XMVectorGetZ(m_absoluteAngle))
 	);
 }
 
@@ -49,9 +49,11 @@ void ComponentEntity::InitEntity(ID3D11Device* device)
 
 void ComponentEntity::UpdateEntity(ID3D11DeviceContext* deviceContext)
 {
+	UpdateAbsoluteEntities();
+
 	m_transformation.m_transformation = GetTranformation();
 	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
-
+	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
 	m_transformationBuffer->Upload(deviceContext, sizeof(STransformation), 1, &m_transformation);
 }
 

@@ -33,7 +33,7 @@ GameEngine::GameEngine()
 
 	// =================================Test==========================
 	m_testCamera = new CameraComponent("", NULL, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(1.f, 1.f, 1.f));
-	m_testCamera->SetCameraProperties(1200, 800, 0.1f, 1E6f, 120.f);
+	m_testCamera->SetCameraProperties(1200, 800, GDefaultNearZ, GDefaultFarZ, GDefaultFovAngle);
 	// ===============================================================
 
 	CreateDefferedContext();
@@ -159,6 +159,10 @@ void GameEngine::Update(const float& deltaTime)
 			componentRenderDefferedContext->TryExecuteCommandList(immediateContext);
 		});
 
+	assetLoadGPUTask.wait();
+	componentUpdateGPUTask.wait();
+	componentRenderGPUTask.wait();
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 
@@ -180,9 +184,7 @@ void GameEngine::Update(const float& deltaTime)
 	ImGui::EndFrame();
 	ImGui::UpdatePlatformWindows();
 
-	assetLoadGPUTask.wait();
-	componentUpdateGPUTask.wait();
-	componentRenderGPUTask.wait();
+
 
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 

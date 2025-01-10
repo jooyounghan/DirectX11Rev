@@ -51,8 +51,18 @@ SceneWindow::SceneWindow(
 
 void SceneWindow::PrepareWindow()
 {
+    static FLOAT clearColor[4] = { 1.f, 1.f, 1.f, 1.f };
     if (m_selectedScene != nullptr && m_selectedCamera != nullptr && m_selectedRenderer != nullptr)
     {
+        (*m_deviceContextAddressCached)->ClearRenderTargetView(
+            m_selectedCamera->GetFilm()->GetRTV(), clearColor
+        );
+        (*m_deviceContextAddressCached)->ClearDepthStencilView(
+            m_selectedCamera->GetDepthStencilViewBuffer()->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0
+        );
+
+        
+
         m_selectedScene->Accept(m_selectedRenderer);
 
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();

@@ -26,7 +26,7 @@ public:
 	ComponentEntity(const uint32_t& componentID);
 	virtual ~ComponentEntity();
 
-public:
+protected:
 	DirectX::XMVECTOR m_absolutePosition;
 	DirectX::XMVECTOR m_absoluteAngle;
 	DirectX::XMVECTOR m_absoluteScale;
@@ -40,11 +40,18 @@ protected:
 	ConstantBuffer* m_componentBuffer;
 
 public:
+	const DynamicBuffer* GetTransformationBuffer() const { return m_transformationBuffer; }
+	const ConstantBuffer* GetComponentBuffer() const { return m_componentBuffer; }
+
+public:
 	inline const uint32_t& GetComponentID() { return m_componentConstant.m_componentID; }
 
 public:
 	DirectX::XMMATRIX GetTranformation();
 	DirectX::XMVECTOR GetQuaternion();
+
+protected:
+	virtual void UpdateAbsoluteEntities() = 0;
 
 public:
 	virtual void InitEntity(ID3D11Device* device);
