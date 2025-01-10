@@ -16,18 +16,18 @@ using namespace DirectX;
 
 SceneWindow::SceneWindow(
     const string& windowID,
-    ID3D11DeviceContext* const* deviceConextAddress,
+    ID3D11DeviceContext* const* drawDefferedDCAddress,
     AssetManager* assetManager,
     ComponentManager* componentManager,
     ComponentPSOManager* componentPsoManager
 )
     : AWindow(windowID, true, nullptr),
-    m_deviceContextAddressCached(deviceConextAddress),
+    m_drawDefferedDCAddressCached(drawDefferedDCAddress),
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
     m_componentInformer(assetManager, componentManager),
-    m_forwardRenderer(deviceConextAddress, m_componentPsoManageCached, &m_selectedCamera),
-    m_defferedRenderer(deviceConextAddress, m_componentPsoManageCached, &m_selectedCamera),
+    m_forwardRenderer(drawDefferedDCAddress, m_componentPsoManageCached, &m_selectedCamera),
+    m_defferedRenderer(drawDefferedDCAddress, m_componentPsoManageCached, &m_selectedCamera),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
     m_rendererComboBox.SetSelectableItems({ "Forward Renderer", "Deffered Renderer" });
@@ -54,10 +54,10 @@ void SceneWindow::PrepareWindow()
     static FLOAT clearColor[4] = { 1.f, 1.f, 1.f, 1.f };
     if (m_selectedScene != nullptr && m_selectedCamera != nullptr && m_selectedRenderer != nullptr)
     {
-        (*m_deviceContextAddressCached)->ClearRenderTargetView(
+        (*m_drawDefferedDCAddressCached)->ClearRenderTargetView(
             m_selectedCamera->GetFilm()->GetRTV(), clearColor
         );
-        (*m_deviceContextAddressCached)->ClearDepthStencilView(
+        (*m_drawDefferedDCAddressCached)->ClearDepthStencilView(
             m_selectedCamera->GetDepthStencilViewBuffer()->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0
         );
 
@@ -131,8 +131,14 @@ void SceneWindow::DrawRendererSelector()
 
 void SceneWindow::DrawScene()
 {
+    const ImVec2 cursorPos = GetCursorPos();
+    const ImVec2 contentAvailRegion = GetContentRegionAvail();
+
     const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = m_selectedCamera->GetFilm();
-    Image((ImU64)(film != nullptr ? film->GetSRV() : nullptr), GetContentRegionAvail());
+    Image((ImU64)(film != nullptr ? film->GetSRV() : nullptr), contentAvailRegion);
+    SetCursorPos(cursorPos);
+    InvisibleButton("SceneInteractor", contentAvailRegion);
+    InteractSceneInput(contentAvailRegion);
 }
 
 void SceneWindow::DrawComponentTree()
@@ -215,4 +221,18 @@ void SceneWindow::DrawComponentTreeRecursive(AComponent* const component)
         TreePop();
     }
 
+}
+
+void SceneWindow::InteractSceneInput(const ImVec2& size)
+{
+    ImGuiIO& io = ImGui::GetIO();
+    if (m_selectedCamera != nullptr && IsItemHovered(ImGuiHoveredFlags_::ImGuiHoveredFlags_None))
+    {
+        const ImVec2 mouseDelta = io.MouseDelta;
+
+        XMVECTOR& relativeAngle = m_selectedCamera->GetRelativeAngleRef();
+        relativeAngle.m128_f32[1] += 360.f * (mouseDelta.x / size.x);
+        relativeAngle.m128_f32[0] += 360.f * (mouseDelta.y / size.y);
+        m_selectedCamera->SetIsModified(true);
+    }
 }

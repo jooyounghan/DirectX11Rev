@@ -13,7 +13,7 @@ constexpr DirectX::XMVECTOR GDefaultUp = DirectX::XMVECTOR{ 0.f, 1.f, 0.f, 0.f }
 constexpr DirectX::XMVECTOR GDefaultRight = DirectX::XMVECTOR{ 1.f, 0.f, 0.f, 0.f };
 constexpr float GDefaultNearZ = 0.01f;
 constexpr float GDefaultFarZ = 1E6f;
-constexpr float GDefaultFovAngle = 120.f;
+constexpr float GDefaultFovAngle = 60.f;
 
 struct SViewElement
 {
@@ -67,7 +67,6 @@ protected:
 public:
 	const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const GetFilm() { return m_film; }
 	const Texture2DInstance<DSVOption>* const GetDepthStencilViewBuffer() { return m_depthStencilViewBuffer; }
-
 
 public:
 	virtual void InitEntity(ID3D11Device* device) override;

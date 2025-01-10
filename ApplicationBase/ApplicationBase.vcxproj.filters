@@ -64,6 +64,18 @@
     <ClInclude Include="ISceneVisitor.h">
       <Filter>헤더 파일\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="InputEventManager.h">
+      <Filter>헤더 파일\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="InputDefinition.h">
+      <Filter>헤더 파일\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseEvent.h">
+      <Filter>헤더 파일\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyEvent.h">
+      <Filter>헤더 파일\InputManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -150,6 +162,12 @@
     <Filter Include="Shader\Resolver">
       <UniqueIdentifier>{99851678-743c-4f84-9c37-3be0d55a3876}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\InputManager">
+      <UniqueIdentifier>{38fcf5a0-01fd-4ee5-be44-9282b2b359ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\InputManager">
+      <UniqueIdentifier>{1c82df74-bf9d-48d2-9b85-7a1f333e6eca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
@@ -205,6 +223,15 @@
     </ClCompile>
     <ClCompile Include="ComponentUpdater.cpp">
       <Filter>소스 파일\Component\Visitor\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="InputEventManager.cpp">
+      <Filter>소스 파일\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseEvent.cpp">
+      <Filter>소스 파일\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyEvent.cpp">
+      <Filter>소스 파일\InputManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

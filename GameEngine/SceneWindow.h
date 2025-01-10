@@ -28,7 +28,7 @@ class SceneWindow : public AWindow
 public:
 	SceneWindow(
 		const std::string& windowID,
-		ID3D11DeviceContext* const* deviceConextAddress,
+		ID3D11DeviceContext* const* drawDefferedDCAddress,
 		AssetManager* assetManager,
 		ComponentManager* componentManager, 
 		ComponentPSOManager* componentPsoManager
@@ -36,7 +36,7 @@ public:
 	~SceneWindow() override = default;
 
 private:
-	ID3D11DeviceContext* const* m_deviceContextAddressCached = nullptr;
+	ID3D11DeviceContext* const* m_drawDefferedDCAddressCached = nullptr;
 	Scene* m_selectedScene = nullptr;
 	ComponentManager* m_componentManagerCached = nullptr;
 	ComponentPSOManager* m_componentPsoManageCached = nullptr;
@@ -74,5 +74,6 @@ private:
 
 private:
 	void DrawComponentTreeRecursive(AComponent* const component);
+	void InteractSceneInput(const ImVec2& size);
 };
 

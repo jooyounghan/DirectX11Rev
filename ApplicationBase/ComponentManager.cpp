@@ -373,8 +373,7 @@ void ComponentManager::AddComponent(AComponent* parentComponent, AComponent* com
 {
 	component->RemoveFromParent();
 	parentComponent->AttachChildComponent(component);
-	m_componentIDsToComponent.emplace(component->GetComponentID(), component);
-
+	RegisterComponent(component);
 	{
 		unique_lock writeLock(m_insertToComponentQueueMutex);
 		m_insertToComponentQueue.push(make_pair(parentComponent, component));
@@ -397,4 +396,9 @@ void ComponentManager::RemoveComponent(AComponent* component)
 		unique_lock writeLock(m_removeQueueMutex);
 		m_removeQueue.push(component);
 	}
+}
+
+void ComponentManager::RegisterComponent(AComponent* component)
+{
+	m_componentIDsToComponent.emplace(component->GetComponentID(), component);
 }

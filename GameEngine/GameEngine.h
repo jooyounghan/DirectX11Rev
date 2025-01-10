@@ -2,19 +2,19 @@
 #include "AApplication.h"
 
 #include "D3D11Engine.h"
-#include "DefferedContext.h"
-
-#include "AssetManager.h"
-#include "TaskManager.h"
-#include "ComponentPSOManager.h"
-
-#include "SessionManager.h"
-#include "ComponentManager.h"
-
 #include "AWindow.h"
 #include "AModal.h"
 
 #include <memory>
+
+class DefferedContext;
+class TaskManager;
+class SessionManager;
+class AssetManager;
+class ComponentManager;
+class ComponentPSOManager;
+class CameraComponent;
+class InputEventManager;
 
 enum class EDefferedContextType
 {
@@ -30,24 +30,6 @@ public:
 	GameEngine();
 	~GameEngine() override;
 
-public:
-	virtual void Init(const wchar_t* className, const wchar_t* applicaitonName) override;
-
-protected:
-	virtual void Update(const float& deltaTime) override;
-	virtual void AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
-
-protected:
-	void OnDropFiles(const HDROP& hDrop);
-
-private:
-	void CreateDefferedContext();
-	void CreateSessionManager();
-	void CreateAssetManager();
-	void CreateComponentManager();
-	void CreatePSOManager();
-	void CreateWindows();
-	void CreateModals();
 
 protected:
 	D3D11::D3D11Engine* m_engine;
@@ -64,13 +46,31 @@ protected:
 	ComponentManager* m_componentManager = nullptr;
 	ComponentPSOManager* m_componentPSOManager = nullptr;
 
-
-	// =================================Test==========================
 protected:
-	CameraComponent* m_testCamera = nullptr;
-	// ===============================================================
+	CameraComponent* m_editorCamera = nullptr;
 
 protected:
 	static Utilities::SColor ClearColor;
+
+public:
+	virtual void Init(const wchar_t* className, const wchar_t* applicaitonName) override;
+
+private:
+	virtual void Update(const float& deltaTime) override;
+	virtual void AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+	void OnDropFiles(const HDROP& hDrop);
+
+private:
+	void CreateEditor();
+
+private:
+	void CreateDefferedContext();
+	void CreateSessionManager();
+	void CreateAssetManager();
+	void CreateComponentManager();
+	void CreatePSOManager();
+	void CreateWindows();
+	void CreateModals();
+
 };
 

@@ -1,15 +1,22 @@
 #include "GameEngine.h"
 #include "ImGuiInitializer.h"
 
+#include "DefferedContext.h"
+
 #include "SceneWindow.h"
 #include "AssetViewWindow.h"
+
+#include "AssetManager.h"
+#include "TaskManager.h"
+#include "ComponentPSOManager.h"
+#include "SessionManager.h"
+#include "ComponentManager.h"
 
 #include "TaskModal.h"
 #include "MessageBoxModal.h"
 
-// =================================Test==========================
 #include "CameraComponent.h"
-// ===============================================================
+#include "InputEventManager.h"
 
 #include <future>
 
@@ -30,11 +37,7 @@ GameEngine::GameEngine()
 	m_engine(D3D11Engine::GetInstance()),
 	m_taskManager(TaskManager::GetInstance())
 {
-
-	// =================================Test==========================
-	m_testCamera = new CameraComponent("", NULL, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(1.f, 1.f, 1.f));
-	m_testCamera->SetCameraProperties(1200, 800, GDefaultNearZ, GDefaultFarZ, GDefaultFovAngle);
-	// ===============================================================
+	CreateEditor();
 
 	CreateDefferedContext();
 	CreateSessionManager();
@@ -42,6 +45,8 @@ GameEngine::GameEngine()
 	CreateComponentManager();
 	CreatePSOManager();
 	
+	m_componentManager->RegisterComponent(m_editorCamera);
+
 	/* Bind Event Handler */
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { m_engine->ResizeSwapChain(widthIn, heightIn); };
 }
@@ -121,8 +126,8 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 
 	m_taskManager->RegisterTask([&, device, assetsLoadDefferedContext]()
 		{
-			m_testCamera->InitEntity(device);
-			m_testCamera->UpdateEntity(assetsLoadDefferedContext->GetDefferedContext());
+			m_editorCamera->InitEntity(device);
+			m_editorCamera->UpdateEntity(assetsLoadDefferedContext->GetDefferedContext());
 			assetsLoadDefferedContext->RecordToCommandList();
 		}, "Test Camera Initializing"
 	);
@@ -147,6 +152,10 @@ void GameEngine::Update(const float& deltaTime)
 			componentUpdateDefferedContext->TryExecuteCommandList(immediateContext);
 		});
 
+
+	assetLoadGPUTask.wait();
+	componentUpdateGPUTask.wait();
+
 	for (auto& imguiWindow : m_imguiWindows)
 	{
 		imguiWindow->PrepareWindow();
@@ -158,9 +167,6 @@ void GameEngine::Update(const float& deltaTime)
 			componentRenderDefferedContext->RecordToCommandList();
 			componentRenderDefferedContext->TryExecuteCommandList(immediateContext);
 		});
-
-	assetLoadGPUTask.wait();
-	componentUpdateGPUTask.wait();
 	componentRenderGPUTask.wait();
 
 	ImGui_ImplDX11_NewFrame();
@@ -194,6 +200,7 @@ void GameEngine::Update(const float& deltaTime)
 void GameEngine::AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
+
 
 	switch (msg)
 	{
@@ -230,6 +237,12 @@ void GameEngine::OnDropFiles(const HDROP& hDrop)
 		}
 	}
 	DragFinish(hDrop);
+}
+
+void GameEngine::CreateEditor()
+{	
+	m_editorCamera = new CameraComponent("", NULL, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(1.f, 1.f, 1.f));
+	m_editorCamera->SetCameraProperties(1200, 800, GDefaultNearZ, GDefaultFarZ, GDefaultFovAngle);
 }
 
 void GameEngine::CreateDefferedContext()
@@ -278,10 +291,11 @@ void GameEngine::CreateWindows()
 	);
 
 	SceneWindow* sceneWindow = new SceneWindow(
-		"SceneWindow", m_defferedContexts[EDefferedContextType::COMPONENT_RENDER]->GetDefferedContextAddress(),
+		"SceneWindow", 
+		m_defferedContexts[EDefferedContextType::COMPONENT_RENDER]->GetDefferedContextAddress(),
 		m_assetManager, m_componentManager, m_componentPSOManager
 	);
-	sceneWindow->SetCameraComponent(m_testCamera);
+	sceneWindow->SetCameraComponent(m_editorCamera);
 	m_imguiWindows.emplace_back(sceneWindow);
 }
 

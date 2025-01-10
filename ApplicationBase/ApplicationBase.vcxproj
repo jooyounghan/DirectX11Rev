@@ -186,6 +186,9 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="ComponentEntity.cpp" />
     <ClCompile Include="ComponentRemover.cpp" />
     <ClCompile Include="ComponentUpdater.cpp" />
+    <ClCompile Include="InputEventManager.cpp" />
+    <ClCompile Include="KeyEvent.cpp" />
+    <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="SceneDefferedRenderer.cpp" />
     <ClCompile Include="SceneForwardRenderer.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -206,7 +209,11 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="ComponentRemover.h" />
     <ClInclude Include="ComponentType.h" />
     <ClInclude Include="ComponentUpdater.h" />
+    <ClInclude Include="InputDefinition.h" />
+    <ClInclude Include="InputEventManager.h" />
     <ClInclude Include="ISceneVisitor.h" />
+    <ClInclude Include="KeyEvent.h" />
+    <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="SceneDefferedRenderer.h" />
     <ClInclude Include="SceneForwardRenderer.h" />
     <ClInclude Include="IComponentVisitor.h" />
