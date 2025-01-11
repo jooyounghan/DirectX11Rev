@@ -8,24 +8,11 @@
 using namespace std;
 using namespace DirectX;
 
-void AnimationPlayer::SetBoneAsset(ID3D11Device* const device, const BoneAsset* boneAsset)
+
+AnimationPlayer::AnimationPlayer(const BoneAsset* boneAsset)
+	: m_boneAssetCached(boneAsset)
 {
-	StopAnimation(false);
 
-	if (m_animationTransformationBuffer != nullptr)
-	{
-		m_animationTransformationBuffer->GetBuffer()->Release();
-		delete m_animationTransformationBuffer;
-	}
-
-	m_boneAssetCached = boneAsset;
-
-	const size_t boneCounts = m_boneAssetCached->GetBones().size();
-
-	m_animationTransformation.clear();
-	m_animationTransformation.resize(boneCounts, XMMatrixIdentity());
-	m_animationTransformationBuffer = new StructuredBuffer(sizeof(XMMATRIX), boneCounts);
-	m_animationTransformationBuffer->Initialize(device);
 }
 
 void AnimationPlayer::PlayAnimation(const AnimationAsset* animationAssetIn, const size_t& playCountIn)
@@ -38,22 +25,62 @@ void AnimationPlayer::PlayAnimation(const AnimationAsset* animationAssetIn, cons
 	}
 }
 
-void AnimationPlayer::StopAnimation(const bool& IsRaiseEvent)
+void AnimationPlayer::StopAnimation()
 {
 	m_animationAssetCached = nullptr;
 	m_playCount = 0;
 	m_playTime = 0.f;
-
-	if (IsRaiseEvent) m_animationEndedEvent();
+	m_animationEndedEvent();
 }
 
 inline bool AnimationPlayer::IsPlaying() { return (m_animationAssetCached != nullptr) && (m_playCount > 0); }
 
-void AnimationPlayer::Update(const float& DeltaTimeIn)
+
+void AnimationPlayer::UpdateBoneFromParent(const Bone* parentBone, const Bone* childBone)
+{
+	if (childBone != nullptr)
+	{
+		XMMATRIX childAnimationTransformation = XMMatrixIdentity();
+		if (m_animationAssetCached != nullptr)
+		{
+			const AnimChannel* animChannel = m_animationAssetCached->GetAnimChannel(childBone->GetBoneName());
+			if (animChannel != nullptr)
+			{
+				childAnimationTransformation = animChannel->GetLocalTransformation(m_playTime);
+			}
+		}
+	
+		if (parentBone != nullptr)
+		{
+			m_boneTransformation[childBone->GetBoneIndex()] =
+				childAnimationTransformation * m_boneTransformation[parentBone->GetBoneIndex()];
+		}
+		else
+		{
+			m_boneTransformation[childBone->GetBoneIndex()] = childAnimationTransformation;
+		}
+
+		const list<Bone*>& GrandChildren = childBone->GetBoneChildren();
+		for (Bone* GrandChild : GrandChildren)
+		{
+			UpdateBoneFromParent(childBone, GrandChild);
+		}
+	}
+}
+
+void AnimationPlayer::InitAnimationPlayer(ID3D11Device* const device)
+{
+	m_boneTransformation.resize(m_boneAssetCached->GetBones().size(), XMMatrixIdentity());
+
+	m_boneTransformationBuffer = new StructuredBuffer(sizeof(XMMATRIX), static_cast<UINT>(m_boneTransformation.size()));
+	m_boneTransformationBuffer->Initialize(device);
+}
+
+void AnimationPlayer::UpdateAnimationPlayer(ID3D11DeviceContext* const deviceContext, const float& deltaTime)
 {
 	if (IsPlaying())
 	{
-		m_playTime += DeltaTimeIn * m_animationAssetCached->GetTicksPerSecond();
+		m_playTime += deltaTime * m_animationAssetCached->GetTicksPerSecond();
 
 		const float Duration = m_animationAssetCached->GetDuration();
 		const float Quotient = floorf(m_playTime / Duration);
@@ -86,38 +113,13 @@ void AnimationPlayer::Update(const float& DeltaTimeIn)
 		for (const Bone* bone : bones)
 		{
 			const size_t& BoneIndex = bone->GetBoneIndex();
-			m_animationTransformation[BoneIndex] = XMMatrixTranspose(bone->GetOffsetMatrix() * m_animationTransformation[BoneIndex]);
+			m_boneTransformation[BoneIndex] = XMMatrixTranspose(bone->GetOffsetMatrix() * m_boneTransformation[BoneIndex]);
 		}
-	}
-}
-
-void AnimationPlayer::UpdateBoneFromParent(const Bone* parentBone, const Bone* childBone)
-{
-	if (childBone != nullptr)
-	{
-		XMMATRIX childAnimationTransformation = XMMatrixIdentity();
-		if (m_animationAssetCached != nullptr)
-		{
-			const AnimChannel* animChannel = m_animationAssetCached->GetAnimChannel(childBone->GetBoneName());
-			if (animChannel != nullptr)
-			{
-				childAnimationTransformation = animChannel->GetLocalTransformation(m_playTime);
-			}
-		}
-	
-		if (parentBone != nullptr)
-		{
-			m_animationTransformation[childBone->GetBoneIndex()] = (childAnimationTransformation * m_animationTransformation[parentBone->GetBoneIndex()]);
-		}
-		else
-		{
-			m_animationTransformation[childBone->GetBoneIndex()] = childAnimationTransformation;
-		}
-
-		const list<Bone*>& GrandChildren = childBone->GetBoneChildren();
-		for (Bone* GrandChild : GrandChildren)
-		{
-			UpdateBoneFromParent(childBone, GrandChild);
-		}
+		
+		m_boneTransformationBuffer->Upload(
+			deviceContext, sizeof(XMMATRIX), 
+			static_cast<UINT>(m_boneTransformation.size()), 
+			m_boneTransformation.data()
+		);
 	}
 }

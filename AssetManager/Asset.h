@@ -1,6 +1,5 @@
 #pragma once
 #include "SerializeHelper.h"
-#include "HeaderHelper.h"
 #include "IAssetVisitor.h"
 
 class AAsset : public ISerializable
@@ -16,8 +15,10 @@ public:
 protected:
 	std::string m_assetName;
 	bool m_isModified = false;
-	MakeGetter(m_assetName, AssetName);
-	MakeGetter(m_isModified, IsModified);
+
+public:
+	inline const std::string& GetAssetName() const { return m_assetName; }
+	inline const bool& GetIsModified() const { return m_isModified; }
 
 public:
 	const std::string& GetAssetName() { return m_assetName; }

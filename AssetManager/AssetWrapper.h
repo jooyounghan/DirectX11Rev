@@ -26,9 +26,7 @@ private:
 	EAssetType m_assetType = EAssetType::ASSET_TYPE_NONE;
 
 public:
-	MakeGetter(m_assetType, AssetType);
-
-public:
+	const EAssetType& GetAssetType() const { return m_assetType; }
 	void SetAssetType(const EAssetType& assetType);
 
 public:

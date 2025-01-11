@@ -29,6 +29,7 @@ ComponentManager::ComponentManager(
 
 ComponentManager::~ComponentManager()
 {
+	unique_lock destuctLock(m_componentMutex);
 	for (auto& componentIDToComponent : m_componentIDsToComponent)
 	{
 		delete componentIDToComponent.second;
@@ -113,36 +114,43 @@ void ComponentManager::LoadComponents()
 	Row rowResult;
 	vector<pair<AComponent*, ComponentID>> componentsToParentID;
 
-	while ((rowResult = result.fetchOne()))
 	{
-		const ComponentID componentID = rowResult[0].get<ComponentID>();
-		const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
-		const EComponentType componentType = static_cast<EComponentType>(rowResult[2].get<uint32_t>());
-		const std::string componentName = rowResult[3].get<std::string>();
-
-		XMFLOAT3 position = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
-		XMFLOAT3 angle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
-		XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
-
-
-		if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
+		unique_lock loadComponentLock(m_componentMutex);
+		while ((rowResult = result.fetchOne()))
 		{
-			AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
-			addedComponent->SetIsModified(true);
-			m_componentIDsToComponent.emplace(componentID, addedComponent);
+			const ComponentID componentID = rowResult[0].get<ComponentID>();
+			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
+			const EComponentType componentType = static_cast<EComponentType>(rowResult[2].get<uint32_t>());
+			const std::string componentName = rowResult[3].get<std::string>();
 
-			componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));
+			XMFLOAT3 position = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
+			XMFLOAT3 angle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
+			XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
+
+
+			if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
+			{
+				AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
+				addedComponent->SetIsModified(true);
+				m_componentIDsToComponent.emplace(componentID, addedComponent);
+
+				componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));
+			}
 		}
 	}
 
-	for (auto& componentToParentID : componentsToParentID)
 	{
-		if (m_componentIDsToComponent.find(componentToParentID.second) != m_componentIDsToComponent.end())
+		shared_lock parentLinkLock(m_componentMutex);
+		for (auto& componentToParentID : componentsToParentID)
 		{
-			AComponent* parentComponent = m_componentIDsToComponent[componentToParentID.second];
-			parentComponent->AttachChildComponent(componentToParentID.first);
+			if (m_componentIDsToComponent.find(componentToParentID.second) != m_componentIDsToComponent.end())
+			{
+				AComponent* parentComponent = m_componentIDsToComponent[componentToParentID.second];
+				parentComponent->AttachChildComponent(componentToParentID.first);
+			}
 		}
 	}
+
 
 	LoadLastAutoIncrementIDFromTable(componentsTableName, m_componentIssuedID);
 }
@@ -184,18 +192,22 @@ void ComponentManager::LoadScenesInformation()
 	RowResult sceneInformationResults = scenesInformationsTable.select("scene_id", "component_id").lockShared().execute();
 
 	Row sceneInformationResult;
-	while ((sceneInformationResult = sceneInformationResults.fetchOne()))
-	{
-		const SceneID sceneID = sceneInformationResult[0].get<SceneID>();
-		const ComponentID componentID = sceneInformationResult[1].get<ComponentID>();
 
-		if (m_sceneIDsToScene.find(sceneID) != m_sceneIDsToScene.end() && m_componentIDsToComponent.find(componentID) != m_componentIDsToComponent.end())
+	{
+		shared_lock loadSceneLock(m_componentMutex);
+		while ((sceneInformationResult = sceneInformationResults.fetchOne()))
 		{
-			m_sceneIDsToScene[sceneID]->AddRootComponent(m_componentIDsToComponent[componentID]);
-		}
-		else
-		{
-			throw std::exception(format("Scene ID({}) or Component ID({}) Not Founded", sceneID, componentID).c_str());
+			const SceneID sceneID = sceneInformationResult[0].get<SceneID>();
+			const ComponentID componentID = sceneInformationResult[1].get<ComponentID>();
+
+			if (m_sceneIDsToScene.find(sceneID) != m_sceneIDsToScene.end() && m_componentIDsToComponent.find(componentID) != m_componentIDsToComponent.end())
+			{
+				m_sceneIDsToScene[sceneID]->AddRootComponent(m_componentIDsToComponent[componentID]);
+			}
+			else
+			{
+				throw std::exception(format("Scene ID({}) or Component ID({}) Not Founded", sceneID, componentID).c_str());
+			}
 		}
 	}
 }
@@ -206,11 +218,15 @@ void ComponentManager::InitLoadedComponents()
 	{
 		m_sessionManager->startTransaction();
 
-		for (auto& componentIDToComponent : m_componentIDsToComponent)
 		{
-			componentIDToComponent.second->Accept(&m_componentDBInitializer);
-			componentIDToComponent.second->InitEntity(*m_deviceAddressCached);
+			shared_lock InitLoadedComponentsLock(m_componentMutex);
+			for (auto& componentIDToComponent : m_componentIDsToComponent)
+			{
+				componentIDToComponent.second->Accept(&m_componentDBInitializer);
+				componentIDToComponent.second->InitEntity(*m_deviceAddressCached);
+			}
 		}
+
 		m_sessionManager->commit();
 
 	}
@@ -244,102 +260,36 @@ void ComponentManager::LoadLastAutoIncrementIDFromTable(const std::string& table
 	}
 }
 
-void ComponentManager::LaunchComponentDBMonitor()
+void ComponentManager::UpdateComponentToDBThread()
 {
 	m_workThreadStarted = true;
 	m_workThread = thread([&]() {
 		while (m_workThreadStarted)
 		{
-			std::queue<pair<Scene*, AComponent*>>			tempInsertToSceneQueue;
-			std::queue<pair<AComponent*, AComponent*>>		tempInsertToComponentQueue;
-			std::queue<AComponent*>							tempRemoveQueue;
-			std::set<AComponent*>							tempUpdateSet;
+			std::set<AComponent*> tempUpdateSet;
 
 			try
 			{
 				m_sessionManager->startTransaction();
-				{
-					{ // Insert Root Component =============================================
-						unique_lock writeLock(m_insertToSceneQueueMutex);
+				{ 
+					shared_lock writeLock(m_updateSetMutex);
 
-						tempInsertToSceneQueue = m_insertToSceneQueue;
+					tempUpdateSet = m_updateToDBSet;
 
-						while (!m_insertToSceneQueue.empty())
-						{
-							auto& sceneWithComponent = m_insertToSceneQueue.back();
-							Scene* scene = sceneWithComponent.first;
-							AComponent* component = sceneWithComponent.second;
-							m_componentDBCreator.AddComponent(scene, nullptr, component);
-							component->Accept(&m_componentDBCreator);
-
-							m_insertToSceneQueue.pop();
-						}
-					} // =======================================================================
-
-					{ // Insert Child Component ================================================
-						unique_lock writeLock(m_insertToComponentQueueMutex);
-
-						tempInsertToComponentQueue = m_insertToComponentQueue;
-
-						while (!m_insertToComponentQueue.empty())
-						{
-							auto& parentComponentWithComponent = m_insertToComponentQueue.back();
-							AComponent* parentComponent = parentComponentWithComponent.first;
-							AComponent* component = parentComponentWithComponent.second;
-							m_componentDBCreator.AddComponent(nullptr, parentComponent, component);
-							component->Accept(&m_componentDBCreator);
-							m_insertToComponentQueue.pop();
-						}
-					} // =======================================================================
-
-					{ // Delete ================================================================
-						unique_lock writeLock(m_removeQueueMutex);
-
-						tempRemoveQueue = m_removeQueue;
-
-						while (!m_removeQueue.empty())
-						{
-							m_removeQueue.back()->Accept(&m_componentDBRemover);
-							m_removeQueue.pop();
-						}
-					} // =======================================================================
-				}
-
-				{ // Update ===================================================================
-					unique_lock writeLock(m_updateSetMutex);
-
-					tempUpdateSet = m_updateSet;
-
-					for (AComponent* updateComponet : m_updateSet)
+					for (AComponent* updateComponet : m_updateToDBSet)
 					{
 						updateComponet->Accept(&m_componentDBUpdater);
 					}
-					m_updateSet.clear();
-				} // ==========================================================================
-
+					m_updateToDBSet.clear();
+				} 
 				m_sessionManager->commit();
 				this_thread::sleep_for(chrono::seconds(1));
 			}
 			catch (const std::exception& ex)
 			{
 				{
-					unique_lock writeLock(m_insertToSceneQueueMutex);
-					m_insertToSceneQueue = tempInsertToSceneQueue;
-				}
-
-				{
-					unique_lock writeLock(m_insertToComponentQueueMutex);
-					m_insertToComponentQueue = tempInsertToComponentQueue;
-				}
-
-				{
-					unique_lock writeLock(m_removeQueueMutex);
-					m_removeQueue = tempRemoveQueue;
-				}
-
-				{
 					unique_lock writeLock(m_updateSetMutex);
-					m_updateSet = tempUpdateSet;
+					m_updateToDBSet = tempUpdateSet;
 				}
 
 				m_sessionManager->rollback();
@@ -350,21 +300,15 @@ void ComponentManager::LaunchComponentDBMonitor()
 		});
 }
 
-void ComponentManager::RegisterComponent(AComponent* component)
-{
-	m_componentIDsToComponent.emplace(component->GetComponentID(), component);
-}
-
 void ComponentManager::AddComponent(Scene* scene, AComponent* component)
 {
 	if (component != nullptr)
 	{
 		scene->AddRootComponent(component);
 		RegisterComponent(component);
-		{
-			unique_lock writeLock(m_insertToSceneQueueMutex);
-			m_insertToSceneQueue.push(make_pair(scene, component));
-		}
+
+		m_componentDBCreator.AddComponent(scene, nullptr, component);
+		component->Accept(&m_componentDBCreator);
 	}
 	else
 	{
@@ -374,18 +318,18 @@ void ComponentManager::AddComponent(Scene* scene, AComponent* component)
 
 void ComponentManager::AddComponent(AComponent* parentComponent, AComponent* component)
 {
+
 	component->RemoveFromParent();
 	parentComponent->AttachChildComponent(component);
 	RegisterComponent(component);
-	{
-		unique_lock writeLock(m_insertToComponentQueueMutex);
-		m_insertToComponentQueue.push(make_pair(parentComponent, component));
-	}
+
+	m_componentDBCreator.AddComponent(nullptr, parentComponent, component);
+	component->Accept(&m_componentDBCreator);
 }
 
 void ComponentManager::RemoveComponent(AComponent* component)
 {
-	m_componentIDsToComponent.erase(component->GetComponentID());
+	DeregisterComponent(component);
 	component->RemoveFromParent();
 
 	const vector<AComponent*>& childComponents = component->GetChildComponents();
@@ -394,13 +338,10 @@ void ComponentManager::RemoveComponent(AComponent* component)
 		RemoveComponent(childComponent);
 	}
 
-	{
-		unique_lock writeLock(m_removeQueueMutex);
-		m_removeQueue.push(component);
-	}
+	component->Accept(&m_componentDBRemover);
 }
 
-void ComponentManager::UpdateComponents()
+void ComponentManager::UpdateComponents(const float& deltaTime)
 {
 	if (m_isInitialized)
 	{
@@ -408,14 +349,17 @@ void ComponentManager::UpdateComponents()
 		{
 			m_sessionManager->startTransaction();
 
-			for (auto& m_componentIDToComponent : m_componentIDsToComponent)
 			{
-				if (m_componentIDToComponent.second->ComsumeIsModified())
+				shared_lock updateComponent(m_componentMutex);
+				for (auto& m_componentIDToComponent : m_componentIDsToComponent)
 				{
-					m_componentIDToComponent.second->UpdateEntity(m_defferedContext->GetDefferedContext());
+					if (m_componentIDToComponent.second->ComsumeIsModified())
 					{
-						unique_lock writeLock(m_updateSetMutex);
-						m_updateSet.insert(m_componentIDToComponent.second);
+						m_componentIDToComponent.second->UpdateEntity(m_defferedContext->GetDefferedContext(), deltaTime);
+						{
+							unique_lock writeLock(m_updateSetMutex);
+							m_updateToDBSet.insert(m_componentIDToComponent.second);
+						}
 					}
 				}
 			}
@@ -433,3 +377,19 @@ void ComponentManager::UpdateComponents()
 	}
 }
 
+void ComponentManager::RegisterComponent(AComponent* component)
+{
+	{
+		unique_lock addComponentLock(m_componentMutex);
+		m_componentIDsToComponent.emplace(component->GetComponentID(), component);
+	}
+}
+
+void ComponentManager::DeregisterComponent(AComponent* component)
+{
+	{
+		unique_lock removeComponentLock(m_componentMutex);
+		m_componentIDsToComponent.erase(component->GetComponentID());
+		m_updateToDBSet.erase(component);
+	}
+}

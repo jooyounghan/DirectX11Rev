@@ -90,10 +90,7 @@ void ASceneRenderer::ApplyCamera() const
     deviceContext->RSSetViewports(1, cameraComponent);
 }
 
-UINT ASceneRenderer::GetLODLevel(const AComponent* component) const
+uint32_t ASceneRenderer::GetLODLevel(const AComponent* component) const
 {
-    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
-
-    return NULL;
+    return 0;
 }
-

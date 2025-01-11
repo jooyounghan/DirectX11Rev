@@ -54,7 +54,7 @@ protected:
 	virtual void UpdateAbsoluteEntities() = 0;
 
 public:
-	virtual void InitEntity(ID3D11Device* device);
-	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext);
+	virtual void InitEntity(ID3D11Device* const device);
+	virtual void UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime);
 };
 

@@ -46,20 +46,15 @@ protected:
 
 protected:
 	std::thread											m_workThread;
-	std::shared_mutex									m_insertToSceneQueueMutex;
-	std::shared_mutex									m_insertToComponentQueueMutex;
-	std::shared_mutex									m_removeQueueMutex;
 	std::shared_mutex									m_updateSetMutex;
-	std::queue<std::pair<Scene*, AComponent*>>			m_insertToSceneQueue;
-	std::queue<std::pair<AComponent*, AComponent*>>		m_insertToComponentQueue;
-	std::queue<AComponent*>								m_removeQueue;
-	std::set<AComponent*>								m_updateSet;
+	std::set<AComponent*>								m_updateToDBSet;
 	bool												m_workThreadStarted = false;
 
 protected:
 	bool m_isInitialized = false;
 	std::unordered_map<EComponentType, ComponentConstructor> m_componentTypesToMaker;
 	std::unordered_map<ComponentID, AComponent*> m_componentIDsToComponent;
+	std::shared_mutex							m_componentMutex;
 
 protected:
 	std::unordered_map<SceneID, Scene*> m_sceneIDsToScene;
@@ -85,14 +80,19 @@ private:
 	void LoadLastAutoIncrementIDFromTable(const std::string& tableName, uint32_t& autoIncrementID);
 
 private:
-	void LaunchComponentDBMonitor();
+	void UpdateComponentToDBThread();
 
 public:
-	void RegisterComponent(AComponent* component);
 	void AddComponent(Scene* scene, AComponent* component);
 	void AddComponent(AComponent* parentComponent, AComponent* component);
 	void RemoveComponent(AComponent* component);
-	void UpdateComponents();
+	void UpdateComponents(const float& deltaTime);
+
+// =============== Temp Funciton ==================
+public:
+	void RegisterComponent(AComponent* component);
+	void DeregisterComponent(AComponent* component);
+// ================================================
 
 public:
 	inline const std::unordered_map<Scene*, std::string>& GetScenesWithDescription() { return m_scenesToDescription; }

@@ -42,12 +42,12 @@ XMVECTOR ComponentEntity::GetQuaternion()
 	);
 }
 
-void ComponentEntity::InitEntity(ID3D11Device* device)
+void ComponentEntity::InitEntity(ID3D11Device* const device)
 {
 	m_transformationBuffer->Initialize(device);
 }
 
-void ComponentEntity::UpdateEntity(ID3D11DeviceContext* deviceContext)
+void ComponentEntity::UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime)
 {
 	UpdateAbsoluteEntities();
 

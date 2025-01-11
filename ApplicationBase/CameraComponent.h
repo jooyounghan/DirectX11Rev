@@ -70,7 +70,7 @@ public:
 
 public:
 	virtual void InitEntity(ID3D11Device* device) override;
-	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext) override;
+	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext, const float& deltaTime) override;
 
 public:
 	virtual void Accept(IComponentVisitor* visitor) override;

@@ -26,8 +26,8 @@ SceneWindow::SceneWindow(
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
     m_componentInformer(assetManager, componentManager),
-    m_forwardRenderer(drawDefferedDCAddress, m_componentPsoManageCached, &m_selectedCamera),
-    m_defferedRenderer(drawDefferedDCAddress, m_componentPsoManageCached, &m_selectedCamera),
+    m_forwardRenderer(drawDefferedDCAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
+    m_defferedRenderer(drawDefferedDCAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
     m_rendererComboBox.SetSelectableItems({ "Forward Renderer", "Deffered Renderer" });

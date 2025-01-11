@@ -7,7 +7,7 @@ DynamicBuffer::DynamicBuffer(const UINT& elementSize, const UINT& arrayCount)
 
 }
 
-void DynamicBuffer::Initialize(ID3D11Device* device)
+void DynamicBuffer::Initialize(ID3D11Device* const device)
 {
 	D3D11_BUFFER_DESC bufferDesc;
 	AutoZeroMemory(bufferDesc);
@@ -22,7 +22,7 @@ void DynamicBuffer::Initialize(ID3D11Device* device)
 	device->CreateBuffer(&bufferDesc, NULL, m_buffer.GetAddressOf());
 }
 
-void DynamicBuffer::Upload(ID3D11DeviceContext* deviceContext, const UINT& elementSize, const UINT& arrayCount, void* cpuDataIn)
+void DynamicBuffer::Upload(ID3D11DeviceContext* const deviceContext, const UINT& elementSize, const UINT& arrayCount, void* cpuDataIn)
 {
 	if (elementSize != m_elementSize) return;
 	if (arrayCount != m_arrayCount) return;

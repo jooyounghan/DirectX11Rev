@@ -32,8 +32,8 @@ protected:
 	float m_heightScale = 1.f;
 
 public:
-	MakeGetter(m_f0, FresnelConstant);
-	MakeGetter(m_heightScale, HeightScale);
+	const DirectX::XMFLOAT3& GetFresnelConstant() const { return m_f0; }
+	const float& GetHeightScale() const { return m_heightScale; }
 
 public:
 	void UpdateModelBaseTextureAsset(

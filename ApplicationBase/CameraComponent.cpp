@@ -77,7 +77,7 @@ void CameraComponent::InitEntity(ID3D11Device* device)
 	);
 }
 
-void CameraComponent::UpdateEntity(ID3D11DeviceContext* deviceContext)
+void CameraComponent::UpdateEntity(ID3D11DeviceContext* deviceContext, const float& deltaTime)
 {
 	UpdateAbsoluteEntities();
 	m_viewElement.m_viewProj = GetViewMatrix() * GetProjectionMatrix();

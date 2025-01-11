@@ -72,6 +72,7 @@ public:
 protected:
 	std::unordered_map<std::string, AnimChannel> m_boneNameToAnimChannels;
 
+
 public:
 	inline const float& GetDuration() const { return m_duration; }
 	inline const float& GetTicksPerSecond() const { return m_ticksPerSecond; }

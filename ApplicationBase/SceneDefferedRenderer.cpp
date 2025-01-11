@@ -3,9 +3,10 @@
 SceneDefferedRenderer::SceneDefferedRenderer(
 	ID3D11DeviceContext* const* deviceContextAddress, 
 	ComponentPSOManager* componentPsoManager,
-	CameraComponent* const* cameraComponentAddress
+	CameraComponent* const* cameraComponentAddress,
+	Scene* const* sceneAddress
 )
-	: ASceneRenderer(deviceContextAddress, componentPsoManager, cameraComponentAddress)
+	: ASceneRenderer(deviceContextAddress, componentPsoManager, cameraComponentAddress, sceneAddress)
 {
 }
 

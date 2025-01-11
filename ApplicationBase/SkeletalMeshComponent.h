@@ -20,17 +20,19 @@ public:
 protected:
 	std::string m_skeletalMeshName;
 	const SkeletalMeshAsset* m_skeletalMeshAsset = nullptr;
-	AnimationPlayer m_animationPlayer;
+	AnimationPlayer* m_animationPlayer = nullptr;
 
 public:
 	inline void SetSkeletalMeshName(const std::string& skeletalMeshName) { m_skeletalMeshName = skeletalMeshName; }
 	inline const std::string& GetSkeletalMeshName() const { return m_skeletalMeshName; }
-
-public:
 	inline const SkeletalMeshAsset* GetSkeletalMetalAsset() const { return m_skeletalMeshAsset; }
 
 public:
 	void UpdateSkeletalMeshAsset(ISkeletalMeshProvider& provider);
+
+public:
+	virtual void InitEntity(ID3D11Device* const device) override;
+	virtual void UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime) override;
 
 public:
 	virtual void Accept(IComponentVisitor* visitor) override;

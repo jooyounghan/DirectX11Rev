@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "BoneAsset.h"
+#include "StructuredBuffer.h"
 
 using namespace std;
 using namespace DirectX;

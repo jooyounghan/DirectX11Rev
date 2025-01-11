@@ -1,8 +1,10 @@
 #pragma once
 #include "IComponentVisitor.h"
 #include "ISceneVisitor.h"
+#include <stdint.h>
 
 struct ID3D11DeviceContext;
+class AComponent;
 class ComponentPSOManager;
 
 class ASceneRenderer : public IComponentVisitor, public ISceneVisitor
@@ -34,6 +36,6 @@ public:
 
 protected:
 	void ApplyCamera() const;
-	UINT GetLODLevel(const AComponent* component) const;
+	uint32_t GetLODLevel(const AComponent* component) const;
 };
 

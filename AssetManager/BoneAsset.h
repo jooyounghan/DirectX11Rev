@@ -1,10 +1,12 @@
 #pragma once
 #include "Asset.h"
-#include <DirectXMath.h>
 
+#include <DirectXMath.h>
 #include <map>
 #include <list>
 #include <memory>
+
+class StructuredBuffer;
 
 class Bone : public ISerializable
 {
@@ -20,11 +22,11 @@ private:
 	std::list<Bone*> m_boneChildren;
 
 public:
-	inline const std::string& GetBoneName() const { return m_boneName; }
-	inline const uint32_t& GetBoneIndex() const { return m_boneIdx; }
-	inline const DirectX::XMMATRIX GetOffsetMatrix() const { return m_offsetMatrix; }
-	inline const Bone* GetParentBone() const { return m_parentBone; }
-	inline const std::list<Bone*>& GetBoneChildren() const { return m_boneChildren; }
+	inline const std::string&		GetBoneName() const { return m_boneName; }
+	inline const uint32_t&			GetBoneIndex() const { return m_boneIdx; }
+	inline const DirectX::XMMATRIX	GetOffsetMatrix() const { return m_offsetMatrix; }
+	inline const Bone*				GetParentBone() const { return m_parentBone; }
+	inline const std::list<Bone*>&	GetBoneChildren() const { return m_boneChildren; }
 
 public:
 	void SetBoneProperties(
@@ -50,8 +52,8 @@ protected:
 	std::vector<Bone*> m_bones;
 
 public:
-	inline const Bone* GetRootBone() const { return m_rootBone; }
-	inline const std::vector<Bone*>& GetBones() const { return m_bones; }
+	inline const Bone*					GetRootBone() const { return m_rootBone; }
+	inline const std::vector<Bone*>&	GetBones() const { return m_bones; }
 
 public:
 	inline void SetRootBone(Bone* const bone) { m_rootBone = bone; }

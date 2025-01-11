@@ -127,7 +127,7 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 	m_taskManager->RegisterTask([&, device, assetsLoadDefferedContext]()
 		{
 			m_editorCamera->InitEntity(device);
-			m_editorCamera->UpdateEntity(assetsLoadDefferedContext->GetDefferedContext());
+			m_editorCamera->SetIsModified(true);
 			assetsLoadDefferedContext->RecordToCommandList();
 		}, "Test Camera Initializing"
 	);
@@ -135,7 +135,7 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 
 void GameEngine::Update(const float& deltaTime)
 {
-	m_componentManager->UpdateComponents();
+	m_componentManager->UpdateComponents(deltaTime);
 
 	m_engine->ClearBackBuffer(ClearColor);
 	m_engine->SetRTVAsBackBuffer();
