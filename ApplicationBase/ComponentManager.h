@@ -4,10 +4,10 @@
 
 #include "SchemaManager.h"
 #include "ComponentType.h"
-#include "ComponentInitializer.h"
-#include "ComponentUpdater.h"
-#include "ComponentRemover.h"
-#include "ComponentCreator.h"
+#include "ComponentDBInitializer.h"
+#include "ComponentDBUpdater.h"
+#include "ComponentDBRemover.h"
+#include "ComponentDBCreator.h"
 
 #include <queue>
 #include <shared_mutex>
@@ -35,26 +35,29 @@ public:
 
 protected:
 	AssetManager* m_assetManagerCached = nullptr;
+	ID3D11Device* const* m_deviceAddressCached = nullptr;
 	DefferedContext* m_defferedContext = nullptr;
 
 protected:
-	ComponentInitializer m_componentInitializer;
-	ComponentUpdater m_componentUpdater;
-	ComponentRemover m_componentRemover;
-	ComponentCreator m_componentCreator;
+	ComponentDBInitializer m_componentDBInitializer;
+	ComponentDBUpdater m_componentDBUpdater;
+	ComponentDBRemover m_componentDBRemover;
+	ComponentDBCreator m_componentDBCreator;
 
 protected:
-	std::thread										m_workThread;
-	std::shared_mutex								m_insertToSceneQueueMutex;
-	std::shared_mutex								m_insertToComponentQueueMutex;
-	std::shared_mutex								m_removeQueueMutex;
-	std::queue<std::pair<Scene*, AComponent*>>		m_insertToSceneQueue;
-	std::queue<std::pair<AComponent*, AComponent*>>	m_insertToComponentQueue;
-	std::queue<AComponent*>							m_removeQueue;
-	bool											m_workThreadStarted = false;
+	std::thread											m_workThread;
+	std::shared_mutex									m_insertToSceneQueueMutex;
+	std::shared_mutex									m_insertToComponentQueueMutex;
+	std::shared_mutex									m_removeQueueMutex;
+	std::shared_mutex									m_updateSetMutex;
+	std::queue<std::pair<Scene*, AComponent*>>			m_insertToSceneQueue;
+	std::queue<std::pair<AComponent*, AComponent*>>		m_insertToComponentQueue;
+	std::queue<AComponent*>								m_removeQueue;
+	std::set<AComponent*>								m_updateSet;
+	bool												m_workThreadStarted = false;
 
 protected:
-	std::shared_mutex m_componentMutex;
+	bool m_isInitialized = false;
 	std::unordered_map<EComponentType, ComponentConstructor> m_componentTypesToMaker;
 	std::unordered_map<ComponentID, AComponent*> m_componentIDsToComponent;
 
@@ -79,16 +82,17 @@ private:
 	void LoadScenes();
 	void LoadScenesInformation();
 	void InitLoadedComponents();
-	void LaunchComponentDBMonitor();
 	void LoadLastAutoIncrementIDFromTable(const std::string& tableName, uint32_t& autoIncrementID);
 
-public:
-	void AddComponent(Scene* scene, AComponent* component);
-	void AddComponent(AComponent* parentComponent, AComponent* component);
-	void RemoveComponent(AComponent* component);
+private:
+	void LaunchComponentDBMonitor();
 
 public:
 	void RegisterComponent(AComponent* component);
+	void AddComponent(Scene* scene, AComponent* component);
+	void AddComponent(AComponent* parentComponent, AComponent* component);
+	void RemoveComponent(AComponent* component);
+	void UpdateComponents();
 
 public:
 	inline const std::unordered_map<Scene*, std::string>& GetScenesWithDescription() { return m_scenesToDescription; }

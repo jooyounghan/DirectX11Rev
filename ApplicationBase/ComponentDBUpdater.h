@@ -5,17 +5,13 @@
 
 struct ID3D11DeviceContext;
 
-class ComponentUpdater : public IComponentVisitor
+class ComponentDBUpdater : public IComponentVisitor
 {
 public:
-	ComponentUpdater(
-		ID3D11DeviceContext* const* deviceContextAddress, 
-		mysqlx::Schema* schema
-	);
-	~ComponentUpdater() override = default;
+	ComponentDBUpdater(mysqlx::Schema* schema);
+	~ComponentDBUpdater() override = default;
 
 protected:
-	ID3D11DeviceContext* const* m_deviceContextAddress = nullptr;
 	mysqlx::Schema* m_schemaCached = nullptr;
 
 public:

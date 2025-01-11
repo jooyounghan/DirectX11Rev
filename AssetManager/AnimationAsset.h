@@ -24,7 +24,7 @@ protected:
 	std::set<float> m_timeTable;
 
 public:
-	MakeGetter(m_timeTable, TimeTable);
+	inline const std::set<float>& GetTimeTable() const { return m_timeTable; }
 
 public:
 	void AddPositionKey(const float& timeIn, const DirectX::XMVECTOR& positionIn);
@@ -70,16 +70,17 @@ public:
 	void SetAnimationDuration(const float& durationIn, const float& ticksPerSecond);
 	
 protected:
-	std::unordered_map<std::string, AnimChannel> boneNameToAnimChannels;
+	std::unordered_map<std::string, AnimChannel> m_boneNameToAnimChannels;
 
 public:
-	MakeGetter(m_duration, Duration);
-	MakeGetter(m_ticksPerSecond, TicksPerSecond);
-	MakeGetter(boneNameToAnimChannels, BoneNameToAnimChannels);
+	inline const float& GetDuration() const { return m_duration; }
+	inline const float& GetTicksPerSecond() const { return m_ticksPerSecond; }
+	inline const std::unordered_map<std::string, AnimChannel>& GetBoneNameToAnimChannels() const { return m_boneNameToAnimChannels; }
 
 public:
 	void AddAnimChaannel(const std::string& boneName, const AnimChannel& animChannel);
 	void AddAnimChannel(const std::string& boneName, AnimChannel&& animChannel);
+	const AnimChannel* GetAnimChannel(const std::string& boneName) const;
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;

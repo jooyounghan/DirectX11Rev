@@ -6,11 +6,11 @@
 
 class Scene;
 
-class ComponentCreator : public IComponentVisitor
+class ComponentDBCreator : public IComponentVisitor
 {
 public:
-	ComponentCreator(mysqlx::Schema* schema);
-	~ComponentCreator() override = default;
+	ComponentDBCreator(mysqlx::Schema* schema);
+	~ComponentDBCreator() override = default;
 
 protected:
 	mysqlx::Schema* m_schemaCached = nullptr;

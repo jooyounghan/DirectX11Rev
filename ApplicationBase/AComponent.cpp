@@ -46,7 +46,7 @@ void AComponent::RemoveFromParent()
 }
 
 XMVECTOR AComponent::GetAbsolutePosition() { return XMVectorAdd(m_relativePosition, m_parentComponent == nullptr ? XMVectorZero() : m_parentComponent->GetAbsolutePosition()); }
-XMVECTOR AComponent::GetAbsoluteAngle() { return XMVectorAddAngles(m_relativeAngle, m_parentComponent == nullptr ? XMVectorZero() : m_parentComponent->GetAbsoluteAngle()); }
+XMVECTOR AComponent::GetAbsoluteAngle() { return XMVectorAdd(m_relativeAngle, m_parentComponent == nullptr ? XMVectorZero() : m_parentComponent->GetAbsoluteAngle()); }
 XMVECTOR AComponent::GetAbsoluteScale() { return XMVectorAdd(m_relativeScale, m_parentComponent == nullptr ? XMVectorZero() : m_parentComponent->GetAbsoluteScale()); }
 
 void AComponent::UpdateAbsoluteEntities()

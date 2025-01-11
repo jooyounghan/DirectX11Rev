@@ -135,6 +135,8 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 
 void GameEngine::Update(const float& deltaTime)
 {
+	m_componentManager->UpdateComponents();
+
 	m_engine->ClearBackBuffer(ClearColor);
 	m_engine->SetRTVAsBackBuffer();
 

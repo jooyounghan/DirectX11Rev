@@ -109,12 +109,22 @@ void AnimationAsset::SetAnimationDuration(const float& durationIn, const float& 
 
 void AnimationAsset::AddAnimChaannel(const string& boneName, const AnimChannel& animChannel)
 {
-	boneNameToAnimChannels.emplace(boneName, animChannel);
+	m_boneNameToAnimChannels.emplace(boneName, animChannel);
 }
 
 void AnimationAsset::AddAnimChannel(const string& boneName, AnimChannel&& animChannel)
 {
-	boneNameToAnimChannels.emplace(boneName, move(animChannel));
+	m_boneNameToAnimChannels.emplace(boneName, move(animChannel));
+}
+
+const AnimChannel* AnimationAsset::GetAnimChannel(const std::string& boneName) const
+{
+	const AnimChannel* animChannel = nullptr;
+	if (m_boneNameToAnimChannels.find(boneName) != m_boneNameToAnimChannels.end())
+	{
+		animChannel = &m_boneNameToAnimChannels.at(boneName);
+	}
+	return animChannel;
 }
 
 void AnimationAsset::Serialize(FILE* fileIn) const
@@ -124,8 +134,8 @@ void AnimationAsset::Serialize(FILE* fileIn) const
 	SerializeHelper::SerializeElement(m_duration, fileIn);
 	SerializeHelper::SerializeElement(m_ticksPerSecond, fileIn);
 
-	SerializeHelper::SerializeContainerSize(boneNameToAnimChannels, fileIn);
-	for (auto& boneNameToAnimChannel : boneNameToAnimChannels)
+	SerializeHelper::SerializeContainerSize(m_boneNameToAnimChannels, fileIn);
+	for (auto& boneNameToAnimChannel : m_boneNameToAnimChannels)
 	{
 		const string& boneName = boneNameToAnimChannel.first;
 		const AnimChannel& animChannel = boneNameToAnimChannel.second;
@@ -147,7 +157,7 @@ void AnimationAsset::Deserialize(FILE* fileIn)
 		string boneName = DeserializeHelper::DeserializeString(fileIn);
 		AnimChannel animChannel;
 		animChannel.Deserialize(fileIn);
-		boneNameToAnimChannels.emplace(boneName, animChannel);
+		m_boneNameToAnimChannels.emplace(boneName, animChannel);
 	}
 }
 

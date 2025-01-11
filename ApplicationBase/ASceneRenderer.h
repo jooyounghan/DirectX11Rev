@@ -11,7 +11,8 @@ public:
 	ASceneRenderer(
 		ID3D11DeviceContext* const* deviceContextAddress,
 		ComponentPSOManager* componentPsoManager,
-		CameraComponent* const* cameraComponentAddress
+		CameraComponent* const* cameraComponentAddress,
+		Scene* const* sceneAddress
 	);
 	~ASceneRenderer() override = default;
 
@@ -19,6 +20,7 @@ protected:
 	ID3D11DeviceContext* const* m_deviceContextAddress = nullptr;
 	ComponentPSOManager* m_componentPsoManagerCached = nullptr;
 	CameraComponent* const* m_selectedCameraComponentAddressCached = nullptr;
+	Scene* const* m_sceneAddressCached = nullptr;
 
 public:
 	virtual void Visit(Scene* scene) override final;
@@ -29,5 +31,9 @@ public:
 
 public:
 	virtual void Visit(CameraComponent* cameraComponent) = 0;
+
+protected:
+	void ApplyCamera() const;
+	UINT GetLODLevel(const AComponent* component) const;
 };
 

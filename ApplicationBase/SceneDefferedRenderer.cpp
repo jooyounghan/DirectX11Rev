@@ -9,11 +9,11 @@ SceneDefferedRenderer::SceneDefferedRenderer(
 {
 }
 
-void SceneDefferedRenderer::Visit(StaticMeshComponent* staticMeshAsset)
+void SceneDefferedRenderer::Visit(StaticMeshComponent* staticMeshComponent)
 {
 }
 
-void SceneDefferedRenderer::Visit(SkeletalMeshComponent* skeletalMeshAsset)
+void SceneDefferedRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
 }
 

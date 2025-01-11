@@ -7,13 +7,14 @@ public:
 	SceneForwardRenderer(
 		ID3D11DeviceContext* const* deviceContextAddress,
 		ComponentPSOManager* componentPsoManager,
-		CameraComponent* const* cameraComponentAddress
+		CameraComponent* const* cameraComponentAddress,
+		Scene* const* sceneAddress
 	);
 	~SceneForwardRenderer() override = default;
 
 public:
-	virtual void Visit(StaticMeshComponent* staticMeshAsset) override;
-	virtual void Visit(SkeletalMeshComponent* skeletalMeshAsset) override;
+	virtual void Visit(StaticMeshComponent* staticMeshComponent) override;
+	virtual void Visit(SkeletalMeshComponent* skeletalMeshComponent) override;
 
 public:
 	virtual void Visit(CameraComponent* cameraComponent) override;

@@ -226,13 +226,17 @@ void SceneWindow::DrawComponentTreeRecursive(AComponent* const component)
 void SceneWindow::InteractSceneInput(const ImVec2& size)
 {
     ImGuiIO& io = ImGui::GetIO();
+
     if (m_selectedCamera != nullptr && IsItemHovered(ImGuiHoveredFlags_::ImGuiHoveredFlags_None))
     {
-        const ImVec2 mouseDelta = io.MouseDelta;
-
-        XMVECTOR& relativeAngle = m_selectedCamera->GetRelativeAngleRef();
-        relativeAngle.m128_f32[1] += 360.f * (mouseDelta.x / size.x);
-        relativeAngle.m128_f32[0] += 360.f * (mouseDelta.y / size.y);
-        m_selectedCamera->SetIsModified(true);
+        if (io.MouseDown[2])
+        {
+            const ImVec2 mouseDelta = io.MouseDelta;
+            XMVECTOR& relativeAngle = m_selectedCamera->GetRelativeAngleRef();
+            relativeAngle.m128_f32[1] += 360.f * (mouseDelta.x / size.x);
+            relativeAngle.m128_f32[0] += 360.f * (mouseDelta.y / size.y);
+            m_selectedCamera->SetIsModified(true);
+        }
     }
+
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "AMeshComponent.h"
+#include "AnimationPlayer.h"
 
 class SkeletalMeshAsset;
 class ISkeletalMeshProvider;
@@ -19,10 +20,14 @@ public:
 protected:
 	std::string m_skeletalMeshName;
 	const SkeletalMeshAsset* m_skeletalMeshAsset = nullptr;
+	AnimationPlayer m_animationPlayer;
 
 public:
 	inline void SetSkeletalMeshName(const std::string& skeletalMeshName) { m_skeletalMeshName = skeletalMeshName; }
-	inline const std::string& GetSkeletalMeshName() { return m_skeletalMeshName; }
+	inline const std::string& GetSkeletalMeshName() const { return m_skeletalMeshName; }
+
+public:
+	inline const SkeletalMeshAsset* GetSkeletalMetalAsset() const { return m_skeletalMeshAsset; }
 
 public:
 	void UpdateSkeletalMeshAsset(ISkeletalMeshProvider& provider);

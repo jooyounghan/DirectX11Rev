@@ -1,4 +1,5 @@
 #include "ComponentPSOManager.h"
+#include "GraphicsPSOObject.h"
 
 using namespace std;
 
@@ -7,13 +8,23 @@ ComponentPSOManager::ComponentPSOManager(ID3D11Device* const* deviceAddress)
 {
 }
 
+ComponentPSOManager::~ComponentPSOManager()
+{
+	for (auto& graphicPSOObject : m_graphicPSOObjects)
+	{
+		delete graphicPSOObject.second;
+	}
+}
+
 void ComponentPSOManager::InitComopnentPSOManager()
 {
-	RegisterShaderForComponent();
-	RegisterDepthStencilStateForComponent();
-	RegisterBlendStateForComponent();
-	RegisterRasterizerStateForComponent();
-	RegisterSamplerStateForComponent();
+	RegisterShadersForComponent();
+	RegisterDepthStencilStatesForComponent();
+	RegisterBlendStatesForComponent();
+	RegisterRasterizerStatesForComponent();
+	RegisterSamplerStatesForComponent();
+
+	RegisterPSOObjectsForComponent();
 }
 
 AShader* const ComponentPSOManager::GetComponentPSOVertexShader(const EComponentPSOVertexShader& vsEnum)
@@ -111,7 +122,74 @@ ID3D11SamplerState* const ComponentPSOManager::GetComponentPSOSamplerState(const
 	return GetSamplerState(samplerStateEnumToString[samplerEnum]);
 }
 
-void ComponentPSOManager::RegisterShaderForComponent()
+GraphicsPSOObject* const ComponentPSOManager::GetGraphicsPSOObject(const EComopnentGraphicsPSOObject& graphicsPSOObjectType)
+{
+	if (m_graphicPSOObjects.find(graphicsPSOObjectType) != m_graphicPSOObjects.end())
+	{
+		return m_graphicPSOObjects.at(graphicsPSOObjectType);
+	}
+	return nullptr;
+}
+
+void ComponentPSOManager::RegisterPSOObjectsForComponent()
+{
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SCENE] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::SCENE),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::FORWARD_SCENE),
+		nullptr,
+		nullptr,
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CCW_SOLID_SS),
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_FORWARD] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::STATIC_MESH),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::FORWARD_MESH),
+		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
+		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS),
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_FORWARD] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::SKELETAL_MESH),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::FORWARD_MESH),
+		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
+		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS),
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_DEFFERED] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::STATIC_MESH),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::DEFFERED_MESH),
+		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
+		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS),
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_DEFFERED] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::SKELETAL_MESH),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::DEFFERED_MESH),
+		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
+		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS),
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+}
+
+void ComponentPSOManager::RegisterShadersForComponent()
 {
 	RegisterVSForComponent();
 	RegisterPSForComponent();
@@ -120,19 +198,19 @@ void ComponentPSOManager::RegisterShaderForComponent()
 	RegisterDomainShader("MeshComponentDS", L"../Shaders/MeshComponentDS.hlsl", "main", "ds_5_0", *m_deviceAddressCached);
 }
 
-void ComponentPSOManager::RegisterDepthStencilStateForComponent()
+void ComponentPSOManager::RegisterDepthStencilStatesForComponent()
 {
 	RegisterDepthStencilState("DepthCompareLess", TRUE, D3D11_COMPARISON_LESS, FALSE);
 	RegisterDepthStencilState("DepthCompareGreater", TRUE, D3D11_COMPARISON_GREATER, FALSE);
 }
 
-void ComponentPSOManager::RegisterBlendStateForComponent()
+void ComponentPSOManager::RegisterBlendStatesForComponent()
 {
 
 
 }
 
-void ComponentPSOManager::RegisterRasterizerStateForComponent()
+void ComponentPSOManager::RegisterRasterizerStatesForComponent()
 {
 	DXGI_SAMPLE_DESC singleSampleDesc;
 	singleSampleDesc.Count = 1;
@@ -143,7 +221,7 @@ void ComponentPSOManager::RegisterRasterizerStateForComponent()
 	RegisterRasterizerState("CounterClockWiseWireframeSS", D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, TRUE, singleSampleDesc);
 }
 
-void ComponentPSOManager::RegisterSamplerStateForComponent()
+void ComponentPSOManager::RegisterSamplerStatesForComponent()
 {
 	RegisterSamplerState("Wrap", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_COMPARISON_NEVER, D3D11_FILTER_MIN_MAG_MIP_LINEAR);
 	RegisterSamplerState("Clamp", D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_COMPARISON_NEVER, D3D11_FILTER_MIN_MAG_MIP_LINEAR);

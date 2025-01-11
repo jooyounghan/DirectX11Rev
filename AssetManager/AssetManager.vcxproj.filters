@@ -152,9 +152,6 @@
     <ClInclude Include="AnimationRetargeter.h">
       <Filter>헤더 파일\Asset\AssetHandler</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderHelper.h">
-      <Filter>헤더 파일\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="IBLMaterialAsset.h">
       <Filter>헤더 파일\Asset\Material</Filter>
     </ClInclude>

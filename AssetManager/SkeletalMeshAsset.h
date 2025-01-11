@@ -51,6 +51,7 @@ protected:
 public:
 	void SetBoneAsset(const BoneAsset* const boneAsset);
 	void UpdateBoneAsset(IBoneProvider& provider);
+	inline const BoneAsset* GetBoneAsset() const { return m_boneAsset; }
 
 public:
 	virtual size_t GetLODCount() const override;

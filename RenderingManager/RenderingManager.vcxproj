@@ -162,8 +162,10 @@
     <ClInclude Include="DynamicBuffer.h" />
     <ClInclude Include="AShader.h" />
     <ClInclude Include="GeometryShader.h" />
+    <ClInclude Include="GraphicsPSOObject.h" />
     <ClInclude Include="HullShader.h" />
     <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="PSOEnumDefinition.h" />
     <ClInclude Include="RTVOption.h" />
     <ClInclude Include="SRVOption.h" />
     <ClInclude Include="ITextureOption.h" />
@@ -187,6 +189,7 @@
     <ClCompile Include="DynamicBuffer.cpp" />
     <ClCompile Include="AShader.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
+    <ClCompile Include="GraphicsPSOObject.cpp" />
     <ClCompile Include="HullShader.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="RTVOption.cpp" />

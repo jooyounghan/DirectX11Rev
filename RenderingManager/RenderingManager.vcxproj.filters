@@ -150,6 +150,12 @@
     <ClInclude Include="DefferedContext.h">
       <Filter>헤더 파일\DefferedContext</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsPSOObject.h">
+      <Filter>헤더 파일\PSOManager</Filter>
+    </ClInclude>
+    <ClInclude Include="PSOEnumDefinition.h">
+      <Filter>헤더 파일\PSOManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PSOManager.cpp">
@@ -220,6 +226,9 @@
     </ClCompile>
     <ClCompile Include="DefferedContext.cpp">
       <Filter>소스 파일\DefferedContext</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsPSOObject.cpp">
+      <Filter>소스 파일\PSOManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

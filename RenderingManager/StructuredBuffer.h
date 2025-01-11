@@ -7,7 +7,6 @@ public:
 	StructuredBuffer(const UINT& elementSize, const UINT& arrayCount);
 	~StructuredBuffer() override = default;
 
-
 protected:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_structuredSRV;
 

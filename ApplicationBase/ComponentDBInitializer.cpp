@@ -1,4 +1,4 @@
-#include "ComponentInitializer.h"
+#include "ComponentDBInitializer.h"
 
 #include "AssetManager.h"
 #include "StaticMeshComponent.h"
@@ -14,16 +14,15 @@ using namespace mysqlx;
 
 using json = nlohmann::json;
 
-ComponentInitializer::ComponentInitializer(
+ComponentDBInitializer::ComponentDBInitializer(
 	AssetManager* assetManager,
-	ID3D11Device* const* deviceAdress,
 	mysqlx::Schema* schema
 )
-	: m_assetManagerCached(assetManager), m_deviceAdressCached(deviceAdress), m_schemaCached(schema)
+	: m_assetManagerCached(assetManager), m_schemaCached(schema)
 {
 }
 
-void ComponentInitializer::Visit(StaticMeshComponent* staticMeshComponent)
+void ComponentDBInitializer::Visit(StaticMeshComponent* staticMeshComponent)
 {
 	const uint32_t comopnentID = staticMeshComponent->GetComponentID();
 	const std::string staticMeshComponentTableName = "static_mesh_components";
@@ -42,11 +41,10 @@ void ComponentInitializer::Visit(StaticMeshComponent* staticMeshComponent)
 	}
 
 	LoadModelMaterials(staticMeshComponent);
-	staticMeshComponent->InitEntity(*m_deviceAdressCached);
 
 }
 
-void ComponentInitializer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
+void ComponentDBInitializer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
 	const uint32_t comopnentID = skeletalMeshComponent->GetComponentID();
 	const std::string skeletalMeshComponentTableName = "skeletal_mesh_components";
@@ -65,10 +63,9 @@ void ComponentInitializer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 	}
 
 	LoadModelMaterials(skeletalMeshComponent);
-	skeletalMeshComponent->InitEntity(*m_deviceAdressCached);
 }
 
-void ComponentInitializer::Visit(CameraComponent* cameraComponent)
+void ComponentDBInitializer::Visit(CameraComponent* cameraComponent)
 {
 	const uint32_t comopnentID = cameraComponent->GetComponentID();
 	const std::string cameraComponentTableName = "camera_components";
@@ -88,10 +85,9 @@ void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 		const float fov_angle = row[4].get<float>();
 		cameraComponent->SetCameraProperties(width, height, near_z, far_z, fov_angle);
 	}
-	cameraComponent->InitEntity(*m_deviceAdressCached);
 }
 
-void ComponentInitializer::LoadModelMaterials(AMeshComponent* meshComponent)
+void ComponentDBInitializer::LoadModelMaterials(AMeshComponent* meshComponent)
 {
 	const uint32_t comopnentID = meshComponent->GetComponentID();
 	const std::string meshComponentInformationTableName = "mesh_component_informations";

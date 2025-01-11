@@ -181,7 +181,6 @@
     <ClInclude Include="AssetWrapper.h" />
     <ClInclude Include="AssetWriter.h" />
     <ClInclude Include="BoneAsset.h" />
-    <ClInclude Include="HeaderHelper.h" />
     <ClInclude Include="IAssetVisitor.h" />
     <ClInclude Include="IBLMaterialAsset.h" />
     <ClInclude Include="IGPUAsset.h" />

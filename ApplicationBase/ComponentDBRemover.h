@@ -3,11 +3,11 @@
 
 #include <mysqlx/xdevapi.h>
 
-class ComponentRemover : public IComponentVisitor
+class ComponentDBRemover : public IComponentVisitor
 {
 public:
-	ComponentRemover(mysqlx::Schema* schema);
-	~ComponentRemover() override = default;
+	ComponentDBRemover(mysqlx::Schema* schema);
+	~ComponentDBRemover() override = default;
 
 protected:
 	mysqlx::Schema* m_schemaCached = nullptr;

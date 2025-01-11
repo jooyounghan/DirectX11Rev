@@ -1,70 +1,17 @@
 #pragma once
 #include "PSOManager.h"
+#include "PSOEnumDefinition.h"
+
+class GraphicsPSOObject;
 
 class ComponentPSOManager : public PSOManager
 {
 public:
 	ComponentPSOManager(ID3D11Device* const* deviceAddress);
-	~ComponentPSOManager() override = default;
+	~ComponentPSOManager() override;
 
 public:
 	void InitComopnentPSOManager();
-
-public:
-	enum class EComponentPSOVertexShader
-	{
-		BOUNDING_COMPONENT,
-		GBUFFER_RESOLVE,
-		SCENE,
-		STATIC_MESH,
-		SKELETAL_MESH
-	};
-
-	enum class EComponentPSOPixelShader
-	{
-		FORWARD_BOUNDING_COMPONENT,
-		GBUFFER_RESOLVE,
-		FORWARD_SCENE,
-		FORWARD_MESH,
-		DEFFERED_MESH
-	};
-
-	enum class EComponentPSOHullShader
-	{
-		MESH
-	};
-
-	enum class EComponentPSODomainShader
-	{
-		MESH
-	};
-
-	enum class EComponentPSODeptshStencilState
-	{
-		DEPTH_COMPARE_LESS,
-		DEPTH_COMPARE_GREATER
-	};
-
-	enum class EComponentPSOBlendState
-	{
-
-	};
-
-	enum class EComponentPSORasterizerState
-	{
-		CW_SOLID_SS,
-		CW_WIREFRAME_SS,
-		CCW_SOLID_SS,
-		CCW_WIREFRAME_SS
-	};
-
-	enum class EComponentPSOSamplerState
-	{
-		WRAP,
-		CLAMP,
-		WRAP_COMPARISON_LESS,
-		CLAMP_COMPARISON_LESS,
-	};
 
 public:
 	AShader* const  GetComponentPSOVertexShader(const EComponentPSOVertexShader& vsEnum);
@@ -78,12 +25,21 @@ public:
 	ID3D11RasterizerState* const GetComponentPSORasterizerState(const EComponentPSORasterizerState& rsEnum);
 	ID3D11SamplerState* const  GetComponentPSOSamplerState(const EComponentPSOSamplerState& samplerEnum);
 
+protected:
+	std::unordered_map<EComopnentGraphicsPSOObject, GraphicsPSOObject*> m_graphicPSOObjects;
+
+public:
+	GraphicsPSOObject* const GetGraphicsPSOObject(const EComopnentGraphicsPSOObject& graphicsPSOObjectType);
+
 private:
-	void RegisterShaderForComponent();
-	void RegisterDepthStencilStateForComponent();
-	void RegisterBlendStateForComponent();
-	void RegisterRasterizerStateForComponent();
-	void RegisterSamplerStateForComponent();
+	void RegisterPSOObjectsForComponent();
+
+private:
+	void RegisterShadersForComponent();
+	void RegisterDepthStencilStatesForComponent();
+	void RegisterBlendStatesForComponent();
+	void RegisterRasterizerStatesForComponent();
+	void RegisterSamplerStatesForComponent();
 
 private:
 	void RegisterVSForComponent();

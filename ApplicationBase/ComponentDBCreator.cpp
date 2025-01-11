@@ -1,4 +1,4 @@
-#include "ComponentCreator.h"
+#include "ComponentDBCreator.h"
 
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
@@ -14,12 +14,12 @@ using namespace DirectX;
 
 using json = nlohmann::json;
 
-ComponentCreator::ComponentCreator(Schema* schema)
+ComponentDBCreator::ComponentDBCreator(Schema* schema)
 	: m_schemaCached(schema)
 {
 }
 
-void ComponentCreator::Visit(StaticMeshComponent* staticMeshComponent)
+void ComponentDBCreator::Visit(StaticMeshComponent* staticMeshComponent)
 {
 	AddMeshComponent(staticMeshComponent);
 	AddComponetToType(staticMeshComponent, EComponentType::STATIC_COMPONENT);
@@ -31,7 +31,7 @@ void ComponentCreator::Visit(StaticMeshComponent* staticMeshComponent)
 		.values(componentID, staticMeshComponent->GetStaticMeshName()).execute();
 }
 
-void ComponentCreator::Visit(SkeletalMeshComponent* skeletalMeshComponent)
+void ComponentDBCreator::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
 	AddMeshComponent(skeletalMeshComponent);
 	AddComponetToType(skeletalMeshComponent, EComponentType::SKELETAL_COMPONENT);
@@ -43,7 +43,7 @@ void ComponentCreator::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 		.values(componentID, skeletalMeshComponent->GetSkeletalMeshName()).execute();
 }
 
-void ComponentCreator::Visit(CameraComponent* cameraComponent)
+void ComponentDBCreator::Visit(CameraComponent* cameraComponent)
 {
 	AddComponetToType(cameraComponent, EComponentType::CAMERA_COMPONENT);
 
@@ -57,7 +57,7 @@ void ComponentCreator::Visit(CameraComponent* cameraComponent)
 		);
 }
 
-void ComponentCreator::AddScene(Scene* scene)
+void ComponentDBCreator::AddScene(Scene* scene)
 {
 	const std::string sceneTableName = "scenes";
 
@@ -67,7 +67,7 @@ void ComponentCreator::AddScene(Scene* scene)
 		.execute();
 }
 
-void ComponentCreator::AddComponent(Scene* scene, AComponent* parentComponent, AComponent* component)
+void ComponentDBCreator::AddComponent(Scene* scene, AComponent* parentComponent, AComponent* component)
 {
 	const uint32_t& componentID = component->GetComponentID();
 
@@ -99,7 +99,7 @@ void ComponentCreator::AddComponent(Scene* scene, AComponent* parentComponent, A
 	).execute();
 }
 
-void ComponentCreator::AddMeshComponent(AMeshComponent* meshComponent)
+void ComponentDBCreator::AddMeshComponent(AMeshComponent* meshComponent)
 {
 	const uint32_t& componentID = meshComponent->GetComponentID();
 	const vector<std::string>& materialNames = meshComponent->GetModelMaterialName();
@@ -112,7 +112,7 @@ void ComponentCreator::AddMeshComponent(AMeshComponent* meshComponent)
 	meshComponentInformationTable.insert("mesh_component_id", "material_names").values(componentID, jsonObject.dump()).execute();
 }
 
-void ComponentCreator::AddComponetToType(AComponent* component, const EComponentType& componentType)
+void ComponentDBCreator::AddComponetToType(AComponent* component, const EComponentType& componentType)
 {
 	const uint32_t& componentID = component->GetComponentID();
 

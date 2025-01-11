@@ -277,9 +277,9 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadMeshesAnd
 
                  const string boneName = currentBone->mName.C_Str();
                  memcpy(&offsetMatrix, &currentBone->mOffsetMatrix, sizeof(XMFLOAT4X4));
-                 bone->SetBoneProperties(boneIdx, XMMatrixTranspose(DirectX::XMLoadFloat4x4(&offsetMatrix)));
 
-                 boneAsset->AddBone(bone, boneName);
+                 bone->SetBoneProperties(boneName, boneIdx, XMMatrixTranspose(DirectX::XMLoadFloat4x4(&offsetMatrix)));
+                 boneAsset->AddBone(bone);
                  nodeNameToBone.emplace(boneName, bone);
              }
              break;

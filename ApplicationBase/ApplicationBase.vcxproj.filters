@@ -37,7 +37,7 @@
     <ClInclude Include="ComponentManager.h">
       <Filter>헤더 파일\Component</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentInitializer.h">
+    <ClInclude Include="ComponentDBInitializer.h">
       <Filter>헤더 파일\Component\Visitor\Database</Filter>
     </ClInclude>
     <ClInclude Include="SceneForwardRenderer.h">
@@ -52,13 +52,13 @@
     <ClInclude Include="ComponentPSOManager.h">
       <Filter>헤더 파일\PSOManager</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCreator.h">
+    <ClInclude Include="ComponentDBCreator.h">
       <Filter>헤더 파일\Component\Visitor\Database</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentRemover.h">
+    <ClInclude Include="ComponentDBRemover.h">
       <Filter>헤더 파일\Component\Visitor\Database</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentUpdater.h">
+    <ClInclude Include="ComponentDBUpdater.h">
       <Filter>헤더 파일\Component\Visitor\Database</Filter>
     </ClInclude>
     <ClInclude Include="ISceneVisitor.h">
@@ -75,6 +75,9 @@
     </ClInclude>
     <ClInclude Include="KeyEvent.h">
       <Filter>헤더 파일\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationPlayer.h">
+      <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -212,16 +215,16 @@
     <ClCompile Include="ComponentPSOManager.cpp">
       <Filter>소스 파일\PSOManager</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentInitializer.cpp">
+    <ClCompile Include="ComponentDBInitializer.cpp">
       <Filter>소스 파일\Component\Visitor\Database</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCreator.cpp">
+    <ClCompile Include="ComponentDBCreator.cpp">
       <Filter>소스 파일\Component\Visitor\Database</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentRemover.cpp">
+    <ClCompile Include="ComponentDBRemover.cpp">
       <Filter>소스 파일\Component\Visitor\Database</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentUpdater.cpp">
+    <ClCompile Include="ComponentDBUpdater.cpp">
       <Filter>소스 파일\Component\Visitor\Database</Filter>
     </ClCompile>
     <ClCompile Include="InputEventManager.cpp">
@@ -232,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="KeyEvent.cpp">
       <Filter>소스 파일\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationPlayer.cpp">
+      <Filter>소스 파일\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

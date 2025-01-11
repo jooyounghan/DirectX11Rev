@@ -12,8 +12,11 @@ Bone::~Bone()
 	}
 }
 
-void Bone::SetBoneProperties(const uint32_t& boneIdxIn, const XMMATRIX offsetMatrix)
+void Bone::SetBoneProperties(
+	const string& boneName, const uint32_t& boneIdxIn, const DirectX::XMMATRIX offsetMatrix
+)
 {
+	m_boneName = boneName;
 	m_boneIdx = boneIdxIn;
 	m_offsetMatrix = offsetMatrix;
 }
@@ -31,6 +34,7 @@ inline void Bone::AddChildBone(Bone* const childBone)
 
 void Bone::Serialize(FILE* fileIn) const
 {
+	SerializeHelper::SerializeString(m_boneName, fileIn);
 	SerializeHelper::SerializeElement(m_boneIdx, fileIn);
 	SerializeHelper::SerializeElement(m_offsetMatrix, fileIn);
 
@@ -38,6 +42,7 @@ void Bone::Serialize(FILE* fileIn) const
 
 void Bone::Deserialize(FILE* fileIn)
 {
+	m_boneName = DeserializeHelper::DeserializeString(fileIn);
 	m_boneIdx = DeserializeHelper::DeserializeElement<uint32_t>(fileIn);
 	m_offsetMatrix = DeserializeHelper::DeserializeElement<XMMATRIX>(fileIn);
 }
@@ -52,28 +57,12 @@ BoneAsset::~BoneAsset()
 	delete m_rootBone;
 }
 
-
-void BoneAsset::SetRootBone(Bone* const bone)
-{
-	m_rootBone = bone;
-}
-
-void BoneAsset::AddBone(Bone* const bone, const std::string& boneName)
-{
-	m_boneToNames.emplace(bone, boneName);
-}
-
 void BoneAsset::Serialize(FILE* fileIn) const
 {
 	AAsset::Serialize(fileIn);
 
 	function<void(Bone* const)> dfs = [&](Bone* const currentBone)
 	{
-		SerializeHelper::SerializeString(
-			m_boneToNames.find(currentBone) != m_boneToNames.end() ? m_boneToNames.at(currentBone) : "",
-			fileIn
-		);
-
 		currentBone->Serialize(fileIn);
 
 		const list<Bone*>& boneChildren = currentBone->GetBoneChildren();
@@ -95,11 +84,9 @@ void BoneAsset::Deserialize(FILE* fileIn)
 	function<Bone*()> dfs = [&]()
 	{
 		Bone* currentBone = new Bone();
-
-		string currentBoneName = DeserializeHelper::DeserializeString(fileIn);
 		currentBone->Deserialize(fileIn);
 
-		m_boneToNames.emplace(currentBone, currentBoneName);
+		m_bones.emplace_back(currentBone);
 
 		size_t currentBoneChildrenCount = DeserializeHelper::DeserializeElement<size_t>(fileIn);
 		for (size_t childIdx = 0; childIdx < currentBoneChildrenCount; ++childIdx)

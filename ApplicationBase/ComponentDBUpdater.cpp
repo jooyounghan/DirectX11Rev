@@ -1,4 +1,4 @@
-#include "ComponentUpdater.h"
+#include "ComponentDBUpdater.h"
 
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
@@ -14,15 +14,12 @@ using namespace DirectX;
 
 using json = nlohmann::json;
 
-ComponentUpdater::ComponentUpdater(
-	ID3D11DeviceContext* const* deviceContextAddress, 
-	Schema* schema
-)
-	: m_deviceContextAddress(deviceContextAddress), m_schemaCached(schema)
+ComponentDBUpdater::ComponentDBUpdater(Schema* schema)
+	: m_schemaCached(schema)
 {
 }
 
-void ComponentUpdater::Visit(StaticMeshComponent* staticMeshComponent)
+void ComponentDBUpdater::Visit(StaticMeshComponent* staticMeshComponent)
 {
 	UpdateComponent(staticMeshComponent);
 
@@ -33,11 +30,9 @@ void ComponentUpdater::Visit(StaticMeshComponent* staticMeshComponent)
 		.set("static_mesh_name", staticMeshComponent->GetStaticMeshName())
 		.where("static_mesh_component_id = :static_mesh_component_id")
 		.bind("static_mesh_component_id", componentID).execute();
-
-	staticMeshComponent->UpdateEntity(*m_deviceContextAddress);
 }
 
-void ComponentUpdater::Visit(SkeletalMeshComponent* skeletalMeshComponent)
+void ComponentDBUpdater::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
 	UpdateComponent(skeletalMeshComponent);
 
@@ -48,11 +43,9 @@ void ComponentUpdater::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 		.set("skeletal_mesh_name", skeletalMeshComponent->GetSkeletalMeshName())
 		.where("skeletal_mesh_component_id = :skeletal_mesh_component_id")
 		.bind("skeletal_mesh_component_id", componentID).execute();
-
-	skeletalMeshComponent->UpdateEntity(*m_deviceContextAddress);
 }
 
-void ComponentUpdater::Visit(CameraComponent* cameraComponent)
+void ComponentDBUpdater::Visit(CameraComponent* cameraComponent)
 {
 	UpdateComponent(cameraComponent);
 
@@ -67,11 +60,9 @@ void ComponentUpdater::Visit(CameraComponent* cameraComponent)
 		.set("fov_angle", cameraComponent->GetFovAngle())
 		.where("camera_component_id = :camera_component_id")
 		.bind("camera_component_id", componentID).execute();
-
-	cameraComponent->UpdateEntity(*m_deviceContextAddress);
 }
 
-void ComponentUpdater::UpdateComponent(AComponent* component)
+void ComponentDBUpdater::UpdateComponent(AComponent* component)
 {
 	const uint32_t& componentID = component->GetComponentID();
 
@@ -94,9 +85,10 @@ void ComponentUpdater::UpdateComponent(AComponent* component)
 		.set("scale_z", scale.m128_f32[2])
 		.where("component_id = :component_id")
 		.bind("component_id", componentID).execute();
+
 }
 
-void ComponentUpdater::UpdateMeshComponent(AMeshComponent* meshComponent)
+void ComponentDBUpdater::UpdateMeshComponent(AMeshComponent* meshComponent)
 {
 	const uint32_t& componentID = meshComponent->GetComponentID();
 

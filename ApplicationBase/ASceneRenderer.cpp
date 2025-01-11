@@ -1,5 +1,7 @@
 #include "ASceneRenderer.h"
+
 #include "ComponentPSOManager.h"
+#include "GraphicsPSOObject.h"
 
 #include "Scene.h"
 #include "CameraComponent.h"
@@ -20,40 +22,28 @@ using namespace std;
 ASceneRenderer::ASceneRenderer(
 	ID3D11DeviceContext* const* deviceContextAddress,
 	ComponentPSOManager* componentPsoManager,
-    CameraComponent* const* cameraComponentAddress
+    CameraComponent* const* cameraComponentAddress,
+    Scene* const* sceneAddress
 )
 	: m_deviceContextAddress(deviceContextAddress), 
     m_componentPsoManagerCached(componentPsoManager), 
-    m_selectedCameraComponentAddressCached(cameraComponentAddress)
+    m_selectedCameraComponentAddressCached(cameraComponentAddress),
+    m_sceneAddressCached(sceneAddress)
 {
 }
 
 void ASceneRenderer::Visit(Scene* scene)
 {   
+    static GraphicsPSOObject* graphicsPSOObject = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::SCENE);
+
     ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
-    CameraComponent* const selectedCameraComponentCached = *m_selectedCameraComponentAddressCached;
+    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
 
-    if (selectedCameraComponentCached != nullptr)
+    if (cameraComponent != nullptr && graphicsPSOObject != nullptr)
     {
-        AShader* const sceneVertexShader = m_componentPsoManagerCached->GetComponentPSOVertexShader(ComponentPSOManager::EComponentPSOVertexShader::SCENE);
-        AShader* const scenePixelShader = m_componentPsoManagerCached->GetComponentPSOPixelShader(ComponentPSOManager::EComponentPSOPixelShader::FORWARD_SCENE);
-        ID3D11SamplerState* const wrapSamplerState = m_componentPsoManagerCached->GetComponentPSOSamplerState(ComponentPSOManager::EComponentPSOSamplerState::WRAP);
-        ID3D11DepthStencilState* const lessDepthStencilState = m_componentPsoManagerCached->GetComponentPSODepthStencilState(ComponentPSOManager::EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS);
-        ID3D11RasterizerState* const ccwSolidSSRasterizerState = m_componentPsoManagerCached->GetComponentPSORasterizerState(ComponentPSOManager::EComponentPSORasterizerState::CCW_SOLID_SS);
-        const vector<ID3D11SamplerState*> samplerStates = { m_componentPsoManagerCached->GetComponentPSOSamplerState(ComponentPSOManager::EComponentPSOSamplerState::WRAP) };
-        
-        const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = selectedCameraComponentCached->GetFilm();
-        const Texture2DInstance<DSVOption>* const depthStencilView = selectedCameraComponentCached->GetDepthStencilViewBuffer();
-
-
-        vector<ID3D11RenderTargetView*> rtvs{ film->GetRTV() };
-
-        deviceContext->OMSetRenderTargets(1, rtvs.data(), depthStencilView->GetDSV());
-        deviceContext->OMSetDepthStencilState(lessDepthStencilState, 0);
+        graphicsPSOObject->ApplyPSOObject(deviceContext);
+        ApplyCamera();
     
-        deviceContext->RSSetState(ccwSolidSSRasterizerState);
-        deviceContext->RSSetViewports(1, selectedCameraComponentCached);
-
         const StaticMeshAsset* const staticMeshAsset = scene->GetSceneMeshAsset();
         MeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(NULL);
 
@@ -67,25 +57,43 @@ void ASceneRenderer::Visit(Scene* scene)
         const vector<UINT>& verticesOffsets = meshPartsData->GetOffsets();
         const UINT& totalIndicesCount = static_cast<UINT>(meshPartsData->GetIndices().size());
 
+        vector<ID3D11Buffer*> vsConstantBuffers{ cameraComponent->GetViewProjMatrixBuffer()->GetBuffer() };
+        vector<ID3D11Buffer*> psConstantBuffers{ iblMaterialAsset->GetIBLToneMappingBuffer()->GetBuffer() };
+        vector<ID3D11ShaderResourceView*> psSRVs{ backgroundTextureAsset->GetSRV() };
+
+        deviceContext->VSSetConstantBuffers(0, 1, vsConstantBuffers.data());
+        deviceContext->PSSetConstantBuffers(0, 1, psConstantBuffers.data());
+        deviceContext->PSSetShaderResources(0, 1, psSRVs.data());
+
         for (size_t idx = 0; idx < meshPartCount; ++idx)
         {
             const UINT indexCount = (idx + 1 == meshPartCount ? totalIndicesCount : indicesOffsets[idx + 1]) - indicesOffsets[idx];
 
-            sceneVertexShader->SetShader(deviceContext);
-            scenePixelShader->SetShader(deviceContext);
-
             deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
             deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, indicesOffsets[idx]);
-
-            vector<ID3D11Buffer*> vsConstantBuffers{ selectedCameraComponentCached->GetViewProjMatrixBuffer()->GetBuffer() };
-            vector<ID3D11Buffer*> psConstantBuffers{ iblMaterialAsset->GetIBLToneMappingBuffer()->GetBuffer() };
-            vector<ID3D11ShaderResourceView*> psSRVs{ backgroundTextureAsset->GetSRV() };
-
-            deviceContext->VSSetConstantBuffers(0, 1, vsConstantBuffers.data());
-            deviceContext->PSSetConstantBuffers(0, 1, psConstantBuffers.data());
-            deviceContext->PSSetShaderResources(0, 1, psSRVs.data());
-            deviceContext->PSSetSamplers(0, 1, samplerStates.data());
             deviceContext->DrawIndexed(indexCount, NULL, NULL);
         }
     }
 }
+
+void ASceneRenderer::ApplyCamera() const
+{
+    ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
+    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
+
+    const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = cameraComponent->GetFilm();
+    const Texture2DInstance<DSVOption>* const depthStencilView = cameraComponent->GetDepthStencilViewBuffer();
+
+    vector<ID3D11RenderTargetView*> rtvs{ film->GetRTV() };
+
+    deviceContext->OMSetRenderTargets(1, rtvs.data(), depthStencilView->GetDSV());
+    deviceContext->RSSetViewports(1, cameraComponent);
+}
+
+UINT ASceneRenderer::GetLODLevel(const AComponent* component) const
+{
+    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
+
+    return NULL;
+}
+

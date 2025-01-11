@@ -40,16 +40,13 @@ AnimationAsset* AnimationRetargeter::GetRetargetedAnimation(const std::string& a
 		const map<string, XMMATRIX> TPoseLocalSourceTransformations = GetTPoseLocalTransformations(m_sourceBoneAsset);
 		const map<string, XMMATRIX> TPoseLocalDestTransformations = GetTPoseLocalTransformations(m_destBoneAsset);
 
-		const map<Bone*, string>& SourceBoneToNames = m_sourceBoneAsset->GetBoneToNames();
-		const map<Bone*, string>& DestBoneToNames = m_destBoneAsset->GetBoneToNames();
-
 		for (const auto& BoneTargeting : m_boneTargetings)
 		{
 			Bone* const DestBone = BoneTargeting.first;
 			Bone* const SourceBone = BoneTargeting.second;
 
-			const string& DestBoneName = DestBoneToNames.at(DestBone);
-			const string& SourceBoneName = SourceBoneToNames.at(SourceBone);
+			const string& DestBoneName = DestBone->GetBoneName();
+			const string& SourceBoneName = SourceBone->GetBoneName();
 
 			XMVECTOR Position;
 			XMVECTOR Quaternion;
@@ -104,24 +101,25 @@ void AnimationRetargeter::GenerateBoneTargetings()
 
 	if (m_sourceBoneAsset != nullptr && m_destBoneAsset != nullptr)
 	{
-		const map<Bone*, string>& sourceBoneToNames = m_sourceBoneAsset->GetBoneToNames();
-		const map<Bone*, string>& destBoneToNames = m_destBoneAsset->GetBoneToNames();
+		const vector<Bone*>& sourceBones = m_sourceBoneAsset->GetBones();
+		const vector<Bone*>& destBones = m_destBoneAsset->GetBones();
 
 		unordered_map<string, Bone*> sourceNameToBones;
-		for (auto& sourceBoneToName : sourceBoneToNames)
+		for (auto& sourceBone : sourceBones)
 		{
-			sourceNameToBones.emplace(sourceBoneToName.second, sourceBoneToName.first);
+			sourceNameToBones.emplace(sourceBone->GetBoneName(), sourceBone);
 		}
 
-		for (auto& destBoneToName : destBoneToNames)
+		for (auto& destBone : destBones)
 		{
-			if (sourceNameToBones.find(destBoneToName.second) != sourceNameToBones.end())
+			const string& destBoneName = destBone->GetBoneName();
+			if (sourceNameToBones.find(destBoneName) != sourceNameToBones.end())
 			{
-				m_boneTargetings.emplace(destBoneToName.first, sourceNameToBones[destBoneToName.second]);
+				m_boneTargetings.emplace(destBone, sourceNameToBones[destBoneName]);
 			}
 			else
 			{
-				m_boneTargetings.emplace(destBoneToName.first, nullptr);
+				m_boneTargetings.emplace(destBone, nullptr);
 			}
 		}
 	}
@@ -146,12 +144,12 @@ bool AnimationRetargeter::IsSameProfile(const BoneAsset* const boneAssetIn, cons
 		return false;
 	}
 
-	const map<Bone*, string>& boneToNames = boneAssetIn->GetBoneToNames();
+	const vector<Bone*>& bones = boneAssetIn->GetBones();
 	const unordered_map<string, AnimChannel>& boneNameToAnimationChannels = animationAssetIn->GetBoneNameToAnimChannels();
 
-	for (const auto& boneToName : boneToNames)
+	for (const Bone* bone : bones)
 	{
-		if (boneNameToAnimationChannels.find(boneToName.second) == boneNameToAnimationChannels.end())
+		if (boneNameToAnimationChannels.find(bone->GetBoneName()) == boneNameToAnimationChannels.end())
 		{
 			return false;
 		}
@@ -164,20 +162,20 @@ map<string, XMMATRIX> AnimationRetargeter::GetTPoseLocalTransformations(const Bo
 {
 	map<string, XMMATRIX> tPoseLocalTransformation;
 
-	Bone* rootBone = boneAssetIn->GetRootBone();
-	const map<Bone*, string>& boneToNames = boneAssetIn->GetBoneToNames();
+	const Bone* rootBone = boneAssetIn->GetRootBone();
+	const vector<Bone*>& bones = boneAssetIn->GetBones();
 
-	for (auto& boneToName : boneToNames)
+	for (auto& bone : bones)
 	{
-		tPoseLocalTransformation[boneToName.second] = XMMatrixIdentity();
+		tPoseLocalTransformation[bone->GetBoneName()] = XMMatrixIdentity();
 	}
 
-	function<void(Bone* const)> updateTLocalTransformation = [&](Bone* const currentBone)
+	function<void(const Bone* const)> updateTLocalTransformation = [&](const Bone* const currentBone)
 		{
 			if (currentBone != nullptr)
 			{
-				const string& boneName = boneToNames.at(currentBone);
-				Bone* parentBone = currentBone->GetParentBone();
+				const string& boneName = currentBone->GetBoneName();
+				const Bone* parentBone = currentBone->GetParentBone();
 
 				tPoseLocalTransformation[boneName] 
 					= XMMatrixMultiply(

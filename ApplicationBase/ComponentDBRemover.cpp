@@ -1,4 +1,4 @@
-#include "ComponentRemover.h"
+#include "ComponentDBRemover.h"
 
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
@@ -7,12 +7,12 @@
 using namespace std;
 using namespace mysqlx;
 
-ComponentRemover::ComponentRemover(Schema* schema)
+ComponentDBRemover::ComponentDBRemover(Schema* schema)
 	: m_schemaCached(schema)
 {
 }
 
-void ComponentRemover::Visit(StaticMeshComponent* staticMeshComponent)
+void ComponentDBRemover::Visit(StaticMeshComponent* staticMeshComponent)
 {
 	DeleteComponetFromSceneInformation(staticMeshComponent);
 
@@ -27,7 +27,7 @@ void ComponentRemover::Visit(StaticMeshComponent* staticMeshComponent)
 
 }
 
-void ComponentRemover::Visit(SkeletalMeshComponent* skeletalMeshComponent)
+void ComponentDBRemover::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
 	DeleteComponetFromSceneInformation(skeletalMeshComponent);
 
@@ -41,7 +41,7 @@ void ComponentRemover::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 	DeleteComponent(skeletalMeshComponent);
 }
 
-void ComponentRemover::Visit(CameraComponent* cameraComponent)
+void ComponentDBRemover::Visit(CameraComponent* cameraComponent)
 {
 	DeleteComponetFromSceneInformation(cameraComponent);
 
@@ -55,7 +55,7 @@ void ComponentRemover::Visit(CameraComponent* cameraComponent)
 
 }
 
-void ComponentRemover::DeleteComponent(AComponent* component)
+void ComponentDBRemover::DeleteComponent(AComponent* component)
 {
 	const uint32_t& componentID = component->GetComponentID();
 
@@ -64,7 +64,7 @@ void ComponentRemover::DeleteComponent(AComponent* component)
 	componentTable.remove().where("component_id = :component_id").bind("component_id", componentID).execute();
 }
 
-void ComponentRemover::DeleteComponetFromSceneInformation(AComponent* component)
+void ComponentDBRemover::DeleteComponetFromSceneInformation(AComponent* component)
 {
 	const uint32_t& componentID = component->GetComponentID();
 
@@ -74,7 +74,7 @@ void ComponentRemover::DeleteComponetFromSceneInformation(AComponent* component)
 
 }
 
-void ComponentRemover::DeleteMeshComponent(AMeshComponent* meshComponent)
+void ComponentDBRemover::DeleteMeshComponent(AMeshComponent* meshComponent)
 {
 	const uint32_t& componentID = meshComponent->GetComponentID();
 

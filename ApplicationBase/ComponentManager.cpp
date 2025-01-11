@@ -18,19 +18,17 @@ ComponentManager::ComponentManager(
 	DefferedContext* defferedContext)
 	: SchemaManager(sessionManager, "component_db"),
 	m_assetManagerCached(assetManager),
-	m_componentInitializer(assetManager, deviceAddress, this),
-	m_componentUpdater(defferedContext->GetDefferedContextAddress(), this),
-	m_componentRemover(this),
-	m_componentCreator(this),
-	m_defferedContext(defferedContext)
+	m_deviceAddressCached(deviceAddress),
+	m_defferedContext(defferedContext),
+	m_componentDBInitializer(assetManager, this),
+	m_componentDBUpdater(this),
+	m_componentDBRemover(this),
+	m_componentDBCreator(this)
 {
 }
 
 ComponentManager::~ComponentManager()
 {
-	m_workThreadStarted = false;
-	m_workThread.join();
-
 	for (auto& componentIDToComponent : m_componentIDsToComponent)
 	{
 		delete componentIDToComponent.second;
@@ -50,7 +48,7 @@ void ComponentManager::InitComponentManager()
 		LoadScenes();
 		LoadScenesInformation();
 		InitLoadedComponents();
-		LaunchComponentDBMonitor();
+		m_isInitialized = true;
 	}
 	catch (const std::exception& ex)
 	{
@@ -204,131 +202,27 @@ void ComponentManager::LoadScenesInformation()
 
 void ComponentManager::InitLoadedComponents()
 {
-	for (auto& componentIDToComponent : m_componentIDsToComponent)
+	try
 	{
-		componentIDToComponent.second->Accept(&m_componentInitializer);
+		m_sessionManager->startTransaction();
+
+		for (auto& componentIDToComponent : m_componentIDsToComponent)
+		{
+			componentIDToComponent.second->Accept(&m_componentDBInitializer);
+			componentIDToComponent.second->InitEntity(*m_deviceAddressCached);
+		}
+		m_sessionManager->commit();
+
+	}
+	catch (const exception& ex)
+	{
+		m_sessionManager->rollback();
+
+		OnErrorOccurs(ex.what());
+
 	}
 }
 
-void ComponentManager::LaunchComponentDBMonitor()
-{
-	m_workThreadStarted = true;
-	m_workThread = thread([&]() {
-		while (m_workThreadStarted)
-		{
-			std::queue<pair<Scene*, AComponent*>>		tempInsertToSceneQueue;
-			std::queue<pair<AComponent*, AComponent*>>	tempInsertToComponentQueue;
-			std::queue<AComponent*>						tempRemoveQueue;
-;
-			try
-			{
-				m_sessionManager->startTransaction();
-				{
-					{ // Insert Root Component =============================================
-						unique_lock writeLock(m_insertToSceneQueueMutex);
-
-						while (!m_insertToSceneQueue.empty())
-						{
-							tempInsertToSceneQueue.push(m_insertToSceneQueue.front());
-							m_insertToSceneQueue.pop();
-							
-							auto& sceneWithComponent = tempInsertToSceneQueue.back();
-							Scene* scene = sceneWithComponent.first;
-							AComponent* component = sceneWithComponent.second;
-
-							m_componentCreator.AddComponent(scene, nullptr, component);
-							component->Accept(&m_componentCreator);
-						}
-					} // =======================================================================
-					
-					{ // Insert Child Component ================================================
-						unique_lock writeLock(m_insertToComponentQueueMutex);
-
-						while (!m_insertToComponentQueue.empty())
-						{
-							tempInsertToComponentQueue.push(m_insertToComponentQueue.front());
-							m_insertToComponentQueue.pop();
-
-							auto& parentComponentWithComponent = tempInsertToComponentQueue.back();
-							AComponent* parentComponent = parentComponentWithComponent.first;
-							AComponent* component = parentComponentWithComponent.second;
-
-							m_componentCreator.AddComponent(nullptr, parentComponent, component);
-							component->Accept(&m_componentCreator);
-						}
-					} // =======================================================================
-
-					{ // Delete ================================================================
-						unique_lock writeLock(m_removeQueueMutex);
-
-						while (!m_removeQueue.empty())
-						{
-							tempRemoveQueue.push(m_removeQueue.front());
-							m_removeQueue.pop();
-							tempRemoveQueue.back()->Accept(&m_componentRemover);
-						}
-					} // =======================================================================
-				}
-
-				{ // Update ===================================================================
-					shared_lock readLock(m_componentMutex);
-					for (auto& m_componentIDToComponent : m_componentIDsToComponent)
-					{
-						if (m_componentIDToComponent.second->ComsumeIsModified())
-						{
-							m_componentIDToComponent.second->Accept(&m_componentUpdater);
-						}
-						m_defferedContext->RecordToCommandList();
-					}
-				} // ==========================================================================
-
-				m_sessionManager->commit();
-
-				while (!tempRemoveQueue.empty())
-				{
-					delete tempRemoveQueue.front();
-					tempRemoveQueue.pop();
-				}
-
-				this_thread::sleep_for(chrono::seconds(1));
-			}
-			catch (const std::exception& ex)
-			{
-				{
-					unique_lock writeLock(m_insertToSceneQueueMutex);
-					while (!tempInsertToSceneQueue.empty())
-					{
-						m_insertToSceneQueue.push(tempInsertToSceneQueue.front());
-						tempInsertToSceneQueue.pop();
-					}
-				}
-
-				{
-					unique_lock writeLock(m_insertToComponentQueueMutex);
-					while (!tempInsertToComponentQueue.empty())
-					{
-						m_insertToComponentQueue.push(tempInsertToComponentQueue.front());
-						tempInsertToComponentQueue.pop();
-					}
-				}
-
-				{
-					unique_lock writeLock(m_removeQueueMutex);
-					while (!tempRemoveQueue.empty())
-					{
-						m_removeQueue.push(tempRemoveQueue.front());
-						tempRemoveQueue.pop();
-					}
-				}
-
-				m_sessionManager->rollback();
-
-				OnErrorOccurs(ex.what());
-			}
-		}
-	});
-
-}
 
 void ComponentManager::LoadLastAutoIncrementIDFromTable(const std::string& tableName, uint32_t& autoIncrementID)
 {
@@ -350,14 +244,123 @@ void ComponentManager::LoadLastAutoIncrementIDFromTable(const std::string& table
 	}
 }
 
+void ComponentManager::LaunchComponentDBMonitor()
+{
+	m_workThreadStarted = true;
+	m_workThread = thread([&]() {
+		while (m_workThreadStarted)
+		{
+			std::queue<pair<Scene*, AComponent*>>			tempInsertToSceneQueue;
+			std::queue<pair<AComponent*, AComponent*>>		tempInsertToComponentQueue;
+			std::queue<AComponent*>							tempRemoveQueue;
+			std::set<AComponent*>							tempUpdateSet;
+
+			try
+			{
+				m_sessionManager->startTransaction();
+				{
+					{ // Insert Root Component =============================================
+						unique_lock writeLock(m_insertToSceneQueueMutex);
+
+						tempInsertToSceneQueue = m_insertToSceneQueue;
+
+						while (!m_insertToSceneQueue.empty())
+						{
+							auto& sceneWithComponent = m_insertToSceneQueue.back();
+							Scene* scene = sceneWithComponent.first;
+							AComponent* component = sceneWithComponent.second;
+							m_componentDBCreator.AddComponent(scene, nullptr, component);
+							component->Accept(&m_componentDBCreator);
+
+							m_insertToSceneQueue.pop();
+						}
+					} // =======================================================================
+
+					{ // Insert Child Component ================================================
+						unique_lock writeLock(m_insertToComponentQueueMutex);
+
+						tempInsertToComponentQueue = m_insertToComponentQueue;
+
+						while (!m_insertToComponentQueue.empty())
+						{
+							auto& parentComponentWithComponent = m_insertToComponentQueue.back();
+							AComponent* parentComponent = parentComponentWithComponent.first;
+							AComponent* component = parentComponentWithComponent.second;
+							m_componentDBCreator.AddComponent(nullptr, parentComponent, component);
+							component->Accept(&m_componentDBCreator);
+							m_insertToComponentQueue.pop();
+						}
+					} // =======================================================================
+
+					{ // Delete ================================================================
+						unique_lock writeLock(m_removeQueueMutex);
+
+						tempRemoveQueue = m_removeQueue;
+
+						while (!m_removeQueue.empty())
+						{
+							m_removeQueue.back()->Accept(&m_componentDBRemover);
+							m_removeQueue.pop();
+						}
+					} // =======================================================================
+				}
+
+				{ // Update ===================================================================
+					unique_lock writeLock(m_updateSetMutex);
+
+					tempUpdateSet = m_updateSet;
+
+					for (AComponent* updateComponet : m_updateSet)
+					{
+						updateComponet->Accept(&m_componentDBUpdater);
+					}
+					m_updateSet.clear();
+				} // ==========================================================================
+
+				m_sessionManager->commit();
+				this_thread::sleep_for(chrono::seconds(1));
+			}
+			catch (const std::exception& ex)
+			{
+				{
+					unique_lock writeLock(m_insertToSceneQueueMutex);
+					m_insertToSceneQueue = tempInsertToSceneQueue;
+				}
+
+				{
+					unique_lock writeLock(m_insertToComponentQueueMutex);
+					m_insertToComponentQueue = tempInsertToComponentQueue;
+				}
+
+				{
+					unique_lock writeLock(m_removeQueueMutex);
+					m_removeQueue = tempRemoveQueue;
+				}
+
+				{
+					unique_lock writeLock(m_updateSetMutex);
+					m_updateSet = tempUpdateSet;
+				}
+
+				m_sessionManager->rollback();
+
+				OnErrorOccurs(ex.what());
+			}
+		}
+		});
+}
+
+void ComponentManager::RegisterComponent(AComponent* component)
+{
+	m_componentIDsToComponent.emplace(component->GetComponentID(), component);
+}
 
 void ComponentManager::AddComponent(Scene* scene, AComponent* component)
 {
 	if (component != nullptr)
 	{
 		scene->AddRootComponent(component);
-		m_componentIDsToComponent.emplace(component->GetComponentID(), component);
-
+		RegisterComponent(component);
 		{
 			unique_lock writeLock(m_insertToSceneQueueMutex);
 			m_insertToSceneQueue.push(make_pair(scene, component));
@@ -385,7 +388,6 @@ void ComponentManager::RemoveComponent(AComponent* component)
 	m_componentIDsToComponent.erase(component->GetComponentID());
 	component->RemoveFromParent();
 
-
 	const vector<AComponent*>& childComponents = component->GetChildComponents();
 	for (AComponent* childComponent : childComponents)
 	{
@@ -398,7 +400,36 @@ void ComponentManager::RemoveComponent(AComponent* component)
 	}
 }
 
-void ComponentManager::RegisterComponent(AComponent* component)
+void ComponentManager::UpdateComponents()
 {
-	m_componentIDsToComponent.emplace(component->GetComponentID(), component);
+	if (m_isInitialized)
+	{
+		try
+		{
+			m_sessionManager->startTransaction();
+
+			for (auto& m_componentIDToComponent : m_componentIDsToComponent)
+			{
+				if (m_componentIDToComponent.second->ComsumeIsModified())
+				{
+					m_componentIDToComponent.second->UpdateEntity(m_defferedContext->GetDefferedContext());
+					{
+						unique_lock writeLock(m_updateSetMutex);
+						m_updateSet.insert(m_componentIDToComponent.second);
+					}
+				}
+			}
+			m_defferedContext->RecordToCommandList();
+
+			m_sessionManager->commit();
+		}
+		catch (const exception& ex)
+		{
+			m_sessionManager->rollback();
+
+			OnErrorOccurs(ex.what());
+
+		}
+	}
 }
+

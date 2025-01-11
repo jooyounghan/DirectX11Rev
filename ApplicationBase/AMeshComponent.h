@@ -22,7 +22,10 @@ protected:
 
 public:
 	inline void SetModelMaterialName(const std::vector<std::string>& modelMaterialNames) { m_modelMaterialNames = modelMaterialNames; }
-	inline const std::vector<std::string>& GetModelMaterialName() { return m_modelMaterialNames; }
+	inline const std::vector<std::string>& GetModelMaterialName() const { return m_modelMaterialNames; }
+
+public:
+	inline const std::vector<ModelMaterialAsset*>& GetSelectedModelMaterials() const { return m_selectedModelMaterials; }
 
 public:
 	void UpdateModelMaterial(IModelMaterialProvider& provider);
