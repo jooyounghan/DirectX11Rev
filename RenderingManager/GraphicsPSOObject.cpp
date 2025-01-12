@@ -19,14 +19,17 @@ GraphicsPSOObject::GraphicsPSOObject(
 
 void GraphicsPSOObject::ApplyPSOObject(ID3D11DeviceContext* const deviceContext) const
 {
-	if(m_vertexShader) m_vertexShader->SetShader(deviceContext);
-	if (m_pixelShader) m_pixelShader->SetShader(deviceContext);
-	if (m_hullShader) m_hullShader->SetShader(deviceContext);
-	if (m_domainShader) m_domainShader->SetShader(deviceContext);
-	if (m_geometryShader) m_geometryShader->SetShader(deviceContext);
+	m_vertexShader ? m_vertexShader->SetShader(deviceContext) : deviceContext->VSSetShader(nullptr, NULL, NULL);
+	m_pixelShader ? m_pixelShader->SetShader(deviceContext) : deviceContext->PSSetShader(nullptr, NULL, NULL);
+	m_hullShader ? m_hullShader->SetShader(deviceContext) : deviceContext->HSSetShader(nullptr, NULL, NULL);
+	m_domainShader ? m_domainShader->SetShader(deviceContext) : deviceContext->DSSetShader(nullptr, NULL, NULL);
+	m_geometryShader ? m_geometryShader->SetShader(deviceContext) : deviceContext->GSSetShader(nullptr, NULL, NULL);
 	
 	deviceContext->OMSetDepthStencilState(m_depthStencilState, 0);
 	deviceContext->RSSetState(m_rasterizerState);
+
+
+	deviceContext->DSSetSamplers(0, static_cast<UINT>(m_samplerStates.size()), m_samplerStates.data());
 	deviceContext->PSSetSamplers(0, static_cast<UINT>(m_samplerStates.size()), m_samplerStates.data());
 }
 

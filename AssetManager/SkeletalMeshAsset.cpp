@@ -124,11 +124,10 @@ size_t SkeletalMeshAsset::GetLODCount() const
 
 MeshPartsData* SkeletalMeshAsset::AddMeshPartData(const uint32_t& lodLevel)
 {
-	if (m_skeletalMeshPartsPerLOD.find(lodLevel) != m_skeletalMeshPartsPerLOD.end())
+	if (m_skeletalMeshPartsPerLOD.find(lodLevel) == m_skeletalMeshPartsPerLOD.end())
 	{
-		delete m_skeletalMeshPartsPerLOD[lodLevel];
+		m_skeletalMeshPartsPerLOD[lodLevel] = new SkeletalMeshPartData();
 	}
-	m_skeletalMeshPartsPerLOD[lodLevel] = new SkeletalMeshPartData();
 	return m_skeletalMeshPartsPerLOD[lodLevel];
 }
 

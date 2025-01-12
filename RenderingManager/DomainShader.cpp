@@ -33,7 +33,7 @@ void DomainShader::SetSamplerState(
 
 void DomainShader::ResetShader(ID3D11DeviceContext* deviceContext) const
 {
-	deviceContext->GSSetShader(nullptr, NULL, NULL);
+	deviceContext->DSSetShader(nullptr, NULL, NULL);
 }
 
 void DomainShader::ResetSamplerState(ID3D11DeviceContext* deviceContext) const

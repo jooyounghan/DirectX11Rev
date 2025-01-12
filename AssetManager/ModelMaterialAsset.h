@@ -1,5 +1,8 @@
 #pragma once
 #include "BaseTextureAsset.h"
+#include "DynamicBuffer.h"
+#include "IGPUAsset.h"
+
 #include <DirectXMath.h>
 
 enum class EModelMaterialTexture
@@ -16,43 +19,47 @@ enum class EModelMaterialTexture
 
 constexpr size_t ModelMaterialTextureCount = static_cast<size_t>(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_EMISSIVE) + 1;
 
-class ModelMaterialAsset : public AAsset
+struct SModelTextureSetting
+{
+	BOOL m_isTextureSet[ModelMaterialTextureCount];
+	DirectX::XMFLOAT3 m_fresnelConstant;
+	float m_heightScale;
+};
+
+class ModelMaterialAsset : public AAsset, public IGPUAsset
 {
 public:
-	ModelMaterialAsset() = default;
+	ModelMaterialAsset();
 	ModelMaterialAsset(const std::string& assetName);
-	~ModelMaterialAsset() override = default;
+	~ModelMaterialAsset() override;
 
 protected:
 	std::string m_materialTextureName[ModelMaterialTextureCount];
-	BaseTextureAsset* m_materialTexture[ModelMaterialTextureCount] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	const BaseTextureAsset* m_materialTexture[ModelMaterialTextureCount] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 
 protected:
-	 DirectX::XMFLOAT3 m_f0 = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
-	float m_heightScale = 1.f;
-
-public:
-	const DirectX::XMFLOAT3& GetFresnelConstant() const { return m_f0; }
-	const float& GetHeightScale() const { return m_heightScale; }
+	SModelTextureSetting m_modelTextureSetting;
+	DynamicBuffer* m_modelTextureSettingBuffer;
 
 public:
 	void UpdateModelBaseTextureAsset(
 		EModelMaterialTexture modelMaterialTextureType,
 		IBaseTextureProvider& provider
 	);
-	void SetModelMaterialTexture(
-		EModelMaterialTexture modelMaterialTextureType, 
-		const std::string& modelMaterialTextureIn, 
-		IBaseTextureProvider& provider
-	);
 
+	void SetModelMaterialTextureName(
+		EModelMaterialTexture modelMaterialTextureType, 
+		const std::string& modelMaterialTextureIn		
+	);
 	void SetModelMaterialTexture(
 		EModelMaterialTexture modelMaterialTextureType,
-		BaseTextureAsset* const baseTextureAsset
+		const BaseTextureAsset* baseTextureASsetIn
 	);
 
 public:
-	void SetModelMaterialProperties(const DirectX::XMFLOAT3& f0, const float& heightScale);
+	void UpdateModelTextureSetting(DirectX::XMFLOAT3* f0, const float* heightScale, ID3D11DeviceContext* const deviceContext);
+	inline const DynamicBuffer* GetModelTextureSettingBuffer() const { return m_modelTextureSettingBuffer; }
+	inline const BaseTextureAsset* GetModelMaterialTexture(EModelMaterialTexture modelMaterialTextureType) const{ return m_materialTexture[static_cast<size_t>(modelMaterialTextureType)]; }
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;
@@ -60,6 +67,12 @@ public:
 
 public:
 	virtual void Accept(IAssetVisitor* visitor) override;
+
+public:
+	virtual void InitializeGPUAsset(
+		ID3D11Device* device,
+		ID3D11DeviceContext* deviceContext
+	) override;
 };
 
 class IModelMaterialProvider

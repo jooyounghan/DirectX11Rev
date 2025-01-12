@@ -56,7 +56,7 @@ struct MeshComponentDomainOutput
 struct MeshComponentPixelOutput
 {
     float4 f4Color;
-    float4 f4ID;
+    //float4 f4ID;
 };
 
 struct DefferedMeshComponentPixelOutput

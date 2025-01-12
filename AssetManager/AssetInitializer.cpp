@@ -35,10 +35,11 @@ void AssetInitializer::Visit(ModelMaterialAsset* modelMaterialAsset)
 	for (size_t materialTextureType = 0; materialTextureType < ModelMaterialTextureCount; ++materialTextureType)
 	{
 		modelMaterialAsset->UpdateModelBaseTextureAsset(
-			static_cast<EModelMaterialTexture>(materialTextureType), 
+			static_cast<EModelMaterialTexture>(materialTextureType),
 			*m_assetManager
 		);
 	}
+	modelMaterialAsset->InitializeGPUAsset(m_deviceCached, m_deviceContextCached);
 }
 
 void AssetInitializer::Visit(IBLMaterialAsset* iblMaterialAsset)

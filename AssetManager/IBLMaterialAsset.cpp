@@ -34,16 +34,10 @@ void IBLMaterialAsset::UpdateIBLBaseTextureAsset(
 	m_materialTexture[materialTextureIdx] = provider.GetScratchTextureAsset(m_materialTextureName[materialTextureIdx]);
 }
 
-void IBLMaterialAsset::SetIBLMaterialTexture(
-	EIBLMaterialTexture iblMaterialTextureType, 
-	const string& iblmaterialTextureIn, 
-	IScratchTextureProvider& provider
-)
+void IBLMaterialAsset::SetIBLMaterialTextureName(EIBLMaterialTexture iblMaterialTextureType, const std::string& iblmaterialTextureIn)
 {
 	const size_t& materialTextureIdx = static_cast<size_t>(iblMaterialTextureType);
 	m_materialTextureName[materialTextureIdx] = iblmaterialTextureIn;
-	UpdateIBLBaseTextureAsset(iblMaterialTextureType, provider);
-	m_isModified = true;
 }
 
 void IBLMaterialAsset::SetIBLMaterialTexture(EIBLMaterialTexture iblMaterialTextureType, ScratchTextureAsset* scratchTextureAsset)

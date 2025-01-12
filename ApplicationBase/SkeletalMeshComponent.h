@@ -26,6 +26,7 @@ public:
 	inline void SetSkeletalMeshName(const std::string& skeletalMeshName) { m_skeletalMeshName = skeletalMeshName; }
 	inline const std::string& GetSkeletalMeshName() const { return m_skeletalMeshName; }
 	inline const SkeletalMeshAsset* GetSkeletalMetalAsset() const { return m_skeletalMeshAsset; }
+	inline const AnimationPlayer* GetAnimationPlayer() const { return m_animationPlayer; }
 
 public:
 	void UpdateSkeletalMeshAsset(ISkeletalMeshProvider& provider);

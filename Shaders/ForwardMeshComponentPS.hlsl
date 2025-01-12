@@ -36,7 +36,6 @@ Texture2D BRDFTexture : register(t2);
 Texture2D MaterialTexture[7] : register(t3);
 
 SamplerState WrapSampler : register(s0);
-SamplerState ClampSampler : register(s1);
 
 MeshComponentPixelOutput main(MeshComponentDomainOutput Input) : SV_TARGET
 {        
@@ -57,6 +56,6 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput Input) : SV_TARGET
         Normal = GetNormalFromMap(Input.f3ModelNormal, Bitangent, Input.f3ModelTangent, Input.fLODLevel, Input.f2TexCoord, MaterialTexture[NORMAL_IDX], WrapSampler);
     }
     Result.f4Color = float4(CalculateIBL(F0, BaseColor, AmbientOcculusion, Metallic, Roughness, Normal, ToEye, SpecularTexture, DiffuseTexture, BRDFTexture, WrapSampler) + Emissive, 1.f);
-    Result.f4ID = IDValues;
+    //Result.f4ID = IDValues;
     return Result;
 }

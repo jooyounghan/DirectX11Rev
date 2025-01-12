@@ -42,10 +42,10 @@ public:
 		EIBLMaterialTexture iblMaterialTextureType,
 		IScratchTextureProvider& provider
 	);
-	void SetIBLMaterialTexture(
+
+	void SetIBLMaterialTextureName(
 		EIBLMaterialTexture iblMaterialTextureType,
-		const std::string& iblmaterialTextureIn,
-		IScratchTextureProvider& provider
+		const std::string& iblmaterialTextureIn
 	);
 	void SetIBLMaterialTexture(
 		EIBLMaterialTexture iblMaterialTextureType,
@@ -63,7 +63,7 @@ public:
 		const float& gamma
 	);
 
-	const DynamicBuffer* GetIBLToneMappingBuffer() const { return m_iblToneMappingBuffer; }
+	inline const DynamicBuffer* GetIBLToneMappingBuffer() const { return m_iblToneMappingBuffer; }
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;

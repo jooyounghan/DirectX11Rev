@@ -83,6 +83,7 @@ void CameraComponent::UpdateEntity(ID3D11DeviceContext* deviceContext, const flo
 	m_viewElement.m_viewProj = GetViewMatrix() * GetProjectionMatrix();
 	m_viewElement.m_invViewProj = XMMatrixInverse(nullptr, m_viewElement.m_viewProj);
 	m_viewElement.m_viewProj = XMMatrixTranspose(m_viewElement.m_viewProj);
+	m_viewElement.m_viewPosition = XMFLOAT3(m_absolutePosition.m128_f32[0], m_absolutePosition.m128_f32[1], m_absolutePosition.m128_f32[2]);
 	m_viewProjBuffer->Upload(deviceContext, sizeof(SViewElement), 1, &m_viewElement);
 }
 

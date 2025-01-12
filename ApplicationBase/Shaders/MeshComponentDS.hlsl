@@ -31,7 +31,6 @@ cbuffer MaterialAssetData : register(b2)
 Texture2D HeightMap : register(t0);
 
 SamplerState WrapSampler : register(s0);
-SamplerState ClampSampler : register(s1);
 
 [domain("tri")]
 MeshComponentDomainOutput main(

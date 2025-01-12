@@ -19,6 +19,8 @@ struct SViewElement
 {
 	DirectX::XMMATRIX m_viewProj = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX m_invViewProj = DirectX::XMMatrixIdentity();
+	DirectX::XMFLOAT3 m_viewPosition;
+	float m_dummy;
 };
 
 class CameraComponent : public AComponent, public D3D11_VIEWPORT
