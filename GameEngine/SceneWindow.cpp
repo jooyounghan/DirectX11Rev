@@ -61,7 +61,7 @@ void SceneWindow::PrepareWindow()
             m_selectedCamera->GetDepthStencilViewBuffer()->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0
         );        
 
-        //m_selectedScene->Accept(m_selectedRenderer);
+        m_selectedScene->Accept(m_selectedRenderer);
 
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
         RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);

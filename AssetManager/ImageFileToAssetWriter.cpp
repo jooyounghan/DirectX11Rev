@@ -1,13 +1,14 @@
-#include "pch.h"
 #include "ImageFileToAssetWriter.h"
 #include "StringHelper.h"
 
 #include "BaseTextureAsset.h"
 #include "ScratchTextureAsset.h"
 
-#include "DirectXTexEXR.h"
+#include <DirectXTexEXR.h>
 
 #include <filesystem>
+#include <stb_image.h>
+#include <stb_image_write.h>
 
 using namespace std;
 using namespace std::filesystem;

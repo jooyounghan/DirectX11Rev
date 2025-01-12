@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "ModelMaterialAsset.h"
 
 using namespace std;

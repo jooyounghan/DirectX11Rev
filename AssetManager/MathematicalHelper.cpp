@@ -1,11 +1,11 @@
-#include "pch.h"
+
 #include "MathematicalHelper.h"
 
 using namespace DirectX;
 
 XMFLOAT3 Normalize(const XMFLOAT3& Vector)
 {
-	float Length = sqrt(Vector.x * Vector.x + Vector.y * Vector.y + Vector.z * Vector.z);
+	float Length = sqrtf(Vector.x * Vector.x + Vector.y * Vector.y + Vector.z * Vector.z);
 	return XMFLOAT3{ Vector.x / Length, Vector.y / Length, Vector.z / Length };
 }
 

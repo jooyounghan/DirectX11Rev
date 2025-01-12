@@ -1,8 +1,9 @@
-#include "pch.h"
 #include "ScratchTextureAsset.h"
 #include "Texture2DInstance.h"
 #include "SRVOption.h"
 #include "RTVOption.h"
+
+#include <DirectXTexEXR.h>
 
 using namespace std;
 using namespace DirectX;

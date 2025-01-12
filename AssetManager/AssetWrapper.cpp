@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "AssetWrapper.h"
 
 void AssetWrapper::SetAssetType(const EAssetType& assetType) { m_assetType = assetType; }

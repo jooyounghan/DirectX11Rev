@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "SerializeHelper.h"
 
 void SerializeHelper::SerializeString(const std::string& textIn, FILE* fileIn)

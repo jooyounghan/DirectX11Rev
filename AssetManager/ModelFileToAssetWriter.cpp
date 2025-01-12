@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "ModelFileToAssetWriter.h"
 
 #include "StringHelper.h"
@@ -12,6 +11,13 @@
 
 #include <filesystem>
 #include <regex>
+
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
+
+#include <stb_image.h>
+#include <stb_image_write.h>
 
 using namespace std;
 using namespace std::filesystem;
@@ -224,7 +230,7 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadMeshesAnd
             skeletalMeshAsset->SetBoneAsset(boneAsset);
 
             LoadBones(scene, boneAsset);
-            LoadMeshes(scene, skeletalMeshAsset, m_skeletalMehsAssetWriter, isGltf);
+            LoadMeshes(scene, skeletalMeshAsset, isGltf);
         }
     }
     else
@@ -236,7 +242,7 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadMeshesAnd
             StaticMeshAsset* staticMeshAsset = new StaticMeshAsset(fileName + "_Static");
             result[EAssetType::ASSET_TYPE_STATIC].emplace_back(staticMeshAsset);
 
-            LoadMeshes(scene, staticMeshAsset, m_staticMeshAssetWriter, isGltf);
+            LoadMeshes(scene, staticMeshAsset, isGltf);
         }
     }
 
@@ -319,7 +325,6 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadMeshesAnd
  void ModelFileToAssetWriter::LoadMeshes(
      const aiScene* const scene, 
      AMeshAsset* const meshAsset,
-     MeshAssetWriter& meshAssetWriter,
      const bool& isGltf
  ) const
  {
@@ -337,7 +342,9 @@ unordered_map<EAssetType, vector<AAsset*>> ModelFileToAssetWriter::LoadMeshesAnd
 
                  const uint32_t lodLevel = GetLODLevelFromMeshName(meshName);
                  MeshPartsData* meshPartsData = meshAsset->AddMeshPartData(lodLevel);
-                 meshAssetWriter.LoadMeshPartData(meshPartsData, isGltf, mesh, currentTransformation);
+
+                 MeshPartsDataWriter meshAssetWriter(isGltf, mesh, currentTransformation);
+                 meshPartsData->Accept(meshAssetWriter);
              }
 
              for (uint32_t idx = 0; idx < node->mNumChildren; ++idx)

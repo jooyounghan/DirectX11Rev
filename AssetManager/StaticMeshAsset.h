@@ -1,32 +1,8 @@
 #pragma once
 #include "MeshAsset.h"
+#include "StaticMeshPartsData.h"
 
-class StaticMeshPartData : public MeshPartsData
-{
-public:
-	StaticMeshPartData() = default;
-	~StaticMeshPartData() override = default;
-
-protected:
-	std::vector<DirectX::XMFLOAT3> m_tangents;
-
-public:
-	void AddTangent(const float& x, const float& y, const float& z);
-
-public:
-	virtual void Serialize(FILE* fileIn) const override;
-	virtual void Deserialize(FILE* fileIn) override;
-
-public:
-	virtual std::vector<UINT> GetStrides() override;
-	virtual std::vector<UINT> GetOffsets() override;
-
-public:
-	virtual void InitializeGPUAsset(
-		ID3D11Device* device,
-		ID3D11DeviceContext* deviceContext
-	) override;
-};
+#include <map>
 
 class StaticMeshAsset : public AMeshAsset
 {
@@ -36,7 +12,7 @@ public:
 	~StaticMeshAsset() override;
 
 protected:
-	std::map<uint32_t, StaticMeshPartData*> m_staticMeshPartsPerLOD;
+	std::map<uint32_t, StaticMeshPartsData*> m_staticMeshPartsPerLOD;
 
 public:
 	virtual size_t GetLODCount() const override;

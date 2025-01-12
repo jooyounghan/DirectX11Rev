@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+﻿
 #include "AssetManager.h"
 #include "AssetInitializer.h"
 

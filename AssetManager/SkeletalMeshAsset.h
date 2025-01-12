@@ -1,38 +1,9 @@
 #pragma once
-#include "StaticMeshAsset.h"
+#include "MeshAsset.h"
+#include "SkeletalMeshPartsData.h"
 #include "BoneAsset.h"
 
-class SkeletalMeshPartData : public StaticMeshPartData
-{
-public:
-	SkeletalMeshPartData() = default;
-	~SkeletalMeshPartData() override = default;
-
-protected:
-	std::vector<DirectX::XMFLOAT4> m_blendWeight;
-	std::vector<DirectX::XMINT4> m_blendIndex;
-
-public:
-	void ResizeBlendProperties(const size_t& resizeCount);
-	void SetBlendProperties(
-		const size_t& vertexIndex,
-		const int& boneIndex,
-		const float& blendWeight
-	);
-public:
-	virtual void Serialize(FILE* fileIn) const override;
-	virtual void Deserialize(FILE* fileIn) override;
-
-public:
-	virtual std::vector<UINT> GetStrides() override;
-	virtual std::vector<UINT> GetOffsets() override;
-
-public:
-	virtual void InitializeGPUAsset(
-		ID3D11Device* device,
-		ID3D11DeviceContext* deviceContext
-	) override;
-};
+#include <map>
 
 class SkeletalMeshAsset : public AMeshAsset
 {
@@ -42,7 +13,7 @@ public:
 	~SkeletalMeshAsset() override;
 
 protected:
-	std::map<uint32_t, SkeletalMeshPartData*> m_skeletalMeshPartsPerLOD;
+	std::map<uint32_t, SkeletalMeshPartsData*> m_skeletalMeshPartsPerLOD;
 
 protected:
 	std::string m_boneAssetName;

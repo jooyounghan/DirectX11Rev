@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "StringHelper.h"
+#include <Windows.h>
 
 using namespace std;
 

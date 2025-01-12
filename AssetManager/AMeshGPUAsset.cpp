@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "AMeshGPUAsset.h"
 #include "ConstantBuffer.h"
 

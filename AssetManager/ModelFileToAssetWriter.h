@@ -1,6 +1,6 @@
 #pragma once
 #include "AssetWriter.h"
-#include "SkeletalMeshAssetWriter.h"
+#include "MeshPartsDataWriter.h"
 
 struct aiScene;
 struct aiMaterial;
@@ -24,10 +24,6 @@ protected:
 
 public:
 	static std::vector<std::string> ModelFileExtensions;
-
-private:
-	StaticMeshAssetWriter m_staticMeshAssetWriter;
-	SkeletalMeshAssetWriter m_skeletalMehsAssetWriter;
 
 public:
 	virtual std::unordered_map<EAssetType, std::vector<AAsset*>> SaveAsAssets(const std::string& filePath) override;
@@ -55,7 +51,6 @@ private:
 	void LoadMeshes(
 		const aiScene* const scene,
 		AMeshAsset* const meshAsset,
-		MeshAssetWriter& meshAssetWriter,
 		const bool& isGltf
 	) const;
 	uint32_t GetLODLevelFromMeshName(const std::string&  meshName) const;

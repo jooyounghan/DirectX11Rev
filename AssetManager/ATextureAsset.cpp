@@ -1,5 +1,6 @@
-#include "pch.h"
 #include "ATextureAsset.h"
+
+#include <zlib.h>
 
 using namespace std;
 

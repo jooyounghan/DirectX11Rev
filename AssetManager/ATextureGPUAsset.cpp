@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "ATextureGPUAsset.h"
 #include "Texture2DInstance.h"
 #include "SRVOption.h"

@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "AnimationAsset.h"
 
 using namespace std;

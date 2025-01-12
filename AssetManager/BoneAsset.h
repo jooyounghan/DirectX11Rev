@@ -2,8 +2,8 @@
 #include "Asset.h"
 
 #include <DirectXMath.h>
-#include <map>
 #include <list>
+#include <vector>
 #include <memory>
 
 class StructuredBuffer;

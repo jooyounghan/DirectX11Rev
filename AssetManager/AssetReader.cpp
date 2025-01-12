@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "AssetReader.h"
 
 #include "StaticMeshAsset.h"

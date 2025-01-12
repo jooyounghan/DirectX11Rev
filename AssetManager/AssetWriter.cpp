@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "AssetWriter.h"
 
 using namespace std;
