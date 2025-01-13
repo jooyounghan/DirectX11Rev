@@ -4,7 +4,7 @@
 class StructuredBuffer : public AUploadableBuffer
 {
 public:
-	StructuredBuffer(const UINT& elementSize, const UINT& arrayCount);
+	StructuredBuffer(const UINT& elementSize, const UINT& arrayCount, const void* cpuDataIn);
 	~StructuredBuffer() override = default;
 
 protected:
@@ -14,7 +14,6 @@ public:
 	ID3D11ShaderResourceView* const GetSRV() const { return m_structuredSRV.Get(); }
 
 public:
-	virtual void Initialize(ID3D11Device* const device, D3D11_SUBRESOURCE_DATA* initialData) override;
-	virtual void Upload(ID3D11DeviceContext* const deviceContext, const UINT& elementSize, const UINT& arrayCount, void* cpuDataIn) override;
+	virtual void InitializeBuffer(ID3D11Device* const device, const D3D11_SUBRESOURCE_DATA* initialData) override;
 };
 

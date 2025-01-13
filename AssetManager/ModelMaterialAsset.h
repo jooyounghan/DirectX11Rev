@@ -1,9 +1,10 @@
 #pragma once
+#include "Asset.h"
 #include "BaseTextureAsset.h"
-#include "DynamicBuffer.h"
-#include "IGPUAsset.h"
 
 #include <DirectXMath.h>
+
+class DynamicBuffer;
 
 enum class EModelMaterialTexture
 {
@@ -26,7 +27,7 @@ struct SModelTextureSetting
 	float m_heightScale;
 };
 
-class ModelMaterialAsset : public AAsset, public IGPUAsset
+class ModelMaterialAsset : public AAsset
 {
 public:
 	ModelMaterialAsset();
@@ -42,6 +43,12 @@ protected:
 	DynamicBuffer* m_modelTextureSettingBuffer;
 
 public:
+	void SetModelMaterialConstants(const DirectX::XMFLOAT3& f0, const float& heightScale);
+	void UpdateModelMaterialTexturesFromNames();
+	inline DynamicBuffer* GetModelTextureSettingBuffer() const { return m_modelTextureSettingBuffer; }
+	inline const BaseTextureAsset* GetModelMaterialTexture(EModelMaterialTexture modelMaterialTextureType) const{ return m_materialTexture[static_cast<size_t>(modelMaterialTextureType)]; }
+	
+public:
 	void UpdateModelBaseTextureAsset(
 		EModelMaterialTexture modelMaterialTextureType,
 		IBaseTextureProvider& provider
@@ -56,23 +63,13 @@ public:
 		const BaseTextureAsset* baseTextureASsetIn
 	);
 
-public:
-	void UpdateModelTextureSetting(DirectX::XMFLOAT3* f0, const float* heightScale, ID3D11DeviceContext* const deviceContext);
-	inline const DynamicBuffer* GetModelTextureSettingBuffer() const { return m_modelTextureSettingBuffer; }
-	inline const BaseTextureAsset* GetModelMaterialTexture(EModelMaterialTexture modelMaterialTextureType) const{ return m_materialTexture[static_cast<size_t>(modelMaterialTextureType)]; }
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;
 	virtual void Deserialize(FILE* fileIn) override;
 
 public:
-	virtual void Accept(IAssetVisitor* visitor) override;
-
-public:
-	virtual void InitializeGPUAsset(
-		ID3D11Device* device,
-		ID3D11DeviceContext* deviceContext
-	) override;
+	virtual void Accept(IAssetVisitor* visitor) override;;
 };
 
 class IModelMaterialProvider

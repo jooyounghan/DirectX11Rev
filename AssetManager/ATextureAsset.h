@@ -1,8 +1,15 @@
 #pragma once
 #include "Asset.h"
-#include "ATextureGPUAsset.h"
 
-class ATextureAsset : public AAsset, public ATextureGPUAsset
+#include <vector>
+#include <d3d11.h>
+
+template<typename ...IsTextureOption>
+class Texture2DInstance;
+class SRVOption;
+class RTVOption;
+
+class ATextureAsset : public AAsset
 {
 public:
 	ATextureAsset() = default;
@@ -19,14 +26,24 @@ protected:
 	uint32_t m_height = 0;
 	uint32_t m_arraySize = 0;
 
+public:
+	inline const uint32_t& GetWidth() const { return m_width; }
+	inline const uint32_t& GetHeight() const { return m_height; }
+	inline const uint32_t& GetArraySize() const { return m_arraySize; }
+
 protected:
 	std::vector<std::vector<uint8_t>> m_imageBuffers;
-
-protected:
 	std::vector<uint32_t> m_imageBuffersSize;
+	Texture2DInstance<SRVOption, RTVOption>* m_resource = nullptr;
 
 public:
-	inline const std::vector<std::vector<uint8_t>>& GetImageBuffers() { return m_imageBuffers; }
+	inline Texture2DInstance<SRVOption, RTVOption>** GetResourceAddress() { return &m_resource; }
+	inline const std::vector<std::vector<uint8_t>> GetImageBuffers() { return m_imageBuffers; }
+
+public:
+	ID3D11Texture2D* GetTexture2D() const;
+	ID3D11ShaderResourceView* GetSRV() const;
+	ID3D11RenderTargetView* GetRTV() const;
 
 public:
 	virtual std::vector<uint32_t> GetRowPitchArray() = 0;

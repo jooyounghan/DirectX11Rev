@@ -86,14 +86,6 @@ void SkeletalMeshAsset::Deserialize(FILE* fileIn)
 	m_boneAssetName = DeserializeHelper::DeserializeString(fileIn);
 }
 
-void SkeletalMeshAsset::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
-{
-	for (auto& skeletalMeshPartPair : m_skeletalMeshPartsPerLOD)
-	{
-		skeletalMeshPartPair.second->InitializeGPUAsset(device, deviceContext);
-	}
-}
-
 void SkeletalMeshAsset::Accept(IAssetVisitor* visitor)
 {
 	visitor->Visit(this);

@@ -7,8 +7,8 @@
 class ABuffer
 {
 public:
-	ABuffer(const UINT& elementSize, const UINT& arrayCount, void* cpuDataIn);
-	virtual ~ABuffer() = default;
+	ABuffer(const UINT& elementSize, const UINT& arrayCount, const void* cpuDataIn);
+	virtual ~ABuffer() { m_buffer.Reset(); };
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;
@@ -16,12 +16,13 @@ protected:
 protected:
 	UINT m_elementSize;
 	UINT m_arrayCount;
-	void* m_cpuDataIn;
+	const void* m_cpuDataIn;
 
 public:
-	ID3D11Buffer* GetBuffer() const { return m_buffer.Get(); }
+	D3D11_SUBRESOURCE_DATA GetSubResourceData() const;
+	inline ID3D11Buffer* GetBuffer() const { return m_buffer.Get(); }
 	
 public:
-	virtual void Initialize(ID3D11Device* const device, D3D11_SUBRESOURCE_DATA* initialData) = 0;
+	virtual void InitializeBuffer(ID3D11Device* const device, const D3D11_SUBRESOURCE_DATA* initialData) = 0;
 };
 

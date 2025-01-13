@@ -25,13 +25,10 @@ protected:
 	std::vector<UINT> m_rowPitchPerArray;
 
 public:
+	inline UINT GetMipLevels() const { return m_mipLevels; }
+	inline UINT GetMiscFlag() const { return m_miscFlag; }
+	inline DXGI_FORMAT GetFormat() const { return m_format; }
 	virtual std::vector<uint32_t> GetRowPitchArray() override;
-
-public:
-	virtual void InitializeGPUAsset(
-		ID3D11Device* device,
-		ID3D11DeviceContext* deviceContext
-	) override;
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;

@@ -6,12 +6,12 @@ using namespace std;
 using namespace DirectX;
 
 IBLMaterialAsset::IBLMaterialAsset()
- : AAsset(), m_iblToneMappingBuffer(new DynamicBuffer(sizeof(SIBLToneMapping), 1))
+ : AAsset(), m_iblToneMappingBuffer(new DynamicBuffer(sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants))
 {
 }
 
 IBLMaterialAsset::IBLMaterialAsset(const string& assetName)
-	: AAsset(assetName), m_iblToneMappingBuffer(new DynamicBuffer(sizeof(SIBLToneMapping), 1))
+	: AAsset(assetName), m_iblToneMappingBuffer(new DynamicBuffer(sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants))
 {
 }
 
@@ -52,7 +52,7 @@ void IBLMaterialAsset::UpdateIBLToneMappingConstant(ID3D11DeviceContext* deviceC
 {
 	m_iblToneMappingConstants.m_exposure = exposure;
 	m_iblToneMappingConstants.m_gamma = gamma;
-	m_iblToneMappingBuffer->Upload(deviceContext, sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants);
+	m_iblToneMappingBuffer->Upload(deviceContext);
 }
 
 void IBLMaterialAsset::Serialize(FILE* fileIn) const
@@ -82,11 +82,5 @@ void IBLMaterialAsset::Deserialize(FILE* fileIn)
 void IBLMaterialAsset::Accept(IAssetVisitor* visitor)
 {
 	visitor->Visit(this);
-}
-
-void IBLMaterialAsset::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
-{
-	m_iblToneMappingBuffer->Initialize(device, nullptr);
-	m_iblToneMappingBuffer->Upload(deviceContext, sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants);
 }
 

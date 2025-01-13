@@ -1,7 +1,6 @@
 #pragma once
 #include "BaseTextureAsset.h"
 #include "ScratchTextureAsset.h"
-#include "IGPUAsset.h"
 
 enum class EIBLMaterialTexture
 {
@@ -23,7 +22,7 @@ struct SIBLToneMapping
 
 class DynamicBuffer;
 
-class IBLMaterialAsset : public AAsset, public IGPUAsset
+class IBLMaterialAsset : public AAsset
 {
 public:
 	IBLMaterialAsset();
@@ -63,7 +62,7 @@ public:
 		const float& gamma
 	);
 
-	inline const DynamicBuffer* GetIBLToneMappingBuffer() const { return m_iblToneMappingBuffer; }
+	inline DynamicBuffer* GetIBLToneMappingBuffer() const { return m_iblToneMappingBuffer; }
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;
@@ -71,12 +70,6 @@ public:
 
 public:
 	virtual void Accept(IAssetVisitor* visitor) override;
-
-public:
-	virtual void InitializeGPUAsset(
-		ID3D11Device* device,
-		ID3D11DeviceContext* deviceContext
-	) override;
 };
 
 class IIBLMaterialProvider

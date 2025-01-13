@@ -7,7 +7,7 @@ using namespace DirectX;
 
 void SkeletalMeshPartsData::ResizeBlendProperties(const size_t& resizeCount)
 {
-	m_blendWeight.resize(resizeCount);
+	m_blendWeights.resize(resizeCount);
 	m_blendIndex.resize(resizeCount, XMINT4(-1, -1, -1, -1));
 }
 
@@ -17,10 +17,10 @@ void SkeletalMeshPartsData::SetBlendProperties(
 	const float& blendWeight
 )
 {
-	if (m_blendWeight.size() <= vertexIndex) return;
+	if (m_blendWeights.size() <= vertexIndex) return;
 	if (m_blendIndex.size() <= vertexIndex) return;
 
-	XMFLOAT4& CurrentBlendWeight = m_blendWeight[vertexIndex];
+	XMFLOAT4& CurrentBlendWeight = m_blendWeights[vertexIndex];
 	XMINT4& CurrentBlendIndex = m_blendIndex[vertexIndex];
 
 	if (CurrentBlendIndex.x == -1)
@@ -49,7 +49,7 @@ void SkeletalMeshPartsData::Serialize(FILE* fileIn) const
 {
 	StaticMeshPartsData::Serialize(fileIn);
 
-	SerializeHelper::SerializeVectorContainer(m_blendWeight, fileIn);
+	SerializeHelper::SerializeVectorContainer(m_blendWeights, fileIn);
 	SerializeHelper::SerializeVectorContainer(m_blendIndex, fileIn);
 }
 
@@ -57,7 +57,7 @@ void SkeletalMeshPartsData::Deserialize(FILE* fileIn)
 {
 	StaticMeshPartsData::Deserialize(fileIn);
 
-	m_blendWeight = DeserializeHelper::DeserializeVectorContainer<vector<XMFLOAT4>>(fileIn);
+	m_blendWeights = DeserializeHelper::DeserializeVectorContainer<vector<XMFLOAT4>>(fileIn);
 	m_blendIndex = DeserializeHelper::DeserializeVectorContainer<vector<XMINT4>>(fileIn);
 }
 
@@ -77,22 +77,6 @@ std::vector<UINT> SkeletalMeshPartsData::GetStrides()
 std::vector<UINT> SkeletalMeshPartsData::GetOffsets()
 {
 	return vector<UINT>{ 0, 0, 0, 0, 0, 0 };
-}
-
-void SkeletalMeshPartsData::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
-{
-	StaticMeshPartsData::InitializeGPUAsset(device, deviceContext);
-	ConstantBuffer* blendWeightBuffer = new ConstantBuffer(sizeof(XMFLOAT4), static_cast<UINT>(m_blendWeight.size()), m_blendWeight.data(), D3D11_BIND_VERTEX_BUFFER);
-	ConstantBuffer* blendIndexBuffer = new ConstantBuffer(sizeof(XMINT4), static_cast<UINT>(m_blendIndex.size()), m_blendIndex.data(), D3D11_BIND_VERTEX_BUFFER);
-
-	D3D11_SUBRESOURCE_DATA blendWeightSubresourceData = blendWeightBuffer->GetSubResourceData();
-	D3D11_SUBRESOURCE_DATA blendIndexSubresourceData = blendIndexBuffer->GetSubResourceData();
-
-	blendWeightBuffer->Initialize(device, &blendWeightSubresourceData);
-	blendIndexBuffer->Initialize(device, &blendIndexSubresourceData);
-
-	m_vertexBuffers.emplace_back(blendWeightBuffer);
-	m_vertexBuffers.emplace_back(blendIndexBuffer);
 }
 
 void SkeletalMeshPartsData::Accept(IMeshPartsDataVisitor& visitor)

@@ -1,11 +1,12 @@
 #pragma once
 #include "IAssetVisitor.h"
+#include "IMeshPartsDataVisitor.h"
 
 class AssetManager;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
-class AssetInitializer : public IAssetVisitor
+class AssetInitializer : public IAssetVisitor, public IMeshPartsDataVisitor
 {
 public:
 	AssetInitializer(AssetManager* assetManager, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
@@ -21,6 +22,10 @@ public:
 	virtual void Visit(SkeletalMeshAsset* skeletalMeshAsset) override;
 
 public:
+	virtual void Visit(StaticMeshPartsData* staticMeshPartsData) override;
+	virtual void Visit(SkeletalMeshPartsData* skeletalMeshPartsData) override;
+
+public:
 	virtual void Visit(BaseTextureAsset* baseTextureAsset) override;
 	virtual void Visit(ScratchTextureAsset* scratchTextureAsset) override;
 
@@ -31,5 +36,6 @@ public:
 public:
 	virtual void Visit(BoneAsset* boneAsset) override;
 	virtual void Visit(AnimationAsset* animationAsset) override;
+
 };
 

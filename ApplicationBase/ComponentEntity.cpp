@@ -10,7 +10,7 @@ SComponent::SComponent(const uint32_t& componentID)
 }
 
 ComponentEntity::ComponentEntity(const uint32_t& componentID)
-	: m_transformationBuffer(new DynamicBuffer(sizeof(STransformation), 1)),
+	: m_transformationBuffer(new DynamicBuffer(sizeof(STransformation), 1, &m_transformation)),
 	m_transformation(),
 	m_componentConstant(componentID),
 	m_componentBuffer(new ConstantBuffer(sizeof(SComponent), 1, &m_componentBuffer))
@@ -47,13 +47,13 @@ void ComponentEntity::InitEntity(ID3D11Device* const device)
 	UpdateComponentTransformation();
 	D3D11_SUBRESOURCE_DATA subResourceData;
 	subResourceData.pSysMem = &m_transformation;
-	m_transformationBuffer->Initialize(device, &subResourceData);
+	m_transformationBuffer->InitializeBuffer(device, &subResourceData);
 }
 
 void ComponentEntity::UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime)
 {
 	UpdateComponentTransformation();
-	m_transformationBuffer->Upload(deviceContext, sizeof(STransformation), 1, &m_transformation);
+	m_transformationBuffer->Upload(deviceContext);
 }
 
 void ComponentEntity::UpdateComponentTransformation()

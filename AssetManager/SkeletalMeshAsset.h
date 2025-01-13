@@ -20,6 +20,9 @@ protected:
 	const BoneAsset* m_boneAsset = nullptr;
 
 public:
+	inline const std::map<uint32_t, SkeletalMeshPartsData*>& GetSkeletalMeshPartsPerLOD() { return m_skeletalMeshPartsPerLOD; }
+
+public:
 	void SetBoneAsset(const BoneAsset* const boneAsset);
 	void UpdateBoneAsset(IBoneProvider& provider);
 	inline const BoneAsset* GetBoneAsset() const { return m_boneAsset; }
@@ -32,12 +35,6 @@ public:
 public:
 	virtual void Serialize(FILE* fileIn) const override;
 	virtual void Deserialize(FILE* fileIn) override;
-
-public:
-	virtual void InitializeGPUAsset(
-		ID3D11Device* device,
-		ID3D11DeviceContext* deviceContext
-	) override;
 
 public:
 	virtual void Accept(IAssetVisitor* visitor) override;

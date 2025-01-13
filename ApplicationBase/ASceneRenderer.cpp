@@ -52,7 +52,7 @@ void ASceneRenderer::Visit(Scene* scene)
 
         const size_t& meshPartCount = meshPartsData->GetPartsCount();
         const vector<UINT>& indicesOffsets = meshPartsData->GetIndexOffsets();
-        const vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetVertexBuffers();
+        const vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetD3D11VertexBuffers();
         const vector<UINT>& strides = meshPartsData->GetStrides();
         const vector<UINT>& verticesOffsets = meshPartsData->GetOffsets();
         const UINT& totalIndicesCount = static_cast<UINT>(meshPartsData->GetIndices().size());
@@ -70,7 +70,7 @@ void ASceneRenderer::Visit(Scene* scene)
             const UINT indexCount = (idx + 1 == meshPartCount ? totalIndicesCount : indicesOffsets[idx + 1]) - indicesOffsets[idx];
 
             deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
-            deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, indicesOffsets[idx]);
+            deviceContext->IASetIndexBuffer(meshPartsData->GetD3D11IndexBuffer(), DXGI_FORMAT_R32_UINT, indicesOffsets[idx]);
             deviceContext->DrawIndexed(indexCount, NULL, NULL);
         }
     }

@@ -185,12 +185,6 @@
     <ClInclude Include="AMeshGPUAsset.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="ATextureGPUAsset.h">
-      <Filter>헤더 파일\Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="IGPUAsset.h">
-      <Filter>헤더 파일\Asset</Filter>
-    </ClInclude>
     <ClInclude Include="IMeshPartsDataVisitor.h">
       <Filter>헤더 파일\Asset\Visitor</Filter>
     </ClInclude>
@@ -279,9 +273,6 @@
     </ClCompile>
     <ClCompile Include="AssetManager.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ATextureGPUAsset.cpp">
-      <Filter>소스 파일\Asset</Filter>
     </ClCompile>
     <ClCompile Include="AMeshGPUAsset.cpp">
       <Filter>소스 파일\Asset</Filter>

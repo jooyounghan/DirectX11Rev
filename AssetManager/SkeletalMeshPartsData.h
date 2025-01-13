@@ -8,8 +8,13 @@ public:
 	~SkeletalMeshPartsData() override = default;
 
 protected:
-	std::vector<DirectX::XMFLOAT4> m_blendWeight;
+	std::vector<DirectX::XMFLOAT4> m_blendWeights;
 	std::vector<DirectX::XMINT4> m_blendIndex;
+
+public:
+	inline const std::vector<DirectX::XMFLOAT4>& GetBlendWeights() { return m_blendWeights; }
+	inline const std::vector<DirectX::XMINT4>& GetBlendIndices() { return m_blendIndex; }
+
 
 public:
 	void ResizeBlendProperties(const size_t& resizeCount);
@@ -25,12 +30,6 @@ public:
 public:
 	virtual std::vector<UINT> GetStrides() override;
 	virtual std::vector<UINT> GetOffsets() override;
-
-public:
-	virtual void InitializeGPUAsset(
-		ID3D11Device* device,
-		ID3D11DeviceContext* deviceContext
-	) override;
 
 public:
 	virtual void Accept(IMeshPartsDataVisitor& visitor) override;

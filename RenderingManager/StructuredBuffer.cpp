@@ -1,11 +1,11 @@
 #include "StructuredBuffer.h"
 
-StructuredBuffer::StructuredBuffer(const UINT& elementSize, const UINT& arrayCount)
-	: AUploadableBuffer(elementSize, arrayCount)
+StructuredBuffer::StructuredBuffer(const UINT& elementSize, const UINT& arrayCount, const void* cpuDataIn)
+	: AUploadableBuffer(elementSize, arrayCount, cpuDataIn)
 {
 }
 
-void StructuredBuffer::Initialize(ID3D11Device* const device, D3D11_SUBRESOURCE_DATA* initialData)
+void StructuredBuffer::InitializeBuffer(ID3D11Device* const device, const D3D11_SUBRESOURCE_DATA* initialData)
 {
 	D3D11_BUFFER_DESC bufferDesc;
 	AutoZeroMemory(bufferDesc);
@@ -25,18 +25,4 @@ void StructuredBuffer::Initialize(ID3D11Device* const device, D3D11_SUBRESOURCE_
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
 	srvDesc.BufferEx.NumElements = m_arrayCount;
 	device->CreateShaderResourceView(m_buffer.Get(), &srvDesc, m_structuredSRV.GetAddressOf());
-}
-
-
-void StructuredBuffer::Upload(ID3D11DeviceContext* const deviceContext, const UINT& elementSize, const UINT& arrayCount, void* cpuDataIn)
-{
-	if (elementSize != m_elementSize) return;
-	if (arrayCount != m_arrayCount) return;
-
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	AutoZeroMemory(mappedResource);
-
-	AssertIfFailed(deviceContext->Map(m_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
-	memcpy(mappedResource.pData, cpuDataIn, elementSize * arrayCount);
-	deviceContext->Unmap(m_buffer.Get(), 0);
 }

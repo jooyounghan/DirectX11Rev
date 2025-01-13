@@ -18,12 +18,6 @@ public:
 	virtual std::vector<uint32_t> GetRowPitchArray() override;
 
 public:
-	virtual void InitializeGPUAsset(
-		ID3D11Device* device,
-		ID3D11DeviceContext* deviceContext
-	) override;
-
-public:
 	virtual void Accept(IAssetVisitor* visitor) override;
 };
 

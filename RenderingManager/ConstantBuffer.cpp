@@ -1,9 +1,8 @@
-
 #include "ConstantBuffer.h"
 
 ConstantBuffer::ConstantBuffer(
 	const UINT& elementSize, const UINT& arrayCount,
-	void* cpuDataIn, 
+	const void* cpuDataIn,
 	const D3D11_BIND_FLAG& bindFlag,
 	const D3D11_USAGE& usage
 )
@@ -12,16 +11,7 @@ ConstantBuffer::ConstantBuffer(
 
 }
 
-D3D11_SUBRESOURCE_DATA ConstantBuffer::GetSubResourceData() const
-{
-	D3D11_SUBRESOURCE_DATA subresourceData;
-	AutoZeroMemory(subresourceData);
-
-	subresourceData.pSysMem = m_cpuDataIn;
-	return subresourceData;
-}
-
-void ConstantBuffer::Initialize(ID3D11Device* device, D3D11_SUBRESOURCE_DATA* initialData)
+void ConstantBuffer::InitializeBuffer(ID3D11Device* device, const D3D11_SUBRESOURCE_DATA* initialData)
 {
 	D3D11_BUFFER_DESC bufferDesc;
 	AutoZeroMemory(bufferDesc);

@@ -57,27 +57,6 @@ void MeshPartsData::AddIndex(const uint32_t& offset, const uint32_t index)
 	m_indices.emplace_back(offset + index);
 }
 
-const std::vector<uint32_t>& MeshPartsData::GetVertexPartOffsets()
-{
-	return m_vertexPartOffsets;
-}
-
-const std::vector<DirectX::XMFLOAT3>& MeshPartsData::GetPositions()
-{
-	return m_positions;
-}
-
-
-const std::vector<uint32_t>& MeshPartsData::GetIndices()
-{
-	return m_indices;
-}
-
-const vector<uint32_t>& MeshPartsData::GetIndexOffsets()
-{
-	return m_indexPartOffsets;
-}
-
 void MeshPartsData::Serialize(FILE* fileIn) const
 {
 	SerializeHelper::SerializeVectorContainer(m_positions, fileIn);

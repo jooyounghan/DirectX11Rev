@@ -71,14 +71,6 @@ void StaticMeshAsset::Deserialize(FILE* fileIn)
 	}
 }
 
-void StaticMeshAsset::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
-{
-	for (auto& staticMeshPartPair : m_staticMeshPartsPerLOD)
-	{
-		staticMeshPartPair.second->InitializeGPUAsset(device, deviceContext);
-	}
-}
-
 void StaticMeshAsset::Accept(IAssetVisitor* visitor)
 {
 	visitor->Visit(this);

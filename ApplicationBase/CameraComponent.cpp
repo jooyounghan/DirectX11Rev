@@ -17,7 +17,8 @@ CameraComponent::CameraComponent(
 	const XMFLOAT3& scale
 )
 	: AComponent(componentName, componentID, position, angle, scale),
-	m_viewProjBuffer(new DynamicBuffer(sizeof(SViewElement), 1)), m_nearZ(GDefaultNearZ), m_farZ(GDefaultFarZ), m_fovAngle(GDefaultFovAngle)
+	m_viewProjBuffer(new DynamicBuffer(sizeof(SViewElement), 1,&m_viewElement)),
+	m_nearZ(GDefaultNearZ), m_farZ(GDefaultFarZ), m_fovAngle(GDefaultFovAngle)
 {
 
 }
@@ -68,7 +69,7 @@ void CameraComponent::InitEntity(ID3D11Device* device)
 	D3D11_SUBRESOURCE_DATA subResourceData;
 	subResourceData.pSysMem = &m_viewElement;
 
-	m_viewProjBuffer->Initialize(device, &subResourceData);
+	m_viewProjBuffer->InitializeBuffer(device, &subResourceData);
 
 	m_film = new Texture2DInstance<SRVOption, RTVOption, UAVOption>(
 		static_cast<uint32_t>(Width), static_cast<uint32_t>(Height), 1, 1, NULL, NULL,
@@ -88,7 +89,7 @@ void CameraComponent::UpdateEntity(ID3D11DeviceContext* deviceContext, const flo
 	AComponent::UpdateEntity(deviceContext, deltaTime);
 	UpdateViewElement();
 
-	m_viewProjBuffer->Upload(deviceContext, sizeof(SViewElement), 1, &m_viewElement);
+	m_viewProjBuffer->Upload(deviceContext);
 }
 
 void CameraComponent::UpdateViewElement()

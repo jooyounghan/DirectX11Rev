@@ -1,17 +1,19 @@
-
 #include "ModelMaterialAsset.h"
+
+#include "BaseTextureAsset.h"
+#include "DynamicBuffer.h"
 
 using namespace std;
 using namespace DirectX;
 
 ModelMaterialAsset::ModelMaterialAsset()
-	: m_modelTextureSettingBuffer(new DynamicBuffer(sizeof(SModelTextureSetting), 1))
+	: m_modelTextureSettingBuffer(new DynamicBuffer(sizeof(SModelTextureSetting), 1, &m_modelTextureSetting))
 {
 	AutoZeroMemory(m_modelTextureSetting);
 }
 
 ModelMaterialAsset::ModelMaterialAsset(const string& assetName)
-	: AAsset(assetName), m_modelTextureSettingBuffer(new DynamicBuffer(sizeof(SModelTextureSetting), 1))
+	: AAsset(assetName), m_modelTextureSettingBuffer(new DynamicBuffer(sizeof(SModelTextureSetting), 1, &m_modelTextureSetting))
 {
 	AutoZeroMemory(m_modelTextureSetting);
 }
@@ -40,18 +42,19 @@ void ModelMaterialAsset::SetModelMaterialTexture(EModelMaterialTexture modelMate
 	m_materialTexture[materialTextureIdx] = baseTextureAssetIn;
 }
 
-void ModelMaterialAsset::UpdateModelTextureSetting(DirectX::XMFLOAT3* f0, const float* heightScale, ID3D11DeviceContext* const deviceContext)
+void ModelMaterialAsset::SetModelMaterialConstants(const XMFLOAT3& f0, const float& heightScale)
 {
-	m_modelTextureSetting.m_fresnelConstant = (f0 != nullptr) ? *f0 : m_modelTextureSetting.m_fresnelConstant;
-	m_modelTextureSetting.m_heightScale = (heightScale != nullptr) ? *heightScale : m_modelTextureSetting.m_heightScale;
+	m_modelTextureSetting.m_fresnelConstant = f0;
+	m_modelTextureSetting.m_heightScale = heightScale;
+}
 
+void ModelMaterialAsset::UpdateModelMaterialTexturesFromNames()
+{
 	for (size_t idx = 0; idx < ModelMaterialTextureCount; ++idx)
 	{
 		m_modelTextureSetting.m_isTextureSet[idx] = (m_materialTexture[idx] != nullptr);
 	}
-	m_modelTextureSettingBuffer->Upload(deviceContext, sizeof(SModelTextureSetting), 1, &m_modelTextureSetting);
 }
-
 
 void ModelMaterialAsset::Serialize(FILE* fileIn) const
 {
@@ -77,11 +80,5 @@ void ModelMaterialAsset::Deserialize(FILE* fileIn)
 void ModelMaterialAsset::Accept(IAssetVisitor* visitor)
 {
 	visitor->Visit(this);
-}
-
-void ModelMaterialAsset::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
-{
-	m_modelTextureSettingBuffer->Initialize(device, nullptr);
-	UpdateModelTextureSetting(nullptr, nullptr, deviceContext);
 }
 

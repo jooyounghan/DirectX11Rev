@@ -4,11 +4,10 @@
 class DynamicBuffer : public AUploadableBuffer
 {
 public:
-	DynamicBuffer(const UINT& elementSize, const UINT& arrayCount);
+	DynamicBuffer(const UINT& elementSize, const UINT& arrayCount, const void* cpuDataIn);
 	~DynamicBuffer() override = default;
 
 public:
-	virtual void Initialize(ID3D11Device* const device, D3D11_SUBRESOURCE_DATA* initialData) override;
-	virtual void Upload(ID3D11DeviceContext* const deviceContext, const UINT& elementSize, const UINT& arrayCount,  void* cpuDataIn) override;
+	virtual void InitializeBuffer(ID3D11Device* const device, const D3D11_SUBRESOURCE_DATA* initialData) override;
 };
 

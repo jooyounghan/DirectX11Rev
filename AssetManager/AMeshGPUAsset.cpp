@@ -1,4 +1,3 @@
-
 #include "AMeshGPUAsset.h"
 #include "ConstantBuffer.h"
 
@@ -9,7 +8,7 @@ AMeshGPUAsset::~AMeshGPUAsset()
 	ResetGPUAsset();
 }
 
-std::vector<ID3D11Buffer*> AMeshGPUAsset::GetVertexBuffers()
+vector<ID3D11Buffer*> AMeshGPUAsset::GetD3D11VertexBuffers() const
 {
 	vector<ID3D11Buffer*> result;
 	for (ConstantBuffer* buffer : m_vertexBuffers)
@@ -19,9 +18,15 @@ std::vector<ID3D11Buffer*> AMeshGPUAsset::GetVertexBuffers()
 	return result;
 }
 
-ID3D11Buffer* AMeshGPUAsset::GetIndexBuffer()
+ID3D11Buffer* AMeshGPUAsset::GetD3D11IndexBuffer() const
 {
 	return m_indexBuffer != nullptr ? m_indexBuffer->GetBuffer() : nullptr;
+}
+
+void AMeshGPUAsset::SetIndexBuffer(ConstantBuffer* indexBuffer) 
+{ 
+	if (m_indexBuffer) delete m_indexBuffer; 
+	m_indexBuffer = indexBuffer; 
 }
 
 void AMeshGPUAsset::ResetGPUAsset()

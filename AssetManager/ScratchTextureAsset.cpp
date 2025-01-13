@@ -46,17 +46,6 @@ vector<uint32_t> ScratchTextureAsset::GetRowPitchArray()
 	return m_rowPitchPerArray;
 }
 
-void ScratchTextureAsset::InitializeGPUAsset(
-	ID3D11Device* device,
-	ID3D11DeviceContext* deviceContext
-)
-{
-	m_resource = new Texture2DInstance<SRVOption, RTVOption>(
-		m_width, m_height, m_arraySize, m_mipLevels,  m_imageBuffers, GetRowPitchArray(),
-		NULL, m_miscFlag, D3D11_USAGE_DEFAULT, m_format,
-		device, deviceContext
-	);
-}
 
 void ScratchTextureAsset::Serialize(FILE* fileIn) const
 {

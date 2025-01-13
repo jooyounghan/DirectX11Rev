@@ -1,6 +1,5 @@
 #pragma once
 #include "Asset.h"
-#include "IGPUAsset.h"
 #include "MeshPartsData.h"
 
 #include <vector>
@@ -9,7 +8,7 @@
 class IModelMaterialProvider;
 
 
-class AMeshAsset : public AAsset, public IGPUAsset
+class AMeshAsset : public AAsset
 {
 public:
 	AMeshAsset() = default;

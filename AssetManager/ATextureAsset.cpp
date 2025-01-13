@@ -1,4 +1,7 @@
 #include "ATextureAsset.h"
+#include "Texture2DInstance.h"
+#include "SRVOption.h"
+#include "RTVOption.h"
 
 #include <zlib.h>
 
@@ -14,6 +17,11 @@ ATextureAsset::ATextureAsset(
 {
 
 }
+
+ID3D11Texture2D* ATextureAsset::GetTexture2D() const { return m_resource->GetTexture2D(); }
+ID3D11ShaderResourceView* ATextureAsset::GetSRV() const { return m_resource->GetSRV(); }
+ID3D11RenderTargetView* ATextureAsset::GetRTV() const { return m_resource->GetRTV(); }
+
 
 vector<pair<uint32_t, vector<uint8_t>>> ATextureAsset::GetCompressedImageBuffers(const vector<vector<uint8_t>>& imageBuffers)
 {

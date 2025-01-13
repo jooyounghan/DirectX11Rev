@@ -184,10 +184,8 @@
     <ClInclude Include="BoneAsset.h" />
     <ClInclude Include="IAssetVisitor.h" />
     <ClInclude Include="IBLMaterialAsset.h" />
-    <ClInclude Include="IGPUAsset.h" />
     <ClInclude Include="ImageFileToAssetWriter.h" />
     <ClInclude Include="AMeshGPUAsset.h" />
-    <ClInclude Include="ATextureGPUAsset.h" />
     <ClInclude Include="IMeshPartsDataVisitor.h" />
     <ClInclude Include="MathematicalHelper.h" />
     <ClInclude Include="MeshPartsDataWriter.h" />
@@ -216,7 +214,6 @@
     <ClCompile Include="AssetReader.cpp" />
     <ClCompile Include="AssetWrapper.cpp" />
     <ClCompile Include="AssetWriter.cpp" />
-    <ClCompile Include="ATextureGPUAsset.cpp" />
     <ClCompile Include="BoneAsset.cpp" />
     <ClCompile Include="IBLMaterialAsset.cpp" />
     <ClCompile Include="ImageFileToAssetWriter.cpp" />

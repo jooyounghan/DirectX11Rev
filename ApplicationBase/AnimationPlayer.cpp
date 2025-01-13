@@ -72,16 +72,10 @@ void AnimationPlayer::InitAnimationPlayer(ID3D11Device* const device)
 {
 	const vector<Bone*>& bones = m_boneAssetCached->GetBones();
 	m_boneTransformation.resize(bones.size(), XMMatrixIdentity());
-	m_boneTransformationBuffer = new StructuredBuffer(sizeof(XMMATRIX), static_cast<UINT>(m_boneTransformation.size()));
+	m_boneTransformationBuffer = new StructuredBuffer(sizeof(XMMATRIX), static_cast<UINT>(m_boneTransformation.size()), m_boneTransformation.data());
 
-	D3D11_SUBRESOURCE_DATA subresourceData;
-	AutoZeroMemory(subresourceData);
-
-	subresourceData.pSysMem = m_boneTransformation.data();
-	subresourceData.SysMemPitch = static_cast<UINT>(sizeof(XMMATRIX) * m_boneTransformation.size());
-	subresourceData.SysMemSlicePitch = subresourceData.SysMemPitch;
-
-	m_boneTransformationBuffer->Initialize(device, &subresourceData);
+	const D3D11_SUBRESOURCE_DATA subresourceData = m_boneTransformationBuffer->GetSubResourceData();
+	m_boneTransformationBuffer->InitializeBuffer(device, &subresourceData);
 }
 
 void AnimationPlayer::UpdateAnimationPlayer(ID3D11DeviceContext* const deviceContext, const float& deltaTime)
@@ -124,11 +118,7 @@ void AnimationPlayer::UpdateAnimationPlayer(ID3D11DeviceContext* const deviceCon
 			}
 		}
 
-		m_boneTransformationBuffer->Upload(
-			deviceContext, sizeof(XMMATRIX),
-			static_cast<UINT>(m_boneTransformation.size()),
-			m_boneTransformation.data()
-		);
+		m_boneTransformationBuffer->Upload(deviceContext);
 	}
 
 
