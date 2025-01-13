@@ -18,9 +18,6 @@ D3D11_SUBRESOURCE_DATA ConstantBuffer::GetSubResourceData() const
 	AutoZeroMemory(subresourceData);
 
 	subresourceData.pSysMem = m_cpuDataIn;
-	subresourceData.SysMemPitch = m_elementSize * m_arrayCount;
-	subresourceData.SysMemSlicePitch = subresourceData.SysMemPitch;
-
 	return subresourceData;
 }
 

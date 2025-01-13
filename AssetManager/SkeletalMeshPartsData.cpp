@@ -88,7 +88,6 @@ void SkeletalMeshPartsData::InitializeGPUAsset(ID3D11Device* device, ID3D11Devic
 	D3D11_SUBRESOURCE_DATA blendWeightSubresourceData = blendWeightBuffer->GetSubResourceData();
 	D3D11_SUBRESOURCE_DATA blendIndexSubresourceData = blendIndexBuffer->GetSubResourceData();
 
-
 	blendWeightBuffer->Initialize(device, &blendWeightSubresourceData);
 	blendIndexBuffer->Initialize(device, &blendIndexSubresourceData);
 

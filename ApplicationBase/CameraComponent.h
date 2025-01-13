@@ -74,6 +74,9 @@ public:
 	virtual void InitEntity(ID3D11Device* device) override;
 	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext, const float& deltaTime) override;
 
+private:
+	void UpdateViewElement();
+
 public:
 	virtual void Accept(IComponentVisitor* visitor) override;
 };

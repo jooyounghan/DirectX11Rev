@@ -56,5 +56,8 @@ protected:
 public:
 	virtual void InitEntity(ID3D11Device* const device);
 	virtual void UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime);
+
+private:
+	void UpdateComponentTransformation();
 };
 

@@ -62,7 +62,13 @@ XMMATRIX CameraComponent::GetProjectionMatrix()
 void CameraComponent::InitEntity(ID3D11Device* device)
 {
 	AComponent::InitEntity(device);
-	m_viewProjBuffer->Initialize(device, nullptr);
+
+	UpdateViewElement();
+
+	D3D11_SUBRESOURCE_DATA subResourceData;
+	subResourceData.pSysMem = &m_viewElement;
+
+	m_viewProjBuffer->Initialize(device, &subResourceData);
 
 	m_film = new Texture2DInstance<SRVOption, RTVOption, UAVOption>(
 		static_cast<uint32_t>(Width), static_cast<uint32_t>(Height), 1, 1, NULL, NULL,
@@ -79,12 +85,18 @@ void CameraComponent::InitEntity(ID3D11Device* device)
 
 void CameraComponent::UpdateEntity(ID3D11DeviceContext* deviceContext, const float& deltaTime)
 {
-	UpdateAbsoluteEntities();
+	AComponent::UpdateEntity(deviceContext, deltaTime);
+	UpdateViewElement();
+
+	m_viewProjBuffer->Upload(deviceContext, sizeof(SViewElement), 1, &m_viewElement);
+}
+
+void CameraComponent::UpdateViewElement()
+{
 	m_viewElement.m_viewProj = GetViewMatrix() * GetProjectionMatrix();
 	m_viewElement.m_invViewProj = XMMatrixInverse(nullptr, m_viewElement.m_viewProj);
 	m_viewElement.m_viewProj = XMMatrixTranspose(m_viewElement.m_viewProj);
 	m_viewElement.m_viewPosition = XMFLOAT3(m_absolutePosition.m128_f32[0], m_absolutePosition.m128_f32[1], m_absolutePosition.m128_f32[2]);
-	m_viewProjBuffer->Upload(deviceContext, sizeof(SViewElement), 1, &m_viewElement);
 }
 
 void CameraComponent::Accept(IComponentVisitor* visitor)

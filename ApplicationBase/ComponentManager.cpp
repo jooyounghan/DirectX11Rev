@@ -135,7 +135,6 @@ void ComponentManager::LoadComponents()
 			if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
 			{
 				AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
-				addedComponent->SetIsModified(true);
 				m_componentIDsToComponent.emplace(componentID, addedComponent);
 
 				componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));

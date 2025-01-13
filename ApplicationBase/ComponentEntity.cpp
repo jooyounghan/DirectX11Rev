@@ -44,16 +44,23 @@ XMVECTOR ComponentEntity::GetQuaternion()
 
 void ComponentEntity::InitEntity(ID3D11Device* const device)
 {
-	m_transformationBuffer->Initialize(device, nullptr);
+	UpdateComponentTransformation();
+	D3D11_SUBRESOURCE_DATA subResourceData;
+	subResourceData.pSysMem = &m_transformation;
+	m_transformationBuffer->Initialize(device, &subResourceData);
 }
 
 void ComponentEntity::UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime)
 {
-	UpdateAbsoluteEntities();
+	UpdateComponentTransformation();
+	m_transformationBuffer->Upload(deviceContext, sizeof(STransformation), 1, &m_transformation);
+}
 
+void ComponentEntity::UpdateComponentTransformation()
+{
+	UpdateAbsoluteEntities();
 	m_transformation.m_transformation = GetTranformation();
 	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
 	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
-	m_transformationBuffer->Upload(deviceContext, sizeof(STransformation), 1, &m_transformation);
 }
 
