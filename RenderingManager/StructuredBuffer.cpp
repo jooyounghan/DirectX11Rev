@@ -5,7 +5,7 @@ StructuredBuffer::StructuredBuffer(const UINT& elementSize, const UINT& arrayCou
 {
 }
 
-void StructuredBuffer::Initialize(ID3D11Device* const device)
+void StructuredBuffer::Initialize(ID3D11Device* const device, D3D11_SUBRESOURCE_DATA* initialData)
 {
 	D3D11_BUFFER_DESC bufferDesc;
 	AutoZeroMemory(bufferDesc);
@@ -17,7 +17,7 @@ void StructuredBuffer::Initialize(ID3D11Device* const device)
 	bufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 	bufferDesc.StructureByteStride = m_elementSize;
 
-	device->CreateBuffer(&bufferDesc, NULL, m_buffer.GetAddressOf());
+	device->CreateBuffer(&bufferDesc, initialData, m_buffer.GetAddressOf());
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	AutoZeroMemory(srvDesc);
@@ -26,6 +26,7 @@ void StructuredBuffer::Initialize(ID3D11Device* const device)
 	srvDesc.BufferEx.NumElements = m_arrayCount;
 	device->CreateShaderResourceView(m_buffer.Get(), &srvDesc, m_structuredSRV.GetAddressOf());
 }
+
 
 void StructuredBuffer::Upload(ID3D11DeviceContext* const deviceContext, const UINT& elementSize, const UINT& arrayCount, void* cpuDataIn)
 {

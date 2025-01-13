@@ -81,7 +81,7 @@ void ModelMaterialAsset::Accept(IAssetVisitor* visitor)
 
 void ModelMaterialAsset::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-	m_modelTextureSettingBuffer->Initialize(device);
+	m_modelTextureSettingBuffer->Initialize(device, nullptr);
 	UpdateModelTextureSetting(nullptr, nullptr, deviceContext);
 }
 

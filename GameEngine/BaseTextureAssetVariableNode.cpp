@@ -13,7 +13,7 @@ using namespace ImGui;
 BaseTextureAssetVariableNode::BaseTextureAssetVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin, AssetManager* assetManager)
 	: m_assetMangerCached(assetManager),
 	VariableNode<BaseTextureAsset*>("BaseTexture Asset", leftTop, radius, referencedOrigin, {}),
-	m_scratchTextureAssetComboBox(format("{}", (uint64_t)this), "", NULL)
+	m_baseTextureAssetComboBox(format("{}", (uint64_t)this), "", NULL)
 {
 	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
 		{
@@ -31,11 +31,11 @@ BaseTextureAssetVariableNode::BaseTextureAssetVariableNode(const ImVec2& leftTop
 	);
 
 	m_assetMangerCached->RegisterAssetLoadedHandler(
-		format("UpdateScratchAssetNode{}", (uint64_t)this),
-		bind(&BaseTextureAssetVariableNode::UpdateScratchAssetSelectables, this, placeholders::_1, placeholders::_2, placeholders::_3)
+		format("UpdateBaseTextureAssetNode{}", (uint64_t)this),
+		bind(&BaseTextureAssetVariableNode::UpdateBaseAssetSelectables, this, placeholders::_1, placeholders::_2, placeholders::_3)
 	);
 
-	m_scratchTextureAssetComboBox.OnSelChanged = [&](const size_t& idx, const string& selectedAssetName)
+	m_baseTextureAssetComboBox.OnSelChanged = [&](const size_t& idx, const string& selectedAssetName)
 		{
 			m_selectedBaseTextureAsset = m_assetMangerCached->GetBaseTextureAsset(selectedAssetName);
 		};
@@ -60,17 +60,17 @@ void BaseTextureAssetVariableNode::DrawBaseAssetSelectCombo()
 
 	PushItemWidth(dynamicWidth > defaultTextSize ? dynamicWidth : defaultTextSize);
 	PushID(format("{}", (uint64_t)this).c_str());
-	m_scratchTextureAssetComboBox.Draw();
+	m_baseTextureAssetComboBox.Draw();
 	ConsumeMouseCaptureForItem();
 	PopID();
 	PopItemWidth();
 }
 
-void BaseTextureAssetVariableNode::UpdateScratchAssetSelectables(const EAssetType& assetType, std::string, AAsset*)
+void BaseTextureAssetVariableNode::UpdateBaseAssetSelectables(const EAssetType& assetType, std::string, AAsset*)
 {
-	if (assetType == EAssetType::ASSET_TYPE_SCRATCH_TEXTURE)
+	if (assetType == EAssetType::ASSET_TYPE_BASE_TEXTURE)
 	{
-		m_scratchTextureAssetComboBox.SetSelectableItems(m_assetMangerCached->GetAssetNames(EAssetType::ASSET_TYPE_SCRATCH_TEXTURE));
+		m_baseTextureAssetComboBox.SetSelectableItems("Select Base Texture", m_assetMangerCached->GetAssetNames(EAssetType::ASSET_TYPE_BASE_TEXTURE));
 	}
 }
 

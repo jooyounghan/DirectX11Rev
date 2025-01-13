@@ -44,7 +44,7 @@ XMVECTOR ComponentEntity::GetQuaternion()
 
 void ComponentEntity::InitEntity(ID3D11Device* const device)
 {
-	m_transformationBuffer->Initialize(device);
+	m_transformationBuffer->Initialize(device, nullptr);
 }
 
 void ComponentEntity::UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime)

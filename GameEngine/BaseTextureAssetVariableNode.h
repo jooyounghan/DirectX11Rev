@@ -21,12 +21,12 @@ protected:
 	BaseTextureAsset* m_selectedBaseTextureAsset = nullptr;
 
 protected:
-	ImGuiComboBox m_scratchTextureAssetComboBox;
+	ImGuiComboBox m_baseTextureAssetComboBox;
 
 private:
 	void DrawImage();
 	void DrawBaseAssetSelectCombo();
-	void UpdateScratchAssetSelectables(const EAssetType&, std::string, AAsset*);
+	void UpdateBaseAssetSelectables(const EAssetType&, std::string, AAsset*);
 
 protected:
 	virtual BaseTextureAsset* GetVariableImpl(const std::tuple<>& variables) override;

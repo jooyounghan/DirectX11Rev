@@ -24,10 +24,11 @@ public:
 	~AnimationPlayer() = default;
 
 protected:
-	const BoneAsset*		m_boneAssetCached;
-	const AnimationAsset*	m_animationAssetCached;
+	const BoneAsset*		m_boneAssetCached = nullptr;
+	const AnimationAsset*	m_animationAssetCached = nullptr;
 	size_t m_playCount = false;
 	float m_playTime = 0.f;
+	bool m_firstUpdated = false;
 //	std::unordered_map<std::string, AnimationNotify> AnimNotifies;
 
 protected:

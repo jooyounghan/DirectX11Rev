@@ -62,7 +62,7 @@ XMMATRIX CameraComponent::GetProjectionMatrix()
 void CameraComponent::InitEntity(ID3D11Device* device)
 {
 	AComponent::InitEntity(device);
-	m_viewProjBuffer->Initialize(device);
+	m_viewProjBuffer->Initialize(device, nullptr);
 
 	m_film = new Texture2DInstance<SRVOption, RTVOption, UAVOption>(
 		static_cast<uint32_t>(Width), static_cast<uint32_t>(Height), 1, 1, NULL, NULL,

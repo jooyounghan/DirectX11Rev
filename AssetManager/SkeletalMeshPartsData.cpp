@@ -85,8 +85,12 @@ void SkeletalMeshPartsData::InitializeGPUAsset(ID3D11Device* device, ID3D11Devic
 	ConstantBuffer* blendWeightBuffer = new ConstantBuffer(sizeof(XMFLOAT4), static_cast<UINT>(m_blendWeight.size()), m_blendWeight.data(), D3D11_BIND_VERTEX_BUFFER);
 	ConstantBuffer* blendIndexBuffer = new ConstantBuffer(sizeof(XMINT4), static_cast<UINT>(m_blendIndex.size()), m_blendIndex.data(), D3D11_BIND_VERTEX_BUFFER);
 
-	blendWeightBuffer->Initialize(device);
-	blendIndexBuffer->Initialize(device);
+	D3D11_SUBRESOURCE_DATA blendWeightSubresourceData = blendWeightBuffer->GetSubResourceData();
+	D3D11_SUBRESOURCE_DATA blendIndexSubresourceData = blendIndexBuffer->GetSubResourceData();
+
+
+	blendWeightBuffer->Initialize(device, &blendWeightSubresourceData);
+	blendIndexBuffer->Initialize(device, &blendIndexSubresourceData);
 
 	m_vertexBuffers.emplace_back(blendWeightBuffer);
 	m_vertexBuffers.emplace_back(blendIndexBuffer);

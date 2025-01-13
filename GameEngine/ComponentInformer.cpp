@@ -26,9 +26,9 @@ ComponentInformer::ComponentInformer(AssetManager* assetManager, ComponentManage
 {
 	const vector<string> absRelativeStrings = { "Absolute", "Relative" };
 
-	m_absRelativeComboPosition.SetSelectableItems(absRelativeStrings);
-	m_absRelativeComboAngle.SetSelectableItems(absRelativeStrings);
-	m_absRelativeComboScale.SetSelectableItems(absRelativeStrings);
+	m_absRelativeComboPosition.SetSelectableItems(isPositionAbsolute ? absRelativeStrings[0] : absRelativeStrings[1], absRelativeStrings);
+	m_absRelativeComboAngle.SetSelectableItems(isPositionAbsolute ? absRelativeStrings[0] : absRelativeStrings[1], absRelativeStrings);
+	m_absRelativeComboScale.SetSelectableItems(isPositionAbsolute ? absRelativeStrings[0] : absRelativeStrings[1], absRelativeStrings);
 
 	m_absRelativeComboPosition.OnSelChanged = [&](const size_t& idx, const string&) { isPositionAbsolute = !static_cast<bool>(idx); };
 	m_absRelativeComboAngle.OnSelChanged = [&](const size_t& idx, const string&) { isAngleAbsolute = !static_cast<bool>(idx); };
@@ -177,8 +177,7 @@ void ComponentInformer::RenderTransformationEntity(
 	{
 		if (DragFloat3("", &absoluteEntity.m128_f32[0], valueSpeed, minValue, maxValue))
 		{
-			auto subtractor = entityType != EComponentEntityType::ENTITY_ANGLE ? &XMVectorSubtract : &XMVectorSubtractAngles;
-			XMVECTOR updatedRelativeEntity = subtractor(absoluteEntity, absoluteParentEntity);
+			XMVECTOR updatedRelativeEntity = XMVectorSubtract(absoluteEntity, absoluteParentEntity);
 			memcpy(relativeEntityAddress, &updatedRelativeEntity.m128_f32[0], sizeof(updatedRelativeEntity));
 			component->UpdateAbsoluteEntities();
 			component->SetIsModified(true);

@@ -49,11 +49,13 @@ void StaticMeshPartsData::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceC
 
 	for (ConstantBuffer* constantBuffer : m_vertexBuffers)
 	{
-		constantBuffer->Initialize(device);
+		D3D11_SUBRESOURCE_DATA vertexSubresourceData = constantBuffer->GetSubResourceData();
+		constantBuffer->Initialize(device, &vertexSubresourceData);
 	}
 
 	m_indexBuffer = new ConstantBuffer(sizeof(uint32_t), static_cast<UINT>(m_indices.size()), m_indices.data(), D3D11_BIND_INDEX_BUFFER);
-	m_indexBuffer->Initialize(device);
+	D3D11_SUBRESOURCE_DATA indexSubresourceData = m_indexBuffer->GetSubResourceData();
+	m_indexBuffer->Initialize(device, &indexSubresourceData);
 }
 
 void StaticMeshPartsData::Accept(IMeshPartsDataVisitor& visitor)

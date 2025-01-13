@@ -8,7 +8,7 @@ public:
 	~DynamicBuffer() override = default;
 
 public:
-	virtual void Initialize(ID3D11Device* const device) override;
+	virtual void Initialize(ID3D11Device* const device, D3D11_SUBRESOURCE_DATA* initialData) override;
 	virtual void Upload(ID3D11DeviceContext* const deviceContext, const UINT& elementSize, const UINT& arrayCount,  void* cpuDataIn) override;
 };
 

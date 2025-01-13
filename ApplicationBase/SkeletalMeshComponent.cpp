@@ -35,7 +35,7 @@ void SkeletalMeshComponent::UpdateEntity(ID3D11DeviceContext* const deviceContex
 {
 	AMeshComponent::UpdateEntity(deviceContext, deltaTime);
 
-if (m_animationPlayer) m_animationPlayer->UpdateAnimationPlayer(deviceContext, deltaTime);
+	if (m_animationPlayer) m_animationPlayer->UpdateAnimationPlayer(deviceContext, deltaTime);
 }
 
 void SkeletalMeshComponent::Accept(IComponentVisitor* visitor)

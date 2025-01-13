@@ -25,10 +25,14 @@ ComponentManager::ComponentManager(
 	m_componentDBRemover(this),
 	m_componentDBCreator(this)
 {
+	UpdateComponentToDBThread();
 }
 
 ComponentManager::~ComponentManager()
 {
+	m_workThreadStarted = false;
+	m_workThread.join();
+
 	unique_lock destuctLock(m_componentMutex);
 	for (auto& componentIDToComponent : m_componentIDsToComponent)
 	{
@@ -345,35 +349,21 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 {
 	if (m_isInitialized)
 	{
-		try
 		{
-			m_sessionManager->startTransaction();
-
+			shared_lock updateComponent(m_componentMutex);
+			for (auto& m_componentIDToComponent : m_componentIDsToComponent)
 			{
-				shared_lock updateComponent(m_componentMutex);
-				for (auto& m_componentIDToComponent : m_componentIDsToComponent)
+				if (m_componentIDToComponent.second->ComsumeIsModified())
 				{
-					if (m_componentIDToComponent.second->ComsumeIsModified())
+					m_componentIDToComponent.second->UpdateEntity(m_defferedContext->GetDefferedContext(), deltaTime);
 					{
-						m_componentIDToComponent.second->UpdateEntity(m_defferedContext->GetDefferedContext(), deltaTime);
-						{
-							unique_lock writeLock(m_updateSetMutex);
-							m_updateToDBSet.insert(m_componentIDToComponent.second);
-						}
+						unique_lock writeLock(m_updateSetMutex);
+						m_updateToDBSet.insert(m_componentIDToComponent.second);
 					}
 				}
 			}
-			m_defferedContext->RecordToCommandList();
-
-			m_sessionManager->commit();
 		}
-		catch (const exception& ex)
-		{
-			m_sessionManager->rollback();
-
-			OnErrorOccurs(ex.what());
-
-		}
+		m_defferedContext->RecordToCommandList();
 	}
 }
 

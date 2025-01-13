@@ -30,7 +30,7 @@ SceneWindow::SceneWindow(
     m_defferedRenderer(drawDefferedDCAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
-    m_rendererComboBox.SetSelectableItems({ "Forward Renderer", "Deffered Renderer" });
+    m_rendererComboBox.SetSelectableItems("Select Rederer", { "Forward Renderer", "Deffered Renderer" });
     m_rendererComboBox.OnSelChanged = [&](const size_t& idx, const string& text) 
         {
             ERendererType renderType = static_cast<ERendererType>(idx);

@@ -14,10 +14,11 @@ public:
 
 protected:
 	const std::string m_id;
+	std::string m_preview;
 	std::vector<std::string> m_selectableItems;
 
 public:
-	inline void SetSelectableItems(const std::vector<std::string>& selectableItems) { m_selectableItems = selectableItems; }
+	inline void SetSelectableItems(const std::string& preview, const std::vector<std::string>& selectableItems) { m_preview = preview; m_selectableItems = selectableItems;}
 
 protected:
 	size_t m_selectedIdx = NotSelected;

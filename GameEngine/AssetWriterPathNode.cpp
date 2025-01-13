@@ -25,7 +25,7 @@ AssetWriterPathNode::AssetWriterPathNode(
 		}
 	);
 
-	m_assetWriterPathComboBox.SetSelectableItems(m_assetMangerCached->GetAssetWriterPaths());
+	m_assetWriterPathComboBox.SetSelectableItems("Select Path", m_assetMangerCached->GetAssetWriterPaths());
 
 	m_assetWriterPathComboBox.OnSelChanged = [&](const size_t& idx, const string& selectedAssetName)
 	{

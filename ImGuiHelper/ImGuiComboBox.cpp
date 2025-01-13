@@ -13,7 +13,7 @@ void ImGuiComboBox::Draw()
 	if (m_selectableItems.size() > 0)
 	{
 		PushID(m_id.c_str());
-		if (BeginCombo(m_label.c_str(), m_selectedIdx == NotSelected ? "" : m_selectableItems[m_selectedIdx].c_str(), m_comboFlags))
+		if (BeginCombo(m_label.c_str(), m_selectedIdx == NotSelected ? m_preview.c_str() : m_selectableItems[m_selectedIdx].c_str(), m_comboFlags))
 		{
 			for (size_t idx = 0; idx < m_selectableItems.size(); idx++)
 			{

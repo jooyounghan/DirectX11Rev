@@ -71,7 +71,7 @@ void ScratchTextureAssetVariableNode::UpdateScratchAssetSelectables(const EAsset
 {
 	if (assetType == EAssetType::ASSET_TYPE_SCRATCH_TEXTURE)
 	{
-		m_scratchTextureAssetComboBox.SetSelectableItems(m_assetMangerCached->GetAssetNames(EAssetType::ASSET_TYPE_SCRATCH_TEXTURE));
+		m_scratchTextureAssetComboBox.SetSelectableItems("Select Scratch Texture", m_assetMangerCached->GetAssetNames(EAssetType::ASSET_TYPE_SCRATCH_TEXTURE));
 	}
 }
 

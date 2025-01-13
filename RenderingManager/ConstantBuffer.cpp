@@ -12,7 +12,19 @@ ConstantBuffer::ConstantBuffer(
 
 }
 
-void ConstantBuffer::Initialize(ID3D11Device* device)
+D3D11_SUBRESOURCE_DATA ConstantBuffer::GetSubResourceData() const
+{
+	D3D11_SUBRESOURCE_DATA subresourceData;
+	AutoZeroMemory(subresourceData);
+
+	subresourceData.pSysMem = m_cpuDataIn;
+	subresourceData.SysMemPitch = m_elementSize * m_arrayCount;
+	subresourceData.SysMemSlicePitch = subresourceData.SysMemPitch;
+
+	return subresourceData;
+}
+
+void ConstantBuffer::Initialize(ID3D11Device* device, D3D11_SUBRESOURCE_DATA* initialData)
 {
 	D3D11_BUFFER_DESC bufferDesc;
 	AutoZeroMemory(bufferDesc);
@@ -24,12 +36,5 @@ void ConstantBuffer::Initialize(ID3D11Device* device)
 	bufferDesc.MiscFlags = NULL;
 	bufferDesc.StructureByteStride = 0;
 
-	D3D11_SUBRESOURCE_DATA subresourceData;
-	AutoZeroMemory(subresourceData);
-	
-	subresourceData.pSysMem = m_cpuDataIn;
-	subresourceData.SysMemPitch = m_elementSize * m_arrayCount;
-	subresourceData.SysMemSlicePitch = subresourceData.SysMemPitch;
-
-	device->CreateBuffer(&bufferDesc, &subresourceData, m_buffer.GetAddressOf());
+	device->CreateBuffer(&bufferDesc, initialData, m_buffer.GetAddressOf());
 }

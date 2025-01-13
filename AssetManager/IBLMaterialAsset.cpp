@@ -86,7 +86,7 @@ void IBLMaterialAsset::Accept(IAssetVisitor* visitor)
 
 void IBLMaterialAsset::InitializeGPUAsset(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-	m_iblToneMappingBuffer->Initialize(device);
+	m_iblToneMappingBuffer->Initialize(device, nullptr);
 	m_iblToneMappingBuffer->Upload(deviceContext, sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants);
 }
 

@@ -70,10 +70,18 @@ void AnimationPlayer::UpdateBoneFromParent(const Bone* parentBone, const Bone* c
 
 void AnimationPlayer::InitAnimationPlayer(ID3D11Device* const device)
 {
-	m_boneTransformation.resize(m_boneAssetCached->GetBones().size(), XMMatrixIdentity());
-
+	const vector<Bone*>& bones = m_boneAssetCached->GetBones();
+	m_boneTransformation.resize(bones.size(), XMMatrixIdentity());
 	m_boneTransformationBuffer = new StructuredBuffer(sizeof(XMMATRIX), static_cast<UINT>(m_boneTransformation.size()));
-	m_boneTransformationBuffer->Initialize(device);
+
+	D3D11_SUBRESOURCE_DATA subresourceData;
+	AutoZeroMemory(subresourceData);
+
+	subresourceData.pSysMem = m_boneTransformation.data();
+	subresourceData.SysMemPitch = static_cast<UINT>(sizeof(XMMATRIX) * m_boneTransformation.size());
+	subresourceData.SysMemSlicePitch = subresourceData.SysMemPitch;
+
+	m_boneTransformationBuffer->Initialize(device, &subresourceData);
 }
 
 void AnimationPlayer::UpdateAnimationPlayer(ID3D11DeviceContext* const deviceContext, const float& deltaTime)
@@ -100,26 +108,28 @@ void AnimationPlayer::UpdateAnimationPlayer(ID3D11DeviceContext* const deviceCon
 		{
 			StopAnimation();
 		}
-	}
 
-	if (m_boneAssetCached)
-	{
-		const Bone* RootBone = m_boneAssetCached->GetRootBone();
-
-		UpdateBoneFromParent(nullptr, RootBone);
-
-		const vector<Bone*>& bones = m_boneAssetCached->GetBones();
-
-		for (const Bone* bone : bones)
+		if (m_boneAssetCached)
 		{
-			const size_t& BoneIndex = bone->GetBoneIndex();
-			m_boneTransformation[BoneIndex] = XMMatrixTranspose(bone->GetOffsetMatrix() * m_boneTransformation[BoneIndex]);
+			const Bone* RootBone = m_boneAssetCached->GetRootBone();
+
+			UpdateBoneFromParent(nullptr, RootBone);
+
+			const vector<Bone*>& bones = m_boneAssetCached->GetBones();
+
+			for (const Bone* bone : bones)
+			{
+				const size_t& BoneIndex = bone->GetBoneIndex();
+				m_boneTransformation[BoneIndex] = XMMatrixTranspose(bone->GetOffsetMatrix() * m_boneTransformation[BoneIndex]);
+			}
 		}
-		
+
 		m_boneTransformationBuffer->Upload(
-			deviceContext, sizeof(XMMATRIX), 
-			static_cast<UINT>(m_boneTransformation.size()), 
+			deviceContext, sizeof(XMMATRIX),
+			static_cast<UINT>(m_boneTransformation.size()),
 			m_boneTransformation.data()
 		);
 	}
+
+
 }

@@ -24,7 +24,10 @@ void DefferedContext::TryExecuteCommandList(ID3D11DeviceContext* immediateContex
 	ID3D11CommandList* commandList;
 	while (m_commandListsQueue.try_pop(commandList))
 	{
-		immediateContext->ExecuteCommandList(commandList, TRUE);
-		commandList->Release();
+		if (commandList)
+		{
+			immediateContext->ExecuteCommandList(commandList, TRUE);
+			commandList->Release();
+		}
 	}
 }
