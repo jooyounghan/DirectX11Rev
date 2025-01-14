@@ -15,27 +15,15 @@ SkeletalMeshComponent::SkeletalMeshComponent(
 {
 }
 
+void SkeletalMeshComponent::SetAnimationPlayer(AnimationPlayer* animationPlayer)
+{
+	if (m_animationPlayer) delete m_animationPlayer;
+	m_animationPlayer = animationPlayer;
+}
+
 void SkeletalMeshComponent::UpdateSkeletalMeshAsset(ISkeletalMeshProvider& provider)
 {
 	m_skeletalMeshAsset = provider.GetSkeletalMeshAsset(m_skeletalMeshName);
-}
-
-void SkeletalMeshComponent::InitEntity(ID3D11Device* const device)
-{
-	AMeshComponent::InitEntity(device);
-
-	if (m_skeletalMeshAsset != nullptr)
-	{
-		m_animationPlayer = new AnimationPlayer(m_skeletalMeshAsset->GetBoneAsset());
-		m_animationPlayer->InitAnimationPlayer(device);
-	}
-}
-
-void SkeletalMeshComponent::UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime)
-{
-	AMeshComponent::UpdateEntity(deviceContext, deltaTime);
-
-	if (m_animationPlayer) m_animationPlayer->UpdateAnimationPlayer(deviceContext, deltaTime);
 }
 
 void SkeletalMeshComponent::Accept(IComponentVisitor* visitor)

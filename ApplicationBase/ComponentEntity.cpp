@@ -42,23 +42,8 @@ XMVECTOR ComponentEntity::GetQuaternion()
 	);
 }
 
-void ComponentEntity::InitEntity(ID3D11Device* const device)
-{
-	UpdateComponentTransformation();
-	D3D11_SUBRESOURCE_DATA subResourceData;
-	subResourceData.pSysMem = &m_transformation;
-	m_transformationBuffer->InitializeBuffer(device, &subResourceData);
-}
-
-void ComponentEntity::UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime)
-{
-	UpdateComponentTransformation();
-	m_transformationBuffer->Upload(deviceContext);
-}
-
 void ComponentEntity::UpdateComponentTransformation()
 {
-	UpdateAbsoluteEntities();
 	m_transformation.m_transformation = GetTranformation();
 	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
 	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);

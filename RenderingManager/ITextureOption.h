@@ -16,7 +16,7 @@ public:
 	virtual ~ITextureOption() = default;
 
 protected:
-	virtual void InitializeByOption(ID3D11Resource* resource, ID3D11Device* device) = 0;
+	virtual void InitializeByOption(ID3D11Resource* resource, ID3D11Device* device, ID3D11DeviceContext* deviceContext) = 0;
 };
 
 

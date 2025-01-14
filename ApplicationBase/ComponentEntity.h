@@ -27,9 +27,9 @@ public:
 	virtual ~ComponentEntity();
 
 protected:
-	DirectX::XMVECTOR m_absolutePosition;
-	DirectX::XMVECTOR m_absoluteAngle;
-	DirectX::XMVECTOR m_absoluteScale;
+	DirectX::XMVECTOR m_absolutePosition = DirectX::XMVectorZero();
+	DirectX::XMVECTOR m_absoluteAngle = DirectX::XMVectorZero();
+	DirectX::XMVECTOR m_absoluteScale = DirectX::XMVectorSet(1.f, 1.f, 1.f, 1.f);
 
 protected:
 	STransformation m_transformation;
@@ -40,7 +40,7 @@ protected:
 	ConstantBuffer* m_componentBuffer;
 
 public:
-	const DynamicBuffer* GetTransformationBuffer() const { return m_transformationBuffer; }
+	DynamicBuffer* GetTransformationBuffer() const { return m_transformationBuffer; }
 	const ConstantBuffer* GetComponentBuffer() const { return m_componentBuffer; }
 
 public:
@@ -50,14 +50,7 @@ public:
 	DirectX::XMMATRIX GetTranformation();
 	DirectX::XMVECTOR GetQuaternion();
 
-protected:
-	virtual void UpdateAbsoluteEntities() = 0;
-
 public:
-	virtual void InitEntity(ID3D11Device* const device);
-	virtual void UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime);
-
-private:
 	void UpdateComponentTransformation();
 };
 

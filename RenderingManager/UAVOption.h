@@ -13,7 +13,7 @@ protected:
 	}
 
 protected:
-	virtual void InitializeByOption(ID3D11Resource* resource, ID3D11Device* device) override;
+	virtual void InitializeByOption(ID3D11Resource* resource, ID3D11Device* device, ID3D11DeviceContext* deviceContext) override;
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> m_uav;

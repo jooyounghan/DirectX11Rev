@@ -31,7 +31,8 @@ public:
 		const UINT& miscFlagIn,
 		const D3D11_USAGE& usage,
 		const DXGI_FORMAT& format,
-		ID3D11Device* device
+		ID3D11Device* device,
+		ID3D11DeviceContext* deviceContext
 	);
 
 	~Texture2DInstance() override = default;
@@ -49,7 +50,11 @@ public:
 	inline ID3D11Texture2D* const GetTexture2D() const { return m_texture2D.Get(); }
 
 private:
-	virtual void InitializeByOption(ID3D11Resource* resource, ID3D11Device* device) override;
+	virtual void InitializeByOption(
+		ID3D11Resource* resource, 
+		ID3D11Device* device, 
+		ID3D11DeviceContext* deviceContext
+	) override;
 };
 
 template<typename ...IsTextureOption>
@@ -93,7 +98,7 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 		);
 	}
 
-	InitializeByOption(m_texture2D.Get(), device);
+	InitializeByOption(m_texture2D.Get(), device, deviceContext);
 }
 
 template<typename ...IsTextureOption>
@@ -106,7 +111,8 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	const UINT& miscFlagIn, 
 	const D3D11_USAGE& usage,
 	const DXGI_FORMAT& format,
-	ID3D11Device* device
+	ID3D11Device* device,
+	ID3D11DeviceContext* deviceContext
 )
 {
 	D3D11_TEXTURE2D_DESC texture2DDesc;
@@ -124,12 +130,16 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	texture2DDesc.Format = format;
 	AssertIfFailed(device->CreateTexture2D(&texture2DDesc, NULL, m_texture2D.GetAddressOf()));
 
-	InitializeByOption(m_texture2D.Get(), device);
+	InitializeByOption(m_texture2D.Get(), device, deviceContext);
 }
 
 template<typename ...IsTextureOption>
-inline void Texture2DInstance<IsTextureOption...>::InitializeByOption(ID3D11Resource* resource, ID3D11Device* device)
+inline void Texture2DInstance<IsTextureOption...>::InitializeByOption(
+	ID3D11Resource* resource, 
+	ID3D11Device* device,
+	ID3D11DeviceContext* deviceContext
+)
 {
-	(IsTextureOption::InitializeByOption(resource, device), ...);
+	(IsTextureOption::InitializeByOption(resource, device, deviceContext), ...);
 }
 

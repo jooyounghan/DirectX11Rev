@@ -1,9 +1,11 @@
 #include "CameraComponent.h"
+
 #include "Texture2DInstance.h"
 #include "RTVOption.h"
 #include "SRVOption.h"
 #include "UAVOption.h"
 #include "DSVOption.h"
+
 #include "DynamicBuffer.h"
 
 using namespace std;
@@ -60,36 +62,16 @@ XMMATRIX CameraComponent::GetProjectionMatrix()
 	return XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fovAngle), Width / Height, m_nearZ, m_farZ);
 }
 
-void CameraComponent::InitEntity(ID3D11Device* device)
+void CameraComponent::SetFilm(Texture2DInstance<SRVOption, RTVOption, UAVOption>* film)
 {
-	AComponent::InitEntity(device);
-
-	UpdateViewElement();
-
-	D3D11_SUBRESOURCE_DATA subResourceData;
-	subResourceData.pSysMem = &m_viewElement;
-
-	m_viewProjBuffer->InitializeBuffer(device, &subResourceData);
-
-	m_film = new Texture2DInstance<SRVOption, RTVOption, UAVOption>(
-		static_cast<uint32_t>(Width), static_cast<uint32_t>(Height), 1, 1, NULL, NULL,
-		D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM, 
-		device
-	);
-
-	m_depthStencilViewBuffer = new Texture2DInstance<DSVOption>(
-		static_cast<uint32_t>(Width), static_cast<uint32_t>(Height), 1, 1, NULL, NULL,
-		D3D11_USAGE_DEFAULT, DXGI_FORMAT_D24_UNORM_S8_UINT,
-		device
-	);
+	if (m_film) delete m_film;
+	m_film = film;
 }
 
-void CameraComponent::UpdateEntity(ID3D11DeviceContext* deviceContext, const float& deltaTime)
+void CameraComponent::SetDepthStencilView(Texture2DInstance<DSVOption>* depthStencilViewBuffer)
 {
-	AComponent::UpdateEntity(deviceContext, deltaTime);
-	UpdateViewElement();
-
-	m_viewProjBuffer->Upload(deviceContext);
+	if (m_depthStencilViewBuffer) delete m_depthStencilViewBuffer;
+	m_depthStencilViewBuffer = depthStencilViewBuffer;
 }
 
 void CameraComponent::UpdateViewElement()

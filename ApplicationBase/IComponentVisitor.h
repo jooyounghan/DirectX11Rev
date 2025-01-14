@@ -1,5 +1,6 @@
 #pragma once
 
+class ComponentEntity;
 class AComponent;
 class AMeshComponent;
 class StaticMeshComponent;

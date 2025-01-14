@@ -56,7 +56,7 @@ public:
 	inline DirectX::XMVECTOR& GetRelativeScaleRef() { return m_relativeScale; }
 
 public:
-	virtual void UpdateAbsoluteEntities() override;
+	void UpdateAbsoluteEntities();
 
 public:
 	virtual void Accept(IComponentVisitor* visitor) = 0;

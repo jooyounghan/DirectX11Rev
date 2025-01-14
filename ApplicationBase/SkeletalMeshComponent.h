@@ -26,14 +26,11 @@ public:
 	inline void SetSkeletalMeshName(const std::string& skeletalMeshName) { m_skeletalMeshName = skeletalMeshName; }
 	inline const std::string& GetSkeletalMeshName() const { return m_skeletalMeshName; }
 	inline const SkeletalMeshAsset* GetSkeletalMetalAsset() const { return m_skeletalMeshAsset; }
-	inline const AnimationPlayer* GetAnimationPlayer() const { return m_animationPlayer; }
+	inline AnimationPlayer* GetAnimationPlayer() const { return m_animationPlayer; }
+	void SetAnimationPlayer(AnimationPlayer* animationPlayer);
 
 public:
 	void UpdateSkeletalMeshAsset(ISkeletalMeshProvider& provider);
-
-public:
-	virtual void InitEntity(ID3D11Device* const device) override;
-	virtual void UpdateEntity(ID3D11DeviceContext* const deviceContext, const float& deltaTime) override;
 
 public:
 	virtual void Accept(IComponentVisitor* visitor) override;

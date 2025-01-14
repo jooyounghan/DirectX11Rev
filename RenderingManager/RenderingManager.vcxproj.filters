@@ -176,9 +176,6 @@
     <ClCompile Include="AUploadableBuffer.cpp">
       <Filter>소스 파일\BufferManager\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="ITextureOption.cpp">
-      <Filter>소스 파일\Texture2D</Filter>
-    </ClCompile>
     <ClCompile Include="SRVOption.cpp">
       <Filter>소스 파일\Texture2D</Filter>
     </ClCompile>
@@ -189,9 +186,6 @@
       <Filter>소스 파일\Texture2D</Filter>
     </ClCompile>
     <ClCompile Include="DSVOption.cpp">
-      <Filter>소스 파일\Texture2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture2DInstance.cpp">
       <Filter>소스 파일\Texture2D</Filter>
     </ClCompile>
     <ClCompile Include="AShader.cpp">

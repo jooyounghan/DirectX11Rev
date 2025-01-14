@@ -4,10 +4,6 @@
 
 #include "SchemaManager.h"
 #include "ComponentType.h"
-#include "ComponentDBInitializer.h"
-#include "ComponentDBUpdater.h"
-#include "ComponentDBRemover.h"
-#include "ComponentDBCreator.h"
 
 #include <queue>
 #include <shared_mutex>
@@ -15,6 +11,7 @@
 class Scene;
 class AComponent;
 class DefferedContext;
+class AssetManager;
 
 class ComponentManager : public SchemaManager
 {
@@ -37,12 +34,6 @@ protected:
 	AssetManager* m_assetManagerCached = nullptr;
 	ID3D11Device* const* m_deviceAddressCached = nullptr;
 	DefferedContext* m_defferedContext = nullptr;
-
-protected:
-	ComponentDBInitializer m_componentDBInitializer;
-	ComponentDBUpdater m_componentDBUpdater;
-	ComponentDBRemover m_componentDBRemover;
-	ComponentDBCreator m_componentDBCreator;
 
 protected:
 	std::thread											m_workThread;

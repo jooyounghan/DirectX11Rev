@@ -179,7 +179,6 @@ void ComponentInformer::RenderTransformationEntity(
 		{
 			XMVECTOR updatedRelativeEntity = XMVectorSubtract(absoluteEntity, absoluteParentEntity);
 			memcpy(relativeEntityAddress, &updatedRelativeEntity.m128_f32[0], sizeof(updatedRelativeEntity));
-			component->UpdateAbsoluteEntities();
 			component->SetIsModified(true);
 		}
 	}
@@ -187,7 +186,6 @@ void ComponentInformer::RenderTransformationEntity(
 	{
 		if (DragFloat3("", relativeEntityAddress, valueSpeed, minValue, maxValue))
 		{
-			component->UpdateAbsoluteEntities();
 			component->SetIsModified(true);
 		}
 	}

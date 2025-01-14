@@ -56,7 +56,7 @@ protected:
 	DynamicBuffer* m_viewProjBuffer;
 
 public:
-	const DynamicBuffer* GetViewProjMatrixBuffer() const { return m_viewProjBuffer; }
+	DynamicBuffer* GetViewProjMatrixBuffer() const { return m_viewProjBuffer; }
 
 public:
 	DirectX::XMMATRIX GetViewMatrix();
@@ -67,14 +67,12 @@ protected:
 	Texture2DInstance<DSVOption>* m_depthStencilViewBuffer = nullptr;
 
 public:
-	const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const GetFilm() { return m_film; }
-	const Texture2DInstance<DSVOption>* const GetDepthStencilViewBuffer() { return m_depthStencilViewBuffer; }
+	void SetFilm(Texture2DInstance<SRVOption, RTVOption, UAVOption>* film);
+	void SetDepthStencilView(Texture2DInstance<DSVOption>* depthStencilViewBuffer);
+	inline const Texture2DInstance<SRVOption, RTVOption, UAVOption>* GetFilm() const { return m_film; }
+	inline const Texture2DInstance<DSVOption>* GetDepthStencilViewBuffer() const { return m_depthStencilViewBuffer; }
 
 public:
-	virtual void InitEntity(ID3D11Device* device) override;
-	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext, const float& deltaTime) override;
-
-private:
 	void UpdateViewElement();
 
 public:

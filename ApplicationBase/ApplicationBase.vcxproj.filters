@@ -79,6 +79,12 @@
     <ClInclude Include="AnimationPlayer.h">
       <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentEntityInitializer.h">
+      <Filter>헤더 파일\Component\Visitor\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEntityUpdater.h">
+      <Filter>헤더 파일\Component\Visitor\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -171,6 +177,12 @@
     <Filter Include="헤더 파일\InputManager">
       <UniqueIdentifier>{1c82df74-bf9d-48d2-9b85-7a1f333e6eca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Component\Visitor\Entity">
+      <UniqueIdentifier>{54cf0f8d-4ed2-4af9-b40b-bd1f8b0e0ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Visitor\Entity">
+      <UniqueIdentifier>{1201d9d4-5bd5-474e-b30d-a3f0a9373a30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
@@ -238,6 +250,12 @@
     </ClCompile>
     <ClCompile Include="AnimationPlayer.cpp">
       <Filter>소스 파일\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEntityInitializer.cpp">
+      <Filter>소스 파일\Component\Visitor\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEntityUpdater.cpp">
+      <Filter>소스 파일\Component\Visitor\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
