@@ -5,7 +5,6 @@ class RTVOption : public ITextureOption
 {
 public:
 	RTVOption() = default;
-	~RTVOption() override = default;
 
 protected:
 	constexpr static D3D11_BIND_FLAG GetBindFlag()

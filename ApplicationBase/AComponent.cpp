@@ -19,6 +19,15 @@ AComponent::AComponent(
 	m_componentName(componentName)
 {}
 
+void AComponent::SetIsModified(const bool& isModified)
+{
+	m_isModified.store(isModified);
+	for (auto& childComponent : m_childComponents)
+	{
+		childComponent->SetIsModified(isModified);
+	}
+};
+
 void AComponent::AttachChildComponent(AComponent* component)
 {
 	component->m_parentComponent = this;

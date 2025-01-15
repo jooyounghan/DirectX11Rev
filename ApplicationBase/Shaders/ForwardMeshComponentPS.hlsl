@@ -4,7 +4,7 @@
 
 cbuffer PickingID : register(b0)
 {
-    float4 IDValues;
+    uint4 IDValues;
 };
 
 cbuffer CameraViewConstantBuffer : register(b1)
@@ -65,6 +65,6 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput Input) : SV_TARGET
     {
         Result.f4Color =  float4(BaseColor * Specular * SpecularTexture.SampleLevel(WrapSampler, Normal, -5.f * (length(Specular) - 1.f)).rgb, 1.f);
     }
-    //Result.f4ID = IDValues;
+    Result.f4ID = IDValues;
     return Result;
 }

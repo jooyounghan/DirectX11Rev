@@ -68,6 +68,18 @@ void CameraComponent::SetFilm(Texture2DInstance<SRVOption, RTVOption, UAVOption>
 	m_film = film;
 }
 
+void CameraComponent::SetIDFilm(Texture2DInstance<RTVOption>* idFilm)
+{
+	if (m_idFilm) delete idFilm;
+	m_idFilm = idFilm;
+}
+
+void CameraComponent::SetIDStagingFilm(Texture2DInstance<PureTextureOption>* idStagingFilm)
+{
+	if (m_idStagingFilm) delete idStagingFilm;
+	m_idStagingFilm = idStagingFilm;
+}
+
 void CameraComponent::SetDepthStencilView(Texture2DInstance<DSVOption>* depthStencilViewBuffer)
 {
 	if (m_depthStencilViewBuffer) delete m_depthStencilViewBuffer;

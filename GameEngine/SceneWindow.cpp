@@ -16,18 +16,20 @@ using namespace DirectX;
 
 SceneWindow::SceneWindow(
     const string& windowID,
-    ID3D11DeviceContext* const* drawDefferedDCAddress,
+    ID3D11DeviceContext* const* immediateContext,
+    ID3D11DeviceContext* const* componentRenderDefferedContext,
     AssetManager* assetManager,
     ComponentManager* componentManager,
     ComponentPSOManager* componentPsoManager
 )
     : AWindow(windowID, true, nullptr),
-    m_drawDefferedDCAddressCached(drawDefferedDCAddress),
+    m_immediateContextAddress(immediateContext),
+    m_componentRenderDefferedContextAddress(componentRenderDefferedContext),
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
     m_componentInformer(assetManager, componentManager),
-    m_forwardRenderer(drawDefferedDCAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
-    m_defferedRenderer(drawDefferedDCAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
+    m_forwardRenderer(componentRenderDefferedContext, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
+    m_defferedRenderer(componentRenderDefferedContext, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
     m_rendererComboBox.SetSelectableItems("Select Rederer", { "Forward Renderer", "Deffered Renderer" });
@@ -51,16 +53,9 @@ SceneWindow::SceneWindow(
 
 void SceneWindow::PrepareWindow()
 {
-    static FLOAT clearColor[4] = { 1.f, 1.f, 1.f, 1.f };
-    if (m_selectedScene != nullptr && m_selectedCamera != nullptr && m_selectedRenderer != nullptr)
+    if (m_selectedScene != nullptr && m_selectedRenderer != nullptr)
     {
-        (*m_drawDefferedDCAddressCached)->ClearRenderTargetView(
-            m_selectedCamera->GetFilm()->GetRTV(), clearColor
-        );
-        (*m_drawDefferedDCAddressCached)->ClearDepthStencilView(
-            m_selectedCamera->GetDepthStencilViewBuffer()->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0
-        );        
-
+        m_selectedRenderer->ClearRenderTargets();
         m_selectedScene->Accept(m_selectedRenderer);
 
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
@@ -197,17 +192,17 @@ void SceneWindow::DrawComponentTreeRecursive(AComponent* const component)
         OpenPopup(contextMenuID.c_str());
     }
 
-    if (ImGui::BeginPopup(contextMenuID.c_str()))
+    if (BeginPopup(contextMenuID.c_str()))
     {
-        if (ImGui::MenuItem("Add Component To Selected Comopnent"))
+        if (MenuItem("Add Component To Selected Comopnent"))
         {
             // Insert Window
         }
-        if (ImGui::MenuItem("Remove Selected Component"))
+        if (MenuItem("Remove Selected Component"))
         {
             // Remove Data
         }
-        ImGui::EndPopup();
+        EndPopup();
     }
 
     if (nodeOpen)
@@ -223,18 +218,64 @@ void SceneWindow::DrawComponentTreeRecursive(AComponent* const component)
 
 void SceneWindow::InteractSceneInput(const ImVec2& size)
 {
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = GetIO();
 
-    if (m_selectedCamera != nullptr && IsItemHovered(ImGuiHoveredFlags_::ImGuiHoveredFlags_None))
+    if (m_selectedCamera != nullptr)
     {
-        if (io.MouseDown[2])
+        if (IsItemClicked(ImGuiMouseButton_::ImGuiMouseButton_Left))
         {
-            const ImVec2 mouseDelta = io.MouseDelta;
-            XMVECTOR& relativeAngle = m_selectedCamera->GetRelativeAngleRef();
-            relativeAngle.m128_f32[1] += 360.f * (mouseDelta.x / size.x);
-            relativeAngle.m128_f32[0] += 360.f * (mouseDelta.y / size.y);
-            m_selectedCamera->SetIsModified(true);
+            uint32_t selectedComponentID = GetMouseClickedComponentID();
+            bool test = true;
+        }
+
+        if (IsItemHovered(ImGuiHoveredFlags_::ImGuiHoveredFlags_None))
+        {
+            if (io.MouseDown[ImGuiMouseButton_::ImGuiMouseButton_Middle])
+            {
+                const ImVec2 mouseDelta = io.MouseDelta;
+                XMVECTOR& relativeAngle = m_selectedCamera->GetRelativeAngleRef();
+                relativeAngle.m128_f32[1] += 360.f * (mouseDelta.x / size.x);
+                relativeAngle.m128_f32[0] += 360.f * (mouseDelta.y / size.y);
+                m_selectedCamera->SetIsModified(true);
+            }
         }
     }
+}
 
+uint32_t SceneWindow::GetMouseClickedComponentID()
+{
+    UINT IDResult = NULL;
+    if (m_selectedCamera)
+    {
+        ImGuiIO& io = GetIO();
+    
+        ID3D11DeviceContext* immediateContext = (*m_immediateContextAddress);
+        ID3D11Texture2D* idFilm = m_selectedCamera->GetIDFilm()->GetTexture2D();
+        ID3D11Texture2D* idStagingFilm = m_selectedCamera->GetIDStatgingFilm()->GetTexture2D();
+
+        const ImVec2 windowPos = GetWindowPos();
+        const ImVec2 windowSize = GetWindowSize();
+        const ImVec2& mousePos = io.MousePos;
+
+        uint32_t posXOnWindow = static_cast<uint32_t>(((mousePos.x - windowPos.x) / windowSize.x) * m_selectedCamera->Width);
+        uint32_t posYOnWindow = static_cast<uint32_t>(((mousePos.y - windowPos.y) / windowSize.y) * m_selectedCamera->Height);
+
+        D3D11_BOX BoxData;
+        AutoZeroMemory(BoxData);
+        BoxData.left = posXOnWindow;
+        BoxData.right = posXOnWindow + 1;
+        BoxData.top = posYOnWindow;
+        BoxData.bottom = posYOnWindow + 1;
+        BoxData.front = 0;
+        BoxData.back = 1;
+
+        immediateContext->CopySubresourceRegion(idStagingFilm, 0, 0, 0, 0, idFilm, 0, &BoxData);
+
+        D3D11_MAPPED_SUBRESOURCE idSelectedSubresource;
+        AutoZeroMemory(idSelectedSubresource);
+        immediateContext->Map(idStagingFilm, 0, D3D11_MAP_READ, NULL, &idSelectedSubresource);
+        memcpy(&IDResult, idSelectedSubresource.pData, sizeof(uint32_t));
+        immediateContext->Unmap(idStagingFilm, 0);
+    }
+    return IDResult;
 }

@@ -144,10 +144,10 @@
     </Bscmake>
     <PostBuildEvent>
       <Command>robocopy "$(ProjectDir)Shaders" "$(SolutionDir)Shaders" /E /IS /IT
-
+robocopy "$(ProjectDir)Shaders" "$(SolutionDir)$(Platform)\Shaders" /E /IS /IT
 if %ERRORLEVEL% LSS 3 exit 0
-
 exit %ERRORLEVEL%</Command>
+      <Message>Shader 파일을 적정 디렉토리에 복사합니다.</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

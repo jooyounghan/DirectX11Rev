@@ -32,7 +32,7 @@ public:
 
 public:
 	inline const bool ComsumeIsModified() { return m_isModified.exchange(false, std::memory_order_acquire); }
-	inline void SetIsModified(const bool& isModified) { m_isModified.store(isModified); }
+	void SetIsModified(const bool& isModified);
 
 protected:
 	std::vector<AComponent*> m_childComponents;

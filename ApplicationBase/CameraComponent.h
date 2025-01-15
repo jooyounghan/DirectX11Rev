@@ -7,6 +7,7 @@ class RTVOption;
 class SRVOption;
 class UAVOption;
 class DSVOption;
+class PureTextureOption;
 
 constexpr DirectX::XMVECTOR GDefaultForward = DirectX::XMVECTOR{ 0.f, 0.f, 1.f, 0.f };
 constexpr DirectX::XMVECTOR GDefaultUp = DirectX::XMVECTOR{ 0.f, 1.f, 0.f, 0.f };
@@ -64,12 +65,20 @@ public:
 
 protected:
 	Texture2DInstance<SRVOption, RTVOption, UAVOption>* m_film = nullptr;
-	Texture2DInstance<DSVOption>* m_depthStencilViewBuffer = nullptr;
+	Texture2DInstance<RTVOption>*			m_idFilm = nullptr;
+	Texture2DInstance<PureTextureOption>*	m_idStagingFilm = nullptr;
+	Texture2DInstance<DSVOption>*			m_depthStencilViewBuffer = nullptr;
 
 public:
 	void SetFilm(Texture2DInstance<SRVOption, RTVOption, UAVOption>* film);
+	void SetIDFilm(Texture2DInstance<RTVOption>* idFilm);
+	void SetIDStagingFilm(Texture2DInstance<PureTextureOption>* idStagingFilm);
 	void SetDepthStencilView(Texture2DInstance<DSVOption>* depthStencilViewBuffer);
+
+public:
 	inline const Texture2DInstance<SRVOption, RTVOption, UAVOption>* GetFilm() const { return m_film; }
+	inline const Texture2DInstance<RTVOption>* GetIDFilm() const { return m_idFilm; }
+	inline const Texture2DInstance<PureTextureOption>* GetIDStatgingFilm() const { return m_idStagingFilm; }
 	inline const Texture2DInstance<DSVOption>* GetDepthStencilViewBuffer() const { return m_depthStencilViewBuffer; }
 
 public:

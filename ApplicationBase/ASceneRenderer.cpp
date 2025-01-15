@@ -67,6 +67,26 @@ void ASceneRenderer::Visit(Scene* scene)
 }
 
 
+void ASceneRenderer::ClearRenderTargets()
+{
+    static FLOAT clearColor[4] = { 0.f, 0.f, 0.f, 0.f };
+
+    ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
+    if (CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached)
+    {
+        deviceContext->ClearRenderTargetView(
+            cameraComponent->GetFilm()->GetRTV(), clearColor
+        );
+        deviceContext->ClearRenderTargetView(
+            cameraComponent->GetIDFilm()->GetRTV(), clearColor
+        );
+        deviceContext->ClearDepthStencilView(
+            cameraComponent->GetDepthStencilViewBuffer()->GetDSV(),
+            D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0
+        );
+    }
+}
+
 uint32_t ASceneRenderer::GetLODLevel(const AComponent* component) const
 {
     return 0;

@@ -37,6 +37,9 @@ public:
 public:
 	virtual void Visit(CameraComponent* cameraComponent) = 0;
 
+public:
+	virtual void ClearRenderTargets();
+
 protected:
 	uint32_t GetLODLevel(const AComponent* component) const;
 	void ApplyMainFilmCamera(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent) const;

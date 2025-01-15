@@ -156,11 +156,13 @@ void SceneForwardRenderer::Visit(CameraComponent* cameraComponent)
 void SceneForwardRenderer::ApplyMainFilmWithIDChannel(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent)
 {
     const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = cameraComponent->GetFilm();
+    const Texture2DInstance<RTVOption>* const idFilm = cameraComponent->GetIDFilm();
+
     const Texture2DInstance<DSVOption>* const depthStencilView = cameraComponent->GetDepthStencilViewBuffer();
 
-    vector<ID3D11RenderTargetView*> rtvs{ film->GetRTV() };
+    vector<ID3D11RenderTargetView*> rtvs{ film->GetRTV(), idFilm->GetRTV() };
 
-    deviceContext->OMSetRenderTargets(1, rtvs.data(), depthStencilView->GetDSV());
+    deviceContext->OMSetRenderTargets(static_cast<UINT>(rtvs.size()), rtvs.data(), depthStencilView->GetDSV());
     deviceContext->RSSetViewports(1, cameraComponent);
 
 }

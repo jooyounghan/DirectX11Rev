@@ -5,7 +5,6 @@ class SRVOption : public ITextureOption
 {
 public:
 	SRVOption() = default;
-	~SRVOption() override = default;
 
 protected:
 	constexpr static D3D11_BIND_FLAG GetBindFlag()

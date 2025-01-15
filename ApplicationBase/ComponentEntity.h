@@ -45,7 +45,7 @@ protected:
 
 public:
 	DynamicBuffer* GetTransformationBuffer() const { return m_transformationBuffer; }
-	const ConstantBuffer* GetComponentBuffer() const { return m_componentBuffer; }
+	ConstantBuffer* GetComponentBuffer() const { return m_componentBuffer; }
 
 public:
 	inline const uint32_t& GetComponentID() { return m_componentConstant.m_componentID; }

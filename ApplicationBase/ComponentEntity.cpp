@@ -15,7 +15,7 @@ ComponentEntity::ComponentEntity(const uint32_t& componentID)
 	: m_transformationBuffer(new DynamicBuffer(sizeof(STransformation), 1, &m_transformation)),
 	m_transformation(),
 	m_componentConstant(componentID),
-	m_componentBuffer(new ConstantBuffer(sizeof(SComponent), 1, &m_componentBuffer))
+	m_componentBuffer(new ConstantBuffer(sizeof(SComponent), 1, &m_componentConstant))
 {
 }
 

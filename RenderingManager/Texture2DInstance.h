@@ -3,6 +3,8 @@
 #include "DirectXUtilities.h"
 #include <vector>
 
+
+
 template<typename ...IsTextureOption>
 class Texture2DInstance : public IsTextureOption...
 {
@@ -34,8 +36,6 @@ public:
 		ID3D11Device* device,
 		ID3D11DeviceContext* deviceContext
 	);
-
-	~Texture2DInstance() override = default;
 
 public:
 	static D3D11_BIND_FLAG GetBindFlags()

@@ -25,13 +25,13 @@ ComponentEntityInitializer::ComponentEntityInitializer(ID3D11Device* device, ID3
 void ComponentEntityInitializer::Visit(StaticMeshComponent* staticModelComponent)
 {
 	staticModelComponent->UpdateAbsoluteEntities();
-	InitTransformationBuffer(staticModelComponent);
+	InitBaseEntityBuffer(staticModelComponent);
 }
 
 void ComponentEntityInitializer::Visit(SkeletalMeshComponent* skeletalModelComponent)
 {
 	skeletalModelComponent->UpdateAbsoluteEntities();
-	InitTransformationBuffer(skeletalModelComponent);
+	InitBaseEntityBuffer(skeletalModelComponent);
 
 	// AnimationPlayerComponent?
 	const SkeletalMeshAsset* skeletalMetalAsset = skeletalModelComponent->GetSkeletalMetalAsset();
@@ -47,7 +47,7 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 {
 	cameraComponent->UpdateAbsoluteEntities();
 	cameraComponent->UpdateViewElement();
-	InitTransformationBuffer(cameraComponent);
+	InitBaseEntityBuffer(cameraComponent);
 
 	DynamicBuffer* viewProjMatrixBuffer = cameraComponent->GetViewProjMatrixBuffer();
 	D3D11_SUBRESOURCE_DATA viewProjSubResourceData = viewProjMatrixBuffer->GetSubResourceData();
@@ -58,6 +58,16 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 		1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM, m_deviceCached, m_deviceContextCached
 	));
 
+	cameraComponent->SetIDFilm(new Texture2DInstance<RTVOption>(
+		static_cast<uint32_t>(cameraComponent->Width), static_cast<uint32_t>(cameraComponent->Height),
+		1, 1, NULL ,NULL , D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UINT, m_deviceCached, m_deviceContextCached
+	));
+
+	cameraComponent->SetIDStagingFilm(new Texture2DInstance<PureTextureOption>(
+		1, 1, 1, 1, D3D11_CPU_ACCESS_READ, NULL, D3D11_USAGE_STAGING, DXGI_FORMAT_R8G8B8A8_UINT, 
+		m_deviceCached, m_deviceContextCached
+	));
+
 	cameraComponent->SetDepthStencilView(new Texture2DInstance<DSVOption>(
 		static_cast<uint32_t>(cameraComponent->Width), static_cast<uint32_t>(cameraComponent->Height),
 		1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_D24_UNORM_S8_UINT, m_deviceCached, m_deviceContextCached
@@ -65,10 +75,16 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 
 }
 
-void ComponentEntityInitializer::InitTransformationBuffer(ComponentEntity* componentEntity)
+void ComponentEntityInitializer::InitBaseEntityBuffer(ComponentEntity* componentEntity)
 {
 	componentEntity->UpdateComponentTransformation();
 	DynamicBuffer* transformationBuffer = componentEntity->GetTransformationBuffer();
+	ConstantBuffer* comopnentBuffer = componentEntity->GetComponentBuffer();
+
 	const D3D11_SUBRESOURCE_DATA transformaionSubresource = transformationBuffer->GetSubResourceData();
 	transformationBuffer->InitializeBuffer(m_deviceCached, &transformaionSubresource);
+
+	const D3D11_SUBRESOURCE_DATA componentSubresource = comopnentBuffer->GetSubResourceData();
+	comopnentBuffer->InitializeBuffer(m_deviceCached, &componentSubresource);
+
 }

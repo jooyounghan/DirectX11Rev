@@ -4,7 +4,7 @@
 
 cbuffer PickingID : register(b0)
 {
-    float4 IDValues;
+    uint4 IDValues;
 };
 
 cbuffer CameraViewConstantBuffer : register(b1)
