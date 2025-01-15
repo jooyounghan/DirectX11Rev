@@ -25,8 +25,8 @@ public:
 	void SetIndexBuffer(ConstantBuffer* indexBuffer);
 
 public:
-	virtual std::vector<UINT> GetStrides() = 0;
-	virtual std::vector<UINT> GetOffsets() = 0;
+	virtual std::vector<UINT> GetStrides() const = 0;
+	virtual std::vector<UINT> GetOffsets() const = 0;
 
 protected:
 	void ResetGPUAsset();

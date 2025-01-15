@@ -18,5 +18,8 @@ public:
 
 public:
 	virtual void Visit(CameraComponent* cameraComponent) override;
+
+protected:
+	void ApplyMainFilmWithIDChannel(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent);
 };
 

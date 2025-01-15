@@ -317,7 +317,7 @@ void ComponentManager::AddComponent(Scene* scene, AComponent* component)
 		ComponentDBCreator componentDBCreator(this);
 
 		scene->AddRootComponent(component);
-		RegisterComponent(component);
+		MonitorComponent(component);
 
 		componentDBCreator.AddComponent(scene, nullptr, component);
 		component->Accept(&componentDBCreator);
@@ -333,7 +333,7 @@ void ComponentManager::AddComponent(AComponent* parentComponent, AComponent* com
 	ComponentDBCreator componentDBCreator(this);
 	component->RemoveFromParent();
 	parentComponent->AttachChildComponent(component);
-	RegisterComponent(component);
+	MonitorComponent(component);
 
 	componentDBCreator.AddComponent(nullptr, parentComponent, component);
 	component->Accept(&componentDBCreator);
@@ -341,7 +341,7 @@ void ComponentManager::AddComponent(AComponent* parentComponent, AComponent* com
 
 void ComponentManager::RemoveComponent(AComponent* component)
 {
-	DeregisterComponent(component);
+	UnmonitorComponent(component);
 	component->RemoveFromParent();
 
 	const vector<AComponent*>& childComponents = component->GetChildComponents();
@@ -379,7 +379,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 	}
 }
 
-void ComponentManager::RegisterComponent(AComponent* component)
+void ComponentManager::MonitorComponent(AComponent* component)
 {
 	{
 		unique_lock addComponentLock(m_componentMutex);
@@ -387,7 +387,7 @@ void ComponentManager::RegisterComponent(AComponent* component)
 	}
 }
 
-void ComponentManager::DeregisterComponent(AComponent* component)
+void ComponentManager::UnmonitorComponent(AComponent* component)
 {
 	{
 		unique_lock removeComponentLock(m_componentMutex);

@@ -2,6 +2,8 @@
 #include "DynamicBuffer.h"
 #include "ConstantBuffer.h"
 
+#include <iostream>
+
 using namespace DirectX;
 
 SComponent::SComponent(const uint32_t& componentID)

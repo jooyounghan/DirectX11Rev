@@ -45,7 +45,7 @@ GameEngine::GameEngine()
 	CreateComponentManager();
 	CreatePSOManager();
 	
-	m_componentManager->RegisterComponent(m_editorCamera);
+	m_componentManager->MonitorComponent(m_editorCamera);
 
 	/* Bind Event Handler */
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { m_engine->ResizeSwapChain(widthIn, heightIn); };
@@ -122,14 +122,6 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 		{
 			m_componentManager->InitComponentManager();
 		}, "Load Component From DB..."
-	);
-
-	m_taskManager->RegisterTask([&, device, assetsLoadDefferedContext]()
-		{
-			m_editorCamera->InitEntity(device);
-			m_editorCamera->SetIsModified(true);
-			assetsLoadDefferedContext->RecordToCommandList();
-		}, "Test Camera Initializing"
 	);
 }
 
@@ -243,7 +235,7 @@ void GameEngine::OnDropFiles(const HDROP& hDrop)
 
 void GameEngine::CreateEditor()
 {	
-	m_editorCamera = new CameraComponent("", NULL, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(1.f, 1.f, 1.f));
+	m_editorCamera = new CameraComponent("", TempID, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(1.f, 1.f, 1.f));
 	m_editorCamera->SetCameraProperties(1200, 800, GDefaultNearZ, GDefaultFarZ, GDefaultFovAngle);
 }
 

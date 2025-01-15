@@ -79,11 +79,9 @@ public:
 	void RemoveComponent(AComponent* component);
 	void UpdateComponents(const float& deltaTime);
 
-// =============== Temp Funciton ==================
 public:
-	void RegisterComponent(AComponent* component);
-	void DeregisterComponent(AComponent* component);
-// ================================================
+	void MonitorComponent(AComponent* component);
+	void UnmonitorComponent(AComponent* component);
 
 public:
 	inline const std::unordered_map<Scene*, std::string>& GetScenesWithDescription() { return m_scenesToDescription; }

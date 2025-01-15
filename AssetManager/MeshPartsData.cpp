@@ -3,7 +3,7 @@
 using namespace std;
 using namespace DirectX;
 
-const DirectX::XMFLOAT3& MeshPartsData::GetPosition(const size_t& index)
+const DirectX::XMFLOAT3& MeshPartsData::GetPosition(const size_t& index) const
 {
 	if (m_positions.size() > index)
 	{
@@ -12,7 +12,7 @@ const DirectX::XMFLOAT3& MeshPartsData::GetPosition(const size_t& index)
 	return m_emptyFloat3;
 }
 
-const DirectX::XMFLOAT2& MeshPartsData::GetUVTextureCoord(const size_t& index)
+const DirectX::XMFLOAT2& MeshPartsData::GetUVTextureCoord(const size_t& index) const
 {
 	if (m_uvTextures.size() > index)
 	{
@@ -21,7 +21,7 @@ const DirectX::XMFLOAT2& MeshPartsData::GetUVTextureCoord(const size_t& index)
 	return m_emptyFloat2;
 }
 
-const DirectX::XMFLOAT3& MeshPartsData::GetNormal(const size_t& index)
+const DirectX::XMFLOAT3& MeshPartsData::GetNormal(const size_t& index) const
 {
 	if (m_normals.size() > index)
 	{

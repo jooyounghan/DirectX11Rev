@@ -21,8 +21,8 @@ public:
 	virtual void Deserialize(FILE* fileIn) override;
 
 public:
-	virtual std::vector<UINT> GetStrides() override;
-	virtual std::vector<UINT> GetOffsets() override;
+	virtual std::vector<UINT> GetStrides() const override;
+	virtual std::vector<UINT> GetOffsets() const override;
 
 public:
 	virtual void Accept(IMeshPartsDataVisitor& visitor) override;

@@ -24,18 +24,18 @@ protected:
 	const DirectX::XMFLOAT2 m_emptyFloat2 = DirectX::XMFLOAT2(0, 0);
 
 public:
-	inline const std::vector<DirectX::XMFLOAT3>& GetPositions() { return m_positions; }
-	inline const std::vector<DirectX::XMFLOAT2>& GetUVTextures() { return m_uvTextures; }
-	inline const std::vector<DirectX::XMFLOAT3>& GetNormals() { return m_normals; }
-	inline const std::vector<uint32_t>& GetIndices() { return m_indices; }
-	inline const std::vector<uint32_t>& GetVertexPartOffsets() { return m_vertexPartOffsets;}
-	inline const std::vector<uint32_t>& GetIndexOffsets() { return m_indexPartOffsets; }
-	inline size_t GetPartsCount() { return m_indexPartOffsets.size(); }
+	inline const std::vector<DirectX::XMFLOAT3>& GetPositions() const { return m_positions; }
+	inline const std::vector<DirectX::XMFLOAT2>& GetUVTextures()const { return m_uvTextures; }
+	inline const std::vector<DirectX::XMFLOAT3>& GetNormals() const { return m_normals; }
+	inline const std::vector<uint32_t>& GetIndices() const { return m_indices; }
+	inline const std::vector<uint32_t>& GetVertexPartOffsets() const { return m_vertexPartOffsets;}
+	inline const std::vector<uint32_t>& GetIndexOffsets() const { return m_indexPartOffsets; }
+	inline size_t GetPartsCount() const { return m_indexPartOffsets.size(); }
 
 public:
-	const DirectX::XMFLOAT3& GetPosition(const size_t& index);
-	const DirectX::XMFLOAT2& GetUVTextureCoord(const size_t& index);
-	const DirectX::XMFLOAT3& GetNormal(const size_t& index);
+	const DirectX::XMFLOAT3& GetPosition(const size_t& index) const;
+	const DirectX::XMFLOAT2& GetUVTextureCoord(const size_t& index) const;
+	const DirectX::XMFLOAT3& GetNormal(const size_t& index) const;
 
 public:
 	void AddPosition(const float& x, const float& y, const float& z);

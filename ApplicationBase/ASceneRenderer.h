@@ -2,10 +2,13 @@
 #include "IComponentVisitor.h"
 #include "ISceneVisitor.h"
 #include <stdint.h>
+#include <functional>
 
 struct ID3D11DeviceContext;
 class AComponent;
 class ComponentPSOManager;
+
+class MeshPartsData;
 
 class ASceneRenderer : public IComponentVisitor, public ISceneVisitor
 {
@@ -35,7 +38,12 @@ public:
 	virtual void Visit(CameraComponent* cameraComponent) = 0;
 
 protected:
-	void ApplyCamera() const;
 	uint32_t GetLODLevel(const AComponent* component) const;
+	void ApplyMainFilmCamera(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent) const;
+	void RenderMeshParts(
+		ID3D11DeviceContext* const deviceContext, 
+		const MeshPartsData* const meshPartsData,
+		std::function<void(const size_t&)> handler = [&](const size_t&) {}
+	);
 };
 

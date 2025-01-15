@@ -62,7 +62,7 @@ void SkeletalMeshPartsData::Deserialize(FILE* fileIn)
 }
 
 
-std::vector<UINT> SkeletalMeshPartsData::GetStrides()
+std::vector<UINT> SkeletalMeshPartsData::GetStrides() const
 {
 	return vector<UINT> {
 		sizeof(XMFLOAT3),
@@ -74,7 +74,7 @@ std::vector<UINT> SkeletalMeshPartsData::GetStrides()
 	};
 }
 
-std::vector<UINT> SkeletalMeshPartsData::GetOffsets()
+std::vector<UINT> SkeletalMeshPartsData::GetOffsets() const
 {
 	return vector<UINT>{ 0, 0, 0, 0, 0, 0 };
 }

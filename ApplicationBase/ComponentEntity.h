@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <limits>
 
 class ConstantBuffer;
 class DynamicBuffer;
@@ -10,6 +11,9 @@ struct STransformation
 	DirectX::XMMATRIX m_transformation = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX m_invTransformation = DirectX::XMMatrixIdentity();
 };
+
+constexpr uint32_t RootID = NULL;
+constexpr uint32_t TempID = std::numeric_limits<uint32_t>::max();
 
 struct SComponent
 {

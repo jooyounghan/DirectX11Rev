@@ -43,8 +43,9 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput Input) : SV_TARGET
     
     float3 ToEye = normalize(ViewPosition - Input.f4ModelPos.xyz);
     
-    float3 BaseColor = IsDiffuseSet ? MaterialTexture[DIFFUSE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(1.0, 1.0, 1.0);
     float AmbientOcculusion = IsAmbientOcculusionSet ? MaterialTexture[AO_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r : 1.0f;
+    float3 Specular = IsSpecularSet ? MaterialTexture[SPECULAR_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(0.0, 0.0, 0.0);
+    float3 BaseColor = IsDiffuseSet ? MaterialTexture[DIFFUSE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(1.0, 1.0, 1.0);
     float Metallic = IsMetalicSet ? MaterialTexture[METALIC_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r : 0.0f;
     float Roughness = IsRoughnessSet ? MaterialTexture[ROUGHNESS_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r : 1.0f;
     float3 Emissive = IsEmissiveSet ? MaterialTexture[EMISSIVE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(0.0, 0.0, 0.0);
@@ -55,7 +56,15 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput Input) : SV_TARGET
         float3 Bitangent = normalize(cross(Input.f3ModelNormal, Input.f3ModelTangent));
         Normal = GetNormalFromMap(Input.f3ModelNormal, Bitangent, Input.f3ModelTangent, Input.fLODLevel, Input.f2TexCoord, MaterialTexture[NORMAL_IDX], WrapSampler);
     }
-    Result.f4Color = float4(CalculateIBL(F0, BaseColor, AmbientOcculusion, Metallic, Roughness, Normal, ToEye, SpecularTexture, DiffuseTexture, BRDFTexture, WrapSampler) + Emissive, 1.f);
+    
+    if (IsMetalicSet && IsRoughnessSet)
+    {
+        Result.f4Color = float4(CalculateIBL(F0, BaseColor, AmbientOcculusion, Metallic, Roughness, Normal, ToEye, SpecularTexture, DiffuseTexture, BRDFTexture, WrapSampler) + Emissive, 1.f);   
+    }
+    else
+    {
+        Result.f4Color =  float4(BaseColor * Specular * SpecularTexture.SampleLevel(WrapSampler, Normal, -5.f * (length(Specular) - 1.f)).rgb, 1.f);
+    }
     //Result.f4ID = IDValues;
     return Result;
 }

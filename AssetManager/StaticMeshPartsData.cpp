@@ -22,7 +22,7 @@ void StaticMeshPartsData::Deserialize(FILE* fileIn)
 	m_tangents = DeserializeHelper::DeserializeVectorContainer<vector<XMFLOAT3>>(fileIn);
 }
 
-vector<UINT> StaticMeshPartsData::GetStrides()
+vector<UINT> StaticMeshPartsData::GetStrides() const
 {
 	return vector<UINT> {
 		sizeof(XMFLOAT3),
@@ -32,7 +32,7 @@ vector<UINT> StaticMeshPartsData::GetStrides()
 	};
 }
 
-vector<UINT> StaticMeshPartsData::GetOffsets()
+vector<UINT> StaticMeshPartsData::GetOffsets() const
 {
 	return vector<UINT>{ 0, 0, 0, 0 };
 }
