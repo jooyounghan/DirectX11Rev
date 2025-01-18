@@ -85,6 +85,6 @@ public:
 
 public:
 	inline const std::unordered_map<Scene*, std::string>& GetScenesWithDescription() { return m_scenesToDescription; }
-	inline const std::unordered_map<ComponentID, AComponent*>& GetComponentIDsWithComponent() { return m_componentIDsToComponent; }
+	AComponent* GetComponent(const ComponentID& componentID);
 };
 

@@ -395,3 +395,12 @@ void ComponentManager::UnmonitorComponent(AComponent* component)
 		m_updateToDBSet.erase(component);
 	}
 }
+
+AComponent* ComponentManager::GetComponent(const ComponentID& componentID)
+{
+	if (m_componentIDsToComponent.find(componentID) != m_componentIDsToComponent.end())
+	{
+		return m_componentIDsToComponent.at(componentID);
+	}
+	return nullptr;
+}

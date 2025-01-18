@@ -225,7 +225,7 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
         if (IsItemClicked(ImGuiMouseButton_::ImGuiMouseButton_Left))
         {
             uint32_t selectedComponentID = GetMouseClickedComponentID();
-            bool test = true;
+            m_selectedComponent = m_componentManagerCached->GetComponent(selectedComponentID);
         }
 
         if (IsItemHovered(ImGuiHoveredFlags_::ImGuiHoveredFlags_None))
