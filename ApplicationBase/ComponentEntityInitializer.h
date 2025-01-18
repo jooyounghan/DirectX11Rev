@@ -20,6 +20,6 @@ public:
 	virtual void Visit(CameraComponent* cameraComponent) override;
 
 private:
-	void InitBaseEntityBuffer(ComponentEntity* componentEntity);
+	void InitBaseEntityBuffer(AComponent* component);
 };
 

@@ -27,13 +27,18 @@ struct SComponent
 class ComponentEntity
 {
 public:
-	ComponentEntity(const uint32_t& componentID);
+	ComponentEntity(
+		const uint32_t& componentID,
+		const DirectX::XMFLOAT3& localPosition,
+		const DirectX::XMFLOAT3& localAngle,
+		const DirectX::XMFLOAT3& localScale
+	);
 	virtual ~ComponentEntity();
 
 protected:
-	DirectX::XMVECTOR m_absolutePosition = DirectX::XMVectorZero();
-	DirectX::XMVECTOR m_absoluteAngle = DirectX::XMVectorZero();
-	DirectX::XMVECTOR m_absoluteScale = DirectX::XMVectorSet(1.f, 1.f, 1.f, 1.f);
+	DirectX::XMVECTOR m_localPosition;
+	DirectX::XMVECTOR m_localAngle;
+	DirectX::XMVECTOR m_localScale;
 
 protected:
 	STransformation m_transformation;
@@ -44,6 +49,11 @@ protected:
 	ConstantBuffer* m_componentBuffer;
 
 public:
+	inline const DirectX::XMVECTOR& GetLocalPosition() const { return m_localPosition; }
+	inline const DirectX::XMVECTOR& GetLocalAngle() const { return m_localAngle; }
+	inline const DirectX::XMVECTOR& GetLocalScale() const { return m_localScale; }
+
+public:
 	DynamicBuffer* GetTransformationBuffer() const { return m_transformationBuffer; }
 	ConstantBuffer* GetComponentBuffer() const { return m_componentBuffer; }
 
@@ -51,10 +61,7 @@ public:
 	inline const uint32_t& GetComponentID() { return m_componentConstant.m_componentID; }
 
 public:
-	DirectX::XMMATRIX GetTranformation();
-	DirectX::XMVECTOR GetQuaternion();
-
-public:
-	void UpdateComponentTransformation();
+	DirectX::XMMATRIX GetLocalTranformation();
+	DirectX::XMVECTOR GetLocalQuaternion();
 };
 

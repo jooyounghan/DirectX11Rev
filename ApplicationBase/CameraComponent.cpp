@@ -50,7 +50,7 @@ void CameraComponent::SetCameraProperties(
 
 XMMATRIX CameraComponent::GetViewMatrix()
 {
-	const XMVECTOR quaternion = GetQuaternion();
+	const XMVECTOR quaternion = GetLocalQuaternion();
 	XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
 	XMVECTOR currentUp = XMVector3Rotate(GDefaultUp, quaternion);
 	return XMMatrixLookToLH(m_absolutePosition, currentForward, currentUp);

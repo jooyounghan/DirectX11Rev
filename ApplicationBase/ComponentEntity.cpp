@@ -11,8 +11,17 @@ SComponent::SComponent(const uint32_t& componentID)
 {
 }
 
-ComponentEntity::ComponentEntity(const uint32_t& componentID)
-	: m_transformationBuffer(new DynamicBuffer(sizeof(STransformation), 1, &m_transformation)),
+ComponentEntity::ComponentEntity(
+	const uint32_t& componentID,
+	const DirectX::XMFLOAT3& localPosition,
+	const DirectX::XMFLOAT3& localAngle,
+	const DirectX::XMFLOAT3& localScale
+)
+	:
+	m_localPosition(XMVectorSet(localPosition.x, localPosition.y, localPosition.z, 0.f)),
+	m_localAngle(XMVectorSet(localAngle.x, localAngle.y, localAngle.z, 0.f)),
+	m_localScale(XMVectorSet(localScale.x, localScale.y, localScale.z, 0.f)),
+	m_transformationBuffer(new DynamicBuffer(sizeof(STransformation), 1, &m_transformation)),
 	m_transformation(),
 	m_componentConstant(componentID),
 	m_componentBuffer(new ConstantBuffer(sizeof(SComponent), 1, &m_componentConstant))
@@ -25,29 +34,23 @@ ComponentEntity::~ComponentEntity()
 	delete m_componentBuffer;
 }
 
-XMMATRIX ComponentEntity::GetTranformation()
+XMMATRIX ComponentEntity::GetLocalTranformation()
 {
 	return XMMatrixAffineTransformation(
-		m_absoluteScale,
+		m_localScale,
 		XMQuaternionIdentity(),
-		GetQuaternion(),
-		m_absolutePosition
+		GetLocalQuaternion(),
+		m_localPosition
 	);
 }
 
-XMVECTOR ComponentEntity::GetQuaternion()
+XMVECTOR ComponentEntity::GetLocalQuaternion()
 {
 	return XMQuaternionRotationRollPitchYaw(
-		XMConvertToRadians(XMVectorGetX(m_absoluteAngle)),
-		XMConvertToRadians(XMVectorGetY(m_absoluteAngle)),
-		XMConvertToRadians(XMVectorGetZ(m_absoluteAngle))
+		XMConvertToRadians(XMVectorGetX(m_localAngle)),
+		XMConvertToRadians(XMVectorGetY(m_localAngle)),
+		XMConvertToRadians(XMVectorGetZ(m_localAngle))
 	);
 }
 
-void ComponentEntity::UpdateComponentTransformation()
-{
-	m_transformation.m_transformation = GetTranformation();
-	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
-	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
-}
 

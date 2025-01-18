@@ -1,21 +1,18 @@
 #include "AComponent.h"
 
+#include <DirectXMath.h>
+
 using namespace std;
 using namespace DirectX;
 
 AComponent::AComponent(
 	const string& componentName,
 	const uint32_t& componentID, 
-	const XMFLOAT3& relativePosition,
-	const XMFLOAT3& relativeAngle,
-	const XMFLOAT3& relativeScale
-)
-	: 
-	
-	ComponentEntity(componentID), 
-	m_relativePosition(XMVectorSet(relativePosition.x, relativePosition.y, relativePosition.z, 0.f)),
-	m_relativeAngle(XMVectorSet(relativeAngle.x, relativeAngle.y, relativeAngle.z, 0.f)),
-	m_relativeScale(XMVectorSet(relativeScale.x, relativeScale.y, relativeScale.z, 0.f)),
+	const XMFLOAT3& localPosition,
+	const XMFLOAT3& localAngle,
+	const XMFLOAT3& localScale
+)	: 
+	ComponentEntity(componentID, localPosition, localAngle, localScale), 
 	m_componentName(componentName)
 {}
 
@@ -54,18 +51,59 @@ void AComponent::RemoveFromParent()
 	m_parentComponent = nullptr;
 }
 
-XMVECTOR AComponent::GetAbsolutePosition() { return XMVectorAdd(m_relativePosition, m_parentComponent == nullptr ? XMVectorZero() : m_parentComponent->GetAbsolutePosition()); }
-XMVECTOR AComponent::GetAbsoluteAngle() { return XMVectorAdd(m_relativeAngle, m_parentComponent == nullptr ? XMVectorZero() : m_parentComponent->GetAbsoluteAngle()); }
-XMVECTOR AComponent::GetAbsoluteScale() { return XMVectorAdd(m_relativeScale, m_parentComponent == nullptr ? XMVectorZero() : m_parentComponent->GetAbsoluteScale()); }
-
-void AComponent::UpdateAbsoluteEntities()
+DirectX::XMMATRIX AComponent::GetAbsoluteTransformation()
 {
-	m_absolutePosition = GetAbsolutePosition();
-	m_absoluteAngle = GetAbsoluteAngle();
-	m_absoluteScale = GetAbsoluteScale();
+	return m_parentComponent ?
+		GetLocalTranformation() * m_parentComponent->GetAbsoluteTransformation() :
+		GetLocalTranformation();
+}
+
+void AComponent::UpdateAbsoluteEntities(const XMMATRIX* parentAbsTransformation)
+{
+	const XMMATRIX matrix = parentAbsTransformation ?
+		GetLocalTranformation() * (*parentAbsTransformation) :
+		GetAbsoluteTransformation();
+	
+	XMVECTOR absRotationQuaternion;
+	
+	XMMatrixDecompose(
+		&m_absoluteScale, 
+		&absRotationQuaternion, 
+		&m_absolutePosition, 
+		matrix
+	);
+
+	XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(absRotationQuaternion);
+
+	float& pitch = m_absoluteAngle.m128_f32[0];
+	float& yaw = m_absoluteAngle.m128_f32[1];
+	float& roll = m_absoluteAngle.m128_f32[2];
+
+	pitch = asinf(-rotationMatrix.r[2].m128_f32[0]);
+	if (cosf(pitch) > 1e-6) 
+	{
+		yaw = atan2f(rotationMatrix.r[2].m128_f32[1], rotationMatrix.r[2].m128_f32[2]);
+		roll = atan2f(rotationMatrix.r[1].m128_f32[0], rotationMatrix.r[0].m128_f32[0]);
+	}
+	else 
+	{
+		yaw = 0.0f;
+		roll = atan2f(-rotationMatrix.r[0].m128_f32[1], rotationMatrix.r[1].m128_f32[1]);
+	}
+
+	pitch = XMConvertToDegrees(pitch);
+	yaw = XMConvertToDegrees(yaw);
+	roll = XMConvertToDegrees(roll);
 
 	for (AComponent* childComponent : m_childComponents)
 	{
-		childComponent->UpdateAbsoluteEntities();
+		childComponent->UpdateAbsoluteEntities(&matrix);
 	}
+}
+
+void AComponent::UpdateComponentTransformation()
+{
+	m_transformation.m_transformation = GetAbsoluteTransformation();
+	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
+	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
 }

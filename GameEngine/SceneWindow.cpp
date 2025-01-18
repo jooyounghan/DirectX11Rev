@@ -233,7 +233,7 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
             if (io.MouseDown[ImGuiMouseButton_::ImGuiMouseButton_Middle])
             {
                 const ImVec2 mouseDelta = io.MouseDelta;
-                XMVECTOR& relativeAngle = m_selectedCamera->GetRelativeAngleRef();
+                XMVECTOR& relativeAngle = const_cast<XMVECTOR&>(m_selectedCamera->GetLocalAngle());
                 relativeAngle.m128_f32[1] += 360.f * (mouseDelta.x / size.x);
                 relativeAngle.m128_f32[0] += 360.f * (mouseDelta.y / size.y);
                 m_selectedCamera->SetIsModified(true);

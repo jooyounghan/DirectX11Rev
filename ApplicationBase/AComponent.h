@@ -12,23 +12,20 @@ public:
 	AComponent(
 		const std::string& componentName,
 		const uint32_t& componentID, 
-		const DirectX::XMFLOAT3& relativePosition,
-		const DirectX::XMFLOAT3& relativeAngle,
-		const DirectX::XMFLOAT3& relativeScale	
+		const DirectX::XMFLOAT3& localPosition,
+		const DirectX::XMFLOAT3& localAngle,
+		const DirectX::XMFLOAT3& localScale	
 	);
 	~AComponent() override = default;
-
-protected:
-	DirectX::XMVECTOR m_relativePosition;
-	DirectX::XMVECTOR m_relativeAngle;
-	DirectX::XMVECTOR m_relativeScale;
 
 protected:
 	std::string m_componentName;
 	std::atomic_bool m_isModified = false;
 
-public:
-	inline const std::string& GetComponentName() { return m_componentName; }
+protected:
+	DirectX::XMVECTOR m_absolutePosition = DirectX::XMVectorZero();
+	DirectX::XMVECTOR m_absoluteAngle = DirectX::XMVectorZero();
+	DirectX::XMVECTOR m_absoluteScale = DirectX::XMVectorSet(1.f, 1.f, 1.f, 1.f);
 
 public:
 	inline const bool ComsumeIsModified() { return m_isModified.exchange(false, std::memory_order_acquire); }
@@ -39,24 +36,24 @@ protected:
 	AComponent* m_parentComponent = nullptr;
 
 public:
-	inline const std::vector<AComponent*>& GetChildComponents() { return m_childComponents; }
 	void AttachChildComponent(AComponent* component);
 	void DetachChildComponent(AComponent* component);
 	void RemoveFromParent();
-	inline AComponent* GetParentComponent() { return m_parentComponent; }
 
 public:
-	DirectX::XMVECTOR GetAbsolutePosition();
-	DirectX::XMVECTOR GetAbsoluteAngle();
-	DirectX::XMVECTOR GetAbsoluteScale();
+	inline const std::string& GetComponentName() const { return m_componentName; }
+	inline const std::vector<AComponent*>& GetChildComponents() const { return m_childComponents; }
+	inline AComponent* GetParentComponent() const { return m_parentComponent; }
+	inline const DirectX::XMVECTOR& GetAbsolutePosition() const { return m_absolutePosition;}
+	inline const DirectX::XMVECTOR& GetAbsoluteAngle() const { return m_absoluteAngle;}
+	inline const DirectX::XMVECTOR& GetAbsoluteScale() const { return m_absoluteScale; }
 
 public:
-	inline DirectX::XMVECTOR& GetRelativePositionRef() { return m_relativePosition; }
-	inline DirectX::XMVECTOR& GetRelativeAngleRef() { return m_relativeAngle; }
-	inline DirectX::XMVECTOR& GetRelativeScaleRef() { return m_relativeScale; }
+	DirectX::XMMATRIX GetAbsoluteTransformation();
 
 public:
-	void UpdateAbsoluteEntities();
+	void UpdateAbsoluteEntities(const DirectX::XMMATRIX* parentAbsTransformation = nullptr);
+	void UpdateComponentTransformation();
 
 public:
 	virtual void Accept(IComponentVisitor* visitor) = 0;

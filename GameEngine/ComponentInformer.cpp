@@ -37,7 +37,7 @@ ComponentInformer::ComponentInformer(AssetManager* assetManager, ComponentManage
 
 void ComponentInformer::Visit(StaticMeshComponent* staticMeshComponent)
 {
-	Text("Skeletal Model Component");
+	Text("Static Model Component");
 	RenderComponentTransformation(staticMeshComponent);
 	RenderMeshComponent(staticMeshComponent);
 	Button(staticMeshComponent->GetComponentName().c_str());
@@ -45,7 +45,7 @@ void ComponentInformer::Visit(StaticMeshComponent* staticMeshComponent)
 
 void ComponentInformer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
-	Text("Static Model Component");
+	Text("Skeletal Model Component");
 	RenderComponentTransformation(skeletalMeshComponent);
 	RenderMeshComponent(skeletalMeshComponent);
 	Button(skeletalMeshComponent->GetComponentName().c_str());
@@ -113,17 +113,17 @@ void ComponentInformer::RenderTransformationEntity(
 			{
 			case EComponentEntityType::ENTITY_POSITION: return parentComponent ? parentComponent->GetAbsolutePosition() : XMVectorZero();
 			case EComponentEntityType::ENTITY_ANGLE: return parentComponent ? parentComponent->GetAbsoluteAngle() : XMVectorZero();
-			case EComponentEntityType::ENTITY_SCALE: return parentComponent ? parentComponent->GetAbsoluteScale() : XMVectorZero();
-			default: return XMVectorZero();
+			case EComponentEntityType::ENTITY_SCALE: return parentComponent ? parentComponent->GetAbsoluteScale() : XMVectorSet(1.f, 1.f, 1.f, 0.f);
+			default: throw std::invalid_argument("Invalid entity type");
 			}
 		};
 
 	const auto GetRelativeEntityRef = [&]() -> XMVECTOR&
 		{
 			switch (entityType) {
-			case EComponentEntityType::ENTITY_POSITION: return component->GetRelativePositionRef();
-			case EComponentEntityType::ENTITY_ANGLE: return component->GetRelativeAngleRef();
-			case EComponentEntityType::ENTITY_SCALE: return component->GetRelativeScaleRef();
+			case EComponentEntityType::ENTITY_POSITION: return const_cast<XMVECTOR&>(component->GetLocalPosition());
+			case EComponentEntityType::ENTITY_ANGLE: return const_cast<XMVECTOR&>(component->GetLocalAngle());
+			case EComponentEntityType::ENTITY_SCALE: return const_cast<XMVECTOR&>(component->GetLocalScale());
 			default: throw std::invalid_argument("Invalid entity type");
 			}
 		};
@@ -162,6 +162,27 @@ void ComponentInformer::RenderTransformationEntity(
 			}
 		};
 
+	const auto EntityHandler = [&](const XMVECTOR& v1, const XMVECTOR& v2) -> XMVECTOR
+		{
+			switch (entityType)
+			{
+			case EComponentEntityType::ENTITY_POSITION: return XMVectorAdd(v1, v2);
+			case EComponentEntityType::ENTITY_ANGLE: return XMVectorAdd(v1, v2);
+			case EComponentEntityType::ENTITY_SCALE: return XMVectorMultiply(v1, v2);
+			default: throw std::invalid_argument("Invalid entity type");
+			}
+		};
+
+	const auto EntityInverseHandler = [&](const XMVECTOR& v1, const XMVECTOR& v2) -> XMVECTOR
+		{
+			switch (entityType)
+			{
+			case EComponentEntityType::ENTITY_POSITION: return XMVectorSubtract(v1, v2);
+			case EComponentEntityType::ENTITY_ANGLE: return XMVectorSubtract(v1, v2);
+			case EComponentEntityType::ENTITY_SCALE: return XMVectorDivide(v1, v2);
+			default: throw std::invalid_argument("Invalid entity type");
+			}
+		};
 
 	PushID(groupID);
 	Text(entityName);
@@ -170,14 +191,14 @@ void ComponentInformer::RenderTransformationEntity(
 
 	absoluteParentEntity = GetParentEntity();
 	XMVECTOR& relativeEntity = GetRelativeEntityRef();
-	absoluteEntity = XMVectorAdd(absoluteParentEntity, relativeEntity);
+	absoluteEntity = EntityHandler(absoluteParentEntity, relativeEntity);
 	relativeEntityAddress = &relativeEntity.m128_f32[0];
 
 	if (GetIsAbsolute())
 	{
 		if (DragFloat3("", &absoluteEntity.m128_f32[0], valueSpeed, minValue, maxValue))
 		{
-			XMVECTOR updatedRelativeEntity = XMVectorSubtract(absoluteEntity, absoluteParentEntity);
+			XMVECTOR updatedRelativeEntity = EntityInverseHandler(absoluteEntity, absoluteParentEntity);
 			memcpy(relativeEntityAddress, &updatedRelativeEntity.m128_f32[0], sizeof(updatedRelativeEntity));
 			component->SetIsModified(true);
 		}

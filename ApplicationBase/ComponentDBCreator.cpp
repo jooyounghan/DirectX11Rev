@@ -84,9 +84,9 @@ void ComponentDBCreator::AddComponent(Scene* scene, AComponent* parentComponent,
 	const std::string componentsTableName = "components";
 	Table componentsTable = m_schemaCached->getTable(componentsTableName, true);
 
-	const XMVECTOR& position = component->GetRelativePositionRef();
-	const XMVECTOR& angle = component->GetRelativeAngleRef();
-	const XMVECTOR& scale = component->GetRelativeScaleRef();
+	const XMVECTOR& position = component->GetLocalPosition();
+	const XMVECTOR& angle = component->GetLocalAngle();
+	const XMVECTOR& scale = component->GetLocalScale();
 
 	componentsTable.insert("component_id", "parent_component_id", "component_name", 
 		"position_x", "position_y", "position_z",

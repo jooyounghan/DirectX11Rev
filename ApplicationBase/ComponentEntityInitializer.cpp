@@ -75,11 +75,11 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 
 }
 
-void ComponentEntityInitializer::InitBaseEntityBuffer(ComponentEntity* componentEntity)
+void ComponentEntityInitializer::InitBaseEntityBuffer(AComponent* component)
 {
-	componentEntity->UpdateComponentTransformation();
-	DynamicBuffer* transformationBuffer = componentEntity->GetTransformationBuffer();
-	ConstantBuffer* comopnentBuffer = componentEntity->GetComponentBuffer();
+	component->UpdateComponentTransformation();
+	DynamicBuffer* transformationBuffer = component->GetTransformationBuffer();
+	ConstantBuffer* comopnentBuffer = component->GetComponentBuffer();
 
 	const D3D11_SUBRESOURCE_DATA transformaionSubresource = transformationBuffer->GetSubResourceData();
 	transformationBuffer->InitializeBuffer(m_deviceCached, &transformaionSubresource);

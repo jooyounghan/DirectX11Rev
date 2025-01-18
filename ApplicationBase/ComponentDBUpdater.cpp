@@ -69,9 +69,9 @@ void ComponentDBUpdater::UpdateComponent(AComponent* component)
 	const std::string componentTableName = "components";
 	Table componentTable = m_schemaCached->getTable(componentTableName, true);
 		
-	const XMVECTOR& position = component->GetRelativePositionRef();
-	const XMVECTOR& angle = component->GetRelativeAngleRef();
-	const XMVECTOR& scale = component->GetRelativeScaleRef();
+	const XMVECTOR& position = component->GetLocalPosition();
+	const XMVECTOR& angle = component->GetLocalAngle();
+	const XMVECTOR& scale = component->GetLocalScale();
 
 	componentTable.update()
 		.set("position_x", position.m128_f32[0])

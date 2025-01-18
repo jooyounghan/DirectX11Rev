@@ -36,9 +36,9 @@ void ComponentEntityUpdater::Visit(CameraComponent* cameraComponent)
 	viewProjMatrixBuffer->Upload(m_deviceContextCached);
 }
 
-void ComponentEntityUpdater::UpdateTransformationBuffer(ComponentEntity* componentEntity)
+void ComponentEntityUpdater::UpdateTransformationBuffer(AComponent* component)
 {
-	componentEntity->UpdateComponentTransformation();
-	DynamicBuffer* transformationBuffer = componentEntity->GetTransformationBuffer();
+	component->UpdateComponentTransformation();
+	DynamicBuffer* transformationBuffer = component->GetTransformationBuffer();
 	transformationBuffer->Upload(m_deviceContextCached);
 }

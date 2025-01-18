@@ -20,6 +20,6 @@ public:
 	virtual void Visit(CameraComponent* cameraComponent) override;
 
 private:
-	void UpdateTransformationBuffer(ComponentEntity* componentEntity);
+	void UpdateTransformationBuffer(AComponent* component);
 
 };
