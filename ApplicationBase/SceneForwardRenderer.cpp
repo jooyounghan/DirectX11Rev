@@ -43,7 +43,6 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
 	static GraphicsPSOObject* staticMeshGraphicsPSOObject
 		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::STATIC_MESH_FORWARD);
 
-
     ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
     CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
     const IBLMaterialAsset* sceneMaterialAsset = (*m_sceneAddressCached)->GetIBLMaterialAsset();

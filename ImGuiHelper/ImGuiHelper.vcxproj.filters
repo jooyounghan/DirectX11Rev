@@ -144,9 +144,6 @@
     <ClCompile Include="MouseClickEventArgs.cpp">
       <Filter>소스 파일\Event</Filter>
     </ClCompile>
-    <ClCompile Include="InteractionManager.cpp">
-      <Filter>소스 파일\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="AModal.cpp">
       <Filter>소스 파일\Notificator\Modal</Filter>
     </ClCompile>
@@ -222,6 +219,9 @@
     <ClCompile Include="PerformanceWindow.cpp">
       <Filter>소스 파일\Window</Filter>
     </ClCompile>
+    <ClCompile Include="InteractionManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui_impl_dx11.h">
@@ -244,9 +244,6 @@
     </ClInclude>
     <ClInclude Include="MouseClickEventArgs.h">
       <Filter>헤더 파일\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="InteractionManager.h">
-      <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
     <ClInclude Include="AModal.h">
       <Filter>헤더 파일\Notificator\Modal</Filter>
@@ -340,6 +337,9 @@
     </ClInclude>
     <ClInclude Include="PerformanceWindow.h">
       <Filter>헤더 파일\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractionManager.h">
+      <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -28,6 +28,7 @@
     <ClCompile Include="FlowInputPort.cpp" />
     <ClCompile Include="FlowOutputPort.cpp" />
     <ClCompile Include="FlowPort.cpp" />
+    <ClCompile Include="InteractionManager.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="ANodeEditorWindow.cpp" />
     <ClCompile Include="APort.cpp" />
@@ -45,7 +46,6 @@
     <ClCompile Include="StringVariableNode.cpp" />
     <ClCompile Include="TaskModal.cpp" />
     <ClCompile Include="AWindow.cpp" />
-    <ClCompile Include="InteractionManager.cpp" />
     <ClCompile Include="ImGuiInitializer.cpp" />
     <ClCompile Include="imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
@@ -65,6 +65,7 @@
     <ClInclude Include="FlowNode.h" />
     <ClInclude Include="FlowOutputPort.h" />
     <ClInclude Include="FlowPort.h" />
+    <ClInclude Include="InteractionManager.h" />
     <ClInclude Include="NodeConstant.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="ANodeEditorWindow.h" />
@@ -83,7 +84,6 @@
     <ClInclude Include="StringVariableNode.h" />
     <ClInclude Include="TaskModal.h" />
     <ClInclude Include="AWindow.h" />
-    <ClInclude Include="InteractionManager.h" />
     <ClInclude Include="ImGuiInitializer.h" />
     <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="imgui_impl_win32.h" />

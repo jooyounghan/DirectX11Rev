@@ -98,7 +98,7 @@ CREATE TABLE `components` (
 
 LOCK TABLES `components` WRITE;
 /*!40000 ALTER TABLE `components` DISABLE KEYS */;
-INSERT INTO `components` VALUES (1,0,'Test1',17,-14,0,-1.2,0.1,2,0.4,1.15,0.65),(2,1,'Test2',0,0,0,0,0,0,0,0,0),(3,1,'Test3',0,-17,15,-1,-0.8,-1.8,0.001,0.001,0.001),(4,2,'Test4',9,-43,-26,-0.4,0.6,-2.583,0.12,0,0);
+INSERT INTO `components` VALUES (1,0,'Test1',198,-175,-25,-1.2,-16.5,-11.9,1,1,1),(2,1,'Test2',-131,107,50,-72.2963,-56.2515,-107.055,1,1,1),(3,1,'Test3',-120,-30,-227,-3.30027,-44.5995,0,1,1,1),(4,2,'Test4',0,0,0,0,0,0,1,1,1);
 /*!40000 ALTER TABLE `components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -125,7 +125,7 @@ CREATE TABLE `components_to_type` (
 
 LOCK TABLES `components_to_type` WRITE;
 /*!40000 ALTER TABLE `components_to_type` DISABLE KEYS */;
-INSERT INTO `components_to_type` VALUES (2,1),(3,1),(1,2),(4,3);
+INSERT INTO `components_to_type` VALUES (2,1),(1,2),(3,2),(4,3);
 /*!40000 ALTER TABLE `components_to_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,7 +151,7 @@ CREATE TABLE `mesh_component_informations` (
 
 LOCK TABLES `mesh_component_informations` WRITE;
 /*!40000 ALTER TABLE `mesh_component_informations` DISABLE KEYS */;
-INSERT INTO `mesh_component_informations` VALUES (1,'{\"material_names\": [\"VanguardBodyMat\", \"Vanguard_VisorMat\"]}'),(2,'{\"material_names\": [\"DefaultMaterial\"]}'),(3,'{\"material_names\": [\"DefaultMaterial\"]}');
+INSERT INTO `mesh_component_informations` VALUES (1,'{\"material_names\": [\"VanguardBodyMat\", \"Vanguard_VisorMat\"]}'),(2,'{\"material_names\": [\"BlueCrystal\"]}'),(3,'{\"material_names\": [\"VanguardBodyMat\", \"Vanguard_VisorMat\"]}');
 /*!40000 ALTER TABLE `mesh_component_informations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +206,7 @@ CREATE TABLE `scenes` (
 
 LOCK TABLES `scenes` WRITE;
 /*!40000 ALTER TABLE `scenes` DISABLE KEYS */;
-INSERT INTO `scenes` VALUES (1,'dev_scene','sphere_model_Static','EveningSky');
+INSERT INTO `scenes` VALUES (1,'dev_scene','sphere_scene_Static','EveningSky');
 /*!40000 ALTER TABLE `scenes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -231,7 +231,7 @@ CREATE TABLE `skeletal_mesh_components` (
 
 LOCK TABLES `skeletal_mesh_components` WRITE;
 /*!40000 ALTER TABLE `skeletal_mesh_components` DISABLE KEYS */;
-INSERT INTO `skeletal_mesh_components` VALUES (1,'Vanguard_LOD_Skeletal');
+INSERT INTO `skeletal_mesh_components` VALUES (1,'Vanguard_LOD_Skeletal'),(3,'Vanguard_LOD_Skeletal');
 /*!40000 ALTER TABLE `skeletal_mesh_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -256,7 +256,7 @@ CREATE TABLE `static_mesh_components` (
 
 LOCK TABLES `static_mesh_components` WRITE;
 /*!40000 ALTER TABLE `static_mesh_components` DISABLE KEYS */;
-INSERT INTO `static_mesh_components` VALUES (2,'sphere_model_Static'),(3,'sphere_model_Static');
+INSERT INTO `static_mesh_components` VALUES (2,'sphere_model_Static');
 /*!40000 ALTER TABLE `static_mesh_components` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -269,4 +269,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-09 22:41:46
+-- Dump completed on 2025-01-20 22:34:01

@@ -37,7 +37,7 @@ void ComponentDBInitializer::Visit(StaticMeshComponent* staticMeshComponent)
 	{
 		const std::string static_asset_name = row[0].get<std::string>();
 		staticMeshComponent->SetStaticMeshName(static_asset_name);
-		staticMeshComponent->UpdateModelMaterial(*m_assetManagerCached);
+		staticMeshComponent->UpdateStaticMeshAsset(*m_assetManagerCached);
 	}
 
 	LoadModelMaterials(staticMeshComponent);
