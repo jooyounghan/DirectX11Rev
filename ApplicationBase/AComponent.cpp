@@ -16,15 +16,6 @@ AComponent::AComponent(
 	m_componentName(componentName)
 {}
 
-void AComponent::SetIsModified(const bool& isModified)
-{
-	m_isModified.store(isModified);
-	for (auto& childComponent : m_childComponents)
-	{
-		childComponent->SetIsModified(isModified);
-	}
-};
-
 void AComponent::AttachChildComponent(AComponent* component)
 {
 	component->m_parentComponent = this;
@@ -107,3 +98,12 @@ void AComponent::UpdateComponentTransformation()
 	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
 	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
 }
+
+void AComponent::SetIsModified(const bool& isModified)
+{
+	m_isModified.store(isModified);
+	for (auto& childComponent : m_childComponents)
+	{
+		childComponent->SetIsModified(isModified);
+	}
+};

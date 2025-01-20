@@ -203,6 +203,12 @@
     <ClInclude Include="MeshPartsDataWriter.h">
       <Filter>헤더 파일\Asset\Visitor\Extended</Filter>
     </ClInclude>
+    <ClInclude Include="AssetUpdater.h">
+      <Filter>헤더 파일\Asset\Visitor\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="AModifiable.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TopologySorter.cpp">
@@ -293,6 +299,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="MeshPartsDataWriter.cpp">
+      <Filter>소스 파일\Asset\Visitor</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetUpdater.cpp">
       <Filter>소스 파일\Asset\Visitor</Filter>
     </ClCompile>
   </ItemGroup>

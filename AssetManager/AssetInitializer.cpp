@@ -1,4 +1,5 @@
 #include "AssetInitializer.h"
+
 #include "AssetManager.h"
 
 #include "Texture2DInstance.h"

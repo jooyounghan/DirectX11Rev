@@ -14,7 +14,7 @@ IBLMaterialAssetCreateFlowNode::IBLMaterialAssetCreateFlowNode(
 	AssetManager* assetManager
 )
 	: FlowNode(
-		"Create IBL Asset", leftTop, radius, referencedOrigin, 
+		"Create IBL Material Asset", leftTop, radius, referencedOrigin, 
 		{"Asset Path", "File Name", "Background", "Specular Cube Map", "Diffuse Cube Map", "BRDR", "Exposure", "Gamma"}),
 	m_deviceAddressCached(deviceAddress), m_deviceContextAddressCached(deviceContextAddress), m_assetManagerCached(assetManager)
 {
@@ -42,9 +42,10 @@ void IBLMaterialAssetCreateFlowNode::ExecuteImpl()
 	iblMaterialAsset->SetIBLMaterialTexture(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_SPECULAR, specular);
 	iblMaterialAsset->SetIBLMaterialTexture(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE, diffuse);
 	iblMaterialAsset->SetIBLMaterialTexture(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF, brdf);
+	iblMaterialAsset->SetIBLToneMappingConstant(exposure, gamma);
+
 	m_assetManagerCached->AddAssetHelper(*m_deviceAddressCached, *m_deviceContextAddressCached,
 		EAssetType::ASSET_TYPE_IBL_MATERIAL, assetPath + "/" + assetName, iblMaterialAsset
 	);
-	iblMaterialAsset->UpdateIBLToneMappingConstant(*m_deviceContextAddressCached, exposure, gamma);
 	AAssetWriter::SaveAssets(assetPath, EAssetType::ASSET_TYPE_IBL_MATERIAL, { iblMaterialAsset });
 }

@@ -1,12 +1,13 @@
 #pragma once
 #include "IComponentVisitor.h"
 #include "ComponentEntity.h"
+#include "AModifiable.h"
 
 #include <vector>
 #include <string>
 #include <atomic>
 
-class AComponent : public ComponentEntity
+class AComponent : public ComponentEntity, public AModifiable
 {
 public:
 	AComponent(
@@ -20,16 +21,11 @@ public:
 
 protected:
 	std::string m_componentName;
-	std::atomic_bool m_isModified = false;
 
 protected:
 	DirectX::XMVECTOR m_absolutePosition = DirectX::XMVectorZero();
 	DirectX::XMVECTOR m_absoluteAngle = DirectX::XMVectorZero();
 	DirectX::XMVECTOR m_absoluteScale = DirectX::XMVectorSet(1.f, 1.f, 1.f, 1.f);
-
-public:
-	inline const bool ComsumeIsModified() { return m_isModified.exchange(false, std::memory_order_acquire); }
-	void SetIsModified(const bool& isModified);
 
 protected:
 	std::vector<AComponent*> m_childComponents;
@@ -56,6 +52,7 @@ public:
 	void UpdateComponentTransformation();
 
 public:
+	virtual void SetIsModified(const bool& isModified) override;
 	virtual void Accept(IComponentVisitor* visitor) = 0;
 };
 

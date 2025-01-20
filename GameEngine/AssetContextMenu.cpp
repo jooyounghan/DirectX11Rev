@@ -30,7 +30,7 @@ void AssetContextMenu::RenderNotification()
         }
         if (MenuItem("Model Material"))
         {
-
+            m_createModelMaterialOpenFlag = true;
         }
         if (MenuItem("IBL Material"))
         {
@@ -44,6 +44,7 @@ void AssetContextMenu::RenderNotification()
         {
 
         }
+
         ImGui::EndMenu();
     }
     if (BeginMenu("Modify Asset"))

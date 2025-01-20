@@ -12,10 +12,12 @@ protected:
 	virtual void RenderNotification() override;
 
 protected:
+	bool m_createModelMaterialOpenFlag = false;
 	bool m_createIBLMaterialOpenFlag = false;
 
 public:
-	bool* GetCreateIBLMaterialOpenFlag() { return &m_createIBLMaterialOpenFlag; }
+	inline bool* GetCreateModelMaterialOpenFlag() { return &m_createModelMaterialOpenFlag; }
+	inline bool* GetCreateIBLMaterialOpenFlag() { return &m_createIBLMaterialOpenFlag; }
 
 };
 

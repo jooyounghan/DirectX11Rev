@@ -12,6 +12,7 @@ protected:
 	static std::string DdsExtension;
 	static std::string PngExtension;
 	static std::string JpegExtension;
+	static std::string JpgExtension;
 
 public:
 	static std::vector<std::string> ImageFileExtensions;

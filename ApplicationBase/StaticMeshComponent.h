@@ -23,6 +23,7 @@ protected:
 public:
 	inline void SetStaticMeshName(const std::string& staticMeshName) { m_staticMeshName = staticMeshName; }
 	inline const std::string& GetStaticMeshName() { return m_staticMeshName; }
+	inline const StaticMeshAsset* GetStaticMetalAsset() const { return m_staticMeshAsset; }
 
 public:
 	void UpdateStaticMeshAsset(IStaticMeshProvider& provider);

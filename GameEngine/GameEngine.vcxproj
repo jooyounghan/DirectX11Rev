@@ -152,9 +152,12 @@
     <ClCompile Include="BaseTextureAssetVariableNode.cpp" />
     <ClCompile Include="ComponentInformer.cpp" />
     <ClCompile Include="CreateIBLMaterialWithNodeEditorWindow.cpp" />
+    <ClCompile Include="CreateModelMaterialWIthNodeEditorWindow.cpp" />
+    <ClCompile Include="Float3VariableNode.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="IBLMaterialAssetCreateFlowNode.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ModelMaterialAssetCreateFlowNode.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
     <ClCompile Include="ScratchTextureAssetVariableNode.cpp" />
   </ItemGroup>
@@ -167,8 +170,11 @@
     <ClInclude Include="BaseTextureAssetVariableNode.h" />
     <ClInclude Include="ComponentInformer.h" />
     <ClInclude Include="CreateIBLMaterialWithNodeEditorWindow.h" />
+    <ClInclude Include="CreateModelMaterialWIthNodeEditorWindow.h" />
+    <ClInclude Include="Float3VariableNode.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="IBLMaterialAssetCreateFlowNode.h" />
+    <ClInclude Include="ModelMaterialAssetCreateFlowNode.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="ScratchTextureAssetVariableNode.h" />

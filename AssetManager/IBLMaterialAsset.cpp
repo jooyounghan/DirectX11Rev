@@ -8,11 +8,13 @@ using namespace DirectX;
 IBLMaterialAsset::IBLMaterialAsset()
  : AAsset(), m_iblToneMappingBuffer(new DynamicBuffer(sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants))
 {
+	AutoZeroMemory(m_iblToneMappingConstants);
 }
 
 IBLMaterialAsset::IBLMaterialAsset(const string& assetName)
 	: AAsset(assetName), m_iblToneMappingBuffer(new DynamicBuffer(sizeof(SIBLToneMapping), 1, &m_iblToneMappingConstants))
 {
+	AutoZeroMemory(m_iblToneMappingConstants);
 }
 
 IBLMaterialAsset::~IBLMaterialAsset()
@@ -48,11 +50,10 @@ void IBLMaterialAsset::SetIBLMaterialTexture(EIBLMaterialTexture iblMaterialText
 }
 
 
-void IBLMaterialAsset::UpdateIBLToneMappingConstant(ID3D11DeviceContext* deviceContext, const float& exposure, const float& gamma)
+void IBLMaterialAsset::SetIBLToneMappingConstant(const float& exposure, const float& gamma)
 {
 	m_iblToneMappingConstants.m_exposure = exposure;
 	m_iblToneMappingConstants.m_gamma = gamma;
-	m_iblToneMappingBuffer->Upload(deviceContext);
 }
 
 void IBLMaterialAsset::Serialize(FILE* fileIn) const

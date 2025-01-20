@@ -13,7 +13,13 @@ void AWindow::ShowWindow()
 
 	ImGui::Begin(m_windowID.c_str(), m_isAlwaysOpen ? NULL : m_openFlag, m_windowFlag);
 	RenderWindowImpl();
+
+	if (IsWindowFocused(ImGuiFocusedFlags_::ImGuiFocusedFlags_ChildWindows))
+	{
+		CheckMouseControlEvents();
+	}
 	ImGui::End();
 
-	CheckMouseControlEvents();
+
+
 }

@@ -18,8 +18,9 @@ string ImageFileToAssetWriter::ExrExtension = ".exr";
 string ImageFileToAssetWriter::DdsExtension = ".dds";
 string ImageFileToAssetWriter::PngExtension = ".png";
 string ImageFileToAssetWriter::JpegExtension = ".jpeg";
+string ImageFileToAssetWriter::JpgExtension = ".jpg";
 
-vector<string> ImageFileToAssetWriter::ImageFileExtensions = { ExrExtension, DdsExtension, PngExtension, JpegExtension };
+vector<string> ImageFileToAssetWriter::ImageFileExtensions = { ExrExtension, DdsExtension, PngExtension, JpegExtension, JpgExtension };
 
 ImageFileToAssetWriter::ImageFileToAssetWriter(const string& assetSavePath)
 	: AAssetWriter(assetSavePath)
@@ -36,7 +37,7 @@ unordered_map<EAssetType, vector<AAsset*>> ImageFileToAssetWriter::SaveAsAssets(
 	if (IsAssetNotLoaded(fileName))
 	{
 		bool isAdded = false;
-		if (extension == PngExtension || extension == JpegExtension)
+		if (extension == PngExtension || extension == JpegExtension || extension == JpgExtension)
 		{
 			isAdded = true;
 			AAsset* baseTextureAsset = LoadBaseTexureAsset(filePath, fileName);

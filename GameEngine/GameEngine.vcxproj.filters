@@ -61,14 +61,8 @@
     <Filter Include="소스 파일\GUI\ContextMenu">
       <UniqueIdentifier>{b313389b-c169-4fbc-91be-27eff94331b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\GUI\NodeEditor\Port">
-      <UniqueIdentifier>{5dbb4959-c338-4f27-9d04-961f24f06e62}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\GUI\NodeEditor\Node">
       <UniqueIdentifier>{8fed41f3-6e08-4b00-86b7-c066e607a5b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\GUI\NodeEditor\Port">
-      <UniqueIdentifier>{99fce0a5-7021-4902-ad8b-e498e8a2a384}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\GUI\NodeEditor\Node">
       <UniqueIdentifier>{d56ee992-a8e7-4529-96e0-ec4e8bbd6f25}</UniqueIdentifier>
@@ -138,6 +132,15 @@
     <ClCompile Include="ATextureAssetVariableNode.cpp">
       <Filter>소스 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClCompile>
+    <ClCompile Include="CreateModelMaterialWIthNodeEditorWindow.cpp">
+      <Filter>소스 파일\GUI\Window\NodeEditor\CreateAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelMaterialAssetCreateFlowNode.cpp">
+      <Filter>소스 파일\GUI\NodeEditor\Node\Flow</Filter>
+    </ClCompile>
+    <ClCompile Include="Float3VariableNode.cpp">
+      <Filter>소스 파일\GUI\NodeEditor\Node\Variable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -177,6 +180,15 @@
       <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClInclude>
     <ClInclude Include="ATextureAssetVariableNode.h">
+      <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateModelMaterialWIthNodeEditorWindow.h">
+      <Filter>헤더 파일\GUI\Window\NodeEditor\CreateAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMaterialAssetCreateFlowNode.h">
+      <Filter>헤더 파일\GUI\NodeEditor\Node\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Float3VariableNode.h">
       <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,6 +7,7 @@
 #include "SRVOption.h"
 
 #include "AssetContextMenu.h"
+#include "CreateModelMaterialWIthNodeEditorWindow.h"
 #include "CreateIBLMaterialWithNodeEditorWindow.h"
 
 #include <filesystem>
@@ -34,6 +35,12 @@ AssetViewWindow::AssetViewWindow(
     m_assetManagerCached->RegisterAssetLoadedHandler("AddAssetControl", bind(&AssetViewWindow::AddAssetControl, this, placeholders::_1, placeholders::_2, placeholders::_3));
     
     m_assetContextMenuModal = new AssetContextMenu("Asset Context Menu");
+
+    m_assetNodeEditorWindows.emplace_back(new CreateModelMaterialWIthNodeEditorWindow(
+        deviceAddress, deviceContextAddress, m_assetManagerCached, "Create Model Material Asset",
+        m_assetContextMenuModal->GetCreateModelMaterialOpenFlag()
+    ));
+
     m_assetNodeEditorWindows.emplace_back(new CreateIBLMaterialWithNodeEditorWindow(
         deviceAddress, deviceContextAddress, m_assetManagerCached, "Create IBL Material Asset",
         m_assetContextMenuModal->GetCreateIBLMaterialOpenFlag()
@@ -59,11 +66,12 @@ void AssetViewWindow::PrepareWindow()
 
 void AssetViewWindow::RenderWindowImpl()
 {
+    m_assetContextMenuModal->DrawNotificator();
+
     BeginGroup();
     PushID("RenderAssetFolder");
 
     ImVec2 regionAvail = GetContentRegionAvail();
-
     BeginChild("AssetFolderStructure", ImVec2(regionAvail.x * 0.2f, regionAvail.y), ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar);
     RenderAssetFolderStructureByRecursive("Root", &m_assetRootFolders);
     EndChild();
@@ -80,7 +88,7 @@ void AssetViewWindow::RenderWindowImpl()
     {
         assetNodeEditorWindow->ShowWindow();
     }
-    m_assetContextMenuModal->DrawNotificator();
+
 }
 
 void AssetViewWindow::AddAssetControl(const EAssetType& assetType, const string& assetPath, AAsset* asset)

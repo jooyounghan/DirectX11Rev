@@ -56,8 +56,7 @@ protected:
 	DynamicBuffer* m_iblToneMappingBuffer;
 
 public:
-	void UpdateIBLToneMappingConstant(
-		ID3D11DeviceContext* deviceContext,
+	void SetIBLToneMappingConstant(
 		const float& exposure,
 		const float& gamma
 	);

@@ -174,11 +174,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AModifiable.h" />
     <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationRetargeter.h" />
     <ClInclude Include="AssetInitializer.h" />
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="AssetReader.h" />
+    <ClInclude Include="AssetUpdater.h" />
     <ClInclude Include="AssetWrapper.h" />
     <ClInclude Include="AssetWriter.h" />
     <ClInclude Include="BoneAsset.h" />
@@ -212,6 +214,7 @@
     <ClCompile Include="AssetInitializer.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AssetReader.cpp" />
+    <ClCompile Include="AssetUpdater.cpp" />
     <ClCompile Include="AssetWrapper.cpp" />
     <ClCompile Include="AssetWriter.cpp" />
     <ClCompile Include="BoneAsset.cpp" />
