@@ -15,6 +15,9 @@ constexpr DirectX::XMVECTOR GDefaultRight = DirectX::XMVECTOR{ 1.f, 0.f, 0.f, 0.
 constexpr float GDefaultNearZ = 0.01f;
 constexpr float GDefaultFarZ = 1E6f;
 constexpr float GDefaultFovAngle = 60.f;
+constexpr uint32_t GDefaultWidth = 1280;
+constexpr uint32_t GDefaultHeight = 960;
+
 
 struct SViewElement
 {

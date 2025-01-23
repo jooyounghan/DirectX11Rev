@@ -28,6 +28,7 @@ class SceneWindow : public AWindow
 public:
 	SceneWindow(
 		const std::string& windowID,
+		ID3D11Device* const* deviceAddress,
 		ID3D11DeviceContext* const* immediateContextAddress,
 		ID3D11DeviceContext* const* componentRenderDefferedContextAddress,
 		AssetManager* assetManager,
@@ -63,6 +64,7 @@ private:
 	SceneForwardRenderer m_forwardRenderer;
 	SceneDefferedRenderer m_defferedRenderer;
 	ASceneRenderer* m_selectedRenderer;
+	bool m_isDefferedRenderer;
 
 private:
 	ImGuiComboBox m_rendererComboBox;

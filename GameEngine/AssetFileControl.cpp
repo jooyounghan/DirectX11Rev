@@ -79,8 +79,13 @@ void AssetFileControl::OnBeginDrag()
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceExtern))
 	{
 		const string& AssetName = m_assetCached->GetAssetName();
-		ImGui::SetDragDropPayload("DND_ASSET", this, sizeof(AssetFileControl*));
+		ImGui::SetDragDropPayload("DND_ASSET", m_assetCached, sizeof(AAsset*));
 		ImGui::Text(AssetName.c_str());
 		ImGui::EndDragDropSource();
 	}
+}
+
+void AssetFileControl::OnMouseDoubleClicked(MouseClickEventArgs& args)
+{
+	bool test = true;
 }

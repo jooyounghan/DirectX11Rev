@@ -198,7 +198,6 @@
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="TaskManager.cpp" />
-    <ClCompile Include="Texture2DInstance.cpp" />
     <ClCompile Include="UAVOption.cpp" />
     <ClCompile Include="VertexShader.cpp" />
   </ItemGroup>

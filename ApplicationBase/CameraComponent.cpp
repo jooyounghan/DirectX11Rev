@@ -70,13 +70,13 @@ void CameraComponent::SetFilm(Texture2DInstance<SRVOption, RTVOption, UAVOption>
 
 void CameraComponent::SetIDFilm(Texture2DInstance<RTVOption>* idFilm)
 {
-	if (m_idFilm) delete idFilm;
+	if (m_idFilm) delete m_idFilm;
 	m_idFilm = idFilm;
 }
 
 void CameraComponent::SetIDStagingFilm(Texture2DInstance<PureTextureOption>* idStagingFilm)
 {
-	if (m_idStagingFilm) delete idStagingFilm;
+	if (m_idStagingFilm) delete m_idStagingFilm;
 	m_idStagingFilm = idStagingFilm;
 }
 

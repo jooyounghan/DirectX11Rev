@@ -9,6 +9,8 @@
 #include "StaticMeshAsset.h"
 #include "SkeletalMeshAsset.h"
 
+#include "ModelMaterialAsset.h"
+
 #include "IBLMaterialAsset.h"
 #include "Texture2DInstance.h"
 #include "SRVOption.h"
@@ -65,7 +67,6 @@ void ASceneRenderer::Visit(Scene* scene)
         }
     }
 }
-
 
 void ASceneRenderer::ClearRenderTargets()
 {
@@ -126,4 +127,51 @@ void ASceneRenderer::RenderMeshParts(
         deviceContext->IASetIndexBuffer(meshPartsData->GetD3D11IndexBuffer(), DXGI_FORMAT_R32_UINT, NULL);
         deviceContext->DrawIndexed(indexCount, indicesOffsets[idx], NULL);
     }
+}
+
+void ASceneRenderer::RenderMeshPartHandler(const size_t& idx)
+{
+    ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
+
+    if (m_selectedModelMaterialAssets.size() > idx)
+    {
+        const ModelMaterialAsset* modelMaterialAsset = m_selectedModelMaterialAssets[idx];
+        const BaseTextureAsset* ambientocculusionAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_AMBIENTOCCULUSION);
+        const BaseTextureAsset* specularAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_SPECULAR);
+        const BaseTextureAsset* diffuseAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_DIFFUSE);
+        const BaseTextureAsset* roughnessAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_ROUGHNESS);
+        const BaseTextureAsset* metalicAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_METALIC);
+        const BaseTextureAsset* normalAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_NORMAL);
+        const BaseTextureAsset* emissiveAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_EMISSIVE);
+        const BaseTextureAsset* heightAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_HEIGHT);
+
+        // =============================== DS ===============================
+        vector<ID3D11Buffer*> dsConstantBuffersPerMeshPart{
+            m_selectedModelMaterialAssets[idx]->GetModelTextureSettingBuffer()->GetBuffer()
+        };
+        vector<ID3D11ShaderResourceView*> dsSRVsPerMeshPart{ heightAsset ? heightAsset->GetSRV() : nullptr };
+
+        deviceContext->DSSetConstantBuffers(2, 1, dsConstantBuffersPerMeshPart.data());
+        deviceContext->DSSetShaderResources(0, 1, dsSRVsPerMeshPart.data());
+        // ===================================================================
+
+        // =============================== PS ===============================
+        vector<ID3D11Buffer*> psConstantBuffersPerMeshPart{
+            m_selectedModelMaterialAssets[idx]->GetModelTextureSettingBuffer()->GetBuffer()
+        };
+        vector<ID3D11ShaderResourceView*> psSRVsPerMeshPart
+        {
+            ambientocculusionAsset ? ambientocculusionAsset->GetSRV() : nullptr,
+            specularAsset ? specularAsset->GetSRV() : nullptr,
+            diffuseAsset ? diffuseAsset->GetSRV() : nullptr,
+            roughnessAsset ? roughnessAsset->GetSRV() : nullptr,
+            metalicAsset ? metalicAsset->GetSRV() : nullptr,
+            normalAsset ? normalAsset->GetSRV() : nullptr,
+            emissiveAsset ? emissiveAsset->GetSRV() : nullptr
+        };
+        deviceContext->PSSetConstantBuffers(2, 1, psConstantBuffersPerMeshPart.data());
+        deviceContext->PSSetShaderResources(3, 7, psSRVsPerMeshPart.data());
+        // ===================================================================
+    }
+
 }

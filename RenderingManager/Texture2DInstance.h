@@ -3,8 +3,6 @@
 #include "DirectXUtilities.h"
 #include <vector>
 
-
-
 template<typename ...IsTextureOption>
 class Texture2DInstance : public IsTextureOption...
 {

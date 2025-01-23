@@ -96,7 +96,7 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
     }
 }
 
-void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComopnent)
+void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
 	static GraphicsPSOObject* skeletalMeshGraphicsPSOObject
 		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::SKELETAL_MESH_FORWARD);
@@ -107,9 +107,9 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComopnent)
 
     if (cameraComponent != nullptr && skeletalMeshGraphicsPSOObject != nullptr && sceneMaterialAsset != nullptr)
     {
-        if (const SkeletalMeshAsset* skeletalMeshAsset = skeletalMeshComopnent->GetSkeletalMetalAsset())
+        if (const SkeletalMeshAsset* skeletalMeshAsset = skeletalMeshComponent->GetSkeletalMetalAsset())
         {
-            if (MeshPartsData* meshPartsData = skeletalMeshAsset->GetMeshPartData(GetLODLevel(skeletalMeshComopnent)))
+            if (MeshPartsData* meshPartsData = skeletalMeshAsset->GetMeshPartData(GetLODLevel(skeletalMeshComponent)))
             {
                 skeletalMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
@@ -118,9 +118,9 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComopnent)
                 // =============================== VS ===============================
                 vector<ID3D11Buffer*> vsConstantBuffers{
                     cameraComponent->GetViewProjMatrixBuffer()->GetBuffer(),
-                    skeletalMeshComopnent->GetTransformationBuffer()->GetBuffer()
+                    skeletalMeshComponent->GetTransformationBuffer()->GetBuffer()
                 };
-                vector<ID3D11ShaderResourceView*> vsSRVs{ skeletalMeshComopnent->GetAnimationPlayer()->GetBoneTransformationBuffer()->GetSRV() };
+                vector<ID3D11ShaderResourceView*> vsSRVs{ skeletalMeshComponent->GetAnimationPlayer()->GetBoneTransformationBuffer()->GetSRV() };
 
                 deviceContext->VSSetConstantBuffers(0, 2, vsConstantBuffers.data());
                 deviceContext->VSSetShaderResources(0, 1, vsSRVs.data());
@@ -129,14 +129,14 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComopnent)
                 // =============================== DS ===============================
                 vector<ID3D11Buffer*> dsConstantBuffers{
                     cameraComponent->GetViewProjMatrixBuffer()->GetBuffer(),
-                    skeletalMeshComopnent->GetTransformationBuffer()->GetBuffer()
+                    skeletalMeshComponent->GetTransformationBuffer()->GetBuffer()
                 };
                 deviceContext->DSSetConstantBuffers(0, 2, dsConstantBuffers.data());
                 // ===================================================================
                 
                 // =============================== PS ===============================
                 vector<ID3D11Buffer*> psConstantBuffers{
-                    skeletalMeshComopnent->GetComponentBuffer()->GetBuffer(),
+                    skeletalMeshComponent->GetComponentBuffer()->GetBuffer(),
                     cameraComponent->GetViewProjMatrixBuffer()->GetBuffer()
                 };
                 vector<ID3D11ShaderResourceView*> psSRVs
@@ -149,7 +149,7 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComopnent)
                 deviceContext->PSSetShaderResources(0, 3, psSRVs.data());
                 // ===================================================================
 
-                m_selectedModelMaterialAssets = skeletalMeshComopnent->GetSelectedModelMaterials();
+                m_selectedModelMaterialAssets = skeletalMeshComponent->GetSelectedModelMaterials();
                 RenderMeshParts(deviceContext, meshPartsData, bind(&SceneForwardRenderer::RenderMeshPartHandler, this, placeholders::_1));
                 m_selectedModelMaterialAssets.clear();
             }
@@ -177,48 +177,6 @@ void SceneForwardRenderer::ApplyMainFilmWithIDChannel(ID3D11DeviceContext* const
 
 }
 
-void SceneForwardRenderer::RenderMeshPartHandler(const size_t& idx)
+void SceneForwardRenderer::PostProcess()
 {
-    ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
-
-    if (m_selectedModelMaterialAssets.size() > idx)
-    {
-        const ModelMaterialAsset* modelMaterialAsset = m_selectedModelMaterialAssets[idx];
-        const BaseTextureAsset* ambientocculusionAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_AMBIENTOCCULUSION);
-        const BaseTextureAsset* specularAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_SPECULAR);
-        const BaseTextureAsset* diffuseAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_DIFFUSE);
-        const BaseTextureAsset* roughnessAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_ROUGHNESS);
-        const BaseTextureAsset* metalicAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_METALIC);
-        const BaseTextureAsset* normalAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_NORMAL);
-        const BaseTextureAsset* emissiveAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_EMISSIVE);
-        const BaseTextureAsset* heightAsset = modelMaterialAsset->GetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_HEIGHT);
-
-        // =============================== DS ===============================
-        vector<ID3D11Buffer*> dsConstantBuffersPerMeshPart{
-            m_selectedModelMaterialAssets[idx]->GetModelTextureSettingBuffer()->GetBuffer()
-        };
-        vector<ID3D11ShaderResourceView*> dsSRVsPerMeshPart{ heightAsset ? heightAsset->GetSRV() : nullptr };
-
-        deviceContext->DSSetConstantBuffers(2, 1, dsConstantBuffersPerMeshPart.data());
-        deviceContext->DSSetShaderResources(0, 1, dsSRVsPerMeshPart.data());
-        // ===================================================================
-
-        // =============================== PS ===============================
-        vector<ID3D11Buffer*> psConstantBuffersPerMeshPart{
-            m_selectedModelMaterialAssets[idx]->GetModelTextureSettingBuffer()->GetBuffer()
-        };
-        vector<ID3D11ShaderResourceView*> psSRVsPerMeshPart
-        {
-            ambientocculusionAsset ? ambientocculusionAsset->GetSRV() : nullptr,
-            specularAsset ? specularAsset->GetSRV() : nullptr,
-            diffuseAsset ? diffuseAsset->GetSRV() : nullptr,
-            roughnessAsset ? roughnessAsset->GetSRV() : nullptr,
-            metalicAsset ? metalicAsset->GetSRV() : nullptr,
-            normalAsset ? normalAsset->GetSRV() : nullptr,
-            emissiveAsset ? emissiveAsset->GetSRV() : nullptr
-        };
-        deviceContext->PSSetConstantBuffers(2, 1, psConstantBuffersPerMeshPart.data());
-        deviceContext->PSSetShaderResources(3, 7, psSRVsPerMeshPart.data());
-        // ===================================================================
-    }
 }

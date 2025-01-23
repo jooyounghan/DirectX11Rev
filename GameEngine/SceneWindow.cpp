@@ -16,20 +16,21 @@ using namespace DirectX;
 
 SceneWindow::SceneWindow(
     const string& windowID,
-    ID3D11DeviceContext* const* immediateContext,
-    ID3D11DeviceContext* const* componentRenderDefferedContext,
+    ID3D11Device* const* deviceAddress,
+    ID3D11DeviceContext* const* immediateContextAddress,
+    ID3D11DeviceContext* const* componentRenderDefferedContextAddress,
     AssetManager* assetManager,
     ComponentManager* componentManager,
     ComponentPSOManager* componentPsoManager
 )
     : AWindow(windowID, true, nullptr),
-    m_immediateContextAddress(immediateContext),
-    m_componentRenderDefferedContextAddress(componentRenderDefferedContext),
+    m_immediateContextAddress(immediateContextAddress),
+    m_componentRenderDefferedContextAddress(componentRenderDefferedContextAddress),
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
     m_componentInformer(assetManager, componentManager),
-    m_forwardRenderer(componentRenderDefferedContext, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
-    m_defferedRenderer(componentRenderDefferedContext, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
+    m_forwardRenderer(componentRenderDefferedContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
+    m_defferedRenderer(deviceAddress, componentRenderDefferedContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
     m_rendererComboBox.SetSelectableItems("Select Rederer", { "Forward Renderer", "Deffered Renderer" });
@@ -40,9 +41,11 @@ SceneWindow::SceneWindow(
             {
             case ERendererType::FORWARD_RENDERING:
                 m_selectedRenderer = &m_forwardRenderer;
+                m_isDefferedRenderer = false;
                 break;
             case ERendererType::DEFFERED_RENDERING:
                 m_selectedRenderer = &m_defferedRenderer;
+                m_isDefferedRenderer = true;
                 break;
             default:
                 break;
@@ -60,6 +63,8 @@ void SceneWindow::PrepareWindow()
 
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
         RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);
+
+        m_selectedRenderer->PostProcess();
     }
 }
 
@@ -116,8 +121,6 @@ void SceneWindow::DrawSceneSelector()
 
 void SceneWindow::DrawRendererSelector()
 {
-    static vector<string> rendererItems{ "Forward Rendering", "Deffered Rendering" };
-
     Text("Renderer Selector");
     m_rendererComboBox.Draw();
 }
@@ -129,6 +132,22 @@ void SceneWindow::DrawScene()
 
     const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = m_selectedCamera->GetFilm();
     Image((ImU64)(film != nullptr ? film->GetSRV() : nullptr), contentAvailRegion);
+
+    if (m_isDefferedRenderer)
+    {
+        ImVec2 currentDebugImagePos = cursorPos;
+        const vector<ID3D11ShaderResourceView*> gBufferSRVs = m_defferedRenderer.GetGBufferSRVs();
+        const ImVec2 debugImageRect = ImVec2(contentAvailRegion.x / gBufferSRVs.size(), contentAvailRegion.y / 10.f);
+        for (ID3D11ShaderResourceView* srv : gBufferSRVs)
+        {
+            SetCursorPos(currentDebugImagePos);
+            SetNextItemAllowOverlap();
+            Image((ImU64)(srv), debugImageRect);
+            currentDebugImagePos.x += debugImageRect.x;
+        }
+    }
+
+
     SetCursorPos(cursorPos);
     InvisibleButton("SceneInteractor", contentAvailRegion);
     InteractSceneInput(contentAvailRegion);
@@ -238,6 +257,34 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
                 relativeAngle.m128_f32[0] += 360.f * (mouseDelta.y / size.y);
                 m_selectedCamera->SetIsModified(true);
             }
+        }
+
+        if (IsItemFocused())
+        {
+            XMVECTOR& relativePos = const_cast<XMVECTOR&>(m_selectedCamera->GetLocalPosition());
+            const XMVECTOR rotationQuaternion = m_selectedCamera->GetLocalQuaternion();
+
+            XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, rotationQuaternion);
+            XMVECTOR currentRight = XMVector3Rotate(GDefaultRight, rotationQuaternion);
+
+            if (IsKeyDown(ImGuiKey::ImGuiKey_W))
+            {
+                printf("W\n");
+                relativePos += currentForward;
+            }
+            if (IsKeyDown(ImGuiKey::ImGuiKey_S))
+            {
+                relativePos -= currentForward;
+            }
+            if (IsKeyDown(ImGuiKey::ImGuiKey_A))
+            {
+                relativePos -= currentRight;
+            }
+            if (IsKeyDown(ImGuiKey::ImGuiKey_D))
+            {
+                relativePos += currentRight;
+            }
+            m_selectedCamera->SetIsModified(true);
         }
     }
 }

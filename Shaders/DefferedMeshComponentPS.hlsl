@@ -36,7 +36,6 @@ Texture2D BRDFTexture : register(t2);
 Texture2D MaterialTexture[7] : register(t3);
 
 SamplerState WrapSampler : register(s0);
-SamplerState ClampSampler : register(s1);
 
 DefferedMeshComponentPixelOutput main(MeshComponentDomainOutput Input)
 {

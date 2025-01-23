@@ -224,8 +224,5 @@
     <ClCompile Include="GraphicsPSOObject.cpp">
       <Filter>소스 파일\PSOManager</Filter>
     </ClCompile>
-    <ClCompile Include="Texture2DInstance.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

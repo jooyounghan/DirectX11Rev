@@ -38,5 +38,6 @@ public:
 	
 public:
 	virtual void OnBeginDrag() override;
+	virtual void OnMouseDoubleClicked(MouseClickEventArgs& args) override;
 };
 

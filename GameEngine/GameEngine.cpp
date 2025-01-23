@@ -236,7 +236,7 @@ void GameEngine::OnDropFiles(const HDROP& hDrop)
 void GameEngine::CreateEditor()
 {	
 	m_editorCamera = new CameraComponent("", TempID, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(1.f, 1.f, 1.f));
-	m_editorCamera->SetCameraProperties(1200, 800, GDefaultNearZ, GDefaultFarZ, GDefaultFovAngle);
+	m_editorCamera->SetCameraProperties(GDefaultWidth, GDefaultHeight, GDefaultNearZ, GDefaultFarZ, GDefaultFovAngle);
 }
 
 void GameEngine::CreateDefferedContext()
@@ -286,7 +286,7 @@ void GameEngine::CreateWindows()
 	);
 
 	SceneWindow* sceneWindow = new SceneWindow(
-		"SceneWindow", deviceContextAddress,
+		"SceneWindow", deviceAddress, deviceContextAddress,
 		m_defferedContexts[EDefferedContextType::COMPONENT_RENDER]->GetDefferedContextAddress(),
 		m_assetManager, m_componentManager, m_componentPSOManager
 	);

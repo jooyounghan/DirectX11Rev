@@ -7,6 +7,7 @@
 struct ID3D11DeviceContext;
 class AComponent;
 class ComponentPSOManager;
+class ModelMaterialAsset;
 
 class MeshPartsData;
 
@@ -26,6 +27,9 @@ protected:
 	ComponentPSOManager* m_componentPsoManagerCached = nullptr;
 	CameraComponent* const* m_selectedCameraComponentAddressCached = nullptr;
 	Scene* const* m_sceneAddressCached = nullptr;
+
+protected:
+	std::vector<ModelMaterialAsset*> m_selectedModelMaterialAssets;
 
 public:
 	virtual void Visit(Scene* scene) override final;
@@ -48,5 +52,11 @@ protected:
 		const MeshPartsData* const meshPartsData,
 		std::function<void(const size_t&)> handler = [&](const size_t&) {}
 	);
+
+protected:
+	void RenderMeshPartHandler(const size_t& idx);
+
+public:
+	virtual void PostProcess() = 0;
 };
 
