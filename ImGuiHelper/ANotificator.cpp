@@ -22,6 +22,10 @@ void ANotificator::DrawNotificator()
         {
             CloseCurrentPopup();
         }
+
+        ImGuiIO& io = ImGui::GetIO();
+        io.WantCaptureMouse = false;
+
         EndPopup();
     }
 }
