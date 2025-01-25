@@ -74,7 +74,7 @@ void MeshPartsDataWriter::LoadMeshPartsField(MeshPartsData* meshPartData)
 		const float zMultiplier = m_isGltf ? -1.0f : 1.0f;
 		for (uint32_t vertexIdx = 0; vertexIdx < m_mesh->mNumVertices; ++vertexIdx)
 		{
-			const aiVector3D& normal = m_mesh->mVertices[vertexIdx];
+			const aiVector3D& normal = m_mesh->mNormals[vertexIdx];
 			meshPartData->AddNormal(normal.x, normal.y, normal.z * zMultiplier);
 		}
 	}

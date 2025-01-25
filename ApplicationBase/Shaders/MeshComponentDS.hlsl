@@ -49,7 +49,7 @@ MeshComponentDomainOutput main(
 
     if (IsHeightSet)
     {
-        float Height =HeightMap.SampleLevel(WrapSampler, Result.f2TexCoord, Result.fLODLevel).x;
+        float Height = HeightMap.SampleLevel(WrapSampler, Result.f2TexCoord, Result.fLODLevel).x;
         Height = (2.f * Height - 1.f) * HeightScale;
         f4WorldPos += float4(Height * f3WorldNormal, 0.f);
     }

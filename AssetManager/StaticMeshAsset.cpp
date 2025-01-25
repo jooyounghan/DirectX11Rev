@@ -1,4 +1,3 @@
-
 #include "StaticMeshAsset.h"
 
 using namespace std;

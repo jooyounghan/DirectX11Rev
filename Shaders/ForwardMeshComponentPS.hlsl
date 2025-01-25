@@ -41,15 +41,13 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput Input) : SV_TARGET
 {        
     MeshComponentPixelOutput Result;
     
-    float3 ToEye = normalize(ViewPosition - Input.f4ModelPos.xyz);
-    
+
     float AmbientOcculusion = IsAmbientOcculusionSet ? MaterialTexture[AO_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r : 1.0f;
     float3 Specular = IsSpecularSet ? MaterialTexture[SPECULAR_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(0.0, 0.0, 0.0);
-    float3 BaseColor = IsDiffuseSet ? MaterialTexture[DIFFUSE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(1.0, 1.0, 1.0);
+    float3 Diffuse = IsDiffuseSet ? MaterialTexture[DIFFUSE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(1.0, 1.0, 1.0);
     float Metallic = IsMetalicSet ? MaterialTexture[METALIC_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r : 0.0f;
     float Roughness = IsRoughnessSet ? MaterialTexture[ROUGHNESS_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r : 1.0f;
     float3 Emissive = IsEmissiveSet ? MaterialTexture[EMISSIVE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(0.0, 0.0, 0.0);
-    
     float3 Normal = Input.f3ModelNormal;
     if (IsNormalSet)
     {
@@ -57,14 +55,19 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput Input) : SV_TARGET
         Normal = GetNormalFromMap(Input.f3ModelNormal, Bitangent, Input.f3ModelTangent, Input.fLODLevel, Input.f2TexCoord, MaterialTexture[NORMAL_IDX], WrapSampler);
     }
     
-    if (IsMetalicSet && IsRoughnessSet)
-    {
-        Result.f4Color = float4(CalculateIBL(F0, BaseColor, AmbientOcculusion, Metallic, Roughness, Normal, ToEye, SpecularTexture, DiffuseTexture, BRDFTexture, WrapSampler) + Emissive, 1.f);   
-    }
-    else
-    {
-        Result.f4Color =  float4(BaseColor * Specular * SpecularTexture.SampleLevel(WrapSampler, Normal, -5.f * (length(Specular) - 1.f)).rgb, 1.f);
-    }
+    float3 ToEye = normalize(ViewPosition - Input.f4ModelPos.xyz);
+    float3 ReflectDir = reflect(-ToEye, Normal);
+
+    float3 IBLDiffuse = DiffuseTexture.Sample(WrapSampler, Normal).rgb;
+    float3 IBLSpecular = SpecularTexture.Sample(WrapSampler, ReflectDir).rgb;
+    
+    float3 DiffuseIBL = IBLDiffuse * Diffuse;
+    float3 SpecularIBL = IBLSpecular * Specular;
+    
+    Result.f4Color = float4(0.f, 0.f, 0.f, 0.f);
+    Result.f4Color += float4(CalculateIBL(F0, Diffuse, AmbientOcculusion, Metallic, Roughness, Normal, ToEye, SpecularTexture, DiffuseTexture, BRDFTexture, WrapSampler) + Emissive, 1.f) / 2.f;
+    Result.f4Color += float4((DiffuseIBL + SpecularIBL), 1.f) / 2.f;    
     Result.f4ID = IDValues;
+    
     return Result;
 }

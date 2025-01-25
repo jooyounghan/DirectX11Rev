@@ -39,23 +39,27 @@ SceneDefferedRenderer::SceneDefferedRenderer(
 )
 	: ASceneRenderer(deviceContextAddress, componentPsoManager, cameraComponentAddress, sceneAddress)
 {
-	m_positionGBuffer = new Texture2DInstance<SRVOption, RTVOption>(GDefaultWidth, GDefaultHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM, *deviceAddress, *deviceContextAddress);
-	m_baseColorGBuffer = new Texture2DInstance<SRVOption, RTVOption>(GDefaultWidth, GDefaultHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM, *deviceAddress, *deviceContextAddress);
+	m_positionGBuffer = new Texture2DInstance<SRVOption, RTVOption>(GDefaultWidth, GDefaultHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16G16B16A16_FLOAT, *deviceAddress, *deviceContextAddress);
+    m_specularGBuffer = new Texture2DInstance<SRVOption, RTVOption>(GDefaultWidth, GDefaultHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM, *deviceAddress, *deviceContextAddress);
+    m_diffuseGBuffer = new Texture2DInstance<SRVOption, RTVOption>(GDefaultWidth, GDefaultHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM, *deviceAddress, *deviceContextAddress);
 	m_aoMetallicRoughnessGBuffer = new Texture2DInstance<SRVOption, RTVOption>(GDefaultWidth, GDefaultHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM, *deviceAddress, *deviceContextAddress);
 	m_normalGBuffer = new Texture2DInstance<SRVOption, RTVOption>(GDefaultWidth, GDefaultHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_SNORM, *deviceAddress, *deviceContextAddress);
 	m_emissiveGBuffer = new Texture2DInstance<SRVOption, RTVOption>(GDefaultWidth, GDefaultHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM, *deviceAddress, *deviceContextAddress);
+    m_fresnelReflectanceGBuffer = new Texture2DInstance<SRVOption, RTVOption>(GDefaultWidth, GDefaultHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM, *deviceAddress, *deviceContextAddress);
 
-    m_gBufferShaderResourceViews = { m_positionGBuffer->GetSRV(), m_baseColorGBuffer->GetSRV(), m_aoMetallicRoughnessGBuffer->GetSRV(), m_normalGBuffer->GetSRV(), m_emissiveGBuffer->GetSRV() };
-    m_gBufferRenderTargetViews = { m_positionGBuffer->GetRTV(), m_baseColorGBuffer->GetRTV(), m_aoMetallicRoughnessGBuffer->GetRTV(), m_normalGBuffer->GetRTV(), m_emissiveGBuffer->GetRTV() };
+    m_gBufferShaderResourceViews = { m_positionGBuffer->GetSRV(), m_specularGBuffer->GetSRV(), m_diffuseGBuffer->GetSRV(),m_aoMetallicRoughnessGBuffer->GetSRV(), m_normalGBuffer->GetSRV(), m_emissiveGBuffer->GetSRV(), m_fresnelReflectanceGBuffer->GetSRV() };
+    m_gBufferRenderTargetViews = { m_positionGBuffer->GetRTV(), m_specularGBuffer->GetRTV(), m_diffuseGBuffer->GetRTV(),m_aoMetallicRoughnessGBuffer->GetRTV(), m_normalGBuffer->GetRTV(), m_emissiveGBuffer->GetRTV(), m_fresnelReflectanceGBuffer->GetRTV() };
 }
 
 SceneDefferedRenderer::~SceneDefferedRenderer()
 {
 	delete m_positionGBuffer;
-	delete m_baseColorGBuffer;
+    delete m_specularGBuffer;
+    delete m_diffuseGBuffer;
 	delete m_aoMetallicRoughnessGBuffer;
 	delete m_normalGBuffer;
 	delete m_emissiveGBuffer;
+    delete m_fresnelReflectanceGBuffer;
 }
 
 void SceneDefferedRenderer::Visit(StaticMeshComponent* staticMeshComponent)
@@ -171,10 +175,12 @@ void SceneDefferedRenderer::ClearRenderTargets()
 
     ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
     deviceContext->ClearRenderTargetView(m_positionGBuffer->GetRTV(), ClearColor);
-    deviceContext->ClearRenderTargetView(m_baseColorGBuffer->GetRTV(), ClearColor);
+    deviceContext->ClearRenderTargetView(m_specularGBuffer->GetRTV(), ClearColor);
+    deviceContext->ClearRenderTargetView(m_diffuseGBuffer->GetRTV(), ClearColor);
     deviceContext->ClearRenderTargetView(m_aoMetallicRoughnessGBuffer->GetRTV(), ClearColor);
     deviceContext->ClearRenderTargetView(m_normalGBuffer->GetRTV(), ClearColor);
     deviceContext->ClearRenderTargetView(m_emissiveGBuffer->GetRTV(), ClearColor);
+    deviceContext->ClearRenderTargetView(m_fresnelReflectanceGBuffer->GetRTV(), ClearColor);
 }
 
 void SceneDefferedRenderer::PostProcess()
@@ -202,13 +208,14 @@ void SceneDefferedRenderer::PostProcess()
             sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
             sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV(),
             m_positionGBuffer->GetSRV(),
-            m_baseColorGBuffer->GetSRV(),
+            m_specularGBuffer->GetSRV(),
+            m_diffuseGBuffer->GetSRV(),
             m_aoMetallicRoughnessGBuffer->GetSRV(),
             m_normalGBuffer->GetSRV(),
             m_emissiveGBuffer->GetSRV()
         };
-        deviceContext->PSSetConstantBuffers(0, 1, psConstantBuffers.data());
-        deviceContext->PSSetShaderResources(0, 8, psSRVs.data());
+        deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
+        deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
         // ===================================================================
 
 		const vector<ID3D11Buffer*> vertexBuffers = screenQuad->GetD3D11VertexBuffers();
@@ -221,7 +228,7 @@ void SceneDefferedRenderer::PostProcess()
 
         vector<ID3D11ShaderResourceView*> psNullSRVs;
         psNullSRVs.resize(psSRVs.size(), nullptr);
-        deviceContext->PSSetShaderResources(0, 8, psNullSRVs.data());
+        deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psNullSRVs.data());
 	}
 }
 

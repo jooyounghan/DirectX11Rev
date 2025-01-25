@@ -30,8 +30,8 @@ MeshComponentVertexOutput main(SkeletalComponentVertexInput Input)
     //float tess = 1.f - saturate(d / (MaxTessDistance - MinTessDistance));
     float tess = lerp(MaxTessFactor, MinTessFactor, saturate(d / MaxTessDistance));
     
-    //Result.fTessFactor = 2.f;
-    Result.fTessFactor = tess;
+    Result.fTessFactor = 1.f;
+    //Result.fTessFactor = tess;
     Result.fLODLevel = 2.f;
     
     float4 f4WorldNormalIn = float4(Input.f3WorldNormal, 0.f);

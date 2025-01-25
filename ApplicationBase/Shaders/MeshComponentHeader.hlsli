@@ -62,9 +62,11 @@ struct MeshComponentPixelOutput
 struct DefferedMeshComponentPixelOutput
 {
     float4 f4Position : SV_Target0;
-    float4 f4BaseColor : SV_Target1;
-    float4 f4Normal : SV_Target2;
+    float4 f4Specular : SV_Target1;    
+    float4 f4Diffuse : SV_Target2;
     float4 AO_Metallic_Roughness : SV_Target3;
-    float4 Emissive : SV_Target4;
-    uint4 f4ID : SV_Target5;
+    float4 f4Normal : SV_Target4;
+    float4 Emissive : SV_Target5;
+    float4 FresnelReflectance : SV_Target6;
+    uint4 f4ID : SV_Target7;
 };
