@@ -15,7 +15,7 @@ protected:
 	ConstantBuffer*					m_indexBuffer = nullptr;
 
 public:
-	inline const std::vector<ConstantBuffer*> GetVertexBuffers() const { return m_vertexBuffers; }
+	inline const std::vector<ConstantBuffer*>& GetVertexBuffers() const { return m_vertexBuffers; }
 	inline ConstantBuffer* GetIndexBuffer() const { return m_indexBuffer; }
 	std::vector<ID3D11Buffer*> GetD3D11VertexBuffers() const;
 	ID3D11Buffer* GetD3D11IndexBuffer() const;

@@ -8,12 +8,13 @@ GraphicsPSOObject::GraphicsPSOObject(
 	AShader* const ds, 
 	AShader* const gs, 
 	ID3D11RasterizerState* const rasterizerState,
+	const uint32_t& stencilValue,
 	ID3D11DepthStencilState* const depthStencilState,
 	const std::vector<ID3D11SamplerState*>& samplerStates
 )
 	: m_vertexShader(vs), m_pixelShader(ps), m_hullShader(hs), m_domainShader(ds), m_geometryShader(gs),
 	m_rasterizerState(rasterizerState), m_depthStencilState(depthStencilState),
-	m_samplerStates(samplerStates)
+	m_stencilValue(stencilValue), m_samplerStates(samplerStates)
 {
 }
 
@@ -25,7 +26,7 @@ void GraphicsPSOObject::ApplyPSOObject(ID3D11DeviceContext* const deviceContext)
 	m_domainShader ? m_domainShader->SetShader(deviceContext) : deviceContext->DSSetShader(nullptr, NULL, NULL);
 	m_geometryShader ? m_geometryShader->SetShader(deviceContext) : deviceContext->GSSetShader(nullptr, NULL, NULL);
 	
-	deviceContext->OMSetDepthStencilState(m_depthStencilState, 0);
+	deviceContext->OMSetDepthStencilState(m_depthStencilState, m_stencilValue);
 	deviceContext->RSSetState(m_rasterizerState);
 
 

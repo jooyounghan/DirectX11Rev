@@ -58,6 +58,7 @@ public:
 protected:
 	SViewElement m_viewElement;
 	DynamicBuffer* m_viewProjBuffer;
+	static ConstantBuffer* ScreenQuadBuffer;
 
 public:
 	DynamicBuffer* GetViewProjMatrixBuffer() const { return m_viewProjBuffer; }

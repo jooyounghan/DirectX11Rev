@@ -29,11 +29,7 @@ cbuffer MaterialAssetData : register(b2)
     bool Dummy1;
 };
 
-TextureCube SpecularTexture : register(t0);
-TextureCube DiffuseTexture : register(t1);
-Texture2D BRDFTexture : register(t2);
-
-Texture2D MaterialTexture[7] : register(t3);
+Texture2D MaterialTexture[7] : register(t0);
 
 SamplerState WrapSampler : register(s0);
 

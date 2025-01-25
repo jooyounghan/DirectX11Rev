@@ -195,6 +195,7 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="SceneDefferedRenderer.cpp" />
     <ClCompile Include="SceneForwardRenderer.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ScreenQuad.cpp" />
     <ClCompile Include="SkeletalMeshComponent.cpp" />
     <ClCompile Include="StaticMeshComponent.cpp" />
   </ItemGroup>
@@ -225,6 +226,7 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="IComponentVisitor.h" />
     <ClInclude Include="ComponentEntity.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="ScreenQuad.h" />
     <ClInclude Include="SkeletalMeshComponent.h" />
     <ClInclude Include="StaticMeshComponent.h" />
   </ItemGroup>

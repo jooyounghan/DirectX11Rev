@@ -49,7 +49,11 @@ protected:
 		const std::string& stateName,
 		const BOOL& depthEnable,
 		const D3D11_COMPARISON_FUNC& depthComparisonFunc,
-		const BOOL& stencilEnable
+		const BOOL& stencilEnable,
+		const D3D11_COMPARISON_FUNC& stenctilComparisonFunc = D3D11_COMPARISON_ALWAYS,
+		const D3D11_STENCIL_OP& passOp = D3D11_STENCIL_OP_KEEP,
+		const D3D11_STENCIL_OP& failOp = D3D11_STENCIL_OP_KEEP,
+		const D3D11_STENCIL_OP& stencilDepthFailOp= D3D11_STENCIL_OP_KEEP
 	);
 	void RegisterBlendState(
 		const std::string& stateName,

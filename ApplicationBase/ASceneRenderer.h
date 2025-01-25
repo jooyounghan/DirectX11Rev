@@ -1,6 +1,7 @@
 #pragma once
 #include "IComponentVisitor.h"
 #include "ISceneVisitor.h"
+
 #include <stdint.h>
 #include <functional>
 
@@ -8,8 +9,11 @@ struct ID3D11DeviceContext;
 class AComponent;
 class ComponentPSOManager;
 class ModelMaterialAsset;
-
 class MeshPartsData;
+class GraphicsPSOObject;
+class ScreenQuad;
+
+constexpr float ClearColor[4] = { 0.f, 0.f, 0.f, 1.f };
 
 class ASceneRenderer : public IComponentVisitor, public ISceneVisitor
 {
@@ -30,6 +34,7 @@ protected:
 
 protected:
 	std::vector<ModelMaterialAsset*> m_selectedModelMaterialAssets;
+	ScreenQuad* m_screenQuad;
 
 public:
 	virtual void Visit(Scene* scene) override final;
@@ -43,20 +48,22 @@ public:
 
 public:
 	virtual void ClearRenderTargets();
+	virtual void PostProcess() = 0;
 
 protected:
 	uint32_t GetLODLevel(const AComponent* component) const;
-	void ApplyMainFilmCamera(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent) const;
 	void RenderMeshParts(
-		ID3D11DeviceContext* const deviceContext, 
+		ID3D11DeviceContext* const deviceContext,
 		const MeshPartsData* const meshPartsData,
 		std::function<void(const size_t&)> handler = [&](const size_t&) {}
 	);
 
 protected:
-	void RenderMeshPartHandler(const size_t& idx);
+	virtual void ApplyRenderTargets(
+		ID3D11DeviceContext* const deviceContext, 
+		const CameraComponent* const cameraComponent
+	) const = 0;
 
-public:
-	virtual void PostProcess() = 0;
+	virtual void RenderMeshPartHandler(const size_t& idx) = 0;
 };
 

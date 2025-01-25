@@ -56,15 +56,23 @@ SceneWindow::SceneWindow(
 
 void SceneWindow::PrepareWindow()
 {
-    if (m_selectedScene != nullptr && m_selectedRenderer != nullptr)
+    try
     {
-        m_selectedRenderer->ClearRenderTargets();
-        m_selectedScene->Accept(m_selectedRenderer);
 
-        const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
-        RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);
+        if (m_selectedScene != nullptr && m_selectedRenderer != nullptr)
+        {
+            m_selectedRenderer->ClearRenderTargets();
+            m_selectedScene->Accept(m_selectedRenderer);
 
-        m_selectedRenderer->PostProcess();
+            const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
+            RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);
+
+            m_selectedRenderer->PostProcess();
+        }
+    }
+    catch (std::exception& e)
+    {
+        printf(e.what());
     }
 }
 
@@ -269,7 +277,6 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
 
             if (IsKeyDown(ImGuiKey::ImGuiKey_W))
             {
-                printf("W\n");
                 relativePos += currentForward;
             }
             if (IsKeyDown(ImGuiKey::ImGuiKey_S))

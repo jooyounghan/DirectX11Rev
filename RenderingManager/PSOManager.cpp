@@ -76,7 +76,11 @@ void PSOManager::RegisterDepthStencilState(
 	const string& stateName, 
 	const BOOL& depthEnable,
 	const D3D11_COMPARISON_FUNC& depthComparisonFunc,
-	const BOOL& stencilEnable
+	const BOOL& stencilEnable,
+	const D3D11_COMPARISON_FUNC& stenctilComparisonFunc,
+	const D3D11_STENCIL_OP& passOp,
+	const D3D11_STENCIL_OP& failOp,
+	const D3D11_STENCIL_OP& stencilDepthFailOp
 )
 {
 	ComPtr<ID3D11DepthStencilState> depthStencilState;
@@ -87,6 +91,20 @@ void PSOManager::RegisterDepthStencilState(
 	depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	depthStencilStateDesc.DepthFunc = depthComparisonFunc;
 	depthStencilStateDesc.StencilEnable = stencilEnable;
+
+	depthStencilStateDesc.StencilReadMask = 0xFF;
+	depthStencilStateDesc.StencilWriteMask = 0xFF;
+
+	depthStencilStateDesc.FrontFace.StencilFunc = stenctilComparisonFunc;
+	depthStencilStateDesc.FrontFace.StencilPassOp = passOp;
+	depthStencilStateDesc.FrontFace.StencilFailOp = failOp;
+	depthStencilStateDesc.FrontFace.StencilDepthFailOp = stencilDepthFailOp;
+
+	depthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilStateDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilStateDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+
 	(*m_deviceAddressCached)->CreateDepthStencilState(&depthStencilStateDesc, depthStencilState.GetAddressOf());
 
 	m_registeredDepthStencilStates[stateName] = depthStencilState;

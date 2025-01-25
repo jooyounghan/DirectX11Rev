@@ -66,5 +66,5 @@ struct DefferedMeshComponentPixelOutput
     float4 f4Normal : SV_Target2;
     float4 AO_Metallic_Roughness : SV_Target3;
     float4 Emissive : SV_Target4;
-    float4 f4ID : SV_Target5;
+    uint4 f4ID : SV_Target5;
 };

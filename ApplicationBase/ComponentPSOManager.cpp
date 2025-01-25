@@ -80,7 +80,9 @@ ID3D11DepthStencilState* const  ComponentPSOManager::GetComponentPSODepthStencil
 	static unordered_map<EComponentPSODeptshStencilState, string> depthStencilStateEnumToString
 	{
 		{ EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS, "DepthCompareLess"},
-		{ EComponentPSODeptshStencilState::DEPTH_COMPARE_GREATER, "DepthCompareGreater"}
+		{ EComponentPSODeptshStencilState::DEPTH_COMPARE_GREATER, "DepthCompareGreater"},
+		{ EComponentPSODeptshStencilState::DEPTH_COMPARE_LEFSS_STENCIL_REPLACE, "DepthCompareLessStencilReplace" },
+		{ EComponentPSODeptshStencilState::DEPTH_DONTCARE_STENCIL_REPLACE, "DepthDontcareStencilReplace" }
 	};
 
 	return GetDepthStencilState(depthStencilStateEnumToString[dssEnum]);
@@ -139,7 +141,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		nullptr,
 		nullptr,
 		nullptr,
-		GetComponentPSORasterizerState(EComponentPSORasterizerState::CCW_SOLID_SS),
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CCW_SOLID_SS), NULL,
 		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
@@ -150,8 +152,8 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
 		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
 		nullptr,
-		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS),
-		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), NULL,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS), 
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 
@@ -161,8 +163,8 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
 		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
 		nullptr,
-		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS),
-		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), NULL,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS), 
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 
@@ -172,8 +174,8 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
 		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
 		nullptr,
-		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS),
-		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), 1,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LEFSS_STENCIL_REPLACE),
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 
@@ -183,8 +185,19 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
 		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
 		nullptr,
-		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS),
-		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), 1,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LEFSS_STENCIL_REPLACE),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::DEFFERED_GBUFFER_RESOLVE] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::GBUFFER_RESOLVE),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::GBUFFER_RESOLVE),
+		nullptr,
+		nullptr,
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), 1,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_DONTCARE_STENCIL_REPLACE),
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 }
@@ -202,6 +215,8 @@ void ComponentPSOManager::RegisterDepthStencilStatesForComponent()
 {
 	RegisterDepthStencilState("DepthCompareLess", TRUE, D3D11_COMPARISON_LESS, FALSE);
 	RegisterDepthStencilState("DepthCompareGreater", TRUE, D3D11_COMPARISON_GREATER, FALSE);
+	RegisterDepthStencilState("DepthCompareLessStencilReplace", TRUE, D3D11_COMPARISON_LESS, TRUE, D3D11_COMPARISON_ALWAYS, D3D11_STENCIL_OP_REPLACE);
+	RegisterDepthStencilState("DepthDontcareStencilReplace", FALSE, D3D11_COMPARISON_ALWAYS, TRUE, D3D11_COMPARISON_EQUAL, D3D11_STENCIL_OP_KEEP);
 }
 
 void ComponentPSOManager::RegisterBlendStatesForComponent()

@@ -18,6 +18,8 @@
 #include "CameraComponent.h"
 #include "InputEventManager.h"
 
+#include "ScreenQuad.h"
+
 #include <future>
 
 using namespace std;
@@ -87,6 +89,9 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 
 	ID3D11Device* device = m_engine->GetDevice();
 	ID3D11DeviceContext* deviceContext = m_engine->GetDeviceContext();
+
+	ScreenQuad* screenQuadInstance = ScreenQuad::GetInstance();
+	screenQuadInstance->InitScreenQuad(device);
 
 	ImGuiInitializer::InitImGui(m_mainWindow, device, deviceContext);
 	OnWindowSizeMove();

@@ -16,7 +16,7 @@ public:
 public:
 	AShader* const  GetComponentPSOVertexShader(const EComponentPSOVertexShader& vsEnum);
 	AShader* const  GetComponentPSOPixelShader(const EComponentPSOPixelShader& vsEnum);
-	AShader* const GetComponentPSOHullShader(const EComponentPSOHullShader& vsEnum);
+	AShader* const	GetComponentPSOHullShader(const EComponentPSOHullShader& vsEnum);
 	AShader* const  GetComponentPSODomainShader(const EComponentPSODomainShader& vsEnum);
 
 public:

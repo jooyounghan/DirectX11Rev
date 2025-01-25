@@ -14,7 +14,9 @@ public:
 		AShader* const ds,
 		AShader* const gs,
 		ID3D11RasterizerState* const rasterizerState,
+		const uint32_t& stencilValue,
 		ID3D11DepthStencilState* const depthStencilState,
+		
 		const std::vector<ID3D11SamplerState*>& samplerStates
 	);
 	GraphicsPSOObject(const GraphicsPSOObject&) = default;
@@ -31,6 +33,10 @@ protected:
 	ID3D11RasterizerState* const m_rasterizerState;
 	ID3D11DepthStencilState* const m_depthStencilState;
 	const std::vector<ID3D11SamplerState*> m_samplerStates;
+
+protected:
+	uint32_t m_stencilValue;
+
 
 public:
 	void ApplyPSOObject(ID3D11DeviceContext* const deviceContext) const;
