@@ -1,6 +1,6 @@
-#include "pch.h"
 #include "CollidableSphere.h"
 #include "CollisionVisitor.h"
+#include "BoundingVolumeNode.h"
 
 using namespace DirectX;
 
@@ -9,7 +9,21 @@ bool CollidableSphere::Accept(ICollisionVisitor& collisionVisitor) const
 	return collisionVisitor.Visit(this);
 }
 
+bool CollidableSphere::IsInBVNode(BoundingVolumeNode* boundingVolumeNode) const
+{
+	return boundingVolumeNode->Contains(*this);
+}
+
 DirectX::BoundingBox CollidableSphere::GetBoundingBox(const float& margin) const
 {
 	return DirectX::BoundingBox(Center, XMFLOAT3(Radius + margin, Radius + margin, Radius + margin));
+}
+
+void CollidableSphere::SetBoundingProperties(
+	const DirectX::XMFLOAT3& center,
+	const float& radius
+)
+{
+	Center = center;
+	Radius = radius;
 }

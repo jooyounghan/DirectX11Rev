@@ -192,6 +192,9 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="InputEventManager.cpp" />
     <ClCompile Include="KeyEvent.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
+    <ClCompile Include="AOrientedBoxCollisionComponent.cpp" />
+    <ClCompile Include="AFrustumCollisionComponent.cpp" />
+    <ClCompile Include="ASphereCollisionComponent.cpp" />
     <ClCompile Include="SceneDefferedRenderer.cpp" />
     <ClCompile Include="SceneForwardRenderer.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -221,6 +224,9 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="ISceneVisitor.h" />
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="MouseEvent.h" />
+    <ClInclude Include="AOrientedBoxCollisionComponent.h" />
+    <ClInclude Include="AFrustumCollisionComponent.h" />
+    <ClInclude Include="ASphereCollisionComponent.h" />
     <ClInclude Include="SceneDefferedRenderer.h" />
     <ClInclude Include="SceneForwardRenderer.h" />
     <ClInclude Include="IComponentVisitor.h" />

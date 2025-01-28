@@ -57,6 +57,18 @@ void ComponentDBCreator::Visit(CameraComponent* cameraComponent)
 		);
 }
 
+void ComponentDBCreator::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+{
+}
+
+void ComponentDBCreator::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
+{
+}
+
+void ComponentDBCreator::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+{
+}
+
 void ComponentDBCreator::AddScene(Scene* scene)
 {
 	const std::string sceneTableName = "scenes";

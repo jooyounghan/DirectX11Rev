@@ -115,15 +115,19 @@ void MeshPartsDataWriter::LoadStaticMeshPartsField(StaticMeshPartsData* staticMe
 			const XMFLOAT3& n1 = staticMeshPartsData->GetNormal(index1);
 			const XMFLOAT3& n2 = staticMeshPartsData->GetNormal(index2);
 
-			XMFLOAT3 t0, t1, t2;
-			XMFLOAT3 b0, b1, b2;
-
-			MathematicalHelper::GetTangentBitangent(
+			XMFLOAT3 t0 = MathematicalHelper::GetTangent(
 				p0, p1, p2,
-				uv0, uv1, uv2,
-				n0, n1, n2,
-				t0, t1, t2,
-				b0, b1, b2
+				uv0, uv1, uv2, n0
+			);
+
+			XMFLOAT3 t1 = MathematicalHelper::GetTangent(
+				p1, p2, p0,
+				uv1, uv2, uv0, n1
+			);
+
+			XMFLOAT3 t2 = MathematicalHelper::GetTangent(
+				p2, p0, p1,
+				uv2, uv0, uv1, n2
 			);
 
 			staticMeshPartsData->AddTangent(t0.x, t0.y, t0.z);
@@ -131,7 +135,6 @@ void MeshPartsDataWriter::LoadStaticMeshPartsField(StaticMeshPartsData* staticMe
 			staticMeshPartsData->AddTangent(t2.x, t2.y, t2.z);
 		}
 	}
-
 }
 
 void MeshPartsDataWriter::LoadSkeletalMeshPartsField(SkeletalMeshPartsData* skeletalMeshPartsData)

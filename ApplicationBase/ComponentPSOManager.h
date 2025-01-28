@@ -6,12 +6,17 @@ class GraphicsPSOObject;
 
 class ComponentPSOManager : public PSOManager
 {
-public:
-	ComponentPSOManager(ID3D11Device* const* deviceAddress);
+protected:
+	ComponentPSOManager() = default;
 	~ComponentPSOManager() override;
+	ComponentPSOManager(const ComponentPSOManager&) = delete;
+	ComponentPSOManager(ComponentPSOManager&&) = delete;
 
 public:
-	void InitComopnentPSOManager();
+	static ComponentPSOManager* GetInstance();
+
+public:
+	void InitComopnentPSOManager(ID3D11Device* device);
 
 public:
 	AShader* const  GetComponentPSOVertexShader(const EComponentPSOVertexShader& vsEnum);
@@ -35,14 +40,14 @@ private:
 	void RegisterPSOObjectsForComponent();
 
 private:
-	void RegisterShadersForComponent();
-	void RegisterDepthStencilStatesForComponent();
-	void RegisterBlendStatesForComponent();
-	void RegisterRasterizerStatesForComponent();
-	void RegisterSamplerStatesForComponent();
+	void RegisterShadersForComponent(ID3D11Device* device);
+	void RegisterDepthStencilStatesForComponent(ID3D11Device* device);
+	void RegisterBlendStatesForComponent(ID3D11Device* device);
+	void RegisterRasterizerStatesForComponent(ID3D11Device* device);
+	void RegisterSamplerStatesForComponent(ID3D11Device* device);
 
 private:
-	void RegisterVSForComponent();
-	void RegisterPSForComponent();
+	void RegisterVSForComponent(ID3D11Device* device);
+	void RegisterPSForComponent(ID3D11Device* device);
 };
 

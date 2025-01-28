@@ -8,11 +8,11 @@ concept ShaderType = std::is_base_of_v<AShader, T>;
 
 class PSOManager
 {
-public:
-	PSOManager(ID3D11Device* const* deviceAddress);
-	virtual ~PSOManager() = default;
 protected:
-	ID3D11Device* const* m_deviceAddressCached = nullptr;
+	PSOManager() = default;
+	virtual ~PSOManager() = default;
+	PSOManager(const PSOManager&) = delete;
+	PSOManager(PSOManager&&) = delete;
 
 protected:
 	std::unordered_map<std::string, std::unique_ptr<AShader>> m_registeredShaders;
@@ -47,6 +47,7 @@ protected:
 protected:
 	void RegisterDepthStencilState(
 		const std::string& stateName,
+		ID3D11Device* device,
 		const BOOL& depthEnable,
 		const D3D11_COMPARISON_FUNC& depthComparisonFunc,
 		const BOOL& stencilEnable,
@@ -57,12 +58,14 @@ protected:
 	);
 	void RegisterBlendState(
 		const std::string& stateName,
+		ID3D11Device* device,
 		const BOOL& AlphaToCoverageEnable,
 		const BOOL& IndependentBlendEnable, 
 		const std::vector<D3D11_RENDER_TARGET_BLEND_DESC>& renderTargetBlendDescs
 	);
 	void RegisterRasterizerState(
 		const std::string& stateName,
+		ID3D11Device* device,
 		const D3D11_FILL_MODE& fillMode,
 		const D3D11_CULL_MODE& cullMode,
 		const BOOL& frontCounterClockwise,
@@ -70,6 +73,7 @@ protected:
 	);
 	void RegisterSamplerState(
 		const std::string& stateName,
+		ID3D11Device* device,
 		const D3D11_TEXTURE_ADDRESS_MODE& textureAddressModeU,
 		const D3D11_TEXTURE_ADDRESS_MODE& textureAddressModeV,
 		const D3D11_TEXTURE_ADDRESS_MODE& textureAddressModeW,

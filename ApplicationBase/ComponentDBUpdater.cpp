@@ -62,6 +62,18 @@ void ComponentDBUpdater::Visit(CameraComponent* cameraComponent)
 		.bind("camera_component_id", componentID).execute();
 }
 
+void ComponentDBUpdater::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+{
+}
+
+void ComponentDBUpdater::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
+{
+}
+
+void ComponentDBUpdater::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+{
+}
+
 void ComponentDBUpdater::UpdateComponent(AComponent* component)
 {
 	const uint32_t& componentID = component->GetComponentID();

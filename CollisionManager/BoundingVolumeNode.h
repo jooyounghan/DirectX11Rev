@@ -6,7 +6,7 @@ class BoundingVolumeNode : public DirectX::BoundingBox
 {
 public:
 	BoundingVolumeNode(
-		const DirectX::BoundingBox boundingBox, 
+		const DirectX::BoundingBox& boundingBox, 
 		ACollisionAcceptor* const collidable = nullptr
 	);
 	BoundingVolumeNode(

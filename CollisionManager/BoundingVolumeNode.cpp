@@ -1,11 +1,11 @@
-#include "pch.h"
+
 #include "BoundingVolumeNode.h"
 
 using namespace std;
 using namespace DirectX;
 
 BoundingVolumeNode::BoundingVolumeNode(
-	const BoundingBox boundingBox, 
+	const BoundingBox& boundingBox, 
 	ACollisionAcceptor* const collidable
 )
 	: BoundingBox(boundingBox),

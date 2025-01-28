@@ -46,22 +46,14 @@ void MathematicalHelper::GramShmidt(
 	Vector3Out = Normalize(Vector3Out);
 }
 
-void MathematicalHelper::GetTangentBitangent(
+XMFLOAT3 MathematicalHelper::GetTangent(
 	const XMFLOAT3& Pos0In,
 	const XMFLOAT3& Pos1In,
 	const XMFLOAT3& Pos2In,
 	const XMFLOAT2& TexCoord0In,
 	const XMFLOAT2& TexCoord1In,
 	const XMFLOAT2& TexCoord2In,
-	const XMFLOAT3& Normal0In,
-	const XMFLOAT3& Normal1In,
-	const XMFLOAT3& Normal2In,
-	XMFLOAT3& Tangent0Out,
-	XMFLOAT3& Tangent1Out,
-	XMFLOAT3& Tangent2Out,
-	XMFLOAT3& Bitangent0Out,
-	XMFLOAT3& Bitangent1Out,
-	XMFLOAT3& Bitangent2Out
+	const XMFLOAT3& NormalIn
 )
 {
 	XMFLOAT3 DeltaPos1 = XMFLOAT3{ Pos1In.x - Pos0In.x, Pos1In.y - Pos0In.y, Pos1In.z - Pos0In.z };
@@ -75,38 +67,14 @@ void MathematicalHelper::GetTangentBitangent(
 	XMVECTOR vDeltaPos1 = XMLoadFloat3(&DeltaPos1);
 	XMVECTOR vDeltaPos2 = XMLoadFloat3(&DeltaPos2);
 
+	XMVECTOR vNormal = XMLoadFloat3(&NormalIn);
 	XMVECTOR vTangent = (vDeltaPos1 * DeltaUV2.y - vDeltaPos2 * DeltaUV1.y) * Determinant;
-	XMVECTOR vBitangent = (vDeltaPos2 * DeltaUV1.x - vDeltaPos1 * DeltaUV2.x) * Determinant;
 
 	vTangent = XMVector3Normalize(vTangent);
-	vBitangent = XMVector3Normalize(vBitangent);
 
-	XMFLOAT3 Tangent;
-	XMFLOAT3 Bitangent;
+	XMFLOAT3 result;
+	XMStoreFloat3(&result, vTangent);
 
-	XMStoreFloat3(&Tangent, vTangent);
-	XMStoreFloat3(&Bitangent, vBitangent);
-
-	GramShmidt(
-		Normal0In,
-		Tangent,
-		Bitangent,
-		Tangent0Out,
-		Bitangent0Out
-	);
-	GramShmidt(
-		Normal1In,
-		Tangent,
-		Bitangent,
-		Tangent1Out,
-		Bitangent1Out
-	);
-	GramShmidt(
-		Normal2In,
-		Tangent,
-		Bitangent,
-		Tangent2Out,
-		Bitangent2Out
-	);
+	return result;
 }
 

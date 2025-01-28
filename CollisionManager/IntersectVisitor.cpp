@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "IntersectVisitor.h"
 
 using namespace std;

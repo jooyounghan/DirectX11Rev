@@ -87,6 +87,18 @@ void ComponentDBInitializer::Visit(CameraComponent* cameraComponent)
 	}
 }
 
+void ComponentDBInitializer::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+{
+}
+
+void ComponentDBInitializer::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
+{
+}
+
+void ComponentDBInitializer::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+{
+}
+
 void ComponentDBInitializer::LoadModelMaterials(AMeshComponent* meshComponent)
 {
 	const uint32_t comopnentID = meshComponent->GetComponentID();

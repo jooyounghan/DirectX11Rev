@@ -4,6 +4,10 @@
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
 
+#include "ASphereCollisionComponent.h"
+#include "AOrientedBoxCollisionComponent.h"
+#include "AFrustumCollisionComponent.h"
+
 #include "DynamicBuffer.h"
 
 ComponentEntityUpdater::ComponentEntityUpdater(ID3D11DeviceContext* deviceContext, const float& deltaTime)
@@ -34,6 +38,27 @@ void ComponentEntityUpdater::Visit(CameraComponent* cameraComponent)
 
 	DynamicBuffer* viewProjMatrixBuffer = cameraComponent->GetViewProjMatrixBuffer();
 	viewProjMatrixBuffer->Upload(m_deviceContextCached);
+}
+
+void ComponentEntityUpdater::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+{
+	renderSphereCollisionComponent->UpdateAbsoluteEntities();
+	UpdateTransformationBuffer(renderSphereCollisionComponent);
+	renderSphereCollisionComponent->UpdateBoundginVolumeHierachy();
+}
+
+void ComponentEntityUpdater::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
+{
+	renderOrientedBoxCollisionComponent->UpdateAbsoluteEntities();
+	UpdateTransformationBuffer(renderOrientedBoxCollisionComponent);
+	renderOrientedBoxCollisionComponent->UpdateBoundginVolumeHierachy();
+}
+
+void ComponentEntityUpdater::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+{
+	renderFrustumCollisionComponent->UpdateAbsoluteEntities();
+	UpdateTransformationBuffer(renderFrustumCollisionComponent);
+	renderFrustumCollisionComponent->UpdateBoundginVolumeHierachy();
 }
 
 void ComponentEntityUpdater::UpdateTransformationBuffer(AComponent* component)

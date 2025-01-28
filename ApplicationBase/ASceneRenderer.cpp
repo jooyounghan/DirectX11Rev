@@ -73,6 +73,18 @@ void ASceneRenderer::Visit(Scene* scene)
     }
 }
 
+void ASceneRenderer::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+{
+}
+
+void ASceneRenderer::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
+{
+}
+
+void ASceneRenderer::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+{
+}
+
 void ASceneRenderer::ClearRenderTargets()
 {
     ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;

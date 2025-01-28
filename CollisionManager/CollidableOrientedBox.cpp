@@ -1,12 +1,17 @@
-#include "pch.h"
 #include "CollidableOrientedBox.h"
 #include "CollisionVisitor.h"
+#include "BoundingVolumeNode.h"
 
 using namespace DirectX;
 
 bool CollidableOrientedBox::Accept(ICollisionVisitor& collisionVisitor) const
 {
 	return collisionVisitor.Visit(this);
+}
+
+bool CollidableOrientedBox::IsInBVNode(BoundingVolumeNode* boundingVolumeNode) const
+{
+    return boundingVolumeNode->Contains(*this);
 }
 
 DirectX::BoundingBox CollidableOrientedBox::GetBoundingBox(const float& margin) const
@@ -39,4 +44,15 @@ DirectX::BoundingBox CollidableOrientedBox::GetBoundingBox(const float& margin) 
     BoundingBox result;
     BoundingBox::CreateFromPoints(result, XMLoadFloat3(&minCorner), XMLoadFloat3(&maxCorner));
     return result;
+}
+
+void CollidableOrientedBox::SetBoundingProperties(
+    const DirectX::XMFLOAT3& center, 
+    const DirectX::XMFLOAT3& extents, 
+    const DirectX::XMFLOAT4& rotationQuaternion
+)
+{
+    Center = center;
+    Extents = extents;
+    Orientation = rotationQuaternion;
 }

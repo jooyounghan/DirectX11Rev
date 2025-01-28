@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "BoundingVolumeHierachy.h"
 
 using namespace std;
@@ -56,6 +56,7 @@ void BoundingVolumeHierachy::RemoveCollidable(ACollisionAcceptor* collidable)
 		BoundingVolumeNode* boundingVolumeNode = m_collidablesToNode[collidable];
 		m_collidablesToNode.erase(collidable);
 
+		// Case 1 (No Parent)
 		BoundingVolumeNode* parentNode = boundingVolumeNode->m_parentNode;
 		if (parentNode == nullptr)
 		{
@@ -64,13 +65,13 @@ void BoundingVolumeHierachy::RemoveCollidable(ACollisionAcceptor* collidable)
 			return;
 		}
 
+		// Case 2 (No GrandParent)
 		BoundingVolumeNode* grandParentNode = parentNode->m_parentNode;
 		if (grandParentNode == nullptr)
 		{
 			if (parentNode->m_left == boundingVolumeNode)
 			{
 				m_rootNode = parentNode->m_right;
-
 			}
 			else
 			{
@@ -82,11 +83,11 @@ void BoundingVolumeHierachy::RemoveCollidable(ACollisionAcceptor* collidable)
 			return;
 		}
 
+		// Case 3 (Has GrandParent)
 		BoundingVolumeNode* siblingNode = nullptr;
 		if (parentNode->m_left == boundingVolumeNode)
 		{
 			siblingNode = parentNode->m_right;
-
 		}
 		else
 		{
@@ -108,6 +109,20 @@ void BoundingVolumeHierachy::RemoveCollidable(ACollisionAcceptor* collidable)
 		/*
 		지웠을 때는 볼륨에 대해서 재구성하지 않고, 다른 원소가 삽입되거나 할 경우에만!		
 		*/ 
+	}
+}
+
+void BoundingVolumeHierachy::UpdateCollidable(ACollisionAcceptor* collidable)
+{
+	if (m_collidablesToNode.find(collidable) != m_collidablesToNode.end())
+	{
+		BoundingVolumeNode* boundingVolumeNode = m_collidablesToNode[collidable];
+
+		if (collidable->IsInBVNode(boundingVolumeNode))
+		{
+			RemoveCollidable(collidable);
+			InsertCollidable(collidable);
+		}
 	}
 }
 
@@ -183,15 +198,5 @@ void BoundingVolumeHierachy::RestructVolume(BoundingVolumeNode* node)
 		}
 		
 		RestructVolume(parentNode);
-	}
-
-
-	if (node != nullptr && node->m_left != nullptr && node->m_right != nullptr)
-	{
-		// 기존 볼륨 사이즈와 달라졌을 경우,
-		if (node->m_volumeSize != BoundingVolumeNode::GetUnionBoundingVolumeSize(node->m_left, node->m_right, m_margin))
-		{
-
-		}
 	}
 }

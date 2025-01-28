@@ -88,6 +88,15 @@
     <ClInclude Include="ScreenQuad.h">
       <Filter>헤더 파일\Component</Filter>
     </ClInclude>
+    <ClInclude Include="AOrientedBoxCollisionComponent.h">
+      <Filter>헤더 파일\Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="AFrustumCollisionComponent.h">
+      <Filter>헤더 파일\Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ASphereCollisionComponent.h">
+      <Filter>헤더 파일\Component\Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -186,6 +195,24 @@
     <Filter Include="소스 파일\Component\Visitor\Entity">
       <UniqueIdentifier>{1201d9d4-5bd5-474e-b30d-a3f0a9373a30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Component\Light">
+      <UniqueIdentifier>{1de3e276-be7d-41a8-8712-17340f183788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Light">
+      <UniqueIdentifier>{001c7df7-f6da-4648-bd77-d79f70055c47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Collision">
+      <UniqueIdentifier>{5749b51e-bac4-4c47-8728-a653998b741a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Collision">
+      <UniqueIdentifier>{7588451a-25cd-424e-826b-3504d80c16c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Collision\Rendering">
+      <UniqueIdentifier>{526f6cd6-088a-4ead-a0f5-c10a7eb46b1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Collision\Rendering">
+      <UniqueIdentifier>{0f847f8b-a615-4cf6-bfc1-266ec58b4954}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
@@ -262,6 +289,15 @@
     </ClCompile>
     <ClCompile Include="ScreenQuad.cpp">
       <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="AOrientedBoxCollisionComponent.cpp">
+      <Filter>소스 파일\Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="AFrustumCollisionComponent.cpp">
+      <Filter>소스 파일\Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="ASphereCollisionComponent.cpp">
+      <Filter>소스 파일\Component\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

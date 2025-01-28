@@ -3,6 +3,9 @@
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
+#include "ASphereCollisionComponent.h"
+#include "AOrientedBoxCollisionComponent.h"
+#include "AFrustumCollisionComponent.h"
 
 #include "SkeletalMeshAsset.h"
 
@@ -73,6 +76,24 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 		1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_D24_UNORM_S8_UINT, m_deviceCached, m_deviceContextCached
 	));
 
+}
+
+void ComponentEntityInitializer::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+{
+	renderSphereCollisionComponent->UpdateAbsoluteEntities();
+	InitBaseEntityBuffer(renderSphereCollisionComponent);
+}
+
+void ComponentEntityInitializer::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
+{
+	renderOrientedBoxCollisionComponent->UpdateAbsoluteEntities();
+	InitBaseEntityBuffer(renderOrientedBoxCollisionComponent);
+}
+
+void ComponentEntityInitializer::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+{
+	renderFrustumCollisionComponent->UpdateAbsoluteEntities();
+	InitBaseEntityBuffer(renderFrustumCollisionComponent);
 }
 
 void ComponentEntityInitializer::InitBaseEntityBuffer(AComponent* component)

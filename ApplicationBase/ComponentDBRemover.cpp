@@ -55,6 +55,18 @@ void ComponentDBRemover::Visit(CameraComponent* cameraComponent)
 
 }
 
+void ComponentDBRemover::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+{
+}
+
+void ComponentDBRemover::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
+{
+}
+
+void ComponentDBRemover::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+{
+}
+
 void ComponentDBRemover::DeleteComponent(AComponent* component)
 {
 	const uint32_t& componentID = component->GetComponentID();

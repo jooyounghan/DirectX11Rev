@@ -17,10 +17,10 @@ private:
 private:
 	const float m_margin;
 
-
 public:
 	void InsertCollidable(ACollisionAcceptor* collidable);
 	void RemoveCollidable(ACollisionAcceptor* collidable);
+	void UpdateCollidable(ACollisionAcceptor* collidable);
 
 private:
 	void RestructVolume(BoundingVolumeNode* node);

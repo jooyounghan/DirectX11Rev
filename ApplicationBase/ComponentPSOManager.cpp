@@ -3,11 +3,6 @@
 
 using namespace std;
 
-ComponentPSOManager::ComponentPSOManager(ID3D11Device* const* deviceAddress)
-	: PSOManager(deviceAddress)
-{
-}
-
 ComponentPSOManager::~ComponentPSOManager()
 {
 	for (auto& graphicPSOObject : m_graphicPSOObjects)
@@ -16,13 +11,19 @@ ComponentPSOManager::~ComponentPSOManager()
 	}
 }
 
-void ComponentPSOManager::InitComopnentPSOManager()
+ComponentPSOManager* ComponentPSOManager::GetInstance()
 {
-	RegisterShadersForComponent();
-	RegisterDepthStencilStatesForComponent();
-	RegisterBlendStatesForComponent();
-	RegisterRasterizerStatesForComponent();
-	RegisterSamplerStatesForComponent();
+	static ComponentPSOManager componentPSOManager;
+	return &componentPSOManager;
+}
+
+void ComponentPSOManager::InitComopnentPSOManager(ID3D11Device* device)
+{
+	RegisterShadersForComponent(device);
+	RegisterDepthStencilStatesForComponent(device);
+	RegisterBlendStatesForComponent(device);
+	RegisterRasterizerStatesForComponent(device);
+	RegisterSamplerStatesForComponent(device);
 
 	RegisterPSOObjectsForComponent();
 }
@@ -202,76 +203,76 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 	);
 }
 
-void ComponentPSOManager::RegisterShadersForComponent()
+void ComponentPSOManager::RegisterShadersForComponent(ID3D11Device* device)
 {
-	RegisterVSForComponent();
-	RegisterPSForComponent();
+	RegisterVSForComponent(device);
+	RegisterPSForComponent(device);
 
-	RegisterHullShader("MeshComponentHS", L"../Shaders/MeshComponentHS.hlsl", "main", "hs_5_0", *m_deviceAddressCached);
-	RegisterDomainShader("MeshComponentDS", L"../Shaders/MeshComponentDS.hlsl", "main", "ds_5_0", *m_deviceAddressCached);
+	RegisterHullShader("MeshComponentHS", L"../Shaders/MeshComponentHS.hlsl", "main", "hs_5_0", device);
+	RegisterDomainShader("MeshComponentDS", L"../Shaders/MeshComponentDS.hlsl", "main", "ds_5_0", device);
 }
 
-void ComponentPSOManager::RegisterDepthStencilStatesForComponent()
+void ComponentPSOManager::RegisterDepthStencilStatesForComponent(ID3D11Device* device)
 {
-	RegisterDepthStencilState("DepthCompareLess", TRUE, D3D11_COMPARISON_LESS, FALSE);
-	RegisterDepthStencilState("DepthCompareGreater", TRUE, D3D11_COMPARISON_GREATER, FALSE);
-	RegisterDepthStencilState("DepthCompareLessStencilReplace", TRUE, D3D11_COMPARISON_LESS, TRUE, D3D11_COMPARISON_ALWAYS, D3D11_STENCIL_OP_REPLACE);
-	RegisterDepthStencilState("DepthDontcareStencilReplace", FALSE, D3D11_COMPARISON_ALWAYS, TRUE, D3D11_COMPARISON_EQUAL, D3D11_STENCIL_OP_KEEP);
+	RegisterDepthStencilState("DepthCompareLess", device, TRUE, D3D11_COMPARISON_LESS, FALSE);
+	RegisterDepthStencilState("DepthCompareGreater", device, TRUE, D3D11_COMPARISON_GREATER, FALSE);
+	RegisterDepthStencilState("DepthCompareLessStencilReplace", device, TRUE, D3D11_COMPARISON_LESS, TRUE, D3D11_COMPARISON_ALWAYS, D3D11_STENCIL_OP_REPLACE);
+	RegisterDepthStencilState("DepthDontcareStencilReplace", device, FALSE, D3D11_COMPARISON_ALWAYS, TRUE, D3D11_COMPARISON_EQUAL, D3D11_STENCIL_OP_KEEP);
 }
 
-void ComponentPSOManager::RegisterBlendStatesForComponent()
+void ComponentPSOManager::RegisterBlendStatesForComponent(ID3D11Device* device)
 {
 
 
 }
 
-void ComponentPSOManager::RegisterRasterizerStatesForComponent()
+void ComponentPSOManager::RegisterRasterizerStatesForComponent(ID3D11Device* device)
 {
 	DXGI_SAMPLE_DESC singleSampleDesc;
 	singleSampleDesc.Count = 1;
 	singleSampleDesc.Quality = 0;
-	RegisterRasterizerState("ClockWiseSolidSS", D3D11_FILL_SOLID, D3D11_CULL_BACK, FALSE, singleSampleDesc);
-	RegisterRasterizerState("ClockWiseWireframeSS", D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, FALSE, singleSampleDesc);
-	RegisterRasterizerState("CounterClockWiseSolidSS", D3D11_FILL_SOLID, D3D11_CULL_BACK, TRUE, singleSampleDesc);
-	RegisterRasterizerState("CounterClockWiseWireframeSS", D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, TRUE, singleSampleDesc);
+	RegisterRasterizerState("ClockWiseSolidSS", device, D3D11_FILL_SOLID, D3D11_CULL_BACK, FALSE, singleSampleDesc);
+	RegisterRasterizerState("ClockWiseWireframeSS", device, D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, FALSE, singleSampleDesc);
+	RegisterRasterizerState("CounterClockWiseSolidSS", device, D3D11_FILL_SOLID, D3D11_CULL_BACK, TRUE, singleSampleDesc);
+	RegisterRasterizerState("CounterClockWiseWireframeSS", device, D3D11_FILL_WIREFRAME, D3D11_CULL_BACK, TRUE, singleSampleDesc);
 }
 
-void ComponentPSOManager::RegisterSamplerStatesForComponent()
+void ComponentPSOManager::RegisterSamplerStatesForComponent(ID3D11Device* device)
 {
-	RegisterSamplerState("Wrap", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_COMPARISON_NEVER, D3D11_FILTER_MIN_MAG_MIP_LINEAR);
-	RegisterSamplerState("Clamp", D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_COMPARISON_NEVER, D3D11_FILTER_MIN_MAG_MIP_LINEAR);
-	RegisterSamplerState("WrapComparisonLess", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_COMPARISON_LESS, D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
-	RegisterSamplerState("ClampComparisonLess", D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_COMPARISON_LESS, D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
+	RegisterSamplerState("Wrap", device, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_COMPARISON_NEVER, D3D11_FILTER_MIN_MAG_MIP_LINEAR);
+	RegisterSamplerState("Clamp", device, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_COMPARISON_NEVER, D3D11_FILTER_MIN_MAG_MIP_LINEAR);
+	RegisterSamplerState("WrapComparisonLess", device, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_COMPARISON_LESS, D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
+	RegisterSamplerState("ClampComparisonLess", device, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_COMPARISON_LESS, D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
 }
 
-void ComponentPSOManager::RegisterVSForComponent()
+void ComponentPSOManager::RegisterVSForComponent(ID3D11Device* device)
 {
 	vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-	RegisterVertexShader("BoundingComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/BoundingComponentVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
+	RegisterVertexShader("BoundingComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/BoundingComponentVS.hlsl", "main", "vs_5_0", device);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		}
 		);
-	RegisterVertexShader("GBufferResolveVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/GBufferResolveVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
+	RegisterVertexShader("GBufferResolveVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/GBufferResolveVS.hlsl", "main", "vs_5_0", device);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
 			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		}
 	);
-	RegisterVertexShader("SceneVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/SceneVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
+	RegisterVertexShader("SceneVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/SceneVS.hlsl", "main", "vs_5_0", device);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
 			{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		}
 		);
-	RegisterVertexShader("StaticMeshComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST, L"../Shaders/StaticMeshComponentVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
+	RegisterVertexShader("StaticMeshComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST, L"../Shaders/StaticMeshComponentVS.hlsl", "main", "vs_5_0", device);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
@@ -279,14 +280,14 @@ void ComponentPSOManager::RegisterVSForComponent()
 			{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 5, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		}
 	);
-	RegisterVertexShader("SkeletalMeshComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST, L"../Shaders/SkeletalMeshComponentVS.hlsl", "main", "vs_5_0", *m_deviceAddressCached);
+	RegisterVertexShader("SkeletalMeshComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST, L"../Shaders/SkeletalMeshComponentVS.hlsl", "main", "vs_5_0", device);
 }
 
-void ComponentPSOManager::RegisterPSForComponent()
+void ComponentPSOManager::RegisterPSForComponent(ID3D11Device* device)
 {
-	RegisterPixelShader("ForwardBoundingComponentPS", 2, L"../Shaders/ForwardBoundingComponentPS.hlsl", "main", "ps_5_0", *m_deviceAddressCached);
-	RegisterPixelShader("GBufferResolvePS", 1, L"../Shaders/GBufferResolvePS.hlsl", "main", "ps_5_0", *m_deviceAddressCached);
-	RegisterPixelShader("ForwardScenePS", 1, L"../Shaders/ForwardScenePS.hlsl", "main", "ps_5_0", *m_deviceAddressCached);
-	RegisterPixelShader("ForwardMeshComponentPS", 2, L"../Shaders/ForwardMeshComponentPS.hlsl", "main", "ps_5_0", *m_deviceAddressCached);
-	RegisterPixelShader("DefferedMeshComponentPS", 6, L"../Shaders/DefferedMeshComponentPS.hlsl", "main", "ps_5_0", *m_deviceAddressCached);
+	RegisterPixelShader("ForwardBoundingComponentPS", 2, L"../Shaders/ForwardBoundingComponentPS.hlsl", "main", "ps_5_0", device);
+	RegisterPixelShader("GBufferResolvePS", 1, L"../Shaders/GBufferResolvePS.hlsl", "main", "ps_5_0", device);
+	RegisterPixelShader("ForwardScenePS", 1, L"../Shaders/ForwardScenePS.hlsl", "main", "ps_5_0", device);
+	RegisterPixelShader("ForwardMeshComponentPS", 2, L"../Shaders/ForwardMeshComponentPS.hlsl", "main", "ps_5_0", device);
+	RegisterPixelShader("DefferedMeshComponentPS", 6, L"../Shaders/DefferedMeshComponentPS.hlsl", "main", "ps_5_0", device);
 }

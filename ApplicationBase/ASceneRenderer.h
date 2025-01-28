@@ -47,6 +47,11 @@ public:
 	virtual void Visit(CameraComponent* cameraComponent) = 0;
 
 public:
+	virtual void Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent) override;
+	virtual void Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent) override;
+	virtual void Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent) override;
+
+public:
 	virtual void ClearRenderTargets();
 	virtual void PostProcess() = 0;
 

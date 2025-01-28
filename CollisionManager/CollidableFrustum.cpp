@@ -1,12 +1,17 @@
-#include "pch.h"
 #include "CollidableFrustum.h"
 #include "CollisionVisitor.h"
+#include "BoundingVolumeNode.h"
 
 using namespace DirectX;
 
 bool CollidableFrustum::Accept(ICollisionVisitor& collisionVisitor) const
 {
 	return collisionVisitor.Visit(this);
+}
+
+bool CollidableFrustum::IsInBVNode(BoundingVolumeNode* boundingVolumeNode) const
+{
+    return boundingVolumeNode->Contains(*this);
 }
 
 DirectX::BoundingBox CollidableFrustum::GetBoundingBox(const float& margin) const
@@ -39,4 +44,22 @@ DirectX::BoundingBox CollidableFrustum::GetBoundingBox(const float& margin) cons
     BoundingBox result;
     BoundingBox::CreateFromPoints(result, XMLoadFloat3(&minCorner), XMLoadFloat3(&maxCorner));
     return result;
+}
+
+void CollidableFrustum::SetBoundingProperties(
+    const DirectX::XMFLOAT3& origin, 
+    const DirectX::XMFLOAT4& rotationQuaternion, 
+    const float& fovAngle, 
+    const float& nearZ, 
+    const float& farZ
+)
+{
+    Origin = origin;
+    Orientation = rotationQuaternion;
+    RightSlope = tanf(fovAngle / 2.f);
+    LeftSlope = -RightSlope;
+    TopSlope = tanf(fovAngle / 2.f);
+    BottomSlope = -TopSlope;
+    Near = nearZ;
+    Far = farZ;
 }

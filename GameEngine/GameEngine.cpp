@@ -101,9 +101,9 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 
 	m_taskManager->StartLaunchingTasks();
 
-	m_taskManager->RegisterTask([&]()
+	m_taskManager->RegisterTask([&, device]()
 		{
-			m_componentPSOManager->InitComopnentPSOManager();
+			m_componentPSOManager->InitComopnentPSOManager(device);
 		}, "Compiling Shaders..."
 	);
 
@@ -276,7 +276,7 @@ void GameEngine::CreateComponentManager()
 void GameEngine::CreatePSOManager()
 {
 	ID3D11Device* const* deviceAddress = m_engine->GetDeviceAddress();
-	m_componentPSOManager = new ComponentPSOManager(deviceAddress);
+	m_componentPSOManager = ComponentPSOManager::GetInstance();
 }
 
 void GameEngine::CreateWindows()

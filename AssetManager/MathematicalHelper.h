@@ -17,22 +17,14 @@ public:
 	);
 
 public:
-	static void GetTangentBitangent(
+	static DirectX::XMFLOAT3 GetTangent(
 		const DirectX::XMFLOAT3& Pos0In,
 		const DirectX::XMFLOAT3& Pos1In,
 		const DirectX::XMFLOAT3& Pos2In,
 		const DirectX::XMFLOAT2& TexCoord0In,
 		const DirectX::XMFLOAT2& TexCoord1In,
 		const DirectX::XMFLOAT2& TexCoord2In,
-		const DirectX::XMFLOAT3& Normal0In,
-		const DirectX::XMFLOAT3& Normal1In,
-		const DirectX::XMFLOAT3& Normal2In,
-		DirectX::XMFLOAT3& Tangent0Out,
-		DirectX::XMFLOAT3& Tangent1Out,
-		DirectX::XMFLOAT3& Tangent2Out,
-		DirectX::XMFLOAT3& Bitangent0Out,
-		DirectX::XMFLOAT3& Bitangent1Out,
-		DirectX::XMFLOAT3& Bitangent2Out
+		const DirectX::XMFLOAT3& NormalIn
 	);
 };
 

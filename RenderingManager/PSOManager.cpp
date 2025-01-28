@@ -14,10 +14,6 @@
 using namespace std;
 using namespace Microsoft::WRL;
 
-PSOManager::PSOManager(ID3D11Device* const* deviceAddress) : m_deviceAddressCached(deviceAddress)
-{
-}
-
 void PSOManager::RegisterVertexShader(const string& shaderName, const vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs, const D3D11_PRIMITIVE_TOPOLOGY& topology, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
 {
 	RegisterShaderImpl<VertexShader>(shaderName, shaderPath, entryPoint, targetVersion, device, inputElementDescs, topology);
@@ -73,7 +69,8 @@ AShader* const PSOManager::GetRegisteredShader(const string& shaderName)
 }
 
 void PSOManager::RegisterDepthStencilState(
-	const string& stateName, 
+	const string& stateName,
+	ID3D11Device* device,
 	const BOOL& depthEnable,
 	const D3D11_COMPARISON_FUNC& depthComparisonFunc,
 	const BOOL& stencilEnable,
@@ -105,13 +102,14 @@ void PSOManager::RegisterDepthStencilState(
 	depthStencilStateDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilStateDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 
-	(*m_deviceAddressCached)->CreateDepthStencilState(&depthStencilStateDesc, depthStencilState.GetAddressOf());
+	device->CreateDepthStencilState(&depthStencilStateDesc, depthStencilState.GetAddressOf());
 
 	m_registeredDepthStencilStates[stateName] = depthStencilState;
 }
 
 void PSOManager::RegisterBlendState(
 	const string& stateName, 
+	ID3D11Device* device,
 	const BOOL& AlphaToCoverageEnable, 
 	const BOOL& IndependentBlendEnable, 
 	const vector<D3D11_RENDER_TARGET_BLEND_DESC>& renderTargetBlendDescs
@@ -128,13 +126,14 @@ void PSOManager::RegisterBlendState(
 		renderTargetBlendDescs.data(), 
 		(renderTargetBlendDescs.size() < 8 ? renderTargetBlendDescs.size() : 8) * sizeof(D3D11_RENDER_TARGET_BLEND_DESC)
 	);
-	(*m_deviceAddressCached)->CreateBlendState(&blendStateDesc, blendState.GetAddressOf());
+	device->CreateBlendState(&blendStateDesc, blendState.GetAddressOf());
 
 	m_registeredBlendStates[stateName] = blendState;
 }
 
 void PSOManager::RegisterRasterizerState(
 	const string& stateName, 
+	ID3D11Device* device,
 	const D3D11_FILL_MODE& fillMode, 
 	const D3D11_CULL_MODE& cullMode, 
 	const BOOL& frontCounterClockwise,
@@ -151,13 +150,14 @@ void PSOManager::RegisterRasterizerState(
 	rasterizerStateDesc.DepthClipEnable = TRUE;
 	rasterizerStateDesc.MultisampleEnable = sampleDesc.Count > 1 ? TRUE : FALSE;
 	rasterizerStateDesc.AntialiasedLineEnable = FALSE;
-	(*m_deviceAddressCached)->CreateRasterizerState(&rasterizerStateDesc, rasterizerState.GetAddressOf());
+	device->CreateRasterizerState(&rasterizerStateDesc, rasterizerState.GetAddressOf());
 
 	m_registeredRasterizerStates[stateName] = rasterizerState;
 }
 
 void PSOManager::RegisterSamplerState(
 	const string& stateName, 
+	ID3D11Device* device,
 	const D3D11_TEXTURE_ADDRESS_MODE& textureAddressModeU,
 	const D3D11_TEXTURE_ADDRESS_MODE& textureAddressModeV,
 	const D3D11_TEXTURE_ADDRESS_MODE& textureAddressModeW,
@@ -174,7 +174,7 @@ void PSOManager::RegisterSamplerState(
 	samplerDesc.AddressW = textureAddressModeW;
 	samplerDesc.ComparisonFunc = comparisonFunc;
 	samplerDesc.Filter = filter;
-	(*m_deviceAddressCached)->CreateSamplerState(&samplerDesc, samplerState.GetAddressOf());
+	device->CreateSamplerState(&samplerDesc, samplerState.GetAddressOf());
 
 	m_registeredSamplerStates[stateName] = samplerState;
 }
