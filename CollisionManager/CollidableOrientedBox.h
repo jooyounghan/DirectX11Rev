@@ -1,7 +1,7 @@
 #pragma once
-#include "ACollisionAcceptor.h"
+#include "ICollisionAcceptor.h"
 
-class CollidableOrientedBox : public ACollisionAcceptor, public DirectX::BoundingOrientedBox
+class CollidableOrientedBox : public ICollisionAcceptor, public DirectX::BoundingOrientedBox
 {
 public:
 	CollidableOrientedBox() = default;

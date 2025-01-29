@@ -1,7 +1,7 @@
 #pragma once
-#include "ACollisionAcceptor.h"
+#include "ICollisionAcceptor.h"
 
-class CollidableFrustum : public ACollisionAcceptor, public DirectX::BoundingFrustum
+class CollidableFrustum : public ICollisionAcceptor, public DirectX::BoundingFrustum
 {
 public:
 	CollidableFrustum() = default;

@@ -9,7 +9,7 @@ BoundingVolumeHierachy::BoundingVolumeHierachy(const float& margin)
 {
 }
 
-void BoundingVolumeHierachy::InsertCollidable(ACollisionAcceptor* collidable)
+void BoundingVolumeHierachy::InsertCollidable(ICollisionAcceptor* collidable)
 {
 	BoundingVolumeNode* leafNode = new BoundingVolumeNode(collidable->GetBoundingBox(m_margin), collidable);
 	m_collidablesToNode.emplace(collidable, leafNode);
@@ -49,7 +49,7 @@ void BoundingVolumeHierachy::InsertCollidable(ACollisionAcceptor* collidable)
 	}
 }
 
-void BoundingVolumeHierachy::RemoveCollidable(ACollisionAcceptor* collidable)
+void BoundingVolumeHierachy::RemoveCollidable(ICollisionAcceptor* collidable)
 {
 	if (m_collidablesToNode.find(collidable) != m_collidablesToNode.end())
 	{
@@ -112,13 +112,13 @@ void BoundingVolumeHierachy::RemoveCollidable(ACollisionAcceptor* collidable)
 	}
 }
 
-void BoundingVolumeHierachy::UpdateCollidable(ACollisionAcceptor* collidable)
+void BoundingVolumeHierachy::UpdateCollidable(ICollisionAcceptor* collidable)
 {
 	if (m_collidablesToNode.find(collidable) != m_collidablesToNode.end())
 	{
 		BoundingVolumeNode* boundingVolumeNode = m_collidablesToNode[collidable];
 
-		if (collidable->IsInBVNode(boundingVolumeNode))
+		if (!collidable->IsInBVNode(boundingVolumeNode))
 		{
 			RemoveCollidable(collidable);
 			InsertCollidable(collidable);

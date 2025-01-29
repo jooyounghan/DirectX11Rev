@@ -4,7 +4,8 @@
 
 cbuffer PickingID : register(b0)
 {
-    uint4 IDValues;
+    uint IDValues;
+    float3 DebugColor;
 };
 
 cbuffer CameraViewConstantBuffer : register(b1)
@@ -59,7 +60,7 @@ DefferedMeshComponentPixelOutput main(MeshComponentDomainOutput Input)
     Result.Emissive = float4(Emissive, 1.f);
     Result.FresnelReflectance = float4(F0, 1.f);
     
-    Result.f4ID = IDValues;
+    Result.uiID = IDValues;
     
     return Result;
 }

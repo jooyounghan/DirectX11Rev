@@ -1,5 +1,5 @@
 #pragma once
-#include "ACollisionAcceptor.h"
+#include "ICollisionAcceptor.h"
 #include <vector>
 
 class BoundingVolumeNode : public DirectX::BoundingBox
@@ -7,12 +7,12 @@ class BoundingVolumeNode : public DirectX::BoundingBox
 public:
 	BoundingVolumeNode(
 		const DirectX::BoundingBox& boundingBox, 
-		ACollisionAcceptor* const collidable = nullptr
+		ICollisionAcceptor* const collidable = nullptr
 	);
 	BoundingVolumeNode(
 		const DirectX::XMFLOAT3& lowerBound, 
 		const DirectX::XMFLOAT3& upperBound, 
-		ACollisionAcceptor* const collidable = nullptr
+		ICollisionAcceptor* const collidable = nullptr
 	);
 
 private:
@@ -28,7 +28,7 @@ public:
 	BoundingVolumeNode* m_right;
 
 public:
-	ACollisionAcceptor* m_collidable;
+	ICollisionAcceptor* m_collidable;
 
 public:
 	inline const float GetVolumeSize() const { return (Extents.x * 2) * (Extents.y * 2) * (Extents.z * 2); }

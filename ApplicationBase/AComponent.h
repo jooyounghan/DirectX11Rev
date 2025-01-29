@@ -31,9 +31,15 @@ protected:
 	std::vector<AComponent*> m_childComponents;
 	AComponent* m_parentComponent = nullptr;
 
+protected:
+	bool m_isRenderable = true;
+
+public:
+	inline const bool& IsRenderable() { return m_isRenderable; }
+	inline void SetRenderable(const bool& isRenderable) { m_isRenderable = isRenderable; }
+
 public:
 	void AttachChildComponent(AComponent* component);
-	void DetachChildComponent(AComponent* component);
 	void RemoveFromParent();
 
 public:
@@ -45,10 +51,14 @@ public:
 	inline const DirectX::XMVECTOR& GetAbsoluteScale() const { return m_absoluteScale; }
 
 public:
+	const DirectX::XMVECTOR GetAbsoluteRotationQuaternionV() const;
+	const DirectX::XMFLOAT4 GetAbsoluteRotationQuaternion() const;
+
+public:
 	DirectX::XMMATRIX GetAbsoluteTransformation();
 
 public:
-	void UpdateAbsoluteEntities(const DirectX::XMMATRIX* parentAbsTransformation = nullptr);
+	virtual void UpdateAbsoluteEntities();
 	void UpdateComponentTransformation();
 
 public:

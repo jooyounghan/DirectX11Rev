@@ -55,15 +55,11 @@ void ComponentDBRemover::Visit(CameraComponent* cameraComponent)
 
 }
 
-void ComponentDBRemover::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+void ComponentDBRemover::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
 }
 
-void ComponentDBRemover::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
-{
-}
-
-void ComponentDBRemover::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+void ComponentDBRemover::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
 }
 

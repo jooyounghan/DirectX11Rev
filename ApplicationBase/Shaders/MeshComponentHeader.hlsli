@@ -56,7 +56,7 @@ struct MeshComponentDomainOutput
 struct MeshComponentPixelOutput
 {
     float4 f4Color;
-    uint4 f4ID;
+    uint uiID;
 };
 
 struct DefferedMeshComponentPixelOutput
@@ -68,5 +68,5 @@ struct DefferedMeshComponentPixelOutput
     float4 f4Normal : SV_Target4;
     float4 Emissive : SV_Target5;
     float4 FresnelReflectance : SV_Target6;
-    uint4 f4ID : SV_Target7;
+    uint uiID : SV_Target7;
 };

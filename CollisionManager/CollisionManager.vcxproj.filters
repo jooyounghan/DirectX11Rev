@@ -51,7 +51,7 @@
     <ClInclude Include="CollisionVisitor.h">
       <Filter>헤더 파일\Visitor</Filter>
     </ClInclude>
-    <ClInclude Include="ACollisionAcceptor.h">
+    <ClInclude Include="ICollisionAcceptor.h">
       <Filter>헤더 파일\Acceptor</Filter>
     </ClInclude>
     <ClInclude Include="BoundingVolumeNode.h">
@@ -79,9 +79,6 @@
     </ClCompile>
     <ClCompile Include="CollisionVisitor.cpp">
       <Filter>소스 파일\Visitor</Filter>
-    </ClCompile>
-    <ClCompile Include="ACollisionAcceptor.cpp">
-      <Filter>소스 파일\Acceptor</Filter>
     </ClCompile>
     <ClCompile Include="BoundingVolumeNode.cpp">
       <Filter>소스 파일\BVH</Filter>

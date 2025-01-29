@@ -27,9 +27,8 @@ public:
 	virtual void Visit(CameraComponent* cameraComponent) override;
 
 public:
-	virtual void Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent) override;
-	virtual void Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent) override;
-	virtual void Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent) override;
+	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) override;
+	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override;
 
 private:
 	void LoadModelMaterials(AMeshComponent* meshComponent);

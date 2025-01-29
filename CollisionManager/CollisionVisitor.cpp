@@ -3,7 +3,7 @@
 
 using namespace std;
 
-ACollisionVisitor::ACollisionVisitor(ACollisionAcceptor* collisionAcceptor)
+ACollisionVisitor::ACollisionVisitor(ICollisionAcceptor* collisionAcceptor)
 	: m_collisionAcceptor(collisionAcceptor)
 {
 }

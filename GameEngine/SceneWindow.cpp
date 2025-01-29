@@ -81,8 +81,11 @@ void SceneWindow::RenderComponentRecursive(ASceneRenderer* const renderer, const
 {
     for (AComponent* component : components)
     {
-        component->Accept(renderer);
-        RenderComponentRecursive(renderer, component->GetChildComponents());
+        if (component->IsRenderable())
+        {
+            component->Accept(renderer);
+            RenderComponentRecursive(renderer, component->GetChildComponents());
+        }
     }
 }
 
@@ -261,8 +264,12 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
             {
                 const ImVec2 mouseDelta = io.MouseDelta;
                 XMVECTOR& relativeAngle = const_cast<XMVECTOR&>(m_selectedCamera->GetLocalAngle());
-                relativeAngle.m128_f32[1] += 360.f * (mouseDelta.x / size.x);
-                relativeAngle.m128_f32[0] += 360.f * (mouseDelta.y / size.y);
+
+                float& pitch = relativeAngle.m128_f32[0];
+                float& yaw = relativeAngle.m128_f32[1];
+
+                yaw += 360.f * (mouseDelta.x / size.x);
+                pitch += 360.f * (mouseDelta.y / size.y);
                 m_selectedCamera->SetIsModified(true);
             }
         }

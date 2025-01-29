@@ -6,7 +6,7 @@ using namespace DirectX;
 
 BoundingVolumeNode::BoundingVolumeNode(
 	const BoundingBox& boundingBox, 
-	ACollisionAcceptor* const collidable
+	ICollisionAcceptor* const collidable
 )
 	: BoundingBox(boundingBox),
 	m_lowerBound(
@@ -27,7 +27,7 @@ BoundingVolumeNode::BoundingVolumeNode(
 BoundingVolumeNode::BoundingVolumeNode(
 	const XMFLOAT3& lowerBound,
 	const XMFLOAT3& upperBound,
-	ACollisionAcceptor* const collidable
+	ICollisionAcceptor* const collidable
 )
 	: BoundingBox(
 		XMFLOAT3(

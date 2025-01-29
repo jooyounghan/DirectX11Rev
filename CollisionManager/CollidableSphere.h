@@ -1,7 +1,7 @@
 #pragma once
-#include "ACollisionAcceptor.h"
+#include "ICollisionAcceptor.h"
 
-class CollidableSphere : public ACollisionAcceptor, public DirectX::BoundingSphere
+class CollidableSphere : public ICollisionAcceptor, public DirectX::BoundingSphere
 {
 public:
 	CollidableSphere() = default;

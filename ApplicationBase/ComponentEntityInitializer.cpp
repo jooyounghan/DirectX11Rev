@@ -3,9 +3,6 @@
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
-#include "ASphereCollisionComponent.h"
-#include "AOrientedBoxCollisionComponent.h"
-#include "AFrustumCollisionComponent.h"
 
 #include "SkeletalMeshAsset.h"
 
@@ -63,11 +60,11 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 
 	cameraComponent->SetIDFilm(new Texture2DInstance<RTVOption>(
 		static_cast<uint32_t>(cameraComponent->Width), static_cast<uint32_t>(cameraComponent->Height),
-		1, 1, NULL ,NULL , D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UINT, m_deviceCached, m_deviceContextCached
+		1, 1, NULL ,NULL , D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT, m_deviceCached, m_deviceContextCached
 	));
 
 	cameraComponent->SetIDStagingFilm(new Texture2DInstance<PureTextureOption>(
-		1, 1, 1, 1, D3D11_CPU_ACCESS_READ, NULL, D3D11_USAGE_STAGING, DXGI_FORMAT_R8G8B8A8_UINT, 
+		1, 1, 1, 1, D3D11_CPU_ACCESS_READ, NULL, D3D11_USAGE_STAGING, DXGI_FORMAT_R32_UINT,
 		m_deviceCached, m_deviceContextCached
 	));
 
@@ -78,29 +75,19 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 
 }
 
-void ComponentEntityInitializer::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+void ComponentEntityInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
-	renderSphereCollisionComponent->UpdateAbsoluteEntities();
-	InitBaseEntityBuffer(renderSphereCollisionComponent);
 }
 
-void ComponentEntityInitializer::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
+void ComponentEntityInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
-	renderOrientedBoxCollisionComponent->UpdateAbsoluteEntities();
-	InitBaseEntityBuffer(renderOrientedBoxCollisionComponent);
-}
-
-void ComponentEntityInitializer::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
-{
-	renderFrustumCollisionComponent->UpdateAbsoluteEntities();
-	InitBaseEntityBuffer(renderFrustumCollisionComponent);
 }
 
 void ComponentEntityInitializer::InitBaseEntityBuffer(AComponent* component)
 {
 	component->UpdateComponentTransformation();
 	DynamicBuffer* transformationBuffer = component->GetTransformationBuffer();
-	ConstantBuffer* comopnentBuffer = component->GetComponentBuffer();
+	DynamicBuffer* comopnentBuffer = component->GetComponentBuffer();
 
 	const D3D11_SUBRESOURCE_DATA transformaionSubresource = transformationBuffer->GetSubResourceData();
 	transformationBuffer->InitializeBuffer(m_deviceCached, &transformaionSubresource);

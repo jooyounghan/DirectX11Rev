@@ -17,11 +17,11 @@ public:
 class ACollisionVisitor : public ICollisionVisitor
 {
 public:
-	ACollisionVisitor(ACollisionAcceptor* collisionAcceptor);
+	ACollisionVisitor(ICollisionAcceptor* collisionAcceptor);
 	~ACollisionVisitor() override = default;
 
 protected:
-	ACollisionAcceptor* m_collisionAcceptor;
+	ICollisionAcceptor* m_collisionAcceptor;
 };
 
 template<typename T>

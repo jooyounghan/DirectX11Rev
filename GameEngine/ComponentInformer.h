@@ -42,6 +42,10 @@ public:
 public:
 	virtual void Visit(CameraComponent* cameraComponent) override;
 
+public:
+	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) override;
+	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override;
+
 private:
 	void RenderComponentTransformation(AComponent* component);
 	void RenderMeshComponent(AMeshComponent* meshComponent);

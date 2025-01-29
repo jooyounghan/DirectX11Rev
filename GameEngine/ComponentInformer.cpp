@@ -59,6 +59,13 @@ void ComponentInformer::Visit(CameraComponent* cameraComponent)
 	Button(cameraComponent->GetComponentName().c_str());
 }
 
+void ComponentInformer::Visit(SphereCollisionComponent* sphereCollisionComponent)
+{
+}
+
+void ComponentInformer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
+{
+}
 
 void ComponentInformer::RenderComponentTransformation(AComponent* component)
 {

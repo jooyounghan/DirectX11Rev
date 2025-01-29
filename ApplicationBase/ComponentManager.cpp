@@ -8,6 +8,9 @@
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
 
+#include "SphereCollisionComponent.h"
+#include "OrientedBoxCollisionComponent.h"
+
 #include "ComponentDBInitializer.h"
 #include "ComponentDBUpdater.h"
 #include "ComponentDBRemover.h"
@@ -97,9 +100,22 @@ void ComponentManager::LoadComponentMakers()
 		case EComponentType::CAMERA_COMPONENT:
 			m_componentTypesToMaker.emplace(componentType, bind(
 				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-				{ return new CameraComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5)
-			);
+				{ return new CameraComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+			));
 			break;
+		case EComponentType::SPHERE_COLLISION_COMPONENT:
+			m_componentTypesToMaker.emplace(componentType, bind(
+				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& dummy1, const DirectX::XMFLOAT3& dummy2)
+				{ return new SphereCollisionComponent(componentName, componentID, position, 0.f); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+			));
+			break;
+		case EComponentType::ORIENTED_BOX_COLLISION_COMPONENT:
+			m_componentTypesToMaker.emplace(componentType, bind(
+				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& extends)
+				{ return new OrientedBoxCollisionComponent(componentName, componentID, position, angle, extends); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+			));
+			break;
+
 		}
 	}
 }

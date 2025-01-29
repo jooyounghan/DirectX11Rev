@@ -16,13 +16,15 @@ CameraComponent::CameraComponent(
 	const uint32_t& componentID, 
 	const XMFLOAT3& position, 
 	const XMFLOAT3& angle,
-	const XMFLOAT3& scale
+	const XMFLOAT3& scale,
+	const uint32_t& width, const uint32_t& height,
+	const float& nearZ, const float& farZ, const float& fovAngle
 )
 	: AComponent(componentName, componentID, position, angle, scale),
 	m_viewProjBuffer(new DynamicBuffer(sizeof(SViewElement), 1,&m_viewElement)),
-	m_nearZ(GDefaultNearZ), m_farZ(GDefaultFarZ), m_fovAngle(GDefaultFovAngle)
+	m_nearZ(nearZ), m_farZ(farZ), m_fovAngle(fovAngle)
 {
-
+	SetCameraProperties(width, height, m_nearZ, m_farZ, m_fovAngle);
 }
 
 CameraComponent::~CameraComponent()
@@ -46,11 +48,17 @@ void CameraComponent::SetCameraProperties(
 	Height = static_cast<float>(height);
 	MinDepth = 0.f;
 	MaxDepth = 1.f;
+
+	XMFLOAT3 center;
+	XMStoreFloat3(&center, m_absolutePosition);
+
+	XMFLOAT4 orientation = GetAbsoluteRotationQuaternion();
+	SetBoundingProperties(center, orientation, m_fovAngle, m_nearZ, m_farZ);
 }
 
 XMMATRIX CameraComponent::GetViewMatrix()
 {
-	const XMVECTOR quaternion = GetLocalQuaternion();
+	const XMVECTOR quaternion = GetAbsoluteRotationQuaternionV();
 	XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
 	XMVECTOR currentUp = XMVector3Rotate(GDefaultUp, quaternion);
 	return XMMatrixLookToLH(m_absolutePosition, currentForward, currentUp);
@@ -86,6 +94,17 @@ void CameraComponent::SetDepthStencilView(Texture2DInstance<DSVOption>* depthSte
 	m_depthStencilViewBuffer = depthStencilViewBuffer;
 }
 
+void CameraComponent::UpdateAbsoluteEntities()
+{
+	AComponent::UpdateAbsoluteEntities();
+
+	XMFLOAT3 center;
+	XMStoreFloat3(&center, m_absolutePosition);
+
+	XMFLOAT4 orientation = GetAbsoluteRotationQuaternion();
+	SetBoundingProperties(center, orientation, m_fovAngle, m_nearZ, m_farZ);
+}
+
 void CameraComponent::UpdateViewElement()
 {
 	m_viewElement.m_viewProj = GetViewMatrix() * GetProjectionMatrix();
@@ -97,4 +116,8 @@ void CameraComponent::UpdateViewElement()
 void CameraComponent::Accept(IComponentVisitor* visitor)
 {
 	visitor->Visit(this);
+}
+
+void CameraComponent::OnCollide(ICollisionAcceptor*)
+{
 }

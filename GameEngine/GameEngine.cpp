@@ -240,8 +240,10 @@ void GameEngine::OnDropFiles(const HDROP& hDrop)
 
 void GameEngine::CreateEditor()
 {	
-	m_editorCamera = new CameraComponent("", TempID, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(1.f, 1.f, 1.f));
-	m_editorCamera->SetCameraProperties(GDefaultWidth, GDefaultHeight, GDefaultNearZ, GDefaultFarZ, GDefaultFovAngle);
+	m_editorCamera = new CameraComponent(
+		"", TempID, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(1.f, 1.f, 1.f),
+		GDefaultWidth, GDefaultHeight, GDefaultNearZ, GDefaultFarZ, GDefaultFovAngle
+	);
 }
 
 void GameEngine::CreateDefferedContext()

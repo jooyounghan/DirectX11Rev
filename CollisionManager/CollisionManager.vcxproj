@@ -167,7 +167,7 @@
     <ClInclude Include="CollidableOrientedBox.h" />
     <ClInclude Include="CollidableSphere.h" />
     <ClInclude Include="ContainVisitor.h" />
-    <ClInclude Include="ACollisionAcceptor.h" />
+    <ClInclude Include="ICollisionAcceptor.h" />
     <ClInclude Include="CollisionVisitor.h" />
     <ClInclude Include="IntersectVisitor.h" />
   </ItemGroup>
@@ -178,7 +178,6 @@
     <ClCompile Include="CollidableOrientedBox.cpp" />
     <ClCompile Include="CollidableSphere.cpp" />
     <ClCompile Include="ContainVisitor.cpp" />
-    <ClCompile Include="ACollisionAcceptor.cpp" />
     <ClCompile Include="CollisionVisitor.cpp" />
     <ClCompile Include="IntersectVisitor.cpp" />
   </ItemGroup>

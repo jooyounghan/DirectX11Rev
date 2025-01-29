@@ -1,0 +1,27 @@
+#pragma once
+#include "ACollisionComponent.h"
+#include "CollidableSphere.h"
+
+class SphereCollisionComponent : public ACollisionComponent, public CollidableSphere
+{
+public:
+	SphereCollisionComponent(
+		const std::string& componentName,
+		const uint32_t& componentID,
+		const DirectX::XMFLOAT3& localPosition,
+		const float& radius
+	);
+	virtual ~SphereCollisionComponent() override;
+
+public:
+	virtual void Accept(IComponentVisitor* visitor) override;
+
+public:
+	virtual void UpdateAbsoluteEntities();
+
+public:
+	virtual void SetCollisionOption(ICollisionOption* collisionOption) override;
+	virtual void UpdateBoundingVolumeHierachy() override;
+	virtual void OnCollide(ICollisionAcceptor* accpetor) override;
+};
+

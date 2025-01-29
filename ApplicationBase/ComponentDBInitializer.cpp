@@ -4,6 +4,8 @@
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
+#include "SphereCollisionComponent.h"
+#include "OrientedBoxCollisionComponent.h"
 
 #include "nlohmann/json.hpp"
 
@@ -87,15 +89,30 @@ void ComponentDBInitializer::Visit(CameraComponent* cameraComponent)
 	}
 }
 
-void ComponentDBInitializer::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+void ComponentDBInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
+	//const uint32_t comopnentID = sphereCollisionComponent->GetComponentID();
+	//const std::string cameraComponentTableName = "camera_components";
+
+	//Table cameraComponentTable = m_schemaCached->getTable(cameraComponentTableName, true);
+	//RowResult rowResult = cameraComponentTable
+	//	.select("width", "height", "near_z", "far_z", "fov_angle").where("camera_component_id = :camera_component_id")
+	//	.bind("camera_component_id", comopnentID).lockShared().execute();
+
+	//auto row = rowResult.fetchOne();
+	//if (!row.isNull())
+	//{
+	//	const uint32_t width = row[0].get<uint32_t>();
+	//	const uint32_t height = row[1].get<uint32_t>();
+	//	const float near_z = row[2].get<float>();
+	//	const float far_z = row[3].get<float>();
+	//	const float fov_angle = row[4].get<float>();
+	//	cameraComponent->SetCameraProperties(width, height, near_z, far_z, fov_angle);
+	//}
+
 }
 
-void ComponentDBInitializer::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
-{
-}
-
-void ComponentDBInitializer::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+void ComponentDBInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
 }
 

@@ -4,7 +4,7 @@
 class IntersectVisitor : public ACollisionVisitor
 {
 public:
-	IntersectVisitor(ACollisionAcceptor* collisionAcceptor);
+	IntersectVisitor(ICollisionAcceptor* collisionAcceptor);
 	~IntersectVisitor() override = default;
 
 public:

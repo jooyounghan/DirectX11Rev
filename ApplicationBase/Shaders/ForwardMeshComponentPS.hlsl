@@ -4,7 +4,8 @@
 
 cbuffer PickingID : register(b0)
 {
-    uint4 IDValues;
+    uint IDValues;
+    float3 DebugColor;
 };
 
 cbuffer CameraViewConstantBuffer : register(b1)
@@ -66,7 +67,7 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput Input) : SV_TARGET
     Result.f4Color = float4(0.f, 0.f, 0.f, 0.f);
     Result.f4Color += float4(CalculateIBL(F0, Diffuse, AmbientOcculusion, Metallic, Roughness, Normal, ToEye, SpecularTexture, DiffuseTexture, BRDFTexture, WrapSampler) + Emissive, 1.f) / 2.f;
     Result.f4Color += float4((DiffuseIBL + SpecularIBL), 1.f) / 2.f;    
-    Result.f4ID = IDValues;
+    Result.uiID = IDValues;
     
     return Result;
 }

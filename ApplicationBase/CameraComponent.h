@@ -1,5 +1,6 @@
 #pragma once
 #include "AComponent.h"
+#include "CollidableFrustum.h"
 
 template<typename ...IsTextureOption>
 class Texture2DInstance;
@@ -27,7 +28,7 @@ struct SViewElement
 	float m_dummy;
 };
 
-class CameraComponent : public AComponent, public D3D11_VIEWPORT
+class CameraComponent : public AComponent, public D3D11_VIEWPORT, public CollidableFrustum
 {
 public:
 	CameraComponent(
@@ -35,7 +36,12 @@ public:
 		const uint32_t& componentID, 
 		const DirectX::XMFLOAT3& position,
 		const DirectX::XMFLOAT3& angle,
-		const DirectX::XMFLOAT3& scale
+		const DirectX::XMFLOAT3& scale,
+		const uint32_t& width = GDefaultWidth,
+		const uint32_t& height = GDefaultHeight,
+		const float& nearZ = GDefaultNearZ, 
+		const float& farZ = GDefaultFarZ, 
+		const float& fovAngle = GDefaultFovAngle
 	);
 	~CameraComponent() override;
 
@@ -86,9 +92,11 @@ public:
 	inline const Texture2DInstance<DSVOption>* GetDepthStencilViewBuffer() const { return m_depthStencilViewBuffer; }
 
 public:
+	virtual void UpdateAbsoluteEntities();
 	void UpdateViewElement();
 
 public:
 	virtual void Accept(IComponentVisitor* visitor) override;
+	virtual void OnCollide(ICollisionAcceptor*) override;
 };
 

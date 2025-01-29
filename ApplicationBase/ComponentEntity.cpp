@@ -7,7 +7,7 @@
 using namespace DirectX;
 
 SComponent::SComponent(const uint32_t& componentID)
-	: m_componentID(componentID), m_dummy1(NULL), m_dummy2(NULL), m_dummy3(NULL)
+	: m_componentID(componentID), m_debugColor{1.f, 0.f, 0.f}
 {
 }
 
@@ -24,7 +24,7 @@ ComponentEntity::ComponentEntity(
 	m_transformationBuffer(new DynamicBuffer(sizeof(STransformation), 1, &m_transformation)),
 	m_transformation(),
 	m_componentConstant(componentID),
-	m_componentBuffer(new ConstantBuffer(sizeof(SComponent), 1, &m_componentConstant))
+	m_componentBuffer(new DynamicBuffer(sizeof(SComponent), 1, &m_componentConstant))
 {
 }
 

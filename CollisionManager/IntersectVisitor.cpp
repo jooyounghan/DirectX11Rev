@@ -4,7 +4,7 @@
 using namespace std;
 using namespace DirectX;
 
-IntersectVisitor::IntersectVisitor(ACollisionAcceptor* collisionAcceptor)
+IntersectVisitor::IntersectVisitor(ICollisionAcceptor* collisionAcceptor)
 	: ACollisionVisitor(collisionAcceptor)
 {
 }

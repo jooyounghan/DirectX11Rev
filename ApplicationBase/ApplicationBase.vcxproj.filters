@@ -88,13 +88,19 @@
     <ClInclude Include="ScreenQuad.h">
       <Filter>헤더 파일\Component</Filter>
     </ClInclude>
-    <ClInclude Include="AOrientedBoxCollisionComponent.h">
+    <ClInclude Include="OrientedBoxCollisionComponent.h">
       <Filter>헤더 파일\Component\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="AFrustumCollisionComponent.h">
+    <ClInclude Include="SphereCollisionComponent.h">
       <Filter>헤더 파일\Component\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="ASphereCollisionComponent.h">
+    <ClInclude Include="RenderControlOption.h">
+      <Filter>헤더 파일\Component\Collision\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ICollisionOption.h">
+      <Filter>헤더 파일\Component\Collision\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ACollisionComponent.h">
       <Filter>헤더 파일\Component\Collision</Filter>
     </ClInclude>
   </ItemGroup>
@@ -207,11 +213,11 @@
     <Filter Include="헤더 파일\Component\Collision">
       <UniqueIdentifier>{7588451a-25cd-424e-826b-3504d80c16c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Component\Collision\Rendering">
-      <UniqueIdentifier>{526f6cd6-088a-4ead-a0f5-c10a7eb46b1d}</UniqueIdentifier>
+    <Filter Include="헤더 파일\Component\Collision\Render">
+      <UniqueIdentifier>{990a9bc7-058e-41a1-93e0-3e52dbefa6da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Component\Collision\Rendering">
-      <UniqueIdentifier>{0f847f8b-a615-4cf6-bfc1-266ec58b4954}</UniqueIdentifier>
+    <Filter Include="소스 파일\Component\Collision\Render">
+      <UniqueIdentifier>{6e982548-45f6-4433-ab7b-605f487fbc8e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -290,14 +296,17 @@
     <ClCompile Include="ScreenQuad.cpp">
       <Filter>소스 파일\Component</Filter>
     </ClCompile>
-    <ClCompile Include="AOrientedBoxCollisionComponent.cpp">
+    <ClCompile Include="ACollisionComponent.cpp">
       <Filter>소스 파일\Component\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="AFrustumCollisionComponent.cpp">
+    <ClCompile Include="OrientedBoxCollisionComponent.cpp">
       <Filter>소스 파일\Component\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="ASphereCollisionComponent.cpp">
+    <ClCompile Include="SphereCollisionComponent.cpp">
       <Filter>소스 파일\Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderControlOption.cpp">
+      <Filter>소스 파일\Component\Collision\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

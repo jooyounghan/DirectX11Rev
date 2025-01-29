@@ -57,15 +57,11 @@ void ComponentDBCreator::Visit(CameraComponent* cameraComponent)
 		);
 }
 
-void ComponentDBCreator::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+void ComponentDBCreator::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
 }
 
-void ComponentDBCreator::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
-{
-}
-
-void ComponentDBCreator::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+void ComponentDBCreator::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
 }
 

@@ -19,9 +19,7 @@ struct SComponent
 {
 	SComponent(const uint32_t& componentID);
 	const uint32_t m_componentID;
-	const uint32_t m_dummy1;
-	const uint32_t m_dummy2;
-	const uint32_t m_dummy3;
+	DirectX::XMFLOAT3 m_debugColor;
 };
 
 class ComponentEntity
@@ -46,7 +44,7 @@ protected:
 
 protected:
 	SComponent m_componentConstant;
-	ConstantBuffer* m_componentBuffer;
+	DynamicBuffer* m_componentBuffer;
 
 public:
 	inline const DirectX::XMVECTOR& GetLocalPosition() const { return m_localPosition; }
@@ -55,7 +53,7 @@ public:
 
 public:
 	DynamicBuffer* GetTransformationBuffer() const { return m_transformationBuffer; }
-	ConstantBuffer* GetComponentBuffer() const { return m_componentBuffer; }
+	DynamicBuffer* GetComponentBuffer() const { return m_componentBuffer; }
 
 public:
 	inline const uint32_t& GetComponentID() { return m_componentConstant.m_componentID; }

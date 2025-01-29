@@ -4,7 +4,7 @@
 class ContainVisitor : public ACollisionVisitor
 {
 public:
-	ContainVisitor(ACollisionAcceptor* collisionAcceptor);
+	ContainVisitor(ICollisionAcceptor* collisionAcceptor);
 	~ContainVisitor() override = default;
 
 public:

@@ -63,8 +63,8 @@ private:
 private:
 	SceneForwardRenderer m_forwardRenderer;
 	SceneDefferedRenderer m_defferedRenderer;
-	ASceneRenderer* m_selectedRenderer;
-	bool m_isDefferedRenderer;
+	ASceneRenderer* m_selectedRenderer = nullptr;
+	bool m_isDefferedRenderer = false;
 
 private:
 	ImGuiComboBox m_rendererComboBox;

@@ -73,15 +73,11 @@ void ASceneRenderer::Visit(Scene* scene)
     }
 }
 
-void ASceneRenderer::Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent)
+void ASceneRenderer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
 }
 
-void ASceneRenderer::Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent)
-{
-}
-
-void ASceneRenderer::Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent)
+void ASceneRenderer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
 }
 

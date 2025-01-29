@@ -174,11 +174,14 @@ exit %ERRORLEVEL%</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp" />
+    <ClCompile Include="ACollisionComponent.cpp" />
     <ClCompile Include="AComponent.cpp" />
     <ClCompile Include="AInstancedModelComponent.cpp" />
     <ClCompile Include="AMeshComponent.cpp" />
     <ClCompile Include="AnimationPlayer.cpp" />
+    <ClCompile Include="OrientedBoxCollisionComponent.cpp" />
     <ClCompile Include="ASceneRenderer.cpp" />
+    <ClCompile Include="SphereCollisionComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="ComponentDBCreator.cpp" />
     <ClCompile Include="ComponentEntityInitializer.cpp" />
@@ -192,9 +195,7 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="InputEventManager.cpp" />
     <ClCompile Include="KeyEvent.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
-    <ClCompile Include="AOrientedBoxCollisionComponent.cpp" />
-    <ClCompile Include="AFrustumCollisionComponent.cpp" />
-    <ClCompile Include="ASphereCollisionComponent.cpp" />
+    <ClCompile Include="RenderControlOption.cpp" />
     <ClCompile Include="SceneDefferedRenderer.cpp" />
     <ClCompile Include="SceneForwardRenderer.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -204,11 +205,14 @@ exit %ERRORLEVEL%</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AApplication.h" />
+    <ClInclude Include="ACollisionComponent.h" />
     <ClInclude Include="AComponent.h" />
     <ClInclude Include="AInstancedModelComponent.h" />
     <ClInclude Include="AMeshComponent.h" />
     <ClInclude Include="AnimationPlayer.h" />
+    <ClInclude Include="OrientedBoxCollisionComponent.h" />
     <ClInclude Include="ASceneRenderer.h" />
+    <ClInclude Include="SphereCollisionComponent.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="ComponentDBCreator.h" />
     <ClInclude Include="ComponentEntityInitializer.h" />
@@ -219,14 +223,13 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="ComponentDBRemover.h" />
     <ClInclude Include="ComponentType.h" />
     <ClInclude Include="ComponentDBUpdater.h" />
+    <ClInclude Include="ICollisionOption.h" />
     <ClInclude Include="InputDefinition.h" />
     <ClInclude Include="InputEventManager.h" />
     <ClInclude Include="ISceneVisitor.h" />
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="MouseEvent.h" />
-    <ClInclude Include="AOrientedBoxCollisionComponent.h" />
-    <ClInclude Include="AFrustumCollisionComponent.h" />
-    <ClInclude Include="ASphereCollisionComponent.h" />
+    <ClInclude Include="RenderControlOption.h" />
     <ClInclude Include="SceneDefferedRenderer.h" />
     <ClInclude Include="SceneForwardRenderer.h" />
     <ClInclude Include="IComponentVisitor.h" />

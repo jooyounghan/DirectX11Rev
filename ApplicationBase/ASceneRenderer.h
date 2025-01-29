@@ -34,7 +34,7 @@ protected:
 
 protected:
 	std::vector<ModelMaterialAsset*> m_selectedModelMaterialAssets;
-	ScreenQuad* m_screenQuad;
+	ScreenQuad* m_screenQuad = nullptr;
 
 public:
 	virtual void Visit(Scene* scene) override final;
@@ -47,9 +47,8 @@ public:
 	virtual void Visit(CameraComponent* cameraComponent) = 0;
 
 public:
-	virtual void Visit(ARenderSphereCollisionComponent* renderSphereCollisionComponent) override;
-	virtual void Visit(ARenderOrientedBoxCollisionComponent* renderOrientedBoxCollisionComponent) override;
-	virtual void Visit(ARenderFrustumCollisionComponent* renderFrustumCollisionComponent) override;
+	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) override final;
+	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override final;
 
 public:
 	virtual void ClearRenderTargets();

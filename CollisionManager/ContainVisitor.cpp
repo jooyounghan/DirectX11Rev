@@ -5,7 +5,7 @@ using namespace std;
 using namespace DirectX;
 
 
-ContainVisitor::ContainVisitor(ACollisionAcceptor* collisionAcceptor)
+ContainVisitor::ContainVisitor(ICollisionAcceptor* collisionAcceptor)
 	: ACollisionVisitor(collisionAcceptor)
 {
 }
