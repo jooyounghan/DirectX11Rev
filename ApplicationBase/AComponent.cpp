@@ -41,21 +41,13 @@ void AComponent::RemoveFromParent()
 	UpdateAbsoluteEntities();
 }
 
-const XMVECTOR AComponent::GetAbsoluteRotationQuaternionV() const
+const XMVECTOR AComponent::GetAbsoluteRotationQuaternion() const
 {
 	return XMQuaternionRotationRollPitchYaw(
 		XMConvertToRadians(XMVectorGetX(m_absoluteAngle)),
 		XMConvertToRadians(XMVectorGetY(m_absoluteAngle)),
 		XMConvertToRadians(XMVectorGetZ(m_absoluteAngle))
 	);
-}
-
-const XMFLOAT4 AComponent::GetAbsoluteRotationQuaternion() const
-{ 
-	const XMVECTOR rotationQuaternionV = GetAbsoluteRotationQuaternionV();
-	XMFLOAT4 rotationQuaternion;
-	XMStoreFloat4(&rotationQuaternion, rotationQuaternionV);
-	return rotationQuaternion;
 }
 
 XMMATRIX AComponent::GetAbsoluteTransformation()

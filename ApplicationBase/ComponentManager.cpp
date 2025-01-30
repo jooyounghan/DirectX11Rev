@@ -26,11 +26,9 @@ using namespace DirectX;
 
 ComponentManager::ComponentManager(
 	SessionManager* sessionManager, 
-	AssetManager* assetManager, 
 	ID3D11Device* const* deviceAddress, 
 	DefferedContext* defferedContext)
 	: SchemaManager(sessionManager, "component_db"),
-	m_assetManagerCached(assetManager),
 	m_deviceAddressCached(deviceAddress),
 	m_defferedContext(defferedContext)
 {
@@ -182,6 +180,8 @@ void ComponentManager::LoadComponents()
 
 void ComponentManager::LoadScenes()
 {
+	AssetManager* assetManager = AssetManager::GetInstance();
+
 	const std::string& scenesTableName = "scenes";
 	Table scenesTable = getTable(scenesTableName, true);
 
@@ -202,8 +202,8 @@ void ComponentManager::LoadScenes()
 		m_sceneIDsToScene.emplace(sceneID, scene);
 		m_scenesToDescription.emplace(scene, sceneDescription);
 
-		scene->UpdateSceneMeshAsset(*m_assetManagerCached);
-		scene->UpdateSceneIBLMaterialAsset(*m_assetManagerCached);
+		scene->UpdateSceneMeshAsset(*assetManager);
+		scene->UpdateSceneIBLMaterialAsset(*assetManager);
 	}
 
 	LoadLastAutoIncrementIDFromTable(scenesTableName, m_sceneIssuedID);
@@ -241,7 +241,7 @@ void ComponentManager::InitLoadedComponents()
 {
 	try
 	{
-		ComponentDBInitializer componentDBInitializer(m_assetManagerCached, this);
+		ComponentDBInitializer componentDBInitializer(this);
 		ComponentEntityInitializer componentEntityInitializer(*m_deviceAddressCached, m_defferedContext->GetDefferedContext());
 		m_sessionManager->startTransaction();
 		{

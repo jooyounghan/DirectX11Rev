@@ -8,16 +8,17 @@ BoundingVolumeNode::BoundingVolumeNode(
 	const BoundingBox& boundingBox, 
 	ICollisionAcceptor* const collidable
 )
-	: BoundingBox(boundingBox),
+	: 
+	m_box(boundingBox),
 	m_lowerBound(
-		boundingBox.Center.x - Extents.x,
-		boundingBox.Center.y - Extents.y,
-		boundingBox.Center.z - Extents.z
+		boundingBox.Center.x - boundingBox.Extents.x,
+		boundingBox.Center.y - boundingBox.Extents.y,
+		boundingBox.Center.z - boundingBox.Extents.z
 	),
 	m_upperBound(
-		boundingBox.Center.x + Extents.x,
-		boundingBox.Center.y + Extents.y,
-		boundingBox.Center.z + Extents.z
+		boundingBox.Center.x + boundingBox.Extents.x,
+		boundingBox.Center.y + boundingBox.Extents.y,
+		boundingBox.Center.z + boundingBox.Extents.z
 	),
 	m_collidable(collidable)
 {
@@ -29,24 +30,13 @@ BoundingVolumeNode::BoundingVolumeNode(
 	const XMFLOAT3& upperBound,
 	ICollisionAcceptor* const collidable
 )
-	: BoundingBox(
-		XMFLOAT3(
-			(lowerBound.x + upperBound.x) / 2.f,
-			(lowerBound.y + upperBound.y) / 2.f,
-			(lowerBound.z + upperBound.z) / 2.f
-		), 
-		XMFLOAT3(
-			(upperBound.x - lowerBound.x / 2.f),
-			(upperBound.y - lowerBound.y / 2.f),
-			(upperBound.z - lowerBound.z / 2.f)
-		)
-	),
+	: m_box(CreateBoundingBox(lowerBound, upperBound)),
 	m_lowerBound(lowerBound), m_upperBound(upperBound), m_collidable(collidable)
 {
 	m_volumeSize = GetVolumeSize();
 }
 
-BoundingVolumeNode* BoundingVolumeNode::CreateUnionBoundingVolume(
+DirectX::BoundingBox BoundingVolumeNode::CreateUnionBoundingBox(
 	const BoundingVolumeNode* const boundingVolume1,
 	const BoundingVolumeNode* const boundingVolume2,
 	const float& margin
@@ -56,7 +46,7 @@ BoundingVolumeNode* BoundingVolumeNode::CreateUnionBoundingVolume(
 	XMFLOAT3 upperBound;
 	GetBounds(boundingVolume1, boundingVolume2, margin, lowerBound, upperBound);
 
-	return new BoundingVolumeNode(lowerBound, upperBound);
+	return CreateBoundingBox(lowerBound, upperBound);
 }
 
 const float BoundingVolumeNode::GetUnionBoundingVolumeSize(
@@ -95,6 +85,35 @@ void BoundingVolumeNode::GetBounds(
 	upperBoundOut.x += margin;
 	upperBoundOut.y += margin;
 	upperBoundOut.z += margin;
+}
+
+DirectX::BoundingBox BoundingVolumeNode::CreateBoundingBox(
+	const DirectX::XMFLOAT3& lowerBound, 
+	const DirectX::XMFLOAT3& upperBound
+)
+{
+	XMVECTOR lowerBoundV = XMLoadFloat3(&lowerBound);
+	XMVECTOR upperBoundV = XMLoadFloat3(&lowerBound);
+
+	XMVECTOR centerV = (lowerBoundV + upperBoundV) / 2.f;
+	XMVECTOR extentsV = (upperBoundV - lowerBoundV) / 2.f;
+
+	XMFLOAT3 center, extents;
+	XMStoreFloat3(&center, centerV);
+	XMStoreFloat3(&extents, extentsV);
+
+	return DirectX::BoundingBox(center, extents);
+}
+
+void BoundingVolumeNode::GetSiblingNode(BoundingVolumeNode* node, BoundingVolumeNode* siblingOut, bool& isSiblingLeft)
+{
+	siblingOut = nullptr;
+	BoundingVolumeNode* parentNode = node->m_parentNode;
+	if (parentNode)
+	{
+		isSiblingLeft = parentNode->m_right == node;
+		siblingOut = isSiblingLeft ? parentNode->m_left : parentNode->m_right;
+	}
 }
 
 void BoundingVolumeNode::FindBestLeafNode(

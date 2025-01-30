@@ -11,12 +11,13 @@ using namespace ImGui;
 
 AssetWriterPathNode::AssetWriterPathNode(
 	const ImVec2& leftTop, const float& radius, 
-	const ImVec2& referencedOrigin, AssetManager* assetManager
+	const ImVec2& referencedOrigin
 )
-	: m_assetMangerCached(assetManager),
-	VariableNode<string>("Writer Asset Path", leftTop, radius, referencedOrigin, {}),
+	: VariableNode<string>("Writer Asset Path", leftTop, radius, referencedOrigin, {}),
 	m_assetWriterPathComboBox(format("{}", (uint64_t)this), "", NULL)
 {
+	AssetManager* assetManager = AssetManager::GetInstance();
+
 	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
 		{
 			SetItemCursorWithInternalMargin(drawLeftTop);
@@ -25,7 +26,7 @@ AssetWriterPathNode::AssetWriterPathNode(
 		}
 	);
 
-	m_assetWriterPathComboBox.SetSelectableItems("Select Path", m_assetMangerCached->GetAssetWriterPaths());
+	m_assetWriterPathComboBox.SetSelectableItems("Select Path", assetManager->GetAssetWriterPaths());
 
 	m_assetWriterPathComboBox.OnSelChanged = [&](const size_t& idx, const string& selectedAssetName)
 	{

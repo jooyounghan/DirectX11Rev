@@ -15,7 +15,6 @@ enum class EAssetThumbnailType
 constexpr size_t AssetThumbnailTypeCount = static_cast<size_t>(EAssetThumbnailType::ASSET_THUMBNAIL_TYPE_MATERIAL) + 1;
 
 class AAsset;
-class AssetManager;
 class AssetFileControl;
 enum class EAssetType;
 
@@ -37,13 +36,11 @@ public:
 	AssetViewWindow(
 		const std::string& windowID, 
 		ID3D11Device* const* deviceAddress,
-		ID3D11DeviceContext* const* deviceContextAddress,
-		AssetManager* assetManager
+		ID3D11DeviceContext* const* deviceContextAddress
 	);
 	~AssetViewWindow() override;
 
 private:
-	AssetManager* m_assetManagerCached = nullptr;
 	SAssetFolder  m_assetRootFolders;
 	const SAssetFolder* m_selectedFolders = nullptr;
 

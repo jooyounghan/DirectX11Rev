@@ -3,6 +3,8 @@
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
+#include "SphereCollisionComponent.h"
+#include "OrientedBoxCollisionComponent.h"
 
 #include "DynamicBuffer.h"
 
@@ -38,10 +40,26 @@ void ComponentEntityUpdater::Visit(CameraComponent* cameraComponent)
 
 void ComponentEntityUpdater::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
+	sphereCollisionComponent->UpdateAbsoluteEntities();
+	UpdateTransformationBuffer(sphereCollisionComponent);
+	UpdateComponentBuffer(sphereCollisionComponent);
+	
+	sphereCollisionComponent->UpdateBoundingVolumeHierachy();
 }
 
 void ComponentEntityUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
+	orientedBoxCollisionComponent->UpdateAbsoluteEntities();
+	UpdateTransformationBuffer(orientedBoxCollisionComponent);
+	UpdateComponentBuffer(orientedBoxCollisionComponent);
+
+	orientedBoxCollisionComponent->UpdateBoundingVolumeHierachy();
+}
+
+void ComponentEntityUpdater::UpdateComponentBuffer(AComponent* component)
+{
+	DynamicBuffer* componentBuffer = component->GetComponentBuffer();
+	componentBuffer->Upload(m_deviceContextCached);
 }
 
 void ComponentEntityUpdater::UpdateTransformationBuffer(AComponent* component)

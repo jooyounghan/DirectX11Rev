@@ -10,13 +10,12 @@
 using namespace std;
 using namespace ImGui;
 
-ScratchTextureAssetVariableNode::ScratchTextureAssetVariableNode(
-	const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin, AssetManager* assetManager
-)
-	: m_assetMangerCached(assetManager), 
-	VariableNode<ScratchTextureAsset*>("Scratch Asset", leftTop, radius, referencedOrigin, {}),
+ScratchTextureAssetVariableNode::ScratchTextureAssetVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin)
+	: VariableNode<ScratchTextureAsset*>("Scratch Asset", leftTop, radius, referencedOrigin, {}),
 	m_scratchTextureAssetComboBox(format("{}", (uint64_t)this), "", NULL)
 {
+	AssetManager* assetManager = AssetManager::GetInstance();
+
 	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
 		{
 			SetItemCursorWithInternalMargin(drawLeftTop);
@@ -32,14 +31,14 @@ ScratchTextureAssetVariableNode::ScratchTextureAssetVariableNode(
 		}
 	);
 
-	m_assetMangerCached->RegisterAssetLoadedHandler(
+	assetManager->RegisterAssetLoadedHandler(
 		format("UpdateScratchAssetNode{}", (uint64_t)this), 
 		bind(&ScratchTextureAssetVariableNode::UpdateScratchAssetSelectables, this, placeholders::_1, placeholders::_2, placeholders::_3)
 	);
 
-	m_scratchTextureAssetComboBox.OnSelChanged = [&](const size_t& idx, const string& selectedAssetName) 
+	m_scratchTextureAssetComboBox.OnSelChanged = [&, assetManager](const size_t& idx, const string& selectedAssetName)
 		{
-			m_selectedScratchTextureAsset = m_assetMangerCached->GetScratchTextureAsset(selectedAssetName);
+			m_selectedScratchTextureAsset = assetManager->GetScratchTextureAsset(selectedAssetName);
 		};
 }
 
@@ -69,9 +68,10 @@ void ScratchTextureAssetVariableNode::DrawScratchAssetSelectCombo()
 
 void ScratchTextureAssetVariableNode::UpdateScratchAssetSelectables(const EAssetType& assetType, std::string s, AAsset* a)
 {
+	AssetManager* assetManager = AssetManager::GetInstance();
 	if (assetType == EAssetType::ASSET_TYPE_SCRATCH_TEXTURE)
 	{
-		m_scratchTextureAssetComboBox.SetSelectableItems("Select Scratch Texture", m_assetMangerCached->GetAssetNames(EAssetType::ASSET_TYPE_SCRATCH_TEXTURE));
+		m_scratchTextureAssetComboBox.SetSelectableItems("Select Scratch Texture", assetManager->GetAssetNames(EAssetType::ASSET_TYPE_SCRATCH_TEXTURE));
 	}
 }
 

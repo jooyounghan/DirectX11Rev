@@ -11,7 +11,7 @@ bool CollidableFrustum::Accept(ICollisionVisitor& collisionVisitor) const
 
 bool CollidableFrustum::IsInBVNode(BoundingVolumeNode* boundingVolumeNode) const
 {
-    return boundingVolumeNode->Contains(*this);
+    return boundingVolumeNode->GetBoundingBox().Contains(*this);
 }
 
 DirectX::BoundingBox CollidableFrustum::GetBoundingBox(const float& margin) const
@@ -47,15 +47,15 @@ DirectX::BoundingBox CollidableFrustum::GetBoundingBox(const float& margin) cons
 }
 
 void CollidableFrustum::SetBoundingProperties(
-    const DirectX::XMFLOAT3& origin, 
-    const DirectX::XMFLOAT4& rotationQuaternion, 
+    const DirectX::XMVECTOR& origin, 
+    const DirectX::XMVECTOR& rotationQuaternion,
     const float& fovAngle, 
     const float& nearZ, 
     const float& farZ
 )
 {
-    Origin = origin;
-    Orientation = rotationQuaternion;
+    XMStoreFloat3(&Origin, origin);
+    XMStoreFloat4(&Orientation, rotationQuaternion);
     RightSlope = tanf(fovAngle / 2.f);
     LeftSlope = -RightSlope;
     TopSlope = tanf(fovAngle / 2.f);

@@ -3,20 +3,16 @@
 
 #include <mysqlx/xdevapi.h>
 
-class AssetManager;
 struct ID3D11Device;
+class ICollisionOption;
 
 class ComponentDBInitializer : public IComponentVisitor
 {
 public:
-	ComponentDBInitializer(
-		AssetManager* assetManager,
-		mysqlx::Schema* schema
-	);
+	ComponentDBInitializer(mysqlx::Schema* schema);
 	~ComponentDBInitializer() override = default;
 
 protected:
-	AssetManager* m_assetManagerCached = nullptr;
 	mysqlx::Schema* m_schemaCached = nullptr;
 
 public:
@@ -32,5 +28,6 @@ public:
 
 private:
 	void LoadModelMaterials(AMeshComponent* meshComponent);
+	ICollisionOption* CreateCollisionOption(const uint32_t& collitionOptionID);
 };
 

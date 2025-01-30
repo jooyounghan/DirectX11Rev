@@ -145,7 +145,7 @@
     <PostBuildEvent>
       <Command>robocopy "$(ProjectDir)Shaders" "$(SolutionDir)Shaders" /E /IS /IT
 robocopy "$(ProjectDir)Shaders" "$(SolutionDir)$(Platform)\Shaders" /E /IS /IT
-if %ERRORLEVEL% LSS 3 exit 0
+if %ERRORLEVEL% LSS 16 exit 0
 exit %ERRORLEVEL%</Command>
       <Message>Shader 파일을 적정 디렉토리에 복사합니다.</Message>
     </PostBuildEvent>
@@ -181,6 +181,7 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="AnimationPlayer.cpp" />
     <ClCompile Include="OrientedBoxCollisionComponent.cpp" />
     <ClCompile Include="ASceneRenderer.cpp" />
+    <ClCompile Include="PerformanceAnalyzer.cpp" />
     <ClCompile Include="SphereCollisionComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="ComponentDBCreator.cpp" />
@@ -212,6 +213,7 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="AnimationPlayer.h" />
     <ClInclude Include="OrientedBoxCollisionComponent.h" />
     <ClInclude Include="ASceneRenderer.h" />
+    <ClInclude Include="PerformanceAnalyzer.h" />
     <ClInclude Include="SphereCollisionComponent.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="ComponentDBCreator.h" />
@@ -251,7 +253,7 @@ exit %ERRORLEVEL%</Command>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\BoundingComponentHeader.hlsli" />
+    <None Include="Shaders\DebugComponentHeader.hlsli" />
     <None Include="Shaders\SceneHeader.hlsli" />
     <None Include="Shaders\GBufferResolverHeader.hlsli" />
     <None Include="Shaders\MaterialComponentHeader.hlsli" />
@@ -259,11 +261,11 @@ exit %ERRORLEVEL%</Command>
     <None Include="Shaders\PBRHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\ForwardBoundingComponentPS.hlsl">
+    <FxCompile Include="Shaders\DebugComponentPS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shaders\BoundingComponentVS.hlsl">
+    <FxCompile Include="Shaders\DebugComponentVS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>

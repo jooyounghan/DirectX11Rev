@@ -17,7 +17,8 @@ public:
 	virtual void Accept(IComponentVisitor* visitor) override;
 
 public:
-	virtual void UpdateAbsoluteEntities();
+	virtual void UpdateAbsoluteEntities() override;
+	virtual void UpdateComponentTransformation() override;
 
 public:
 	virtual void SetCollisionOption(ICollisionOption* collisionOption) override;

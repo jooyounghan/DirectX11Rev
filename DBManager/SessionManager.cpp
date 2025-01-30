@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "SessionManager.h"
 
 using namespace std;

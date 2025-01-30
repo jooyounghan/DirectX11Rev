@@ -62,7 +62,7 @@ public:
 	virtual void PostProcess() override;
 
 protected:
-	virtual void ApplyRenderTargets(
+	virtual void ApplyRenderTargetsWithID(
 		ID3D11DeviceContext* const deviceContext, 
 		const CameraComponent* const cameraComponent
 	) const override;

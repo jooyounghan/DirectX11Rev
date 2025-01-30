@@ -27,22 +27,23 @@ string AssetViewWindow::MaterialAssetTN = "MATERIALASSETTN";
 AssetViewWindow::AssetViewWindow(
     const std::string& windowID, 
     ID3D11Device* const* deviceAddress,
-    ID3D11DeviceContext* const* deviceContextAddress,
-    AssetManager* assetManager
+    ID3D11DeviceContext* const* deviceContextAddress
 )
-	: AWindow(windowID, true, nullptr), m_assetManagerCached(assetManager)
+	: AWindow(windowID, true, nullptr)
 {
-    m_assetManagerCached->RegisterAssetLoadedHandler("AddAssetControl", bind(&AssetViewWindow::AddAssetControl, this, placeholders::_1, placeholders::_2, placeholders::_3));
+    AssetManager* assetManager = AssetManager::GetInstance();
+
+    assetManager->RegisterAssetLoadedHandler("AddAssetControl", bind(&AssetViewWindow::AddAssetControl, this, placeholders::_1, placeholders::_2, placeholders::_3));
     
     m_assetContextMenuModal = new AssetContextMenu("Asset Context Menu");
 
     m_assetNodeEditorWindows.emplace_back(new CreateModelMaterialWIthNodeEditorWindow(
-        deviceAddress, deviceContextAddress, m_assetManagerCached, "Create Model Material Asset",
+        deviceAddress, deviceContextAddress, "Create Model Material Asset",
         m_assetContextMenuModal->GetCreateModelMaterialOpenFlag()
     ));
 
     m_assetNodeEditorWindows.emplace_back(new CreateIBLMaterialWithNodeEditorWindow(
-        deviceAddress, deviceContextAddress, m_assetManagerCached, "Create IBL Material Asset",
+        deviceAddress, deviceContextAddress, "Create IBL Material Asset",
         m_assetContextMenuModal->GetCreateIBLMaterialOpenFlag()
     ));
 }
@@ -100,6 +101,8 @@ void AssetViewWindow::AddAssetByRecursiveKey(
     const EAssetType& assetType, SAssetFolder& targetFolder, const string& assetPath, AAsset* asset
 )
 {
+    AssetManager* assetManager = AssetManager::GetInstance();
+
     std::string normalizedPath = assetPath;
     const path& _assetPath = assetPath;
     std::replace(normalizedPath.begin(), normalizedPath.end(), '\\', '/');
@@ -119,16 +122,16 @@ void AssetViewWindow::AddAssetByRecursiveKey(
         switch (assetType)
         {
         case EAssetType::ASSET_TYPE_STATIC:
-            thumbnailSRV = m_assetManagerCached->GetResourceAsset(StaticMeshAssetTN)->GetSRV();
+            thumbnailSRV = assetManager->GetResourceAsset(StaticMeshAssetTN)->GetSRV();
             break;
         case EAssetType::ASSET_TYPE_SKELETAL:
-            thumbnailSRV = m_assetManagerCached->GetResourceAsset(SkeletalMeshAssetTN)->GetSRV();
+            thumbnailSRV = assetManager->GetResourceAsset(SkeletalMeshAssetTN)->GetSRV();
             break;
         case EAssetType::ASSET_TYPE_BONE:
-            thumbnailSRV = m_assetManagerCached->GetResourceAsset(BoneAssetTN)->GetSRV();
+            thumbnailSRV = assetManager->GetResourceAsset(BoneAssetTN)->GetSRV();
             break;
         case EAssetType::ASSET_TYPE_ANIMATION:
-            thumbnailSRV = m_assetManagerCached->GetResourceAsset(AnimationAssetTN)->GetSRV();
+            thumbnailSRV = assetManager->GetResourceAsset(AnimationAssetTN)->GetSRV();
             break;
         case EAssetType::ASSET_TYPE_BASE_TEXTURE:
         case EAssetType::ASSET_TYPE_SCRATCH_TEXTURE:
@@ -139,7 +142,7 @@ void AssetViewWindow::AddAssetByRecursiveKey(
         }
         case EAssetType::ASSET_TYPE_MODEL_MATERIAL:
         case EAssetType::ASSET_TYPE_IBL_MATERIAL:
-            thumbnailSRV = m_assetManagerCached->GetResourceAsset(MaterialAssetTN)->GetSRV();
+            thumbnailSRV = assetManager->GetResourceAsset(MaterialAssetTN)->GetSRV();
             break;
         default:
             break;

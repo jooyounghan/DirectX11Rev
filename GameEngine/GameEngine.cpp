@@ -5,6 +5,7 @@
 
 #include "SceneWindow.h"
 #include "AssetViewWindow.h"
+#include "PerformanceAnalyzerWindow.h"
 
 #include "AssetManager.h"
 #include "TaskManager.h"
@@ -261,7 +262,7 @@ void GameEngine::CreateSessionManager()
 
 void GameEngine::CreateAssetManager()
 {
-	m_assetManager = new AssetManager();
+	m_assetManager = AssetManager::GetInstance();
 	m_assetManager->RegisterAssetReadPath("./Assets");
 	m_assetManager->RegisterAssetWritePath("./Assets");
 }
@@ -270,7 +271,7 @@ void GameEngine::CreateComponentManager()
 {
 	ID3D11Device* const* deviceAddress = m_engine->GetDeviceAddress();
 	m_componentManager = new ComponentManager(
-		m_sessionManager, m_assetManager, deviceAddress, 
+		m_sessionManager, deviceAddress, 
 		m_defferedContexts[EDefferedContextType::COMPONENT_UPDATE]
 	);
 }
@@ -288,17 +289,18 @@ void GameEngine::CreateWindows()
 
 	m_imguiWindows.emplace_back(new AssetViewWindow(
 		"AssetViewWindow", deviceAddress, 
-		m_defferedContexts[EDefferedContextType::ASSETS_LOAD]->GetDefferedContextAddress(),
-		m_assetManager)
-	);
+		m_defferedContexts[EDefferedContextType::ASSETS_LOAD]->GetDefferedContextAddress()
+	));
 
 	SceneWindow* sceneWindow = new SceneWindow(
 		"SceneWindow", deviceAddress, deviceContextAddress,
 		m_defferedContexts[EDefferedContextType::COMPONENT_RENDER]->GetDefferedContextAddress(),
-		m_assetManager, m_componentManager, m_componentPSOManager
+		m_componentManager, m_componentPSOManager
 	);
 	sceneWindow->SetCameraComponent(m_editorCamera);
 	m_imguiWindows.emplace_back(sceneWindow);
+
+	m_imguiWindows.emplace_back(new PerformanceAnalyzerWindow("PerformanceAnalyzerWindow"));
 }
 
 void GameEngine::CreateModals()

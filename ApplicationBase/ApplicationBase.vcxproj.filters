@@ -103,6 +103,9 @@
     <ClInclude Include="ACollisionComponent.h">
       <Filter>헤더 파일\Component\Collision</Filter>
     </ClInclude>
+    <ClInclude Include="PerformanceAnalyzer.h">
+      <Filter>헤더 파일\Performance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -174,9 +177,6 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{69af0b85-78ea-4d4f-b920-7e4f5febf77a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader\BoundingComponent">
-      <UniqueIdentifier>{402ec000-5199-4f75-9a3c-523dd4f2aa75}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader\MeshComponent">
       <UniqueIdentifier>{9a6552dd-4370-49c3-adb5-6c99dbf4e683}</UniqueIdentifier>
     </Filter>
@@ -218,6 +218,15 @@
     </Filter>
     <Filter Include="소스 파일\Component\Collision\Render">
       <UniqueIdentifier>{6e982548-45f6-4433-ab7b-605f487fbc8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\DebugComponent">
+      <UniqueIdentifier>{402ec000-5199-4f75-9a3c-523dd4f2aa75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Performance">
+      <UniqueIdentifier>{b5cbf0c0-4d8c-417d-b5d5-f048dba8d88b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Performance">
+      <UniqueIdentifier>{50e5f434-5502-4536-84f0-c14a0a8a2697}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -308,9 +317,12 @@
     <ClCompile Include="RenderControlOption.cpp">
       <Filter>소스 파일\Component\Collision\Render</Filter>
     </ClCompile>
+    <ClCompile Include="PerformanceAnalyzer.cpp">
+      <Filter>소스 파일\Performance</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\BoundingComponentHeader.hlsli">
+    <None Include="Shaders\DebugComponentHeader.hlsli">
       <Filter>Shader\Header</Filter>
     </None>
     <None Include="Shaders\SceneHeader.hlsli">
@@ -330,8 +342,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\BoundingComponentVS.hlsl">
-      <Filter>Shader\BoundingComponent</Filter>
+    <FxCompile Include="Shaders\DebugComponentVS.hlsl">
+      <Filter>Shader\DebugComponent</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\DefferedMeshComponentPS.hlsl">
       <Filter>Shader\MeshComponent</Filter>
@@ -363,8 +375,8 @@
     <FxCompile Include="Shaders\StaticMeshComponentVS.hlsl">
       <Filter>Shader\MeshComponent</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\ForwardBoundingComponentPS.hlsl">
-      <Filter>Shader\BoundingComponent</Filter>
+    <FxCompile Include="Shaders\DebugComponentPS.hlsl">
+      <Filter>Shader\DebugComponent</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

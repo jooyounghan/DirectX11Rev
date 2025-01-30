@@ -3,6 +3,9 @@
 using namespace std;
 using namespace DirectX;
 
+const std::string StaticMeshAsset::DefaultSphereModelName = "sphere_model_Static";
+const std::string StaticMeshAsset::DefaultCubeModelName = "cube_model_Static";
+
 StaticMeshAsset::StaticMeshAsset(const string& assetName)
 	: AMeshAsset(assetName)
 {

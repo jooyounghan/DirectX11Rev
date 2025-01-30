@@ -57,9 +57,11 @@ public:
 
 public:
 	inline const uint32_t& GetComponentID() { return m_componentConstant.m_componentID; }
+	inline const DirectX::XMFLOAT3& GetDebugColor() { return m_componentConstant.m_debugColor; }
+	inline void SetDebugColor(const DirectX::XMFLOAT3& debugColor) { m_componentConstant.m_debugColor = debugColor; }
 
 public:
-	DirectX::XMMATRIX GetLocalTranformation();
+	virtual DirectX::XMMATRIX GetLocalTranformation();
 	DirectX::XMVECTOR GetLocalQuaternion();
 };
 

@@ -158,6 +158,7 @@
     <ClCompile Include="IBLMaterialAssetCreateFlowNode.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelMaterialAssetCreateFlowNode.cpp" />
+    <ClCompile Include="PerformanceAnalyzerWindow.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
     <ClCompile Include="ScratchTextureAssetVariableNode.cpp" />
   </ItemGroup>
@@ -175,6 +176,7 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="IBLMaterialAssetCreateFlowNode.h" />
     <ClInclude Include="ModelMaterialAssetCreateFlowNode.h" />
+    <ClInclude Include="PerformanceAnalyzerWindow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="ScratchTextureAssetVariableNode.h" />

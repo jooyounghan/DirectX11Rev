@@ -3,6 +3,8 @@
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
+#include "SphereCollisionComponent.h"
+#include "OrientedBoxCollisionComponent.h"
 
 #include "SkeletalMeshAsset.h"
 
@@ -77,10 +79,16 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 
 void ComponentEntityInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
+	sphereCollisionComponent->SetDebugColor({ 1.f, 0.f, 0.f });
+	sphereCollisionComponent->UpdateAbsoluteEntities();
+	InitBaseEntityBuffer(sphereCollisionComponent);
 }
 
 void ComponentEntityInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
+	orientedBoxCollisionComponent->SetDebugColor({ 1.f, 0.f, 0.f });
+	orientedBoxCollisionComponent->UpdateAbsoluteEntities();
+	InitBaseEntityBuffer(orientedBoxCollisionComponent);
 }
 
 void ComponentEntityInitializer::InitBaseEntityBuffer(AComponent* component)

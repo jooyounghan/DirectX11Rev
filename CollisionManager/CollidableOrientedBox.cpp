@@ -11,7 +11,7 @@ bool CollidableOrientedBox::Accept(ICollisionVisitor& collisionVisitor) const
 
 bool CollidableOrientedBox::IsInBVNode(BoundingVolumeNode* boundingVolumeNode) const
 {
-    return boundingVolumeNode->Contains(*this);
+    return boundingVolumeNode->GetBoundingBox().Contains(*this);
 }
 
 DirectX::BoundingBox CollidableOrientedBox::GetBoundingBox(const float& margin) const
@@ -47,12 +47,12 @@ DirectX::BoundingBox CollidableOrientedBox::GetBoundingBox(const float& margin) 
 }
 
 void CollidableOrientedBox::SetBoundingProperties(
-    const DirectX::XMFLOAT3& center, 
-    const DirectX::XMFLOAT3& extents, 
-    const DirectX::XMFLOAT4& rotationQuaternion
+    const DirectX::XMVECTOR& center,
+    const DirectX::XMFLOAT3& extents,
+    const DirectX::XMVECTOR& rotationQuaternion
 )
 {
-    Center = center;
+    XMStoreFloat3(&Center, center);
     Extents = extents;
-    Orientation = rotationQuaternion;
+    XMStoreFloat4(&Orientation, rotationQuaternion);
 }

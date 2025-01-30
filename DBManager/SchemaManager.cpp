@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "SchemaManager.h"
 
 using namespace std;

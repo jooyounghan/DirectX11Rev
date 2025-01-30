@@ -13,7 +13,7 @@ public:
 		const DirectX::XMFLOAT3& localPosition,
 		const DirectX::XMFLOAT3& localAngle
 	);
-	virtual ~ACollisionComponent() override = default;
+	virtual ~ACollisionComponent() override;
 
 protected:
 	ICollisionOption* m_collisionOption = nullptr;

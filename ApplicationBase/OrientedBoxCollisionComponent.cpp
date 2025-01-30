@@ -14,8 +14,8 @@ OrientedBoxCollisionComponent::OrientedBoxCollisionComponent(
 )
 	: ACollisionComponent(componentName, componentID, localPosition, localAngle)
 {
-	XMFLOAT4 rotationQuaternion = GetAbsoluteRotationQuaternion();
-	SetBoundingProperties(localPosition, extends, rotationQuaternion);
+	const XMVECTOR rotationQuaternion = GetAbsoluteRotationQuaternion();
+	SetBoundingProperties(m_localPosition, extends, rotationQuaternion);
 }
 
 OrientedBoxCollisionComponent::~OrientedBoxCollisionComponent()
@@ -32,16 +32,19 @@ void OrientedBoxCollisionComponent::UpdateAbsoluteEntities()
 {
 	AComponent::UpdateAbsoluteEntities();
 
-	XMFLOAT3 center;
-	XMStoreFloat3(&center, m_absolutePosition);
+	SetBoundingProperties(m_absolutePosition, Extents, GetAbsoluteRotationQuaternion());
+}
 
-	XMFLOAT4 orientation = GetAbsoluteRotationQuaternion();
-	SetBoundingProperties(center, Extents, orientation);
-
+void OrientedBoxCollisionComponent::UpdateComponentTransformation()
+{
+	m_transformation.m_transformation = XMMatrixScalingFromVector(XMLoadFloat3(&Extents)) * GetAbsoluteTransformation();
+	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
+	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
 }
 
 void OrientedBoxCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)
 {
+	if (m_collisionOption) m_collisionOption->RemoveBVHImpl(this);
 	ACollisionComponent::SetCollisionOption(collisionOption);
 	m_collisionOption->InsertBVHImpl(this);
 }

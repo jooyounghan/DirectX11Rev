@@ -16,7 +16,6 @@ class Scene;
 class AComponent;
 class CameraComponent;
 
-class AssetManager;
 class ComponentManager;
 class ComponentPSOManager;
 
@@ -31,7 +30,6 @@ public:
 		ID3D11Device* const* deviceAddress,
 		ID3D11DeviceContext* const* immediateContextAddress,
 		ID3D11DeviceContext* const* componentRenderDefferedContextAddress,
-		AssetManager* assetManager,
 		ComponentManager* componentManager, 
 		ComponentPSOManager* componentPsoManager
 	);
@@ -45,7 +43,6 @@ private:
 	ComponentPSOManager* m_componentPsoManageCached = nullptr;
 	CameraComponent* m_selectedCamera = nullptr;
 
-
 public:
 	inline void SetCameraComponent(CameraComponent* cameraComponent) { m_selectedCamera = cameraComponent; }
 	virtual void PrepareWindow() override;
@@ -53,7 +50,7 @@ public:
 private:
 	void RenderComponentRecursive(ASceneRenderer* const renderer, const std::vector<AComponent*>& components);
 
-private:
+protected:
 	virtual void RenderWindowImpl() override;
 
 private:

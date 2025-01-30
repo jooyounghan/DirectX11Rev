@@ -14,7 +14,16 @@ ACollisionComponent::ACollisionComponent(
 {
 }
 
+ACollisionComponent::~ACollisionComponent()
+{
+	if (m_collisionOption)
+	{
+		delete m_collisionOption;
+	}
+}
+
 void ACollisionComponent::SetCollisionOption(ICollisionOption* collisionOption) 
 { 
+	if (m_collisionOption) delete m_collisionOption;
 	m_collisionOption = collisionOption; 
 }

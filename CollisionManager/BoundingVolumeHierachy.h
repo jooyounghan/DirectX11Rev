@@ -23,7 +23,8 @@ public:
 	void UpdateCollidable(ICollisionAcceptor* collidable);
 
 private:
-	void RestructVolume(BoundingVolumeNode* node);
+	void Refit(BoundingVolumeNode* node);
+	void Rotate(BoundingVolumeNode* node);
 
 };
 

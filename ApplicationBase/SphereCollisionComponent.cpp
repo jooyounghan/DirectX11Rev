@@ -13,7 +13,7 @@ SphereCollisionComponent::SphereCollisionComponent(
 )
 	: ACollisionComponent(componentName, componentID, localPosition, XMFLOAT3(0.f, 0.f, 0.f))
 {
-	SetBoundingProperties(localPosition, radius);;
+	SetBoundingProperties(m_localPosition, radius);
 }
 
 SphereCollisionComponent::~SphereCollisionComponent()
@@ -29,19 +29,21 @@ void SphereCollisionComponent::Accept(IComponentVisitor* visitor)
 void SphereCollisionComponent::UpdateAbsoluteEntities()
 {
 	AComponent::UpdateAbsoluteEntities();
+	SetBoundingProperties(m_absolutePosition, Radius);
+}
 
-	XMFLOAT3 center;
-	XMStoreFloat3(&center, m_absolutePosition);
-
-	XMFLOAT4 orientation = GetAbsoluteRotationQuaternion();
-	SetBoundingProperties(center, Radius);
-
+void SphereCollisionComponent::UpdateComponentTransformation()
+{
+	m_transformation.m_transformation = XMMatrixScaling(Radius, Radius, Radius) * GetAbsoluteTransformation();
+	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
+	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
 }
 
 void SphereCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)
 {
+	if (m_collisionOption) m_collisionOption->RemoveBVHImpl(this);
 	ACollisionComponent::SetCollisionOption(collisionOption);
-	m_collisionOption->InsertBVHImpl(this);
+	if (m_collisionOption) m_collisionOption->InsertBVHImpl(this);
 }
 
 void SphereCollisionComponent::UpdateBoundingVolumeHierachy()

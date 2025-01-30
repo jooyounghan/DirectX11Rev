@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 #include <functional>
+#include <string>
 
 struct ID3D11DeviceContext;
 class AComponent;
@@ -12,6 +13,7 @@ class ModelMaterialAsset;
 class MeshPartsData;
 class GraphicsPSOObject;
 class ScreenQuad;
+class ACollisionComponent;
 
 constexpr float ClearColor[4] = { 0.f, 0.f, 0.f, 1.f };
 
@@ -66,8 +68,15 @@ protected:
 	virtual void ApplyRenderTargets(
 		ID3D11DeviceContext* const deviceContext, 
 		const CameraComponent* const cameraComponent
-	) const = 0;
+	) const ;
+	virtual void ApplyRenderTargetsWithID(
+		ID3D11DeviceContext* const deviceContext,
+		const CameraComponent* const cameraComponent
+	) const;
 
 	virtual void RenderMeshPartHandler(const size_t& idx) = 0;
+
+private:
+	void RenderCollisionComponent(ACollisionComponent* collisionComponent, const std::string& debugStaticMeshAssetName);
 };
 

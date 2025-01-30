@@ -2,7 +2,7 @@
 #include "MaterialComponentHeader.hlsli"
 #include "PBRHeader.hlsli"
 
-cbuffer PickingID : register(b0)
+cbuffer ComponentBuffer : register(b0)
 {
     uint IDValues;
     float3 DebugColor;

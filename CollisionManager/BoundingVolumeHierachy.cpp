@@ -14,38 +14,43 @@ void BoundingVolumeHierachy::InsertCollidable(ICollisionAcceptor* collidable)
 	BoundingVolumeNode* leafNode = new BoundingVolumeNode(collidable->GetBoundingBox(m_margin), collidable);
 	m_collidablesToNode.emplace(collidable, leafNode);
 
-	float minVolumeSize = FLT_MAX;
-	BoundingVolumeNode* bestLeafNode = nullptr;
+	if (m_rootNode == nullptr)
+	{
+		m_rootNode = leafNode;
+		return;
+	}
 
+	float minVolumeSize = FLT_MAX;
+	BoundingVolumeNode* bestLeafNode = m_rootNode;
 	BoundingVolumeNode::FindBestLeafNode(m_rootNode, leafNode, m_margin, minVolumeSize, bestLeafNode);
 
-	if (bestLeafNode != nullptr)
+	BoundingBox newParentBox = BoundingVolumeNode::CreateUnionBoundingBox(leafNode, bestLeafNode, m_margin);
+	BoundingVolumeNode* oldParent = bestLeafNode->m_parentNode;
+	BoundingVolumeNode* newParent = new BoundingVolumeNode(newParentBox);
+
+	if (oldParent != nullptr)
 	{
-		BoundingVolumeNode* newInternalNode = BoundingVolumeNode::CreateUnionBoundingVolume(leafNode, bestLeafNode, m_margin);
-
-		BoundingVolumeNode* parent = bestLeafNode->m_parentNode;
-
-		if (parent->m_left == bestLeafNode)
+		if (oldParent->m_left == bestLeafNode)
 		{
-			parent->m_left = newInternalNode;
+			oldParent->m_left = newParent;
 		}
 		else
 		{
-			parent->m_right = newInternalNode;
+			oldParent->m_right = newParent;
 		}
-		newInternalNode->m_parentNode = parent;
-
-		leafNode->m_parentNode = newInternalNode;
-		bestLeafNode->m_parentNode = newInternalNode;
-
-		newInternalNode->m_left = leafNode;
-		newInternalNode->m_right = bestLeafNode;
-
-		RestructVolume(newInternalNode);
+		newParent->m_left = bestLeafNode;
+		newParent->m_right = leafNode;
+		bestLeafNode->m_parentNode = newParent;
+		leafNode->m_parentNode = newParent;
+		Refit(newParent);
 	}
 	else
 	{
-		m_rootNode = leafNode;
+		newParent->m_left = bestLeafNode;
+		newParent->m_right = leafNode;
+		bestLeafNode->m_parentNode = newParent;
+		leafNode->m_parentNode = newParent;
+		m_rootNode = newParent;
 	}
 }
 
@@ -56,8 +61,9 @@ void BoundingVolumeHierachy::RemoveCollidable(ICollisionAcceptor* collidable)
 		BoundingVolumeNode* boundingVolumeNode = m_collidablesToNode[collidable];
 		m_collidablesToNode.erase(collidable);
 
-		// Case 1 (No Parent)
 		BoundingVolumeNode* parentNode = boundingVolumeNode->m_parentNode;
+
+		// Case 1 (No Parent)
 		if (parentNode == nullptr)
 		{
 			delete boundingVolumeNode;
@@ -65,10 +71,10 @@ void BoundingVolumeHierachy::RemoveCollidable(ICollisionAcceptor* collidable)
 			return;
 		}
 
-		// Case 2 (No GrandParent)
 		BoundingVolumeNode* grandParentNode = parentNode->m_parentNode;
 		if (grandParentNode == nullptr)
 		{
+			// Case 2 (No GrandParent)
 			if (parentNode->m_left == boundingVolumeNode)
 			{
 				m_rootNode = parentNode->m_right;
@@ -78,37 +84,29 @@ void BoundingVolumeHierachy::RemoveCollidable(ICollisionAcceptor* collidable)
 				m_rootNode = parentNode->m_left;
 			}
 			m_rootNode->m_parentNode = nullptr;
-			delete boundingVolumeNode;
-			delete parentNode;
-			return;
-		}
-
-		// Case 3 (Has GrandParent)
-		BoundingVolumeNode* siblingNode = nullptr;
-		if (parentNode->m_left == boundingVolumeNode)
-		{
-			siblingNode = parentNode->m_right;
 		}
 		else
 		{
-			siblingNode = parentNode->m_left;
+			// Case 3 (Has GrandParent)
+			BoundingVolumeNode* siblingNode = nullptr;
+			bool isSiblingLeft = false;
+			BoundingVolumeNode::GetSiblingNode(boundingVolumeNode, siblingNode, isSiblingLeft);
+			if (siblingNode)
+			{
+				if (grandParentNode->m_left == parentNode)
+				{
+					grandParentNode->m_left = siblingNode;
+				}
+				else
+				{
+					grandParentNode->m_right = siblingNode;
+				}
+				siblingNode->m_parentNode = grandParentNode;
+				Refit(grandParentNode);
+			}
 		}
-
-		if (grandParentNode->m_left == parentNode)
-		{
-			grandParentNode->m_right = siblingNode;
-		}
-		else
-		{
-			grandParentNode->m_left = siblingNode;
-		}
-		siblingNode->m_parentNode = grandParentNode;
 		delete boundingVolumeNode;
 		delete parentNode;
-
-		/*
-		지웠을 때는 볼륨에 대해서 재구성하지 않고, 다른 원소가 삽입되거나 할 경우에만!		
-		*/ 
 	}
 }
 
@@ -126,77 +124,58 @@ void BoundingVolumeHierachy::UpdateCollidable(ICollisionAcceptor* collidable)
 	}
 }
 
-void BoundingVolumeHierachy::RestructVolume(BoundingVolumeNode* node)
+void BoundingVolumeHierachy::Refit(BoundingVolumeNode* node)
 {
-	BoundingVolumeNode* parentNode = node->m_parentNode;
-	if (parentNode == nullptr)
+	if (node == nullptr) return;
+	node->SetBoundingBox(BoundingVolumeNode::CreateUnionBoundingBox(node->m_left, node->m_right, m_margin));
+	Rotate(node);
+	Refit(node->m_parentNode);
+}
+
+void BoundingVolumeHierachy::Rotate(BoundingVolumeNode* node)
+{
+	BoundingVolumeNode* parent = node->m_parentNode;
+	BoundingVolumeNode* leftChildNode = node->m_left;
+	BoundingVolumeNode* rightChildNode = node->m_right;
+	BoundingVolumeNode* siblingNode = nullptr;
+	bool isSiblingLeft = false;
+	BoundingVolumeNode::GetSiblingNode(node, siblingNode, isSiblingLeft);
+
+	if (parent && leftChildNode && rightChildNode && siblingNode)
 	{
-		return;
-	}
+		float currentBVSize = BoundingVolumeNode::GetUnionBoundingVolumeSize(leftChildNode, rightChildNode, m_margin);
+		float rotationLeftWithSiblingSize = BoundingVolumeNode::GetUnionBoundingVolumeSize(siblingNode, rightChildNode, m_margin);
+		float rotationRightWithSiblingSize = BoundingVolumeNode::GetUnionBoundingVolumeSize(siblingNode, leftChildNode, m_margin);
 
-	if (parentNode->m_volumeSize != BoundingVolumeNode::GetUnionBoundingVolumeSize(parentNode->m_left, parentNode->m_right, m_margin))
-	{
-		BoundingVolumeNode* restructedNode = BoundingVolumeNode::CreateUnionBoundingVolume(parentNode->m_left, parentNode->m_right, m_margin);
+		bool rotateLeft = (rotationLeftWithSiblingSize < rotationRightWithSiblingSize);
+		float bestRotationSize = rotateLeft ? rotationLeftWithSiblingSize : rotationRightWithSiblingSize;
 
-		bool isNodeLeft = false;
-		if (parentNode->m_left == node)
+		if (bestRotationSize < currentBVSize)
 		{
-			isNodeLeft = true;
-		}
+			BoundingVolumeNode* replacingChild = rotateLeft ? node->m_left : node->m_right;
 
-		restructedNode->m_left = parentNode->m_left;
-		restructedNode->m_right = parentNode->m_right;
-		parentNode->m_left->m_parentNode = restructedNode;
-		parentNode->m_right->m_parentNode = restructedNode;
-
-		BoundingVolumeNode* grandParentNode = parentNode->m_parentNode;
-		if (grandParentNode == nullptr)
-		{
-			delete parentNode;
-			m_rootNode = restructedNode;
-			return;
-		}
-
-		BoundingVolumeNode* sibling = nullptr;
-		bool isSiblingLeft = false;
-		if (grandParentNode->m_left == restructedNode)
-		{
-			grandParentNode->m_left = restructedNode;
-			sibling = grandParentNode->m_right;
-		}
-		else
-		{
-			grandParentNode->m_right = restructedNode;
-			sibling = grandParentNode->m_left;
-			isSiblingLeft = true;
-		}
-		restructedNode->m_parentNode = grandParentNode;
-		delete parentNode;
-
-		// Rotate
-		if (sibling->IsLeaf())
-		{
 			if (isSiblingLeft)
 			{
-				grandParentNode->m_right = node;
+				parent->m_left = replacingChild;
 			}
 			else
 			{
-				grandParentNode->m_left = node;
+				parent->m_right = replacingChild;
 			}
-			node->m_parentNode = grandParentNode;
+			replacingChild->m_parentNode = parent;
 
-			if (isNodeLeft)
+
+			if (rotateLeft)
 			{
-				restructedNode->m_left = sibling;
+				node->m_left = siblingNode;
 			}
 			else
 			{
-				restructedNode->m_right = sibling;
+				node->m_right = siblingNode;
 			}
-			sibling->m_parentNode = restructedNode;
+			siblingNode->m_parentNode = node;
 		}
-		
-		RestructVolume(parentNode);
+
+		node->SetBoundingBox(BoundingVolumeNode::CreateUnionBoundingBox(node->m_left, node->m_right, m_margin));
 	}
 }

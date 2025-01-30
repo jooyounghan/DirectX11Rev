@@ -1,4 +1,6 @@
 #include "AApplication.h"
+#include "PerformanceAnalyzer.h"
+
 #include <assert.h>
 #include <functional>
 
@@ -73,8 +75,9 @@ void AApplication::Run()
 		}
 		else
 		{
-			const float& deltaTime = GetDeltaTimeFromLastCall();
-			Update(deltaTime);
+			PerformanceAnalyzer::ResetPerformacneVariable();
+			PerformanceAnalyzer::DeltaTime = GetDeltaTimeFromLastCall();
+			Update(PerformanceAnalyzer::DeltaTime);
 		}
 	}
 }

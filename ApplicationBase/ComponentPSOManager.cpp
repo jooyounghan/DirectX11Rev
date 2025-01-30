@@ -32,9 +32,9 @@ AShader* const ComponentPSOManager::GetComponentPSOVertexShader(const EComponent
 {
 	static unordered_map<EComponentPSOVertexShader, string> vertexShaderEnumToString
 	{
-		{ EComponentPSOVertexShader::BOUNDING_COMPONENT, "BoundingComponentVS"},
-		{ EComponentPSOVertexShader::GBUFFER_RESOLVE, "GBufferResolveVS"},
 		{ EComponentPSOVertexShader::SCENE, "SceneVS"},
+		{ EComponentPSOVertexShader::DEBUG_COMPONENT, "DebugComponentVS"},
+		{ EComponentPSOVertexShader::GBUFFER_RESOLVE, "GBufferResolveVS"},
 		{ EComponentPSOVertexShader::STATIC_MESH, "StaticMeshComponentVS"},
 		{ EComponentPSOVertexShader::SKELETAL_MESH, "SkeletalMeshComponentVS"}
 	};
@@ -46,9 +46,9 @@ AShader* const  ComponentPSOManager::GetComponentPSOPixelShader(const EComponent
 {
 	static unordered_map<EComponentPSOPixelShader, string> pixelShaderEnumToString
 	{
-		{ EComponentPSOPixelShader::FORWARD_BOUNDING_COMPONENT, "ForwardBoundingComponentPS"},
+		{ EComponentPSOPixelShader::SCENE, "ForwardScenePS"},
+		{ EComponentPSOPixelShader::DEBUG_COMPONENT, "DebugComponentPS"},
 		{ EComponentPSOPixelShader::GBUFFER_RESOLVE, "GBufferResolvePS"},
-		{ EComponentPSOPixelShader::FORWARD_SCENE, "ForwardScenePS"},
 		{ EComponentPSOPixelShader::FORWARD_MESH, "ForwardMeshComponentPS"},
 		{ EComponentPSOPixelShader::DEFFERED_MESH, "DefferedMeshComponentPS"}
 	};
@@ -138,11 +138,22 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 {
 	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SCENE] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::SCENE),
-		GetComponentPSOPixelShader(EComponentPSOPixelShader::FORWARD_SCENE),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::SCENE),
 		nullptr,
 		nullptr,
 		nullptr,
 		GetComponentPSORasterizerState(EComponentPSORasterizerState::CCW_SOLID_SS), NULL,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::DEBUG_COMPONENT] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::DEBUG_COMPONENT),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::DEBUG_COMPONENT),
+		nullptr,
+		nullptr,
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_WIREFRAME_SS), NULL,
 		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
@@ -251,7 +262,7 @@ void ComponentPSOManager::RegisterVSForComponent(ID3D11Device* device)
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-	RegisterVertexShader("BoundingComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/BoundingComponentVS.hlsl", "main", "vs_5_0", device);
+	RegisterVertexShader("DebugComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/DebugComponentVS.hlsl", "main", "vs_5_0", device);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
@@ -285,7 +296,7 @@ void ComponentPSOManager::RegisterVSForComponent(ID3D11Device* device)
 
 void ComponentPSOManager::RegisterPSForComponent(ID3D11Device* device)
 {
-	RegisterPixelShader("ForwardBoundingComponentPS", 2, L"../Shaders/ForwardBoundingComponentPS.hlsl", "main", "ps_5_0", device);
+	RegisterPixelShader("DebugComponentPS", 2, L"../Shaders/DebugComponentPS.hlsl", "main", "ps_5_0", device);
 	RegisterPixelShader("GBufferResolvePS", 1, L"../Shaders/GBufferResolvePS.hlsl", "main", "ps_5_0", device);
 	RegisterPixelShader("ForwardScenePS", 1, L"../Shaders/ForwardScenePS.hlsl", "main", "ps_5_0", device);
 	RegisterPixelShader("ForwardMeshComponentPS", 2, L"../Shaders/ForwardMeshComponentPS.hlsl", "main", "ps_5_0", device);

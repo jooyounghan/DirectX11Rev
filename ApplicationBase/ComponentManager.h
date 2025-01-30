@@ -11,7 +11,6 @@
 class Scene;
 class AComponent;
 class DefferedContext;
-class AssetManager;
 
 class ComponentManager : public SchemaManager
 {
@@ -24,14 +23,12 @@ class ComponentManager : public SchemaManager
 public:
 	ComponentManager(
 		SessionManager* sessionManager,
-		AssetManager* assetManager,
 		ID3D11Device* const* deviceAddress,
 		DefferedContext* defferedContext
 	);
 	~ComponentManager() override;
 
 protected:
-	AssetManager* m_assetManagerCached = nullptr;
 	ID3D11Device* const* m_deviceAddressCached = nullptr;
 	DefferedContext* m_defferedContext = nullptr;
 

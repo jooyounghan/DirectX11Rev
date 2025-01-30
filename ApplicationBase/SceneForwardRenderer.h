@@ -23,10 +23,6 @@ public:
 	virtual void PostProcess() override;
 
 protected:
-	virtual void ApplyRenderTargets(
-		ID3D11DeviceContext* const deviceContext, 
-		const CameraComponent* const cameraComponent
-	) const override;
 	virtual void RenderMeshPartHandler(const size_t& idx) override;
 };
 

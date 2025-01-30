@@ -5,19 +5,15 @@
 enum class EAssetType;
 
 class AAsset;
-class AssetManager;
 class ScratchTextureAsset;
 
 class ScratchTextureAssetVariableNode : public VariableNode<ScratchTextureAsset*>
 {
 public:
-	ScratchTextureAssetVariableNode(
-		const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin, AssetManager* assetManager
-	);
+	ScratchTextureAssetVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin);
 	~ScratchTextureAssetVariableNode() override = default;
 
 protected:
-	AssetManager* m_assetMangerCached = nullptr;
 	ScratchTextureAsset* m_selectedScratchTextureAsset = nullptr;
 
 protected:

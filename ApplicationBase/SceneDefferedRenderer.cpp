@@ -78,7 +78,7 @@ void SceneDefferedRenderer::Visit(StaticMeshComponent* staticMeshComponent)
             {
                 staticMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
-                ApplyRenderTargets(deviceContext, cameraComponent);
+                ApplyRenderTargetsWithID(deviceContext, cameraComponent);
 
                 // =============================== VS ===============================
                 vector<ID3D11Buffer*> vsConstantBuffers{
@@ -128,7 +128,7 @@ void SceneDefferedRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
             {
                 skeletalMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
-                ApplyRenderTargets(deviceContext, cameraComponent);
+                ApplyRenderTargetsWithID(deviceContext, cameraComponent);
 
                 // =============================== VS ===============================
                 vector<ID3D11Buffer*> vsConstantBuffers{
@@ -232,7 +232,7 @@ void SceneDefferedRenderer::PostProcess()
 	}
 }
 
-void SceneDefferedRenderer::ApplyRenderTargets(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent) const
+void SceneDefferedRenderer::ApplyRenderTargetsWithID(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent) const
 {
     vector<ID3D11RenderTargetView*> rtvs = m_gBufferRenderTargetViews;
     rtvs.push_back(cameraComponent->GetIDFilm()->GetRTV());

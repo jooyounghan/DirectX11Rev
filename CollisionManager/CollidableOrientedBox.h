@@ -14,9 +14,9 @@ public:
 public:
 	virtual DirectX::BoundingBox GetBoundingBox(const float& margin) const override;
 	void SetBoundingProperties(
-		const DirectX::XMFLOAT3& center,
+		const DirectX::XMVECTOR& center,
 		const DirectX::XMFLOAT3& extents,
-		const DirectX::XMFLOAT4& rotationQuaternion
+		const DirectX::XMVECTOR& rotationQuaternion
 	);
 };
 

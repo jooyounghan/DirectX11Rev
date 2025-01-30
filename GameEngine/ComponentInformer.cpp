@@ -6,6 +6,8 @@
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
+#include "SphereCollisionComponent.h"
+#include "OrientedBoxCollisionComponent.h"
 
 #include <vector>
 #include <string>
@@ -18,8 +20,8 @@ bool ComponentInformer::isPositionAbsolute = true;
 bool ComponentInformer::isAngleAbsolute = true;
 bool ComponentInformer::isScaleAbsolute = true;
 
-ComponentInformer::ComponentInformer(AssetManager* assetManager, ComponentManager* componentManager)
-	: m_assetManagerCached(assetManager), m_componentManagerCached(componentManager),
+ComponentInformer::ComponentInformer(ComponentManager* componentManager)
+	: m_componentManagerCached(componentManager),
 	m_absRelativeComboPosition("AbsRelativePositionCombo", "", ImGuiComboFlags_WidthFitPreview),
 	m_absRelativeComboAngle("AbsRelativeAngleCombo", "", ImGuiComboFlags_WidthFitPreview),
 	m_absRelativeComboScale("AbsRelativeScaleCombo", "", ImGuiComboFlags_WidthFitPreview)
@@ -61,10 +63,34 @@ void ComponentInformer::Visit(CameraComponent* cameraComponent)
 
 void ComponentInformer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
+	Text("Sphere Collision Component");
+	RenderComponentTransformation(sphereCollisionComponent);
+
+	Text("Radius");
+	PushID("SphereCollisionComponentRadius");
+	if (DragFloat("", &sphereCollisionComponent->Radius, 0.1f, 0.0f))
+	{
+		sphereCollisionComponent->SetIsModified(true);
+	}
+	PopID();
+
+	Button(sphereCollisionComponent->GetComponentName().c_str());
 }
 
 void ComponentInformer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
+	Text("Oriented-Box Collision Component");
+	RenderComponentTransformation(orientedBoxCollisionComponent);
+
+	Text("Extends");
+	PushID("OrientedBoxCollisionComponentExtents");
+	if (DragFloat3("", &orientedBoxCollisionComponent->Extents.x, 0.1f, 0.0f))
+	{
+		orientedBoxCollisionComponent->SetIsModified(true);
+	}
+	PopID();
+
+	Button(orientedBoxCollisionComponent->GetComponentName().c_str());
 }
 
 void ComponentInformer::RenderComponentTransformation(AComponent* component)

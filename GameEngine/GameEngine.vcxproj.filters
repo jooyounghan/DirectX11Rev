@@ -91,6 +91,9 @@
     <Filter Include="소스 파일\GUI\NodeEditor\Node\Variable">
       <UniqueIdentifier>{7dab8f96-a719-4dd3-b359-4de50954e2e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GUI\Window\Extended">
+      <UniqueIdentifier>{64a9ed87-72aa-448c-b8b7-7321ccb031b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -99,14 +102,8 @@
     <ClCompile Include="GameEngine.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="AssetViewWindow.cpp">
-      <Filter>소스 파일\GUI\Window</Filter>
-    </ClCompile>
     <ClCompile Include="AssetFileControl.cpp">
       <Filter>소스 파일\GUI\Control</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneWindow.cpp">
-      <Filter>소스 파일\GUI\Window</Filter>
     </ClCompile>
     <ClCompile Include="ComponentInformer.cpp">
       <Filter>소스 파일\GUI\Child</Filter>
@@ -141,12 +138,18 @@
     <ClCompile Include="Float3VariableNode.cpp">
       <Filter>소스 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClCompile>
+    <ClCompile Include="AssetViewWindow.cpp">
+      <Filter>소스 파일\GUI\Window\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneWindow.cpp">
+      <Filter>소스 파일\GUI\Window\Extended</Filter>
+    </ClCompile>
+    <ClCompile Include="PerformanceAnalyzerWindow.cpp">
+      <Filter>소스 파일\GUI\Window\Extended</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="AssetViewWindow.h">
@@ -190,6 +193,12 @@
     </ClInclude>
     <ClInclude Include="Float3VariableNode.h">
       <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="PerformanceAnalyzerWindow.h">
+      <Filter>헤더 파일\GUI\Window\Extended</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

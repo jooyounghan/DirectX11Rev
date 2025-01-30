@@ -11,7 +11,7 @@ bool CollidableSphere::Accept(ICollisionVisitor& collisionVisitor) const
 
 bool CollidableSphere::IsInBVNode(BoundingVolumeNode* boundingVolumeNode) const
 {
-	return boundingVolumeNode->Contains(*this);
+	return boundingVolumeNode->GetBoundingBox().Contains(*this);
 }
 
 DirectX::BoundingBox CollidableSphere::GetBoundingBox(const float& margin) const
@@ -20,10 +20,10 @@ DirectX::BoundingBox CollidableSphere::GetBoundingBox(const float& margin) const
 }
 
 void CollidableSphere::SetBoundingProperties(
-	const DirectX::XMFLOAT3& center,
+	const DirectX::XMVECTOR& center,
 	const float& radius
 )
 {
-	Center = center;
+	XMStoreFloat3(&Center, center);
 	Radius = radius;
 }

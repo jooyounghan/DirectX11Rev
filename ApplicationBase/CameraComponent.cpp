@@ -49,16 +49,12 @@ void CameraComponent::SetCameraProperties(
 	MinDepth = 0.f;
 	MaxDepth = 1.f;
 
-	XMFLOAT3 center;
-	XMStoreFloat3(&center, m_absolutePosition);
-
-	XMFLOAT4 orientation = GetAbsoluteRotationQuaternion();
-	SetBoundingProperties(center, orientation, m_fovAngle, m_nearZ, m_farZ);
+	SetBoundingProperties(m_absolutePosition, GetAbsoluteRotationQuaternion(), m_fovAngle, m_nearZ, m_farZ);
 }
 
 XMMATRIX CameraComponent::GetViewMatrix()
 {
-	const XMVECTOR quaternion = GetAbsoluteRotationQuaternionV();
+	const XMVECTOR quaternion = GetAbsoluteRotationQuaternion();
 	XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
 	XMVECTOR currentUp = XMVector3Rotate(GDefaultUp, quaternion);
 	return XMMatrixLookToLH(m_absolutePosition, currentForward, currentUp);
@@ -97,12 +93,7 @@ void CameraComponent::SetDepthStencilView(Texture2DInstance<DSVOption>* depthSte
 void CameraComponent::UpdateAbsoluteEntities()
 {
 	AComponent::UpdateAbsoluteEntities();
-
-	XMFLOAT3 center;
-	XMStoreFloat3(&center, m_absolutePosition);
-
-	XMFLOAT4 orientation = GetAbsoluteRotationQuaternion();
-	SetBoundingProperties(center, orientation, m_fovAngle, m_nearZ, m_farZ);
+	SetBoundingProperties(m_absolutePosition, GetAbsoluteRotationQuaternion(), m_fovAngle, m_nearZ, m_farZ);
 }
 
 void CameraComponent::UpdateViewElement()

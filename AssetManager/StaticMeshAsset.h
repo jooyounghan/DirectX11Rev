@@ -11,6 +11,10 @@ public:
 	StaticMeshAsset(const std::string& assetName);
 	~StaticMeshAsset() override;
 
+public:
+	const static std::string DefaultSphereModelName;
+	const static std::string DefaultCubeModelName;
+
 protected:
 	std::map<uint32_t, StaticMeshPartsData*> m_staticMeshPartsPerLOD;
 

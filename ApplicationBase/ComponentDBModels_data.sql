@@ -30,7 +30,7 @@ CREATE TABLE `camera_components` (
   `far_z` float NOT NULL,
   `fov_angle` float NOT NULL,
   PRIMARY KEY (`camera_component_id`),
-  CONSTRAINT `camera_component_id` FOREIGN KEY (`camera_component_id`) REFERENCES `components` (`component_id`)
+  CONSTRAINT `component_id_fk6` FOREIGN KEY (`camera_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -40,7 +40,6 @@ CREATE TABLE `camera_components` (
 
 LOCK TABLES `camera_components` WRITE;
 /*!40000 ALTER TABLE `camera_components` DISABLE KEYS */;
-INSERT INTO `camera_components` VALUES (4,1000,1000,0.1,100000,120);
 /*!40000 ALTER TABLE `camera_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -88,7 +87,7 @@ CREATE TABLE `component_types` (
 
 LOCK TABLES `component_types` WRITE;
 /*!40000 ALTER TABLE `component_types` DISABLE KEYS */;
-INSERT INTO `component_types` VALUES (1,'static_model_component'),(2,'skeletal_model_component'),(3,'camera_model_component'),(4,'sphere_collision_component'),(5,'oriented_box_collision_component');
+INSERT INTO `component_types` VALUES (1,'static_mesh'),(2,'skeletal_mesh'),(3,'camera'),(4,'sphere_collision'),(5,'oriented_box_collision');
 /*!40000 ALTER TABLE `component_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -113,7 +112,7 @@ CREATE TABLE `components` (
   `scale_y` float NOT NULL DEFAULT '0',
   `scale_z` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`component_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,7 +121,7 @@ CREATE TABLE `components` (
 
 LOCK TABLES `components` WRITE;
 /*!40000 ALTER TABLE `components` DISABLE KEYS */;
-INSERT INTO `components` VALUES (1,0,'Skeletal1',466,21,0,4.5,-89.6,0,1,1,1),(2,1,'Static1',-84,0,0,3.8,4.8,0,1,1,1),(3,1,'Skeletal2',-104,21,-13,-4.60034,-198.4,-8.99995,1,1,1),(4,2,'Collision1',-85,-22,-78,2.4,-172.8,-12.3,1,1,1),(5,4,'Static2',-297,0,0,0,0,0,0.99,1,1);
+INSERT INTO `components` VALUES (1,0,'SphereCollision1',227,-2,500,0,0,0,1,1,1),(2,0,'OrientedCollision1',-173,0,500,0,0,0,1,1,1),(3,1,'Skeletal1',0,-101,0,0,0,0,1,1,1),(4,2,'Skeletal2',0,-88,0,0,-5.8,0,1,1,1),(5,0,'SphereCollision2',-380,0,500,0,0,0,1,1,1),(6,0,'SphereCollision3',0,0,500,0,0,0,1,1,1),(7,0,'OrientedCollision2',453,0,500,0,0,0,1,1,1),(8,0,'OrientedCollision3',0,-215,500,0,0,0,1,1,1),(9,5,'Skeletal3',0,-88,0,0,0,0,1,1,1),(10,6,'Skeleta4',0,-85,0,0,0,0,1,1,1),(11,7,'Skeletal5',0,-88,0,0,0,0,1,1,1),(12,8,'Skeletal6',0,-88,0,0,0,0,1,1,1);
 /*!40000 ALTER TABLE `components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,8 +137,8 @@ CREATE TABLE `components_to_type` (
   `component_type` int unsigned NOT NULL,
   PRIMARY KEY (`component_id`),
   KEY `components_to_type_comopnent_type_idx` (`component_type`),
-  CONSTRAINT `components_to_type_comopnent_type` FOREIGN KEY (`component_type`) REFERENCES `component_types` (`component_type`),
-  CONSTRAINT `components_to_type_component_id` FOREIGN KEY (`component_id`) REFERENCES `components` (`component_id`)
+  CONSTRAINT `component_id_fk1` FOREIGN KEY (`component_id`) REFERENCES `components` (`component_id`),
+  CONSTRAINT `component_type_fk1` FOREIGN KEY (`component_type`) REFERENCES `component_types` (`component_type`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -149,7 +148,7 @@ CREATE TABLE `components_to_type` (
 
 LOCK TABLES `components_to_type` WRITE;
 /*!40000 ALTER TABLE `components_to_type` DISABLE KEYS */;
-INSERT INTO `components_to_type` VALUES (2,1),(5,1),(1,2),(3,2),(4,5);
+INSERT INTO `components_to_type` VALUES (3,2),(4,2),(9,2),(10,2),(11,2),(12,2),(1,4),(5,4),(6,4),(2,5),(7,5),(8,5);
 /*!40000 ALTER TABLE `components_to_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -165,7 +164,7 @@ CREATE TABLE `mesh_component_informations` (
   `material_names` json DEFAULT NULL,
   PRIMARY KEY (`mesh_component_id`),
   KEY `mesh_component_id_idx` (`mesh_component_id`),
-  CONSTRAINT `mesh_component_id` FOREIGN KEY (`mesh_component_id`) REFERENCES `components` (`component_id`)
+  CONSTRAINT `component_id_fk3` FOREIGN KEY (`mesh_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -175,7 +174,7 @@ CREATE TABLE `mesh_component_informations` (
 
 LOCK TABLES `mesh_component_informations` WRITE;
 /*!40000 ALTER TABLE `mesh_component_informations` DISABLE KEYS */;
-INSERT INTO `mesh_component_informations` VALUES (1,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(2,'{\"material_names\": [\"BlueCrystal\"]}'),(3,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(5,'{\"material_names\": [\"BlueCrystal\"]}');
+INSERT INTO `mesh_component_informations` VALUES (3,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(4,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(9,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(10,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(11,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(12,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}');
 /*!40000 ALTER TABLE `mesh_component_informations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -188,12 +187,15 @@ DROP TABLE IF EXISTS `oriented_box_collision_components`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `oriented_box_collision_components` (
   `oriented_box_collision_component_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `extent_x` float NOT NULL,
+  `extent_y` float NOT NULL,
+  `extent_z` float NOT NULL,
   `collision_option_id` int unsigned NOT NULL,
   PRIMARY KEY (`oriented_box_collision_component_id`),
   KEY `collision_option_fk2_idx` (`collision_option_id`),
   CONSTRAINT `collision_option_fk2` FOREIGN KEY (`collision_option_id`) REFERENCES `collision_options` (`collision_option_id`) ON UPDATE CASCADE,
   CONSTRAINT `component_id_fk8` FOREIGN KEY (`oriented_box_collision_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,7 +204,7 @@ CREATE TABLE `oriented_box_collision_components` (
 
 LOCK TABLES `oriented_box_collision_components` WRITE;
 /*!40000 ALTER TABLE `oriented_box_collision_components` DISABLE KEYS */;
-INSERT INTO `oriented_box_collision_components` VALUES (4,1);
+INSERT INTO `oriented_box_collision_components` VALUES (2,100,200,100,1),(7,50,200,50,1),(8,80,200,80,1);
 /*!40000 ALTER TABLE `oriented_box_collision_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -220,8 +222,8 @@ CREATE TABLE `scene_informations` (
   PRIMARY KEY (`scene_information_id`),
   KEY `scene_id_idx` (`scene_id`),
   KEY `scene_component_id_idx` (`component_id`),
-  CONSTRAINT `mapping_component_id` FOREIGN KEY (`component_id`) REFERENCES `components` (`component_id`),
-  CONSTRAINT `mapping_scene_id` FOREIGN KEY (`scene_id`) REFERENCES `scenes` (`scene_id`)
+  CONSTRAINT `component_id_fk2` FOREIGN KEY (`component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE,
+  CONSTRAINT `scene_id_fk1` FOREIGN KEY (`scene_id`) REFERENCES `scenes` (`scene_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -231,7 +233,7 @@ CREATE TABLE `scene_informations` (
 
 LOCK TABLES `scene_informations` WRITE;
 /*!40000 ALTER TABLE `scene_informations` DISABLE KEYS */;
-INSERT INTO `scene_informations` VALUES (5,1,1);
+INSERT INTO `scene_informations` VALUES (1,1,1),(2,1,2),(3,1,5),(4,1,6),(5,1,7),(6,1,8);
 /*!40000 ALTER TABLE `scene_informations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -257,7 +259,7 @@ CREATE TABLE `scenes` (
 
 LOCK TABLES `scenes` WRITE;
 /*!40000 ALTER TABLE `scenes` DISABLE KEYS */;
-INSERT INTO `scenes` VALUES (1,'dev_scene','sphere_scene_Static','EveningSky');
+INSERT INTO `scenes` VALUES (1,'test_map','sphere_scene_Static','EveningSky');
 /*!40000 ALTER TABLE `scenes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -272,7 +274,7 @@ CREATE TABLE `skeletal_mesh_components` (
   `skeletal_mesh_component_id` int unsigned NOT NULL,
   `skeletal_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`skeletal_mesh_component_id`),
-  CONSTRAINT `skeletal_mesh_component_id` FOREIGN KEY (`skeletal_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`)
+  CONSTRAINT `component_id_fk4` FOREIGN KEY (`skeletal_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -282,7 +284,7 @@ CREATE TABLE `skeletal_mesh_components` (
 
 LOCK TABLES `skeletal_mesh_components` WRITE;
 /*!40000 ALTER TABLE `skeletal_mesh_components` DISABLE KEYS */;
-INSERT INTO `skeletal_mesh_components` VALUES (1,'Vanguard_LOD_Skeletal'),(3,'Vanguard_LOD_Skeletal');
+INSERT INTO `skeletal_mesh_components` VALUES (3,'Vanguard_LOD_Skeletal'),(4,'Vanguard_LOD_Skeletal'),(9,'Vanguard_LOD_Skeletal'),(10,'Vanguard_LOD_Skeletal'),(11,'Vanguard_LOD_Skeletal'),(12,'Vanguard_LOD_Skeletal');
 /*!40000 ALTER TABLE `skeletal_mesh_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -295,12 +297,13 @@ DROP TABLE IF EXISTS `sphere_collision_components`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sphere_collision_components` (
   `sphere_collision_component_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `radius` float NOT NULL,
   `collision_option_id` int unsigned NOT NULL,
   PRIMARY KEY (`sphere_collision_component_id`),
   KEY `collision_option_fk1_idx` (`collision_option_id`),
   CONSTRAINT `collision_option_fk1` FOREIGN KEY (`collision_option_id`) REFERENCES `collision_options` (`collision_option_id`) ON UPDATE CASCADE,
   CONSTRAINT `component_id_fk7` FOREIGN KEY (`sphere_collision_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -309,6 +312,7 @@ CREATE TABLE `sphere_collision_components` (
 
 LOCK TABLES `sphere_collision_components` WRITE;
 /*!40000 ALTER TABLE `sphere_collision_components` DISABLE KEYS */;
+INSERT INTO `sphere_collision_components` VALUES (1,100,1),(5,150,1),(6,200,1);
 /*!40000 ALTER TABLE `sphere_collision_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -323,7 +327,7 @@ CREATE TABLE `static_mesh_components` (
   `static_mesh_component_id` int unsigned NOT NULL,
   `static_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`static_mesh_component_id`),
-  CONSTRAINT `static_mesh_component_id` FOREIGN KEY (`static_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`)
+  CONSTRAINT `component_id_fk5` FOREIGN KEY (`static_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -333,7 +337,6 @@ CREATE TABLE `static_mesh_components` (
 
 LOCK TABLES `static_mesh_components` WRITE;
 /*!40000 ALTER TABLE `static_mesh_components` DISABLE KEYS */;
-INSERT INTO `static_mesh_components` VALUES (2,'sphere_model_Static'),(5,'cube_model_Static');
 /*!40000 ALTER TABLE `static_mesh_components` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -346,4 +349,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-29 21:20:34
+-- Dump completed on 2025-01-30 17:07:49

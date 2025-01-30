@@ -7,9 +7,10 @@
 
 using namespace std;
 
-
-AssetManager::AssetManager()
+AssetManager* AssetManager::GetInstance()
 {
+	static AssetManager assetManager;
+	return &assetManager;
 }
 
 AssetManager::~AssetManager()
@@ -77,7 +78,7 @@ void AssetManager::RegisterAssetWritePath(const std::string& writePath)
 
 void AssetManager::PreloadFromResources(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-	AssetInitializer assetGPUInitializer(this, device, deviceContext);
+	AssetInitializer assetGPUInitializer(device, deviceContext);
 	const vector<BaseTextureAsset*> bitmapResourceAssets = m_resourceManager.LoadBitmapResources();
 	for (BaseTextureAsset* const bitmapResourceAsset : bitmapResourceAssets)
 	{
@@ -141,7 +142,7 @@ void AssetManager::WrtieFileAsAsset(ID3D11Device* device, ID3D11DeviceContext* d
 
 void AssetManager::AddAssetHelper(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const EAssetType& assetType, std::string assetPath, AAsset* asset)
 {
-	AssetInitializer assetGPUInitializer(this, device, deviceContext);
+	AssetInitializer assetGPUInitializer(device, deviceContext);
 	asset->Accept(&assetGPUInitializer);
 
 	m_assetNameToAssets[assetType][asset->GetAssetName()] = asset;

@@ -49,17 +49,14 @@ public:
 	inline const DirectX::XMVECTOR& GetAbsolutePosition() const { return m_absolutePosition;}
 	inline const DirectX::XMVECTOR& GetAbsoluteAngle() const { return m_absoluteAngle;}
 	inline const DirectX::XMVECTOR& GetAbsoluteScale() const { return m_absoluteScale; }
-
-public:
-	const DirectX::XMVECTOR GetAbsoluteRotationQuaternionV() const;
-	const DirectX::XMFLOAT4 GetAbsoluteRotationQuaternion() const;
+	const DirectX::XMVECTOR GetAbsoluteRotationQuaternion() const;
 
 public:
 	DirectX::XMMATRIX GetAbsoluteTransformation();
 
 public:
 	virtual void UpdateAbsoluteEntities();
-	void UpdateComponentTransformation();
+	virtual void UpdateComponentTransformation();
 
 public:
 	virtual void SetIsModified(const bool& isModified) override;

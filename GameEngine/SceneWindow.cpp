@@ -10,6 +10,8 @@
 #include "UAVOption.h"
 #include "DSVOption.h"
 
+#include "PerformanceAnalyzer.h"
+
 using namespace std;
 using namespace ImGui;
 using namespace DirectX;
@@ -19,7 +21,6 @@ SceneWindow::SceneWindow(
     ID3D11Device* const* deviceAddress,
     ID3D11DeviceContext* const* immediateContextAddress,
     ID3D11DeviceContext* const* componentRenderDefferedContextAddress,
-    AssetManager* assetManager,
     ComponentManager* componentManager,
     ComponentPSOManager* componentPsoManager
 )
@@ -28,7 +29,7 @@ SceneWindow::SceneWindow(
     m_componentRenderDefferedContextAddress(componentRenderDefferedContextAddress),
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
-    m_componentInformer(assetManager, componentManager),
+    m_componentInformer(componentManager),
     m_forwardRenderer(componentRenderDefferedContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_defferedRenderer(deviceAddress, componentRenderDefferedContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
@@ -56,23 +57,15 @@ SceneWindow::SceneWindow(
 
 void SceneWindow::PrepareWindow()
 {
-    try
+    if (m_selectedScene != nullptr && m_selectedRenderer != nullptr)
     {
+        m_selectedRenderer->ClearRenderTargets();
+        m_selectedScene->Accept(m_selectedRenderer);
 
-        if (m_selectedScene != nullptr && m_selectedRenderer != nullptr)
-        {
-            m_selectedRenderer->ClearRenderTargets();
-            m_selectedScene->Accept(m_selectedRenderer);
+        const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
+        RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);
 
-            const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
-            RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);
-
-            m_selectedRenderer->PostProcess();
-        }
-    }
-    catch (std::exception& e)
-    {
-        printf(e.what());
+        m_selectedRenderer->PostProcess();
     }
 }
 

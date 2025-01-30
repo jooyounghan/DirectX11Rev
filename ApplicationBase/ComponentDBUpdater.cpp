@@ -3,6 +3,8 @@
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
+#include "SphereCollisionComponent.h"
+#include "OrientedBoxCollisionComponent.h"
 
 #include "nlohmann/json.hpp"
 
@@ -64,10 +66,30 @@ void ComponentDBUpdater::Visit(CameraComponent* cameraComponent)
 
 void ComponentDBUpdater::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
+	UpdateComponent(sphereCollisionComponent);
+
+	const uint32_t& componentID = sphereCollisionComponent->GetComponentID();
+	const std::string sphereCollisionTableName = "sphere_collision_components";
+	Table sphereCollisionTable = m_schemaCached->getTable(sphereCollisionTableName, true);
+	sphereCollisionTable.update()
+		.set("radius", sphereCollisionComponent->Radius)
+		.where("sphere_collision_component_id = :sphere_collision_component_id")
+		.bind("sphere_collision_component_id", componentID).execute();
 }
 
 void ComponentDBUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
+	UpdateComponent(orientedBoxCollisionComponent);
+
+	const uint32_t& componentID = orientedBoxCollisionComponent->GetComponentID();
+	const std::string orientedBoxCollisionName = "oriented_box_collision_components";
+	Table orientedBoxCollision = m_schemaCached->getTable(orientedBoxCollisionName, true);
+	orientedBoxCollision.update()
+		.set("extent_x", orientedBoxCollisionComponent->Extents.x)
+		.set("extent_y", orientedBoxCollisionComponent->Extents.y)
+		.set("extent_z", orientedBoxCollisionComponent->Extents.z)
+		.where("oriented_box_collision_component_id = :oriented_box_collision_component_id")
+		.bind("oriented_box_collision_component_id", componentID).execute();
 }
 
 void ComponentDBUpdater::UpdateComponent(AComponent* component)

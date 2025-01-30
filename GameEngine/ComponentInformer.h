@@ -18,11 +18,10 @@ enum class EComponentEntityType
 class ComponentInformer : public IComponentVisitor
 {
 public:
-	ComponentInformer(AssetManager* assetManager, ComponentManager* componentManager);
+	ComponentInformer(ComponentManager* componentManager);
 	~ComponentInformer() override = default;
 
 protected:
-	AssetManager* m_assetManagerCached = nullptr;
 	ComponentManager* m_componentManagerCached = nullptr;
 
 private:

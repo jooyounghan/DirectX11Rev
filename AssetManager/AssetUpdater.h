@@ -7,11 +7,10 @@ struct ID3D11DeviceContext;
 class AssetUpdater : public IAssetVisitor
 {
 public:
-	AssetUpdater(AssetManager* assetManager, ID3D11DeviceContext* deviceContext);
+	AssetUpdater(ID3D11DeviceContext* deviceContext);
 	~AssetUpdater() override = default;
 
 protected:
-	AssetManager* m_assetManager = nullptr;
 	ID3D11DeviceContext* m_deviceContextCached = nullptr;
 
 public:

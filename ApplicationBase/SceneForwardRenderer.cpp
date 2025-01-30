@@ -55,7 +55,7 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
             {
                 staticMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
-                ApplyRenderTargets(deviceContext, cameraComponent);
+                ApplyRenderTargetsWithID(deviceContext, cameraComponent);
 
                 // =============================== VS ===============================
                 vector<ID3D11Buffer*> vsConstantBuffers{
@@ -113,7 +113,7 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
             {
                 skeletalMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
-                ApplyRenderTargets(deviceContext, cameraComponent);
+                ApplyRenderTargetsWithID(deviceContext, cameraComponent);
 
                 // =============================== VS ===============================
                 vector<ID3D11Buffer*> vsConstantBuffers{
@@ -164,19 +164,6 @@ void SceneForwardRenderer::Visit(CameraComponent* cameraComponent)
 
 void SceneForwardRenderer::PostProcess()
 {
-}
-
-void SceneForwardRenderer::ApplyRenderTargets(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent) const
-{
-    const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = cameraComponent->GetFilm();
-    const Texture2DInstance<RTVOption>* const idFilm = cameraComponent->GetIDFilm();
-
-    const Texture2DInstance<DSVOption>* const depthStencilView = cameraComponent->GetDepthStencilViewBuffer();
-
-    vector<ID3D11RenderTargetView*> rtvs{ film->GetRTV(), idFilm->GetRTV() };
-
-    deviceContext->OMSetRenderTargets(static_cast<UINT>(rtvs.size()), rtvs.data(), depthStencilView->GetDSV());
-    deviceContext->RSSetViewports(1, cameraComponent);
 }
 
 void SceneForwardRenderer::RenderMeshPartHandler(const size_t& idx)

@@ -2,7 +2,7 @@
 #include "ICollisionAcceptor.h"
 #include <vector>
 
-class BoundingVolumeNode : public DirectX::BoundingBox
+class BoundingVolumeNode
 {
 public:
 	BoundingVolumeNode(
@@ -16,6 +16,7 @@ public:
 	);
 
 private:
+	DirectX::BoundingBox m_box;
 	DirectX::XMFLOAT3 m_lowerBound;
 	DirectX::XMFLOAT3 m_upperBound;
 
@@ -28,14 +29,20 @@ public:
 	BoundingVolumeNode* m_right;
 
 public:
-	ICollisionAcceptor* m_collidable;
+	ICollisionAcceptor* m_collidable = nullptr;
 
 public:
-	inline const float GetVolumeSize() const { return (Extents.x * 2) * (Extents.y * 2) * (Extents.z * 2); }
+	inline const DirectX::BoundingBox& GetBoundingBox() const { return m_box; }
+	inline void SetBoundingBox(const DirectX::BoundingBox& box) { m_box = box; }
+
+	inline const float GetVolumeSize() const 
+	{ 
+		return (m_box.Extents.x * 2) * (m_box.Extents.y * 2) * (m_box.Extents.z * 2); 
+	}
 	inline const bool IsLeaf() const { return m_collidable != nullptr; }
 
 public:
-	static BoundingVolumeNode* CreateUnionBoundingVolume(
+	static DirectX::BoundingBox CreateUnionBoundingBox(
 		const BoundingVolumeNode* const boundingVolume1,
 		const BoundingVolumeNode* const boundingVolume2,
 		const float& margin
@@ -54,8 +61,6 @@ public:
 		float& minVolumeSize,
 		BoundingVolumeNode*& bestSiblingLeafNode
 	);
-
-private:
 	static void GetBounds(
 		const BoundingVolumeNode* const boundingVolume1,
 		const BoundingVolumeNode* const boundingVolume2,
@@ -63,6 +68,12 @@ private:
 		DirectX::XMFLOAT3& lowerBoundOut,
 		DirectX::XMFLOAT3& upperBoundOut
 	);
-
+	static DirectX::BoundingBox CreateBoundingBox(
+		const DirectX::XMFLOAT3& lowerBound,
+		const DirectX::XMFLOAT3& upperBound
+	);
+	static void GetSiblingNode(
+		BoundingVolumeNode* node, BoundingVolumeNode* siblingOut, bool& isSiblingLeft
+	);
 };
 

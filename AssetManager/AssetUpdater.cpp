@@ -5,8 +5,8 @@
 #include "ConstantBuffer.h"
 #include "DynamicBuffer.h"
 
-AssetUpdater::AssetUpdater(AssetManager* assetManager, ID3D11DeviceContext* deviceContext)
-	: m_assetManager(assetManager), m_deviceContextCached(deviceContext)
+AssetUpdater::AssetUpdater(ID3D11DeviceContext* deviceContext)
+	: m_deviceContextCached(deviceContext)
 {
 }
 

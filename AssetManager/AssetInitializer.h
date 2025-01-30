@@ -2,18 +2,16 @@
 #include "IAssetVisitor.h"
 #include "IMeshPartsDataVisitor.h"
 
-class AssetManager;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
 class AssetInitializer : public IAssetVisitor, public IMeshPartsDataVisitor
 {
 public:
-	AssetInitializer(AssetManager* assetManager, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	AssetInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	~AssetInitializer() override = default;
 
 protected:
-	AssetManager* m_assetManager = nullptr;
 	ID3D11Device* m_deviceCached = nullptr;
 	ID3D11DeviceContext* m_deviceContextCached = nullptr;
 

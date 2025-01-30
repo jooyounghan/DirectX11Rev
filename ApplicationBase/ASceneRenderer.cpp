@@ -1,10 +1,13 @@
 #include "ASceneRenderer.h"
 
+#include "AssetManager.h"
 #include "ComponentPSOManager.h"
 #include "GraphicsPSOObject.h"
 
 #include "Scene.h"
 #include "CameraComponent.h"
+#include "SphereCollisionComponent.h"
+#include "OrientedBoxCollisionComponent.h"
 
 #include "StaticMeshComponent.h"
 #include "StaticMeshAsset.h"
@@ -24,6 +27,8 @@
 #include "ConstantBuffer.h"
 #include "DynamicBuffer.h"
 #include "StructuredBuffer.h"
+
+#include "PerformanceAnalyzer.h"
 
 using namespace std;
 
@@ -63,9 +68,9 @@ void ASceneRenderer::Visit(Scene* scene)
                 vector<ID3D11Buffer*> psConstantBuffers{ iblMaterialAsset->GetIBLToneMappingBuffer()->GetBuffer() };
                 vector<ID3D11ShaderResourceView*> psSRVs{ backgroundTextureAsset->GetSRV() };
 
-                deviceContext->VSSetConstantBuffers(0, 1, vsConstantBuffers.data());
-                deviceContext->PSSetConstantBuffers(0, 1, psConstantBuffers.data());
-                deviceContext->PSSetShaderResources(0, 1, psSRVs.data());
+                deviceContext->VSSetConstantBuffers(0, static_cast<UINT>(vsConstantBuffers.size()), vsConstantBuffers.data());
+                deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
+                deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
 
                 RenderMeshParts(deviceContext, meshPartsData);
             }
@@ -75,10 +80,12 @@ void ASceneRenderer::Visit(Scene* scene)
 
 void ASceneRenderer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
+    RenderCollisionComponent(sphereCollisionComponent, StaticMeshAsset::DefaultSphereModelName);
 }
 
 void ASceneRenderer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
+    RenderCollisionComponent(orientedBoxCollisionComponent, StaticMeshAsset::DefaultCubeModelName);
 }
 
 void ASceneRenderer::ClearRenderTargets()
@@ -111,8 +118,52 @@ void ASceneRenderer::ApplyRenderTargets(ID3D11DeviceContext* const deviceContext
 
     vector<ID3D11RenderTargetView*> rtvs{ film->GetRTV() };
 
-    deviceContext->OMSetRenderTargets(1, rtvs.data(), depthStencilView->GetDSV());
+    deviceContext->OMSetRenderTargets(static_cast<UINT>(rtvs.size()), rtvs.data(), depthStencilView->GetDSV());
     deviceContext->RSSetViewports(1, cameraComponent);
+}
+
+void ASceneRenderer::ApplyRenderTargetsWithID(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent) const
+{
+    const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = cameraComponent->GetFilm();
+    const Texture2DInstance<RTVOption>* const idFilm = cameraComponent->GetIDFilm();
+    const Texture2DInstance<DSVOption>* const depthStencilView = cameraComponent->GetDepthStencilViewBuffer();
+
+    vector<ID3D11RenderTargetView*> rtvs{ film->GetRTV(), idFilm->GetRTV()};
+
+    deviceContext->OMSetRenderTargets(static_cast<UINT>(rtvs.size()), rtvs.data(), depthStencilView->GetDSV());
+    deviceContext->RSSetViewports(1, cameraComponent);
+}
+
+void ASceneRenderer::RenderCollisionComponent(ACollisionComponent* collisionComponent, const string& debugStaticMeshAssetName)
+{
+    static GraphicsPSOObject* graphicsPSOObject = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::DEBUG_COMPONENT);
+
+    ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
+    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
+
+    if (cameraComponent != nullptr && graphicsPSOObject != nullptr)
+    {
+        AssetManager* assetManager = AssetManager::GetInstance();
+        if (const StaticMeshAsset* staticMeshAsset = assetManager->GetStaticMeshAsset(debugStaticMeshAssetName))
+        {
+            if (MeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(0))
+            {
+                graphicsPSOObject->ApplyPSOObject(deviceContext);
+                ASceneRenderer::ApplyRenderTargetsWithID(deviceContext, cameraComponent);
+
+                vector<ID3D11Buffer*> vsConstantBuffers{
+                    cameraComponent->GetViewProjMatrixBuffer()->GetBuffer(),
+                    collisionComponent->GetTransformationBuffer()->GetBuffer()
+                };
+                vector<ID3D11Buffer*> psConstantBuffers{ collisionComponent->GetComponentBuffer()->GetBuffer() };
+
+                deviceContext->VSSetConstantBuffers(0, static_cast<UINT>(vsConstantBuffers.size()), vsConstantBuffers.data());
+                deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
+
+                RenderMeshParts(deviceContext, meshPartsData);
+            }
+        }
+    }
 }
 
 void ASceneRenderer::RenderMeshParts(
@@ -137,5 +188,6 @@ void ASceneRenderer::RenderMeshParts(
         deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
         deviceContext->IASetIndexBuffer(meshPartsData->GetD3D11IndexBuffer(), DXGI_FORMAT_R32_UINT, NULL);
         deviceContext->DrawIndexed(indexCount, indicesOffsets[idx], NULL);
+        PerformanceAnalyzer::DrawCount += indexCount;
     }
 }

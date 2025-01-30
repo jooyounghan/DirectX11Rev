@@ -216,9 +216,6 @@
     <ClCompile Include="ANodeEditorWindow.cpp">
       <Filter>소스 파일\Window</Filter>
     </ClCompile>
-    <ClCompile Include="PerformanceWindow.cpp">
-      <Filter>소스 파일\Window</Filter>
-    </ClCompile>
     <ClCompile Include="InteractionManager.cpp">
       <Filter>소스 파일\Manager</Filter>
     </ClCompile>
@@ -333,9 +330,6 @@
       <Filter>헤더 파일\Control\NodeEditor\Node\VariableNode</Filter>
     </ClInclude>
     <ClInclude Include="ANodeEditorWindow.h">
-      <Filter>헤더 파일\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="PerformanceWindow.h">
       <Filter>헤더 파일\Window</Filter>
     </ClInclude>
     <ClInclude Include="InteractionManager.h">

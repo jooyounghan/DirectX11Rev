@@ -1,4 +1,4 @@
-#include "BoundingComponentHeader.hlsli"
+#include "DebugComponentHeader.hlsli"
 
 cbuffer CameraViewProj : register(b0)
 {
@@ -14,9 +14,9 @@ cbuffer ModelMatrix : register(b1)
     matrix ModelInvMatrix;
 };
 
-BoundingComponentVertexOutPut main(BoundingComponentVertexInput Input)
+DebugComponentVertexOutPut main(DebugComponentVertexInput Input)
 {
-    BoundingComponentVertexOutPut Result;
+    DebugComponentVertexOutPut Result;
 
     Result.f4ProjPos = mul(float4(Input.f3WorldPos, 1.f), ModelMatrix);
     Result.f4ProjPos = mul(Result.f4ProjPos, ViewProjMatrix);

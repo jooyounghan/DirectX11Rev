@@ -18,8 +18,15 @@ class AssetManager : public IBaseTextureProvider, public IScratchTextureProvider
 	public ISkeletalMeshProvider, public IModelMaterialProvider, public IIBLMaterialProvider, public IBoneProvider,
 	public IAnimationProvider, public IResourceProvider
 {
+private:
+	AssetManager() = default;
+	AssetManager(const AssetManager&) = delete;
+	AssetManager(AssetManager&&) = delete;
+
 public:
-	AssetManager();
+	static AssetManager* GetInstance();
+
+public:
 	~AssetManager();
 
 protected:

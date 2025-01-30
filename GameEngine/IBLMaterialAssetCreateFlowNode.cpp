@@ -10,13 +10,12 @@ IBLMaterialAssetCreateFlowNode::IBLMaterialAssetCreateFlowNode(
 	const ImVec2& leftTop, const float& radius, 
 	const ImVec2& referencedOrigin, 
 	ID3D11Device* const* deviceAddress,
-	ID3D11DeviceContext* const* deviceContextAddress,
-	AssetManager* assetManager
+	ID3D11DeviceContext* const* deviceContextAddress
 )
 	: FlowNode(
 		"Create IBL Material Asset", leftTop, radius, referencedOrigin, 
 		{"Asset Path", "File Name", "Background", "Specular Cube Map", "Diffuse Cube Map", "BRDR", "Exposure", "Gamma"}),
-	m_deviceAddressCached(deviceAddress), m_deviceContextAddressCached(deviceContextAddress), m_assetManagerCached(assetManager)
+	m_deviceAddressCached(deviceAddress), m_deviceContextAddressCached(deviceContextAddress)
 {
 	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
 		{
@@ -26,6 +25,8 @@ IBLMaterialAssetCreateFlowNode::IBLMaterialAssetCreateFlowNode(
 
 void IBLMaterialAssetCreateFlowNode::ExecuteImpl()
 {
+	AssetManager* assetManager = AssetManager::GetInstance();
+
 	auto inputVariables = GetInputVariables();
 
 	const string& assetPath = get<0>(inputVariables);
@@ -44,7 +45,7 @@ void IBLMaterialAssetCreateFlowNode::ExecuteImpl()
 	iblMaterialAsset->SetIBLMaterialTexture(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF, brdf);
 	iblMaterialAsset->SetIBLToneMappingConstant(exposure, gamma);
 
-	m_assetManagerCached->AddAssetHelper(*m_deviceAddressCached, *m_deviceContextAddressCached,
+	assetManager->AddAssetHelper(*m_deviceAddressCached, *m_deviceContextAddressCached,
 		EAssetType::ASSET_TYPE_IBL_MATERIAL, assetPath + "/" + assetName, iblMaterialAsset
 	);
 	AAssetWriter::SaveAssets(assetPath, EAssetType::ASSET_TYPE_IBL_MATERIAL, { iblMaterialAsset });

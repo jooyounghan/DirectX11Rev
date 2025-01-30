@@ -24,6 +24,6 @@ public:
 	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override;
 
 private:
+	void UpdateComponentBuffer(AComponent* component);
 	void UpdateTransformationBuffer(AComponent* component);
-
 };

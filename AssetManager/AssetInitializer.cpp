@@ -14,8 +14,8 @@
 using namespace std;
 using namespace DirectX;
 
-AssetInitializer::AssetInitializer(AssetManager* assetManager, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
-	: m_assetManager(assetManager), m_deviceCached(device), m_deviceContextCached(deviceContext)
+AssetInitializer::AssetInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+	: m_deviceCached(device), m_deviceContextCached(deviceContext)
 {
 }
 
@@ -30,7 +30,9 @@ void AssetInitializer::Visit(StaticMeshAsset* staticMeshAsset)
 
 void AssetInitializer::Visit(SkeletalMeshAsset* skeletalMeshAsset)
 {
-	skeletalMeshAsset->UpdateBoneAsset(*m_assetManager);
+	AssetManager* assetManager = AssetManager::GetInstance();
+
+	skeletalMeshAsset->UpdateBoneAsset(*assetManager);
 	auto& skeletalMeshPartsPerLOD = skeletalMeshAsset->GetSkeletalMeshPartsPerLOD();
 	for (auto& skeletalMeshPartPerLOD : skeletalMeshPartsPerLOD)
 	{
@@ -111,11 +113,12 @@ void AssetInitializer::Visit(ScratchTextureAsset* scratchTextureAsset)
 
 void AssetInitializer::Visit(ModelMaterialAsset* modelMaterialAsset)
 {
+	AssetManager* assetManager = AssetManager::GetInstance();
 	for (size_t materialTextureType = 0; materialTextureType < ModelMaterialTextureCount; ++materialTextureType)
 	{
 		modelMaterialAsset->UpdateModelBaseTextureAsset(
 			static_cast<EModelMaterialTexture>(materialTextureType),
-			*m_assetManager
+			*assetManager
 		);
 	}
 	modelMaterialAsset->UpdateModelMaterialTexturesFromNames();
@@ -127,11 +130,12 @@ void AssetInitializer::Visit(ModelMaterialAsset* modelMaterialAsset)
 
 void AssetInitializer::Visit(IBLMaterialAsset* iblMaterialAsset)
 {
+	AssetManager* assetManager = AssetManager::GetInstance();
 	for (size_t materialTextureType = 0; materialTextureType < IBLMaterialTextureCount; ++materialTextureType)
 	{
 		iblMaterialAsset->UpdateIBLBaseTextureAsset(
 			static_cast<EIBLMaterialTexture>(materialTextureType),
-			*m_assetManager
+			*assetManager
 		);
 	}
 	DynamicBuffer* const iblToneMappingBuffer = iblMaterialAsset->GetIBLToneMappingBuffer();

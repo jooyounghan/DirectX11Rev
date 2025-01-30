@@ -11,12 +11,11 @@ ModelMaterialAssetCreateFlowNode::ModelMaterialAssetCreateFlowNode(
 	const ImVec2& leftTop, const float& radius,
 	const ImVec2& referencedOrigin,
 	ID3D11Device* const* deviceAddress,
-	ID3D11DeviceContext* const* deviceContextAddress,
-	AssetManager* assetManager
+	ID3D11DeviceContext* const* deviceContextAddress
 )
 	: FlowNode("Create Model Material Asset", leftTop, radius, referencedOrigin,
 		{ "Asset Path", "File Name", "Ambient Occulusion", "Specular", "Diffuse", "Roughness", "Metalic", "Normal", "Height", "Emissive", "Fresnel", "Height Scale"}),
-	m_deviceAddressCached(deviceAddress), m_deviceContextAddressCached(deviceContextAddress), m_assetManagerCached(assetManager)
+	m_deviceAddressCached(deviceAddress), m_deviceContextAddressCached(deviceContextAddress)
 {
 	AddDrawCommand([&](const ImVec2& drawLeftTop, ImDrawList* drawListIn)
 		{
@@ -26,6 +25,8 @@ ModelMaterialAssetCreateFlowNode::ModelMaterialAssetCreateFlowNode(
 
 void ModelMaterialAssetCreateFlowNode::ExecuteImpl()
 {
+	AssetManager* assetManager = AssetManager::GetInstance();
+
 	auto inputVariables = GetInputVariables();
 
 	const string& assetPath = get<0>(inputVariables);
@@ -53,7 +54,7 @@ void ModelMaterialAssetCreateFlowNode::ExecuteImpl()
 	modelMaterialAsset->SetModelMaterialTexture(EModelMaterialTexture::MODEL_MATERIAL_TEXTURE_EMISSIVE, emissive);
 	modelMaterialAsset->SetModelMaterialConstants(fresnel, heightScale);
 
-	m_assetManagerCached->AddAssetHelper(*m_deviceAddressCached, *m_deviceContextAddressCached,
+	assetManager->AddAssetHelper(*m_deviceAddressCached, *m_deviceContextAddressCached,
 		EAssetType::ASSET_TYPE_MODEL_MATERIAL, assetPath + "/" + assetName, modelMaterialAsset
 	);
 

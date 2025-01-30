@@ -5,19 +5,15 @@
 enum class EAssetType;
 
 class AAsset;
-class AssetManager;
 class BaseTextureAsset;
 
 class BaseTextureAssetVariableNode : public VariableNode<BaseTextureAsset*>
 {
 public:
-	BaseTextureAssetVariableNode(
-		const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin, AssetManager* assetManager
-	);
+	BaseTextureAssetVariableNode(const ImVec2& leftTop, const float& radius, const ImVec2& referencedOrigin);
 	~BaseTextureAssetVariableNode() override = default;
 
 protected:
-	AssetManager* m_assetMangerCached = nullptr;
 	BaseTextureAsset* m_selectedBaseTextureAsset = nullptr;
 
 protected:
