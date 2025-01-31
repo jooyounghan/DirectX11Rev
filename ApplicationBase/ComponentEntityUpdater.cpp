@@ -8,8 +8,8 @@
 
 #include "DynamicBuffer.h"
 
-ComponentEntityUpdater::ComponentEntityUpdater(ID3D11DeviceContext* deviceContext, const float& deltaTime)
-	: m_deviceContextCached(deviceContext), m_deltaTime(deltaTime)
+ComponentEntityUpdater::ComponentEntityUpdater(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const float& deltaTime)
+	: m_deviceCached(device), m_deviceContextCached(deviceContext), m_deltaTime(deltaTime)
 {
 }
 
@@ -44,7 +44,7 @@ void ComponentEntityUpdater::Visit(SphereCollisionComponent* sphereCollisionComp
 	UpdateTransformationBuffer(sphereCollisionComponent);
 	//UpdateComponentBuffer(sphereCollisionComponent);
 	
-	sphereCollisionComponent->UpdateBoundingVolumeHierachy();
+	sphereCollisionComponent->UpdateBoundingVolumeHierarchy(m_deviceCached, m_deviceContextCached);
 }
 
 void ComponentEntityUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
@@ -53,7 +53,7 @@ void ComponentEntityUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCol
 	UpdateTransformationBuffer(orientedBoxCollisionComponent);
 	//UpdateComponentBuffer(orientedBoxCollisionComponent);
 
-	orientedBoxCollisionComponent->UpdateBoundingVolumeHierachy();
+	orientedBoxCollisionComponent->UpdateBoundingVolumeHierarchy(m_deviceCached, m_deviceContextCached);
 }
 
 void ComponentEntityUpdater::UpdateComponentBuffer(AComponent* component)

@@ -5,35 +5,32 @@ using namespace std;
 using namespace DirectX;
 
 BoundingVolumeNode::BoundingVolumeNode(
+	ID3D11Device* device,
 	const BoundingBox& boundingBox, 
 	ICollisionAcceptor* const collidable
 )
 	: 
 	m_box(boundingBox),
-	m_lowerBound(
-		boundingBox.Center.x - boundingBox.Extents.x,
-		boundingBox.Center.y - boundingBox.Extents.y,
-		boundingBox.Center.z - boundingBox.Extents.z
-	),
-	m_upperBound(
-		boundingBox.Center.x + boundingBox.Extents.x,
-		boundingBox.Center.y + boundingBox.Extents.y,
-		boundingBox.Center.z + boundingBox.Extents.z
-	),
-	m_collidable(collidable)
+	m_collidable(collidable),
+	m_transformationBuffer(DynamicBuffer(sizeof(STransformation), 1, &m_transformation))
 {
+	D3D11_SUBRESOURCE_DATA subresource = m_transformationBuffer.GetSubResourceData();
+	m_transformationBuffer.InitializeBuffer(device, &subresource);
+
 	m_volumeSize = GetVolumeSize();
 }
 
-BoundingVolumeNode::BoundingVolumeNode(
-	const XMFLOAT3& lowerBound,
-	const XMFLOAT3& upperBound,
-	ICollisionAcceptor* const collidable
-)
-	: m_box(CreateBoundingBox(lowerBound, upperBound)),
-	m_lowerBound(lowerBound), m_upperBound(upperBound), m_collidable(collidable)
+void BoundingVolumeNode::UpdateComponentTransformation(ID3D11DeviceContext* deviceContext)
 {
-	m_volumeSize = GetVolumeSize();
+	m_transformation.m_transformation = XMMatrixAffineTransformation(
+			XMVectorSet(m_box.Extents.x * 2.f, m_box.Extents.y * 2.f, m_box.Extents.z * 2.f, 0.f),
+			XMQuaternionIdentity(),
+			XMQuaternionIdentity(),
+			XMVectorSet(m_box.Center.x, m_box.Center.y, m_box.Center.z, 1.f)
+	);
+	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
+	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
+	m_transformationBuffer.Upload(deviceContext);
 }
 
 DirectX::BoundingBox BoundingVolumeNode::CreateUnionBoundingBox(
@@ -70,13 +67,14 @@ void BoundingVolumeNode::GetBounds(
 	XMFLOAT3& upperBoundOut
 )
 {
-	lowerBoundOut.x = std::min(boundingVolume1->m_lowerBound.x, boundingVolume2->m_lowerBound.x);
-	lowerBoundOut.y = std::min(boundingVolume1->m_lowerBound.y, boundingVolume2->m_lowerBound.y);
-	lowerBoundOut.z = std::min(boundingVolume1->m_lowerBound.z, boundingVolume2->m_lowerBound.z);
+	
+	lowerBoundOut.x = std::min(boundingVolume1->m_box.Center.x - boundingVolume1->m_box.Extents.x, boundingVolume2->m_box.Center.x - boundingVolume2->m_box.Extents.x);
+	lowerBoundOut.y = std::min(boundingVolume1->m_box.Center.y - boundingVolume1->m_box.Extents.y, boundingVolume2->m_box.Center.y - boundingVolume2->m_box.Extents.y);
+	lowerBoundOut.z = std::min(boundingVolume1->m_box.Center.z - boundingVolume1->m_box.Extents.z, boundingVolume2->m_box.Center.z - boundingVolume2->m_box.Extents.z);
 
-	upperBoundOut.x = std::max(boundingVolume1->m_upperBound.x, boundingVolume2->m_upperBound.x);
-	upperBoundOut.y = std::max(boundingVolume1->m_upperBound.y, boundingVolume2->m_upperBound.y);
-	upperBoundOut.z = std::max(boundingVolume1->m_upperBound.z, boundingVolume2->m_upperBound.z);
+	upperBoundOut.x = std::max(boundingVolume1->m_box.Center.x + boundingVolume1->m_box.Extents.x, boundingVolume2->m_box.Center.x + boundingVolume2->m_box.Extents.x);
+	upperBoundOut.y = std::max(boundingVolume1->m_box.Center.y + boundingVolume1->m_box.Extents.y, boundingVolume2->m_box.Center.y + boundingVolume2->m_box.Extents.y);
+	upperBoundOut.z = std::max(boundingVolume1->m_box.Center.z + boundingVolume1->m_box.Extents.z, boundingVolume2->m_box.Center.z + boundingVolume2->m_box.Extents.z);
 
 	lowerBoundOut.x -= margin;
 	lowerBoundOut.y -= margin;

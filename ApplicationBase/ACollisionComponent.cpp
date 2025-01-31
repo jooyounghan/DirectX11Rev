@@ -22,7 +22,7 @@ ACollisionComponent::~ACollisionComponent()
 	}
 }
 
-void ACollisionComponent::SetCollisionOption(ICollisionOption* collisionOption) 
+void ACollisionComponent::SetCollisionOption(ID3D11Device* device, ICollisionOption* collisionOption)
 { 
 	if (m_collisionOption) delete m_collisionOption;
 	m_collisionOption = collisionOption; 

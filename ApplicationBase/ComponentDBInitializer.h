@@ -9,10 +9,11 @@ class ICollisionOption;
 class ComponentDBInitializer : public IComponentVisitor
 {
 public:
-	ComponentDBInitializer(mysqlx::Schema* schema);
+	ComponentDBInitializer(ID3D11Device* device, mysqlx::Schema* schema);
 	~ComponentDBInitializer() override = default;
 
 protected:
+	ID3D11Device* m_deviceCached = nullptr;
 	mysqlx::Schema* m_schemaCached = nullptr;
 
 public:

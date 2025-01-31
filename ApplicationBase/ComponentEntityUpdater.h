@@ -5,10 +5,11 @@
 class ComponentEntityUpdater : public IComponentVisitor
 {
 public:
-	ComponentEntityUpdater(ID3D11DeviceContext* deviceContext, const float& deltaTime);
+	ComponentEntityUpdater(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const float& deltaTime);
 	virtual ~ComponentEntityUpdater() override = default;
 
 protected:
+	ID3D11Device* m_deviceCached = nullptr;
 	ID3D11DeviceContext* m_deviceContextCached = nullptr;
 	const float& m_deltaTime;
 

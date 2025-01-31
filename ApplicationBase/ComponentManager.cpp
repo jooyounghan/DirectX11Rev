@@ -241,7 +241,7 @@ void ComponentManager::InitLoadedComponents()
 {
 	try
 	{
-		ComponentDBInitializer componentDBInitializer(this);
+		ComponentDBInitializer componentDBInitializer(*m_deviceAddressCached, this);
 		ComponentEntityInitializer componentEntityInitializer(*m_deviceAddressCached, m_defferedContext->GetDefferedContext());
 		m_sessionManager->startTransaction();
 		{
@@ -375,7 +375,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 	if (m_isInitialized)
 	{
 		
-		ComponentEntityUpdater componentEntityUpdater(m_defferedContext->GetDefferedContext(), deltaTime);
+		ComponentEntityUpdater componentEntityUpdater(*m_deviceAddressCached, m_defferedContext->GetDefferedContext(), deltaTime);
 
 		{
 			shared_lock updateComponent(m_componentMutex);

@@ -15,7 +15,7 @@ void PerformanceAnalyzerWindow::PrepareWindow()
 
 void PerformanceAnalyzerWindow::RenderWindowImpl()
 {
-    DrawFPSLinePlotting();
+    //DrawFPSLinePlotting();
     DrawPerformanceIndicators();
 }
 

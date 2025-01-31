@@ -138,7 +138,10 @@ void GameEngine::Update(const float& deltaTime)
 {
 	m_componentManager->UpdateComponents(deltaTime);
 
+	ID3D11DeviceContext* immediateContext = m_engine->GetDeviceContext();
+
 	// TEST =================================================
+	RenderControlOption::RenderBVH.UpdateTransformation(m_engine->GetDevice(), immediateContext);
 	RenderControlOption::RenderBVH.ResetSerachCount();
 	RenderControlOption::RenderBVH.Traverse(m_editorCamera);
 	PerformanceAnalyzer::CollisionCheckCount = RenderControlOption::RenderBVH.GetSerachCount();
@@ -147,7 +150,7 @@ void GameEngine::Update(const float& deltaTime)
 	m_engine->ClearBackBuffer(ClearColor);
 	m_engine->SetRTVAsBackBuffer();
 
-	ID3D11DeviceContext* immediateContext = m_engine->GetDeviceContext();
+
 
 	future<void> assetLoadGPUTask = async(launch::deferred, [&, immediateContext]() 
 		{

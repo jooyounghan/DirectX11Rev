@@ -20,8 +20,8 @@ using namespace DirectX;
 
 using json = nlohmann::json;
 
-ComponentDBInitializer::ComponentDBInitializer(mysqlx::Schema* schema)
-	: m_schemaCached(schema)
+ComponentDBInitializer::ComponentDBInitializer(ID3D11Device* device, mysqlx::Schema* schema)
+	: m_deviceCached(device), m_schemaCached(schema)
 {
 }
 
@@ -113,7 +113,7 @@ void ComponentDBInitializer::Visit(SphereCollisionComponent* sphereCollisionComp
 		const XMVECTOR& absolutePosition = sphereCollisionComponent->GetAbsolutePosition();
 		sphereCollisionComponent->SetBoundingProperties(absolutePosition, radius);
 		ICollisionOption* collisionOption = CreateCollisionOption(collisionOptionID);
-		sphereCollisionComponent->SetCollisionOption(collisionOption);
+		sphereCollisionComponent->SetCollisionOption(m_deviceCached, collisionOption);
 	}
 
 }
@@ -141,7 +141,7 @@ void ComponentDBInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCol
 		orientedBoxCollisionComponent->SetBoundingProperties(absolutePosition, XMFLOAT3(extendX, extendY, extendZ), rotationQuaternion);
 
 		ICollisionOption* collisionOption = CreateCollisionOption(collisionOptionID);
-		orientedBoxCollisionComponent->SetCollisionOption(collisionOption);
+		orientedBoxCollisionComponent->SetCollisionOption(m_deviceCached, collisionOption);
 	}
 }
 

@@ -29,6 +29,7 @@
 #include "StructuredBuffer.h"
 
 #include "PerformanceAnalyzer.h"
+#include "BoundingVolumeNode.h"
 
 using namespace std;
 
@@ -88,6 +89,36 @@ void ASceneRenderer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionCo
 {
     RenderCollisionComponent(orientedBoxCollisionComponent, StaticMeshAsset::DefaultCubeModelName);
     orientedBoxCollisionComponent->SetRenderable(false);
+}
+
+void ASceneRenderer::Visit(BoundingVolumeNode* boundingVolumeNode)
+{
+    static GraphicsPSOObject* graphicsPSOObject = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::DEBUG_COMPONENT);
+
+    ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
+    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
+
+    if (cameraComponent != nullptr && graphicsPSOObject != nullptr)
+    {
+        AssetManager* assetManager = AssetManager::GetInstance();
+        if (const StaticMeshAsset* staticMeshAsset = assetManager->GetStaticMeshAsset(StaticMeshAsset::DefaultCubeModelName))
+        {
+            if (MeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(0))
+            {
+                graphicsPSOObject->ApplyPSOObject(deviceContext);
+                ASceneRenderer::ApplyRenderTargetsWithID(deviceContext, cameraComponent);
+
+                vector<ID3D11Buffer*> vsConstantBuffers{
+                    cameraComponent->GetViewProjMatrixBuffer()->GetBuffer(),
+                    boundingVolumeNode->m_transformationBuffer.GetBuffer()
+                };
+
+                deviceContext->VSSetConstantBuffers(0, static_cast<UINT>(vsConstantBuffers.size()), vsConstantBuffers.data());
+
+                RenderMeshParts(deviceContext, meshPartsData);
+            }
+        }
+    }
 }
 
 void ASceneRenderer::ClearRenderTargets()

@@ -37,21 +37,21 @@ void OrientedBoxCollisionComponent::UpdateAbsoluteEntities()
 
 void OrientedBoxCollisionComponent::UpdateComponentTransformation()
 {
-	m_transformation.m_transformation = XMMatrixScalingFromVector(XMLoadFloat3(&Extents)) * GetAbsoluteTransformation();
+	m_transformation.m_transformation = XMMatrixScalingFromVector(XMLoadFloat3(&Extents) * 2.f) * GetAbsoluteTransformation();
 	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
 	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
 }
 
-void OrientedBoxCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)
+void OrientedBoxCollisionComponent::SetCollisionOption(ID3D11Device* device, ICollisionOption* collisionOption)
 {
 	if (m_collisionOption) m_collisionOption->RemoveBVHImpl(this);
-	ACollisionComponent::SetCollisionOption(collisionOption);
-	m_collisionOption->InsertBVHImpl(this);
+	ACollisionComponent::SetCollisionOption(device, collisionOption);
+	m_collisionOption->InsertBVHImpl(device, this);
 }
 
-void OrientedBoxCollisionComponent::UpdateBoundingVolumeHierachy()
+void OrientedBoxCollisionComponent::UpdateBoundingVolumeHierarchy(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-	m_collisionOption->UpdateBVHImpl(this);
+	m_collisionOption->UpdateBVHImpl(device, this);
 }
 
 void OrientedBoxCollisionComponent::OnCollide(ICollisionAcceptor* accpetor)

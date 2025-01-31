@@ -1,24 +1,29 @@
 #pragma once
 #include "ICollisionAcceptor.h"
+
+#include "DynamicBuffer.h"
+#include "AComponent.h"
+
 #include <vector>
 
 class BoundingVolumeNode
 {
 public:
 	BoundingVolumeNode(
+		ID3D11Device* device,
 		const DirectX::BoundingBox& boundingBox, 
 		ICollisionAcceptor* const collidable = nullptr
 	);
-	BoundingVolumeNode(
-		const DirectX::XMFLOAT3& lowerBound, 
-		const DirectX::XMFLOAT3& upperBound, 
-		ICollisionAcceptor* const collidable = nullptr
-	);
+
+public:
+	STransformation m_transformation;
+	DynamicBuffer m_transformationBuffer;
+
+public:
+	void UpdateComponentTransformation(ID3D11DeviceContext* deviceContext);
 
 private:
 	DirectX::BoundingBox m_box;
-	DirectX::XMFLOAT3 m_lowerBound;
-	DirectX::XMFLOAT3 m_upperBound;
 
 public:
 	BoundingVolumeNode* m_parentNode = nullptr;

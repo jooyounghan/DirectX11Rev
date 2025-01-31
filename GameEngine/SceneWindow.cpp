@@ -11,6 +11,7 @@
 #include "DSVOption.h"
 
 #include "PerformanceAnalyzer.h"
+#include "RenderControlOption.h"
 
 using namespace std;
 using namespace ImGui;
@@ -64,6 +65,9 @@ void SceneWindow::PrepareWindow()
 
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
         RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);
+
+
+        RenderControlOption::RenderBVH.RenderCollidable(m_selectedRenderer);
 
         m_selectedRenderer->PostProcess();
     }

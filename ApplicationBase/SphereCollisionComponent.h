@@ -21,8 +21,8 @@ public:
 	virtual void UpdateComponentTransformation() override;
 
 public:
-	virtual void SetCollisionOption(ICollisionOption* collisionOption) override;
-	virtual void UpdateBoundingVolumeHierachy() override;
+	virtual void SetCollisionOption(ID3D11Device* device, ICollisionOption* collisionOption) override;
+	virtual void UpdateBoundingVolumeHierarchy(ID3D11Device* device, ID3D11DeviceContext* deviceContext) override;
 	virtual void OnCollide(ICollisionAcceptor* accpetor) override;
 };
 

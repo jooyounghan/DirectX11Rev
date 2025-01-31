@@ -19,7 +19,7 @@ protected:
 	ICollisionOption* m_collisionOption = nullptr;
 
 public:
-	virtual void SetCollisionOption(ICollisionOption* collisionOption);
-	virtual void UpdateBoundingVolumeHierachy() = 0;
+	virtual void SetCollisionOption(ID3D11Device* device, ICollisionOption* collisionOption);
+	virtual void UpdateBoundingVolumeHierarchy(ID3D11Device* device, ID3D11DeviceContext* deviceContext) = 0;
 };
 

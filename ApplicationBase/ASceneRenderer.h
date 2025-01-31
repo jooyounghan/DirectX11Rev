@@ -14,6 +14,7 @@ class MeshPartsData;
 class GraphicsPSOObject;
 class ScreenQuad;
 class ACollisionComponent;
+class BoundingVolumeNode;
 
 constexpr float ClearColor[4] = { 0.f, 0.f, 0.f, 1.f };
 
@@ -51,6 +52,9 @@ public:
 public:
 	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) override final;
 	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override final;
+
+public:
+	void Visit(BoundingVolumeNode* boundingVolumeNode);
 
 public:
 	virtual void ClearRenderTargets();

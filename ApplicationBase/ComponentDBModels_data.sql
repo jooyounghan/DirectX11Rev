@@ -52,7 +52,7 @@ DROP TABLE IF EXISTS `collision_options`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `collision_options` (
   `collision_option_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `collision_option_description` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `collision_option_description` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
   PRIMARY KEY (`collision_option_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -101,7 +101,7 @@ DROP TABLE IF EXISTS `components`;
 CREATE TABLE `components` (
   `component_id` int unsigned NOT NULL AUTO_INCREMENT,
   `parent_component_id` int unsigned NOT NULL DEFAULT '0',
-  `component_name` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'NULL',
+  `component_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'NULL',
   `position_x` float NOT NULL DEFAULT '0',
   `position_y` float NOT NULL DEFAULT '0',
   `position_z` float NOT NULL DEFAULT '0',
@@ -121,7 +121,7 @@ CREATE TABLE `components` (
 
 LOCK TABLES `components` WRITE;
 /*!40000 ALTER TABLE `components` DISABLE KEYS */;
-INSERT INTO `components` VALUES (1,0,'SphereCollision1',227,-2,500,0,0,0,1,1,1),(2,0,'OrientedCollision1',-173,-9,500,0,0,0,1,1,1),(3,1,'Skeletal1',0,-101,0,0,0,0,1,1,1),(4,2,'Skeletal2',0,-88,0,0,-5.8,0,1,1,1),(5,0,'SphereCollision2',-380,10,500,0,0,0,1,1,1),(6,0,'SphereCollision3',0,-13,500,0,0,0,1,1,1),(7,0,'OrientedCollision2',453,-53,500,0,0,0,1,1,1),(8,0,'OrientedCollision3',0,-378,500,0,-23,0,1,1,1),(9,5,'Skeletal3',0,-88,0,0,0,0,1,1,1),(10,6,'Skeleta4',0,-85,0,0,0,0,1,1,1),(11,7,'Skeletal5',0,-88,0,0,0,0,1,1,1),(12,8,'Skeletal6',0,-88,0,0,0,0,1,1,1);
+INSERT INTO `components` VALUES (1,0,'SphereCollision1',-982,-729,0,0,0,0,1,1,1),(2,0,'OrientedCollision1',-750,0,0,-1.6,-1.7,0,1,1,1),(3,1,'Skeletal1',0,-101,0,0,0,0,1,1,1),(4,2,'Skeletal2',0,-88,0,0,-5.8,0,1,1,1),(5,0,'SphereCollision2',393,-846,0,0,0,0,1,1,1),(6,0,'SphereCollision3',-223,57,0,0,0,0,1,1,1),(7,0,'OrientedCollision2',750,0,0,0,0,0,1,1,1),(8,0,'OrientedCollision3',1250,0,0,0,-23,0,1,1,1),(9,5,'Skeletal3',0,-88,0,0,0,0,1,1,1),(10,6,'Skeleta4',0,-85,0,0,0,0,1,1,1),(11,7,'Skeletal5',0,-88,0,0,0,0,1,1,1),(12,8,'Skeletal6',0,-88,0,0,0,0,1,1,1);
 /*!40000 ALTER TABLE `components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -204,7 +204,7 @@ CREATE TABLE `oriented_box_collision_components` (
 
 LOCK TABLES `oriented_box_collision_components` WRITE;
 /*!40000 ALTER TABLE `oriented_box_collision_components` DISABLE KEYS */;
-INSERT INTO `oriented_box_collision_components` VALUES (2,100,200,100,1),(7,50,200,50,1),(8,80,200,80,1);
+INSERT INTO `oriented_box_collision_components` VALUES (2,100,200,100,1),(7,81.9,200,50,1),(8,80,200,80,1);
 /*!40000 ALTER TABLE `oriented_box_collision_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -247,8 +247,8 @@ DROP TABLE IF EXISTS `scenes`;
 CREATE TABLE `scenes` (
   `scene_id` int unsigned NOT NULL AUTO_INCREMENT,
   `scene_description` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `scene_static_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `scene_ibl_material_name` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `scene_static_mesh_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `scene_ibl_material_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
   PRIMARY KEY (`scene_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -272,7 +272,7 @@ DROP TABLE IF EXISTS `skeletal_mesh_components`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `skeletal_mesh_components` (
   `skeletal_mesh_component_id` int unsigned NOT NULL,
-  `skeletal_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `skeletal_mesh_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`skeletal_mesh_component_id`),
   CONSTRAINT `component_id_fk4` FOREIGN KEY (`skeletal_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -325,7 +325,7 @@ DROP TABLE IF EXISTS `static_mesh_components`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `static_mesh_components` (
   `static_mesh_component_id` int unsigned NOT NULL,
-  `static_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `static_mesh_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`static_mesh_component_id`),
   CONSTRAINT `component_id_fk5` FOREIGN KEY (`static_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -349,4 +349,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-31 14:10:40
+-- Dump completed on 2025-01-31 22:35:17

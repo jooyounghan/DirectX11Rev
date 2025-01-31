@@ -39,16 +39,16 @@ void SphereCollisionComponent::UpdateComponentTransformation()
 	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
 }
 
-void SphereCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)
+void SphereCollisionComponent::SetCollisionOption(ID3D11Device* device, ICollisionOption* collisionOption)
 {
 	if (m_collisionOption) m_collisionOption->RemoveBVHImpl(this);
-	ACollisionComponent::SetCollisionOption(collisionOption);
-	if (m_collisionOption) m_collisionOption->InsertBVHImpl(this);
+	ACollisionComponent::SetCollisionOption(device, collisionOption);
+	if (m_collisionOption) m_collisionOption->InsertBVHImpl(device, this);
 }
 
-void SphereCollisionComponent::UpdateBoundingVolumeHierachy()
+void SphereCollisionComponent::UpdateBoundingVolumeHierarchy(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-	m_collisionOption->UpdateBVHImpl(this);
+	m_collisionOption->UpdateBVHImpl(device, this);
 }
 
 void SphereCollisionComponent::OnCollide(ICollisionAcceptor* accpetor)
