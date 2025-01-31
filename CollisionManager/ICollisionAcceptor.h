@@ -11,7 +11,8 @@ public:
 
 public: 
 	virtual bool Accept(ICollisionVisitor& collisionVisitor) const = 0;
-	virtual bool IsInBVNode(BoundingVolumeNode* boundingVolumeNode) const = 0;
+	virtual bool IsInBVNode(const BoundingVolumeNode* boundingVolumeNode) const = 0;
+	virtual bool IsBVNodeIn(const BoundingVolumeNode* boundingVolumeNode) const = 0;
 
 public:
 	virtual DirectX::BoundingBox GetBoundingBox(const float& margin) const = 0;

@@ -81,11 +81,13 @@ void ASceneRenderer::Visit(Scene* scene)
 void ASceneRenderer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
     RenderCollisionComponent(sphereCollisionComponent, StaticMeshAsset::DefaultSphereModelName);
+    sphereCollisionComponent->SetRenderable(false);
 }
 
 void ASceneRenderer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
     RenderCollisionComponent(orientedBoxCollisionComponent, StaticMeshAsset::DefaultCubeModelName);
+    orientedBoxCollisionComponent->SetRenderable(false);
 }
 
 void ASceneRenderer::ClearRenderTargets()

@@ -109,11 +109,11 @@ void ComponentDBInitializer::Visit(SphereCollisionComponent* sphereCollisionComp
 	{
 		const float radius = row[0].get<float>();
 		const uint32_t collisionOptionID = row[1].get<uint32_t>();
-		ICollisionOption* collisionOption = CreateCollisionOption(collisionOptionID);
-		sphereCollisionComponent->SetCollisionOption(collisionOption);
 
 		const XMVECTOR& absolutePosition = sphereCollisionComponent->GetAbsolutePosition();
 		sphereCollisionComponent->SetBoundingProperties(absolutePosition, radius);
+		ICollisionOption* collisionOption = CreateCollisionOption(collisionOptionID);
+		sphereCollisionComponent->SetCollisionOption(collisionOption);
 	}
 
 }
@@ -136,12 +136,12 @@ void ComponentDBInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCol
 		const float extendZ = row[2].get<float>();
 		const uint32_t collisionOptionID = row[3].get<uint32_t>();
 
-		ICollisionOption* collisionOption = CreateCollisionOption(collisionOptionID);
-		orientedBoxCollisionComponent->SetCollisionOption(collisionOption);
-
 		const XMVECTOR& absolutePosition = orientedBoxCollisionComponent->GetAbsolutePosition();
 		const XMVECTOR& rotationQuaternion =  orientedBoxCollisionComponent->GetAbsoluteRotationQuaternion();
 		orientedBoxCollisionComponent->SetBoundingProperties(absolutePosition, XMFLOAT3(extendX, extendY, extendZ), rotationQuaternion);
+
+		ICollisionOption* collisionOption = CreateCollisionOption(collisionOptionID);
+		orientedBoxCollisionComponent->SetCollisionOption(collisionOption);
 	}
 }
 

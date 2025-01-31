@@ -9,7 +9,7 @@ public:
 
 public:
 	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
-	virtual bool Visit(const CollidableOrientedBox* const collidableOrientedBox)const override;
+	virtual bool Visit(const CollidableOrientedBox* const collidableOrientedBox) const override;
 	virtual bool Visit(const CollidableFrustum* const collidableFrustum) const override;
 };
 

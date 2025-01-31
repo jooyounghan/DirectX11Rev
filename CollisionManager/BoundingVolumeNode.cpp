@@ -93,7 +93,7 @@ DirectX::BoundingBox BoundingVolumeNode::CreateBoundingBox(
 )
 {
 	XMVECTOR lowerBoundV = XMLoadFloat3(&lowerBound);
-	XMVECTOR upperBoundV = XMLoadFloat3(&lowerBound);
+	XMVECTOR upperBoundV = XMLoadFloat3(&upperBound);
 
 	XMVECTOR centerV = (lowerBoundV + upperBoundV) / 2.f;
 	XMVECTOR extentsV = (upperBoundV - lowerBoundV) / 2.f;
@@ -105,7 +105,7 @@ DirectX::BoundingBox BoundingVolumeNode::CreateBoundingBox(
 	return DirectX::BoundingBox(center, extents);
 }
 
-void BoundingVolumeNode::GetSiblingNode(BoundingVolumeNode* node, BoundingVolumeNode* siblingOut, bool& isSiblingLeft)
+void BoundingVolumeNode::GetSiblingNode(BoundingVolumeNode* node, BoundingVolumeNode*& siblingOut, bool& isSiblingLeft)
 {
 	siblingOut = nullptr;
 	BoundingVolumeNode* parentNode = node->m_parentNode;

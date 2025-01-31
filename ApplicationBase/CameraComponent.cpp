@@ -48,8 +48,6 @@ void CameraComponent::SetCameraProperties(
 	Height = static_cast<float>(height);
 	MinDepth = 0.f;
 	MaxDepth = 1.f;
-
-	SetBoundingProperties(m_absolutePosition, GetAbsoluteRotationQuaternion(), m_fovAngle, m_nearZ, m_farZ);
 }
 
 XMMATRIX CameraComponent::GetViewMatrix()
@@ -90,18 +88,18 @@ void CameraComponent::SetDepthStencilView(Texture2DInstance<DSVOption>* depthSte
 	m_depthStencilViewBuffer = depthStencilViewBuffer;
 }
 
-void CameraComponent::UpdateAbsoluteEntities()
-{
-	AComponent::UpdateAbsoluteEntities();
-	SetBoundingProperties(m_absolutePosition, GetAbsoluteRotationQuaternion(), m_fovAngle, m_nearZ, m_farZ);
-}
-
 void CameraComponent::UpdateViewElement()
 {
-	m_viewElement.m_viewProj = GetViewMatrix() * GetProjectionMatrix();
+	const XMMATRIX& viewMatrix = GetViewMatrix();
+	const XMMATRIX& projectionMatrix = GetProjectionMatrix();
+
+	m_viewElement.m_viewProj = viewMatrix * projectionMatrix;
 	m_viewElement.m_invViewProj = XMMatrixInverse(nullptr, m_viewElement.m_viewProj);
 	m_viewElement.m_viewProj = XMMatrixTranspose(m_viewElement.m_viewProj);
 	m_viewElement.m_viewPosition = XMFLOAT3(m_absolutePosition.m128_f32[0], m_absolutePosition.m128_f32[1], m_absolutePosition.m128_f32[2]);
+
+	BoundingFrustum::CreateFromMatrix(*this, projectionMatrix);
+	this->Transform(*this, XMMatrixInverse(nullptr, viewMatrix));
 }
 
 void CameraComponent::Accept(IComponentVisitor* visitor)

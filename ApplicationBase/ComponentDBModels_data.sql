@@ -121,7 +121,7 @@ CREATE TABLE `components` (
 
 LOCK TABLES `components` WRITE;
 /*!40000 ALTER TABLE `components` DISABLE KEYS */;
-INSERT INTO `components` VALUES (1,0,'SphereCollision1',227,-2,500,0,0,0,1,1,1),(2,0,'OrientedCollision1',-173,0,500,0,0,0,1,1,1),(3,1,'Skeletal1',0,-101,0,0,0,0,1,1,1),(4,2,'Skeletal2',0,-88,0,0,-5.8,0,1,1,1),(5,0,'SphereCollision2',-380,0,500,0,0,0,1,1,1),(6,0,'SphereCollision3',0,0,500,0,0,0,1,1,1),(7,0,'OrientedCollision2',453,0,500,0,0,0,1,1,1),(8,0,'OrientedCollision3',0,-215,500,0,0,0,1,1,1),(9,5,'Skeletal3',0,-88,0,0,0,0,1,1,1),(10,6,'Skeleta4',0,-85,0,0,0,0,1,1,1),(11,7,'Skeletal5',0,-88,0,0,0,0,1,1,1),(12,8,'Skeletal6',0,-88,0,0,0,0,1,1,1);
+INSERT INTO `components` VALUES (1,0,'SphereCollision1',227,-2,500,0,0,0,1,1,1),(2,0,'OrientedCollision1',-173,-9,500,0,0,0,1,1,1),(3,1,'Skeletal1',0,-101,0,0,0,0,1,1,1),(4,2,'Skeletal2',0,-88,0,0,-5.8,0,1,1,1),(5,0,'SphereCollision2',-380,10,500,0,0,0,1,1,1),(6,0,'SphereCollision3',0,-13,500,0,0,0,1,1,1),(7,0,'OrientedCollision2',453,-53,500,0,0,0,1,1,1),(8,0,'OrientedCollision3',0,-378,500,0,-23,0,1,1,1),(9,5,'Skeletal3',0,-88,0,0,0,0,1,1,1),(10,6,'Skeleta4',0,-85,0,0,0,0,1,1,1),(11,7,'Skeletal5',0,-88,0,0,0,0,1,1,1),(12,8,'Skeletal6',0,-88,0,0,0,0,1,1,1);
 /*!40000 ALTER TABLE `components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -349,4 +349,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-30 17:07:49
+-- Dump completed on 2025-01-31 14:10:40

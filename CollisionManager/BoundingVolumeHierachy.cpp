@@ -1,5 +1,6 @@
-
 #include "BoundingVolumeHierachy.h"
+#include "ContainVisitor.h"
+#include "IntersectVisitor.h"
 
 using namespace std;
 using namespace DirectX;
@@ -38,6 +39,8 @@ void BoundingVolumeHierachy::InsertCollidable(ICollisionAcceptor* collidable)
 		{
 			oldParent->m_right = newParent;
 		}
+		newParent->m_parentNode = oldParent;
+
 		newParent->m_left = bestLeafNode;
 		newParent->m_right = leafNode;
 		bestLeafNode->m_parentNode = newParent;
@@ -124,6 +127,12 @@ void BoundingVolumeHierachy::UpdateCollidable(ICollisionAcceptor* collidable)
 	}
 }
 
+void BoundingVolumeHierachy::Traverse(ICollisionAcceptor* collidable)
+{
+	IntersectVisitor containVisitor(collidable);
+	TraverseImpl(m_rootNode, collidable, containVisitor);
+}
+
 void BoundingVolumeHierachy::Refit(BoundingVolumeNode* node)
 {
 	if (node == nullptr) return;
@@ -177,5 +186,27 @@ void BoundingVolumeHierachy::Rotate(BoundingVolumeNode* node)
 		}
 
 		node->SetBoundingBox(BoundingVolumeNode::CreateUnionBoundingBox(node->m_left, node->m_right, m_margin));
+	}
+}
+
+void BoundingVolumeHierachy::TraverseImpl(BoundingVolumeNode* node, ICollisionAcceptor*& collidable, ACollisionVisitor& containVisitor)
+{
+	if (node)
+	{
+		m_searchCount++;
+
+		if (collidable->IsInBVNode(node))
+		{
+			if (node->IsLeaf())
+			{
+				m_searchCount++;
+				if (node->m_collidable->Accept(containVisitor))
+				{
+					node->m_collidable->OnCollide(collidable);
+				}
+			}
+			TraverseImpl(node->m_left, collidable, containVisitor);
+			TraverseImpl(node->m_right, collidable, containVisitor);
+		}
 	}
 }

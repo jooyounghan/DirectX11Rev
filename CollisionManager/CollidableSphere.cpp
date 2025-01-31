@@ -9,9 +9,14 @@ bool CollidableSphere::Accept(ICollisionVisitor& collisionVisitor) const
 	return collisionVisitor.Visit(this);
 }
 
-bool CollidableSphere::IsInBVNode(BoundingVolumeNode* boundingVolumeNode) const
+bool CollidableSphere::IsInBVNode(const BoundingVolumeNode* boundingVolumeNode) const
 {
 	return boundingVolumeNode->GetBoundingBox().Contains(*this);
+}
+
+bool CollidableSphere::IsBVNodeIn(const BoundingVolumeNode* boundingVolumeNode) const
+{
+	return this->Contains(boundingVolumeNode->GetBoundingBox());
 }
 
 DirectX::BoundingBox CollidableSphere::GetBoundingBox(const float& margin) const

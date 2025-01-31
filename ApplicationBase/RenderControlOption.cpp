@@ -20,5 +20,7 @@ void RenderControlOption::UpdateBVHImpl(ICollisionAcceptor* accpetor)
 
 void RenderControlOption::OnCollideImpl(AComponent* component)
 {
+	component->SetDebugColor(DirectX::XMFLOAT3(0.f, 1.f, 0.f));
+	component->SetIsModified(true);
 	component->SetRenderable(true);
 }

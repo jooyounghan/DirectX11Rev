@@ -73,7 +73,7 @@ public:
 		const DirectX::XMFLOAT3& upperBound
 	);
 	static void GetSiblingNode(
-		BoundingVolumeNode* node, BoundingVolumeNode* siblingOut, bool& isSiblingLeft
+		BoundingVolumeNode* node, BoundingVolumeNode*& siblingOut, bool& isSiblingLeft
 	);
 };
 

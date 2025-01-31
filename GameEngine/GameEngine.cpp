@@ -23,6 +23,9 @@
 
 #include <future>
 
+//TEST
+#include "RenderControlOption.h"
+
 using namespace std;
 using namespace D3D11;
 
@@ -134,6 +137,12 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 void GameEngine::Update(const float& deltaTime)
 {
 	m_componentManager->UpdateComponents(deltaTime);
+
+	// TEST =================================================
+	RenderControlOption::RenderBVH.ResetSerachCount();
+	RenderControlOption::RenderBVH.Traverse(m_editorCamera);
+	PerformanceAnalyzer::CollisionCheckCount = RenderControlOption::RenderBVH.GetSerachCount();
+	// ======================================================
 
 	m_engine->ClearBackBuffer(ClearColor);
 	m_engine->SetRTVAsBackBuffer();
