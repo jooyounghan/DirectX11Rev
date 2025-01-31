@@ -44,7 +44,7 @@ void ComponentEntityUpdater::Visit(SphereCollisionComponent* sphereCollisionComp
 	UpdateTransformationBuffer(sphereCollisionComponent);
 	//UpdateComponentBuffer(sphereCollisionComponent);
 	
-	sphereCollisionComponent->UpdateBoundingVolumeHierachy();
+	sphereCollisionComponent->UpdateBoundingVolumeHierarchy();
 }
 
 void ComponentEntityUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
@@ -53,7 +53,7 @@ void ComponentEntityUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCol
 	UpdateTransformationBuffer(orientedBoxCollisionComponent);
 	//UpdateComponentBuffer(orientedBoxCollisionComponent);
 
-	orientedBoxCollisionComponent->UpdateBoundingVolumeHierachy();
+	orientedBoxCollisionComponent->UpdateBoundingVolumeHierarchy();
 }
 
 void ComponentEntityUpdater::UpdateComponentBuffer(AComponent* component)

@@ -109,9 +109,7 @@
     <ClInclude Include="BoundingVolumeNode.h">
       <Filter>헤더 파일\Component\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="BoundingVolumeHierachy.h">
-      <Filter>헤더 파일\BVH</Filter>
-    </ClInclude>
+    <ClInclude Include="BoundingVolumeHierarchy.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -335,9 +333,7 @@
     <ClCompile Include="BoundingVolumeNode.cpp">
       <Filter>소스 파일\Component\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="BoundingVolumeHierachy.cpp">
-      <Filter>소스 파일\BVH</Filter>
-    </ClCompile>
+    <ClCompile Include="BoundingVolumeHierarchy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\DebugComponentHeader.hlsli">

@@ -20,6 +20,6 @@ protected:
 
 public:
 	virtual void SetCollisionOption(ICollisionOption* collisionOption);
-	virtual void UpdateBoundingVolumeHierachy() = 0;
+	virtual void UpdateBoundingVolumeHierarchy() = 0;
 };
 

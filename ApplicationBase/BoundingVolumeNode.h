@@ -9,16 +9,9 @@ public:
 		const DirectX::BoundingBox& boundingBox, 
 		ICollisionAcceptor* const collidable = nullptr
 	);
-	BoundingVolumeNode(
-		const DirectX::XMFLOAT3& lowerBound, 
-		const DirectX::XMFLOAT3& upperBound, 
-		ICollisionAcceptor* const collidable = nullptr
-	);
 
 private:
 	DirectX::BoundingBox m_box;
-	DirectX::XMFLOAT3 m_lowerBound;
-	DirectX::XMFLOAT3 m_upperBound;
 
 public:
 	BoundingVolumeNode* m_parentNode = nullptr;

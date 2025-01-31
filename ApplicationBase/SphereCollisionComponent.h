@@ -22,7 +22,7 @@ public:
 
 public:
 	virtual void SetCollisionOption(ICollisionOption* collisionOption) override;
-	virtual void UpdateBoundingVolumeHierachy() override;
+	virtual void UpdateBoundingVolumeHierarchy() override;
 	virtual void OnCollide(ICollisionAcceptor* accpetor) override;
 };
 

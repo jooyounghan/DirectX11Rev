@@ -1,11 +1,11 @@
 #pragma once
 #include "ICollisionOption.h"
-#include "BoundingVolumeHierachy.h"
+#include "BoundingVolumeHierarchy.h"
 
 class RenderControlOption : public ICollisionOption
 {
 public:
-	static BoundingVolumeHierachy RenderBVH;
+	static BoundingVolumeHierarchy RenderBVH;
 
 public:
 	virtual void InsertBVHImpl(ICollisionAcceptor* acceptor) override;

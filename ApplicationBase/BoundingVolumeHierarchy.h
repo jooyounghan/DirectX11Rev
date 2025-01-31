@@ -5,10 +5,10 @@
 
 class ACollisionVisitor;
 
-class BoundingVolumeHierachy
+class BoundingVolumeHierarchy
 {
 public:
-	BoundingVolumeHierachy(const float& margin);
+	BoundingVolumeHierarchy(const float& margin);
 
 private:
 	BoundingVolumeNode* m_rootNode = nullptr;

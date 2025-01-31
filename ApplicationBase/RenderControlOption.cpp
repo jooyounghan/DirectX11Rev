@@ -1,7 +1,7 @@
 #include "RenderControlOption.h"
 #include "AComponent.h"
 
-BoundingVolumeHierachy RenderControlOption::RenderBVH(10.f);
+BoundingVolumeHierarchy RenderControlOption::RenderBVH(10.f);
 
 void RenderControlOption::InsertBVHImpl(ICollisionAcceptor* acceptor)
 {

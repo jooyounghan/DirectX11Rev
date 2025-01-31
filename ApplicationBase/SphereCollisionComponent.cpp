@@ -46,7 +46,7 @@ void SphereCollisionComponent::SetCollisionOption(ICollisionOption* collisionOpt
 	if (m_collisionOption) m_collisionOption->InsertBVHImpl(this);
 }
 
-void SphereCollisionComponent::UpdateBoundingVolumeHierachy()
+void SphereCollisionComponent::UpdateBoundingVolumeHierarchy()
 {
 	m_collisionOption->UpdateBVHImpl(this);
 }

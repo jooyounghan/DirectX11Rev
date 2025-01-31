@@ -37,7 +37,7 @@ void OrientedBoxCollisionComponent::UpdateAbsoluteEntities()
 
 void OrientedBoxCollisionComponent::UpdateComponentTransformation()
 {
-	m_transformation.m_transformation = XMMatrixScalingFromVector(XMLoadFloat3(&Extents)) * GetAbsoluteTransformation();
+	m_transformation.m_transformation = XMMatrixScalingFromVector(XMLoadFloat3(&Extents) * 2.f) * GetAbsoluteTransformation();
 	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
 	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
 }
@@ -49,7 +49,7 @@ void OrientedBoxCollisionComponent::SetCollisionOption(ICollisionOption* collisi
 	m_collisionOption->InsertBVHImpl(this);
 }
 
-void OrientedBoxCollisionComponent::UpdateBoundingVolumeHierachy()
+void OrientedBoxCollisionComponent::UpdateBoundingVolumeHierarchy()
 {
 	m_collisionOption->UpdateBVHImpl(this);
 }

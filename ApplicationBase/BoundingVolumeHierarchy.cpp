@@ -1,16 +1,16 @@
-#include "BoundingVolumeHierachy.h"
+#include "BoundingVolumeHierarchy.h"
 #include "ContainVisitor.h"
 #include "IntersectVisitor.h"
 
 using namespace std;
 using namespace DirectX;
 
-BoundingVolumeHierachy::BoundingVolumeHierachy(const float& margin)
+BoundingVolumeHierarchy::BoundingVolumeHierarchy(const float& margin)
 	: m_margin(margin)
 {
 }
 
-void BoundingVolumeHierachy::InsertCollidable(ICollisionAcceptor* collidable)
+void BoundingVolumeHierarchy::InsertCollidable(ICollisionAcceptor* collidable)
 {
 	BoundingVolumeNode* leafNode = new BoundingVolumeNode(collidable->GetBoundingBox(m_margin), collidable);
 	m_collidablesToNode.emplace(collidable, leafNode);
@@ -57,7 +57,7 @@ void BoundingVolumeHierachy::InsertCollidable(ICollisionAcceptor* collidable)
 	}
 }
 
-void BoundingVolumeHierachy::RemoveCollidable(ICollisionAcceptor* collidable)
+void BoundingVolumeHierarchy::RemoveCollidable(ICollisionAcceptor* collidable)
 {
 	if (m_collidablesToNode.find(collidable) != m_collidablesToNode.end())
 	{
@@ -113,7 +113,7 @@ void BoundingVolumeHierachy::RemoveCollidable(ICollisionAcceptor* collidable)
 	}
 }
 
-void BoundingVolumeHierachy::UpdateCollidable(ICollisionAcceptor* collidable)
+void BoundingVolumeHierarchy::UpdateCollidable(ICollisionAcceptor* collidable)
 {
 	if (m_collidablesToNode.find(collidable) != m_collidablesToNode.end())
 	{
@@ -127,13 +127,13 @@ void BoundingVolumeHierachy::UpdateCollidable(ICollisionAcceptor* collidable)
 	}
 }
 
-void BoundingVolumeHierachy::Traverse(ICollisionAcceptor* collidable)
+void BoundingVolumeHierarchy::Traverse(ICollisionAcceptor* collidable)
 {
 	IntersectVisitor containVisitor(collidable);
 	TraverseImpl(m_rootNode, collidable, containVisitor);
 }
 
-void BoundingVolumeHierachy::Refit(BoundingVolumeNode* node)
+void BoundingVolumeHierarchy::Refit(BoundingVolumeNode* node)
 {
 	if (node == nullptr) return;
 	node->SetBoundingBox(BoundingVolumeNode::CreateUnionBoundingBox(node->m_left, node->m_right, m_margin));
@@ -141,7 +141,7 @@ void BoundingVolumeHierachy::Refit(BoundingVolumeNode* node)
 	Refit(node->m_parentNode);
 }
 
-void BoundingVolumeHierachy::Rotate(BoundingVolumeNode* node)
+void BoundingVolumeHierarchy::Rotate(BoundingVolumeNode* node)
 {
 	BoundingVolumeNode* parent = node->m_parentNode;
 	BoundingVolumeNode* leftChildNode = node->m_left;
@@ -189,7 +189,7 @@ void BoundingVolumeHierachy::Rotate(BoundingVolumeNode* node)
 	}
 }
 
-void BoundingVolumeHierachy::TraverseImpl(BoundingVolumeNode* node, ICollisionAcceptor*& collidable, ACollisionVisitor& containVisitor)
+void BoundingVolumeHierarchy::TraverseImpl(BoundingVolumeNode* node, ICollisionAcceptor*& collidable, ACollisionVisitor& containVisitor)
 {
 	if (node)
 	{

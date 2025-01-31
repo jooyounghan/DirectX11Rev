@@ -9,29 +9,7 @@ BoundingVolumeNode::BoundingVolumeNode(
 	ICollisionAcceptor* const collidable
 )
 	: 
-	m_box(boundingBox),
-	m_lowerBound(
-		boundingBox.Center.x - boundingBox.Extents.x,
-		boundingBox.Center.y - boundingBox.Extents.y,
-		boundingBox.Center.z - boundingBox.Extents.z
-	),
-	m_upperBound(
-		boundingBox.Center.x + boundingBox.Extents.x,
-		boundingBox.Center.y + boundingBox.Extents.y,
-		boundingBox.Center.z + boundingBox.Extents.z
-	),
-	m_collidable(collidable)
-{
-	m_volumeSize = GetVolumeSize();
-}
-
-BoundingVolumeNode::BoundingVolumeNode(
-	const XMFLOAT3& lowerBound,
-	const XMFLOAT3& upperBound,
-	ICollisionAcceptor* const collidable
-)
-	: m_box(CreateBoundingBox(lowerBound, upperBound)),
-	m_lowerBound(lowerBound), m_upperBound(upperBound), m_collidable(collidable)
+	m_box(boundingBox), m_collidable(collidable)
 {
 	m_volumeSize = GetVolumeSize();
 }
@@ -70,13 +48,14 @@ void BoundingVolumeNode::GetBounds(
 	XMFLOAT3& upperBoundOut
 )
 {
-	lowerBoundOut.x = std::min(boundingVolume1->m_lowerBound.x, boundingVolume2->m_lowerBound.x);
-	lowerBoundOut.y = std::min(boundingVolume1->m_lowerBound.y, boundingVolume2->m_lowerBound.y);
-	lowerBoundOut.z = std::min(boundingVolume1->m_lowerBound.z, boundingVolume2->m_lowerBound.z);
 
-	upperBoundOut.x = std::max(boundingVolume1->m_upperBound.x, boundingVolume2->m_upperBound.x);
-	upperBoundOut.y = std::max(boundingVolume1->m_upperBound.y, boundingVolume2->m_upperBound.y);
-	upperBoundOut.z = std::max(boundingVolume1->m_upperBound.z, boundingVolume2->m_upperBound.z);
+	lowerBoundOut.x = std::min(boundingVolume1->m_box.Center.x - boundingVolume1->m_box.Extents.x, boundingVolume2->m_box.Center.x - boundingVolume2->m_box.Extents.x);
+	lowerBoundOut.y = std::min(boundingVolume1->m_box.Center.y - boundingVolume1->m_box.Extents.y, boundingVolume2->m_box.Center.y - boundingVolume2->m_box.Extents.y);
+	lowerBoundOut.z = std::min(boundingVolume1->m_box.Center.z - boundingVolume1->m_box.Extents.z, boundingVolume2->m_box.Center.z - boundingVolume2->m_box.Extents.z);
+
+	upperBoundOut.x = std::max(boundingVolume1->m_box.Center.x + boundingVolume1->m_box.Extents.x, boundingVolume2->m_box.Center.x + boundingVolume2->m_box.Extents.x);
+	upperBoundOut.y = std::max(boundingVolume1->m_box.Center.y + boundingVolume1->m_box.Extents.y, boundingVolume2->m_box.Center.y + boundingVolume2->m_box.Extents.y);
+	upperBoundOut.z = std::max(boundingVolume1->m_box.Center.z + boundingVolume1->m_box.Extents.z, boundingVolume2->m_box.Center.z + boundingVolume2->m_box.Extents.z);
 
 	lowerBoundOut.x -= margin;
 	lowerBoundOut.y -= margin;
