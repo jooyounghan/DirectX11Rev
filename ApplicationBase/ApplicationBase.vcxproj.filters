@@ -106,6 +106,12 @@
     <ClInclude Include="PerformanceAnalyzer.h">
       <Filter>헤더 파일\Performance</Filter>
     </ClInclude>
+    <ClInclude Include="BoundingVolumeNode.h">
+      <Filter>헤더 파일\Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingVolumeHierachy.h">
+      <Filter>헤더 파일\BVH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -228,6 +234,12 @@
     <Filter Include="소스 파일\Performance">
       <UniqueIdentifier>{50e5f434-5502-4536-84f0-c14a0a8a2697}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\BVH">
+      <UniqueIdentifier>{09f63129-2a6e-4fc9-9a08-441469c25667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\BVH">
+      <UniqueIdentifier>{512e7460-d996-438c-9366-5e5bf3a09e56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
@@ -319,6 +331,12 @@
     </ClCompile>
     <ClCompile Include="PerformanceAnalyzer.cpp">
       <Filter>소스 파일\Performance</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingVolumeNode.cpp">
+      <Filter>소스 파일\Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingVolumeHierachy.cpp">
+      <Filter>소스 파일\BVH</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

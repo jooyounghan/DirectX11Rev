@@ -119,7 +119,7 @@ void BoundingVolumeHierachy::UpdateCollidable(ICollisionAcceptor* collidable)
 	{
 		BoundingVolumeNode* boundingVolumeNode = m_collidablesToNode[collidable];
 
-		if (!collidable->IsInBVNode(boundingVolumeNode))
+		if (!collidable->IsIntersectBoundingBox(boundingVolumeNode->GetBoundingBox()))
 		{
 			RemoveCollidable(collidable);
 			InsertCollidable(collidable);
@@ -195,7 +195,7 @@ void BoundingVolumeHierachy::TraverseImpl(BoundingVolumeNode* node, ICollisionAc
 	{
 		m_searchCount++;
 
-		if (collidable->IsInBVNode(node))
+		if (collidable->IsIntersectBoundingBox(node->GetBoundingBox()))
 		{
 			if (node->IsLeaf())
 			{

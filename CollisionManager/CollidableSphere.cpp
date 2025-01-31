@@ -1,6 +1,5 @@
 #include "CollidableSphere.h"
 #include "CollisionVisitor.h"
-#include "BoundingVolumeNode.h"
 
 using namespace DirectX;
 
@@ -9,14 +8,9 @@ bool CollidableSphere::Accept(ICollisionVisitor& collisionVisitor) const
 	return collisionVisitor.Visit(this);
 }
 
-bool CollidableSphere::IsInBVNode(const BoundingVolumeNode* boundingVolumeNode) const
+bool CollidableSphere::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
 {
-	return boundingVolumeNode->GetBoundingBox().Contains(*this);
-}
-
-bool CollidableSphere::IsBVNodeIn(const BoundingVolumeNode* boundingVolumeNode) const
-{
-	return this->Contains(boundingVolumeNode->GetBoundingBox());
+	return boundingBox.Intersects(*this);
 }
 
 DirectX::BoundingBox CollidableSphere::GetBoundingBox(const float& margin) const

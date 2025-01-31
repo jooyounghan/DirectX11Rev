@@ -119,10 +119,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <BrowseInformation>true</BrowseInformation>
@@ -161,8 +162,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BoundingVolumeHierachy.h" />
-    <ClInclude Include="BoundingVolumeNode.h" />
     <ClInclude Include="CollidableFrustum.h" />
     <ClInclude Include="CollidableOrientedBox.h" />
     <ClInclude Include="CollidableSphere.h" />
@@ -172,8 +171,6 @@
     <ClInclude Include="IntersectVisitor.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BoundingVolumeHierachy.cpp" />
-    <ClCompile Include="BoundingVolumeNode.cpp" />
     <ClCompile Include="CollidableFrustum.cpp" />
     <ClCompile Include="CollidableOrientedBox.cpp" />
     <ClCompile Include="CollidableSphere.cpp" />

@@ -179,6 +179,8 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="AInstancedModelComponent.cpp" />
     <ClCompile Include="AMeshComponent.cpp" />
     <ClCompile Include="AnimationPlayer.cpp" />
+    <ClCompile Include="BoundingVolumeHierachy.cpp" />
+    <ClCompile Include="BoundingVolumeNode.cpp" />
     <ClCompile Include="OrientedBoxCollisionComponent.cpp" />
     <ClCompile Include="ASceneRenderer.cpp" />
     <ClCompile Include="PerformanceAnalyzer.cpp" />
@@ -211,6 +213,8 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="AInstancedModelComponent.h" />
     <ClInclude Include="AMeshComponent.h" />
     <ClInclude Include="AnimationPlayer.h" />
+    <ClInclude Include="BoundingVolumeHierachy.h" />
+    <ClInclude Include="BoundingVolumeNode.h" />
     <ClInclude Include="OrientedBoxCollisionComponent.h" />
     <ClInclude Include="ASceneRenderer.h" />
     <ClInclude Include="PerformanceAnalyzer.h" />

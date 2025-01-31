@@ -2,7 +2,8 @@
 #include "CollidableSphere.h"
 #include "CollidableOrientedBox.h"
 #include "CollidableFrustum.h"
-#include "BoundingVolumeNode.h"
+
+#include <algorithm>
 
 class ICollisionVisitor
 {

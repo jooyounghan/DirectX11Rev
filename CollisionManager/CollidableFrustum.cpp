@@ -1,6 +1,5 @@
 #include "CollidableFrustum.h"
 #include "CollisionVisitor.h"
-#include "BoundingVolumeNode.h"
 
 using namespace DirectX;
 
@@ -9,14 +8,9 @@ bool CollidableFrustum::Accept(ICollisionVisitor& collisionVisitor) const
 	return collisionVisitor.Visit(this);
 }
 
-bool CollidableFrustum::IsInBVNode(const BoundingVolumeNode* boundingVolumeNode) const
+bool CollidableFrustum::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
 {
-    return boundingVolumeNode->GetBoundingBox().Contains(*this);
-}
-
-bool CollidableFrustum::IsBVNodeIn(const BoundingVolumeNode* boundingVolumeNode) const
-{
-    return this->Contains(boundingVolumeNode->GetBoundingBox());
+    return boundingBox.Intersects(*this);
 }
 
 DirectX::BoundingBox CollidableFrustum::GetBoundingBox(const float& margin) const
