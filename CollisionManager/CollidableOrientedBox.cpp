@@ -10,7 +10,7 @@ bool CollidableOrientedBox::Accept(ICollisionVisitor& collisionVisitor) const
 
 bool CollidableOrientedBox::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
 {
-    return boundingBox.Contains(*this);
+    return boundingBox.Intersects(*this);
 }
 
 DirectX::BoundingBox CollidableOrientedBox::GetBoundingBox(const float& margin) const

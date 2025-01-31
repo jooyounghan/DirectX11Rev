@@ -10,7 +10,7 @@ bool CollidableSphere::Accept(ICollisionVisitor& collisionVisitor) const
 
 bool CollidableSphere::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
 {
-	return boundingBox.Contains(*this);
+	return boundingBox.Intersects(*this);
 }
 
 DirectX::BoundingBox CollidableSphere::GetBoundingBox(const float& margin) const

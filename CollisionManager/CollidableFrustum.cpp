@@ -10,7 +10,7 @@ bool CollidableFrustum::Accept(ICollisionVisitor& collisionVisitor) const
 
 bool CollidableFrustum::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
 {
-    return boundingBox.Contains(*this);
+    return boundingBox.Intersects(*this);
 }
 
 DirectX::BoundingBox CollidableFrustum::GetBoundingBox(const float& margin) const
