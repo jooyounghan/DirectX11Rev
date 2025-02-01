@@ -6,7 +6,7 @@ class ComponentEntityInitializer : public IComponentVisitor
 {
 public:
 	ComponentEntityInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
-	virtual ~ComponentEntityInitializer() override = default;
+	~ComponentEntityInitializer() override = default;
 
 protected:
 	ID3D11Device* m_deviceCached = nullptr;

@@ -19,7 +19,7 @@ struct SComponent
 {
 	SComponent(const uint32_t& componentID);
 	const uint32_t m_componentID;
-	DirectX::XMFLOAT3 m_debugColor;
+	DirectX::XMFLOAT3 m_componentColor;
 };
 
 class ComponentEntity
@@ -52,13 +52,13 @@ public:
 	inline const DirectX::XMVECTOR& GetLocalScale() const { return m_localScale; }
 
 public:
-	DynamicBuffer* GetTransformationBuffer() const { return m_transformationBuffer; }
-	DynamicBuffer* GetComponentBuffer() const { return m_componentBuffer; }
+	inline DynamicBuffer* GetTransformationBuffer() const { return m_transformationBuffer; }
+	inline DynamicBuffer* GetComponentBuffer() const { return m_componentBuffer; }
 
 public:
 	inline const uint32_t& GetComponentID() { return m_componentConstant.m_componentID; }
-	inline const DirectX::XMFLOAT3& GetDebugColor() { return m_componentConstant.m_debugColor; }
-	inline void SetDebugColor(const DirectX::XMFLOAT3& debugColor) { m_componentConstant.m_debugColor = debugColor; }
+	inline const DirectX::XMFLOAT3& GetComponentColor() { return m_componentConstant.m_componentColor; }
+	inline void SetComponentColor(const DirectX::XMFLOAT3& componentColor) { m_componentConstant.m_componentColor = componentColor; }
 
 public:
 	virtual DirectX::XMMATRIX GetLocalTranformation();

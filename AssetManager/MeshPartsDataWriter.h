@@ -12,7 +12,7 @@ public:
 		const aiMesh* const mesh,
 		const DirectX::XMMATRIX& transformation
 	);
-	virtual ~MeshPartsDataWriter() override = default;
+	~MeshPartsDataWriter() override = default;
 
 protected:
 	const bool m_isGltf;

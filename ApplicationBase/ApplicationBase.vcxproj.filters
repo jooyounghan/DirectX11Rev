@@ -110,6 +110,18 @@
       <Filter>헤더 파일\Component\Collision</Filter>
     </ClInclude>
     <ClInclude Include="BoundingVolumeHierarchy.h" />
+    <ClInclude Include="ALightComponent.h">
+      <Filter>헤더 파일\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightComponent.h">
+      <Filter>헤더 파일\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLightComponent.h">
+      <Filter>헤더 파일\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="AViewComponent.h">
+      <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -238,6 +250,9 @@
     <Filter Include="헤더 파일\BVH">
       <UniqueIdentifier>{512e7460-d996-438c-9366-5e5bf3a09e56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Light">
+      <UniqueIdentifier>{2ee7bc29-fb93-43e0-9ab9-926e125d26aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
@@ -334,6 +349,18 @@
       <Filter>소스 파일\Component\Collision</Filter>
     </ClCompile>
     <ClCompile Include="BoundingVolumeHierarchy.cpp" />
+    <ClCompile Include="ALightComponent.cpp">
+      <Filter>소스 파일\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightComponent.cpp">
+      <Filter>소스 파일\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLightComponent.cpp">
+      <Filter>소스 파일\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="AViewComponent.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\DebugComponentHeader.hlsli">

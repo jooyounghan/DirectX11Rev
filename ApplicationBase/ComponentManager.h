@@ -35,7 +35,8 @@ protected:
 protected:
 	std::thread											m_workThread;
 	std::shared_mutex									m_updateSetMutex;
-	std::set<AComponent*>								m_updateToDBSet;
+	std::set<AComponent*>								m_updateToDBComponentsMain;
+	std::set<AComponent*>								m_updateToDBComponentsWorker;
 	bool												m_workThreadStarted = false;
 
 protected:

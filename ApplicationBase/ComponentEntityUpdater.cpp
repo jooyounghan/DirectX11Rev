@@ -31,7 +31,7 @@ void ComponentEntityUpdater::Visit(SkeletalMeshComponent* skeletalModelComponent
 void ComponentEntityUpdater::Visit(CameraComponent* cameraComponent)
 {
 	cameraComponent->UpdateAbsoluteEntities();
-	cameraComponent->UpdateViewElement();
+	cameraComponent->UpdateViewEntity();
 	UpdateTransformationBuffer(cameraComponent);
 
 	DynamicBuffer* viewProjMatrixBuffer = cameraComponent->GetViewProjMatrixBuffer();

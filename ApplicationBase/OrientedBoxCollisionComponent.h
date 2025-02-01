@@ -12,7 +12,7 @@ public:
 		const DirectX::XMFLOAT3& localAngle,
 		const DirectX::XMFLOAT3& extends
 	);
-	virtual ~OrientedBoxCollisionComponent() override;
+	~OrientedBoxCollisionComponent() override;
 
 public:
 	virtual void Accept(IComponentVisitor* visitor) override;

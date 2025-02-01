@@ -9,7 +9,7 @@ class SessionManager : public mysqlx::Session, public DBErrorHandler
 {
 public:
 	SessionManager(const std::string& host, unsigned port, const std::string& user, const char* pwd = NULL);
-	virtual ~SessionManager();
+	~SessionManager() override;
 
 protected:
 	mysqlx::string m_savePoint;

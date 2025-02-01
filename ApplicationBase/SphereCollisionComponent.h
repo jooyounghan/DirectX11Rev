@@ -11,7 +11,7 @@ public:
 		const DirectX::XMFLOAT3& localPosition,
 		const float& radius
 	);
-	virtual ~SphereCollisionComponent() override;
+	~SphereCollisionComponent() override;
 
 public:
 	virtual void Accept(IComponentVisitor* visitor) override;

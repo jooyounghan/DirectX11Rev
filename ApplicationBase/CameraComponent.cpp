@@ -20,48 +20,16 @@ CameraComponent::CameraComponent(
 	const uint32_t& width, const uint32_t& height,
 	const float& nearZ, const float& farZ, const float& fovAngle
 )
-	: AComponent(componentName, componentID, position, angle, scale),
-	m_viewProjBuffer(new DynamicBuffer(sizeof(SViewElement), 1,&m_viewElement)),
-	m_nearZ(nearZ), m_farZ(farZ), m_fovAngle(fovAngle)
+	: AViewComponent(componentName, componentID, position, angle, scale, width, height, nearZ, farZ, fovAngle)
 {
-	SetCameraProperties(width, height, m_nearZ, m_farZ, m_fovAngle);
 }
 
 CameraComponent::~CameraComponent()
 {
-	delete m_viewProjBuffer;
-}
-
-void CameraComponent::SetCameraProperties(
-	const uint32_t& width, const uint32_t& height, 
-	const float& nearZ, const float& farZ, 
-	const float& fovAngle
-)
-{
-	m_nearZ = nearZ;
-	m_farZ = farZ; 
-	m_fovAngle = fovAngle;
-
-	TopLeftX = 0.f;
-	TopLeftY = 0.f;
-	Width = static_cast<float>(width);
-	Height = static_cast<float>(height);
-	MinDepth = 0.f;
-	MaxDepth = 1.f;
-}
-
-XMMATRIX CameraComponent::GetViewMatrix()
-{
-	const XMVECTOR quaternion = GetAbsoluteRotationQuaternion();
-	XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
-	XMVECTOR currentUp = XMVector3Rotate(GDefaultUp, quaternion);
-	return XMMatrixLookToLH(m_absolutePosition, currentForward, currentUp);
-
-}
-
-XMMATRIX CameraComponent::GetProjectionMatrix()
-{
-	return XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fovAngle), Width / Height, m_nearZ, m_farZ);
+	delete m_film;
+	delete m_idFilm;
+	delete m_idStagingFilm;
+	delete m_depthStencilViewBuffer;
 }
 
 void CameraComponent::SetFilm(Texture2DInstance<SRVOption, RTVOption, UAVOption>* film)
@@ -88,15 +56,12 @@ void CameraComponent::SetDepthStencilView(Texture2DInstance<DSVOption>* depthSte
 	m_depthStencilViewBuffer = depthStencilViewBuffer;
 }
 
-void CameraComponent::UpdateViewElement()
+void CameraComponent::UpdateViewEntity()
 {
 	const XMMATRIX& viewMatrix = GetViewMatrix();
 	const XMMATRIX& projectionMatrix = GetProjectionMatrix();
-
-	m_viewElement.m_viewProj = viewMatrix * projectionMatrix;
-	m_viewElement.m_invViewProj = XMMatrixInverse(nullptr, m_viewElement.m_viewProj);
-	m_viewElement.m_viewProj = XMMatrixTranspose(m_viewElement.m_viewProj);
-	m_viewElement.m_viewPosition = XMFLOAT3(m_absolutePosition.m128_f32[0], m_absolutePosition.m128_f32[1], m_absolutePosition.m128_f32[2]);
+	
+	UpdateViewEntityImpl(viewMatrix, projectionMatrix);
 
 	BoundingFrustum::CreateFromMatrix(*this, projectionMatrix);
 	this->Transform(*this, XMMatrixInverse(nullptr, viewMatrix));

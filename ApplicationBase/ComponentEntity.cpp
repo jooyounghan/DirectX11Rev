@@ -7,7 +7,7 @@
 using namespace DirectX;
 
 SComponent::SComponent(const uint32_t& componentID)
-	: m_componentID(componentID), m_debugColor{1.f, 0.f, 0.f}
+	: m_componentID(componentID), m_componentColor{1.f, 0.f, 0.f}
 {
 }
 

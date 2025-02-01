@@ -292,36 +292,37 @@ void ComponentManager::UpdateComponentToDBThread()
 	m_workThread = thread([&]() {
 		while (m_workThreadStarted)
 		{
-			std::set<AComponent*> tempUpdateSet;
 			ComponentDBUpdater componentDBUpdater(this);
 			try
 			{
 				m_sessionManager->startTransaction();
-				{ 
-					shared_lock writeLock(m_updateSetMutex);
+				{
+					unique_lock writeLock(m_updateSetMutex);
+					m_updateToDBComponentsWorker = m_updateToDBComponentsMain;
+					m_updateToDBComponentsMain.clear();
+				}
 
-					tempUpdateSet = m_updateToDBSet;
-
-					for (AComponent* updateComponet : m_updateToDBSet)
-					{
-						updateComponet->Accept(&componentDBUpdater);
-					}
-					m_updateToDBSet.clear();
-				} 
+				for (AComponent* updateComponet : m_updateToDBComponentsWorker)
+				{
+					updateComponet->Accept(&componentDBUpdater);
+				}
 				m_sessionManager->commit();
-				this_thread::sleep_for(chrono::seconds(1));
+				m_updateToDBComponentsWorker.clear();
 			}
 			catch (const std::exception& ex)
 			{
 				{
 					unique_lock writeLock(m_updateSetMutex);
-					m_updateToDBSet = tempUpdateSet;
+					m_updateToDBComponentsMain.insert(m_updateToDBComponentsWorker.begin(), m_updateToDBComponentsWorker.end());
+					m_updateToDBComponentsWorker.clear();
 				}
 
 				m_sessionManager->rollback();
 
 				OnErrorOccurs(ex.what());
 			}
+
+			this_thread::sleep_for(chrono::milliseconds(1000));
 		}
 		});
 }
@@ -374,7 +375,6 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 {
 	if (m_isInitialized)
 	{
-		
 		ComponentEntityUpdater componentEntityUpdater(m_defferedContext->GetDefferedContext(), deltaTime);
 
 		{
@@ -386,7 +386,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 					m_componentIDToComponent.second->Accept(&componentEntityUpdater);
 					{
 						unique_lock writeLock(m_updateSetMutex);
-						m_updateToDBSet.insert(m_componentIDToComponent.second);
+						m_updateToDBComponentsMain.insert(m_componentIDToComponent.second);
 					}
 				}
 			}
@@ -408,7 +408,7 @@ void ComponentManager::UnmonitorComponent(AComponent* component)
 	{
 		unique_lock removeComponentLock(m_componentMutex);
 		m_componentIDsToComponent.erase(component->GetComponentID());
-		m_updateToDBSet.erase(component);
+		m_updateToDBComponentsMain.erase(component);
 	}
 }
 

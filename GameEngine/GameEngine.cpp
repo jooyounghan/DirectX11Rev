@@ -146,7 +146,7 @@ void GameEngine::Update(const float& deltaTime)
 
 	m_engine->ClearBackBuffer(ClearColor);
 	m_engine->SetRTVAsBackBuffer();
-
+	
 	ID3D11DeviceContext* immediateContext = m_engine->GetDeviceContext();
 
 	future<void> assetLoadGPUTask = async(launch::deferred, [&, immediateContext]() 
@@ -161,9 +161,9 @@ void GameEngine::Update(const float& deltaTime)
 			componentUpdateDefferedContext->TryExecuteCommandList(immediateContext);
 		});
 
-
 	assetLoadGPUTask.wait();
 	componentUpdateGPUTask.wait();
+
 
 	for (auto& imguiWindow : m_imguiWindows)
 	{
@@ -203,7 +203,10 @@ void GameEngine::Update(const float& deltaTime)
 
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
+
 	m_engine->GetSwapChain()->Present(1, 0);
+
+
 }
 
 void GameEngine::AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

@@ -5,7 +5,7 @@ class StaticMeshPartsData : public MeshPartsData
 {
 public:
 	StaticMeshPartsData() = default;
-	virtual ~StaticMeshPartsData() override = default;
+	~StaticMeshPartsData() override = default;
 
 protected:
 	std::vector<DirectX::XMFLOAT3> m_tangents;

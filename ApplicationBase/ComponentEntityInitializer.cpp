@@ -48,7 +48,7 @@ void ComponentEntityInitializer::Visit(SkeletalMeshComponent* skeletalModelCompo
 void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 {
 	cameraComponent->UpdateAbsoluteEntities();
-	cameraComponent->UpdateViewElement();
+	cameraComponent->UpdateViewEntity();
 	InitBaseEntityBuffer(cameraComponent);
 
 	DynamicBuffer* viewProjMatrixBuffer = cameraComponent->GetViewProjMatrixBuffer();
@@ -79,14 +79,14 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 
 void ComponentEntityInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
-	sphereCollisionComponent->SetDebugColor({ 1.f, 0.f, 0.f });
+	sphereCollisionComponent->SetComponentColor({ 1.f, 0.f, 0.f });
 	sphereCollisionComponent->UpdateAbsoluteEntities();
 	InitBaseEntityBuffer(sphereCollisionComponent);
 }
 
 void ComponentEntityInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
-	orientedBoxCollisionComponent->SetDebugColor({ 1.f, 0.f, 0.f });
+	orientedBoxCollisionComponent->SetComponentColor({ 1.f, 0.f, 0.f });
 	orientedBoxCollisionComponent->UpdateAbsoluteEntities();
 	InitBaseEntityBuffer(orientedBoxCollisionComponent);
 }

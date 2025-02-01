@@ -179,11 +179,14 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="AInstancedModelComponent.cpp" />
     <ClCompile Include="AMeshComponent.cpp" />
     <ClCompile Include="AnimationPlayer.cpp" />
+    <ClCompile Include="AViewComponent.cpp" />
     <ClCompile Include="BoundingVolumeHierarchy.cpp" />
     <ClCompile Include="BoundingVolumeNode.cpp" />
+    <ClCompile Include="ALightComponent.cpp" />
     <ClCompile Include="OrientedBoxCollisionComponent.cpp" />
     <ClCompile Include="ASceneRenderer.cpp" />
     <ClCompile Include="PerformanceAnalyzer.cpp" />
+    <ClCompile Include="PointLightComponent.cpp" />
     <ClCompile Include="SphereCollisionComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="ComponentDBCreator.cpp" />
@@ -204,6 +207,7 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ScreenQuad.cpp" />
     <ClCompile Include="SkeletalMeshComponent.cpp" />
+    <ClCompile Include="SpotLightComponent.cpp" />
     <ClCompile Include="StaticMeshComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -213,11 +217,14 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="AInstancedModelComponent.h" />
     <ClInclude Include="AMeshComponent.h" />
     <ClInclude Include="AnimationPlayer.h" />
+    <ClInclude Include="AViewComponent.h" />
     <ClInclude Include="BoundingVolumeHierarchy.h" />
     <ClInclude Include="BoundingVolumeNode.h" />
+    <ClInclude Include="ALightComponent.h" />
     <ClInclude Include="OrientedBoxCollisionComponent.h" />
     <ClInclude Include="ASceneRenderer.h" />
     <ClInclude Include="PerformanceAnalyzer.h" />
+    <ClInclude Include="PointLightComponent.h" />
     <ClInclude Include="SphereCollisionComponent.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="ComponentDBCreator.h" />
@@ -243,6 +250,7 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ScreenQuad.h" />
     <ClInclude Include="SkeletalMeshComponent.h" />
+    <ClInclude Include="SpotLightComponent.h" />
     <ClInclude Include="StaticMeshComponent.h" />
   </ItemGroup>
   <ItemGroup>

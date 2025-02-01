@@ -20,7 +20,6 @@ Texture2D AO_Metallic_Roughtness_GBuffer : register(t6);
 Texture2D NormalGBuffer : register(t7);
 Texture2D EmissiveGBuffer : register(t8);
 Texture2D FresnelReflectanceGBuffer : register(t9);
-
 SamplerState WrapSampler : register(s0);
 
 float4 main(GBufferResolveVertexOutput Input) : SV_TARGET
