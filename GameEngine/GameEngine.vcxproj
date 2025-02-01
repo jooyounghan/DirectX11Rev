@@ -150,7 +150,7 @@
     <ClCompile Include="AssetWriterPathNode.cpp" />
     <ClCompile Include="ATextureAssetVariableNode.cpp" />
     <ClCompile Include="BaseTextureAssetVariableNode.cpp" />
-    <ClCompile Include="ComponentInformer.cpp" />
+    <ClCompile Include="ComponentHandler.cpp" />
     <ClCompile Include="CreateIBLMaterialWithNodeEditorWindow.cpp" />
     <ClCompile Include="CreateModelMaterialWIthNodeEditorWindow.cpp" />
     <ClCompile Include="Float3VariableNode.cpp" />
@@ -169,7 +169,7 @@
     <ClInclude Include="AssetWriterPathNode.h" />
     <ClInclude Include="ATextureAssetVariableNode.h" />
     <ClInclude Include="BaseTextureAssetVariableNode.h" />
-    <ClInclude Include="ComponentInformer.h" />
+    <ClInclude Include="ComponentHandler.h" />
     <ClInclude Include="CreateIBLMaterialWithNodeEditorWindow.h" />
     <ClInclude Include="CreateModelMaterialWIthNodeEditorWindow.h" />
     <ClInclude Include="Float3VariableNode.h" />

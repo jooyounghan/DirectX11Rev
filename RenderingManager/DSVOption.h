@@ -20,4 +20,8 @@ protected:
 
 public:
 	ID3D11DepthStencilView* GetDSV() const { return m_dsv.Get(); }
+
+private:
+	static D3D11_DEPTH_STENCIL_VIEW_DESC GetDepthStencilViewDesc(const D3D11_TEXTURE2D_DESC& texture2dDesc);
+	static DXGI_FORMAT GetDepthStencilViewFormatFromTextureFormat(const DXGI_FORMAT& textureFormat);
 };

@@ -1,8 +1,6 @@
 #pragma once
 #include "SessionManager.h"
 
-#include <unordered_map>
-
 class SchemaManager : public mysqlx::Schema, public DBErrorHandler
 {
 public:

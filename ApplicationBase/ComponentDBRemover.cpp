@@ -57,10 +57,22 @@ void ComponentDBRemover::Visit(CameraComponent* cameraComponent)
 
 void ComponentDBRemover::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
+	// TBD
 }
 
 void ComponentDBRemover::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
+	// TBD
+}
+
+void ComponentDBRemover::Visit(SpotLightComponent* spotLightComponent)
+{
+	// TBD
+}
+
+void ComponentDBRemover::Visit(PointLightComponent* pointLightComponent)
+{
+	// TBD
 }
 
 void ComponentDBRemover::DeleteComponent(AComponent* component)

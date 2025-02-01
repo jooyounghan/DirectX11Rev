@@ -29,7 +29,7 @@ SceneWindow::SceneWindow(
     m_componentRenderDefferedContextAddress(componentRenderDefferedContextAddress),
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
-    m_componentInformer(componentManager),
+    m_componentHandler(componentManager),
     m_forwardRenderer(componentRenderDefferedContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_defferedRenderer(deviceAddress, componentRenderDefferedContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
@@ -185,7 +185,7 @@ void SceneWindow::DrawComponentInformations()
     BeginChild("ComponentInformations", GetContentRegionAvail());
     if (m_selectedComponent != nullptr)
     {
-        m_selectedComponent->Accept(&m_componentInformer);
+        m_selectedComponent->Accept(&m_componentHandler);
     }
     EndChild();
 }

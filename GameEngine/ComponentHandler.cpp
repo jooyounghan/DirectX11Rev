@@ -1,4 +1,4 @@
-#include "ComponentInformer.h"
+#include "ComponentHandler.h"
 
 #include "AssetManager.h"
 #include "ComponentManager.h"
@@ -8,6 +8,8 @@
 #include "CameraComponent.h"
 #include "SphereCollisionComponent.h"
 #include "OrientedBoxCollisionComponent.h"
+#include "SpotLightComponent.h"
+#include "PointLightComponent.h"
 
 #include <vector>
 #include <string>
@@ -16,11 +18,11 @@ using namespace std;
 using namespace ImGui;
 using namespace DirectX;
 
-bool ComponentInformer::isPositionAbsolute = true;
-bool ComponentInformer::isAngleAbsolute = true;
-bool ComponentInformer::isScaleAbsolute = true;
+bool ComponentHandler::isPositionAbsolute = true;
+bool ComponentHandler::isAngleAbsolute = true;
+bool ComponentHandler::isScaleAbsolute = true;
 
-ComponentInformer::ComponentInformer(ComponentManager* componentManager)
+ComponentHandler::ComponentHandler(ComponentManager* componentManager)
 	: m_componentManagerCached(componentManager),
 	m_absRelativeComboPosition("AbsRelativePositionCombo", "", ImGuiComboFlags_WidthFitPreview),
 	m_absRelativeComboAngle("AbsRelativeAngleCombo", "", ImGuiComboFlags_WidthFitPreview),
@@ -37,63 +39,66 @@ ComponentInformer::ComponentInformer(ComponentManager* componentManager)
 	m_absRelativeComboScale.OnSelChanged = [&](const size_t& idx, const string&) { isScaleAbsolute = !static_cast<bool>(idx); };
 }
 
-void ComponentInformer::Visit(StaticMeshComponent* staticMeshComponent)
+void ComponentHandler::Visit(StaticMeshComponent* staticMeshComponent)
 {
-	Text("Static Model Component");
-	RenderComponentTransformation(staticMeshComponent);
-	RenderMeshComponent(staticMeshComponent);
-	Button(staticMeshComponent->GetComponentName().c_str());
+	HandleComponentName(staticMeshComponent, "Static Model Component");
+	HandleComponentTransformation(staticMeshComponent, true, true, true);
+	HandleMeshComponent(staticMeshComponent);
 }
 
-void ComponentInformer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
+void ComponentHandler::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
-	Text("Skeletal Model Component");
-	RenderComponentTransformation(skeletalMeshComponent);
-	RenderMeshComponent(skeletalMeshComponent);
-	Button(skeletalMeshComponent->GetComponentName().c_str());
+	HandleComponentName(skeletalMeshComponent, "Skeletal Model Component");
+	HandleComponentTransformation(skeletalMeshComponent, true, true, true);
+	HandleMeshComponent(skeletalMeshComponent);
 }
 
-void ComponentInformer::Visit(CameraComponent* cameraComponent)
+void ComponentHandler::Visit(CameraComponent* cameraComponent)
 {
-	Text("Camera Model Component");
-	RenderComponentTransformation(cameraComponent);
-
-	Button(cameraComponent->GetComponentName().c_str());
+	HandleComponentName(cameraComponent, "Camera Model Component");
+	HandleComponentTransformation(cameraComponent, true, true, false);
 }
 
-void ComponentInformer::Visit(SphereCollisionComponent* sphereCollisionComponent)
+void ComponentHandler::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
-	Text("Sphere Collision Component");
-	RenderComponentTransformation(sphereCollisionComponent);
-
-	Text("Radius");
-	PushID("SphereCollisionComponentRadius");
-	if (DragFloat("", &sphereCollisionComponent->Radius, 0.1f, 0.0f))
-	{
-		sphereCollisionComponent->SetIsModified(true);
-	}
+	HandleComponentName(sphereCollisionComponent, "Sphere Collision Component");
+	HandleComponentTransformation(sphereCollisionComponent, true, false, false);
+	HandleSphereCollisionComponent(sphereCollisionComponent);
 	PopID();
-
-	Button(sphereCollisionComponent->GetComponentName().c_str());
 }
 
-void ComponentInformer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
+void ComponentHandler::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
-	Text("Oriented-Box Collision Component");
-	RenderComponentTransformation(orientedBoxCollisionComponent);
-
-	Text("Extends");
-	PushID("OrientedBoxCollisionComponentExtents");
-	if (DragFloat3("", &orientedBoxCollisionComponent->Extents.x, 0.1f, 0.0f))
-	{
-		orientedBoxCollisionComponent->SetIsModified(true);
-	}
+	HandleComponentName(orientedBoxCollisionComponent, "Oriented-Box Collision Component");
+	HandleComponentTransformation(orientedBoxCollisionComponent, true, true, false);
+	HandleOrientedCollisionComponent(orientedBoxCollisionComponent);
 	PopID();
-
-	Button(orientedBoxCollisionComponent->GetComponentName().c_str());
 }
 
-void ComponentInformer::RenderComponentTransformation(AComponent* component)
+void ComponentHandler::Visit(SpotLightComponent* spotLightComponent)
+{
+	HandleComponentName(spotLightComponent, "Spot Light Component");
+	HandleLightEntity(spotLightComponent, spotLightComponent, true);
+}
+
+void ComponentHandler::Visit(PointLightComponent* pointLightComponent)
+{
+	HandleComponentName(pointLightComponent, "Point Light Component");
+	HandleLightEntity(pointLightComponent, pointLightComponent, false);
+}
+
+void ComponentHandler::HandleComponentName(AComponent* comopnent, const string& componentDescription)
+{
+	SeparatorText(comopnent->GetComponentName().c_str());
+	Text(componentDescription.c_str());
+}
+
+void ComponentHandler::HandleComponentTransformation(
+	AComponent* component,
+	const bool& isHandlePosition,
+	const bool& isHandleAngle ,
+	const bool& isHandleScale
+)
 {
 	SeparatorText("Transformation");
 
@@ -103,33 +108,107 @@ void ComponentInformer::RenderComponentTransformation(AComponent* component)
 
 	AComponent* parentComponent = component->GetParentComponent();
 
-	RenderTransformationEntity(
-		"RenderPositionEntity", "Position", 
-		component, EComponentEntityType::ENTITY_POSITION,
-		1.f, -1E9f, 1E9f
-	);
-	RenderTransformationEntity(
-		"RenderAngleEntity", "Angle",
-		component, EComponentEntityType::ENTITY_ANGLE,
-		0.1f, -360.f, 360.f
-	);
-	RenderTransformationEntity(
-		"RenderScaleEntity", "Scale",
-		component, EComponentEntityType::ENTITY_SCALE,
-		0.01f, 1E-3f, 10.f
-	);
+	if (isHandlePosition)
+	{
+		RenderTransformationEntity(
+			"RenderPositionEntity", "Position", 
+			component, EComponentEntityType::ENTITY_POSITION,
+			1.f, -1E9f, 1E9f
+		);
+	}
+	if (isHandleAngle)
+	{
+		RenderTransformationEntity(
+			"RenderAngleEntity", "Angle",
+			component, EComponentEntityType::ENTITY_ANGLE,
+			0.1f, -360.f, 360.f
+		);
+	}
+	if (isHandleScale)
+	{
+		RenderTransformationEntity(
+			"RenderScaleEntity", "Scale",
+			component, EComponentEntityType::ENTITY_SCALE,
+			0.01f, 1E-3f, 10.f
+		);
+	}
 }
 
-void ComponentInformer::RenderMeshComponent(AMeshComponent* meshComponent)
+void ComponentHandler::HandleMeshComponent(AMeshComponent* meshComponent)
 {
+	// TBD =================================================================================
 	SeparatorText("Materials");
 	for (const string& materialName : meshComponent->GetModelMaterialName())
 	{
 		Text(materialName.c_str());
 	}
+	// =====================================================================================
 }
 
-void ComponentInformer::RenderTransformationEntity(
+void ComponentHandler::HandleSphereCollisionComponent(SphereCollisionComponent* sphereCollisionComponent)
+{
+	SeparatorText("Sphere Properties");
+	Text("Radius");
+	PushID("SphereCollisionComponentRadius");
+	if (DragFloat("", &sphereCollisionComponent->Radius, 0.1f, 0.0f))
+	{
+		sphereCollisionComponent->SetIsModified(true);
+	}
+}
+
+void ComponentHandler::HandleOrientedCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
+{
+	SeparatorText("Oriented-Box Properties");
+	Text("Extends");
+	PushID("OrientedBoxCollisionComponentExtents");
+	if (DragFloat3("", &orientedBoxCollisionComponent->Extents.x, 0.1f, 0.0f))
+	{
+		orientedBoxCollisionComponent->SetIsModified(true);
+	}
+}
+
+void ComponentHandler::HandleLightEntity(AComponent* component, LightEntity* lightEntity, const bool& isHandleSpotPower)
+{
+	SeparatorText("Light Entities");
+	SLightEntity& lightEntityValue = const_cast<SLightEntity&>(lightEntity->GetLightEntity());
+	
+	PushID("lightPowerEntity");
+	Text("Light Power");
+	if (DragFloat("", &lightEntityValue.m_lightPower, 0.1f, 0.f, 1.f))
+	{
+		component->SetIsModified(true);
+	};
+	PopID();
+
+	PushID("falloffStartEntity");
+	Text("Fall-Off Start Distance");
+	if (DragFloat("", &lightEntityValue.m_fallOffStart, 1.f, 0.f, 1E6))
+	{
+		component->SetIsModified(true);
+	}
+	PopID();
+
+	PushID("falloffEndEntity");
+	Text("Fall-Off End Distance");
+	if (DragFloat("", &lightEntityValue.m_fallOffEnd, 1.f, 0.f, 1E6))
+	{
+		component->SetIsModified(true);
+	}
+	PopID();
+
+	if (isHandleSpotPower)
+	{
+		PushID("spotPowerEntity");
+		Text("Spot Power");
+		if (DragFloat("", &lightEntityValue.m_spotPower, 0.1f, 0.f, 10.f))
+		{
+			component->SetIsModified(true);
+		}
+		PopID();
+	}
+}
+
+void ComponentHandler::RenderTransformationEntity(
 	const char* groupID, const char* entityName, 
 	AComponent* component, const EComponentEntityType& entityType,
 	const float& valueSpeed, const float& minValue, const float& maxValue
@@ -147,7 +226,7 @@ void ComponentInformer::RenderTransformationEntity(
 			case EComponentEntityType::ENTITY_POSITION: return parentComponent ? parentComponent->GetAbsolutePosition() : XMVectorZero();
 			case EComponentEntityType::ENTITY_ANGLE: return parentComponent ? parentComponent->GetAbsoluteAngle() : XMVectorZero();
 			case EComponentEntityType::ENTITY_SCALE: return parentComponent ? parentComponent->GetAbsoluteScale() : XMVectorSet(1.f, 1.f, 1.f, 0.f);
-			default: throw std::invalid_argument("Invalid entity type");
+			default: throw invalid_argument("Invalid entity type");
 			}
 		};
 
@@ -157,7 +236,7 @@ void ComponentInformer::RenderTransformationEntity(
 			case EComponentEntityType::ENTITY_POSITION: return const_cast<XMVECTOR&>(component->GetLocalPosition());
 			case EComponentEntityType::ENTITY_ANGLE: return const_cast<XMVECTOR&>(component->GetLocalAngle());
 			case EComponentEntityType::ENTITY_SCALE: return const_cast<XMVECTOR&>(component->GetLocalScale());
-			default: throw std::invalid_argument("Invalid entity type");
+			default: throw invalid_argument("Invalid entity type");
 			}
 		};
 
@@ -170,7 +249,7 @@ void ComponentInformer::RenderTransformationEntity(
 				case EComponentEntityType::ENTITY_POSITION: isPositionAbsolute = true; break;
 				case EComponentEntityType::ENTITY_ANGLE: isAngleAbsolute = true; break;
 				case EComponentEntityType::ENTITY_SCALE: isScaleAbsolute = true; break;
-				default: throw std::invalid_argument("Invalid entity type");
+				default: throw invalid_argument("Invalid entity type");
 				}
 				return;
 			}
@@ -180,7 +259,7 @@ void ComponentInformer::RenderTransformationEntity(
 			case EComponentEntityType::ENTITY_POSITION: return m_absRelativeComboPosition.Draw();
 			case EComponentEntityType::ENTITY_ANGLE: return m_absRelativeComboAngle.Draw();
 			case EComponentEntityType::ENTITY_SCALE: return m_absRelativeComboScale.Draw();
-			default: throw std::invalid_argument("Invalid entity type");
+			default: throw invalid_argument("Invalid entity type");
 			}
 		};
 
@@ -191,7 +270,7 @@ void ComponentInformer::RenderTransformationEntity(
 			case EComponentEntityType::ENTITY_POSITION: return isPositionAbsolute;
 			case EComponentEntityType::ENTITY_ANGLE: return isAngleAbsolute;
 			case EComponentEntityType::ENTITY_SCALE: return isScaleAbsolute;
-			default: throw std::invalid_argument("Invalid entity type");
+			default: throw invalid_argument("Invalid entity type");
 			}
 		};
 
@@ -202,7 +281,7 @@ void ComponentInformer::RenderTransformationEntity(
 			case EComponentEntityType::ENTITY_POSITION: return XMVectorAdd(v1, v2);
 			case EComponentEntityType::ENTITY_ANGLE: return XMVectorAdd(v1, v2);
 			case EComponentEntityType::ENTITY_SCALE: return XMVectorMultiply(v1, v2);
-			default: throw std::invalid_argument("Invalid entity type");
+			default: throw invalid_argument("Invalid entity type");
 			}
 		};
 
@@ -213,7 +292,7 @@ void ComponentInformer::RenderTransformationEntity(
 			case EComponentEntityType::ENTITY_POSITION: return XMVectorSubtract(v1, v2);
 			case EComponentEntityType::ENTITY_ANGLE: return XMVectorSubtract(v1, v2);
 			case EComponentEntityType::ENTITY_SCALE: return XMVectorDivide(v1, v2);
-			default: throw std::invalid_argument("Invalid entity type");
+			default: throw invalid_argument("Invalid entity type");
 			}
 		};
 

@@ -105,7 +105,7 @@
     <ClCompile Include="AssetFileControl.cpp">
       <Filter>소스 파일\GUI\Control</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentInformer.cpp">
+    <ClCompile Include="ComponentHandler.cpp">
       <Filter>소스 파일\GUI\Child</Filter>
     </ClCompile>
     <ClCompile Include="AssetContextMenu.cpp">
@@ -161,7 +161,7 @@
     <ClInclude Include="SceneWindow.h">
       <Filter>헤더 파일\GUI\Window\Extended</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentInformer.h">
+    <ClInclude Include="ComponentHandler.h">
       <Filter>헤더 파일\GUI\Child</Filter>
     </ClInclude>
     <ClInclude Include="AssetContextMenu.h">

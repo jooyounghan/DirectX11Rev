@@ -90,6 +90,14 @@ void ASceneRenderer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionCo
     orientedBoxCollisionComponent->SetRenderable(false);
 }
 
+void ASceneRenderer::Visit(SpotLightComponent* spotLightComponent)
+{
+}
+
+void ASceneRenderer::Visit(PointLightComponent* pointLightComponent)
+{
+}
+
 void ASceneRenderer::ClearRenderTargets()
 {
     ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;

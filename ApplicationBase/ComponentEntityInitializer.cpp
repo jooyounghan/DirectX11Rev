@@ -6,8 +6,10 @@
 #include "SphereCollisionComponent.h"
 #include "OrientedBoxCollisionComponent.h"
 
-#include "SkeletalMeshAsset.h"
+#include "SpotLightComponent.h"
+#include "PointLightComponent.h"
 
+#include "SkeletalMeshAsset.h"
 #include "AnimationPlayer.h"
 
 #include "ConstantBuffer.h"
@@ -26,14 +28,12 @@ ComponentEntityInitializer::ComponentEntityInitializer(ID3D11Device* device, ID3
 
 void ComponentEntityInitializer::Visit(StaticMeshComponent* staticModelComponent)
 {
-	staticModelComponent->UpdateAbsoluteEntities();
-	InitBaseEntityBuffer(staticModelComponent);
+	InitBaseComponent(staticModelComponent);
 }
 
 void ComponentEntityInitializer::Visit(SkeletalMeshComponent* skeletalModelComponent)
 {
-	skeletalModelComponent->UpdateAbsoluteEntities();
-	InitBaseEntityBuffer(skeletalModelComponent);
+	InitBaseComponent(skeletalModelComponent);
 
 	// AnimationPlayerComponent?
 	const SkeletalMeshAsset* skeletalMetalAsset = skeletalModelComponent->GetSkeletalMetalAsset();
@@ -47,13 +47,8 @@ void ComponentEntityInitializer::Visit(SkeletalMeshComponent* skeletalModelCompo
 
 void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 {
-	cameraComponent->UpdateAbsoluteEntities();
-	cameraComponent->UpdateViewEntity();
-	InitBaseEntityBuffer(cameraComponent);
-
-	DynamicBuffer* viewProjMatrixBuffer = cameraComponent->GetViewProjMatrixBuffer();
-	D3D11_SUBRESOURCE_DATA viewProjSubResourceData = viewProjMatrixBuffer->GetSubResourceData();
-	viewProjMatrixBuffer->InitializeBuffer(m_deviceCached, &viewProjSubResourceData);
+	InitBaseComponent(cameraComponent);
+	InitViewComponent(cameraComponent);
 
 	cameraComponent->SetFilm(new Texture2DInstance<SRVOption, RTVOption, UAVOption>(
 		static_cast<uint32_t>(cameraComponent->Width), static_cast<uint32_t>(cameraComponent->Height),
@@ -79,20 +74,36 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 
 void ComponentEntityInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
+	InitBaseComponent(sphereCollisionComponent);
+	
 	sphereCollisionComponent->SetComponentColor({ 1.f, 0.f, 0.f });
-	sphereCollisionComponent->UpdateAbsoluteEntities();
-	InitBaseEntityBuffer(sphereCollisionComponent);
 }
 
 void ComponentEntityInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
+	InitBaseComponent(orientedBoxCollisionComponent);
+	
 	orientedBoxCollisionComponent->SetComponentColor({ 1.f, 0.f, 0.f });
-	orientedBoxCollisionComponent->UpdateAbsoluteEntities();
-	InitBaseEntityBuffer(orientedBoxCollisionComponent);
 }
 
-void ComponentEntityInitializer::InitBaseEntityBuffer(AComponent* component)
+void ComponentEntityInitializer::Visit(SpotLightComponent* spotLightComponent)
 {
+	InitBaseComponent(spotLightComponent);
+	InitViewComponent(spotLightComponent);
+
+	spotLightComponent->SetDepthTestView(new Texture2DInstance<SRVOption, DSVOption>(
+		static_cast<uint32_t>(spotLightComponent->Width), static_cast<uint32_t>(spotLightComponent->Height),
+		1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_TYPELESS, m_deviceCached, m_deviceContextCached
+	));
+}
+
+void ComponentEntityInitializer::Visit(PointLightComponent* pointLightComponent)
+{
+}
+
+void ComponentEntityInitializer::InitBaseComponent(AComponent* component)
+{
+	component->UpdateAbsoluteEntities();
 	component->UpdateComponentTransformation();
 	DynamicBuffer* transformationBuffer = component->GetTransformationBuffer();
 	DynamicBuffer* comopnentBuffer = component->GetComponentBuffer();
@@ -103,4 +114,12 @@ void ComponentEntityInitializer::InitBaseEntityBuffer(AComponent* component)
 	const D3D11_SUBRESOURCE_DATA componentSubresource = comopnentBuffer->GetSubResourceData();
 	comopnentBuffer->InitializeBuffer(m_deviceCached, &componentSubresource);
 
+}
+
+void ComponentEntityInitializer::InitViewComponent(AViewComponent* viewComponent)
+{
+	viewComponent->UpdateViewEntity();
+	DynamicBuffer* viewProjMatrixBuffer = viewComponent->GetViewProjMatrixBuffer();
+	D3D11_SUBRESOURCE_DATA viewProjSubResourceData = viewProjMatrixBuffer->GetSubResourceData();
+	viewProjMatrixBuffer->InitializeBuffer(m_deviceCached, &viewProjSubResourceData);
 }

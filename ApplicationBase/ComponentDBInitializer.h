@@ -5,6 +5,7 @@
 
 struct ID3D11Device;
 class ICollisionOption;
+class LightEntity;
 
 class ComponentDBInitializer : public IComponentVisitor
 {
@@ -26,8 +27,13 @@ public:
 	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) override;
 	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override;
 
+public:
+	virtual void Visit(SpotLightComponent* spotLightComponent) override final;
+	virtual void Visit(PointLightComponent* pointLightComponent) override final;
+
 private:
 	void LoadModelMaterials(AMeshComponent* meshComponent);
 	ICollisionOption* CreateCollisionOption(const uint32_t& collitionOptionID);
+	void LoadLightEntity(AComponent* lightComponent, LightEntity* lightEntity);
 };
 

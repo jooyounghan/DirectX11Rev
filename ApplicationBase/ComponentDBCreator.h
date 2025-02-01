@@ -27,6 +27,10 @@ public:
 	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override;
 
 public:
+	virtual void Visit(SpotLightComponent* spotLightComponent) override final;
+	virtual void Visit(PointLightComponent* pointLightComponent) override final;
+
+public:
 	void AddScene(Scene* scene);
 	void AddComponent(Scene* scene, AComponent* parentComponent, AComponent* component);
 

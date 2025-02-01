@@ -136,47 +136,46 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 
 void GameEngine::Update(const float& deltaTime)
 {
-	m_componentManager->UpdateComponents(deltaTime);
-
-	// TEST =================================================
-	RenderControlOption::RenderBVH.ResetSerachCount();
-	RenderControlOption::RenderBVH.Traverse(m_editorCamera);
-	PerformanceAnalyzer::CollisionCheckCount = RenderControlOption::RenderBVH.GetSerachCount();
-	// ======================================================
+	ID3D11DeviceContext* immediateContext = m_engine->GetDeviceContext();
 
 	m_engine->ClearBackBuffer(ClearColor);
 	m_engine->SetRTVAsBackBuffer();
-	
-	ID3D11DeviceContext* immediateContext = m_engine->GetDeviceContext();
 
+	m_componentManager->UpdateComponents(deltaTime);
 	future<void> assetLoadGPUTask = async(launch::deferred, [&, immediateContext]() 
 		{
 			DefferedContext* assetLoadDefferedContext = m_defferedContexts[EDefferedContextType::ASSETS_LOAD];
 			assetLoadDefferedContext->TryExecuteCommandList(immediateContext); 
-		});
-
+		}
+	);
 	future<void> componentUpdateGPUTask = async(launch::deferred, [&, immediateContext]() 
 		{
 			DefferedContext* componentUpdateDefferedContext = m_defferedContexts[EDefferedContextType::COMPONENT_UPDATE];
 			componentUpdateDefferedContext->TryExecuteCommandList(immediateContext);
-		});
+		}
+	);
+
+	// Collision은 CPU로 Components를 업데이트 하고 GPU에 업데이트를 반영하는 사이에 확인한다. 
+	HandleCollision();
 
 	assetLoadGPUTask.wait();
 	componentUpdateGPUTask.wait();
-
 
 	for (auto& imguiWindow : m_imguiWindows)
 	{
 		imguiWindow->PrepareWindow();
 	}
-
 	future<void> componentRenderGPUTask = async(launch::deferred, [&, immediateContext]()
 		{
 			DefferedContext* componentRenderDefferedContext = m_defferedContexts[EDefferedContextType::COMPONENT_RENDER];
 			componentRenderDefferedContext->RecordToCommandList();
 			componentRenderDefferedContext->TryExecuteCommandList(immediateContext);
-		});
+		}
+	);
 	componentRenderGPUTask.wait();
+
+
+
 
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -199,14 +198,9 @@ void GameEngine::Update(const float& deltaTime)
 	ImGui::EndFrame();
 	ImGui::UpdatePlatformWindows();
 
-
-
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-
 	m_engine->GetSwapChain()->Present(1, 0);
-
-
 }
 
 void GameEngine::AppProcImpl(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -326,4 +320,12 @@ void GameEngine::CreateModals()
 	m_taskManager->OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1, placeholders::_2);
 	m_taskManager->OnTasksCompleted = bind(&TaskModal::SetTasksCompleted, taskModal);
 	m_componentManager->OnErrorOccurs = bind(&MessageBoxModal::SetMessage, errorMessageBoxModal, placeholders::_1);
+}
+
+void GameEngine::HandleCollision()
+{	
+	RenderControlOption::RenderBVH.ResetSerachCount();
+	RenderControlOption::RenderBVH.Traverse(m_editorCamera);
+	PerformanceAnalyzer::CollisionCheckCount = RenderControlOption::RenderBVH.GetSerachCount();
+	
 }

@@ -109,18 +109,23 @@
     <ClInclude Include="BoundingVolumeNode.h">
       <Filter>헤더 파일\Component\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="BoundingVolumeHierarchy.h" />
-    <ClInclude Include="ALightComponent.h">
-      <Filter>헤더 파일\Light</Filter>
+    <ClInclude Include="LightEntity.h">
+      <Filter>헤더 파일\Component\Light</Filter>
     </ClInclude>
     <ClInclude Include="PointLightComponent.h">
-      <Filter>헤더 파일\Light</Filter>
+      <Filter>헤더 파일\Component\Light</Filter>
     </ClInclude>
     <ClInclude Include="SpotLightComponent.h">
-      <Filter>헤더 파일\Light</Filter>
+      <Filter>헤더 파일\Component\Light</Filter>
     </ClInclude>
     <ClInclude Include="AViewComponent.h">
       <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ILightVisitor.h">
+      <Filter>헤더 파일\Component\Visitor\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingVolumeHierarchy.h">
+      <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -217,12 +222,6 @@
     <Filter Include="소스 파일\Component\Visitor\Entity">
       <UniqueIdentifier>{1201d9d4-5bd5-474e-b30d-a3f0a9373a30}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Component\Light">
-      <UniqueIdentifier>{1de3e276-be7d-41a8-8712-17340f183788}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Light">
-      <UniqueIdentifier>{001c7df7-f6da-4648-bd77-d79f70055c47}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Component\Collision">
       <UniqueIdentifier>{5749b51e-bac4-4c47-8728-a653998b741a}</UniqueIdentifier>
     </Filter>
@@ -250,8 +249,17 @@
     <Filter Include="헤더 파일\BVH">
       <UniqueIdentifier>{512e7460-d996-438c-9366-5e5bf3a09e56}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Light">
+    <Filter Include="소스 파일\Component\Light">
+      <UniqueIdentifier>{001c7df7-f6da-4648-bd77-d79f70055c47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Light">
       <UniqueIdentifier>{2ee7bc29-fb93-43e0-9ab9-926e125d26aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Visitor\Light">
+      <UniqueIdentifier>{453fe629-f7e2-475c-ab24-c594ec5a3247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Visitor\Light">
+      <UniqueIdentifier>{8dc4a9c9-b5cf-4e3f-b1c9-838b08521b64}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -348,18 +356,20 @@
     <ClCompile Include="BoundingVolumeNode.cpp">
       <Filter>소스 파일\Component\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="BoundingVolumeHierarchy.cpp" />
-    <ClCompile Include="ALightComponent.cpp">
-      <Filter>소스 파일\Light</Filter>
+    <ClCompile Include="LightEntity.cpp">
+      <Filter>소스 파일\Component\Light</Filter>
     </ClCompile>
     <ClCompile Include="PointLightComponent.cpp">
-      <Filter>소스 파일\Light</Filter>
+      <Filter>소스 파일\Component\Light</Filter>
     </ClCompile>
     <ClCompile Include="SpotLightComponent.cpp">
-      <Filter>소스 파일\Light</Filter>
+      <Filter>소스 파일\Component\Light</Filter>
     </ClCompile>
     <ClCompile Include="AViewComponent.cpp">
       <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingVolumeHierarchy.cpp">
+      <Filter>소스 파일\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

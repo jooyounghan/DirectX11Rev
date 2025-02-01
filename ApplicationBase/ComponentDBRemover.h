@@ -23,6 +23,10 @@ public:
 	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) override;
 	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override;
 
+public:
+	virtual void Visit(SpotLightComponent* spotLightComponent) override final;
+	virtual void Visit(PointLightComponent* pointLightComponent) override final;
+
 private:
 	void DeleteComponent(AComponent* component);
 	void DeleteComponetFromSceneInformation(AComponent* component);

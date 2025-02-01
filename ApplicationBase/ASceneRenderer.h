@@ -53,6 +53,10 @@ public:
 	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override final;
 
 public:
+	virtual void Visit(SpotLightComponent* spotLightComponent) override final;
+	virtual void Visit(PointLightComponent* pointLightComponent) override final;
+
+public:
 	virtual void ClearRenderTargets();
 	virtual void PostProcess() = 0;
 

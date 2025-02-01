@@ -26,10 +26,10 @@ CameraComponent::CameraComponent(
 
 CameraComponent::~CameraComponent()
 {
-	delete m_film;
-	delete m_idFilm;
-	delete m_idStagingFilm;
-	delete m_depthStencilViewBuffer;
+	if (m_film) delete m_film;
+	if (m_idFilm) delete m_idFilm;
+	if (m_idStagingFilm) delete m_idStagingFilm;
+	if (m_depthStencilView) delete m_depthStencilView;
 }
 
 void CameraComponent::SetFilm(Texture2DInstance<SRVOption, RTVOption, UAVOption>* film)
@@ -52,26 +52,12 @@ void CameraComponent::SetIDStagingFilm(Texture2DInstance<PureTextureOption>* idS
 
 void CameraComponent::SetDepthStencilView(Texture2DInstance<DSVOption>* depthStencilViewBuffer)
 {
-	if (m_depthStencilViewBuffer) delete m_depthStencilViewBuffer;
-	m_depthStencilViewBuffer = depthStencilViewBuffer;
+	if (m_depthStencilView) delete m_depthStencilView;
+	m_depthStencilView = depthStencilViewBuffer;
 }
 
-void CameraComponent::UpdateViewEntity()
-{
-	const XMMATRIX& viewMatrix = GetViewMatrix();
-	const XMMATRIX& projectionMatrix = GetProjectionMatrix();
-	
-	UpdateViewEntityImpl(viewMatrix, projectionMatrix);
-
-	BoundingFrustum::CreateFromMatrix(*this, projectionMatrix);
-	this->Transform(*this, XMMatrixInverse(nullptr, viewMatrix));
-}
 
 void CameraComponent::Accept(IComponentVisitor* visitor)
 {
 	visitor->Visit(this);
-}
-
-void CameraComponent::OnCollide(ICollisionAcceptor*)
-{
 }

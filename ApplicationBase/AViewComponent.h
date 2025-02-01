@@ -1,5 +1,6 @@
 #pragma once
 #include "AComponent.h"
+#include "CollidableFrustum.h"
 
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -25,11 +26,11 @@ struct SViewEntity
 {
 	DirectX::XMMATRIX m_viewProj = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX m_invViewProj = DirectX::XMMatrixIdentity();
-	DirectX::XMFLOAT3 m_viewPosition;
-	float m_dummy;
-
+	DirectX::XMFLOAT3 m_viewPosition = { 0.f, 0.f, 0.f };
+	float m_dummy = 0.f;
 };
-class AViewComponent : public AComponent, public D3D11_VIEWPORT
+
+class AViewComponent : public AComponent, public D3D11_VIEWPORT, public CollidableFrustum
 {
 public:
 	AViewComponent(
@@ -44,7 +45,7 @@ public:
 		const float& farZ = GDefaultFarZ,
 		const float& fovAngle = GDefaultFovAngle
 	);
-	virtual ~AViewComponent();
+	~AViewComponent() override;
 
 protected:
 	float m_nearZ;
@@ -63,7 +64,7 @@ public:
 	inline DynamicBuffer* GetViewProjMatrixBuffer() const { return m_viewProjBuffer; }
 
 public:
-	void SetCameraProperties(
+	void SetViewProperties(
 		const uint32_t& width, const uint32_t& height,
 		const float& nearZ, const float& farZ, const float& fovAngle
 	);
@@ -74,8 +75,6 @@ public:
 
 public:
 	virtual void UpdateViewEntity();
-
-protected:
-	void UpdateViewEntityImpl(const DirectX::XMMATRIX& viewMatrix, const DirectX::XMMATRIX& projectMatrix);
+	virtual void OnCollide(ICollisionAcceptor*) override;
 };
 

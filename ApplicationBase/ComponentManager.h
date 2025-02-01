@@ -7,6 +7,7 @@
 
 #include <queue>
 #include <shared_mutex>
+#include <unordered_map>
 
 class Scene;
 class AComponent;

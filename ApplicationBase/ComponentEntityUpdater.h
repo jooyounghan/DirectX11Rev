@@ -2,6 +2,8 @@
 #include "IComponentVisitor.h"
 #include <d3d11.h>
 
+class AViewComponent;
+
 class ComponentEntityUpdater : public IComponentVisitor
 {
 public:
@@ -23,7 +25,11 @@ public:
 	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) override;
 	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override;
 
+public:
+	virtual void Visit(SpotLightComponent* spotLightComponent) override final;
+	virtual void Visit(PointLightComponent* pointLightComponent) override final;
+
 private:
-	void UpdateComponentBuffer(AComponent* component);
-	void UpdateTransformationBuffer(AComponent* component);
+	void UpdateBaseComponent(AComponent* component);
+	void UpdateViewComponent(AViewComponent* viewComponent);
 };

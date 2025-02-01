@@ -7,6 +7,7 @@ class ComponentEntity;
 class AMeshComponent;
 class AssetManager;
 class ComponentManager;
+class LightEntity;
 
 enum class EComponentEntityType
 {
@@ -15,11 +16,11 @@ enum class EComponentEntityType
 	ENTITY_SCALE
 };
 
-class ComponentInformer : public IComponentVisitor
+class ComponentHandler : public IComponentVisitor
 {
 public:
-	ComponentInformer(ComponentManager* componentManager);
-	~ComponentInformer() override = default;
+	ComponentHandler(ComponentManager* componentManager);
+	~ComponentHandler() override = default;
 
 protected:
 	ComponentManager* m_componentManagerCached = nullptr;
@@ -45,9 +46,25 @@ public:
 	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) override;
 	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override;
 
+public:
+	virtual void Visit(SpotLightComponent* spotLightComponent) override;
+	virtual void Visit(PointLightComponent* pointLightComponent) override;
+
 private:
-	void RenderComponentTransformation(AComponent* component);
-	void RenderMeshComponent(AMeshComponent* meshComponent);
+	void HandleComponentName(
+		AComponent* comopnent, 
+		const std::string& componentDescription
+	);
+	void HandleComponentTransformation(
+		AComponent* component,
+		const bool& isHandlePosition,
+		const bool& isHandleAngle,
+		const bool& isHandleScale
+	);
+	void HandleMeshComponent(AMeshComponent* meshComponent);
+	void HandleSphereCollisionComponent(SphereCollisionComponent* sphereCollisionComponent);
+	void HandleOrientedCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent);
+	void HandleLightEntity(AComponent* component, LightEntity* lightEntity, const bool& isHandleSpotPower);
 
 private:
 	void RenderTransformationEntity(

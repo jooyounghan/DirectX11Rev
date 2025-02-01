@@ -1,7 +1,7 @@
 #pragma once
 #include "AWindow.h"
 
-#include "ComponentInformer.h"
+#include "ComponentHandler.h"
 #include "SceneForwardRenderer.h"
 #include "SceneDefferedRenderer.h"
 #include "ImGuiComboBox.h"
@@ -55,7 +55,7 @@ protected:
 
 private:
 	AComponent* m_selectedComponent = nullptr;
-	ComponentInformer m_componentInformer;
+	ComponentHandler m_componentHandler;
 
 private:
 	SceneForwardRenderer m_forwardRenderer;

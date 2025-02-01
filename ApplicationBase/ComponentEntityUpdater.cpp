@@ -5,6 +5,8 @@
 #include "CameraComponent.h"
 #include "SphereCollisionComponent.h"
 #include "OrientedBoxCollisionComponent.h"
+#include "SpotLightComponent.h"
+#include "PointLightComponent.h"
 
 #include "DynamicBuffer.h"
 
@@ -15,14 +17,12 @@ ComponentEntityUpdater::ComponentEntityUpdater(ID3D11DeviceContext* deviceContex
 
 void ComponentEntityUpdater::Visit(StaticMeshComponent* staticModelComponent)
 {
-	staticModelComponent->UpdateAbsoluteEntities();
-	UpdateTransformationBuffer(staticModelComponent);
+	UpdateBaseComponent(staticModelComponent);
 }
 
 void ComponentEntityUpdater::Visit(SkeletalMeshComponent* skeletalModelComponent)
 {
-	skeletalModelComponent->UpdateAbsoluteEntities();
-	UpdateTransformationBuffer(skeletalModelComponent);
+	UpdateBaseComponent(skeletalModelComponent);
 
 	AnimationPlayer* animationPlayer = skeletalModelComponent->GetAnimationPlayer();
 	if (animationPlayer) animationPlayer->UpdateAnimationPlayer(m_deviceContextCached, m_deltaTime);
@@ -30,41 +30,47 @@ void ComponentEntityUpdater::Visit(SkeletalMeshComponent* skeletalModelComponent
 
 void ComponentEntityUpdater::Visit(CameraComponent* cameraComponent)
 {
-	cameraComponent->UpdateAbsoluteEntities();
-	cameraComponent->UpdateViewEntity();
-	UpdateTransformationBuffer(cameraComponent);
-
-	DynamicBuffer* viewProjMatrixBuffer = cameraComponent->GetViewProjMatrixBuffer();
-	viewProjMatrixBuffer->Upload(m_deviceContextCached);
+	UpdateBaseComponent(cameraComponent);
+	UpdateViewComponent(cameraComponent);
 }
 
 void ComponentEntityUpdater::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
-	sphereCollisionComponent->UpdateAbsoluteEntities();
-	UpdateTransformationBuffer(sphereCollisionComponent);
-	//UpdateComponentBuffer(sphereCollisionComponent);
-	
+	UpdateBaseComponent(sphereCollisionComponent);
 	sphereCollisionComponent->UpdateBoundingVolumeHierarchy();
 }
 
 void ComponentEntityUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
-	orientedBoxCollisionComponent->UpdateAbsoluteEntities();
-	UpdateTransformationBuffer(orientedBoxCollisionComponent);
-	//UpdateComponentBuffer(orientedBoxCollisionComponent);
-
+	UpdateBaseComponent(orientedBoxCollisionComponent);
 	orientedBoxCollisionComponent->UpdateBoundingVolumeHierarchy();
 }
 
-void ComponentEntityUpdater::UpdateComponentBuffer(AComponent* component)
+void ComponentEntityUpdater::Visit(SpotLightComponent* spotLightComponent)
+{
+	UpdateBaseComponent(spotLightComponent);
+	UpdateViewComponent(spotLightComponent);
+}
+
+void ComponentEntityUpdater::Visit(PointLightComponent* pointLightComponent)
+{
+}
+
+void ComponentEntityUpdater::UpdateBaseComponent(AComponent* component)
 {
 	DynamicBuffer* componentBuffer = component->GetComponentBuffer();
 	componentBuffer->Upload(m_deviceContextCached);
-}
 
-void ComponentEntityUpdater::UpdateTransformationBuffer(AComponent* component)
-{
+	component->UpdateAbsoluteEntities();
 	component->UpdateComponentTransformation();
 	DynamicBuffer* transformationBuffer = component->GetTransformationBuffer();
 	transformationBuffer->Upload(m_deviceContextCached);
 }
+
+void ComponentEntityUpdater::UpdateViewComponent(AViewComponent* viewComponent)
+{
+	viewComponent->UpdateViewEntity();
+	DynamicBuffer* viewProjMatrixBuffer = viewComponent->GetViewProjMatrixBuffer();
+	viewProjMatrixBuffer->Upload(m_deviceContextCached);
+}
+

@@ -20,5 +20,9 @@ protected:
 
 public:
 	inline ID3D11ShaderResourceView* const GetSRV() const { return m_srv.Get(); }
+
+private:
+	static D3D11_SHADER_RESOURCE_VIEW_DESC GetShaderResourceViewDesc(const D3D11_TEXTURE2D_DESC& texture2dDesc);
+	static DXGI_FORMAT GetShaderResourceViewFormatFromTextureFormat(const DXGI_FORMAT& textureFormat);
 };
 

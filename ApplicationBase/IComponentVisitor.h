@@ -8,6 +8,8 @@ class SkeletalMeshComponent;
 class CameraComponent;
 class SphereCollisionComponent;
 class OrientedBoxCollisionComponent;
+class SpotLightComponent;
+class PointLightComponent;
 
 class IComponentVisitor
 {
@@ -24,5 +26,9 @@ public:
 public:
 	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) = 0;
 	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) = 0;
+
+public:
+	virtual void Visit(SpotLightComponent* spotLightComponent) = 0;
+	virtual void Visit(PointLightComponent* pointLightComponent) = 0;
 };
 

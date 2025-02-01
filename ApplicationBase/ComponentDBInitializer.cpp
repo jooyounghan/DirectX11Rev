@@ -6,6 +6,8 @@
 #include "CameraComponent.h"
 #include "SphereCollisionComponent.h"
 #include "OrientedBoxCollisionComponent.h"
+#include "SpotLightComponent.h"
+#include "PointLightComponent.h"
 
 #include "ComponentType.h"
 #include "RenderControlOption.h"
@@ -29,13 +31,13 @@ void ComponentDBInitializer::Visit(StaticMeshComponent* staticMeshComponent)
 {
 	AssetManager* assetManager = AssetManager::GetInstance();
 
-	const uint32_t comopnentID = staticMeshComponent->GetComponentID();
+	const uint32_t componentID = staticMeshComponent->GetComponentID();
 	const std::string staticMeshComponentTableName = "static_mesh_components";
 
 	Table staticMeshComponentTable = m_schemaCached->getTable(staticMeshComponentTableName, true);
 	RowResult rowResult = staticMeshComponentTable
 		.select("static_mesh_name").where("static_mesh_component_id = :static_mesh_component_id")
-		.bind("static_mesh_component_id", comopnentID).lockShared().execute();
+		.bind("static_mesh_component_id", componentID).lockShared().execute();
 
 	auto row = rowResult.fetchOne();
 	if (!row.isNull()) 
@@ -53,13 +55,13 @@ void ComponentDBInitializer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
 	AssetManager* assetManager = AssetManager::GetInstance();
 
-	const uint32_t comopnentID = skeletalMeshComponent->GetComponentID();
+	const uint32_t componentID = skeletalMeshComponent->GetComponentID();
 	const std::string skeletalMeshComponentTableName = "skeletal_mesh_components";
 
 	Table skeletalMeshComponentTable = m_schemaCached->getTable(skeletalMeshComponentTableName, true);
 	RowResult rowResult = skeletalMeshComponentTable
 		.select("skeletal_mesh_name").where("skeletal_mesh_component_id = :skeletal_mesh_component_id")
-		.bind("skeletal_mesh_component_id", comopnentID).lockShared().execute();
+		.bind("skeletal_mesh_component_id", componentID).lockShared().execute();
 
 	auto row = rowResult.fetchOne();
 	if (!row.isNull())
@@ -74,13 +76,13 @@ void ComponentDBInitializer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 
 void ComponentDBInitializer::Visit(CameraComponent* cameraComponent)
 {
-	const uint32_t comopnentID = cameraComponent->GetComponentID();
+	const uint32_t componentID = cameraComponent->GetComponentID();
 	const std::string cameraComponentTableName = "camera_components";
 
 	Table cameraComponentTable = m_schemaCached->getTable(cameraComponentTableName, true);
 	RowResult rowResult = cameraComponentTable
 		.select("width", "height", "near_z", "far_z", "fov_angle").where("camera_component_id = :camera_component_id")
-		.bind("camera_component_id", comopnentID).lockShared().execute();
+		.bind("camera_component_id", componentID).lockShared().execute();
 
 	auto row = rowResult.fetchOne();
 	if (!row.isNull())
@@ -90,19 +92,19 @@ void ComponentDBInitializer::Visit(CameraComponent* cameraComponent)
 		const float near_z = row[2].get<float>();
 		const float far_z = row[3].get<float>();
 		const float fov_angle = row[4].get<float>();
-		cameraComponent->SetCameraProperties(width, height, near_z, far_z, fov_angle);
+		cameraComponent->SetViewProperties(width, height, near_z, far_z, fov_angle);
 	}
 }
 
 void ComponentDBInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
-	const uint32_t comopnentID = sphereCollisionComponent->GetComponentID();
+	const uint32_t componentID = sphereCollisionComponent->GetComponentID();
 	const std::string sphereCollisionComponentTableName = "sphere_collision_components";
 
 	Table sphereCollisionComponentTable = m_schemaCached->getTable(sphereCollisionComponentTableName, true);
 	RowResult rowResult = sphereCollisionComponentTable
 		.select("radius", "collision_option_id").where("sphere_collision_component_id = :sphere_collision_component_id")
-		.bind("sphere_collision_component_id", comopnentID).lockShared().execute();
+		.bind("sphere_collision_component_id", componentID).lockShared().execute();
 
 	auto row = rowResult.fetchOne();
 	if (!row.isNull())
@@ -120,13 +122,13 @@ void ComponentDBInitializer::Visit(SphereCollisionComponent* sphereCollisionComp
 
 void ComponentDBInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
-	const uint32_t comopnentID = orientedBoxCollisionComponent->GetComponentID();
+	const uint32_t componentID = orientedBoxCollisionComponent->GetComponentID();
 	const std::string orientedBoxCollisionComponentTableName = "oriented_box_collision_components";
 
 	Table orientedBoxCollisionComponentTable = m_schemaCached->getTable(orientedBoxCollisionComponentTableName, true);
 	RowResult rowResult = orientedBoxCollisionComponentTable
 		.select("extent_x", "extent_y", "extent_z", "collision_option_id").where("oriented_box_collision_component_id = :oriented_box_collision_component_id")
-		.bind("oriented_box_collision_component_id", comopnentID).lockShared().execute();
+		.bind("oriented_box_collision_component_id", componentID).lockShared().execute();
 
 	auto row = rowResult.fetchOne();
 	if (!row.isNull())
@@ -145,17 +147,27 @@ void ComponentDBInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCol
 	}
 }
 
+void ComponentDBInitializer::Visit(SpotLightComponent* spotLightComponent)
+{
+	LoadLightEntity(spotLightComponent, spotLightComponent);
+}
+
+void ComponentDBInitializer::Visit(PointLightComponent* pointLightComponent)
+{
+	LoadLightEntity(pointLightComponent, pointLightComponent);
+}
+
 void ComponentDBInitializer::LoadModelMaterials(AMeshComponent* meshComponent)
 {
 	AssetManager* assetManager = AssetManager::GetInstance();
 
-	const uint32_t comopnentID = meshComponent->GetComponentID();
+	const uint32_t componentID = meshComponent->GetComponentID();
 	const std::string meshComponentInformationTableName = "mesh_component_informations";
 
 	Table meshComponentInformationTable = m_schemaCached->getTable(meshComponentInformationTableName, true);
 	RowResult rowResult = meshComponentInformationTable
 		.select("material_names").where("mesh_component_id = :mesh_component_id")
-		.bind("mesh_component_id", comopnentID).lockShared().execute();
+		.bind("mesh_component_id", componentID).lockShared().execute();
 
 
 	auto row = rowResult.fetchOne();
@@ -191,4 +203,26 @@ ICollisionOption* ComponentDBInitializer::CreateCollisionOption(const uint32_t& 
 		break;
 	}
 	return nullptr;
+}
+
+void ComponentDBInitializer::LoadLightEntity(AComponent* lightComponent, LightEntity* lightEntity)
+{
+	const uint32_t componentID = lightComponent->GetComponentID();
+	const std::string lightsTableName = "lights";
+
+	Table lightsTable = m_schemaCached->getTable(lightsTableName, true);
+	RowResult rowResult = lightsTable
+		.select("light_power", "falloff_start", "falloff_end", "spot_power").where("light_component_id = :light_component_id")
+		.bind("light_component_id", componentID).lockShared().execute();
+
+	auto row = rowResult.fetchOne();
+	if (!row.isNull())
+	{
+		const float lightPower = row[0].get<float>();
+		const float falloffStart = row[1].get<float>();
+		const float falloffEnd = row[2].get<float>();
+		const float spotPower = row[3].get<float>();
+
+		lightEntity->SetLigthEntity(lightPower, falloffEnd, falloffEnd, spotPower);
+	}
 }

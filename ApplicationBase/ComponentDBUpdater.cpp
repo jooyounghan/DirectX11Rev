@@ -6,6 +6,9 @@
 #include "SphereCollisionComponent.h"
 #include "OrientedBoxCollisionComponent.h"
 
+#include "SpotLightComponent.h"
+#include "PointLightComponent.h"
+
 #include "nlohmann/json.hpp"
 
 #include <d3d11.h>
@@ -92,6 +95,18 @@ void ComponentDBUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisi
 		.bind("oriented_box_collision_component_id", componentID).execute();
 }
 
+void ComponentDBUpdater::Visit(SpotLightComponent* spotLightComponent)
+{
+	UpdateComponent(spotLightComponent);
+	UpdateLightEntity(spotLightComponent, spotLightComponent);
+}
+
+void ComponentDBUpdater::Visit(PointLightComponent* pointLightComponent)
+{
+	UpdateComponent(pointLightComponent);
+	UpdateLightEntity(pointLightComponent, pointLightComponent);
+}
+
 void ComponentDBUpdater::UpdateComponent(AComponent* component)
 {
 	const uint32_t& componentID = component->GetComponentID();
@@ -136,4 +151,22 @@ void ComponentDBUpdater::UpdateMeshComponent(AMeshComponent* meshComponent)
 		.set("material_names", jsonString)
 		.where("mesh_component_id = :component_id")
 		.bind("mesh_component_id", componentID).execute();
+}
+
+void ComponentDBUpdater::UpdateLightEntity(AComponent* component, LightEntity* ligthEntity)
+{
+	const uint32_t& componentID = component->GetComponentID();
+
+	const std::string lightsTableName = "lights";
+	Table lightsTable = m_schemaCached->getTable(lightsTableName, true);
+
+	const SLightEntity& lightEntityValue = ligthEntity->GetLightEntity();
+
+	lightsTable.update()
+		.set("light_power", lightEntityValue.m_lightPower)
+		.set("falloff_start", lightEntityValue.m_fallOffStart)
+		.set("falloff_end", lightEntityValue.m_fallOffEnd)
+		.set("spot_power", lightEntityValue.m_spotPower)
+		.where("light_component_id = :light_component_id")
+		.bind("light_component_id", componentID).execute();
 }

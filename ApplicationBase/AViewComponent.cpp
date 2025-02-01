@@ -18,7 +18,7 @@ AViewComponent::AViewComponent(
 	m_viewProjBuffer(new DynamicBuffer(sizeof(SViewEntity), 1, &m_viewEntity)),
 	m_nearZ(nearZ), m_farZ(farZ), m_fovAngle(fovAngle)
 {
-	SetCameraProperties(width, height, m_nearZ, m_farZ, m_fovAngle);
+	SetViewProperties(width, height, m_nearZ, m_farZ, m_fovAngle);
 }
 
 AViewComponent::~AViewComponent()
@@ -26,7 +26,7 @@ AViewComponent::~AViewComponent()
 	delete m_viewProjBuffer;
 }
 
-void AViewComponent::SetCameraProperties(const uint32_t& width, const uint32_t& height, const float& nearZ, const float& farZ, const float& fovAngle)
+void AViewComponent::SetViewProperties(const uint32_t& width, const uint32_t& height, const float& nearZ, const float& farZ, const float& fovAngle)
 {
 	m_nearZ = nearZ;
 	m_farZ = farZ;
@@ -55,13 +55,19 @@ XMMATRIX AViewComponent::GetProjectionMatrix()
 
 void AViewComponent::UpdateViewEntity()
 {
-	UpdateViewEntityImpl(GetViewMatrix(), GetProjectionMatrix());
-}
+	const XMMATRIX& viewMatrix = GetViewMatrix();
+	const XMMATRIX& projectionMatrix = GetProjectionMatrix();
 
-void AViewComponent::UpdateViewEntityImpl(const XMMATRIX& viewMatrix, const XMMATRIX& projectMatrix)
-{
-	m_viewEntity.m_viewProj = viewMatrix * projectMatrix;
+	m_viewEntity.m_viewProj = viewMatrix * projectionMatrix;
 	m_viewEntity.m_invViewProj = XMMatrixInverse(nullptr, m_viewEntity.m_viewProj);
 	m_viewEntity.m_viewProj = XMMatrixTranspose(m_viewEntity.m_viewProj);
 	XMStoreFloat3(&m_viewEntity.m_viewPosition, m_absolutePosition);
+
+	BoundingFrustum::CreateFromMatrix(*this, projectionMatrix);
+	this->Transform(*this, XMMatrixInverse(nullptr, viewMatrix));
+
+}
+
+void AViewComponent::OnCollide(ICollisionAcceptor*)
+{
 }

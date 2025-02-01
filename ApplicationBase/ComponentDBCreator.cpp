@@ -59,10 +59,22 @@ void ComponentDBCreator::Visit(CameraComponent* cameraComponent)
 
 void ComponentDBCreator::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
+	// TBD
 }
 
 void ComponentDBCreator::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
+	// TBD
+}
+
+void ComponentDBCreator::Visit(SpotLightComponent* spotLightComponent)
+{
+	// TBD
+}
+
+void ComponentDBCreator::Visit(PointLightComponent* pointLightComponent)
+{
+	// TBD
 }
 
 void ComponentDBCreator::AddScene(Scene* scene)

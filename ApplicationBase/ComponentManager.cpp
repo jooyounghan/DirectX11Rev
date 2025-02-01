@@ -11,6 +11,9 @@
 #include "SphereCollisionComponent.h"
 #include "OrientedBoxCollisionComponent.h"
 
+#include "SpotLightComponent.h"
+#include "PointLightComponent.h"
+
 #include "ComponentDBInitializer.h"
 #include "ComponentDBUpdater.h"
 #include "ComponentDBRemover.h"
@@ -113,7 +116,18 @@ void ComponentManager::LoadComponentMakers()
 				{ return new OrientedBoxCollisionComponent(componentName, componentID, position, angle, extends); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
 			));
 			break;
-
+		case EComponentType::SPOT_LIGHT_COMPONENT:
+			m_componentTypesToMaker.emplace(componentType, bind(
+				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+				{ return new SpotLightComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+			));
+			break;
+		case EComponentType::POINT_LIGHT_COMPONENT:
+			m_componentTypesToMaker.emplace(componentType, bind(
+				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+				{ return new PointLightComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+			));
+			break;
 		}
 	}
 }
