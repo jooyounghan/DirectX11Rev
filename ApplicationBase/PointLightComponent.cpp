@@ -12,15 +12,23 @@ PointLightComponent::PointLightComponent(
 )
 	: AComponent(componentName, componentID, position, angle, scale)
 {
-	Lights.emplace(componentID, this);
 }
 
 PointLightComponent::~PointLightComponent()
 {
-	Lights.erase(m_componentConstant.m_componentID);
 }
 
 void PointLightComponent::Accept(IComponentVisitor* visitor)
 {
 	visitor->Visit(this);
 }
+
+void PointLightComponent::GenerateShadowMap(
+	ID3D11DeviceContext* const* deviceContextAddress, 
+	ComponentPSOManager* componentPsoManager, 
+	const vector<AComponent*>& components
+)
+{
+
+}
+

@@ -78,12 +78,14 @@ void ComponentHandler::Visit(OrientedBoxCollisionComponent* orientedBoxCollision
 void ComponentHandler::Visit(SpotLightComponent* spotLightComponent)
 {
 	HandleComponentName(spotLightComponent, "Spot Light Component");
+	HandleComponentTransformation(spotLightComponent, true, true, false);
 	HandleLightEntity(spotLightComponent, spotLightComponent, true);
 }
 
 void ComponentHandler::Visit(PointLightComponent* pointLightComponent)
 {
 	HandleComponentName(pointLightComponent, "Point Light Component");
+	HandleComponentTransformation(pointLightComponent, true, true, false);
 	HandleLightEntity(pointLightComponent, pointLightComponent, false);
 }
 

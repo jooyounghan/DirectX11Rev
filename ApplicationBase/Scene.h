@@ -10,6 +10,7 @@ class StaticMeshAsset;
 class IBLMaterialAsset;
 class IStaticMeshProvider;
 class IIBLMaterialProvider;
+class LightEntity;
 
 class Scene
 {
@@ -47,13 +48,15 @@ public:
 
 protected:
 	std::vector<AComponent*> m_rootComponentsCached;
+	std::vector<LightEntity*> m_lights;
 
 public:
 	inline void AddRootComponent(AComponent* component) { m_rootComponentsCached.push_back(component); }
+	inline void AddLight(LightEntity* lightEntity) { m_lights.push_back(lightEntity); }
 
 public:
 	inline const std::vector<AComponent*>& GetRootComponents() { return m_rootComponentsCached; }
-
+	inline const std::vector<LightEntity*>& GetLights() { return m_lights; }
 public:
 	void Accept(ISceneVisitor* visitor);
 };

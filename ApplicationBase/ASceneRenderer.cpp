@@ -184,8 +184,6 @@ void ASceneRenderer::RenderMeshParts(
 {
     const size_t& meshPartCount = meshPartsData->GetPartsCount();
     const vector<UINT>& indicesOffsets = meshPartsData->GetIndexOffsets();
-
-    const vector<ConstantBuffer*> constantVertexBuffers = meshPartsData->GetVertexConstantBuffers();
     vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetVertexBuffers();    
     const vector<UINT>& strides = meshPartsData->GetStrides();
     const vector<UINT>& verticesOffsets = meshPartsData->GetOffsets();

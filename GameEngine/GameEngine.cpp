@@ -23,9 +23,6 @@
 
 #include <future>
 
-//TEST
-#include "RenderControlOption.h"
-
 using namespace std;
 using namespace D3D11;
 
@@ -141,31 +138,31 @@ void GameEngine::Update(const float& deltaTime)
 	m_engine->ClearBackBuffer(ClearColor);
 	m_engine->SetRTVAsBackBuffer();
 
-	m_componentManager->UpdateComponents(deltaTime);
-	future<void> assetLoadGPUTask = async(launch::deferred, [&, immediateContext]() 
+	future<void> assetLoadGPUTask = async(launch::async, [&, immediateContext]() 
 		{
 			DefferedContext* assetLoadDefferedContext = m_defferedContexts[EDefferedContextType::ASSETS_LOAD];
 			assetLoadDefferedContext->TryExecuteCommandList(immediateContext); 
 		}
 	);
-	future<void> componentUpdateGPUTask = async(launch::deferred, [&, immediateContext]() 
+
+	m_componentManager->UpdateComponents(deltaTime);
+
+	assetLoadGPUTask.wait();
+
+	future<void> componentUpdateGPUTask = async(launch::async, [&, immediateContext]()
 		{
 			DefferedContext* componentUpdateDefferedContext = m_defferedContexts[EDefferedContextType::COMPONENT_UPDATE];
 			componentUpdateDefferedContext->TryExecuteCommandList(immediateContext);
 		}
 	);
 
-	// Collision은 CPU로 Components를 업데이트 하고 GPU에 업데이트를 반영하는 사이에 확인한다. 
-	HandleCollision();
-
-	assetLoadGPUTask.wait();
 	componentUpdateGPUTask.wait();
 
 	for (auto& imguiWindow : m_imguiWindows)
 	{
 		imguiWindow->PrepareWindow();
 	}
-	future<void> componentRenderGPUTask = async(launch::deferred, [&, immediateContext]()
+	future<void> componentRenderGPUTask = async(launch::async, [&, immediateContext]()
 		{
 			DefferedContext* componentRenderDefferedContext = m_defferedContexts[EDefferedContextType::COMPONENT_RENDER];
 			componentRenderDefferedContext->RecordToCommandList();
@@ -320,12 +317,4 @@ void GameEngine::CreateModals()
 	m_taskManager->OnTaskStarted = bind(&TaskModal::SetTaskDescription, taskModal, placeholders::_1, placeholders::_2);
 	m_taskManager->OnTasksCompleted = bind(&TaskModal::SetTasksCompleted, taskModal);
 	m_componentManager->OnErrorOccurs = bind(&MessageBoxModal::SetMessage, errorMessageBoxModal, placeholders::_1);
-}
-
-void GameEngine::HandleCollision()
-{	
-	RenderControlOption::RenderBVH.ResetSerachCount();
-	RenderControlOption::RenderBVH.Traverse(m_editorCamera);
-	PerformanceAnalyzer::CollisionCheckCount = RenderControlOption::RenderBVH.GetSerachCount();
-	
 }

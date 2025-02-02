@@ -10,6 +10,9 @@
 #include "UAVOption.h"
 #include "DSVOption.h"
 
+#include "LightEntity.h"
+#include "RenderControlOption.h"
+
 #include "PerformanceAnalyzer.h"
 
 using namespace std;
@@ -62,9 +65,23 @@ void SceneWindow::PrepareWindow()
         m_selectedRenderer->ClearRenderTargets();
         m_selectedScene->Accept(m_selectedRenderer);
 
+        const vector<LightEntity*>& lights =  m_selectedScene->GetLights();
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
-        RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);
 
+        for (LightEntity* light : lights)
+        {
+            light->GenerateShadowMap(
+                m_componentRenderDefferedContextAddress, 
+                m_componentPsoManageCached, 
+                sceneRootComponents
+            );
+        }
+
+        RenderControlOption::RenderBVH.ResetSerachCount();
+        RenderControlOption::RenderBVH.Traverse(m_selectedCamera);
+        PerformanceAnalyzer::CollisionCheckCount = RenderControlOption::RenderBVH.GetSerachCount();
+
+        RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);
         m_selectedRenderer->PostProcess();
     }
 }

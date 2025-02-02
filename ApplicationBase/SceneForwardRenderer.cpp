@@ -5,14 +5,12 @@
 
 #include "Scene.h"
 
+#include "StaticMeshComponent.h"
+#include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
 
-#include "StaticMeshComponent.h"
 #include "StaticMeshAsset.h"
-
-#include "SkeletalMeshComponent.h"
 #include "SkeletalMeshAsset.h"
-
 #include "ModelMaterialAsset.h"
 #include "IBLMaterialAsset.h"
 

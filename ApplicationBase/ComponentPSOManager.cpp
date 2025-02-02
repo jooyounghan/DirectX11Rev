@@ -36,7 +36,9 @@ AShader* const ComponentPSOManager::GetComponentPSOVertexShader(const EComponent
 		{ EComponentPSOVertexShader::DEBUG_COMPONENT, "DebugComponentVS"},
 		{ EComponentPSOVertexShader::GBUFFER_RESOLVE, "GBufferResolveVS"},
 		{ EComponentPSOVertexShader::STATIC_MESH, "StaticMeshComponentVS"},
-		{ EComponentPSOVertexShader::SKELETAL_MESH, "SkeletalMeshComponentVS"}
+		{ EComponentPSOVertexShader::SKELETAL_MESH, "SkeletalMeshComponentVS"},
+		{ EComponentPSOVertexShader::STATIC_MESH_DEPTH_TEST, "StaticMeshDepthTestVS"},
+		{ EComponentPSOVertexShader::SKELETAL_MESH_DEPTH_TEST, "SkeletalMeshDepthTestVS"}
 	};
 	
 	return GetRegisteredShader(vertexShaderEnumToString[vsEnum]);
@@ -50,7 +52,7 @@ AShader* const  ComponentPSOManager::GetComponentPSOPixelShader(const EComponent
 		{ EComponentPSOPixelShader::DEBUG_COMPONENT, "DebugComponentPS"},
 		{ EComponentPSOPixelShader::GBUFFER_RESOLVE, "GBufferResolvePS"},
 		{ EComponentPSOPixelShader::FORWARD_MESH, "ForwardMeshComponentPS"},
-		{ EComponentPSOPixelShader::DEFFERED_MESH, "DefferedMeshComponentPS"}
+		{ EComponentPSOPixelShader::DEFFERED_MESH, "DefferedMeshComponentPS"},
 	};
 
 	return GetRegisteredShader(pixelShaderEnumToString[psEnum]);
@@ -212,6 +214,28 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_DONTCARE_STENCIL_REPLACE),
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
+
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_DEPTH_TEST] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::STATIC_MESH_DEPTH_TEST),
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), 1,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_DEPTH_TEST] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::SKELETAL_MESH_DEPTH_TEST),
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), 1,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
 }
 
 void ComponentPSOManager::RegisterShadersForComponent(ID3D11Device* device)
@@ -292,6 +316,20 @@ void ComponentPSOManager::RegisterVSForComponent(ID3D11Device* device)
 		}
 	);
 	RegisterVertexShader("SkeletalMeshComponentVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST, L"../Shaders/SkeletalMeshComponentVS.hlsl", "main", "vs_5_0", device);
+
+	inputElementDesc =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	RegisterVertexShader("StaticMeshDepthTestVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/StaticMeshDepthTestVS.hlsl", "main", "vs_5_0", device);
+
+	inputElementDesc.insert(inputElementDesc.end(),
+		{
+			{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 4, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 5, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		}
+	);
+	RegisterVertexShader("SkeletalMeshDepthTestVS", inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/SkeletalMeshDepthTestVS.hlsl", "main", "vs_5_0", device);
 }
 
 void ComponentPSOManager::RegisterPSForComponent(ID3D11Device* device)

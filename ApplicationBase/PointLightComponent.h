@@ -15,9 +15,11 @@ public:
 	~PointLightComponent() override;
 
 public:
-
-
-public:
 	virtual void Accept(IComponentVisitor* visitor) override;
+	virtual void GenerateShadowMap(
+		ID3D11DeviceContext* const* deviceContextAddress,
+		ComponentPSOManager* componentPsoManager,
+		const std::vector<AComponent*>& components
+	) override;
 };
 

@@ -54,4 +54,5 @@ void PerformanceAnalyzerWindow::DrawPerformanceIndicators()
 {
     Text("Total Drawn Indices Count %d", PerformanceAnalyzer::DrawCount);
     Text("Total Collision Check Count %d", PerformanceAnalyzer::CollisionCheckCount);
+    Text("Total Drawn Indices In Ligth Shadow Map Count %d", PerformanceAnalyzer::DrawForDepthTestCount);
 }

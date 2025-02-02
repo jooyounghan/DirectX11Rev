@@ -269,6 +269,7 @@ exit %ERRORLEVEL%</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\DebugComponentHeader.hlsli" />
+    <None Include="Shaders\DepthTestHeader.hlsli" />
     <None Include="Shaders\SceneHeader.hlsli" />
     <None Include="Shaders\GBufferResolverHeader.hlsli" />
     <None Include="Shaders\MaterialComponentHeader.hlsli" />
@@ -320,7 +321,15 @@ exit %ERRORLEVEL%</Command>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="Shaders\SkeletalMeshDepthTestVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Shaders\StaticMeshComponentVS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticMeshDepthTestVS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>

@@ -3,6 +3,8 @@
 #include "CollidableFrustum.h"
 #include "LightEntity.h"
 
+class DepthTestRenderer;
+
 class SpotLightComponent : public AViewComponent, public LightEntity
 {
 public:
@@ -31,5 +33,13 @@ public:
 
 public:
 	virtual void Accept(IComponentVisitor* visitor) override;
+	virtual void GenerateShadowMap(
+		ID3D11DeviceContext* const* deviceContextAddress,
+		ComponentPSOManager* componentPsoManager,
+		const std::vector<AComponent*>& components
+	) override;
+
+private:
+	void DepthTestImpl(AComponent* component, DepthTestRenderer& depthTestRenderer);
 };
 

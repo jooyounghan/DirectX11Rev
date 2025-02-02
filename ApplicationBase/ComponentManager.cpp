@@ -119,13 +119,21 @@ void ComponentManager::LoadComponentMakers()
 		case EComponentType::SPOT_LIGHT_COMPONENT:
 			m_componentTypesToMaker.emplace(componentType, bind(
 				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-				{ return new SpotLightComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+				{ 
+					SpotLightComponent* spotLightComponent = new SpotLightComponent(componentName, componentID, position, angle, scale);
+					m_componentIDsToLight.emplace(componentID, spotLightComponent);
+					return spotLightComponent; 
+				}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
 			));
 			break;
 		case EComponentType::POINT_LIGHT_COMPONENT:
 			m_componentTypesToMaker.emplace(componentType, bind(
 				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-				{ return new PointLightComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+				{ 
+					PointLightComponent* pointLightComponent = new PointLightComponent(componentName, componentID, position, angle, scale);
+					m_componentIDsToLight.emplace(componentID, pointLightComponent);
+					return new PointLightComponent(componentName, componentID, position, angle, scale); 
+				}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
 			));
 			break;
 		}
@@ -165,12 +173,10 @@ void ComponentManager::LoadComponents()
 			XMFLOAT3 angle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
 			XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
 
-
 			if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
 			{
 				AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
 				m_componentIDsToComponent.emplace(componentID, addedComponent);
-
 				componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));
 			}
 		}
@@ -242,6 +248,11 @@ void ComponentManager::LoadScenesInformation()
 			if (m_sceneIDsToScene.find(sceneID) != m_sceneIDsToScene.end() && m_componentIDsToComponent.find(componentID) != m_componentIDsToComponent.end())
 			{
 				m_sceneIDsToScene[sceneID]->AddRootComponent(m_componentIDsToComponent[componentID]);
+
+				if (m_componentIDsToLight.find(componentID) != m_componentIDsToLight.end())
+				{
+					m_sceneIDsToScene[sceneID]->AddLight(m_componentIDsToLight[componentID]);
+				}
 			}
 			else
 			{

@@ -2,8 +2,6 @@
 
 using namespace std;
 
-unordered_map<uint32_t, LightEntity*> LightEntity::Lights;
-
 void LightEntity::SetLigthEntity(
 	const float& lightPower, 
 	const float& fallOffStart, 

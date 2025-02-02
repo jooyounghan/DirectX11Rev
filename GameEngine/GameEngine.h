@@ -71,8 +71,5 @@ private:
 	void CreatePSOManager();
 	void CreateWindows();
 	void CreateModals();
-
-private:
-	void HandleCollision();
 };
 

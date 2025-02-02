@@ -70,15 +70,3 @@ struct DefferedMeshComponentPixelOutput
     float4 FresnelReflectance : SV_Target6;
     uint uiID : SV_Target7;
 };
-
-struct SkeletalComponentVertexInputForDepthTest
-{
-    float3 f3WorldPos : POSITION;
-    float4 f4BlendWeight : BLENDWEIGHT;
-    uint4 f4BlendIndices : BLENDINDICES;
-};
-
-struct StaticComponentVertexInputForDepthTest
-{
-    float3 f3WorldPos : POSITION;
-};

@@ -3,6 +3,14 @@
 #include "SRVOption.h"
 #include "DSVOption.h"
 
+#include "Scene.h"
+#include "DepthTestRenderer.h"
+
+#include "RenderControlOption.h"
+#include "DepthTestRenderer.h"
+
+#include "DynamicBuffer.h"
+
 using namespace std;
 using namespace DirectX;
 
@@ -18,12 +26,10 @@ SpotLightComponent::SpotLightComponent(
 )
 	: AViewComponent(componentName, componentID, position, angle, scale, width, height, nearZ, farZ, fovAngle)
 {
-	Lights.emplace(componentID, this);
 }
 
 SpotLightComponent::~SpotLightComponent()
 {
-	Lights.erase(m_componentConstant.m_componentID);
 	if (m_depthTestView) delete m_depthTestView;
 }
 
@@ -36,4 +42,40 @@ void SpotLightComponent::SetDepthTestView(Texture2DInstance<SRVOption, DSVOption
 void SpotLightComponent::Accept(IComponentVisitor* visitor)
 {
 	visitor->Visit(this);
+}
+
+void SpotLightComponent::GenerateShadowMap(
+	ID3D11DeviceContext* const* deviceContextAddress, 
+	ComponentPSOManager* componentPsoManager, 
+	const vector<AComponent*>& components
+)
+{
+	RenderControlOption::RenderBVH.Traverse(this);
+
+	(*deviceContextAddress)->ClearDepthStencilView(m_depthTestView->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+
+	DepthTestRenderer depthTestRenderer = DepthTestRenderer(
+		deviceContextAddress, componentPsoManager,
+		m_viewProjBuffer->GetBuffer(),
+		this,
+		m_depthTestView
+	);
+
+	for (AComponent* component : components)
+	{
+		DepthTestImpl(component, depthTestRenderer);
+	}
+}
+
+void SpotLightComponent::DepthTestImpl(AComponent* component, DepthTestRenderer& depthTestRenderer)
+{
+	if (component->IsRenderable())
+	{
+		component->Accept(&depthTestRenderer);
+		const vector<AComponent*>& childComponents = component->GetChildComponents();
+		for (AComponent* childComponent : childComponents)
+		{
+			DepthTestImpl(childComponent, depthTestRenderer);
+		}
+	}
 }

@@ -1,7 +1,10 @@
 #pragma once
 #include <unordered_map>
 
+struct ID3D11DeviceContext;
 class DynamicBuffer;
+class ComponentPSOManager;
+class AComponent;
 
 struct SLightEntity
 {
@@ -17,9 +20,6 @@ public:
 	LightEntity() = default;
 	virtual ~LightEntity() = default;
 
-public:
-	static std::unordered_map<uint32_t, LightEntity*> Lights;
-
 protected:
 	SLightEntity m_lightEntity;
 	DynamicBuffer* m_lightEntityBuffer = nullptr;
@@ -30,5 +30,11 @@ public:
 
 public:
 	inline DynamicBuffer* GetLightEntityBuffer() const { m_lightEntityBuffer; }
-};
 
+public:
+	virtual void GenerateShadowMap(
+		ID3D11DeviceContext* const* deviceContextAddress,
+		ComponentPSOManager* componentPsoManager,
+		const std::vector<AComponent*>& components
+	) = 0;
+};

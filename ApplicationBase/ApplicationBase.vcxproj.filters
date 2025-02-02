@@ -400,6 +400,9 @@
     <None Include="Shaders\PBRHeader.hlsli">
       <Filter>Shader\Header</Filter>
     </None>
+    <None Include="Shaders\DepthTestHeader.hlsli">
+      <Filter>Shader\Header</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\DebugComponentVS.hlsl">
@@ -437,6 +440,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\DebugComponentPS.hlsl">
       <Filter>Shader\DebugComponent</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkeletalMeshDepthTestVS.hlsl">
+      <Filter>Shader\DepthTest</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticMeshDepthTestVS.hlsl">
+      <Filter>Shader\DepthTest</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

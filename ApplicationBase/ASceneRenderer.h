@@ -7,13 +7,14 @@
 #include <string>
 
 struct ID3D11DeviceContext;
-class AComponent;
 class ComponentPSOManager;
-class ModelMaterialAsset;
-class AMeshPartsData;
 class GraphicsPSOObject;
-class ScreenQuad;
+
+class AMeshPartsData;
+class ModelMaterialAsset;
+class AComponent;
 class ACollisionComponent;
+class ScreenQuad;
 
 constexpr float ClearColor[4] = { 0.f, 0.f, 0.f, 1.f };
 
@@ -42,8 +43,8 @@ public:
 	virtual void Visit(Scene* scene) override;
 
 public:
-	virtual void Visit(StaticMeshComponent* staticMeshAsset) = 0;
-	virtual void Visit(SkeletalMeshComponent* skeletalMeshAsset) = 0;
+	virtual void Visit(StaticMeshComponent* staticMeshComponent) = 0;
+	virtual void Visit(SkeletalMeshComponent* skeletalMeshComponent) = 0;
 
 public:
 	virtual void Visit(CameraComponent* cameraComponent) = 0;
