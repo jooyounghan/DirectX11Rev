@@ -1,31 +1,30 @@
 #pragma once
 #include "SerializeHelper.h"
-#include "AMeshGPUAsset.h"
+#include "AMeshData.h"
 #include "IMeshPartsDataVisitor.h"
 
-#include <DirectXMath.h>
 
-class MeshPartsData : public ISerializable, public AMeshGPUAsset
+class AMeshPartsData : public ISerializable, public AMeshData
 {
 public:
-	MeshPartsData() = default;
-	~MeshPartsData() override = default;
+	AMeshPartsData() = default;
+	~AMeshPartsData() override = default;
 
 protected:
-	std::vector<DirectX::XMFLOAT3> m_positions;
-	std::vector<DirectX::XMFLOAT2> m_uvTextures;
 	std::vector<DirectX::XMFLOAT3> m_normals;
-	std::vector<uint32_t> m_indices;
+	ConstantBuffer* m_normalBuffer = nullptr;
+
+protected:
 	std::vector<uint32_t> m_vertexPartOffsets;
 	std::vector<uint32_t> m_indexPartOffsets;
 
-protected:
-	const DirectX::XMFLOAT3 m_emptyFloat3 = DirectX::XMFLOAT3(0, 0, 0);
-	const DirectX::XMFLOAT2 m_emptyFloat2 = DirectX::XMFLOAT2(0, 0);
+public:
+	inline ConstantBuffer* GetNormalBuffer() const { return m_normalBuffer; }
 
 public:
-	inline const std::vector<DirectX::XMFLOAT3>& GetPositions() const { return m_positions; }
-	inline const std::vector<DirectX::XMFLOAT2>& GetUVTextures()const { return m_uvTextures; }
+	void SetNormalBuffer(ConstantBuffer* normalBuffer);
+
+public:
 	inline const std::vector<DirectX::XMFLOAT3>& GetNormals() const { return m_normals; }
 	inline const std::vector<uint32_t>& GetIndices() const { return m_indices; }
 	inline const std::vector<uint32_t>& GetVertexPartOffsets() const { return m_vertexPartOffsets;}
@@ -33,13 +32,9 @@ public:
 	inline size_t GetPartsCount() const { return m_indexPartOffsets.size(); }
 
 public:
-	const DirectX::XMFLOAT3& GetPosition(const size_t& index) const;
-	const DirectX::XMFLOAT2& GetUVTextureCoord(const size_t& index) const;
 	const DirectX::XMFLOAT3& GetNormal(const size_t& index) const;
 
 public:
-	void AddPosition(const float& x, const float& y, const float& z);
-	void AddUVTexture(const float& u, const float& v);
 	void AddNormal(const float& x, const float& y, const float& z);
 	void AddIndex(const uint32_t& offset, const uint32_t index);
 	void AddPartOffsets(const uint32_t& vertexOffset, const uint32_t& indexOffset);
@@ -50,4 +45,7 @@ public:
 
 public:
 	virtual void Accept(IMeshPartsDataVisitor& visitor) = 0;
+
+protected:
+	virtual void ResetMeshData() override;
 };

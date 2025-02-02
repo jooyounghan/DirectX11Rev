@@ -187,11 +187,11 @@
     <ClInclude Include="IAssetVisitor.h" />
     <ClInclude Include="IBLMaterialAsset.h" />
     <ClInclude Include="ImageFileToAssetWriter.h" />
-    <ClInclude Include="AMeshGPUAsset.h" />
+    <ClInclude Include="AMeshData.h" />
     <ClInclude Include="IMeshPartsDataVisitor.h" />
     <ClInclude Include="MathematicalHelper.h" />
     <ClInclude Include="MeshPartsDataWriter.h" />
-    <ClInclude Include="MeshPartsData.h" />
+    <ClInclude Include="AMeshPartsData.h" />
     <ClInclude Include="ModelFileToAssetWriter.h" />
     <ClInclude Include="ModelMaterialAsset.h" />
     <ClInclude Include="MeshAsset.h" />
@@ -220,10 +220,10 @@
     <ClCompile Include="BoneAsset.cpp" />
     <ClCompile Include="IBLMaterialAsset.cpp" />
     <ClCompile Include="ImageFileToAssetWriter.cpp" />
-    <ClCompile Include="AMeshGPUAsset.cpp" />
+    <ClCompile Include="AMeshData.cpp" />
     <ClCompile Include="MathematicalHelper.cpp" />
     <ClCompile Include="MeshPartsDataWriter.cpp" />
-    <ClCompile Include="MeshPartsData.cpp" />
+    <ClCompile Include="AMeshPartsData.cpp" />
     <ClCompile Include="ModelFileToAssetWriter.cpp" />
     <ClCompile Include="ModelMaterialAsset.cpp" />
     <ClCompile Include="MeshAsset.cpp" />

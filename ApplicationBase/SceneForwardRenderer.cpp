@@ -51,7 +51,7 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
     {
         if (const StaticMeshAsset* staticMeshAsset = staticMeshComponent->GetStaticMetalAsset())
         {
-            if (MeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(GetLODLevel(staticMeshComponent)))
+            if (AMeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(GetLODLevel(staticMeshComponent)))
             {
                 staticMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
@@ -109,7 +109,7 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
     {
         if (const SkeletalMeshAsset* skeletalMeshAsset = skeletalMeshComponent->GetSkeletalMetalAsset())
         {
-            if (MeshPartsData* meshPartsData = skeletalMeshAsset->GetMeshPartData(GetLODLevel(skeletalMeshComponent)))
+            if (AMeshPartsData* meshPartsData = skeletalMeshAsset->GetMeshPartData(GetLODLevel(skeletalMeshComponent)))
             {
                 skeletalMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 

@@ -10,7 +10,7 @@ struct ID3D11DeviceContext;
 class AComponent;
 class ComponentPSOManager;
 class ModelMaterialAsset;
-class MeshPartsData;
+class AMeshPartsData;
 class GraphicsPSOObject;
 class ScreenQuad;
 class ACollisionComponent;
@@ -39,7 +39,7 @@ protected:
 	ScreenQuad* m_screenQuad = nullptr;
 
 public:
-	virtual void Visit(Scene* scene) override final;
+	virtual void Visit(Scene* scene) override;
 
 public:
 	virtual void Visit(StaticMeshComponent* staticMeshAsset) = 0;
@@ -49,12 +49,12 @@ public:
 	virtual void Visit(CameraComponent* cameraComponent) = 0;
 
 public:
-	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) override final;
-	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override final;
+	virtual void Visit(SphereCollisionComponent* sphereCollisionComponent) override;
+	virtual void Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent) override;
 
 public:
-	virtual void Visit(SpotLightComponent* spotLightComponent) override final;
-	virtual void Visit(PointLightComponent* pointLightComponent) override final;
+	virtual void Visit(SpotLightComponent* spotLightComponent) override;
+	virtual void Visit(PointLightComponent* pointLightComponent) override;
 
 public:
 	virtual void ClearRenderTargets();
@@ -64,7 +64,7 @@ protected:
 	uint32_t GetLODLevel(const AComponent* component) const;
 	void RenderMeshParts(
 		ID3D11DeviceContext* const deviceContext,
-		const MeshPartsData* const meshPartsData,
+		const AMeshPartsData* const meshPartsData,
 		std::function<void(const size_t&)> handler = [&](const size_t&) {}
 	);
 

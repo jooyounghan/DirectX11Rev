@@ -56,7 +56,7 @@ void ASceneRenderer::Visit(Scene* scene)
     {
         if (const StaticMeshAsset* staticMeshAsset = scene->GetSceneMeshAsset())
         {
-            if (MeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(0))
+            if (AMeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(0))
             {
                 graphicsPSOObject->ApplyPSOObject(deviceContext);
                 ASceneRenderer::ApplyRenderTargets(deviceContext, cameraComponent);
@@ -156,7 +156,7 @@ void ASceneRenderer::RenderCollisionComponent(ACollisionComponent* collisionComp
         AssetManager* assetManager = AssetManager::GetInstance();
         if (const StaticMeshAsset* staticMeshAsset = assetManager->GetStaticMeshAsset(debugStaticMeshAssetName))
         {
-            if (MeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(0))
+            if (AMeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(0))
             {
                 graphicsPSOObject->ApplyPSOObject(deviceContext);
                 ASceneRenderer::ApplyRenderTargetsWithID(deviceContext, cameraComponent);
@@ -178,13 +178,15 @@ void ASceneRenderer::RenderCollisionComponent(ACollisionComponent* collisionComp
 
 void ASceneRenderer::RenderMeshParts(
     ID3D11DeviceContext* const deviceContext, 
-    const MeshPartsData* const meshPartsData,
+    const AMeshPartsData* const meshPartsData,
     function<void(const size_t&)> handler
 )
 {
     const size_t& meshPartCount = meshPartsData->GetPartsCount();
     const vector<UINT>& indicesOffsets = meshPartsData->GetIndexOffsets();
-    const vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetD3D11VertexBuffers();
+
+    const vector<ConstantBuffer*> constantVertexBuffers = meshPartsData->GetVertexConstantBuffers();
+    vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetVertexBuffers();    
     const vector<UINT>& strides = meshPartsData->GetStrides();
     const vector<UINT>& verticesOffsets = meshPartsData->GetOffsets();
     const UINT& totalIndicesCount = static_cast<UINT>(meshPartsData->GetIndices().size());
@@ -196,7 +198,7 @@ void ASceneRenderer::RenderMeshParts(
         handler(idx);
 
         deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
-        deviceContext->IASetIndexBuffer(meshPartsData->GetD3D11IndexBuffer(), DXGI_FORMAT_R32_UINT, NULL);
+        deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
         deviceContext->DrawIndexed(indexCount, indicesOffsets[idx], NULL);
         PerformanceAnalyzer::DrawCount += indexCount;
     }

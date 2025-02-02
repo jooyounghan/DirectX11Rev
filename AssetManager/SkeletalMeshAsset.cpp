@@ -34,7 +34,7 @@ size_t SkeletalMeshAsset::GetLODCount() const
 	return m_skeletalMeshPartsPerLOD.size();
 }
 
-MeshPartsData* SkeletalMeshAsset::AddMeshPartData(const uint32_t& lodLevel)
+AMeshPartsData* SkeletalMeshAsset::AddMeshPartData(const uint32_t& lodLevel)
 {
 	if (m_skeletalMeshPartsPerLOD.find(lodLevel) == m_skeletalMeshPartsPerLOD.end())
 	{
@@ -43,7 +43,7 @@ MeshPartsData* SkeletalMeshAsset::AddMeshPartData(const uint32_t& lodLevel)
 	return m_skeletalMeshPartsPerLOD[lodLevel];
 }
 
-MeshPartsData* SkeletalMeshAsset::GetMeshPartData(const uint32_t& lodLevel) const
+AMeshPartsData* SkeletalMeshAsset::GetMeshPartData(const uint32_t& lodLevel) const
 {
 	if (m_skeletalMeshPartsPerLOD.find(lodLevel) != m_skeletalMeshPartsPerLOD.end())
 	{

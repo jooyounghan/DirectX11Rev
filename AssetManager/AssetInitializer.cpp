@@ -48,12 +48,12 @@ void AssetInitializer::Visit(StaticMeshPartsData* staticMeshPartsData)
 	const vector<XMFLOAT3>& tangents = staticMeshPartsData->GetTangents();
 
 
-	staticMeshPartsData->AddVertexBuffer(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(positions.size()), positions.data(), D3D11_BIND_VERTEX_BUFFER));
-	staticMeshPartsData->AddVertexBuffer(new ConstantBuffer(sizeof(XMFLOAT2), static_cast<UINT>(uvTextures.size()), uvTextures.data(), D3D11_BIND_VERTEX_BUFFER));
-	staticMeshPartsData->AddVertexBuffer(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(normals.size()), normals.data(), D3D11_BIND_VERTEX_BUFFER));
-	staticMeshPartsData->AddVertexBuffer(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(tangents.size()), tangents.data(), D3D11_BIND_VERTEX_BUFFER));
+	staticMeshPartsData->SetVertexBuffer(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(positions.size()), positions.data(), D3D11_BIND_VERTEX_BUFFER));
+	staticMeshPartsData->SetUVBuffer(new ConstantBuffer(sizeof(XMFLOAT2), static_cast<UINT>(uvTextures.size()), uvTextures.data(), D3D11_BIND_VERTEX_BUFFER));
+	staticMeshPartsData->SetNormalBuffer(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(normals.size()), normals.data(), D3D11_BIND_VERTEX_BUFFER));
+	staticMeshPartsData->SetTangentBuffer(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(tangents.size()), tangents.data(), D3D11_BIND_VERTEX_BUFFER));
 
-	const vector<ConstantBuffer*>& vertexBuffers = staticMeshPartsData->GetVertexBuffers();
+	const vector<ConstantBuffer*>& vertexBuffers = staticMeshPartsData->GetVertexConstantBuffers();
 	for (ConstantBuffer* vertexBuffer : vertexBuffers)
 	{
 		const D3D11_SUBRESOURCE_DATA vertexSubresourceData = vertexBuffer->GetSubResourceData();
@@ -70,24 +70,13 @@ void AssetInitializer::Visit(StaticMeshPartsData* staticMeshPartsData)
 
 void AssetInitializer::Visit(SkeletalMeshPartsData* skeletalMeshPartsData)
 {
-	Visit((StaticMeshPartsData*)skeletalMeshPartsData);
-
 	const vector<XMFLOAT4>& blendWeights = skeletalMeshPartsData->GetBlendWeights();
 	const vector<XMINT4>& blendIndices = skeletalMeshPartsData->GetBlendIndices();
 
-	ConstantBuffer* const blendWeightBuffer = new ConstantBuffer(sizeof(XMFLOAT4), static_cast<UINT>(blendWeights.size()), blendWeights.data(), D3D11_BIND_VERTEX_BUFFER);
-	ConstantBuffer* const blendIndexBuffer = new ConstantBuffer(sizeof(XMINT4), static_cast<UINT>(blendIndices.size()), blendIndices.data(), D3D11_BIND_VERTEX_BUFFER);
+	skeletalMeshPartsData->SetBlendWeightBuffer(new ConstantBuffer(sizeof(XMFLOAT4), static_cast<UINT>(blendWeights.size()), blendWeights.data(), D3D11_BIND_VERTEX_BUFFER));
+	skeletalMeshPartsData->SetBlendIndexBuffer(new ConstantBuffer(sizeof(XMINT4), static_cast<UINT>(blendIndices.size()), blendIndices.data(), D3D11_BIND_VERTEX_BUFFER));
 
-	const D3D11_SUBRESOURCE_DATA blendWeightSubresourceData = blendWeightBuffer->GetSubResourceData();
-	const D3D11_SUBRESOURCE_DATA blendIndexSubresourceData = blendIndexBuffer->GetSubResourceData();
-
-	blendWeightBuffer->InitializeBuffer(m_deviceCached, &blendWeightSubresourceData);
-	blendIndexBuffer->InitializeBuffer(m_deviceCached, &blendIndexSubresourceData);
-
-	skeletalMeshPartsData->AddVertexBuffer(blendWeightBuffer);
-	skeletalMeshPartsData->AddVertexBuffer(blendIndexBuffer);
-
-
+	Visit((StaticMeshPartsData*)skeletalMeshPartsData);
 }
 
 void AssetInitializer::Visit(BaseTextureAsset* baseTextureAsset)

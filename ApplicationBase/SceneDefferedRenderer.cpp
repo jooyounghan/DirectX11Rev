@@ -74,7 +74,7 @@ void SceneDefferedRenderer::Visit(StaticMeshComponent* staticMeshComponent)
     {
         if (const StaticMeshAsset* staticMeshAsset = staticMeshComponent->GetStaticMetalAsset())
         {
-            if (MeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(GetLODLevel(staticMeshComponent)))
+            if (AMeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(GetLODLevel(staticMeshComponent)))
             {
                 staticMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
@@ -124,7 +124,7 @@ void SceneDefferedRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
     {
         if (const SkeletalMeshAsset* skeletalMeshAsset = skeletalMeshComponent->GetSkeletalMetalAsset())
         {
-            if (MeshPartsData* meshPartsData = skeletalMeshAsset->GetMeshPartData(GetLODLevel(skeletalMeshComponent)))
+            if (AMeshPartsData* meshPartsData = skeletalMeshAsset->GetMeshPartData(GetLODLevel(skeletalMeshComponent)))
             {
                 skeletalMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
@@ -218,12 +218,12 @@ void SceneDefferedRenderer::PostProcess()
         deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
         // ===================================================================
 
-		const vector<ID3D11Buffer*> vertexBuffers = screenQuad->GetD3D11VertexBuffers();
+		const vector<ID3D11Buffer*> vertexBuffers = screenQuad->GetVertexBuffers();
 		const vector<UINT>& strides = screenQuad->GetStrides();
 		const vector<UINT>& verticesOffsets = screenQuad->GetOffsets();
 
 		deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
-		deviceContext->IASetIndexBuffer(screenQuad->GetD3D11IndexBuffer(), DXGI_FORMAT_R32_UINT, NULL);
+		deviceContext->IASetIndexBuffer(screenQuad->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
 		deviceContext->DrawIndexed(screenQuad->GetIndexCount(), NULL, NULL);
 
         vector<ID3D11ShaderResourceView*> psNullSRVs;

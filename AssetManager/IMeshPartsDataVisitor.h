@@ -1,6 +1,6 @@
 #pragma once
 
-class MeshPartsData;
+class AMeshPartsData;
 class StaticMeshPartsData;
 class SkeletalMeshPartsData;
 

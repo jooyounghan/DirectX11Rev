@@ -29,8 +29,8 @@ public:
 
 public:
 	virtual size_t GetLODCount() const override;
-	virtual MeshPartsData* AddMeshPartData(const uint32_t& lodLevel) override;
-	virtual MeshPartsData* GetMeshPartData(const uint32_t& lodLevel) const override;
+	virtual AMeshPartsData* AddMeshPartData(const uint32_t& lodLevel) override;
+	virtual AMeshPartsData* GetMeshPartData(const uint32_t& lodLevel) const override;
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;

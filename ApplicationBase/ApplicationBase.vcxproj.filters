@@ -127,6 +127,9 @@
     <ClInclude Include="BoundingVolumeHierarchy.h">
       <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="DepthTestRenderer.h">
+      <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -261,6 +264,9 @@
     <Filter Include="헤더 파일\Component\Visitor\Light">
       <UniqueIdentifier>{8dc4a9c9-b5cf-4e3f-b1c9-838b08521b64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\DepthTest">
+      <UniqueIdentifier>{5a8e9368-049c-46a6-994a-d05d61745f28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
@@ -370,6 +376,9 @@
     </ClCompile>
     <ClCompile Include="BoundingVolumeHierarchy.cpp">
       <Filter>소스 파일\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthTestRenderer.cpp">
+      <Filter>소스 파일\Component\Visitor\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

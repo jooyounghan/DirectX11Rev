@@ -30,7 +30,7 @@ void MeshPartsDataWriter::Visit(SkeletalMeshPartsData* skeletalMeshPartsData)
 	LoadSkeletalMeshPartsField(skeletalMeshPartsData);
 }
 
-void MeshPartsDataWriter::LoadMeshPartsField(MeshPartsData* meshPartData)
+void MeshPartsDataWriter::LoadMeshPartsField(AMeshPartsData* meshPartData)
 {
 	if (m_mesh->HasFaces())
 	{

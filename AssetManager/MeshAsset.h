@@ -1,6 +1,6 @@
 #pragma once
 #include "Asset.h"
-#include "MeshPartsData.h"
+#include "AMeshPartsData.h"
 
 #include <vector>
 
@@ -27,8 +27,8 @@ public:
 
 public:
 	virtual size_t GetLODCount() const = 0;
-	virtual MeshPartsData* AddMeshPartData(const uint32_t& lodLevel) = 0;
-	virtual MeshPartsData* GetMeshPartData(const uint32_t& lodLevel) const = 0;
+	virtual AMeshPartsData* AddMeshPartData(const uint32_t& lodLevel) = 0;
+	virtual AMeshPartsData* GetMeshPartData(const uint32_t& lodLevel) const = 0;
 
 public:
 	virtual void Serialize(FILE* fileIn) const override;

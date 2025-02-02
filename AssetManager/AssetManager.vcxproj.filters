@@ -182,13 +182,13 @@
     <ClInclude Include="IAssetVisitor.h">
       <Filter>헤더 파일\Asset\Visitor</Filter>
     </ClInclude>
-    <ClInclude Include="AMeshGPUAsset.h">
+    <ClInclude Include="AMeshData.h">
       <Filter>헤더 파일\Asset</Filter>
     </ClInclude>
     <ClInclude Include="IMeshPartsDataVisitor.h">
       <Filter>헤더 파일\Asset\Visitor</Filter>
     </ClInclude>
-    <ClInclude Include="MeshPartsData.h">
+    <ClInclude Include="AMeshPartsData.h">
       <Filter>헤더 파일\Asset\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="StaticMeshPartsData.h">
@@ -280,13 +280,13 @@
     <ClCompile Include="AssetManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="AMeshGPUAsset.cpp">
+    <ClCompile Include="AMeshData.cpp">
       <Filter>소스 파일\Asset</Filter>
     </ClCompile>
     <ClCompile Include="AssetInitializer.cpp">
       <Filter>소스 파일\Asset\Visitor</Filter>
     </ClCompile>
-    <ClCompile Include="MeshPartsData.cpp">
+    <ClCompile Include="AMeshPartsData.cpp">
       <Filter>소스 파일\Asset\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="StaticMeshPartsData.cpp">

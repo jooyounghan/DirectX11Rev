@@ -25,7 +25,7 @@ size_t StaticMeshAsset::GetLODCount() const
 	return m_staticMeshPartsPerLOD.size();
 }
 
-MeshPartsData* StaticMeshAsset::AddMeshPartData(const uint32_t& lodLevel)
+AMeshPartsData* StaticMeshAsset::AddMeshPartData(const uint32_t& lodLevel)
 {
 	if (m_staticMeshPartsPerLOD.find(lodLevel) == m_staticMeshPartsPerLOD.end())
 	{
@@ -35,7 +35,7 @@ MeshPartsData* StaticMeshAsset::AddMeshPartData(const uint32_t& lodLevel)
 }
 
 
-MeshPartsData* StaticMeshAsset::GetMeshPartData(const uint32_t& lodLevel) const
+AMeshPartsData* StaticMeshAsset::GetMeshPartData(const uint32_t& lodLevel) const
 {
 	if (m_staticMeshPartsPerLOD.find(lodLevel) != m_staticMeshPartsPerLOD.end())
 	{

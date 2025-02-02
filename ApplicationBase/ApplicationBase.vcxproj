@@ -182,6 +182,7 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="AViewComponent.cpp" />
     <ClCompile Include="BoundingVolumeHierarchy.cpp" />
     <ClCompile Include="BoundingVolumeNode.cpp" />
+    <ClCompile Include="DepthTestRenderer.cpp" />
     <ClCompile Include="LightEntity.cpp" />
     <ClCompile Include="OrientedBoxCollisionComponent.cpp" />
     <ClCompile Include="ASceneRenderer.cpp" />
@@ -220,6 +221,7 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="AViewComponent.h" />
     <ClInclude Include="BoundingVolumeHierarchy.h" />
     <ClInclude Include="BoundingVolumeNode.h" />
+    <ClInclude Include="DepthTestRenderer.h" />
     <ClInclude Include="ILightVisitor.h" />
     <ClInclude Include="LightEntity.h" />
     <ClInclude Include="OrientedBoxCollisionComponent.h" />

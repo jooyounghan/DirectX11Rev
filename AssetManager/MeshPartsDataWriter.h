@@ -24,7 +24,7 @@ public:
 	virtual void Visit(SkeletalMeshPartsData* skeletalMeshPartsData) override;
 
 public:
-	void LoadMeshPartsField(MeshPartsData* meshPartData);
+	void LoadMeshPartsField(AMeshPartsData* meshPartData);
 	void LoadStaticMeshPartsField(StaticMeshPartsData* staticMeshPartsData);
 	void LoadSkeletalMeshPartsField(SkeletalMeshPartsData* skeletalMeshPartsData);
 };
