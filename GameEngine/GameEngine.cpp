@@ -246,7 +246,7 @@ void GameEngine::CreateEditor()
 {	
 	m_editorCamera = new CameraComponent(
 		"", TempID, DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(0.f, 0.f, 0.f), DirectX::XMFLOAT3(1.f, 1.f, 1.f),
-		GDefaultWidth, GDefaultHeight, GDefaultNearZ, GDefaultFarZ, GDefaultFovAngle
+		GDefaultViewWidth, GDefaultViewHeight, GDefaultFovAngle, GDefaultNearZ, GDefaultFarZ
 	);
 }
 

@@ -1,9 +1,7 @@
 #pragma once
 #include "AComponent.h"
 #include "CollidableFrustum.h"
-
-#include <d3d11.h>
-#include <DirectXMath.h>
+#include "IViewEntity.h"
 
 template<typename ...IsTextureOption>
 class Texture2DInstance;
@@ -13,24 +11,13 @@ class UAVOption;
 class DSVOption;
 class PureTextureOption;
 
-constexpr DirectX::XMVECTOR GDefaultForward = DirectX::XMVECTOR{ 0.f, 0.f, 1.f, 0.f };
-constexpr DirectX::XMVECTOR GDefaultUp = DirectX::XMVECTOR{ 0.f, 1.f, 0.f, 0.f };
-constexpr DirectX::XMVECTOR GDefaultRight = DirectX::XMVECTOR{ 1.f, 0.f, 0.f, 0.f };
 constexpr float GDefaultNearZ = 0.1f;
 constexpr float GDefaultFarZ = 1E6f;
 constexpr float GDefaultFovAngle = 60.f;
-constexpr uint32_t GDefaultWidth = 1280;
-constexpr uint32_t GDefaultHeight = 960;
+constexpr uint32_t GDefaultViewWidth = 1280;
+constexpr uint32_t GDefaultViewHeight = 960;
 
-struct SViewEntity
-{
-	DirectX::XMMATRIX m_viewProj = DirectX::XMMatrixIdentity();
-	DirectX::XMMATRIX m_invViewProj = DirectX::XMMatrixIdentity();
-	DirectX::XMFLOAT3 m_viewPosition = { 0.f, 0.f, 0.f };
-	float m_dummy = 0.f;
-};
-
-class AViewComponent : public AComponent, public D3D11_VIEWPORT, public CollidableFrustum
+class AViewComponent : public IViewEntity, public AComponent, public D3D11_VIEWPORT, public CollidableFrustum
 {
 public:
 	AViewComponent(
@@ -39,42 +26,35 @@ public:
 		const DirectX::XMFLOAT3& position,
 		const DirectX::XMFLOAT3& angle,
 		const DirectX::XMFLOAT3& scale,
-		const uint32_t& width = GDefaultWidth,
-		const uint32_t& height = GDefaultHeight,
-		const float& nearZ = GDefaultNearZ,
-		const float& farZ = GDefaultFarZ,
+		const uint32_t& width = GDefaultViewWidth,
+		const uint32_t& height = GDefaultViewHeight,
 		const float& fovAngle = GDefaultFovAngle
 	);
 	~AViewComponent() override;
 
 protected:
-	float m_nearZ;
-	float m_farZ;
 	float m_fovAngle;
 
 protected:
 	SViewEntity m_viewEntity;
-	DynamicBuffer* m_viewProjBuffer;
+	DynamicBuffer* m_viewProjBuffer = nullptr;
 	static ConstantBuffer* ScreenQuadBuffer;
 
 public:
-	inline const float& GetNearZ() { return m_nearZ; }
-	inline const float& GetFarZ() { return m_farZ; }
 	inline const float& GetFovAngle() { return m_fovAngle; }
-	inline DynamicBuffer* GetViewProjMatrixBuffer() const { return m_viewProjBuffer; }
+	inline void SetFovAngle(const float& fovAngle) { m_fovAngle = fovAngle; }
 
 public:
-	void SetViewProperties(
-		const uint32_t& width, const uint32_t& height,
-		const float& nearZ, const float& farZ, const float& fovAngle
-	);
+	virtual DynamicBuffer* GetViewProjMatrixBuffer() const override;
 
 public:
-	DirectX::XMMATRIX GetViewMatrix();
-	DirectX::XMMATRIX GetProjectionMatrix();
+	void SetViewport(const uint32_t& width, const uint32_t& height);
 
 public:
-	virtual void UpdateViewEntity();
+	DirectX::XMMATRIX GetViewMatrix() const;
+
+public:
+	virtual void UpdateViewEntity() override;
 	virtual void OnCollide(ICollisionAcceptor*) override;
 };
 

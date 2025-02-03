@@ -99,6 +99,32 @@ void ComponentEntityInitializer::Visit(SpotLightComponent* spotLightComponent)
 
 void ComponentEntityInitializer::Visit(PointLightComponent* pointLightComponent)
 {
+	InitBaseComponent(pointLightComponent);
+
+	Texture2DInstance<SRVOption>* depthStencilViewCube = new Texture2DInstance<SRVOption>(
+		static_cast<uint32_t>(pointLightComponent->GetWidth()), static_cast<uint32_t>(pointLightComponent->GetHeight()),
+		6, 1, NULL, D3D11_RESOURCE_MISC_TEXTURECUBE, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_TYPELESS, 
+		m_deviceCached, m_deviceContextCached, D3D11_BIND_DEPTH_STENCIL
+	);
+
+	pointLightComponent->SetDepthTestViewCube(depthStencilViewCube);
+
+	for (size_t idx = 0; idx < 6; ++idx)
+	{
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+		ZeroMemory(&dsvDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+
+		dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+		dsvDesc.Texture2DArray.MipSlice = 0;
+		dsvDesc.Texture2DArray.FirstArraySlice = static_cast<UINT>(idx);
+		dsvDesc.Texture2DArray.ArraySize = 1;
+		m_deviceCached->CreateDepthStencilView(depthStencilViewCube->GetTexture2D(), &dsvDesc, pointLightComponent->GetDepthTestDSV(idx));
+	}
+
+	DynamicBuffer* viewProjBuffer = pointLightComponent->GetViewProjMatrixBuffer();
+	const D3D11_SUBRESOURCE_DATA viewProjBuffersSubresource = viewProjBuffer->GetSubResourceData();
+	viewProjBuffer->InitializeBuffer(m_deviceCached, &viewProjBuffersSubresource);
 }
 
 void ComponentEntityInitializer::InitBaseComponent(AComponent* component)

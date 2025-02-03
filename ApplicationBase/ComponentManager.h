@@ -12,7 +12,8 @@
 class Scene;
 class AComponent;
 class DefferedContext;
-class LightEntity;
+class SpotLightComponent;
+class PointLightComponent;
 
 class ComponentManager : public SchemaManager
 {
@@ -45,7 +46,8 @@ protected:
 	bool m_isInitialized = false;
 	std::unordered_map<EComponentType, ComponentConstructor> m_componentTypesToMaker;
 	std::unordered_map<ComponentID, AComponent*> m_componentIDsToComponent;
-	std::unordered_map<ComponentID, LightEntity*> m_componentIDsToLight;
+	std::unordered_map<ComponentID, SpotLightComponent*> m_componentIDsToSpotLight;
+	std::unordered_map<ComponentID, PointLightComponent*> m_componentIDsToPointLight;
 	std::shared_mutex							m_componentMutex;
 
 protected:

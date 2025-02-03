@@ -5,9 +5,7 @@
 
 #include "Scene.h"
 #include "DepthTestRenderer.h"
-
 #include "RenderControlOption.h"
-#include "DepthTestRenderer.h"
 
 #include "DynamicBuffer.h"
 
@@ -20,12 +18,16 @@ SpotLightComponent::SpotLightComponent(
 	const XMFLOAT3& position, 
 	const XMFLOAT3& angle, 
 	const XMFLOAT3& scale, 
-	const uint32_t& width, const uint32_t& height,
-	const float& nearZ, const float& farZ, 
-	const float& fovAngle
+	const float& fovAngle,
+	const float& farZ
 )
-	: AViewComponent(componentName, componentID, position, angle, scale, width, height, nearZ, farZ, fovAngle)
+	: AViewComponent(
+		componentName, componentID, 
+		position, angle, scale, 
+		GDefaultShadowMapWidth, GDefaultShadowMapHeight, fovAngle
+	)
 {
+	m_lightEntity.m_fallOffEnd = farZ;
 }
 
 SpotLightComponent::~SpotLightComponent()
@@ -37,6 +39,11 @@ void SpotLightComponent::SetDepthTestView(Texture2DInstance<SRVOption, DSVOption
 {
 	if (m_depthTestView) delete m_depthTestView;
 	m_depthTestView = depthTestView;
+}
+
+XMMATRIX SpotLightComponent::GetProjectionMatrix() const
+{
+	return XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fovAngle), Width / Height, 0.01f, m_lightEntity.m_fallOffEnd);
 }
 
 void SpotLightComponent::Accept(IComponentVisitor* visitor)

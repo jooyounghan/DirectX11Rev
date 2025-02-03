@@ -10,15 +10,14 @@ AViewComponent::AViewComponent(
 	const XMFLOAT3& position, 
 	const XMFLOAT3& angle, 
 	const XMFLOAT3& scale, 
-	const uint32_t& width, const uint32_t& height, 
-	const float& nearZ, const float& farZ, 
+	const uint32_t& width, const uint32_t& height,
 	const float& fovAngle
 ) 
 	: AComponent(componentName, componentID, position, angle, scale),
 	m_viewProjBuffer(new DynamicBuffer(sizeof(SViewEntity), 1, &m_viewEntity)),
-	m_nearZ(nearZ), m_farZ(farZ), m_fovAngle(fovAngle)
+	m_fovAngle(fovAngle)
 {
-	SetViewProperties(width, height, m_nearZ, m_farZ, m_fovAngle);
+	SetViewport(width, height);
 }
 
 AViewComponent::~AViewComponent()
@@ -26,12 +25,10 @@ AViewComponent::~AViewComponent()
 	delete m_viewProjBuffer;
 }
 
-void AViewComponent::SetViewProperties(const uint32_t& width, const uint32_t& height, const float& nearZ, const float& farZ, const float& fovAngle)
-{
-	m_nearZ = nearZ;
-	m_farZ = farZ;
-	m_fovAngle = fovAngle;
+DynamicBuffer* AViewComponent::GetViewProjMatrixBuffer() const { return m_viewProjBuffer; }
 
+void AViewComponent::SetViewport(const uint32_t& width, const uint32_t& height)
+{
 	TopLeftX = 0.f;
 	TopLeftY = 0.f;
 	Width = static_cast<float>(width);
@@ -40,17 +37,12 @@ void AViewComponent::SetViewProperties(const uint32_t& width, const uint32_t& he
 	MaxDepth = 1.f;
 }
 
-XMMATRIX AViewComponent::GetViewMatrix()
+DirectX::XMMATRIX AViewComponent::GetViewMatrix() const
 {
 	const XMVECTOR quaternion = GetAbsoluteRotationQuaternion();
 	XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
 	XMVECTOR currentUp = XMVector3Rotate(GDefaultUp, quaternion);
 	return XMMatrixLookToLH(m_absolutePosition, currentForward, currentUp);
-}
-
-XMMATRIX AViewComponent::GetProjectionMatrix()
-{
-	return XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fovAngle), Width / Height, m_nearZ, m_farZ);
 }
 
 void AViewComponent::UpdateViewEntity()

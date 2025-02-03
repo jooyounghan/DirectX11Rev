@@ -27,77 +27,38 @@ ComponentDBUpdater::ComponentDBUpdater(Schema* schema)
 void ComponentDBUpdater::Visit(StaticMeshComponent* staticMeshComponent)
 {
 	UpdateComponent(staticMeshComponent);
-
-	const uint32_t& componentID = staticMeshComponent->GetComponentID();
-	const std::string staticMeshTableName = "static_mesh_components";
-	Table staticMeshTable = m_schemaCached->getTable(staticMeshTableName, true);
-	staticMeshTable.update()
-		.set("static_mesh_name", staticMeshComponent->GetStaticMeshName())
-		.where("static_mesh_component_id = :static_mesh_component_id")
-		.bind("static_mesh_component_id", componentID).execute();
+	UpdateStaticMeshComponent(staticMeshComponent);
 }
 
 void ComponentDBUpdater::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
 	UpdateComponent(skeletalMeshComponent);
-
-	const uint32_t& componentID = skeletalMeshComponent->GetComponentID();
-	const std::string skeletalMeshTableName = "skeletal_mesh_components";
-	Table skeletalMeshTable = m_schemaCached->getTable(skeletalMeshTableName, true);
-	skeletalMeshTable.update()
-		.set("skeletal_mesh_name", skeletalMeshComponent->GetSkeletalMeshName())
-		.where("skeletal_mesh_component_id = :skeletal_mesh_component_id")
-		.bind("skeletal_mesh_component_id", componentID).execute();
+	UpdateSkeletalMeshComponent(skeletalMeshComponent);
 }
 
 void ComponentDBUpdater::Visit(CameraComponent* cameraComponent)
 {
 	UpdateComponent(cameraComponent);
-
-	const uint32_t& componentID = cameraComponent->GetComponentID();
-	const std::string cameraTableName = "camera_components";
-	Table cameraTable = m_schemaCached->getTable(cameraTableName, true);
-	cameraTable.update()
-		.set("width", cameraComponent->Width)
-		.set("height", cameraComponent->Height)
-		.set("near_z", cameraComponent->GetNearZ())
-		.set("far_z", cameraComponent->GetFarZ())
-		.set("fov_angle", cameraComponent->GetFovAngle())
-		.where("camera_component_id = :camera_component_id")
-		.bind("camera_component_id", componentID).execute();
+	UpdateViewComponent(cameraComponent);
+	UpdateCameraComponent(cameraComponent);
 }
 
 void ComponentDBUpdater::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
 	UpdateComponent(sphereCollisionComponent);
-
-	const uint32_t& componentID = sphereCollisionComponent->GetComponentID();
-	const std::string sphereCollisionTableName = "sphere_collision_components";
-	Table sphereCollisionTable = m_schemaCached->getTable(sphereCollisionTableName, true);
-	sphereCollisionTable.update()
-		.set("radius", sphereCollisionComponent->Radius)
-		.where("sphere_collision_component_id = :sphere_collision_component_id")
-		.bind("sphere_collision_component_id", componentID).execute();
+	UpdateSphereCollisionComponent(sphereCollisionComponent);
 }
 
 void ComponentDBUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
 	UpdateComponent(orientedBoxCollisionComponent);
-
-	const uint32_t& componentID = orientedBoxCollisionComponent->GetComponentID();
-	const std::string orientedBoxCollisionName = "oriented_box_collision_components";
-	Table orientedBoxCollision = m_schemaCached->getTable(orientedBoxCollisionName, true);
-	orientedBoxCollision.update()
-		.set("extent_x", orientedBoxCollisionComponent->Extents.x)
-		.set("extent_y", orientedBoxCollisionComponent->Extents.y)
-		.set("extent_z", orientedBoxCollisionComponent->Extents.z)
-		.where("oriented_box_collision_component_id = :oriented_box_collision_component_id")
-		.bind("oriented_box_collision_component_id", componentID).execute();
+	UpdateOrientedBoxCollisionComponent(orientedBoxCollisionComponent);
 }
 
 void ComponentDBUpdater::Visit(SpotLightComponent* spotLightComponent)
 {
 	UpdateComponent(spotLightComponent);
+	UpdateViewComponent(spotLightComponent);
 	UpdateLightEntity(spotLightComponent, spotLightComponent);
 }
 
@@ -151,6 +112,78 @@ void ComponentDBUpdater::UpdateMeshComponent(AMeshComponent* meshComponent)
 		.set("material_names", jsonString)
 		.where("mesh_component_id = :component_id")
 		.bind("mesh_component_id", componentID).execute();
+}
+
+void ComponentDBUpdater::UpdateStaticMeshComponent(StaticMeshComponent* staticMeshComponent)
+{
+	const uint32_t& componentID = staticMeshComponent->GetComponentID();
+	const std::string staticMeshTableName = "static_mesh_components";
+	Table staticMeshTable = m_schemaCached->getTable(staticMeshTableName, true);
+	staticMeshTable.update()
+		.set("static_mesh_name", staticMeshComponent->GetStaticMeshName())
+		.where("static_mesh_component_id = :static_mesh_component_id")
+		.bind("static_mesh_component_id", componentID).execute();
+
+}
+
+void ComponentDBUpdater::UpdateSkeletalMeshComponent(SkeletalMeshComponent* skeletalMeshComponent)
+{
+	const uint32_t& componentID = skeletalMeshComponent->GetComponentID();
+	const std::string skeletalMeshTableName = "skeletal_mesh_components";
+	Table skeletalMeshTable = m_schemaCached->getTable(skeletalMeshTableName, true);
+	skeletalMeshTable.update()
+		.set("skeletal_mesh_name", skeletalMeshComponent->GetSkeletalMeshName())
+		.where("skeletal_mesh_component_id = :skeletal_mesh_component_id")
+		.bind("skeletal_mesh_component_id", componentID).execute();
+}
+
+void ComponentDBUpdater::UpdateViewComponent(AViewComponent* viewComponent)
+{
+	const uint32_t& componentID = viewComponent->GetComponentID();
+	const std::string viewComponentTableName = "view_components";
+	Table viewComponentTable = m_schemaCached->getTable(viewComponentTableName, true);
+	viewComponentTable.update()
+		.set("width", viewComponent->Width)
+		.set("height", viewComponent->Height)
+		.set("fov_angle", viewComponent->GetFovAngle())
+		.where("view_component_id = :view_component_id")
+		.bind("view_component_id", componentID).execute();
+}
+
+void ComponentDBUpdater::UpdateCameraComponent(CameraComponent* cameraComponent)
+{
+	const uint32_t& componentID = cameraComponent->GetComponentID();
+	const std::string cameraTableName = "camera_components";
+	Table cameraTable = m_schemaCached->getTable(cameraTableName, true);
+	cameraTable.update()
+		.set("near_z", cameraComponent->GetNearZ())
+		.set("far_z", cameraComponent->GetFarZ())
+		.where("camera_component_id = :camera_component_id")
+		.bind("camera_component_id", componentID).execute();
+}
+
+void ComponentDBUpdater::UpdateSphereCollisionComponent(SphereCollisionComponent* sphereCollisionComponent)
+{
+	const uint32_t& componentID = sphereCollisionComponent->GetComponentID();
+	const std::string sphereCollisionTableName = "sphere_collision_components";
+	Table sphereCollisionTable = m_schemaCached->getTable(sphereCollisionTableName, true);
+	sphereCollisionTable.update()
+		.set("radius", sphereCollisionComponent->Radius)
+		.where("sphere_collision_component_id = :sphere_collision_component_id")
+		.bind("sphere_collision_component_id", componentID).execute();
+}
+
+void ComponentDBUpdater::UpdateOrientedBoxCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
+{
+	const uint32_t& componentID = orientedBoxCollisionComponent->GetComponentID();
+	const std::string orientedBoxCollisionName = "oriented_box_collision_components";
+	Table orientedBoxCollision = m_schemaCached->getTable(orientedBoxCollisionName, true);
+	orientedBoxCollision.update()
+		.set("extent_x", orientedBoxCollisionComponent->Extents.x)
+		.set("extent_y", orientedBoxCollisionComponent->Extents.y)
+		.set("extent_z", orientedBoxCollisionComponent->Extents.z)
+		.where("oriented_box_collision_component_id = :oriented_box_collision_component_id")
+		.bind("oriented_box_collision_component_id", componentID).execute();
 }
 
 void ComponentDBUpdater::UpdateLightEntity(AComponent* component, LightEntity* ligthEntity)

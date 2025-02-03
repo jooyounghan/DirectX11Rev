@@ -130,6 +130,7 @@
     <ClInclude Include="DepthTestRenderer.h">
       <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="IViewEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">

@@ -17,10 +17,11 @@ CameraComponent::CameraComponent(
 	const XMFLOAT3& position, 
 	const XMFLOAT3& angle,
 	const XMFLOAT3& scale,
-	const uint32_t& width, const uint32_t& height,
-	const float& nearZ, const float& farZ, const float& fovAngle
+	const uint32_t& width, const uint32_t& height, const float& fovAngle,
+	const float& nearZ, const float& farZ
 )
-	: AViewComponent(componentName, componentID, position, angle, scale, width, height, nearZ, farZ, fovAngle)
+	: AViewComponent(componentName, componentID, position, angle, scale, width, height, fovAngle),
+	m_nearZ(nearZ), m_farZ(farZ)
 {
 }
 
@@ -56,6 +57,11 @@ void CameraComponent::SetDepthStencilView(Texture2DInstance<DSVOption>* depthSte
 	m_depthStencilView = depthStencilViewBuffer;
 }
 
+
+XMMATRIX CameraComponent::GetProjectionMatrix() const
+{
+	return XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fovAngle), Width / Height, m_nearZ, m_farZ);
+}
 
 void CameraComponent::Accept(IComponentVisitor* visitor)
 {

@@ -19,7 +19,8 @@ public:
 		const D3D11_USAGE& usage,
 		const DXGI_FORMAT& format,
 		ID3D11Device* device,
-		ID3D11DeviceContext* deviceContext
+		ID3D11DeviceContext* deviceContext,
+		const UINT& additionalBindFlag = NULL
 	);
 public:
 	Texture2DInstance(
@@ -32,7 +33,8 @@ public:
 		const D3D11_USAGE& usage,
 		const DXGI_FORMAT& format,
 		ID3D11Device* device,
-		ID3D11DeviceContext* deviceContext
+		ID3D11DeviceContext* deviceContext,
+		const UINT& additionalBindFlag = NULL
 	);
 
 public:
@@ -68,7 +70,8 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	const D3D11_USAGE& usage,
 	const DXGI_FORMAT& format,
 	ID3D11Device* device,
-	ID3D11DeviceContext* deviceContext
+	ID3D11DeviceContext* deviceContext,
+	const UINT& additionalBindFlag
 )
 {
 	D3D11_TEXTURE2D_DESC texture2DDesc;
@@ -77,7 +80,7 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	texture2DDesc.Height = height;
 	texture2DDesc.ArraySize = arraySize;
 	texture2DDesc.MipLevels = mipLevels;
-	texture2DDesc.BindFlags = Texture2DInstance<IsTextureOption...>::GetBindFlags();
+	texture2DDesc.BindFlags = (D3D11_BIND_FLAG)(additionalBindFlag | Texture2DInstance<IsTextureOption...>::GetBindFlags());
 	texture2DDesc.CPUAccessFlags = cpuAccessFlag;
 	texture2DDesc.MiscFlags = miscFlagIn;
 	texture2DDesc.SampleDesc.Count = 1;
@@ -110,7 +113,8 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	const D3D11_USAGE& usage,
 	const DXGI_FORMAT& format,
 	ID3D11Device* device,
-	ID3D11DeviceContext* deviceContext
+	ID3D11DeviceContext* deviceContext,
+	const UINT& additionalBindFlag
 )
 {
 	D3D11_TEXTURE2D_DESC texture2DDesc;
@@ -119,7 +123,7 @@ inline Texture2DInstance<IsTextureOption...>::Texture2DInstance(
 	texture2DDesc.Height = height;
 	texture2DDesc.ArraySize = arraySize;
 	texture2DDesc.MipLevels = mipLevels;
-	texture2DDesc.BindFlags = Texture2DInstance<IsTextureOption...>::GetBindFlags();
+	texture2DDesc.BindFlags = (D3D11_BIND_FLAG)(additionalBindFlag | Texture2DInstance<IsTextureOption...>::GetBindFlags());
 	texture2DDesc.CPUAccessFlags = cpuAccessFlag;
 	texture2DDesc.MiscFlags = miscFlagIn;
 	texture2DDesc.SampleDesc.Count = 1;

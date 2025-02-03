@@ -4,6 +4,7 @@
 #include <mysqlx/xdevapi.h>
 
 struct ID3D11DeviceContext;
+class AViewComponent;
 class LightEntity;
 
 class ComponentDBUpdater : public IComponentVisitor
@@ -33,6 +34,20 @@ public:
 private:
 	void UpdateComponent(AComponent* component);
 	void UpdateMeshComponent(AMeshComponent* meshComponent);
+
+private:
+	void UpdateStaticMeshComponent(StaticMeshComponent* staticMeshComponent);
+	void UpdateSkeletalMeshComponent(SkeletalMeshComponent* skeletalMeshComponent);
+
+private:
+	void UpdateViewComponent(AViewComponent* viewComponent);
+	void UpdateCameraComponent(CameraComponent* cameraComponent);
+
+private:
+	void UpdateSphereCollisionComponent(SphereCollisionComponent* sphereCollisionComponent);
+	void UpdateOrientedBoxCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent);
+
+private:
 	void UpdateLightEntity(AComponent* component, LightEntity* ligthEntity);
 };
 

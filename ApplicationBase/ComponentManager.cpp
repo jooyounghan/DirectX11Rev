@@ -121,7 +121,7 @@ void ComponentManager::LoadComponentMakers()
 				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
 				{ 
 					SpotLightComponent* spotLightComponent = new SpotLightComponent(componentName, componentID, position, angle, scale);
-					m_componentIDsToLight.emplace(componentID, spotLightComponent);
+					m_componentIDsToSpotLight.emplace(componentID, spotLightComponent);
 					return spotLightComponent; 
 				}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
 			));
@@ -131,7 +131,7 @@ void ComponentManager::LoadComponentMakers()
 				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
 				{ 
 					PointLightComponent* pointLightComponent = new PointLightComponent(componentName, componentID, position, angle, scale);
-					m_componentIDsToLight.emplace(componentID, pointLightComponent);
+					m_componentIDsToPointLight.emplace(componentID, pointLightComponent);
 					return new PointLightComponent(componentName, componentID, position, angle, scale); 
 				}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
 			));
@@ -249,9 +249,13 @@ void ComponentManager::LoadScenesInformation()
 			{
 				m_sceneIDsToScene[sceneID]->AddRootComponent(m_componentIDsToComponent[componentID]);
 
-				if (m_componentIDsToLight.find(componentID) != m_componentIDsToLight.end())
+				if (m_componentIDsToSpotLight.find(componentID) != m_componentIDsToSpotLight.end())
 				{
-					m_sceneIDsToScene[sceneID]->AddLight(m_componentIDsToLight[componentID]);
+					m_sceneIDsToScene[sceneID]->AddSpotLight(m_componentIDsToSpotLight[componentID]);
+				}
+				else if (m_componentIDsToPointLight.find(componentID) != m_componentIDsToPointLight.end())
+				{
+					m_sceneIDsToScene[sceneID]->AddPointLight(m_componentIDsToPointLight[componentID]);
 				}
 			}
 			else

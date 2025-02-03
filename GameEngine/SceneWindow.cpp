@@ -10,7 +10,9 @@
 #include "UAVOption.h"
 #include "DSVOption.h"
 
-#include "LightEntity.h"
+#include "SpotLightComponent.h"
+#include "PointLightComponent.h"
+
 #include "RenderControlOption.h"
 
 #include "PerformanceAnalyzer.h"
@@ -65,14 +67,25 @@ void SceneWindow::PrepareWindow()
         m_selectedRenderer->ClearRenderTargets();
         m_selectedScene->Accept(m_selectedRenderer);
 
-        const vector<LightEntity*>& lights =  m_selectedScene->GetLights();
+        const vector<SpotLightComponent*>& spotLights =  m_selectedScene->GetSpotLights();
+        const vector<PointLightComponent*>& pointLights = m_selectedScene->GetPointLights();
+
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
 
-        for (LightEntity* light : lights)
+        for (SpotLightComponent* spotLight : spotLights)
         {
-            light->GenerateShadowMap(
+            spotLight->GenerateShadowMap(
                 m_componentRenderDefferedContextAddress, 
                 m_componentPsoManageCached, 
+                sceneRootComponents
+            );
+        }
+
+        for (PointLightComponent* pointLight : pointLights)
+        {
+            pointLight->GenerateShadowMap(
+                m_componentRenderDefferedContextAddress,
+                m_componentPsoManageCached,
                 sceneRootComponents
             );
         }

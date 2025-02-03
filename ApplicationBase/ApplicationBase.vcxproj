@@ -223,6 +223,7 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="BoundingVolumeNode.h" />
     <ClInclude Include="DepthTestRenderer.h" />
     <ClInclude Include="ILightVisitor.h" />
+    <ClInclude Include="IViewEntity.h" />
     <ClInclude Include="LightEntity.h" />
     <ClInclude Include="OrientedBoxCollisionComponent.h" />
     <ClInclude Include="ASceneRenderer.h" />

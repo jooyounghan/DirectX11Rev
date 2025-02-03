@@ -32,6 +32,7 @@ void PerformanceAnalyzerWindow::DrawFPSLinePlotting()
     {
         delayDeltaTime = PerformanceAnalyzer::DeltaTime;
         const float currentFPS = 1.f / delayDeltaTime;
+
         fpsData[valuesOffset] = currentFPS;
         valuesOffset = (valuesOffset + 1) % fpsDataCount;
     }

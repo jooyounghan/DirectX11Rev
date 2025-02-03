@@ -6,6 +6,9 @@ class DynamicBuffer;
 class ComponentPSOManager;
 class AComponent;
 
+constexpr uint32_t GDefaultShadowMapWidth = 512;
+constexpr uint32_t GDefaultShadowMapHeight = 512;
+
 struct SLightEntity
 {
 	float m_lightPower = 0.f;
