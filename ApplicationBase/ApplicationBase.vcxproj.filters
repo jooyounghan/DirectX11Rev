@@ -130,7 +130,12 @@
     <ClInclude Include="DepthTestRenderer.h">
       <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="IViewEntity.h" />
+    <ClInclude Include="AViewEntity.h">
+      <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCollector.h">
+      <Filter>헤더 파일\Component\Visitor\Collector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -268,6 +273,12 @@
     <Filter Include="Shader\DepthTest">
       <UniqueIdentifier>{5a8e9368-049c-46a6-994a-d05d61745f28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\Visitor\Collector">
+      <UniqueIdentifier>{f1e53133-ff6c-462a-b46d-0d1eb96d5163}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Visitor\Collector">
+      <UniqueIdentifier>{dac59d51-c92a-402f-88a0-08b2685df2f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AApplication.cpp">
@@ -381,6 +392,10 @@
     <ClCompile Include="DepthTestRenderer.cpp">
       <Filter>소스 파일\Component\Visitor\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCollector.cpp">
+      <Filter>소스 파일\Component\Visitor\Collector</Filter>
+    </ClCompile>
+    <ClCompile Include="AViewEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\DebugComponentHeader.hlsli">

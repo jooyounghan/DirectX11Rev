@@ -2,7 +2,7 @@
 #include "IComponentVisitor.h"
 #include <d3d11.h>
 
-class IViewEntity;
+class AViewComponent;
 
 class ComponentEntityUpdater : public IComponentVisitor
 {
@@ -31,5 +31,5 @@ public:
 
 private:
 	void UpdateBaseComponent(AComponent* component);
-	void UpdateViewComponent(IViewEntity* viewEntity);
+	void UpdateViewComponent(AViewComponent* viewComponent);
 };

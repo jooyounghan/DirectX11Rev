@@ -23,6 +23,11 @@ OrientedBoxCollisionComponent::~OrientedBoxCollisionComponent()
 	m_collisionOption->RemoveBVHImpl(this);
 }
 
+bool OrientedBoxCollisionComponent::GetDefaultRenderable()
+{
+	return false;
+}
+
 void OrientedBoxCollisionComponent::Accept(IComponentVisitor* visitor)
 {
 	visitor->Visit(this);

@@ -21,6 +21,11 @@ SphereCollisionComponent::~SphereCollisionComponent()
 	m_collisionOption->RemoveBVHImpl(this);
 }
 
+bool SphereCollisionComponent::GetDefaultRenderable()
+{
+	return false;
+}
+
 void SphereCollisionComponent::Accept(IComponentVisitor* visitor)
 {
 	visitor->Visit(this);

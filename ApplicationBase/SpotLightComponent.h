@@ -36,8 +36,5 @@ public:
 		ComponentPSOManager* componentPsoManager,
 		const std::vector<AComponent*>& components
 	) override;
-
-private:
-	void DepthTestImpl(AComponent* component, DepthTestRenderer& depthTestRenderer);
 };
 

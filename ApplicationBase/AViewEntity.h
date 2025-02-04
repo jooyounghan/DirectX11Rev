@@ -16,10 +16,28 @@ struct SViewEntity
 	float m_dummy = 0.f;
 };
 
-class IViewEntity
+class AViewEntity
 {
 public:
-	virtual DynamicBuffer* GetViewProjMatrixBuffer() const = 0;
+	AViewEntity();
+	virtual ~AViewEntity() = default;
+
+protected:
+	SViewEntity m_viewEntity;
+	DynamicBuffer* m_viewProjBuffer = nullptr;
+
+public:
+	inline DynamicBuffer* GetViewProjMatrixBuffer() const { return m_viewProjBuffer; };
+
+public:
+	virtual DirectX::XMMATRIX GetViewMatrix() const = 0;
 	virtual DirectX::XMMATRIX GetProjectionMatrix() const = 0;
 	virtual void UpdateViewEntity() = 0;
+
+protected:
+	void UpdateViewEntityImpl(
+		const DirectX::XMMATRIX& viewMatrix, 
+		const DirectX::XMMATRIX& projectionMatrix, 
+		const DirectX::XMVECTOR& position
+	);
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include "AComponent.h"
 #include "CollidableFrustum.h"
-#include "IViewEntity.h"
+#include "AViewEntity.h"
 
 template<typename ...IsTextureOption>
 class Texture2DInstance;
@@ -17,7 +17,7 @@ constexpr float GDefaultFovAngle = 60.f;
 constexpr uint32_t GDefaultViewWidth = 1280;
 constexpr uint32_t GDefaultViewHeight = 960;
 
-class AViewComponent : public IViewEntity, public AComponent, public D3D11_VIEWPORT, public CollidableFrustum
+class AViewComponent : public AViewEntity, public AComponent, public D3D11_VIEWPORT, public CollidableFrustum
 {
 public:
 	AViewComponent(
@@ -34,10 +34,6 @@ public:
 
 protected:
 	float m_fovAngle;
-
-protected:
-	SViewEntity m_viewEntity;
-	DynamicBuffer* m_viewProjBuffer = nullptr;
 	static ConstantBuffer* ScreenQuadBuffer;
 
 public:
@@ -45,13 +41,10 @@ public:
 	inline void SetFovAngle(const float& fovAngle) { m_fovAngle = fovAngle; }
 
 public:
-	virtual DynamicBuffer* GetViewProjMatrixBuffer() const override;
-
-public:
 	void SetViewport(const uint32_t& width, const uint32_t& height);
 
 public:
-	DirectX::XMMATRIX GetViewMatrix() const;
+	virtual DirectX::XMMATRIX GetViewMatrix() const override;
 
 public:
 	virtual void UpdateViewEntity() override;

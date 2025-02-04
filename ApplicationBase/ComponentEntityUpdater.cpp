@@ -55,7 +55,15 @@ void ComponentEntityUpdater::Visit(SpotLightComponent* spotLightComponent)
 void ComponentEntityUpdater::Visit(PointLightComponent* pointLightComponent)
 {
 	UpdateBaseComponent(pointLightComponent);
-	UpdateViewComponent(pointLightComponent);
+	pointLightComponent->UpdatePointLightParts();
+
+	for (size_t idx = 0; idx < 6; ++idx)
+	{
+		PointLightFrustumPart* pointLightFrustumPart = pointLightComponent->GetPointLightFrustumPart(idx);
+
+		DynamicBuffer* viewProjMatrixBuffer = pointLightFrustumPart->GetViewProjMatrixBuffer();
+		viewProjMatrixBuffer->Upload(m_deviceContextCached);
+	}
 }
 
 void ComponentEntityUpdater::UpdateBaseComponent(AComponent* component)
@@ -69,10 +77,10 @@ void ComponentEntityUpdater::UpdateBaseComponent(AComponent* component)
 	transformationBuffer->Upload(m_deviceContextCached);
 }
 
-void ComponentEntityUpdater::UpdateViewComponent(IViewEntity* viewEntity)
+void ComponentEntityUpdater::UpdateViewComponent(AViewComponent* viewComponent)
 {
-	viewEntity->UpdateViewEntity();
-	DynamicBuffer* viewProjMatrixBuffer = viewEntity->GetViewProjMatrixBuffer();
+	viewComponent->UpdateViewEntity();
+	DynamicBuffer* viewProjMatrixBuffer = viewComponent->GetViewProjMatrixBuffer();
 	viewProjMatrixBuffer->Upload(m_deviceContextCached);
 }
 

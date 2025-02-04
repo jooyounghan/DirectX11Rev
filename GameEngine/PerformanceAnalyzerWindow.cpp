@@ -53,7 +53,11 @@ void PerformanceAnalyzerWindow::DrawFPSLinePlotting()
 
 void PerformanceAnalyzerWindow::DrawPerformanceIndicators()
 {
-    Text("Total Drawn Indices Count %d", PerformanceAnalyzer::DrawCount);
-    Text("Total Collision Check Count %d", PerformanceAnalyzer::CollisionCheckCount);
-    Text("Total Drawn Indices In Ligth Shadow Map Count %d", PerformanceAnalyzer::DrawForDepthTestCount);
+    SeparatorText("Rendering");
+    Text("Total Rendering Drawn Indices Count %d", PerformanceAnalyzer::RenderingDrawCount);
+    Text("Total Rendering Collision Check Count %d", PerformanceAnalyzer::RenderingCollisionCheckCount);
+
+    SeparatorText("Depth Test");
+    Text("Total Depth Test Drawn Indices Count %d", PerformanceAnalyzer::DepthTestDrawCount);
+    Text("Total Depth Test Collision Check Count %d", PerformanceAnalyzer::DepthTestCollisionCheckCount);
 }

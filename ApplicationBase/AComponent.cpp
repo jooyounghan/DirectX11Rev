@@ -20,6 +20,11 @@ AComponent::AComponent(
 	m_absoluteScale = XMLoadFloat3(&localScale);
 }
 
+bool AComponent::GetDefaultRenderable() 
+{ 
+	return true; 
+}
+
 void AComponent::AttachChildComponent(AComponent* component)
 {
 	component->m_parentComponent = this;

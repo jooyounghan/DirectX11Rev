@@ -180,6 +180,7 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="AMeshComponent.cpp" />
     <ClCompile Include="AnimationPlayer.cpp" />
     <ClCompile Include="AViewComponent.cpp" />
+    <ClCompile Include="AViewEntity.cpp" />
     <ClCompile Include="BoundingVolumeHierarchy.cpp" />
     <ClCompile Include="BoundingVolumeNode.cpp" />
     <ClCompile Include="DepthTestRenderer.cpp" />
@@ -188,6 +189,7 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="ASceneRenderer.cpp" />
     <ClCompile Include="PerformanceAnalyzer.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
+    <ClCompile Include="ComponentCollector.cpp" />
     <ClCompile Include="SphereCollisionComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="ComponentDBCreator.cpp" />
@@ -223,12 +225,13 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="BoundingVolumeNode.h" />
     <ClInclude Include="DepthTestRenderer.h" />
     <ClInclude Include="ILightVisitor.h" />
-    <ClInclude Include="IViewEntity.h" />
+    <ClInclude Include="AViewEntity.h" />
     <ClInclude Include="LightEntity.h" />
     <ClInclude Include="OrientedBoxCollisionComponent.h" />
     <ClInclude Include="ASceneRenderer.h" />
     <ClInclude Include="PerformanceAnalyzer.h" />
     <ClInclude Include="PointLightComponent.h" />
+    <ClInclude Include="ComponentCollector.h" />
     <ClInclude Include="SphereCollisionComponent.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="ComponentDBCreator.h" />

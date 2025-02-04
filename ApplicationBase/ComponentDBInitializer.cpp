@@ -65,6 +65,7 @@ void ComponentDBInitializer::Visit(SpotLightComponent* spotLightComponent)
 void ComponentDBInitializer::Visit(PointLightComponent* pointLightComponent)
 {
 	LoadLightEntity(pointLightComponent, pointLightComponent);
+	pointLightComponent->UpdatePointLightParts();
 }
 
 void ComponentDBInitializer::LoadStaticMeshComponent(StaticMeshComponent* staticMeshComponent)
@@ -204,6 +205,7 @@ void ComponentDBInitializer::LoadSphereColiisionComponent(SphereCollisionCompone
 
 		const XMVECTOR& absolutePosition = sphereCollisionComponent->GetAbsolutePosition();
 		sphereCollisionComponent->SetBoundingProperties(absolutePosition, radius);
+
 		ICollisionOption* collisionOption = CreateCollisionOption(collisionOptionID);
 		sphereCollisionComponent->SetCollisionOption(collisionOption);
 	}
@@ -267,6 +269,6 @@ void ComponentDBInitializer::LoadLightEntity(AComponent* lightComponent, LightEn
 		const float falloffEnd = row[2].get<float>();
 		const float spotPower = row[3].get<float>();
 
-		lightEntity->SetLigthEntity(lightPower, falloffEnd, falloffEnd, spotPower);
+		lightEntity->SetLigthEntity(lightPower, falloffStart, falloffEnd, spotPower);
 	}
 }

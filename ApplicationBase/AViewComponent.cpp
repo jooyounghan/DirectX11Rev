@@ -14,7 +14,7 @@ AViewComponent::AViewComponent(
 	const float& fovAngle
 ) 
 	: AComponent(componentName, componentID, position, angle, scale),
-	m_viewProjBuffer(new DynamicBuffer(sizeof(SViewEntity), 1, &m_viewEntity)),
+	AViewEntity(),
 	m_fovAngle(fovAngle)
 {
 	SetViewport(width, height);
@@ -24,8 +24,6 @@ AViewComponent::~AViewComponent()
 {
 	delete m_viewProjBuffer;
 }
-
-DynamicBuffer* AViewComponent::GetViewProjMatrixBuffer() const { return m_viewProjBuffer; }
 
 void AViewComponent::SetViewport(const uint32_t& width, const uint32_t& height)
 {
@@ -47,13 +45,10 @@ DirectX::XMMATRIX AViewComponent::GetViewMatrix() const
 
 void AViewComponent::UpdateViewEntity()
 {
-	const XMMATRIX& viewMatrix = GetViewMatrix();
-	const XMMATRIX& projectionMatrix = GetProjectionMatrix();
+	const XMMATRIX viewMatrix = GetViewMatrix();
+	const XMMATRIX projectionMatrix = GetProjectionMatrix();
 
-	m_viewEntity.m_viewProj = viewMatrix * projectionMatrix;
-	m_viewEntity.m_invViewProj = XMMatrixInverse(nullptr, m_viewEntity.m_viewProj);
-	m_viewEntity.m_viewProj = XMMatrixTranspose(m_viewEntity.m_viewProj);
-	XMStoreFloat3(&m_viewEntity.m_viewPosition, m_absolutePosition);
+	UpdateViewEntityImpl(viewMatrix, projectionMatrix, m_absolutePosition);
 
 	BoundingFrustum::CreateFromMatrix(*this, projectionMatrix);
 	this->Transform(*this, XMMatrixInverse(nullptr, viewMatrix));

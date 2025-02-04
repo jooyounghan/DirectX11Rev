@@ -72,6 +72,7 @@ void SceneWindow::PrepareWindow()
 
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
 
+        RenderControlOption::RenderBVH.ResetSerachCount();
         for (SpotLightComponent* spotLight : spotLights)
         {
             spotLight->GenerateShadowMap(
@@ -89,26 +90,18 @@ void SceneWindow::PrepareWindow()
                 sceneRootComponents
             );
         }
+        PerformanceAnalyzer::DepthTestCollisionCheckCount = RenderControlOption::RenderBVH.GetSerachCount();
+
 
         RenderControlOption::RenderBVH.ResetSerachCount();
-        RenderControlOption::RenderBVH.Traverse(m_selectedCamera);
-        PerformanceAnalyzer::CollisionCheckCount = RenderControlOption::RenderBVH.GetSerachCount();
-
-        RenderComponentRecursive(m_selectedRenderer, sceneRootComponents);
-        m_selectedRenderer->PostProcess();
-    }
-}
-
-
-void SceneWindow::RenderComponentRecursive(ASceneRenderer* const renderer, const vector<AComponent*>& components)
-{
-    for (AComponent* component : components)
-    {
-        if (component->IsRenderable())
+        const vector<AComponent*> renderableComponts = RenderControlOption::GetRenderableComponents(m_selectedCamera, sceneRootComponents);
+        for (AComponent* renderableCompont : renderableComponts)
         {
-            component->Accept(renderer);
-            RenderComponentRecursive(renderer, component->GetChildComponents());
+            renderableCompont->Accept(m_selectedRenderer);
         }
+        PerformanceAnalyzer::RenderingCollisionCheckCount = RenderControlOption::RenderBVH.GetSerachCount();
+
+        m_selectedRenderer->PostProcess();
     }
 }
 

@@ -1,8 +1,8 @@
 #pragma once
 #include "AComponent.h"
 #include "LightEntity.h"
-#include "IViewEntity.h"
-#include "CollidableSphere.h"
+#include "AViewEntity.h"
+#include "CollidableFrustum.h"
 
 #include <wrl/client.h>
 
@@ -11,7 +11,38 @@ class Texture2DInstance;
 class SRVOption;
 class DSVOption;
 
-class PointLightComponent : public IViewEntity, public AComponent, public LightEntity, public CollidableSphere
+class PointLightFrustumPart : public AViewEntity, public CollidableFrustum
+{
+public:
+	PointLightFrustumPart(
+		const DirectX::XMFLOAT3& rotationAngle,
+		D3D11_VIEWPORT& viewport,
+		DirectX::XMVECTOR& absolutePosition,
+		float& fallOffEnd
+	);
+	~PointLightFrustumPart() override = default;
+
+protected:
+	const DirectX::XMFLOAT3 m_rotationRadian;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthTestDSV;
+
+protected:
+	D3D11_VIEWPORT& m_viewport;
+	DirectX::XMVECTOR& m_absolutePosition;
+	float& m_fallOffEnd;
+
+public:
+	virtual DirectX::XMMATRIX GetViewMatrix() const override;
+	virtual DirectX::XMMATRIX GetProjectionMatrix() const override;
+	virtual void UpdateViewEntity() override;
+	virtual void OnCollide(ICollisionAcceptor*) override;
+
+public:
+	inline ID3D11DepthStencilView* GetDepthTestDSV() { return m_depthTestDSV.Get(); }
+	inline ID3D11DepthStencilView** GetDepthTestDSVAddress() { return m_depthTestDSV.GetAddressOf(); }
+};
+
+class PointLightComponent : public AComponent, public LightEntity
 {
 public:
 	PointLightComponent(
@@ -27,35 +58,27 @@ public:
 
 protected:
 	D3D11_VIEWPORT m_viewport;
+	PointLightFrustumPart m_pointLightFrustumPart[6];
+
+public:
+	inline PointLightFrustumPart* GetPointLightFrustumPart(const size_t& idx) { return idx < 6 ? &m_pointLightFrustumPart[idx] : nullptr; }
 
 protected:
 	Texture2DInstance<SRVOption>* m_deptTestViewCube = nullptr;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthTestDSVs[6];
-
-protected:
-	SViewEntity m_viewEntities[6];
-	DynamicBuffer* m_viewPorjBuffers = nullptr;
 
 public:
 	inline UINT GetWidth() { return static_cast<UINT>(m_viewport.Width); }
 	inline UINT GetHeight() { return static_cast<UINT>(m_viewport.Height); }
-	inline ID3D11DepthStencilView** GetDepthTestDSV(const size_t& idx) { return idx < 6 ? m_depthTestDSVs[idx].GetAddressOf() : nullptr; }
 
 public:
 	void SetDepthTestViewCube(Texture2DInstance<SRVOption>* depthTestViewCube);
-	DirectX::XMMATRIX GetViewMatrix(const size_t& idx) const;
 
 public:
-	virtual DirectX::XMMATRIX GetProjectionMatrix() const override;
-	virtual DynamicBuffer* GetViewProjMatrixBuffer() const override;
-	virtual void UpdateViewEntity() override;
-
-public:
+	void UpdatePointLightParts();
 	virtual void Accept(IComponentVisitor* visitor) override;
 	virtual void GenerateShadowMap(
 		ID3D11DeviceContext* const* deviceContextAddress,
 		ComponentPSOManager* componentPsoManager,
 		const std::vector<AComponent*>& components
 	) override;
-	virtual void OnCollide(ICollisionAcceptor*) override;
 };

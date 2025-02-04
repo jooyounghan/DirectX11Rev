@@ -3,7 +3,6 @@
 #include "SRVOption.h"
 #include "DSVOption.h"
 
-#include "Scene.h"
 #include "DepthTestRenderer.h"
 #include "RenderControlOption.h"
 
@@ -57,32 +56,18 @@ void SpotLightComponent::GenerateShadowMap(
 	const vector<AComponent*>& components
 )
 {
-	RenderControlOption::RenderBVH.Traverse(this);
+	vector<AComponent*> renderableComponents = RenderControlOption::GetRenderableComponents(this, components);
 
 	(*deviceContextAddress)->ClearDepthStencilView(m_depthTestView->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
-
 	DepthTestRenderer depthTestRenderer = DepthTestRenderer(
 		deviceContextAddress, componentPsoManager,
 		m_viewProjBuffer->GetBuffer(),
 		this,
-		m_depthTestView
+		m_depthTestView->GetDSV()
 	);
 
-	for (AComponent* component : components)
+	for (AComponent* renderableComponent : renderableComponents)
 	{
-		DepthTestImpl(component, depthTestRenderer);
-	}
-}
-
-void SpotLightComponent::DepthTestImpl(AComponent* component, DepthTestRenderer& depthTestRenderer)
-{
-	if (component->IsRenderable())
-	{
-		component->Accept(&depthTestRenderer);
-		const vector<AComponent*>& childComponents = component->GetChildComponents();
-		for (AComponent* childComponent : childComponents)
-		{
-			DepthTestImpl(childComponent, depthTestRenderer);
-		}
+		renderableComponent->Accept(&depthTestRenderer);
 	}
 }

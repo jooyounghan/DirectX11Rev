@@ -111,6 +111,8 @@ void ComponentEntityInitializer::Visit(PointLightComponent* pointLightComponent)
 
 	for (size_t idx = 0; idx < 6; ++idx)
 	{
+		PointLightFrustumPart* pointLightFrustumPart = pointLightComponent->GetPointLightFrustumPart(idx);
+
 		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 		ZeroMemory(&dsvDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 
@@ -119,12 +121,12 @@ void ComponentEntityInitializer::Visit(PointLightComponent* pointLightComponent)
 		dsvDesc.Texture2DArray.MipSlice = 0;
 		dsvDesc.Texture2DArray.FirstArraySlice = static_cast<UINT>(idx);
 		dsvDesc.Texture2DArray.ArraySize = 1;
-		m_deviceCached->CreateDepthStencilView(depthStencilViewCube->GetTexture2D(), &dsvDesc, pointLightComponent->GetDepthTestDSV(idx));
-	}
+		m_deviceCached->CreateDepthStencilView(depthStencilViewCube->GetTexture2D(), &dsvDesc, pointLightFrustumPart->GetDepthTestDSVAddress());
 
-	DynamicBuffer* viewProjBuffer = pointLightComponent->GetViewProjMatrixBuffer();
-	const D3D11_SUBRESOURCE_DATA viewProjBuffersSubresource = viewProjBuffer->GetSubResourceData();
-	viewProjBuffer->InitializeBuffer(m_deviceCached, &viewProjBuffersSubresource);
+		DynamicBuffer* viewProjBuffer = pointLightFrustumPart->GetViewProjMatrixBuffer();
+		const D3D11_SUBRESOURCE_DATA viewProjBuffersSubresource = viewProjBuffer->GetSubResourceData();
+		viewProjBuffer->InitializeBuffer(m_deviceCached, &viewProjBuffersSubresource);
+	}
 }
 
 void ComponentEntityInitializer::InitBaseComponent(AComponent* component)

@@ -14,11 +14,6 @@
 #include "SphereCollisionComponent.h"
 #include "OrientedBoxCollisionComponent.h"
 
-#include "Texture2DInstance.h"
-#include "SRVOption.h"
-#include "UAVOption.h"
-#include "DSVOption.h"
-
 #include "ConstantBuffer.h"
 #include "DynamicBuffer.h"
 #include "StructuredBuffer.h"
@@ -32,13 +27,13 @@ DepthTestRenderer::DepthTestRenderer(
 	ComponentPSOManager* componentPsoManager, 
     ID3D11Buffer* viewProjMatrix,
     D3D11_VIEWPORT* viewport,
-    Texture2DInstance<SRVOption, DSVOption>* depthStencilViewTexture
+    ID3D11DepthStencilView* depthStencilView
 )
     : m_deviceContextAddress(deviceContextAddress),
     m_componentPsoManagerCached(componentPsoManager),
     m_viewProjMatrix(viewProjMatrix),
     m_viewport(viewport),
-    m_depthStencilViewTexture(depthStencilViewTexture)
+    m_depthStencilView(depthStencilView)
 {
 }
 
@@ -58,7 +53,7 @@ void DepthTestRenderer::Visit(StaticMeshComponent* staticMeshComponent)
                 staticMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
                 ID3D11RenderTargetView* nullRTV = nullptr;
-                deviceContext->OMSetRenderTargets(0, &nullRTV, m_depthStencilViewTexture->GetDSV());
+                deviceContext->OMSetRenderTargets(0, &nullRTV, m_depthStencilView);
                 deviceContext->RSSetViewports(1, m_viewport);
 
                 // =============================== VS ===============================
@@ -92,7 +87,7 @@ void DepthTestRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
                 skeletalMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
                 ID3D11RenderTargetView* nullRTV = nullptr;
-                deviceContext->OMSetRenderTargets(0, &nullRTV, m_depthStencilViewTexture->GetDSV());
+                deviceContext->OMSetRenderTargets(0, &nullRTV, m_depthStencilView);
                 deviceContext->RSSetViewports(1, m_viewport);
 
                 // =============================== VS ===============================
@@ -119,12 +114,12 @@ void DepthTestRenderer::Visit(CameraComponent* cameraComponent)
 
 void DepthTestRenderer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
-    sphereCollisionComponent->SetRenderable(false);
+    // Do Nothing
 }
 
 void DepthTestRenderer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
-    orientedBoxCollisionComponent->SetRenderable(false);
+    // Do Nothing
 }
 
 void DepthTestRenderer::Visit(SpotLightComponent* spotLightComponent)
@@ -153,6 +148,6 @@ void DepthTestRenderer::DepthTestMeshParts(ID3D11DeviceContext* const deviceCont
         deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
         deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
         deviceContext->DrawIndexed(indexCount, indicesOffsets[idx], NULL);
-        PerformanceAnalyzer::DrawForDepthTestCount += indexCount;
+        PerformanceAnalyzer::DepthTestDrawCount += indexCount;
     }
 }

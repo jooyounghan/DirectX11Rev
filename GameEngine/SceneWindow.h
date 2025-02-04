@@ -47,9 +47,6 @@ public:
 	inline void SetCameraComponent(CameraComponent* cameraComponent) { m_selectedCamera = cameraComponent; }
 	virtual void PrepareWindow() override;
 
-private:
-	void RenderComponentRecursive(ASceneRenderer* const renderer, const std::vector<AComponent*>& components);
-
 protected:
 	virtual void RenderWindowImpl() override;
 

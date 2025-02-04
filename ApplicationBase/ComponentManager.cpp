@@ -132,7 +132,7 @@ void ComponentManager::LoadComponentMakers()
 				{ 
 					PointLightComponent* pointLightComponent = new PointLightComponent(componentName, componentID, position, angle, scale);
 					m_componentIDsToPointLight.emplace(componentID, pointLightComponent);
-					return new PointLightComponent(componentName, componentID, position, angle, scale); 
+					return pointLightComponent;
 				}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
 			));
 			break;

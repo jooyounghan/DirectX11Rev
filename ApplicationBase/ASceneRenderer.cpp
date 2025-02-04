@@ -81,13 +81,11 @@ void ASceneRenderer::Visit(Scene* scene)
 void ASceneRenderer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
     RenderCollisionComponent(sphereCollisionComponent, StaticMeshAsset::DefaultSphereModelName);
-    sphereCollisionComponent->SetRenderable(false);
 }
 
 void ASceneRenderer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
     RenderCollisionComponent(orientedBoxCollisionComponent, StaticMeshAsset::DefaultCubeModelName);
-    orientedBoxCollisionComponent->SetRenderable(false);
 }
 
 void ASceneRenderer::Visit(SpotLightComponent* spotLightComponent)
@@ -198,6 +196,6 @@ void ASceneRenderer::RenderMeshParts(
         deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
         deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
         deviceContext->DrawIndexed(indexCount, indicesOffsets[idx], NULL);
-        PerformanceAnalyzer::DrawCount += indexCount;
+        PerformanceAnalyzer::RenderingDrawCount += indexCount;
     }
 }

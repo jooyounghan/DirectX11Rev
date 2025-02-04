@@ -39,6 +39,9 @@ public:
 	inline void SetRenderable(const bool& isRenderable) { m_isRenderable = isRenderable; }
 
 public:
+	virtual bool GetDefaultRenderable();
+
+public:
 	void AttachChildComponent(AComponent* component);
 	void RemoveFromParent();
 

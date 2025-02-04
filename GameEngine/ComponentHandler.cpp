@@ -57,6 +57,7 @@ void ComponentHandler::Visit(CameraComponent* cameraComponent)
 {
 	HandleComponentName(cameraComponent, "Camera Model Component");
 	HandleComponentTransformation(cameraComponent, true, true, false);
+	HandleViewComponent(cameraComponent);
 }
 
 void ComponentHandler::Visit(SphereCollisionComponent* sphereCollisionComponent)
@@ -64,7 +65,6 @@ void ComponentHandler::Visit(SphereCollisionComponent* sphereCollisionComponent)
 	HandleComponentName(sphereCollisionComponent, "Sphere Collision Component");
 	HandleComponentTransformation(sphereCollisionComponent, true, false, false);
 	HandleSphereCollisionComponent(sphereCollisionComponent);
-	PopID();
 }
 
 void ComponentHandler::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
@@ -72,13 +72,13 @@ void ComponentHandler::Visit(OrientedBoxCollisionComponent* orientedBoxCollision
 	HandleComponentName(orientedBoxCollisionComponent, "Oriented-Box Collision Component");
 	HandleComponentTransformation(orientedBoxCollisionComponent, true, true, false);
 	HandleOrientedCollisionComponent(orientedBoxCollisionComponent);
-	PopID();
 }
 
 void ComponentHandler::Visit(SpotLightComponent* spotLightComponent)
 {
 	HandleComponentName(spotLightComponent, "Spot Light Component");
 	HandleComponentTransformation(spotLightComponent, true, true, false);
+	HandleViewComponent(spotLightComponent);
 	HandleLightEntity(spotLightComponent, spotLightComponent, true);
 }
 
@@ -156,6 +156,20 @@ void ComponentHandler::HandleSphereCollisionComponent(SphereCollisionComponent* 
 	{
 		sphereCollisionComponent->SetIsModified(true);
 	}
+	PopID();
+}
+
+void ComponentHandler::HandleViewComponent(AViewComponent* viewComponent)
+{
+	SeparatorText("View Properties");
+	Text("Fov Angle");
+	PushID("FovAngle");
+	float& fovAngle = const_cast<float&>(viewComponent->GetFovAngle());
+	if (DragFloat("", &fovAngle, 0.1f, 60.f, 160.f))
+	{
+		viewComponent->SetIsModified(true);
+	}
+	PopID();
 }
 
 void ComponentHandler::HandleOrientedCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
@@ -167,6 +181,7 @@ void ComponentHandler::HandleOrientedCollisionComponent(OrientedBoxCollisionComp
 	{
 		orientedBoxCollisionComponent->SetIsModified(true);
 	}
+	PopID();
 }
 
 void ComponentHandler::HandleLightEntity(AComponent* component, LightEntity* lightEntity, const bool& isHandleSpotPower)
@@ -192,7 +207,7 @@ void ComponentHandler::HandleLightEntity(AComponent* component, LightEntity* lig
 
 	PushID("falloffEndEntity");
 	Text("Fall-Off End Distance");
-	if (DragFloat("", &lightEntityValue.m_fallOffEnd, 1.f, 0.f, 1E6))
+	if (DragFloat("", &lightEntityValue.m_fallOffEnd, 1.f, lightEntityValue.m_fallOffStart + 100, 1E6))
 	{
 		component->SetIsModified(true);
 	}

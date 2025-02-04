@@ -3,11 +3,14 @@
 #include "IComponentVisitor.h"
 #include "ImGuiComboBox.h"
 
-class ComponentEntity;
 class AMeshComponent;
+class AViewComponent;
+
+class ComponentEntity;
+class LightEntity;
+
 class AssetManager;
 class ComponentManager;
-class LightEntity;
 
 enum class EComponentEntityType
 {
@@ -63,6 +66,7 @@ private:
 	);
 	void HandleMeshComponent(AMeshComponent* meshComponent);
 	void HandleSphereCollisionComponent(SphereCollisionComponent* sphereCollisionComponent);
+	void HandleViewComponent(AViewComponent* viewComponent);
 	void HandleOrientedCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent);
 	void HandleLightEntity(AComponent* component, LightEntity* lightEntity, const bool& isHandleSpotPower);
 

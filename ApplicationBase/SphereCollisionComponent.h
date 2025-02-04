@@ -14,6 +14,9 @@ public:
 	~SphereCollisionComponent() override;
 
 public:
+	virtual bool GetDefaultRenderable() override;
+
+public:
 	virtual void Accept(IComponentVisitor* visitor) override;
 
 public:

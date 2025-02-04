@@ -3,14 +3,10 @@
 
 struct ID3D11Buffer;
 struct ID3D11DeviceContext;
+struct ID3D11DepthStencilView;
 struct D3D11_VIEWPORT;
 class ComponentPSOManager;
 class AMeshPartsData;
-
-template<typename ...IsTextureOption>
-class Texture2DInstance;
-class SRVOption;
-class DSVOption;
 
 class Scene;
 
@@ -22,7 +18,7 @@ public:
 		ComponentPSOManager* componentPsoManager,
 		ID3D11Buffer* viewProjMatrix,
 		D3D11_VIEWPORT* viewport,
-		Texture2DInstance<SRVOption, DSVOption>* depthStencilViewTexture
+		ID3D11DepthStencilView* depthStencilView
 	);
 	~DepthTestRenderer() override = default;
 
@@ -31,7 +27,7 @@ protected:
 	ComponentPSOManager* m_componentPsoManagerCached = nullptr;
 	ID3D11Buffer* m_viewProjMatrix = nullptr;
 	D3D11_VIEWPORT* m_viewport = nullptr;
-	Texture2DInstance<SRVOption, DSVOption>* m_depthStencilViewTexture = nullptr;
+	ID3D11DepthStencilView* m_depthStencilView = nullptr;
 
 public:
 	virtual void Visit(StaticMeshComponent* staticMeshComponent) override;
