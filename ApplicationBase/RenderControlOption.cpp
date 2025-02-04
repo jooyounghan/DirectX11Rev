@@ -23,7 +23,6 @@ void RenderControlOption::UpdateBVHImpl(ICollisionAcceptor* accpetor)
 
 void RenderControlOption::OnCollideImpl(AComponent* component)
 {
-	component->SetIsModified(true);
 	component->SetRenderable(true);
 }
 

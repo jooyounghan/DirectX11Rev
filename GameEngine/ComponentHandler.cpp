@@ -2,6 +2,7 @@
 
 #include "AssetManager.h"
 #include "ComponentManager.h"
+#include "AnimationPlayer.h"
 
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
@@ -51,6 +52,7 @@ void ComponentHandler::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 	HandleComponentName(skeletalMeshComponent, "Skeletal Model Component");
 	HandleComponentTransformation(skeletalMeshComponent, true, true, true);
 	HandleMeshComponent(skeletalMeshComponent);
+	HandleAnimationPlayer(skeletalMeshComponent);
 }
 
 void ComponentHandler::Visit(CameraComponent* cameraComponent)
@@ -134,6 +136,34 @@ void ComponentHandler::HandleComponentTransformation(
 			0.01f, 1E-3f, 10.f
 		);
 	}
+}
+
+void ComponentHandler::HandleAnimationPlayer(SkeletalMeshComponent* skeletalMeshComponent)
+{
+	SeparatorText("Animation Previewer");
+	AnimationPlayer* animationPlayer = skeletalMeshComponent->GetAnimationPlayer();
+	const AnimationAsset* playingAnimationAsset = animationPlayer->GetPlayingAnimationAsset();
+	const string playingAnimationName = playingAnimationAsset ? playingAnimationAsset->GetAssetName() : "Select Animation Asset";
+
+	AssetManager* assetManager = AssetManager::GetInstance();
+	const vector<string> animationNames = assetManager->GetAssetNames(EAssetType::ASSET_TYPE_ANIMATION);
+
+	PushID("AnimationPreviewer");
+	if (BeginCombo("Select Animation", playingAnimationName.c_str()))
+	{
+		for (const string& animationName : animationNames)
+		{
+			const bool is_selected = (playingAnimationName == animationName);
+			if (Selectable(animationName.c_str(), is_selected))
+			{
+				animationPlayer->PlayAnimation(assetManager->GetAnimationAsset(animationName), INFINITE);
+			}
+			if (is_selected)
+				SetItemDefaultFocus();
+		}
+		EndCombo();
+	}
+	PopID();
 }
 
 void ComponentHandler::HandleMeshComponent(AMeshComponent* meshComponent)

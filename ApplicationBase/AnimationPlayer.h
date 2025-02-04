@@ -12,6 +12,8 @@ class StructuredBuffer;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
+class AComponent;
+
 //struct AnimationNotify
 //{
 //	float NotifyTime;
@@ -20,10 +22,11 @@ struct ID3D11DeviceContext;
 class AnimationPlayer
 {
 public:
-	AnimationPlayer(const BoneAsset* boneAsset);
+	AnimationPlayer(AComponent* parentcomponent, const BoneAsset* boneAsset);
 	~AnimationPlayer() = default;
 
 protected:
+	AComponent* m_parentcomponent = nullptr;
 	const BoneAsset*		m_boneAssetCached = nullptr;
 	const AnimationAsset*	m_animationAssetCached = nullptr;
 	size_t m_playCount = false;
@@ -39,8 +42,11 @@ public:
 	std::function<void()> m_animationEndedEvent;
 
 public:
-	void PlayAnimation(const AnimationAsset* animationAsset, const size_t& playCountIn);
+	inline const AnimationAsset* GetPlayingAnimationAsset() { return m_animationAssetCached; };
 	inline StructuredBuffer* GetBoneTransformationBuffer() const { return m_boneTransformationBuffer; }
+
+public:
+	void PlayAnimation(const AnimationAsset* animationAsset, const size_t& playCountIn);
 
 private:
 	bool IsPlaying();

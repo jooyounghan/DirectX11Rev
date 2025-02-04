@@ -1,5 +1,6 @@
 #include "AnimationPlayer.h"
 
+#include "AComponent.h"
 #include "BoneAsset.h"
 #include "AnimationAsset.h"
 
@@ -8,11 +9,9 @@
 using namespace std;
 using namespace DirectX;
 
-
-AnimationPlayer::AnimationPlayer(const BoneAsset* boneAsset)
-	: m_boneAssetCached(boneAsset)
+AnimationPlayer::AnimationPlayer(AComponent* parentcomponent, const BoneAsset* boneAsset)
+	: m_parentcomponent(parentcomponent), m_boneAssetCached(boneAsset)
 {
-
 }
 
 void AnimationPlayer::PlayAnimation(const AnimationAsset* animationAssetIn, const size_t& playCountIn)
@@ -22,6 +21,7 @@ void AnimationPlayer::PlayAnimation(const AnimationAsset* animationAssetIn, cons
 		m_animationAssetCached = animationAssetIn;
 		m_playCount = playCountIn;
 		m_playTime = 0.f;
+		m_parentcomponent->SetIsModified(true);
 	}
 }
 
@@ -31,6 +31,7 @@ void AnimationPlayer::StopAnimation()
 	m_playCount = 0;
 	m_playTime = 0.f;
 	m_animationEndedEvent();
+	m_parentcomponent->SetIsModified(false);
 }
 
 inline bool AnimationPlayer::IsPlaying() { return (m_animationAssetCached != nullptr) && (m_playCount > 0); }
@@ -82,6 +83,7 @@ void AnimationPlayer::UpdateAnimationPlayer(ID3D11DeviceContext* const deviceCon
 {
 	if (IsPlaying())
 	{
+		m_parentcomponent->SetIsModified(true);
 		m_playTime += deltaTime * m_animationAssetCached->GetTicksPerSecond();
 
 		const float Duration = m_animationAssetCached->GetDuration();

@@ -39,7 +39,7 @@ void ComponentEntityInitializer::Visit(SkeletalMeshComponent* skeletalModelCompo
 	const SkeletalMeshAsset* skeletalMetalAsset = skeletalModelComponent->GetSkeletalMetalAsset();
 	if (skeletalMetalAsset != nullptr)
 	{
-		AnimationPlayer* animationPlayer = new AnimationPlayer(skeletalMetalAsset->GetBoneAsset());
+		AnimationPlayer* animationPlayer = new AnimationPlayer(skeletalModelComponent, skeletalMetalAsset->GetBoneAsset());
 		skeletalModelComponent->SetAnimationPlayer(animationPlayer);
 		animationPlayer->InitAnimationPlayer(m_deviceCached);
 	}

@@ -64,6 +64,7 @@ private:
 		const bool& isHandleAngle,
 		const bool& isHandleScale
 	);
+	void HandleAnimationPlayer(SkeletalMeshComponent* skeletalMeshComponent);
 	void HandleMeshComponent(AMeshComponent* meshComponent);
 	void HandleSphereCollisionComponent(SphereCollisionComponent* sphereCollisionComponent);
 	void HandleViewComponent(AViewComponent* viewComponent);
