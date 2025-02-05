@@ -35,8 +35,7 @@ void AAssetWriter::SaveAssets(const std::string& assetSavePath, const EAssetType
     for (const AAsset* const asset : assets)
     {
         FILE* fileIn = nullptr;
-        const string assetPathStr = assetSavePath + "\\" + asset->GetAssetName() + AAsset::AssetExtension;
-
+        const string assetPathStr = assetSavePath + "/" + asset->GetAssetName() + AAsset::AssetExtension;
         fopen_s(&fileIn, assetPathStr.c_str(), "wb");
         if (fileIn != nullptr)
         {

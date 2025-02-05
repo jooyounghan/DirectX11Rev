@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CreateAnimationRetargeterWindow.cpp" />
     <ClCompile Include="AssetContextMenu.cpp" />
     <ClCompile Include="AssetViewWindow.cpp" />
     <ClCompile Include="AssetFileControl.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="ScratchTextureAssetVariableNode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CreateAnimationRetargeterWindow.h" />
     <ClInclude Include="AssetContextMenu.h" />
     <ClInclude Include="AssetViewWindow.h" />
     <ClInclude Include="AssetFileControl.h" />

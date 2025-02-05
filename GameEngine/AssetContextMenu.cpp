@@ -38,11 +38,10 @@ void AssetContextMenu::RenderNotification()
         }
         if (MenuItem("Animtion"))
         {
-
         }
         if (MenuItem("Retargeted Animation"))
         {
-
+            m_createRetargetedAnimationOpenFlag = true;
         }
 
         ImGui::EndMenu();

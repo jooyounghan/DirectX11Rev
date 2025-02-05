@@ -49,9 +49,6 @@
     <Filter Include="헤더 파일\GUI\ContextMenu">
       <UniqueIdentifier>{98641e98-8670-4c55-8496-42a492b80e2b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\GUI\Modal\CreateAsset">
-      <UniqueIdentifier>{f2e7584e-c78c-4979-9bee-43c174215690}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\GUI\NodeEditor">
       <UniqueIdentifier>{a55cbb82-62c4-49e1-a320-8f6007bb5cf2}</UniqueIdentifier>
     </Filter>
@@ -147,6 +144,9 @@
     <ClCompile Include="PerformanceAnalyzerWindow.cpp">
       <Filter>소스 파일\GUI\Window\Extended</Filter>
     </ClCompile>
+    <ClCompile Include="CreateAnimationRetargeterWindow.cpp">
+      <Filter>소스 파일\GUI\Window\Extended</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -198,6 +198,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="PerformanceAnalyzerWindow.h">
+      <Filter>헤더 파일\GUI\Window\Extended</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateAnimationRetargeterWindow.h">
       <Filter>헤더 파일\GUI\Window\Extended</Filter>
     </ClInclude>
   </ItemGroup>

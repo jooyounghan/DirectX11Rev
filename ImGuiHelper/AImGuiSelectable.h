@@ -27,6 +27,6 @@ public:
 	std::function<void(const size_t&, const std::string&)> OnSelChanged = [&](const size_t&, const std::string&) {};
 
 public:
-	virtual void Draw() = 0;
+	virtual bool Draw() = 0;
 };
 

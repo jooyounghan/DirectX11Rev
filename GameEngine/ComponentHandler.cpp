@@ -12,6 +12,8 @@
 #include "SpotLightComponent.h"
 #include "PointLightComponent.h"
 
+#include "ImGuiComboBox.h"
+
 #include <vector>
 #include <string>
 
@@ -19,25 +21,27 @@ using namespace std;
 using namespace ImGui;
 using namespace DirectX;
 
-bool ComponentHandler::isPositionAbsolute = true;
-bool ComponentHandler::isAngleAbsolute = true;
-bool ComponentHandler::isScaleAbsolute = true;
+bool ComponentHandler::IsPositionAbsolute = true;
+bool ComponentHandler::IsAngleAbsolute = true;
+bool ComponentHandler::IsScaleAbsolute = true;
 
 ComponentHandler::ComponentHandler(ComponentManager* componentManager)
 	: m_componentManagerCached(componentManager),
 	m_absRelativeComboPosition("AbsRelativePositionCombo", "", ImGuiComboFlags_WidthFitPreview),
 	m_absRelativeComboAngle("AbsRelativeAngleCombo", "", ImGuiComboFlags_WidthFitPreview),
-	m_absRelativeComboScale("AbsRelativeScaleCombo", "", ImGuiComboFlags_WidthFitPreview)
+	m_absRelativeComboScale("AbsRelativeScaleCombo", "", ImGuiComboFlags_WidthFitPreview),
+	m_animationPreview("AnimationPreviewer", "Select Animtion")
 {
 	const vector<string> absRelativeStrings = { "Absolute", "Relative" };
 
-	m_absRelativeComboPosition.SetSelectableItems(isPositionAbsolute ? absRelativeStrings[0] : absRelativeStrings[1], absRelativeStrings);
-	m_absRelativeComboAngle.SetSelectableItems(isPositionAbsolute ? absRelativeStrings[0] : absRelativeStrings[1], absRelativeStrings);
-	m_absRelativeComboScale.SetSelectableItems(isPositionAbsolute ? absRelativeStrings[0] : absRelativeStrings[1], absRelativeStrings);
+	m_absRelativeComboPosition.SetSelectableItems(IsPositionAbsolute ? absRelativeStrings[0] : absRelativeStrings[1], absRelativeStrings);
+	m_absRelativeComboAngle.SetSelectableItems(IsPositionAbsolute ? absRelativeStrings[0] : absRelativeStrings[1], absRelativeStrings);
+	m_absRelativeComboScale.SetSelectableItems(IsPositionAbsolute ? absRelativeStrings[0] : absRelativeStrings[1], absRelativeStrings);
 
-	m_absRelativeComboPosition.OnSelChanged = [&](const size_t& idx, const string&) { isPositionAbsolute = !static_cast<bool>(idx); };
-	m_absRelativeComboAngle.OnSelChanged = [&](const size_t& idx, const string&) { isAngleAbsolute = !static_cast<bool>(idx); };
-	m_absRelativeComboScale.OnSelChanged = [&](const size_t& idx, const string&) { isScaleAbsolute = !static_cast<bool>(idx); };
+	m_absRelativeComboPosition.OnSelChanged = [&](const size_t& idx, const string&) { IsPositionAbsolute = !static_cast<bool>(idx); };
+	m_absRelativeComboAngle.OnSelChanged = [&](const size_t& idx, const string&) { IsAngleAbsolute = !static_cast<bool>(idx); };
+	m_absRelativeComboScale.OnSelChanged = [&](const size_t& idx, const string&) { IsScaleAbsolute = !static_cast<bool>(idx); };
+	m_animationPreview.OnSelChanged = [&](const size_t&, const string& animationAssetName) { m_selectedAnimationName = animationAssetName; };
 }
 
 void ComponentHandler::Visit(StaticMeshComponent* staticMeshComponent)
@@ -148,22 +152,12 @@ void ComponentHandler::HandleAnimationPlayer(SkeletalMeshComponent* skeletalMesh
 	AssetManager* assetManager = AssetManager::GetInstance();
 	const vector<string> animationNames = assetManager->GetAssetNames(EAssetType::ASSET_TYPE_ANIMATION);
 
-	PushID("AnimationPreviewer");
-	if (BeginCombo("Select Animation", playingAnimationName.c_str()))
+	m_animationPreview.SetSelectableItems(playingAnimationName, animationNames);
+	
+	if (m_animationPreview.Draw())
 	{
-		for (const string& animationName : animationNames)
-		{
-			const bool is_selected = (playingAnimationName == animationName);
-			if (Selectable(animationName.c_str(), is_selected))
-			{
-				animationPlayer->PlayAnimation(assetManager->GetAnimationAsset(animationName), INFINITE);
-			}
-			if (is_selected)
-				SetItemDefaultFocus();
-		}
-		EndCombo();
+		animationPlayer->PlayAnimation(assetManager->GetAnimationAsset(m_selectedAnimationName), INFINITE);
 	}
-	PopID();
 }
 
 void ComponentHandler::HandleMeshComponent(AMeshComponent* meshComponent)
@@ -287,18 +281,18 @@ void ComponentHandler::RenderTransformationEntity(
 			}
 		};
 
-	const auto RenderAbsoluteRelativeSelector = [&]()
+	const auto RenderAbsoluteRelativeSelector = [&]() -> bool
 		{
 			if (parentComponent == nullptr)
 			{
 				switch (entityType)
 				{
-				case EComponentEntityType::ENTITY_POSITION: isPositionAbsolute = true; break;
-				case EComponentEntityType::ENTITY_ANGLE: isAngleAbsolute = true; break;
-				case EComponentEntityType::ENTITY_SCALE: isScaleAbsolute = true; break;
+				case EComponentEntityType::ENTITY_POSITION: IsPositionAbsolute = true; break;
+				case EComponentEntityType::ENTITY_ANGLE: IsAngleAbsolute = true; break;
+				case EComponentEntityType::ENTITY_SCALE: IsScaleAbsolute = true; break;
 				default: throw invalid_argument("Invalid entity type");
 				}
-				return;
+				return false;
 			}
 
 			switch (entityType) 
@@ -314,9 +308,9 @@ void ComponentHandler::RenderTransformationEntity(
 		{
 			switch (entityType)
 			{
-			case EComponentEntityType::ENTITY_POSITION: return isPositionAbsolute;
-			case EComponentEntityType::ENTITY_ANGLE: return isAngleAbsolute;
-			case EComponentEntityType::ENTITY_SCALE: return isScaleAbsolute;
+			case EComponentEntityType::ENTITY_POSITION: return IsPositionAbsolute;
+			case EComponentEntityType::ENTITY_ANGLE: return IsAngleAbsolute;
+			case EComponentEntityType::ENTITY_SCALE: return IsScaleAbsolute;
 			default: throw invalid_argument("Invalid entity type");
 			}
 		};

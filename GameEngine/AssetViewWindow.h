@@ -46,7 +46,7 @@ private:
 
 private:
 	AssetContextMenu* m_assetContextMenuModal = nullptr;
-	std::vector<AWindow*> m_assetNodeEditorWindows;
+	std::vector<AWindow*> m_assetEditorWindows;
 
 private:
 	static std::string AnimationAssetTN;

@@ -32,11 +32,13 @@ private:
 	ImGuiComboBox m_absRelativeComboPosition;
 	ImGuiComboBox m_absRelativeComboAngle;
 	ImGuiComboBox m_absRelativeComboScale;
+	ImGuiComboBox m_animationPreview;
+	std::string m_selectedAnimationName;
 
 private:
-	static bool isPositionAbsolute;
-	static bool isAngleAbsolute;
-	static bool isScaleAbsolute;
+	static bool IsPositionAbsolute;
+	static bool IsAngleAbsolute;
+	static bool IsScaleAbsolute;
 
 public:
 	virtual void Visit(StaticMeshComponent* staticMeshComponent) override;

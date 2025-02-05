@@ -8,8 +8,9 @@ ImGuiListBox::ImGuiListBox(const string& id, const ImVec2& size)
 {
 }
 
-void ImGuiListBox::Draw()
+bool ImGuiListBox::Draw()
 {
+    bool result = false;
     if (m_selectableItems.size() > 0)
     {
         if (BeginListBox(m_id.c_str(), m_size))
@@ -21,6 +22,7 @@ void ImGuiListBox::Draw()
                 {
                     m_selectedIdx = idx;
                     OnSelChanged(m_selectedIdx, m_selectableItems[m_selectedIdx]);
+                    result = true;
                 }
 
                 if (is_selected)
@@ -29,4 +31,5 @@ void ImGuiListBox::Draw()
             EndListBox();
         }
     }
+    return result;
 }

@@ -11,6 +11,6 @@ protected:
 	const ImGuiComboFlags m_comboFlags;
 
 public:
-	virtual void Draw() override;
+	virtual bool Draw() override;
 };
 

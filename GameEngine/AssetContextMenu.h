@@ -14,10 +14,11 @@ protected:
 protected:
 	bool m_createModelMaterialOpenFlag = false;
 	bool m_createIBLMaterialOpenFlag = false;
+	bool m_createRetargetedAnimationOpenFlag = false;
 
 public:
 	inline bool* GetCreateModelMaterialOpenFlag() { return &m_createModelMaterialOpenFlag; }
 	inline bool* GetCreateIBLMaterialOpenFlag() { return &m_createIBLMaterialOpenFlag; }
-
+	inline bool* GetCreateRetargetedAnimationOpenFlag() { return &m_createRetargetedAnimationOpenFlag; }
 };
 

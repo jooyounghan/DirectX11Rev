@@ -9,7 +9,7 @@
 #include "AssetContextMenu.h"
 #include "CreateModelMaterialWIthNodeEditorWindow.h"
 #include "CreateIBLMaterialWithNodeEditorWindow.h"
-
+#include "CreateAnimationRetargeterWindow.h"
 #include <filesystem>
 
 using namespace std;
@@ -37,20 +37,24 @@ AssetViewWindow::AssetViewWindow(
     
     m_assetContextMenuModal = new AssetContextMenu("Asset Context Menu");
 
-    m_assetNodeEditorWindows.emplace_back(new CreateModelMaterialWIthNodeEditorWindow(
+    m_assetEditorWindows.emplace_back(new CreateModelMaterialWIthNodeEditorWindow(
         deviceAddress, deviceContextAddress, "Create Model Material Asset",
         m_assetContextMenuModal->GetCreateModelMaterialOpenFlag()
     ));
 
-    m_assetNodeEditorWindows.emplace_back(new CreateIBLMaterialWithNodeEditorWindow(
+    m_assetEditorWindows.emplace_back(new CreateIBLMaterialWithNodeEditorWindow(
         deviceAddress, deviceContextAddress, "Create IBL Material Asset",
         m_assetContextMenuModal->GetCreateIBLMaterialOpenFlag()
+    ));
+    m_assetEditorWindows.emplace_back(new CreateAnimationRetargeterWindow(
+        deviceAddress, deviceContextAddress,
+        "Create IBL Material Asset", m_assetContextMenuModal->GetCreateRetargetedAnimationOpenFlag()
     ));
 }
 
 AssetViewWindow::~AssetViewWindow()
 {
-    for (AWindow* assetNodeEditorWindow : m_assetNodeEditorWindows)
+    for (AWindow* assetNodeEditorWindow : m_assetEditorWindows)
     {
         delete assetNodeEditorWindow;
     }
@@ -59,7 +63,7 @@ AssetViewWindow::~AssetViewWindow()
 
 void AssetViewWindow::PrepareWindow()
 {
-    for (AWindow* assetNodeEditorWindow : m_assetNodeEditorWindows)
+    for (AWindow* assetNodeEditorWindow : m_assetEditorWindows)
     {
         assetNodeEditorWindow->PrepareWindow();
     }
@@ -85,7 +89,7 @@ void AssetViewWindow::RenderWindowImpl()
     PopID();
     EndGroup();
 
-    for (AWindow* assetNodeEditorWindow : m_assetNodeEditorWindows)
+    for (AWindow* assetNodeEditorWindow : m_assetEditorWindows)
     {
         assetNodeEditorWindow->ShowWindow();
     }

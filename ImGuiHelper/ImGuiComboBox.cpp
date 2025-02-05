@@ -8,8 +8,9 @@ ImGuiComboBox::ImGuiComboBox(const string& id, const string& label, ImGuiComboFl
 {
 }
 
-void ImGuiComboBox::Draw()
+bool ImGuiComboBox::Draw()
 {
+	bool result = false;
 	if (m_selectableItems.size() > 0)
 	{
 		PushID(m_id.c_str());
@@ -22,6 +23,7 @@ void ImGuiComboBox::Draw()
 				{
 					m_selectedIdx = idx;
 					OnSelChanged(m_selectedIdx, m_selectableItems[m_selectedIdx]);
+					result = true;
 				}
 
 				if (isSelected)
@@ -35,5 +37,6 @@ void ImGuiComboBox::Draw()
 	{
 		Text("None Selectables");
 	}
+	return result;
 }
 

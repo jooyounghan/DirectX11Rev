@@ -9,6 +9,6 @@ protected:
 	const ImVec2 m_size;
 
 public:
-	virtual void Draw() override;
+	virtual bool Draw() override;
 };
 

@@ -12,8 +12,10 @@ using namespace ImGui;
 
 
 CreateIBLMaterialWithNodeEditorWindow::CreateIBLMaterialWithNodeEditorWindow(
-	ID3D11Device* const* deviceAddress, ID3D11DeviceContext* const* deviceContextAddress,
-	const std::string& windowID, bool* openFlag
+	ID3D11Device* const* deviceAddress, 
+	ID3D11DeviceContext* const* deviceContextAddress,
+	const std::string& windowID, 
+	bool* openFlag
 )
 	: ANodeEditorWindow(windowID, openFlag, 3)
 {
