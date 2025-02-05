@@ -80,7 +80,7 @@ void CreateAnimationRetargeterWindow::RenderWindowImpl()
         m_animationRetargeter.GenerateBoneTargetings();
     }
 
-    const unordered_map<const Bone*, const Bone*>& targetedBones = m_animationRetargeter.GetBoneTargetings();
+    const vector<pair<const Bone*, const Bone*>>& targetedBones = m_animationRetargeter.GetBoneTargetings();
     
     ImVec2 regionAvailSize = GetContentRegionAvail();
     if (BeginTable("Retarget Bone Asset", 2,
@@ -92,8 +92,10 @@ void CreateAnimationRetargeterWindow::RenderWindowImpl()
         TableSetupColumn("Target Bone");
         ImGui::TableHeadersRow();
 
-        for (auto& targetedBone : targetedBones)
+        for (size_t idx = 0; idx < targetedBones.size(); ++ idx)
         {
+            auto& targetedBone = targetedBones[idx];
+
             ImGui::TableNextRow();
             const Bone* sourceBone = targetedBone.first;
             const Bone* targetBone = targetedBone.second;
@@ -115,7 +117,7 @@ void CreateAnimationRetargeterWindow::RenderWindowImpl()
             targetBoneCombo.SetSelectableItems(targetBoneName, targetBoneNames);
             if (targetBoneCombo.Draw())
             {
-                m_animationRetargeter.ReplaceTargetBone(sourceBone, targetBoneNameToBones.at(replacedTargetBoneName));
+                m_animationRetargeter.ReplaceTargetBone(idx, sourceBone, targetBoneNameToBones.at(replacedTargetBoneName));
             }
         }
         EndTable();

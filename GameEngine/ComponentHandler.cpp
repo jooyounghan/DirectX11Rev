@@ -95,9 +95,14 @@ void ComponentHandler::Visit(PointLightComponent* pointLightComponent)
 	HandleLightEntity(pointLightComponent, pointLightComponent, false);
 }
 
-void ComponentHandler::HandleComponentName(AComponent* comopnent, const string& componentDescription)
+void ComponentHandler::HandleComponentName(AComponent* component, const string& componentDescription)
 {
-	SeparatorText(comopnent->GetComponentName().c_str());
+	if (m_lastHandledComponent != component)
+	{
+		m_lastHandledComponent = component;
+		m_animationPreview.ResetSelection();
+	}
+	SeparatorText(component->GetComponentName().c_str());
 	Text(componentDescription.c_str());
 }
 

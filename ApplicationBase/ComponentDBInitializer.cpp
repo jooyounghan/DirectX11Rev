@@ -190,8 +190,9 @@ void ComponentDBInitializer::LoadCameraComponent(CameraComponent* cameraComponen
 void ComponentDBInitializer::LoadSphereColiisionComponent(SphereCollisionComponent* sphereCollisionComponent)
 {
 	const uint32_t componentID = sphereCollisionComponent->GetComponentID();
-	const std::string sphereCollisionComponentTableName = "sphere_collision_components";
+	const uint32_t& sceneID = sphereCollisionComponent->GetParentSceneID();
 
+	const std::string sphereCollisionComponentTableName = "sphere_collision_components";
 	Table sphereCollisionComponentTable = m_schemaCached->getTable(sphereCollisionComponentTableName, true);
 	RowResult rowResult = sphereCollisionComponentTable
 		.select("radius", "collision_option_id").where("sphere_collision_component_id = :sphere_collision_component_id")
@@ -206,14 +207,16 @@ void ComponentDBInitializer::LoadSphereColiisionComponent(SphereCollisionCompone
 		const XMVECTOR& absolutePosition = sphereCollisionComponent->GetAbsolutePosition();
 		sphereCollisionComponent->SetBoundingProperties(absolutePosition, radius);
 
-		ICollisionOption* collisionOption = CreateCollisionOption(collisionOptionID);
+		ICollisionOption* collisionOption = CreateCollisionOption(sceneID, collisionOptionID);
 		sphereCollisionComponent->SetCollisionOption(collisionOption);
 	}
 }
 
 void ComponentDBInitializer::LoadOrientedBoxCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
-	const uint32_t componentID = orientedBoxCollisionComponent->GetComponentID();
+	const uint32_t& componentID = orientedBoxCollisionComponent->GetComponentID();
+	const uint32_t& sceneID = orientedBoxCollisionComponent->GetParentSceneID();
+
 	const std::string orientedBoxCollisionComponentTableName = "oriented_box_collision_components";
 
 	Table orientedBoxCollisionComponentTable = m_schemaCached->getTable(orientedBoxCollisionComponentTableName, true);
@@ -233,19 +236,19 @@ void ComponentDBInitializer::LoadOrientedBoxCollisionComponent(OrientedBoxCollis
 		const XMVECTOR& rotationQuaternion = orientedBoxCollisionComponent->GetAbsoluteRotationQuaternion();
 		orientedBoxCollisionComponent->SetBoundingProperties(absolutePosition, XMFLOAT3(extendX, extendY, extendZ), rotationQuaternion);
 
-		ICollisionOption* collisionOption = CreateCollisionOption(collisionOptionID);
+		ICollisionOption* collisionOption = CreateCollisionOption(sceneID, collisionOptionID);
 		orientedBoxCollisionComponent->SetCollisionOption(collisionOption);
 	}
 
 }
 
-ICollisionOption* ComponentDBInitializer::CreateCollisionOption(const uint32_t& collitionOptionID)
+ICollisionOption* ComponentDBInitializer::CreateCollisionOption(const uint32_t& sceneID, const uint32_t& collitionOptionID)
 {
 	const ECollisionOptionType collisionType = static_cast<ECollisionOptionType>(collitionOptionID);
 	switch (collisionType)
 	{
 	case ECollisionOptionType::RENDER_CONTROL:
-		return new RenderControlOption();
+		return new RenderControlOption(sceneID);
 		break;
 	}
 	return nullptr;

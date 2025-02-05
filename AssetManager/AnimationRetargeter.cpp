@@ -24,12 +24,12 @@ AnimationAsset* AnimationRetargeter::GetRetargetedAnimation(const std::string& a
 	}
 	else
 	{
-		const float& Duration = m_sourceAnimationAsset->GetDuration();
-		const float& TicksPerSecond = m_sourceAnimationAsset->GetTicksPerSecond();
+		const float& duration = m_sourceAnimationAsset->GetDuration();
+		const float& ticksPerSecond = m_sourceAnimationAsset->GetTicksPerSecond();
 
 		const unordered_map<string, AnimChannel>& sourceBoneNameToAnimChannels = m_sourceAnimationAsset->GetBoneNameToAnimChannels();
-		AnimationAsset* RetargetedAnimation = new AnimationAsset(assetName);
-		RetargetedAnimation->SetAnimationDuration(Duration, TicksPerSecond);
+		AnimationAsset* retargetedAnimation = new AnimationAsset(assetName);
+		retargetedAnimation->SetAnimationDuration(duration, ticksPerSecond);
 
 		const map<string, XMMATRIX> localSourceTPoseTransformations = GetLocalTPoseTransformations(m_sourceBoneAsset);
 		const map<string, XMMATRIX> localTargetTPoseTransformations = GetLocalTPoseTransformations(m_targetBoneAsset);
@@ -42,48 +42,48 @@ AnimationAsset* AnimationRetargeter::GetRetargetedAnimation(const std::string& a
 			const string& sourceBoneName = sourceBone ? sourceBone->GetBoneName() : "";
 			const string& targetBoneName = targetingBone ? targetingBone->GetBoneName() : "";
 
-			XMVECTOR Position;
-			XMVECTOR Quaternion;
-			XMVECTOR Scale;
+			XMVECTOR position;
+			XMVECTOR quaternion;
+			XMVECTOR scale;
 
 			if (sourceBoneNameToAnimChannels.find(targetBoneName) != sourceBoneNameToAnimChannels.end())
 			{
 				AnimChannel newChannel;
-				const AnimChannel& SourceBoneChannel = sourceBoneNameToAnimChannels.at(targetBoneName);
+				const AnimChannel& sourceBoneChannel = sourceBoneNameToAnimChannels.at(targetBoneName);
 
-				const set<float>& TimeTable = SourceBoneChannel.GetTimeTable();
-				for (const float& Time : TimeTable)
+				const set<float>& TimeTable = sourceBoneChannel.GetTimeTable();
+				for (const float& time : TimeTable)
 				{
-					XMMATRIX SourceLocalAnimation = SourceBoneChannel.GetLocalTransformation(Time);
-					const XMMATRIX InvSourceTPose = XMMatrixInverse(nullptr, localSourceTPoseTransformations.at(targetBoneName));
-					const XMMATRIX DestTPose = localTargetTPoseTransformations.at(sourceBoneName);
+					XMMATRIX sourceLocalAnimation = sourceBoneChannel.GetLocalTransformation(time);
+					const XMMATRIX invSourceTPose = XMMatrixInverse(nullptr, localSourceTPoseTransformations.at(targetBoneName));
+					const XMMATRIX targetTPose = localTargetTPoseTransformations.at(targetBoneName);
 
 
-					XMMatrixDecompose(&Scale, &Quaternion, &Position, SourceLocalAnimation * InvSourceTPose * DestTPose);
+					XMMatrixDecompose(&scale, &quaternion, &position, sourceLocalAnimation * invSourceTPose * targetTPose);
 
-					newChannel.AddPositionKey(Time, Position);
-					newChannel.AddQuaternionKey(Time, Quaternion);
-					newChannel.AddScaleKey(Time, Scale);
+					newChannel.AddPositionKey(time, position);
+					newChannel.AddQuaternionKey(time, quaternion);
+					newChannel.AddScaleKey(time, scale);
 				}
-				RetargetedAnimation->AddAnimChannel(targetBoneName, move(newChannel));
+				retargetedAnimation->AddAnimChannel(targetBoneName, move(newChannel));
 			}
 			else
 			{
-				const XMMATRIX DestTPose = localTargetTPoseTransformations.at(sourceBoneName);
-				XMMatrixDecompose(&Scale, &Quaternion, &Position, DestTPose);
+				const XMMATRIX targetTPose = localTargetTPoseTransformations.at(targetBoneName);
+				XMMatrixDecompose(&scale, &quaternion, &position, targetTPose);
 
 				AnimChannel identityChannel;
-				identityChannel.AddPositionKey(0.f, Position);
-				identityChannel.AddPositionKey(Duration, Position);
-				identityChannel.AddQuaternionKey(0.f, Quaternion);
-				identityChannel.AddQuaternionKey(Duration, Quaternion);
-				identityChannel.AddScaleKey(0.f, Scale);
-				identityChannel.AddScaleKey(Duration, Scale);
+				identityChannel.AddPositionKey(0.f, position);
+				identityChannel.AddPositionKey(duration, position);
+				identityChannel.AddQuaternionKey(0.f, quaternion);
+				identityChannel.AddQuaternionKey(duration, quaternion);
+				identityChannel.AddScaleKey(0.f, scale);
+				identityChannel.AddScaleKey(duration, scale);
 
-				RetargetedAnimation->AddAnimChannel(targetBoneName, move(identityChannel));
+				retargetedAnimation->AddAnimChannel(targetBoneName, move(identityChannel));
 			}
 		}
-		return RetargetedAnimation;
+		return retargetedAnimation;
 	}
 	return nullptr;
 }
@@ -95,34 +95,38 @@ void AnimationRetargeter::GenerateBoneTargetings()
 	if (m_sourceBoneAsset != nullptr && m_targetBoneAsset != nullptr)
 	{
 		const vector<Bone*>& sourceBones = m_sourceBoneAsset->GetBones();
-		const vector<Bone*>& destBones = m_targetBoneAsset->GetBones();
+		const vector<Bone*>& targetBones = m_targetBoneAsset->GetBones();
 
-		unordered_map<string, Bone*> sourceNameToBones;
-		for (auto& sourceBone : sourceBones)
+		bool isSourceMain = sourceBones.size() > targetBones.size();
+		const vector<Bone*>& mainBones = isSourceMain ? sourceBones : targetBones;
+		const vector<Bone*>& subBones = isSourceMain ? targetBones : sourceBones;
+
+		unordered_map<string, Bone*> subBoneNameToBones;
+		for (auto& subBone : subBones)
 		{
-			sourceNameToBones.emplace(sourceBone->GetBoneName(), sourceBone);
+			subBoneNameToBones.emplace(subBone->GetBoneName(), subBone);
 		}
 
-		for (auto& destBone : destBones)
+		for (auto& mainBone : mainBones)
 		{
-			const string& destBoneName = destBone->GetBoneName();
-			if (sourceNameToBones.find(destBoneName) != sourceNameToBones.end())
+			const string& mainBoneName = mainBone->GetBoneName();
+			if (subBoneNameToBones.find(mainBoneName) != subBoneNameToBones.end())
 			{
-				m_boneTargetings.emplace(destBone, sourceNameToBones[destBoneName]);
+				m_boneTargetings.emplace_back(make_pair(isSourceMain ? mainBone : subBoneNameToBones[mainBoneName], isSourceMain ? subBoneNameToBones[mainBoneName] : mainBone));
 			}
 			else
 			{
-				m_boneTargetings.emplace(destBone, nullptr);
+				m_boneTargetings.emplace_back(make_pair(isSourceMain ? mainBone : nullptr, isSourceMain ? nullptr : mainBone));
 			}
 		}
 	}
 }
 
-void AnimationRetargeter::ReplaceTargetBone(const Bone* const sourceBone, const Bone* const targetBone)
+void AnimationRetargeter::ReplaceTargetBone(const size_t& idx, const Bone* const sourceBone, const Bone* const targetBone)
 {
-	if (m_boneTargetings.find(sourceBone) != m_boneTargetings.end())
+	if (m_boneTargetings.size() > idx)
 	{
-		m_boneTargetings[sourceBone] = targetBone;
+		m_boneTargetings[idx] = make_pair(sourceBone, targetBone);
 	}
 }
 

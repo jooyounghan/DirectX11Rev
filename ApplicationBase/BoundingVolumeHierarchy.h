@@ -8,7 +8,7 @@ class ACollisionVisitor;
 class BoundingVolumeHierarchy
 {
 public:
-	BoundingVolumeHierarchy(const float& margin);
+	BoundingVolumeHierarchy(const float& margin = 10.f);
 
 private:
 	BoundingVolumeNode* m_rootNode = nullptr;

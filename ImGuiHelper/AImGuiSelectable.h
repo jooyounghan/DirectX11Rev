@@ -27,6 +27,7 @@ public:
 	std::function<void(const size_t&, const std::string&)> OnSelChanged = [&](const size_t&, const std::string&) {};
 
 public:
+	inline void ResetSelection() { m_selectedIdx = NotSelected; }
 	virtual bool Draw() = 0;
 };
 

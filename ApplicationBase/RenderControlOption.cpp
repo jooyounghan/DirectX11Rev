@@ -4,21 +4,26 @@
 
 using namespace std;
 
-BoundingVolumeHierarchy RenderControlOption::RenderBVH(10.f);
+std::unordered_map<uint32_t, BoundingVolumeHierarchy> RenderControlOption::RenderBVHs;
+
+RenderControlOption::RenderControlOption(const uint32_t& sceneID)
+	: m_sceneID(sceneID)
+{
+}
 
 void RenderControlOption::InsertBVHImpl(ICollisionAcceptor* acceptor)
 {
-	RenderControlOption::RenderBVH.InsertCollidable(acceptor);
+	RenderControlOption::RenderBVHs[m_sceneID].InsertCollidable(acceptor);
 }
 
 void RenderControlOption::RemoveBVHImpl(ICollisionAcceptor* acceptor)
 {
-	RenderControlOption::RenderBVH.RemoveCollidable(acceptor);
+	RenderControlOption::RenderBVHs[m_sceneID].RemoveCollidable(acceptor);
 }
 
 void RenderControlOption::UpdateBVHImpl(ICollisionAcceptor* accpetor)
 {
-	RenderControlOption::RenderBVH.UpdateCollidable(accpetor);
+	RenderControlOption::RenderBVHs[m_sceneID].UpdateCollidable(accpetor);
 }
 
 void RenderControlOption::OnCollideImpl(AComponent* component)
@@ -27,12 +32,13 @@ void RenderControlOption::OnCollideImpl(AComponent* component)
 }
 
 vector<AComponent*> RenderControlOption::GetRenderableComponents(
+	const uint32_t& sceneID,
 	ICollisionAcceptor* renderControlOptionCollidable, 
 	const vector<AComponent*>& components
 )
 {
 	vector<AComponent*> result;
-	RenderBVH.Traverse(renderControlOptionCollidable);
+	RenderBVHs[sceneID].Traverse(renderControlOptionCollidable);
 
 	ComponentCollector renderableCollector;
 	CollectRenderableComponentsImpl(components, renderableCollector);

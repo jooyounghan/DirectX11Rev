@@ -149,7 +149,6 @@
     <ClCompile Include="AssetViewWindow.cpp" />
     <ClCompile Include="AssetFileControl.cpp" />
     <ClCompile Include="AssetWriterPathNode.cpp" />
-    <ClCompile Include="ATextureAssetVariableNode.cpp" />
     <ClCompile Include="BaseTextureAssetVariableNode.cpp" />
     <ClCompile Include="ComponentHandler.cpp" />
     <ClCompile Include="CreateIBLMaterialWithNodeEditorWindow.cpp" />
@@ -169,7 +168,6 @@
     <ClInclude Include="AssetViewWindow.h" />
     <ClInclude Include="AssetFileControl.h" />
     <ClInclude Include="AssetWriterPathNode.h" />
-    <ClInclude Include="ATextureAssetVariableNode.h" />
     <ClInclude Include="BaseTextureAssetVariableNode.h" />
     <ClInclude Include="ComponentHandler.h" />
     <ClInclude Include="CreateIBLMaterialWithNodeEditorWindow.h" />

@@ -56,7 +56,7 @@ void SpotLightComponent::GenerateShadowMap(
 	const vector<AComponent*>& components
 )
 {
-	vector<AComponent*> renderableComponents = RenderControlOption::GetRenderableComponents(this, components);
+	vector<AComponent*> renderableComponents = RenderControlOption::GetRenderableComponents(m_parentSceneID, this, components);
 
 	(*deviceContextAddress)->ClearDepthStencilView(m_depthTestView->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 	DepthTestRenderer depthTestRenderer = DepthTestRenderer(

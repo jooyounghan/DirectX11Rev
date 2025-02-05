@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <map>
-#include <unordered_map>
+#include <vector>
 #include <string>
 
 namespace DirectX
@@ -26,7 +26,7 @@ protected:
 	const AnimationAsset* m_sourceAnimationAsset = nullptr;
 
 protected:
-	std::unordered_map<const Bone*, const Bone*> m_boneTargetings;
+	std::vector<std::pair<const Bone*, const Bone*>> m_boneTargetings;
 
 public:
 	inline void SetSourceBoneAsset(const BoneAsset* sourceBoneAsset) { m_sourceBoneAsset = sourceBoneAsset; }
@@ -37,7 +37,7 @@ public:
 	inline const AnimationAsset* GetSourceAnimationAsset() { return m_sourceAnimationAsset; }
 
 public:
-	const std::unordered_map<const Bone*, const Bone*>& GetBoneTargetings() { return m_boneTargetings; }
+	const std::vector<std::pair<const Bone*, const Bone*>>& GetBoneTargetings() { return m_boneTargetings; }
 
 public:
 	inline bool IsAvailableRetargeting() { return m_sourceAnimationAsset && m_targetBoneAsset && m_sourceAnimationAsset; }
@@ -45,7 +45,7 @@ public:
 
 public:
 	void GenerateBoneTargetings();
-	void ReplaceTargetBone(const Bone* const sourceBone, const Bone* const targetBone);
+	void ReplaceTargetBone(const size_t& idx, const Bone* const sourceBone, const Bone* const targetBone);
 
 private:
 	bool IsSameProfile(

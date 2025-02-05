@@ -116,7 +116,7 @@ void PointLightComponent::GenerateShadowMap(
 	for (size_t idx = 0; idx < 6; ++idx)
 	{
 		PointLightFrustumPart& pointLightFrustumPart = m_pointLightFrustumPart[idx];
-		vector<AComponent*> renderableComponents = RenderControlOption::GetRenderableComponents(&pointLightFrustumPart, components);
+		vector<AComponent*> renderableComponents = RenderControlOption::GetRenderableComponents(m_parentSceneID, &pointLightFrustumPart, components);
 
 		(*deviceContextAddress)->ClearDepthStencilView(pointLightFrustumPart.GetDepthTestDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 		DepthTestRenderer depthTestRenderer = DepthTestRenderer(

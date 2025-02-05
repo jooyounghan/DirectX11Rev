@@ -123,9 +123,6 @@
     <ClCompile Include="BaseTextureAssetVariableNode.cpp">
       <Filter>소스 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClCompile>
-    <ClCompile Include="ATextureAssetVariableNode.cpp">
-      <Filter>소스 파일\GUI\NodeEditor\Node\Variable</Filter>
-    </ClCompile>
     <ClCompile Include="CreateModelMaterialWIthNodeEditorWindow.cpp">
       <Filter>소스 파일\GUI\Window\NodeEditor\CreateAsset</Filter>
     </ClCompile>
@@ -180,9 +177,6 @@
       <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClInclude>
     <ClInclude Include="BaseTextureAssetVariableNode.h">
-      <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
-    </ClInclude>
-    <ClInclude Include="ATextureAssetVariableNode.h">
       <Filter>헤더 파일\GUI\NodeEditor\Node\Variable</Filter>
     </ClInclude>
     <ClInclude Include="CreateModelMaterialWIthNodeEditorWindow.h">

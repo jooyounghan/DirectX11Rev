@@ -26,6 +26,7 @@ public:
 	~ComponentHandler() override = default;
 
 protected:
+	AComponent* m_lastHandledComponent = nullptr;
 	ComponentManager* m_componentManagerCached = nullptr;
 
 private:

@@ -59,9 +59,8 @@ void ComponentManager::InitComponentManager()
 	try
 	{
 		LoadComponentMakers();
-		LoadComponents();
 		LoadScenes();
-		LoadScenesInformation();
+		LoadComponents();
 		InitLoadedComponents();
 		m_isInitialized = true;
 	}
@@ -140,64 +139,6 @@ void ComponentManager::LoadComponentMakers()
 	}
 }
 
-void ComponentManager::LoadComponents()
-{
-	const std::string& componentsTableName = "components";
-	const std::string& componentsToTypeTableName = "components_to_type";
-	const std::string schemaName = getName();
-	RowResult result = m_sessionManager->sql(
-		format(
-			"SELECT c.component_id, c.parent_component_id, ctt.component_type, "
-			"c.component_name, c.position_x, c.position_y, c.position_z, "
-			"c.angle_x, c.angle_y, c.angle_z, "
-			"c.scale_x, c.scale_y, c.scale_z "
-			"FROM {}.{} c "
-			"JOIN {}.{} ctt ON c.component_id = ctt.component_id LOCK IN SHARE MODE",
-			schemaName, componentsTableName, schemaName, componentsToTypeTableName
-		)
-	).execute();
-
-	Row rowResult;
-	vector<pair<AComponent*, ComponentID>> componentsToParentID;
-
-	{
-		unique_lock loadComponentLock(m_componentMutex);
-		while ((rowResult = result.fetchOne()))
-		{
-			const ComponentID componentID = rowResult[0].get<ComponentID>();
-			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
-			const EComponentType componentType = static_cast<EComponentType>(rowResult[2].get<uint32_t>());
-			const std::string componentName = rowResult[3].get<std::string>();
-
-			XMFLOAT3 position = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
-			XMFLOAT3 angle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
-			XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
-
-			if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
-			{
-				AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
-				m_componentIDsToComponent.emplace(componentID, addedComponent);
-				componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));
-			}
-		}
-	}
-
-	{
-		shared_lock parentLinkLock(m_componentMutex);
-		for (auto& componentToParentID : componentsToParentID)
-		{
-			if (m_componentIDsToComponent.find(componentToParentID.second) != m_componentIDsToComponent.end())
-			{
-				AComponent* parentComponent = m_componentIDsToComponent[componentToParentID.second];
-				parentComponent->AttachChildComponent(componentToParentID.first);
-			}
-		}
-	}
-
-
-	LoadLastAutoIncrementIDFromTable(componentsTableName, m_componentIssuedID);
-}
-
 void ComponentManager::LoadScenes()
 {
 	AssetManager* assetManager = AssetManager::GetInstance();
@@ -229,41 +170,84 @@ void ComponentManager::LoadScenes()
 	LoadLastAutoIncrementIDFromTable(scenesTableName, m_sceneIssuedID);
 }
 
-void ComponentManager::LoadScenesInformation()
+void ComponentManager::LoadComponents()
 {
-	const std::string& scenesInformationsTableName = "scene_informations";
-	Table scenesInformationsTable = getTable(scenesInformationsTableName, true);
+	const std::string& componentsTableName = "components";
+	const std::string& componentsToTypeTableName = "components_to_type";
+	const std::string schemaName = getName();
+	RowResult result = m_sessionManager->sql(
+		format(
+			"SELECT c.component_id, c.parent_component_id, ctt.component_type, "
+			"c.component_name, c.position_x, c.position_y, c.position_z, "
+			"c.angle_x, c.angle_y, c.angle_z, "
+			"c.scale_x, c.scale_y, c.scale_z, c.scene_id "
+			"FROM {}.{} c "
+			"JOIN {}.{} ctt ON c.component_id = ctt.component_id LOCK IN SHARE MODE",
+			schemaName, componentsTableName, schemaName, componentsToTypeTableName
+		)
+	).execute();
 
-	RowResult sceneInformationResults = scenesInformationsTable.select("scene_id", "component_id").lockShared().execute();
-
-	Row sceneInformationResult;
+	Row rowResult;
+	vector<pair<AComponent*, ComponentID>> componentsToParentID;
 
 	{
-		shared_lock loadSceneLock(m_componentMutex);
-		while ((sceneInformationResult = sceneInformationResults.fetchOne()))
+		unique_lock loadComponentLock(m_componentMutex);
+		while ((rowResult = result.fetchOne()))
 		{
-			const SceneID sceneID = sceneInformationResult[0].get<SceneID>();
-			const ComponentID componentID = sceneInformationResult[1].get<ComponentID>();
+			const ComponentID componentID = rowResult[0].get<ComponentID>();
+			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
+			const EComponentType componentType = static_cast<EComponentType>(rowResult[2].get<uint32_t>());
+			const std::string componentName = rowResult[3].get<std::string>();
 
-			if (m_sceneIDsToScene.find(sceneID) != m_sceneIDsToScene.end() && m_componentIDsToComponent.find(componentID) != m_componentIDsToComponent.end())
-			{
-				m_sceneIDsToScene[sceneID]->AddRootComponent(m_componentIDsToComponent[componentID]);
+			XMFLOAT3 position = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
+			XMFLOAT3 angle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
+			XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
+			
+			SceneID sceneID = rowResult[13].get<SceneID>();
 
-				if (m_componentIDsToSpotLight.find(componentID) != m_componentIDsToSpotLight.end())
-				{
-					m_sceneIDsToScene[sceneID]->AddSpotLight(m_componentIDsToSpotLight[componentID]);
-				}
-				else if (m_componentIDsToPointLight.find(componentID) != m_componentIDsToPointLight.end())
-				{
-					m_sceneIDsToScene[sceneID]->AddPointLight(m_componentIDsToPointLight[componentID]);
-				}
-			}
-			else
+			if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
 			{
-				throw std::exception(format("Scene ID({}) or Component ID({}) Not Founded", sceneID, componentID).c_str());
+				AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
+				m_componentIDsToComponent.emplace(componentID, addedComponent);
+				addedComponent->SetParentSceneID(sceneID);
+
+				componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));
 			}
 		}
 	}
+
+	{
+		shared_lock parentLinkLock(m_componentMutex);
+		for (auto& componentToParentID : componentsToParentID)
+		{
+			AComponent* component = componentToParentID.first;
+			const SceneID& parentSceneID = component->GetParentSceneID();
+			const ComponentID& componentID = component->GetComponentID();
+			const ComponentID& parentComponenetID = componentToParentID.second;
+
+			if (m_componentIDsToComponent.find(parentComponenetID) != m_componentIDsToComponent.end())
+			{
+				AComponent* parentComponent = m_componentIDsToComponent[parentComponenetID];
+				parentComponent->AttachChildComponent(component);
+			}
+			else
+			{
+				m_sceneIDsToScene[parentSceneID]->AddRootComponent(component);
+			}
+
+			if (m_componentIDsToSpotLight.find(componentID) != m_componentIDsToSpotLight.end())
+			{
+				m_sceneIDsToScene[parentSceneID]->AddSpotLight(m_componentIDsToSpotLight[componentID]);
+			}
+			else if (m_componentIDsToPointLight.find(componentID) != m_componentIDsToPointLight.end())
+			{
+				m_sceneIDsToScene[parentSceneID]->AddPointLight(m_componentIDsToPointLight[componentID]);
+			}
+		}
+	}
+
+
+	LoadLastAutoIncrementIDFromTable(componentsTableName, m_componentIssuedID);
 }
 
 void ComponentManager::InitLoadedComponents()

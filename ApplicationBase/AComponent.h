@@ -32,6 +32,13 @@ protected:
 	AComponent* m_parentComponent = nullptr;
 
 protected:
+	uint32_t m_parentSceneID = NULL;
+	
+public:
+	inline const uint32_t& GetParentSceneID() { return m_parentSceneID; }
+	void SetParentSceneID(const uint32_t& parentSceneID) { m_parentSceneID = parentSceneID; }
+
+protected:
 	bool m_isRenderable = true;
 
 public:

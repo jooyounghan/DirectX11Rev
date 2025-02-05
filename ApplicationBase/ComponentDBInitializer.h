@@ -44,7 +44,7 @@ private:
 private:
 	void LoadSphereColiisionComponent(SphereCollisionComponent* sphereCollisionComponent);
 	void LoadOrientedBoxCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent);
-	ICollisionOption* CreateCollisionOption(const uint32_t& collitionOptionID);
+	ICollisionOption* CreateCollisionOption(const uint32_t& sceneID, const uint32_t& collitionOptionID);
 
 private:
 	void LoadLightEntity(AComponent* lightComponent, LightEntity* lightEntity);
