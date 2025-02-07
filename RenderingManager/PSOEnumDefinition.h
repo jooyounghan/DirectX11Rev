@@ -12,6 +12,21 @@ enum class EComponentPSOVertexShader
 	SKELETAL_MESH_DEPTH_TEST,
 };
 
+class VertexShaderID
+{
+public:
+	constexpr VertexShaderID(EComponentPSOVertexShader shaderType) : m_shaderType(shaderType) {}
+
+private:
+	EComponentPSOVertexShader m_shaderType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_shaderType);
+	}
+};
+
 enum class EComponentPSOPixelShader
 {
 	NONE,
@@ -22,10 +37,40 @@ enum class EComponentPSOPixelShader
 	DEFFERED_MESH
 };
 
+class PixelShaderID
+{
+public:
+	constexpr PixelShaderID(EComponentPSOPixelShader shaderType) : m_shaderType(shaderType) {}
+
+private:
+	EComponentPSOPixelShader m_shaderType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_shaderType);
+	}
+};
+
 enum class EComponentPSOHullShader
 {
 	NONE,
 	MESH
+};
+
+class HullShaderID
+{
+public:
+	constexpr HullShaderID(EComponentPSOHullShader shaderType) : m_shaderType(shaderType) {}
+
+private:
+	EComponentPSOHullShader m_shaderType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_shaderType);
+	}
 };
 
 enum class EComponentPSODomainShader
@@ -34,11 +79,60 @@ enum class EComponentPSODomainShader
 	MESH
 };
 
+class DomainShaderID
+{
+public:
+	constexpr DomainShaderID(EComponentPSODomainShader shaderType) : m_shaderType(shaderType) {}
+
+private:
+	EComponentPSODomainShader m_shaderType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_shaderType);
+	}
+};
+
 enum class EComponentPSOGeometryShader
 {
 	NONE,
 };
 
+class GeometryShaderID
+{
+public:
+	constexpr GeometryShaderID(EComponentPSOGeometryShader shaderType) : m_shaderType(shaderType) {}
+
+private:
+	EComponentPSOGeometryShader m_shaderType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_shaderType);
+	}
+};
+
+enum class EComponentPSOComputeShader
+{
+	NONE,
+};
+
+class ComputeShaderID
+{
+public:
+	constexpr ComputeShaderID(EComponentPSOComputeShader shaderType) : m_shaderType(shaderType) {}
+
+private:
+	EComponentPSOComputeShader m_shaderType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_shaderType);
+	}
+};
 
 enum class EComponentPSODeptshStencilState
 {
@@ -49,9 +143,39 @@ enum class EComponentPSODeptshStencilState
 	DEPTH_DONTCARE_STENCIL_REPLACE
 };
 
+class DepthStencilStateID
+{
+public:
+	constexpr DepthStencilStateID(EComponentPSODeptshStencilState stateType) : m_stateType(stateType) {}
+
+private:
+	EComponentPSODeptshStencilState m_stateType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_stateType);
+	}
+};
+
 enum class EComponentPSOBlendState
 {
 	NONE,
+};
+
+class BlendStateStateID
+{
+public:
+	constexpr BlendStateStateID(EComponentPSOBlendState stateType) : m_stateType(stateType) {}
+
+private:
+	EComponentPSOBlendState m_stateType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_stateType);
+	}
 };
 
 enum class EComponentPSORasterizerState
@@ -63,6 +187,22 @@ enum class EComponentPSORasterizerState
 	CCW_WIREFRAME_SS
 };
 
+class RasterizerStateStateID
+{
+public:
+	constexpr RasterizerStateStateID(EComponentPSORasterizerState stateType) : m_stateType(stateType) {}
+
+private:
+	EComponentPSORasterizerState m_stateType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_stateType);
+	}
+};
+
+
 enum class EComponentPSOSamplerState
 {
 	NONE,
@@ -70,6 +210,21 @@ enum class EComponentPSOSamplerState
 	CLAMP,
 	WRAP_COMPARISON_LESS,
 	CLAMP_COMPARISON_LESS,
+};
+
+class SamplerStateStateID
+{
+public:
+	constexpr SamplerStateStateID(EComponentPSOSamplerState stateType) : m_stateType(stateType) {}
+
+private:
+	EComponentPSOSamplerState m_stateType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_stateType);
+	}
 };
 
 enum class EComopnentGraphicsPSOObject
@@ -84,3 +239,19 @@ enum class EComopnentGraphicsPSOObject
 	STATIC_MESH_DEPTH_TEST,
 	SKELETAL_MESH_DEPTH_TEST
 };
+
+class PSOObjectID
+{
+public:
+	constexpr PSOObjectID(EComopnentGraphicsPSOObject psoObjectType) : m_psoObjectType(psoObjectType) {}
+
+private:
+	EComopnentGraphicsPSOObject m_psoObjectType;
+
+public:
+	constexpr operator size_t() const
+	{
+		return static_cast<size_t>(m_psoObjectType);
+	}
+};
+

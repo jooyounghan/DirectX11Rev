@@ -16,14 +16,6 @@ class ComponentPSOManager;
 class CameraComponent;
 class InputEventManager;
 
-enum class EDefferedContextType
-{
-	ASSETS_LOAD,
-	COMPONENT_UPDATE,
-	COMPONENT_RENDER
-};
-
-
 class GameEngine : public App::AApplication
 {
 public:
@@ -33,7 +25,6 @@ public:
 
 protected:
 	D3D11::D3D11Engine* m_engine;
-	std::unordered_map<EDefferedContextType, DefferedContext*> m_defferedContexts;
 
 protected:
 	std::vector<AWindow*> m_imguiWindows;

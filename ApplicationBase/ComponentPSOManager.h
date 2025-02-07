@@ -20,10 +20,11 @@ public:
 
 public:
 	AShader* const  GetComponentPSOVertexShader(const EComponentPSOVertexShader& vsEnum);
-	AShader* const  GetComponentPSOPixelShader(const EComponentPSOPixelShader& vsEnum);
-	AShader* const	GetComponentPSOHullShader(const EComponentPSOHullShader& vsEnum);
-	AShader* const  GetComponentPSODomainShader(const EComponentPSODomainShader& vsEnum);
-
+	AShader* const  GetComponentPSOPixelShader(const EComponentPSOPixelShader& psEnum);
+	AShader* const	GetComponentPSOHullShader(const EComponentPSOHullShader& hsEnum);
+	AShader* const  GetComponentPSODomainShader(const EComponentPSODomainShader& dsEnum);
+	AShader* const	GetComponentPSOGeometryShader(const EComponentPSOGeometryShader& gsEnum);
+	AShader* const  GetComponentPSOComputeShader(const EComponentPSOComputeShader& csEnum);
 public:
 	ID3D11DepthStencilState* const  GetComponentPSODepthStencilState(const EComponentPSODeptshStencilState& dssEnum);
 	ID3D11BlendState* const GetComponentPSOBlendState(const EComponentPSOBlendState& bsEnum);

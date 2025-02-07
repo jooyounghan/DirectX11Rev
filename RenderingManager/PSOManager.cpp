@@ -14,39 +14,105 @@
 using namespace std;
 using namespace Microsoft::WRL;
 
-void PSOManager::RegisterVertexShader(const string& shaderName, const vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs, const D3D11_PRIMITIVE_TOPOLOGY& topology, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
+PSOManager::~PSOManager()
 {
-	RegisterShaderImpl<VertexShader>(shaderName, shaderPath, entryPoint, targetVersion, device, inputElementDescs, topology);
+	for(auto& shader : m_registeredVertexShaders)
+	{
+		delete shader.second;
+	}
+	for(auto& shader : m_registeredPixelShaders)
+	{
+		delete shader.second;
+	}
+	for(auto& shader : m_registeredHullShaders)
+	{
+		delete shader.second;
+	}
+	for(auto& shader : m_registeredDomainShaders)
+	{
+		delete shader.second;
+	}		
+	for (auto& shader : m_registeredGeometryShaders)
+	{
+		delete shader.second;
+	}
 }
 
-void PSOManager::RegisterPixelShader(const string& shaderName, const UINT& renderTargetCounts, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
+void PSOManager::RegisterVertexShader(const size_t& shaderID, const vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescs, const D3D11_PRIMITIVE_TOPOLOGY& topology, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
 {
-	RegisterShaderImpl<PixelShader>(shaderName, shaderPath, entryPoint, targetVersion, device, renderTargetCounts);
+	RegisterShader(m_registeredVertexShaders, shaderID,
+		CreateShaderImpl<VertexShader>(shaderID, shaderPath, entryPoint, targetVersion, device, inputElementDescs, topology)
+	);
 }
 
-void PSOManager::RegisterHullShader(const string& shaderName, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
+void PSOManager::RegisterPixelShader(const size_t& shaderID, const UINT& renderTargetCounts, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
 {
-	RegisterShaderImpl<HullShader>(shaderName, shaderPath, entryPoint, targetVersion, device);
+	RegisterShader(m_registeredPixelShaders, shaderID,
+		CreateShaderImpl<PixelShader>(shaderID, shaderPath, entryPoint, targetVersion, device, renderTargetCounts)
+	);
 }
 
-void PSOManager::RegisterDomainShader(const string& shaderName, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
+void PSOManager::RegisterHullShader(const size_t& shaderID, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
 {
-	RegisterShaderImpl<DomainShader>(shaderName, shaderPath, entryPoint, targetVersion, device);
+	RegisterShader(m_registeredHullShaders, shaderID,
+		CreateShaderImpl<HullShader>(shaderID, shaderPath, entryPoint, targetVersion, device)
+	);
 }
 
-void PSOManager::RegisterGeometryShader(const string& shaderName, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
+void PSOManager::RegisterDomainShader(const size_t& shaderID, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
 {
-	RegisterShaderImpl<GeometryShader>(shaderName, shaderPath, entryPoint, targetVersion, device);
+	RegisterShader(m_registeredDomainShaders, shaderID,
+		CreateShaderImpl<DomainShader>(shaderID, shaderPath, entryPoint, targetVersion, device)
+	);
 }
 
-void PSOManager::RegisterComputeShader(const string& shaderName, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
+void PSOManager::RegisterGeometryShader(const size_t& shaderID, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
 {
-	RegisterShaderImpl<ComputeShader>(shaderName, shaderPath, entryPoint, targetVersion, device);
+	RegisterShader(m_registeredGeometryShaders, shaderID,
+		CreateShaderImpl<GeometryShader>(shaderID, shaderPath, entryPoint, targetVersion, device)
+	);
+}
+
+void PSOManager::RegisterComputeShader(const size_t& shaderID, const wstring& shaderPath, const string& entryPoint, const string& targetVersion, ID3D11Device* device)
+{
+	RegisterShader(m_registeredComputeShaders, shaderID,
+		CreateShaderImpl<ComputeShader>(shaderID, shaderPath, entryPoint, targetVersion, device)
+	);
+}
+
+AShader* PSOManager::GetVertexShader(const size_t& shaderID)
+{
+	return GetShader(m_registeredVertexShaders, shaderID);
+}
+
+AShader* PSOManager::GetPixelShader(const size_t& shaderID)
+{
+	return GetShader(m_registeredPixelShaders, shaderID);
+}
+
+AShader* PSOManager::GetHullShader(const size_t& shaderID)
+{
+	return GetShader(m_registeredHullShaders, shaderID);
+}
+
+AShader* PSOManager::GetDomainShader(const size_t& shaderID)
+{
+	return GetShader(m_registeredDomainShaders, shaderID);
+}
+
+AShader* PSOManager::GetGeometryShader(const size_t& shaderID)
+{
+	return GetShader(m_registeredGeometryShaders, shaderID);
+}
+
+AShader* PSOManager::GetComputeShader(const size_t& shaderID)
+{
+	return GetShader(m_registeredComputeShaders, shaderID);
 }
 
 template<typename ShaderType, typename ...Args>
-inline void PSOManager::RegisterShaderImpl(
-	const string& shaderName, 
+AShader* PSOManager::CreateShaderImpl(
+	const size_t& shaderID,
 	const wstring& shaderPath, 
 	const string& entryPoint, 
 	const string& targetVersion, 
@@ -54,22 +120,31 @@ inline void PSOManager::RegisterShaderImpl(
 	Args... args
 )
 {
-	m_registeredShaders[shaderName] = make_unique<ShaderType>(args...);
-	m_registeredShaders[shaderName]->CreateShader(shaderPath, entryPoint, targetVersion, device);
+	AShader* shader = new ShaderType(args...);
+	shader->CreateShader(shaderPath, entryPoint, targetVersion, device);
+	return shader;
 }
 
-
-AShader* const PSOManager::GetRegisteredShader(const string& shaderName)
+void PSOManager::RegisterShader(std::unordered_map<size_t, AShader*>& shaderContainer, const size_t& shaderID, AShader* shader)
 {
-	if (m_registeredShaders.find(shaderName) != m_registeredShaders.end())
+	if (shaderContainer.find(shaderID) != shaderContainer.end())
 	{
-		return m_registeredShaders[shaderName].get();
+		delete shaderContainer[shaderID];
+	}
+	shaderContainer[shaderID] = shader;
+}
+
+AShader* PSOManager::GetShader(std::unordered_map<size_t, AShader*>& shaderContainer, const size_t& shaderID)
+{
+	if (shaderContainer.find(shaderID) != shaderContainer.end())
+	{
+		return shaderContainer[shaderID];
 	}
 	return nullptr;
 }
 
 void PSOManager::RegisterDepthStencilState(
-	const string& stateName,
+	const size_t& stateID,
 	ID3D11Device* device,
 	const BOOL& depthEnable,
 	const D3D11_COMPARISON_FUNC& depthComparisonFunc,
@@ -104,11 +179,11 @@ void PSOManager::RegisterDepthStencilState(
 
 	device->CreateDepthStencilState(&depthStencilStateDesc, depthStencilState.GetAddressOf());
 
-	m_registeredDepthStencilStates[stateName] = depthStencilState;
+	m_registeredDepthStencilStates[stateID] = depthStencilState;
 }
 
 void PSOManager::RegisterBlendState(
-	const string& stateName, 
+	const size_t& stateID,
 	ID3D11Device* device,
 	const BOOL& AlphaToCoverageEnable, 
 	const BOOL& IndependentBlendEnable, 
@@ -128,11 +203,11 @@ void PSOManager::RegisterBlendState(
 	);
 	device->CreateBlendState(&blendStateDesc, blendState.GetAddressOf());
 
-	m_registeredBlendStates[stateName] = blendState;
+	m_registeredBlendStates[stateID] = blendState;
 }
 
 void PSOManager::RegisterRasterizerState(
-	const string& stateName, 
+	const size_t& stateID,
 	ID3D11Device* device,
 	const D3D11_FILL_MODE& fillMode, 
 	const D3D11_CULL_MODE& cullMode, 
@@ -152,11 +227,11 @@ void PSOManager::RegisterRasterizerState(
 	rasterizerStateDesc.AntialiasedLineEnable = FALSE;
 	device->CreateRasterizerState(&rasterizerStateDesc, rasterizerState.GetAddressOf());
 
-	m_registeredRasterizerStates[stateName] = rasterizerState;
+	m_registeredRasterizerStates[stateID] = rasterizerState;
 }
 
 void PSOManager::RegisterSamplerState(
-	const string& stateName, 
+	const size_t& stateID,
 	ID3D11Device* device,
 	const D3D11_TEXTURE_ADDRESS_MODE& textureAddressModeU,
 	const D3D11_TEXTURE_ADDRESS_MODE& textureAddressModeV,
@@ -176,41 +251,41 @@ void PSOManager::RegisterSamplerState(
 	samplerDesc.Filter = filter;
 	device->CreateSamplerState(&samplerDesc, samplerState.GetAddressOf());
 
-	m_registeredSamplerStates[stateName] = samplerState;
+	m_registeredSamplerStates[stateID] = samplerState;
 }
 
-ID3D11DepthStencilState* const PSOManager::GetDepthStencilState(const string& stateName)
+ID3D11DepthStencilState* const PSOManager::GetDepthStencilState(const size_t& stateID)
 {
-	if (m_registeredDepthStencilStates.find(stateName) != m_registeredDepthStencilStates.end())
+	if (m_registeredDepthStencilStates.find(stateID) != m_registeredDepthStencilStates.end())
 	{
-		return m_registeredDepthStencilStates[stateName].Get();
+		return m_registeredDepthStencilStates[stateID].Get();
 	}
 	return nullptr;
 }
 
-ID3D11BlendState* const PSOManager::GetBlendState(const string& stateName)
+ID3D11BlendState* const PSOManager::GetBlendState(const size_t& stateID)
 {
-	if (m_registeredBlendStates.find(stateName) != m_registeredBlendStates.end())
+	if (m_registeredBlendStates.find(stateID) != m_registeredBlendStates.end())
 	{
-		return m_registeredBlendStates[stateName].Get();
+		return m_registeredBlendStates[stateID].Get();
 	}
 	return nullptr;
 }
 
-ID3D11RasterizerState* const PSOManager::GetRasterizerState(const string& stateName)
+ID3D11RasterizerState* const PSOManager::GetRasterizerState(const size_t& stateID)
 {
-	if (m_registeredRasterizerStates.find(stateName) != m_registeredRasterizerStates.end())
+	if (m_registeredRasterizerStates.find(stateID) != m_registeredRasterizerStates.end())
 	{
-		return m_registeredRasterizerStates[stateName].Get();
+		return m_registeredRasterizerStates[stateID].Get();
 	}
 	return nullptr;
 }
 
-ID3D11SamplerState* const PSOManager::GetSamplerState(const string& stateName)
+ID3D11SamplerState* const PSOManager::GetSamplerState(const size_t& stateID)
 {
-	if (m_registeredSamplerStates.find(stateName) != m_registeredSamplerStates.end())
+	if (m_registeredSamplerStates.find(stateID) != m_registeredSamplerStates.end())
 	{
-		return m_registeredSamplerStates[stateName].Get();
+		return m_registeredSamplerStates[stateID].Get();
 	}
 	return nullptr;
 }

@@ -1,9 +1,7 @@
 #pragma once
 #include "D3D11Utilities.h"
-
-#include <windows.h>
-#include <wrl/client.h>
-#include <d3d11.h>
+#include "unordered_map"
+#include "DefferedContext.h"
 
 namespace D3D11
 {
@@ -30,12 +28,22 @@ namespace D3D11
 		D3D11Engine(D3D11Engine&& engine) = delete;
 
 	public:
+		~D3D11Engine();
+
+	public:
 		static D3D11Engine* GetInstance();
 
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11Device>		m_device;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_deviceContext;
 		Microsoft::WRL::ComPtr<IDXGISwapChain>		m_swapChain;
+
+	protected:
+		std::unordered_map<size_t, DefferedContext*> m_defferedContexts;
+
+	public:
+		void AddDefferedContext(const size_t& defferedContextID);
+		DefferedContext* GetDefferedContext(const size_t& defferedContextID);
 
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> m_backBufferTexture;

@@ -3,10 +3,36 @@
 
 using namespace D3D11;
 
+D3D11::D3D11Engine::~D3D11Engine()
+{
+    for (auto& defferedContexts : m_defferedContexts)
+    {
+        delete defferedContexts.second;
+    }
+}
+
 D3D11Engine* D3D11Engine::GetInstance()
 {
 	static D3D11Engine engine;
 	return &engine;
+}
+
+void D3D11::D3D11Engine::AddDefferedContext(const size_t& defferedContextID)
+{
+    if (m_defferedContexts.find(defferedContextID) != m_defferedContexts.end())
+    {
+        delete m_defferedContexts[defferedContextID];
+    }
+    m_defferedContexts[defferedContextID] = new DefferedContext(m_device.GetAddressOf());
+}
+
+DefferedContext* D3D11::D3D11Engine::GetDefferedContext(const size_t& defferedContextID)
+{
+    if (m_defferedContexts.find(defferedContextID) != m_defferedContexts.end())
+    {
+        return m_defferedContexts[defferedContextID];
+    }
+    return nullptr;
 }
 
 void D3D11Engine::D3D11Engine::InitEngine(const UINT& widthIn, const UINT& heightIn, HWND wndHandle)
@@ -49,6 +75,11 @@ void D3D11Engine::D3D11Engine::InitEngine(const UINT& widthIn, const UINT& heigh
     assert(m_deviceContext != nullptr);
 
     LoadBackBufferFromSwapchain();
+
+    for (auto& defferedContexts : m_defferedContexts)
+    {
+        defferedContexts.second->InitDefferedContext();
+    }
 }
 
 void D3D11Engine::D3D11Engine::ResizeSwapChain(const UINT& widthIn, const UINT& heightIn)
