@@ -253,12 +253,6 @@ void ComponentPSOManager::RegisterVSForComponent(ID3D11Device* device)
 		}
 	);
 	RegisterVertexShader(VertexShaderID(EComponentPSOVertexShader::SCENE), inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/SceneVS.hlsl", "main", "vs_5_0", device);
-
-	inputElementDesc.insert(inputElementDesc.end(),
-		{
-			{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		}
-		);
 	RegisterVertexShader(VertexShaderID(EComponentPSOVertexShader::STATIC_MESH), inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST, L"../Shaders/StaticMeshComponentVS.hlsl", "main", "vs_5_0", device);
 
 	inputElementDesc.insert(inputElementDesc.end(),

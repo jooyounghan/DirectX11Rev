@@ -80,7 +80,6 @@ std::vector<ConstantBuffer*> SkeletalMeshPartsData::GetVertexConstantBuffers() c
 		m_vertexBuffer,
 		m_uvBuffer,
 		m_normalBuffer,
-		m_tangentBuffer,
 		m_blendWeightBuffer,
 		m_blendIndexBuffer
 	};
@@ -99,7 +98,6 @@ std::vector<UINT> SkeletalMeshPartsData::GetStrides() const
 		sizeof(XMFLOAT3),
 		sizeof(XMFLOAT2),
 		sizeof(XMFLOAT3),
-		sizeof(XMFLOAT3),
 		sizeof(XMFLOAT4),
 		sizeof(XMINT4)
 	};
@@ -107,7 +105,7 @@ std::vector<UINT> SkeletalMeshPartsData::GetStrides() const
 
 std::vector<UINT> SkeletalMeshPartsData::GetOffsets() const
 {
-	return vector<UINT>{ 0, 0, 0, 0, 0, 0 };
+	return vector<UINT>{ 0, 0, 0, 0, 0 };
 }
 
 std::vector<UINT> SkeletalMeshPartsData::GetStridesForDepthTest() const

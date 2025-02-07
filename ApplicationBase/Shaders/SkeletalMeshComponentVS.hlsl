@@ -35,7 +35,6 @@ MeshComponentVertexOutput main(SkeletalComponentVertexInput Input)
     Result.fLODLevel = 2.f;
     
     float4 f4WorldNormalIn = float4(Input.f3WorldNormal, 0.f);
-    float4 f4WorldTangentIn = float4(Input.f3WorldTangent, 0.f);
     float4 f4WorldPosIn = float4(Input.f3WorldPos, 1.f);
     
     float4 f4WorldNormalOut = 0;
@@ -50,14 +49,11 @@ MeshComponentVertexOutput main(SkeletalComponentVertexInput Input)
         float4x4 boneTransform = BoneTransformation[index];
         
         f4WorldNormalOut += weight * mul(f4WorldNormalIn, boneTransform);
-        f4WorldTangentOut += weight * mul(f4WorldTangentIn, boneTransform);
         f4WorldPosOut += weight * mul(f4WorldPosIn, boneTransform);
     }
     
     
     Result.f3WorldNormal = normalize(f4WorldNormalOut.xyz);
-    Result.f3ModelTangent = normalize(mul(f4WorldTangentOut, ModelMatrix).xyz);
-
     Result.f2TexCoord = Input.f2TexCoord;
     Result.f4WorldjPos = f4WorldPosOut;
 

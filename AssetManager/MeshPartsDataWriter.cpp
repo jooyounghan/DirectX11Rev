@@ -19,18 +19,16 @@ MeshPartsDataWriter::MeshPartsDataWriter(const bool& isGltf, const aiMesh* const
 
 void MeshPartsDataWriter::Visit(StaticMeshPartsData* staticMeshPartsData)
 {
-	LoadMeshPartsField(staticMeshPartsData);
 	LoadStaticMeshPartsField(staticMeshPartsData);
 }
 
 void MeshPartsDataWriter::Visit(SkeletalMeshPartsData* skeletalMeshPartsData)
 {
-	LoadMeshPartsField(skeletalMeshPartsData);
 	LoadStaticMeshPartsField(skeletalMeshPartsData);
 	LoadSkeletalMeshPartsField(skeletalMeshPartsData);
 }
 
-void MeshPartsDataWriter::LoadMeshPartsField(AMeshPartsData* meshPartData)
+void MeshPartsDataWriter::LoadStaticMeshPartsField(StaticMeshPartsData* meshPartData)
 {
 	if (m_mesh->HasFaces())
 	{
@@ -76,63 +74,6 @@ void MeshPartsDataWriter::LoadMeshPartsField(AMeshPartsData* meshPartData)
 		{
 			const aiVector3D& normal = m_mesh->mNormals[vertexIdx];
 			meshPartData->AddNormal(normal.x, normal.y, normal.z * zMultiplier);
-		}
-	}
-}
-
-void MeshPartsDataWriter::LoadStaticMeshPartsField(StaticMeshPartsData* staticMeshPartsData)
-{
-	if (m_mesh->HasTangentsAndBitangents())
-	{
-		for (size_t vertexIdx = 0; vertexIdx < m_mesh->mNumVertices; ++vertexIdx)
-		{
-			const aiVector3D& tangent = m_mesh->mTangents[vertexIdx];
-			staticMeshPartsData->AddTangent(tangent.x, tangent.y, tangent.z);
-		}
-	}
-	else
-	{
-		const vector<uint32_t>& indices = staticMeshPartsData->GetIndices();
-		const vector<uint32_t> indexOffsets = staticMeshPartsData->GetIndexOffsets();
-		const uint32_t indexOffset = indexOffsets.empty() ? 0 : indexOffsets[indexOffsets.size() - 1];
-
-
-		for (size_t idx = indexOffset; idx < indices.size(); idx += 3)
-		{
-			const uint32_t& index0 = indices[idx];
-			const uint32_t& index1 = indices[idx + 1];
-			const uint32_t& index2 = indices[idx + 2];
-
-			const XMFLOAT3& p0 = staticMeshPartsData->GetPosition(index0);
-			const XMFLOAT3& p1 = staticMeshPartsData->GetPosition(index1);
-			const XMFLOAT3& p2 = staticMeshPartsData->GetPosition(index2);
-
-			const XMFLOAT2& uv0 = staticMeshPartsData->GetUVTextureCoord(index0);
-			const XMFLOAT2& uv1 = staticMeshPartsData->GetUVTextureCoord(index1);
-			const XMFLOAT2& uv2 = staticMeshPartsData->GetUVTextureCoord(index2);
-
-			const XMFLOAT3& n0 = staticMeshPartsData->GetNormal(index0);
-			const XMFLOAT3& n1 = staticMeshPartsData->GetNormal(index1);
-			const XMFLOAT3& n2 = staticMeshPartsData->GetNormal(index2);
-
-			XMFLOAT3 t0 = MathematicalHelper::GetTangent(
-				p0, p1, p2,
-				uv0, uv1, uv2, n0
-			);
-
-			XMFLOAT3 t1 = MathematicalHelper::GetTangent(
-				p1, p2, p0,
-				uv1, uv2, uv0, n1
-			);
-
-			XMFLOAT3 t2 = MathematicalHelper::GetTangent(
-				p2, p0, p1,
-				uv2, uv0, uv1, n2
-			);
-
-			staticMeshPartsData->AddTangent(t0.x, t0.y, t0.z);
-			staticMeshPartsData->AddTangent(t1.x, t1.y, t1.z);
-			staticMeshPartsData->AddTangent(t2.x, t2.y, t2.z);
 		}
 	}
 }

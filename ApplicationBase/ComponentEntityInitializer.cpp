@@ -35,7 +35,6 @@ void ComponentEntityInitializer::Visit(SkeletalMeshComponent* skeletalModelCompo
 {
 	InitBaseComponent(skeletalModelComponent);
 
-	// AnimationPlayerComponent?
 	const SkeletalMeshAsset* skeletalMetalAsset = skeletalModelComponent->GetSkeletalMetalAsset();
 	if (skeletalMetalAsset != nullptr)
 	{

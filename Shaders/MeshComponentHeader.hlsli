@@ -3,7 +3,6 @@ struct SkeletalComponentVertexInput
     float3 f3WorldPos : POSITION;
     float2 f2TexCoord : TEXCOORD;
     float3 f3WorldNormal : NORMAL;
-    float3 f3WorldTangent : TANGENT;
     float4 f4BlendWeight : BLENDWEIGHT;
     uint4 f4BlendIndices : BLENDINDICES;
 };
@@ -13,7 +12,6 @@ struct StaticComponentVertexInput
     float3 f3WorldPos : POSITION;
     float2 f2TexCoord : TEXCOORD;
     float3 f3WorldNormal : NORMAL;
-    float3 f3WorldTangent : TANGENT;
 };
 
 struct MeshComponentVertexOutput
@@ -21,7 +19,6 @@ struct MeshComponentVertexOutput
     float4 f4WorldjPos : POSITION;
     float2 f2TexCoord : TEXCOORD;
     float3 f3WorldNormal : NORMAL;
-    float3 f3ModelTangent : TANGENT;
     float fTessFactor : TESSFACTOR;
     float fLODLevel : LOD_LEVEL;
 };
@@ -39,7 +36,6 @@ struct MeshComponentHullOutput
     float4 f4WorldPos : POSITION;
     float2 f2TexCoord : TEXCOORD;
     float3 f3WorldNormal : NORMAL;
-    float3 f3ModelTangent : TANGENT;
     float fLODLevel : LOD_LEVEL;
 };
 

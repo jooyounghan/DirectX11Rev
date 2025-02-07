@@ -39,13 +39,10 @@ MeshComponentDomainOutput main(
 {
     MeshComponentDomainOutput Result;
 
-    Result.f2TexCoord = tri[0].f2TexCoord * domain.x + tri[1].f2TexCoord * domain.y + tri[2].f2TexCoord * domain.z;
-    Result.fLODLevel = tri[0].fLODLevel * domain.x + tri[1].fLODLevel * domain.y + tri[2].fLODLevel * domain.z;
-
-    float3 f3WorldNormal = normalize(tri[0].f3WorldNormal * domain.x + tri[1].f3WorldNormal * domain.y + tri[2].f3WorldNormal * domain.z);
-    Result.f3ModelTangent = normalize(tri[0].f3ModelTangent * domain.x + tri[1].f3ModelTangent * domain.y + tri[2].f3ModelTangent * domain.z);
-	
     float4 f4WorldPos = tri[0].f4WorldPos * domain.x + tri[1].f4WorldPos * domain.y + tri[2].f4WorldPos * domain.z;
+    Result.f2TexCoord = tri[0].f2TexCoord * domain.x + tri[1].f2TexCoord * domain.y + tri[2].f2TexCoord * domain.z;
+    float3 f3WorldNormal = normalize(tri[0].f3WorldNormal * domain.x + tri[1].f3WorldNormal * domain.y + tri[2].f3WorldNormal * domain.z);
+    Result.fLODLevel = tri[0].fLODLevel * domain.x + tri[1].fLODLevel * domain.y + tri[2].fLODLevel * domain.z;
 
     if (IsHeightSet)
     {
@@ -53,8 +50,22 @@ MeshComponentDomainOutput main(
         Height = (2.f * Height - 1.f) * HeightScale;
         f4WorldPos += float4(Height * f3WorldNormal, 0.f);
     }
-
+    
     Result.f3ModelNormal = normalize(mul(float4(f3WorldNormal, 0.f), ModelInvMatrix).xyz);
+    
+    float4 edge1 = tri[1].f4WorldPos - tri[0].f4WorldPos;
+    float4 edge2 = tri[2].f4WorldPos - tri[0].f4WorldPos;
+
+    float2 deltaUV1 = tri[1].f2TexCoord - tri[0].f2TexCoord;
+    float2 deltaUV2 = tri[2].f2TexCoord - tri[0].f2TexCoord;
+    
+    float det = deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y;
+    float f = (abs(det) < 1e-6f) ? 1.0f : 1.0f / det;
+
+    Result.f3ModelTangent = (edge1 * deltaUV2.y - edge2 * deltaUV1.y) * f;
+    
+    float dotNT = dot(Result.f3ModelNormal, Result.f3ModelTangent);
+    Result.f3ModelTangent = normalize(Result.f3ModelTangent - dotNT * Result.f3ModelNormal);
 
     Result.f4ModelPos = mul(f4WorldPos, ModelMatrix);
     Result.f4ProjPos = mul(Result.f4ModelPos, ViewProjMatrix);

@@ -33,7 +33,6 @@ MeshComponentVertexOutput main(StaticComponentVertexInput Input)
     Result.fLODLevel = 2.f;
     
     Result.f3WorldNormal = Input.f3WorldNormal;
-    Result.f3ModelTangent = normalize(mul(float4(Input.f3WorldTangent, 0.f), ModelMatrix).xyz);
     Result.f2TexCoord = Input.f2TexCoord;
     Result.f4WorldjPos = float4(Input.f3WorldPos, 1.f);
 

@@ -45,13 +45,11 @@ void AssetInitializer::Visit(StaticMeshPartsData* staticMeshPartsData)
 	const vector<XMFLOAT3>& positions = staticMeshPartsData->GetPositions();
 	const vector<XMFLOAT2>& uvTextures = staticMeshPartsData->GetUVTextures();
 	const vector<XMFLOAT3>& normals = staticMeshPartsData->GetNormals();
-	const vector<XMFLOAT3>& tangents = staticMeshPartsData->GetTangents();
 
 
 	staticMeshPartsData->SetVertexBuffer(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(positions.size()), positions.data(), D3D11_BIND_VERTEX_BUFFER));
 	staticMeshPartsData->SetUVBuffer(new ConstantBuffer(sizeof(XMFLOAT2), static_cast<UINT>(uvTextures.size()), uvTextures.data(), D3D11_BIND_VERTEX_BUFFER));
 	staticMeshPartsData->SetNormalBuffer(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(normals.size()), normals.data(), D3D11_BIND_VERTEX_BUFFER));
-	staticMeshPartsData->SetTangentBuffer(new ConstantBuffer(sizeof(XMFLOAT3), static_cast<UINT>(tangents.size()), tangents.data(), D3D11_BIND_VERTEX_BUFFER));
 
 	const vector<ConstantBuffer*>& vertexBuffers = staticMeshPartsData->GetVertexConstantBuffers();
 	for (ConstantBuffer* vertexBuffer : vertexBuffers)
