@@ -21,15 +21,8 @@ MeshComponentVertexOutput main(StaticComponentVertexInput Input)
        
     float d = distance(Input.f3WorldPos, ViewPosition);
 
-    float MinTessDistance = 0.f;
-    float MaxTessDistance = 1000.f;
-    float MinTessFactor = 0.f;
-    float MaxTessFactor = 3.f;
-    //float tess = 1.f - saturate(d / (MaxTessDistance - MinTessDistance));
-    float tess = lerp(MaxTessFactor, MinTessFactor, saturate(d / MaxTessDistance));
-    
     Result.fTessFactor = 1.f;
-    //Result.fTessFactor = tess;
+    //Result.fTessFactor = getTessFactor(d);
     Result.fLODLevel = 2.f;
     
     Result.f3WorldNormal = Input.f3WorldNormal;

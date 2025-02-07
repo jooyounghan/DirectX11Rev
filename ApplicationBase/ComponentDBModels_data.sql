@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `component_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `component_db`;
 -- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: component_db
@@ -49,7 +51,7 @@ DROP TABLE IF EXISTS `collision_options`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `collision_options` (
   `collision_option_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `collision_option_description` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `collision_option_description` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
   PRIMARY KEY (`collision_option_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -98,7 +100,7 @@ DROP TABLE IF EXISTS `components`;
 CREATE TABLE `components` (
   `component_id` int unsigned NOT NULL AUTO_INCREMENT,
   `parent_component_id` int unsigned NOT NULL DEFAULT '0',
-  `component_name` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'NULL',
+  `component_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'NULL',
   `position_x` float NOT NULL DEFAULT '0',
   `position_y` float NOT NULL DEFAULT '0',
   `position_z` float NOT NULL DEFAULT '0',
@@ -247,8 +249,8 @@ DROP TABLE IF EXISTS `scenes`;
 CREATE TABLE `scenes` (
   `scene_id` int unsigned NOT NULL AUTO_INCREMENT,
   `scene_description` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `scene_static_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `scene_ibl_material_name` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `scene_static_mesh_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `scene_ibl_material_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
   PRIMARY KEY (`scene_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -272,7 +274,7 @@ DROP TABLE IF EXISTS `skeletal_mesh_components`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `skeletal_mesh_components` (
   `skeletal_mesh_component_id` int unsigned NOT NULL,
-  `skeletal_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `skeletal_mesh_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`skeletal_mesh_component_id`),
   CONSTRAINT `component_id_fk4` FOREIGN KEY (`skeletal_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -325,7 +327,7 @@ DROP TABLE IF EXISTS `static_mesh_components`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `static_mesh_components` (
   `static_mesh_component_id` int unsigned NOT NULL,
-  `static_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `static_mesh_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`static_mesh_component_id`),
   CONSTRAINT `component_id_fk5` FOREIGN KEY (`static_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -376,4 +378,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-05 22:58:25
+-- Dump completed on 2025-02-07 22:07:50

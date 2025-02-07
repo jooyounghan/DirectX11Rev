@@ -74,7 +74,7 @@ void SceneDefferedRenderer::Visit(StaticMeshComponent* staticMeshComponent)
     {
         if (const StaticMeshAsset* staticMeshAsset = staticMeshComponent->GetStaticMetalAsset())
         {
-            if (AMeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(GetLODLevel(staticMeshComponent)))
+            if (AMeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(GetLODLevel(staticMeshAsset->GetLODCount(), staticMeshComponent)))
             {
                 staticMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 
@@ -124,7 +124,7 @@ void SceneDefferedRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
     {
         if (const SkeletalMeshAsset* skeletalMeshAsset = skeletalMeshComponent->GetSkeletalMetalAsset())
         {
-            if (AMeshPartsData* meshPartsData = skeletalMeshAsset->GetMeshPartData(GetLODLevel(skeletalMeshComponent)))
+            if (AMeshPartsData* meshPartsData = skeletalMeshAsset->GetMeshPartData(GetLODLevel(skeletalMeshAsset->GetLODCount(), skeletalMeshComponent)))
             {
                 skeletalMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
 

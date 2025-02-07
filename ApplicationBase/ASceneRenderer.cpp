@@ -31,6 +31,7 @@
 #include "PerformanceAnalyzer.h"
 
 using namespace std;
+using namespace DirectX;
 
 ASceneRenderer::ASceneRenderer(
 	ID3D11DeviceContext* const* deviceContextAddress,
@@ -114,8 +115,18 @@ void ASceneRenderer::ClearRenderTargets()
     }
 }
 
-uint32_t ASceneRenderer::GetLODLevel(const AComponent* component) const
+uint32_t ASceneRenderer::GetLODLevel(const size_t& maxLODLevel, const AComponent* component) const
 {
+    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
+    if (cameraComponent)
+    {
+        XMVECTOR vDistance = XMVectorSubtract(cameraComponent->GetAbsolutePosition(), component->GetAbsolutePosition());
+        const float distance = XMVectorGetX(XMVector3Length(vDistance));
+        const float maxDistance = cameraComponent->GetFarZ();
+        constexpr int controlOption = 300;
+
+        return static_cast<uint32_t>(maxLODLevel * (1 - pow(1 - (distance / maxDistance), controlOption)));
+    }
     return 0;
 }
 

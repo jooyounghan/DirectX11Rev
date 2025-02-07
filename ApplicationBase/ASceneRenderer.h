@@ -62,7 +62,7 @@ public:
 	virtual void PostProcess() = 0;
 
 protected:
-	uint32_t GetLODLevel(const AComponent* component) const;
+	uint32_t GetLODLevel(const size_t& maxLODLevel, const AComponent* component) const;
 	void RenderMeshParts(
 		ID3D11DeviceContext* const deviceContext,
 		const AMeshPartsData* const meshPartsData,

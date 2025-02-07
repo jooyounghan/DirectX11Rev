@@ -8,12 +8,6 @@ cbuffer CameraViewConstantBuffer : register(b0)
     float Dummy;
 };
 
-cbuffer ModelConstantBuffer : register(b1)
-{
-    matrix ModelMatrix;
-    matrix ModelInvMatrix;
-};
-
 StructuredBuffer<float4x4> BoneTransformation : register(t0);
 
 MeshComponentVertexOutput main(SkeletalComponentVertexInput Input)
@@ -21,17 +15,9 @@ MeshComponentVertexOutput main(SkeletalComponentVertexInput Input)
     MeshComponentVertexOutput Result;
 
     float d = distance(Input.f3WorldPos, ViewPosition);
-
-    float MinTessDistance = 0.f;
-    float MaxTessDistance = 1000.f;
-    float MinTessFactor = 1.f;
-    float MaxTessFactor = 10.f;
-    
-    //float tess = 1.f - saturate(d / (MaxTessDistance - MinTessDistance));
-    float tess = lerp(MaxTessFactor, MinTessFactor, saturate(d / MaxTessDistance));
-    
+     
     Result.fTessFactor = 1.f;
-    //Result.fTessFactor = tess;
+    //Result.fTessFactor = getTessFactor(d);
     Result.fLODLevel = 2.f;
     
     float4 f4WorldNormalIn = float4(Input.f3WorldNormal, 0.f);

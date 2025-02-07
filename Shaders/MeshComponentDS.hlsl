@@ -62,7 +62,7 @@ MeshComponentDomainOutput main(
     float det = deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y;
     float f = (abs(det) < 1e-6f) ? 1.0f : 1.0f / det;
 
-    Result.f3ModelTangent = (edge1 * deltaUV2.y - edge2 * deltaUV1.y) * f;
+    Result.f3ModelTangent = (edge1 * deltaUV2.y - edge2 * deltaUV1.y).xyz * f;
     
     float dotNT = dot(Result.f3ModelNormal, Result.f3ModelTangent);
     Result.f3ModelTangent = normalize(Result.f3ModelTangent - dotNT * Result.f3ModelNormal);
