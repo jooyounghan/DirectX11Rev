@@ -67,10 +67,9 @@ public:
 
 private:
 	void LoadComponentMakers();
-	void LoadComponents();
 	void LoadScenes();
-	void LoadScenesInformation();
-	void InitLoadedComponents();
+	void LoadComponents();
+	void Initialize();
 	void LoadLastAutoIncrementIDFromTable(const std::string& tableName, uint32_t& autoIncrementID);
 
 private:

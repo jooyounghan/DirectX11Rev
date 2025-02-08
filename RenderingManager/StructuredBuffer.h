@@ -14,6 +14,6 @@ public:
 	ID3D11ShaderResourceView* const GetSRV() const { return m_structuredSRV.Get(); }
 
 public:
-	virtual void InitializeBuffer(ID3D11Device* const device, const D3D11_SUBRESOURCE_DATA* initialData) override;
+	virtual void InitializeBuffer(ID3D11Device* const device) override;
 };
 

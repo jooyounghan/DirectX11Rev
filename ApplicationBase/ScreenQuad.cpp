@@ -43,12 +43,10 @@ void ScreenQuad::InitScreenQuad(ID3D11Device* device)
 	vector<ConstantBuffer*> vertexBuffers = GetVertexConstantBuffers();
 	for (ConstantBuffer* vertexBuffers : vertexBuffers)
 	{
-		D3D11_SUBRESOURCE_DATA vertexSubresourceData = vertexBuffers->GetSubResourceData();
-		vertexBuffers->InitializeBuffer(device, &vertexSubresourceData);
+		vertexBuffers->InitializeBuffer(device);
 	}
 
-	D3D11_SUBRESOURCE_DATA screenQuadIndexSubresourceData = m_indexBuffer->GetSubResourceData();
-	m_indexBuffer->InitializeBuffer(device, &screenQuadIndexSubresourceData);
+	m_indexBuffer->InitializeBuffer(device);
 }
 
 vector<ConstantBuffer*> ScreenQuad::GetVertexConstantBuffers() const

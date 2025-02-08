@@ -54,16 +54,14 @@ void AssetInitializer::Visit(StaticMeshPartsData* staticMeshPartsData)
 	const vector<ConstantBuffer*>& vertexBuffers = staticMeshPartsData->GetVertexConstantBuffers();
 	for (ConstantBuffer* vertexBuffer : vertexBuffers)
 	{
-		const D3D11_SUBRESOURCE_DATA vertexSubresourceData = vertexBuffer->GetSubResourceData();
-		vertexBuffer->InitializeBuffer(m_deviceCached, &vertexSubresourceData);
+		vertexBuffer->InitializeBuffer(m_deviceCached);
 	}
 
 	const vector<uint32_t>& indices = staticMeshPartsData->GetIndices();
 	staticMeshPartsData->SetIndexBuffer(new ConstantBuffer(sizeof(uint32_t), static_cast<UINT>(indices.size()), indices.data(), D3D11_BIND_INDEX_BUFFER));
 
 	ConstantBuffer* const indexBuffer = staticMeshPartsData->GetIndexBuffer();
-	const D3D11_SUBRESOURCE_DATA indexSubresourceData = indexBuffer->GetSubResourceData();
-	indexBuffer->InitializeBuffer(m_deviceCached, &indexSubresourceData);
+	indexBuffer->InitializeBuffer(m_deviceCached);
 }
 
 void AssetInitializer::Visit(SkeletalMeshPartsData* skeletalMeshPartsData)
@@ -111,8 +109,7 @@ void AssetInitializer::Visit(ModelMaterialAsset* modelMaterialAsset)
 	modelMaterialAsset->UpdateModelMaterialTexturesFromNames();
 
 	DynamicBuffer* const modelTextureSettingBuffer = modelMaterialAsset->GetModelTextureSettingBuffer();
-	const D3D11_SUBRESOURCE_DATA modelTextureSettingSubresourceData = modelTextureSettingBuffer->GetSubResourceData();
-	modelTextureSettingBuffer->InitializeBuffer(m_deviceCached, &modelTextureSettingSubresourceData);
+	modelTextureSettingBuffer->InitializeBuffer(m_deviceCached);
 }
 
 void AssetInitializer::Visit(IBLMaterialAsset* iblMaterialAsset)
@@ -126,8 +123,7 @@ void AssetInitializer::Visit(IBLMaterialAsset* iblMaterialAsset)
 		);
 	}
 	DynamicBuffer* const iblToneMappingBuffer = iblMaterialAsset->GetIBLToneMappingBuffer();
-	const D3D11_SUBRESOURCE_DATA iblToneMpaaingSubsourceData = iblToneMappingBuffer->GetSubResourceData();
-	iblToneMappingBuffer->InitializeBuffer(m_deviceCached, &iblToneMpaaingSubsourceData);
+	iblToneMappingBuffer->InitializeBuffer(m_deviceCached);
 }
 
 

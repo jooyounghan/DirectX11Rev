@@ -209,6 +209,7 @@
     <ClInclude Include="TopologySorter.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AModifiable.cpp" />
     <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationRetargeter.cpp" />
     <ClCompile Include="AssetInitializer.cpp" />

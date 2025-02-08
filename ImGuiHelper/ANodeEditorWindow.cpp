@@ -1,6 +1,8 @@
 #include "ANodeEditorWindow.h"
 #include "FlowEndNode.h"
 
+#include <format>
+
 using namespace std;
 using namespace ImGui;
 
@@ -8,7 +10,9 @@ ANodeEditorWindow::ANodeEditorWindow(const std::string& windowID, bool* openFlag
 	: AWindow(
 		windowID, false, openFlag, 
 		ImGuiWindowFlags_(ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)),
-	m_lineCount(lineCount), m_nodeExecuteContextMenu(&m_isEnableAutoPlacement)
+	m_lineCount(lineCount), 
+	m_nodeExecuteContextMenu(&m_isEnableAutoPlacement),
+	m_messasgeBoxModal("Node Editor Information")
 {
 	m_canvas.RegisterToInteractionManager(this);
 
@@ -16,6 +20,8 @@ ANodeEditorWindow::ANodeEditorWindow(const std::string& windowID, bool* openFlag
 	m_flowEndNode = AddNode<FlowEndNode>(m_lineCount - 1);
 
 	m_nodeExecuteContextMenu.m_onExecuteHandler = bind(&FlowEndNode::Execute, m_flowEndNode);
+	m_nodeExecuteContextMenu.m_onExecuteSucceed = [&]() { m_messasgeBoxModal.SetMessage("Execute Succeeded"); };
+	m_nodeExecuteContextMenu.m_onExecuteFailed = [&](const string& message) { m_messasgeBoxModal.SetMessage(format("Execute Failed {}", message)); };
 }
 
 ANodeEditorWindow::~ANodeEditorWindow()
@@ -29,6 +35,7 @@ void ANodeEditorWindow::RenderWindowImpl()
 
 	m_canvas.RenderControl();
 	m_nodeExecuteContextMenu.DrawNotificator();
+	m_messasgeBoxModal.DrawNotificator();
 }
 
 void ANodeEditorWindow::AdjustNodesLayout()

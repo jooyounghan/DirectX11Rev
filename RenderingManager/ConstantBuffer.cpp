@@ -11,8 +11,10 @@ ConstantBuffer::ConstantBuffer(
 
 }
 
-void ConstantBuffer::InitializeBuffer(ID3D11Device* device, const D3D11_SUBRESOURCE_DATA* initialData)
+void ConstantBuffer::InitializeBuffer(ID3D11Device* device)
 {
+	D3D11_SUBRESOURCE_DATA initialData = GetSubResourceData();
+
 	D3D11_BUFFER_DESC bufferDesc;
 	AutoZeroMemory(bufferDesc);
 
@@ -23,5 +25,5 @@ void ConstantBuffer::InitializeBuffer(ID3D11Device* device, const D3D11_SUBRESOU
 	bufferDesc.MiscFlags = NULL;
 	bufferDesc.StructureByteStride = 0;
 
-	device->CreateBuffer(&bufferDesc, initialData, m_buffer.GetAddressOf());
+	device->CreateBuffer(&bufferDesc, &initialData, m_buffer.GetAddressOf());
 }

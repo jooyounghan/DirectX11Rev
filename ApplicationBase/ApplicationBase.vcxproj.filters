@@ -398,9 +398,11 @@
     <ClCompile Include="ComponentCollector.cpp">
       <Filter>소스 파일\Component\Visitor\Collector</Filter>
     </ClCompile>
-    <ClCompile Include="AViewEntity.cpp" />
     <ClCompile Include="DefferedContextID.cpp">
       <Filter>소스 파일\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="AViewEntity.cpp">
+      <Filter>소스 파일\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

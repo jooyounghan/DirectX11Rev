@@ -61,7 +61,7 @@ void ComponentManager::InitComponentManager()
 		LoadComponentMakers();
 		LoadScenes();
 		LoadComponents();
-		InitLoadedComponents();
+		Initialize();
 		m_isInitialized = true;
 	}
 	catch (const std::exception& ex)
@@ -204,7 +204,6 @@ void ComponentManager::LoadComponents()
 			XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
 			
 			SceneID sceneID = rowResult[13].get<SceneID>();
-
 			if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
 			{
 				AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
@@ -250,7 +249,7 @@ void ComponentManager::LoadComponents()
 	LoadLastAutoIncrementIDFromTable(componentsTableName, m_componentIssuedID);
 }
 
-void ComponentManager::InitLoadedComponents()
+void ComponentManager::Initialize()
 {
 	try
 	{
@@ -265,9 +264,7 @@ void ComponentManager::InitLoadedComponents()
 				componentIDToComponent.second->Accept(&componentEntityInitializer);
 			}
 		}
-
 		m_sessionManager->commit();
-
 	}
 	catch (const exception& ex)
 	{

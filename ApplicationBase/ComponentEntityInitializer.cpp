@@ -123,8 +123,7 @@ void ComponentEntityInitializer::Visit(PointLightComponent* pointLightComponent)
 		m_deviceCached->CreateDepthStencilView(depthStencilViewCube->GetTexture2D(), &dsvDesc, pointLightFrustumPart->GetDepthTestDSVAddress());
 
 		DynamicBuffer* viewProjBuffer = pointLightFrustumPart->GetViewProjMatrixBuffer();
-		const D3D11_SUBRESOURCE_DATA viewProjBuffersSubresource = viewProjBuffer->GetSubResourceData();
-		viewProjBuffer->InitializeBuffer(m_deviceCached, &viewProjBuffersSubresource);
+		viewProjBuffer->InitializeBuffer(m_deviceCached);
 	}
 }
 
@@ -135,18 +134,13 @@ void ComponentEntityInitializer::InitBaseComponent(AComponent* component)
 	DynamicBuffer* transformationBuffer = component->GetTransformationBuffer();
 	DynamicBuffer* comopnentBuffer = component->GetComponentBuffer();
 
-	const D3D11_SUBRESOURCE_DATA transformaionSubresource = transformationBuffer->GetSubResourceData();
-	transformationBuffer->InitializeBuffer(m_deviceCached, &transformaionSubresource);
-
-	const D3D11_SUBRESOURCE_DATA componentSubresource = comopnentBuffer->GetSubResourceData();
-	comopnentBuffer->InitializeBuffer(m_deviceCached, &componentSubresource);
-
+	transformationBuffer->InitializeBuffer(m_deviceCached);
+	comopnentBuffer->InitializeBuffer(m_deviceCached);
 }
 
 void ComponentEntityInitializer::InitViewComponent(AViewComponent* viewComponent)
 {
 	viewComponent->UpdateViewEntity();
 	DynamicBuffer* viewProjMatrixBuffer = viewComponent->GetViewProjMatrixBuffer();
-	D3D11_SUBRESOURCE_DATA viewProjSubResourceData = viewProjMatrixBuffer->GetSubResourceData();
-	viewProjMatrixBuffer->InitializeBuffer(m_deviceCached, &viewProjSubResourceData);
+	viewProjMatrixBuffer->InitializeBuffer(m_deviceCached);
 }

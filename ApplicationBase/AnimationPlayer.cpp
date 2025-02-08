@@ -75,8 +75,7 @@ void AnimationPlayer::InitAnimationPlayer(ID3D11Device* const device)
 	m_boneTransformation.resize(bones.size(), XMMatrixIdentity());
 	m_boneTransformationBuffer = new StructuredBuffer(sizeof(XMMATRIX), static_cast<UINT>(m_boneTransformation.size()), m_boneTransformation.data());
 
-	const D3D11_SUBRESOURCE_DATA subresourceData = m_boneTransformationBuffer->GetSubResourceData();
-	m_boneTransformationBuffer->InitializeBuffer(device, &subresourceData);
+	m_boneTransformationBuffer->InitializeBuffer(device);
 }
 
 void AnimationPlayer::UpdateAnimationPlayer(ID3D11DeviceContext* const deviceContext, const float& deltaTime)

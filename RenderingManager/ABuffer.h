@@ -23,6 +23,6 @@ public:
 	inline ID3D11Buffer* GetBuffer() const { return m_buffer.Get(); }
 	
 public:
-	virtual void InitializeBuffer(ID3D11Device* const device, const D3D11_SUBRESOURCE_DATA* initialData) = 0;
+	virtual void InitializeBuffer(ID3D11Device* const device) = 0;
 };
 

@@ -2,6 +2,7 @@
 #include "Node.h"
 #include "Canvas.h"
 #include "AWindow.h"
+#include "MessageBoxModal.h"
 #include "NodeExecuteContextMenu.h"
 #include "NodeConstant.h"
 
@@ -26,6 +27,7 @@ protected:
 	size_t m_lineCount;
 	FlowEndNode* m_flowEndNode;
 	NodeExecuteContextMenu m_nodeExecuteContextMenu;
+	MessageBoxModal m_messasgeBoxModal;
 
 protected:
 	std::vector<std::vector<Node*>> m_nodesWithLines;

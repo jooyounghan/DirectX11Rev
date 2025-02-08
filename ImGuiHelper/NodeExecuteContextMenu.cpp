@@ -1,4 +1,5 @@
 #include "NodeExecuteContextMenu.h"
+
 #include <exception>
 
 using namespace std;
@@ -9,13 +10,16 @@ NodeExecuteContextMenu::NodeExecuteContextMenu(bool* isEnableAutoPlacement)
 {
 }
 
+NodeExecuteContextMenu::~NodeExecuteContextMenu()
+{
+}
+
 bool NodeExecuteContextMenu::OpenCondition()
 {
     const ImVec2 minRect = GetWindowPos();
     const ImVec2 rectSize = GetWindowSize();
     const ImVec2 maxRect = ImVec2(minRect.x + rectSize.x, minRect.y + rectSize.y);
     return IsMouseHoveringRect(minRect, maxRect) && IsMouseClicked(ImGuiMouseButton_::ImGuiMouseButton_Right);
-
 }
 
 void NodeExecuteContextMenu::RenderNotification()
@@ -26,11 +30,11 @@ void NodeExecuteContextMenu::RenderNotification()
         try
         {
             m_onExecuteHandler();
+            m_onExecuteSucceed();
         }
         catch (const exception& e)
         {
-            // 안될 경우!
-            bool test = true;
+            m_onExecuteFailed(e.what());
         }
     }
     if (MenuItem(isEnableAutoPlacement ? "Disenable Auto Placement" : "Enable Auto Placement"))

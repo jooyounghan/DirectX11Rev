@@ -17,6 +17,6 @@ protected:
 	D3D11_BIND_FLAG m_bindFlag;
 
 public:
-	virtual void InitializeBuffer(ID3D11Device* device, const D3D11_SUBRESOURCE_DATA* initialData) override;
+	virtual void InitializeBuffer(ID3D11Device* device) override;
 };
 
