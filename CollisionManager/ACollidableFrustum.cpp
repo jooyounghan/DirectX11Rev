@@ -1,19 +1,19 @@
-#include "CollidableFrustum.h"
+#include "ACollidableFrustum.h"
 #include "CollisionVisitor.h"
 
 using namespace DirectX;
 
-bool CollidableFrustum::Accept(ICollisionVisitor& collisionVisitor) const
+bool ACollidableFrustum::Accept(ICollisionVisitor& collisionVisitor) const
 {
 	return collisionVisitor.Visit(this);
 }
 
-bool CollidableFrustum::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
+bool ACollidableFrustum::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
 {
     return boundingBox.Intersects(*this);
 }
 
-DirectX::BoundingBox CollidableFrustum::GetBoundingBox(const float& margin) const
+DirectX::BoundingBox ACollidableFrustum::GetBoundingBox(const float& margin) const
 {
     XMFLOAT3 corners[8];
     GetCorners(corners);

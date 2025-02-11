@@ -1,7 +1,7 @@
 #pragma once
-#include "CollidableSphere.h"
-#include "CollidableOrientedBox.h"
-#include "CollidableFrustum.h"
+#include "ACollidableSphere.h"
+#include "ACollidableOrientedBox.h"
+#include "ACollidableFrustum.h"
 
 #include <algorithm>
 
@@ -11,9 +11,9 @@ public:
 	virtual ~ICollisionVisitor() = default;
 
 public:
-	virtual bool Visit(const CollidableSphere* const collidableSphere) const = 0;
-	virtual bool Visit(const CollidableOrientedBox* const collidableSphere) const = 0;
-	virtual bool Visit(const CollidableFrustum* const collidableSphere) const = 0;
+	virtual bool Visit(const ACollidableSphere* const collidableSphere) const = 0;
+	virtual bool Visit(const ACollidableOrientedBox* const collidableSphere) const = 0;
+	virtual bool Visit(const ACollidableFrustum* const collidableSphere) const = 0;
 };
 
 class ACollisionVisitor : public ICollisionVisitor

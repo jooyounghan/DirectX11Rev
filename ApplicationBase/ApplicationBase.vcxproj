@@ -183,7 +183,7 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="AViewEntity.cpp" />
     <ClCompile Include="BoundingVolumeHierarchy.cpp" />
     <ClCompile Include="BoundingVolumeNode.cpp" />
-    <ClCompile Include="DefferedContextID.cpp" />
+    <ClCompile Include="DeferredContextID.cpp" />
     <ClCompile Include="DepthTestRenderer.cpp" />
     <ClCompile Include="LightEntity.cpp" />
     <ClCompile Include="OrientedBoxCollisionComponent.cpp" />
@@ -206,7 +206,7 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="KeyEvent.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="RenderControlOption.cpp" />
-    <ClCompile Include="SceneDefferedRenderer.cpp" />
+    <ClCompile Include="SceneDeferredRenderer.cpp" />
     <ClCompile Include="SceneForwardRenderer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ScreenQuad.cpp" />
@@ -224,7 +224,7 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="AViewComponent.h" />
     <ClInclude Include="BoundingVolumeHierarchy.h" />
     <ClInclude Include="BoundingVolumeNode.h" />
-    <ClInclude Include="DefferedContextID.h" />
+    <ClInclude Include="DeferredContextID.h" />
     <ClInclude Include="DepthTestRenderer.h" />
     <ClInclude Include="ILightVisitor.h" />
     <ClInclude Include="AViewEntity.h" />
@@ -252,7 +252,7 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="RenderControlOption.h" />
-    <ClInclude Include="SceneDefferedRenderer.h" />
+    <ClInclude Include="SceneDeferredRenderer.h" />
     <ClInclude Include="SceneForwardRenderer.h" />
     <ClInclude Include="IComponentVisitor.h" />
     <ClInclude Include="ComponentEntity.h" />
@@ -291,7 +291,7 @@ exit %ERRORLEVEL%</Command>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shaders\DefferedMeshComponentPS.hlsl">
+    <FxCompile Include="Shaders\DeferredMeshComponentPS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
     </FxCompile>

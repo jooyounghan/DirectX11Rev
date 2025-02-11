@@ -2,7 +2,7 @@
 #include "AComponent.h"
 #include "LightEntity.h"
 #include "AViewEntity.h"
-#include "CollidableFrustum.h"
+#include "ACollidableFrustum.h"
 
 #include <wrl/client.h>
 
@@ -11,7 +11,7 @@ class Texture2DInstance;
 class SRVOption;
 class DSVOption;
 
-class PointLightFrustumPart : public AViewEntity, public CollidableFrustum
+class PointLightFrustumPart : public AViewEntity, public ACollidableFrustum
 {
 public:
 	PointLightFrustumPart(

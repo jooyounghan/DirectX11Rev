@@ -58,10 +58,10 @@
     <Filter Include="소스 파일\Texture2D">
       <UniqueIdentifier>{9a62471e-3230-4a3b-9616-ec62a0355a27}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\DefferedContext">
+    <Filter Include="헤더 파일\DeferredContext">
       <UniqueIdentifier>{022eca1c-7966-44b1-8130-557570c7f250}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\DefferedContext">
+    <Filter Include="소스 파일\DeferredContext">
       <UniqueIdentifier>{bce6bc0f-000d-401d-b8c4-290dcd9b51f9}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\PSOManager">
@@ -147,14 +147,14 @@
     <ClInclude Include="D3D11Utilities.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DefferedContext.h">
-      <Filter>헤더 파일\DefferedContext</Filter>
-    </ClInclude>
     <ClInclude Include="GraphicsPSOObject.h">
       <Filter>헤더 파일\PSOManager</Filter>
     </ClInclude>
     <ClInclude Include="PSOEnumDefinition.h">
       <Filter>헤더 파일\PSOManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredContext.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -218,11 +218,11 @@
     <ClCompile Include="D3D11Utilities.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="DefferedContext.cpp">
-      <Filter>소스 파일\DefferedContext</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicsPSOObject.cpp">
       <Filter>소스 파일\PSOManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredContext.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

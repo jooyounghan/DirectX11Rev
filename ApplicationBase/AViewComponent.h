@@ -1,6 +1,6 @@
 #pragma once
 #include "AComponent.h"
-#include "CollidableFrustum.h"
+#include "ACollidableFrustum.h"
 #include "AViewEntity.h"
 
 template<typename ...IsTextureOption>
@@ -17,7 +17,7 @@ constexpr float GDefaultFovAngle = 60.f;
 constexpr uint32_t GDefaultViewWidth = 1280;
 constexpr uint32_t GDefaultViewHeight = 960;
 
-class AViewComponent : public AViewEntity, public AComponent, public D3D11_VIEWPORT, public CollidableFrustum
+class AViewComponent : public AViewEntity, public AComponent, public D3D11_VIEWPORT, public ACollidableFrustum
 {
 public:
 	AViewComponent(

@@ -1,6 +1,12 @@
 #include "LightEntity.h"
+#include "DynamicBuffer.h"
 
 using namespace std;
+
+LightEntity::LightEntity()
+	: m_lightEntityBuffer(new DynamicBuffer(sizeof(SLightEntity), 1, &m_lightEntity))
+{
+}
 
 void LightEntity::SetLigthEntity(
 	const float& lightPower, 

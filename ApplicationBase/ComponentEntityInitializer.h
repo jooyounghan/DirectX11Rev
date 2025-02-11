@@ -3,6 +3,7 @@
 #include <d3d11.h>
 
 class AViewComponent;
+class LightEntity;
 
 class ComponentEntityInitializer : public IComponentVisitor
 {
@@ -32,5 +33,6 @@ public:
 private:
 	void InitBaseComponent(AComponent* component);
 	void InitViewComponent(AViewComponent* viewComponent);
+	void InitLightComponent(LightEntity* lightEntity);
 };
 

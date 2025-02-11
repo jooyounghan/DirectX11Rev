@@ -3,13 +3,13 @@
 
 #include "ComponentHandler.h"
 #include "SceneForwardRenderer.h"
-#include "SceneDefferedRenderer.h"
+#include "SceneDeferredRenderer.h"
 #include "ImGuiComboBox.h"
 
 enum class ERendererType
 {
 	FORWARD_RENDERING,
-	DEFFERED_RENDERING
+	Deferred_RENDERING
 };
 
 class Scene;
@@ -29,7 +29,7 @@ public:
 		const std::string& windowID,
 		ID3D11Device* const* deviceAddress,
 		ID3D11DeviceContext* const* immediateContextAddress,
-		ID3D11DeviceContext* const* componentRenderDefferedContextAddress,
+		ID3D11DeviceContext* const* componentRenderDeferredContextAddress,
 		ComponentManager* componentManager, 
 		ComponentPSOManager* componentPsoManager
 	);
@@ -37,7 +37,7 @@ public:
 
 private:
 	ID3D11DeviceContext* const* m_immediateContextAddress = nullptr;
-	ID3D11DeviceContext* const* m_componentRenderDefferedContextAddress = nullptr;
+	ID3D11DeviceContext* const* m_componentRenderDeferredContextAddress = nullptr;
 	Scene* m_selectedScene = nullptr;
 	ComponentManager* m_componentManagerCached = nullptr;
 	ComponentPSOManager* m_componentPsoManageCached = nullptr;
@@ -56,9 +56,9 @@ private:
 
 private:
 	SceneForwardRenderer m_forwardRenderer;
-	SceneDefferedRenderer m_defferedRenderer;
+	SceneDeferredRenderer m_DeferredRenderer;
 	ASceneRenderer* m_selectedRenderer = nullptr;
-	bool m_isDefferedRenderer = false;
+	bool m_isDeferredRenderer = false;
 
 private:
 	ImGuiComboBox m_rendererComboBox;

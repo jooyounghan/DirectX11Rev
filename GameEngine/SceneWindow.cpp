@@ -25,21 +25,21 @@ SceneWindow::SceneWindow(
     const string& windowID,
     ID3D11Device* const* deviceAddress,
     ID3D11DeviceContext* const* immediateContextAddress,
-    ID3D11DeviceContext* const* componentRenderDefferedContextAddress,
+    ID3D11DeviceContext* const* componentRenderDeferredContextAddress,
     ComponentManager* componentManager,
     ComponentPSOManager* componentPsoManager
 )
     : AWindow(windowID, true, nullptr),
     m_immediateContextAddress(immediateContextAddress),
-    m_componentRenderDefferedContextAddress(componentRenderDefferedContextAddress),
+    m_componentRenderDeferredContextAddress(componentRenderDeferredContextAddress),
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
     m_componentHandler(componentManager),
-    m_forwardRenderer(componentRenderDefferedContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
-    m_defferedRenderer(deviceAddress, componentRenderDefferedContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
+    m_forwardRenderer(componentRenderDeferredContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
+    m_DeferredRenderer(deviceAddress, componentRenderDeferredContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
-    m_rendererComboBox.SetSelectableItems("Select Rederer", { "Forward Renderer", "Deffered Renderer" });
+    m_rendererComboBox.SetSelectableItems("Select Rederer", { "Forward Renderer", "Deferred Renderer" });
     m_rendererComboBox.OnSelChanged = [&](const size_t& idx, const string& text) 
         {
             ERendererType renderType = static_cast<ERendererType>(idx);
@@ -47,11 +47,11 @@ SceneWindow::SceneWindow(
             {
             case ERendererType::FORWARD_RENDERING:
                 m_selectedRenderer = &m_forwardRenderer;
-                m_isDefferedRenderer = false;
+                m_isDeferredRenderer = false;
                 break;
-            case ERendererType::DEFFERED_RENDERING:
-                m_selectedRenderer = &m_defferedRenderer;
-                m_isDefferedRenderer = true;
+            case ERendererType::Deferred_RENDERING:
+                m_selectedRenderer = &m_DeferredRenderer;
+                m_isDeferredRenderer = true;
                 break;
             default:
                 break;
@@ -80,7 +80,7 @@ void SceneWindow::PrepareWindow()
         for (SpotLightComponent* spotLight : spotLights)
         {
             spotLight->GenerateShadowMap(
-                m_componentRenderDefferedContextAddress, 
+                m_componentRenderDeferredContextAddress, 
                 m_componentPsoManageCached, 
                 sceneRootComponents
             );
@@ -89,7 +89,7 @@ void SceneWindow::PrepareWindow()
         for (PointLightComponent* pointLight : pointLights)
         {
             pointLight->GenerateShadowMap(
-                m_componentRenderDefferedContextAddress,
+                m_componentRenderDeferredContextAddress,
                 m_componentPsoManageCached,
                 sceneRootComponents
             );
@@ -164,10 +164,10 @@ void SceneWindow::DrawScene()
     const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = m_selectedCamera->GetFilm();
     Image((ImU64)(film != nullptr ? film->GetSRV() : nullptr), contentAvailRegion);
 
-    if (m_isDefferedRenderer)
+    if (m_isDeferredRenderer)
     {
         ImVec2 currentDebugImagePos = cursorPos;
-        const vector<ID3D11ShaderResourceView*> gBufferSRVs = m_defferedRenderer.GetGBufferSRVs();
+        const vector<ID3D11ShaderResourceView*> gBufferSRVs = m_DeferredRenderer.GetGBufferSRVs();
         const ImVec2 debugImageRect = ImVec2(contentAvailRegion.x / gBufferSRVs.size(), contentAvailRegion.y / 10.f);
         for (ID3D11ShaderResourceView* srv : gBufferSRVs)
         {

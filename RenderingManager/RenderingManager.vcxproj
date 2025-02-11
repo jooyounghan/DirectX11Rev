@@ -155,7 +155,7 @@
     <ClInclude Include="AUploadableBuffer.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="D3D11Engine.h" />
-    <ClInclude Include="DefferedContext.h" />
+    <ClInclude Include="DeferredContext.h" />
     <ClInclude Include="DirectXUtilities.h" />
     <ClInclude Include="DomainShader.h" />
     <ClInclude Include="DSVOption.h" />
@@ -183,7 +183,7 @@
     <ClCompile Include="AUploadableBuffer.cpp" />
     <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="D3D11Engine.cpp" />
-    <ClCompile Include="DefferedContext.cpp" />
+    <ClCompile Include="DeferredContext.cpp" />
     <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="DSVOption.cpp" />
     <ClCompile Include="DynamicBuffer.cpp" />

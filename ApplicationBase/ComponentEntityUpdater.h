@@ -3,6 +3,7 @@
 #include <d3d11.h>
 
 class AViewComponent;
+class LightEntity;
 
 class ComponentEntityUpdater : public IComponentVisitor
 {
@@ -32,4 +33,5 @@ public:
 private:
 	void UpdateBaseComponent(AComponent* component);
 	void UpdateViewComponent(AViewComponent* viewComponent);
+	void UpdateLightComponent(LightEntity* lightComponent);
 };

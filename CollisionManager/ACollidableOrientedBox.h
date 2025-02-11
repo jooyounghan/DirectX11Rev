@@ -1,11 +1,11 @@
 #pragma once
 #include "ICollisionAcceptor.h"
 
-class CollidableOrientedBox : public ICollisionAcceptor, public DirectX::BoundingOrientedBox
+class ACollidableOrientedBox : public ICollisionAcceptor, public DirectX::BoundingOrientedBox
 {
 public:
-	CollidableOrientedBox() = default;
-	~CollidableOrientedBox() override = default;
+	ACollidableOrientedBox() = default;
+	~ACollidableOrientedBox() override = default;
 
 public:
 	virtual bool Accept(ICollisionVisitor& collisionVisitor) const override;

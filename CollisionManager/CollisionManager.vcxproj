@@ -162,18 +162,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CollidableFrustum.h" />
-    <ClInclude Include="CollidableOrientedBox.h" />
-    <ClInclude Include="CollidableSphere.h" />
+    <ClInclude Include="ACollidableFrustum.h" />
+    <ClInclude Include="ACollidableOrientedBox.h" />
+    <ClInclude Include="ACollidableSphere.h" />
     <ClInclude Include="ContainVisitor.h" />
     <ClInclude Include="ICollisionAcceptor.h" />
     <ClInclude Include="CollisionVisitor.h" />
     <ClInclude Include="IntersectVisitor.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CollidableFrustum.cpp" />
-    <ClCompile Include="CollidableOrientedBox.cpp" />
-    <ClCompile Include="CollidableSphere.cpp" />
+    <ClCompile Include="ACollidableFrustum.cpp" />
+    <ClCompile Include="ACollidableOrientedBox.cpp" />
+    <ClCompile Include="ACollidableSphere.cpp" />
     <ClCompile Include="ContainVisitor.cpp" />
     <ClCompile Include="CollisionVisitor.cpp" />
     <ClCompile Include="IntersectVisitor.cpp" />

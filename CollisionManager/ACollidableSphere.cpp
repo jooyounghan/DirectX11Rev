@@ -1,24 +1,24 @@
-#include "CollidableSphere.h"
+#include "ACollidableSphere.h"
 #include "CollisionVisitor.h"
 
 using namespace DirectX;
 
-bool CollidableSphere::Accept(ICollisionVisitor& collisionVisitor) const
+bool ACollidableSphere::Accept(ICollisionVisitor& collisionVisitor) const
 {
 	return collisionVisitor.Visit(this);
 }
 
-bool CollidableSphere::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
+bool ACollidableSphere::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
 {
 	return boundingBox.Intersects(*this);
 }
 
-DirectX::BoundingBox CollidableSphere::GetBoundingBox(const float& margin) const
+DirectX::BoundingBox ACollidableSphere::GetBoundingBox(const float& margin) const
 {
 	return DirectX::BoundingBox(Center, XMFLOAT3(Radius + margin, Radius + margin, Radius + margin));
 }
 
-void CollidableSphere::SetBoundingProperties(
+void ACollidableSphere::SetBoundingProperties(
 	const DirectX::XMVECTOR& center,
 	const float& radius
 )

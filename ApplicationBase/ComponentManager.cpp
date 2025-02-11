@@ -1,7 +1,7 @@
 #include "ComponentManager.h"
 
 #include "AssetManager.h"
-#include "DefferedContext.h"
+#include "DeferredContext.h"
 
 #include "Scene.h"
 #include "StaticMeshComponent.h"
@@ -30,10 +30,10 @@ using namespace DirectX;
 ComponentManager::ComponentManager(
 	SessionManager* sessionManager, 
 	ID3D11Device* const* deviceAddress, 
-	DefferedContext* defferedContext)
+	DeferredContext* DeferredContext)
 	: SchemaManager(sessionManager, "component_db"),
 	m_deviceAddressCached(deviceAddress),
-	m_defferedContext(defferedContext)
+	m_DeferredContext(DeferredContext)
 {
 	UpdateComponentToDBThread();
 }
@@ -254,7 +254,7 @@ void ComponentManager::Initialize()
 	try
 	{
 		ComponentDBInitializer componentDBInitializer(this);
-		ComponentEntityInitializer componentEntityInitializer(*m_deviceAddressCached, m_defferedContext->GetDefferedContext());
+		ComponentEntityInitializer componentEntityInitializer(*m_deviceAddressCached, m_DeferredContext->GetDeferredContext());
 		m_sessionManager->startTransaction();
 		{
 			shared_lock InitLoadedComponentsLock(m_componentMutex);
@@ -385,7 +385,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 {
 	if (m_isInitialized)
 	{
-		ComponentEntityUpdater componentEntityUpdater(m_defferedContext->GetDefferedContext(), deltaTime);
+		ComponentEntityUpdater componentEntityUpdater(m_DeferredContext->GetDeferredContext(), deltaTime);
 
 		{
 			shared_lock updateComponent(m_componentMutex);
@@ -401,7 +401,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 				}
 			}
 		}
-		m_defferedContext->RecordToCommandList();
+		m_DeferredContext->RecordToCommandList();
 	}
 }
 

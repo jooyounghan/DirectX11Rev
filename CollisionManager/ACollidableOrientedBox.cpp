@@ -1,24 +1,24 @@
-#include "CollidableOrientedBox.h"
+#include "ACollidableOrientedBox.h"
 #include "CollisionVisitor.h"
 
 using namespace DirectX;
 
-bool CollidableOrientedBox::Accept(ICollisionVisitor& collisionVisitor) const
+bool ACollidableOrientedBox::Accept(ICollisionVisitor& collisionVisitor) const
 {
 	return collisionVisitor.Visit(this);
 }
 
-bool CollidableOrientedBox::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
+bool ACollidableOrientedBox::IsIntersectBoundingBox(const DirectX::BoundingBox& boundingBox) const
 {
     return boundingBox.Intersects(*this);
 }
 
-DirectX::BoundingBox CollidableOrientedBox::GetBoundingBox(const float& margin) const
+DirectX::BoundingBox ACollidableOrientedBox::GetBoundingBox(const float& margin) const
 {
     return BoundingBox(Center, XMFLOAT3(Extents.x + margin, Extents.y + margin, Extents.z + margin));
 }
 
-void CollidableOrientedBox::SetBoundingProperties(
+void ACollidableOrientedBox::SetBoundingProperties(
     const DirectX::XMVECTOR& center,
     const DirectX::XMFLOAT3& extents,
     const DirectX::XMVECTOR& rotationQuaternion

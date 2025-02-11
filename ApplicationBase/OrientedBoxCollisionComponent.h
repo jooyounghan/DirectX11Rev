@@ -1,8 +1,8 @@
 #pragma once
 #include "ACollisionComponent.h"
-#include "CollidableOrientedBox.h"
+#include "ACollidableOrientedBox.h"
 
-class OrientedBoxCollisionComponent : public ACollisionComponent, public CollidableOrientedBox
+class OrientedBoxCollisionComponent : public ACollisionComponent, public ACollidableOrientedBox
 {
 public:
 	OrientedBoxCollisionComponent(

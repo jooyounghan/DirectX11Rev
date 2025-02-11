@@ -1,9 +1,12 @@
-#include "SceneDefferedRenderer.h"
+#include "SceneDeferredRenderer.h"
 
 #include "ComponentPSOManager.h"
 #include "GraphicsPSOObject.h"
 
 #include "CameraComponent.h"
+
+#include "SpotLightComponent.h"
+#include "PointLightComponent.h"
 
 #include "Scene.h"
 
@@ -30,7 +33,7 @@
 
 using namespace std;
 
-SceneDefferedRenderer::SceneDefferedRenderer(
+SceneDeferredRenderer::SceneDeferredRenderer(
 	ID3D11Device* const* deviceAddress,
 	ID3D11DeviceContext* const* deviceContextAddress, 
 	ComponentPSOManager* componentPsoManager,
@@ -51,7 +54,7 @@ SceneDefferedRenderer::SceneDefferedRenderer(
     m_gBufferRenderTargetViews = { m_positionGBuffer->GetRTV(), m_specularGBuffer->GetRTV(), m_diffuseGBuffer->GetRTV(),m_aoMetallicRoughnessGBuffer->GetRTV(), m_normalGBuffer->GetRTV(), m_emissiveGBuffer->GetRTV(), m_fresnelReflectanceGBuffer->GetRTV() };
 }
 
-SceneDefferedRenderer::~SceneDefferedRenderer()
+SceneDeferredRenderer::~SceneDeferredRenderer()
 {
 	delete m_positionGBuffer;
     delete m_specularGBuffer;
@@ -62,10 +65,10 @@ SceneDefferedRenderer::~SceneDefferedRenderer()
     delete m_fresnelReflectanceGBuffer;
 }
 
-void SceneDefferedRenderer::Visit(StaticMeshComponent* staticMeshComponent)
+void SceneDeferredRenderer::Visit(StaticMeshComponent* staticMeshComponent)
 {
 	static GraphicsPSOObject* staticMeshGraphicsPSOObject
-		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::STATIC_MESH_DEFFERED);
+		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::STATIC_MESH_Deferred);
 
     ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
     CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
@@ -105,17 +108,17 @@ void SceneDefferedRenderer::Visit(StaticMeshComponent* staticMeshComponent)
                 // ===================================================================
 
                 m_selectedModelMaterialAssets = staticMeshComponent->GetSelectedModelMaterials();
-                RenderMeshParts(deviceContext, meshPartsData, bind(&SceneDefferedRenderer::RenderMeshPartHandler, this, placeholders::_1));
+                RenderMeshParts(deviceContext, meshPartsData, bind(&SceneDeferredRenderer::RenderMeshPartHandler, this, placeholders::_1));
                 m_selectedModelMaterialAssets.clear();
             }
         }
     }
 }
 
-void SceneDefferedRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
+void SceneDeferredRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
     static GraphicsPSOObject* skeletalMeshGraphicsPSOObject
-		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::SKELETAL_MESH_DEFFERED);
+		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::SKELETAL_MESH_Deferred);
 
     ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
     CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
@@ -158,18 +161,18 @@ void SceneDefferedRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
                 // ===================================================================
 
                 m_selectedModelMaterialAssets = skeletalMeshComponent->GetSelectedModelMaterials();
-                RenderMeshParts(deviceContext, meshPartsData, bind(&SceneDefferedRenderer::RenderMeshPartHandler, this, placeholders::_1));
+                RenderMeshParts(deviceContext, meshPartsData, bind(&SceneDeferredRenderer::RenderMeshPartHandler, this, placeholders::_1));
                 m_selectedModelMaterialAssets.clear();
             }
         }
     }
 }
 
-void SceneDefferedRenderer::Visit(CameraComponent* cameraComponent)
+void SceneDeferredRenderer::Visit(CameraComponent* cameraComponent)
 {
 }
 
-void SceneDefferedRenderer::ClearRenderTargets()
+void SceneDeferredRenderer::ClearRenderTargets()
 {
     ASceneRenderer::ClearRenderTargets();
 
@@ -183,25 +186,30 @@ void SceneDefferedRenderer::ClearRenderTargets()
     deviceContext->ClearRenderTargetView(m_fresnelReflectanceGBuffer->GetRTV(), ClearColor);
 }
 
-void SceneDefferedRenderer::PostProcess()
+void SceneDeferredRenderer::PostProcess()
 {
-	static GraphicsPSOObject* graphicsPSOObject = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::DEFFERED_GBUFFER_RESOLVE);
+	static GraphicsPSOObject* graphicsPSOObject = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::Deferred_GBUFFER_RESOLVE);
 
 	ScreenQuad* screenQuad = ScreenQuad::GetInstance();
 
 	ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
-	CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
+    Scene* const scene = *m_sceneAddressCached;
+    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
     const IBLMaterialAsset* sceneMaterialAsset = (*m_sceneAddressCached)->GetIBLMaterialAsset();
 
-	if (cameraComponent != nullptr)
+	if (scene != nullptr && cameraComponent != nullptr)
 	{
 		graphicsPSOObject->ApplyPSOObject(deviceContext);
 		ASceneRenderer::ApplyRenderTargets(deviceContext, cameraComponent);
+
+        const vector<SpotLightComponent*>& spotLights = scene->GetSpotLights();
+        const vector<PointLightComponent*>& pointLights = scene->GetPointLights();
 
         // =============================== PS ===============================
         vector<ID3D11Buffer*> psConstantBuffers{
             cameraComponent->GetViewProjMatrixBuffer()->GetBuffer()
         };
+
         vector<ID3D11ShaderResourceView*> psSRVs
         {
             sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_SPECULAR)->GetSRV(),
@@ -212,8 +220,10 @@ void SceneDefferedRenderer::PostProcess()
             m_diffuseGBuffer->GetSRV(),
             m_aoMetallicRoughnessGBuffer->GetSRV(),
             m_normalGBuffer->GetSRV(),
-            m_emissiveGBuffer->GetSRV()
+            m_emissiveGBuffer->GetSRV(),
+            m_fresnelReflectanceGBuffer->GetSRV()
         };
+
         deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
         deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
         // ===================================================================
@@ -232,7 +242,7 @@ void SceneDefferedRenderer::PostProcess()
 	}
 }
 
-void SceneDefferedRenderer::ApplyRenderTargetsWithID(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent) const
+void SceneDeferredRenderer::ApplyRenderTargetsWithID(ID3D11DeviceContext* const deviceContext, const CameraComponent* const cameraComponent) const
 {
     vector<ID3D11RenderTargetView*> rtvs = m_gBufferRenderTargetViews;
     rtvs.push_back(cameraComponent->GetIDFilm()->GetRTV());
@@ -242,7 +252,7 @@ void SceneDefferedRenderer::ApplyRenderTargetsWithID(ID3D11DeviceContext* const 
     deviceContext->RSSetViewports(1, cameraComponent);
 }
 
-void SceneDefferedRenderer::RenderMeshPartHandler(const size_t& idx)
+void SceneDeferredRenderer::RenderMeshPartHandler(const size_t& idx)
 {
     ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
 

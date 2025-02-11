@@ -1,6 +1,6 @@
 #pragma once
 #include "AViewComponent.h"
-#include "CollidableFrustum.h"
+#include "ACollidableFrustum.h"
 
 class CameraComponent : public AViewComponent
 {

@@ -20,7 +20,7 @@ struct SLightEntity
 class LightEntity
 {
 public:
-	LightEntity() = default;
+	LightEntity();
 	virtual ~LightEntity() = default;
 
 protected:
@@ -32,7 +32,7 @@ public:
 	void SetLigthEntity(const float& lightPower, const float& fallOffStart, const float& fallOffEnd, const float& spotPower);
 
 public:
-	inline DynamicBuffer* GetLightEntityBuffer() const { m_lightEntityBuffer; }
+	inline DynamicBuffer* GetLightEntityBuffer() const { return m_lightEntityBuffer; }
 
 public:
 	virtual void GenerateShadowMap(

@@ -1,7 +1,7 @@
 #pragma once
 #include "D3D11Utilities.h"
 #include "unordered_map"
-#include "DefferedContext.h"
+#include "DeferredContext.h"
 
 namespace D3D11
 {
@@ -39,11 +39,11 @@ namespace D3D11
 		Microsoft::WRL::ComPtr<IDXGISwapChain>		m_swapChain;
 
 	protected:
-		std::unordered_map<size_t, DefferedContext*> m_defferedContexts;
+		std::unordered_map<size_t, DeferredContext*> m_DeferredContexts;
 
 	public:
-		void AddDefferedContext(const size_t& defferedContextID);
-		DefferedContext* GetDefferedContext(const size_t& defferedContextID);
+		void AddDeferredContext(const size_t& DeferredContextID);
+		DeferredContext* GetDeferredContext(const size_t& DeferredContextID);
 
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> m_backBufferTexture;

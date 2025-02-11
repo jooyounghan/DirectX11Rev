@@ -55,7 +55,7 @@ struct MeshComponentPixelOutput
     uint uiID;
 };
 
-struct DefferedMeshComponentPixelOutput
+struct DeferredMeshComponentPixelOutput
 {
     float4 f4Position : SV_Target0;
     float4 f4Specular : SV_Target1;    

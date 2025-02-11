@@ -9,82 +9,82 @@ IntersectVisitor::IntersectVisitor(ICollisionAcceptor* collisionAcceptor)
 {
 }
 
-bool IntersectVisitor::Visit(const CollidableSphere* const collidableSphere) const
+bool IntersectVisitor::Visit(const ACollidableSphere* const collidableSphere) const
 {
 	IntersectSphereVisitor intersectSphereVisitor(collidableSphere);
 	return m_collisionAcceptor->Accept(intersectSphereVisitor);
 }
 
-bool IntersectVisitor::Visit(const CollidableOrientedBox* const collidableOrientedBox) const
+bool IntersectVisitor::Visit(const ACollidableOrientedBox* const collidableOrientedBox) const
 {
 	IntersectOrientedBoxVisitor intersectOrientedBoxVisitor(collidableOrientedBox);
 	return m_collisionAcceptor->Accept(intersectOrientedBoxVisitor);
 }
 
-bool IntersectVisitor::Visit(const CollidableFrustum* const collidableFrustum) const
+bool IntersectVisitor::Visit(const ACollidableFrustum* const collidableFrustum) const
 {
 	IntersectFrustumVisitor intersectFrustumVisitor(collidableFrustum);
 	return m_collisionAcceptor->Accept(intersectFrustumVisitor);
 }
 
-IntersectSphereVisitor::IntersectSphereVisitor(const CollidableSphere* const collidableSphere)
-	: ACollisionSpecifiedVisitor<CollidableSphere>(collidableSphere)
+IntersectSphereVisitor::IntersectSphereVisitor(const ACollidableSphere* const collidableSphere)
+	: ACollisionSpecifiedVisitor<ACollidableSphere>(collidableSphere)
 {
 
 }
 
-bool IntersectSphereVisitor::Visit(const CollidableSphere* const collidableSphere) const
+bool IntersectSphereVisitor::Visit(const ACollidableSphere* const collidableSphere) const
 {
 	return collidableSphere->Intersects(*m_specifiedCollisionAccpetor);
 }
 
-bool IntersectSphereVisitor::Visit(const CollidableOrientedBox* const collidableOrientedBox) const
+bool IntersectSphereVisitor::Visit(const ACollidableOrientedBox* const collidableOrientedBox) const
 {
 	return collidableOrientedBox->Intersects(*m_specifiedCollisionAccpetor);
 }
 
-bool IntersectSphereVisitor::Visit(const CollidableFrustum* const collidableFrustum) const
+bool IntersectSphereVisitor::Visit(const ACollidableFrustum* const collidableFrustum) const
 {
 	return collidableFrustum->Intersects(*m_specifiedCollisionAccpetor);
 }
 
-IntersectOrientedBoxVisitor::IntersectOrientedBoxVisitor(const CollidableOrientedBox* const collidableOrientedBox)
-	: ACollisionSpecifiedVisitor<CollidableOrientedBox>(collidableOrientedBox)
+IntersectOrientedBoxVisitor::IntersectOrientedBoxVisitor(const ACollidableOrientedBox* const collidableOrientedBox)
+	: ACollisionSpecifiedVisitor<ACollidableOrientedBox>(collidableOrientedBox)
 {
 }
 
-bool IntersectOrientedBoxVisitor::Visit(const CollidableSphere* const collidableSphere) const
+bool IntersectOrientedBoxVisitor::Visit(const ACollidableSphere* const collidableSphere) const
 {
 	return collidableSphere->Intersects(*m_specifiedCollisionAccpetor);
 }
 
-bool IntersectOrientedBoxVisitor::Visit(const CollidableOrientedBox* const collidableOrientedBox) const
+bool IntersectOrientedBoxVisitor::Visit(const ACollidableOrientedBox* const collidableOrientedBox) const
 {
 	return collidableOrientedBox->Intersects(*m_specifiedCollisionAccpetor);
 }
 
-bool IntersectOrientedBoxVisitor::Visit(const CollidableFrustum* const collidableFrustum) const
+bool IntersectOrientedBoxVisitor::Visit(const ACollidableFrustum* const collidableFrustum) const
 {
 	return collidableFrustum->Intersects(*m_specifiedCollisionAccpetor);
 }
 
 
-IntersectFrustumVisitor::IntersectFrustumVisitor(const CollidableFrustum* const collidableFrustum)
-	: ACollisionSpecifiedVisitor<CollidableFrustum>(collidableFrustum)
+IntersectFrustumVisitor::IntersectFrustumVisitor(const ACollidableFrustum* const collidableFrustum)
+	: ACollisionSpecifiedVisitor<ACollidableFrustum>(collidableFrustum)
 {
 }
 
-bool IntersectFrustumVisitor::Visit(const CollidableSphere* const collidableSphere) const
+bool IntersectFrustumVisitor::Visit(const ACollidableSphere* const collidableSphere) const
 {
 	return collidableSphere->Intersects(*m_specifiedCollisionAccpetor);
 }
 
-bool IntersectFrustumVisitor::Visit(const CollidableOrientedBox* const collidableOrientedBox) const
+bool IntersectFrustumVisitor::Visit(const ACollidableOrientedBox* const collidableOrientedBox) const
 {
 	return collidableOrientedBox->Intersects(*m_specifiedCollisionAccpetor);
 }
 
-bool IntersectFrustumVisitor::Visit(const CollidableFrustum* const collidableFrustum) const
+bool IntersectFrustumVisitor::Visit(const ACollidableFrustum* const collidableFrustum) const
 {
 	return collidableFrustum->Intersects(*m_specifiedCollisionAccpetor);
 }

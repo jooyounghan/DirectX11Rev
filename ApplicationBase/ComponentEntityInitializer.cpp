@@ -89,6 +89,7 @@ void ComponentEntityInitializer::Visit(SpotLightComponent* spotLightComponent)
 {
 	InitBaseComponent(spotLightComponent);
 	InitViewComponent(spotLightComponent);
+	InitLightComponent(spotLightComponent);
 
 	spotLightComponent->SetDepthTestView(new Texture2DInstance<SRVOption, DSVOption>(
 		static_cast<uint32_t>(spotLightComponent->Width), static_cast<uint32_t>(spotLightComponent->Height),
@@ -99,6 +100,7 @@ void ComponentEntityInitializer::Visit(SpotLightComponent* spotLightComponent)
 void ComponentEntityInitializer::Visit(PointLightComponent* pointLightComponent)
 {
 	InitBaseComponent(pointLightComponent);
+	InitLightComponent(pointLightComponent);
 
 	Texture2DInstance<SRVOption>* depthStencilViewCube = new Texture2DInstance<SRVOption>(
 		static_cast<uint32_t>(pointLightComponent->GetWidth()), static_cast<uint32_t>(pointLightComponent->GetHeight()),
@@ -143,4 +145,10 @@ void ComponentEntityInitializer::InitViewComponent(AViewComponent* viewComponent
 	viewComponent->UpdateViewEntity();
 	DynamicBuffer* viewProjMatrixBuffer = viewComponent->GetViewProjMatrixBuffer();
 	viewProjMatrixBuffer->InitializeBuffer(m_deviceCached);
+}
+
+void ComponentEntityInitializer::InitLightComponent(LightEntity* lightEntity)
+{
+	DynamicBuffer* lightBuffer = lightEntity->GetLightEntityBuffer();
+	lightBuffer->InitializeBuffer(m_deviceCached);
 }

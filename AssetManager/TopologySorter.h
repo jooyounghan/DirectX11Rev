@@ -32,7 +32,7 @@ void TopologySorter<T>::AddTopologyNode(T&& nodeIn)
 template<typename T>
 void TopologySorter<T>::AddPrequisite(T&& nodeIn, T&& prequisiteIn)
 {
-    m_topologyNodes[std::forward<T>(nodeIn)].emplace_back(std::forward<T>(prequisiteIn));
+    m_topologyNodes[std::forward<T>(prequisiteIn)].emplace_back(std::forward<T>(nodeIn));
 }
 
 
@@ -85,5 +85,6 @@ inline std::vector<T> TopologySorter<T>::GetTopologySort() const
         }
     }
 
+    reverse(result.begin(), result.end());
     return result;
 }

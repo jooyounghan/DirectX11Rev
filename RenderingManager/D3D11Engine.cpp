@@ -5,9 +5,9 @@ using namespace D3D11;
 
 D3D11::D3D11Engine::~D3D11Engine()
 {
-    for (auto& defferedContexts : m_defferedContexts)
+    for (auto& DeferredContexts : m_DeferredContexts)
     {
-        delete defferedContexts.second;
+        delete DeferredContexts.second;
     }
 }
 
@@ -17,20 +17,20 @@ D3D11Engine* D3D11Engine::GetInstance()
 	return &engine;
 }
 
-void D3D11::D3D11Engine::AddDefferedContext(const size_t& defferedContextID)
+void D3D11::D3D11Engine::AddDeferredContext(const size_t& DeferredContextID)
 {
-    if (m_defferedContexts.find(defferedContextID) != m_defferedContexts.end())
+    if (m_DeferredContexts.find(DeferredContextID) != m_DeferredContexts.end())
     {
-        delete m_defferedContexts[defferedContextID];
+        delete m_DeferredContexts[DeferredContextID];
     }
-    m_defferedContexts[defferedContextID] = new DefferedContext(m_device.GetAddressOf());
+    m_DeferredContexts[DeferredContextID] = new DeferredContext(m_device.GetAddressOf());
 }
 
-DefferedContext* D3D11::D3D11Engine::GetDefferedContext(const size_t& defferedContextID)
+DeferredContext* D3D11::D3D11Engine::GetDeferredContext(const size_t& DeferredContextID)
 {
-    if (m_defferedContexts.find(defferedContextID) != m_defferedContexts.end())
+    if (m_DeferredContexts.find(DeferredContextID) != m_DeferredContexts.end())
     {
-        return m_defferedContexts[defferedContextID];
+        return m_DeferredContexts[DeferredContextID];
     }
     return nullptr;
 }
@@ -76,9 +76,9 @@ void D3D11Engine::D3D11Engine::InitEngine(const UINT& widthIn, const UINT& heigh
 
     LoadBackBufferFromSwapchain();
 
-    for (auto& defferedContexts : m_defferedContexts)
+    for (auto& DeferredContexts : m_DeferredContexts)
     {
-        defferedContexts.second->InitDefferedContext();
+        DeferredContexts.second->InitDeferredContext();
     }
 }
 

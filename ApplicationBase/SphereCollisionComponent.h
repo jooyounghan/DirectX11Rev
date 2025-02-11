@@ -1,8 +1,8 @@
 #pragma once
 #include "ACollisionComponent.h"
-#include "CollidableSphere.h"
+#include "ACollidableSphere.h"
 
-class SphereCollisionComponent : public ACollisionComponent, public CollidableSphere
+class SphereCollisionComponent : public ACollisionComponent, public ACollidableSphere
 {
 public:
 	SphereCollisionComponent(

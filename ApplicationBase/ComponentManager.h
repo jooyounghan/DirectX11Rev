@@ -11,7 +11,7 @@
 
 class Scene;
 class AComponent;
-class DefferedContext;
+class DeferredContext;
 class SpotLightComponent;
 class PointLightComponent;
 
@@ -27,13 +27,13 @@ public:
 	ComponentManager(
 		SessionManager* sessionManager,
 		ID3D11Device* const* deviceAddress,
-		DefferedContext* defferedContext
+		DeferredContext* DeferredContext
 	);
 	~ComponentManager() override;
 
 protected:
 	ID3D11Device* const* m_deviceAddressCached = nullptr;
-	DefferedContext* m_defferedContext = nullptr;
+	DeferredContext* m_DeferredContext = nullptr;
 
 protected:
 	std::thread											m_workThread;

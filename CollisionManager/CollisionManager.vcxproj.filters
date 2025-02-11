@@ -27,13 +27,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CollidableOrientedBox.h">
+    <ClInclude Include="ACollidableOrientedBox.h">
       <Filter>헤더 파일\Acceptor</Filter>
     </ClInclude>
-    <ClInclude Include="CollidableSphere.h">
+    <ClInclude Include="ACollidableSphere.h">
       <Filter>헤더 파일\Acceptor</Filter>
     </ClInclude>
-    <ClInclude Include="CollidableFrustum.h">
+    <ClInclude Include="ACollidableFrustum.h">
       <Filter>헤더 파일\Acceptor</Filter>
     </ClInclude>
     <ClInclude Include="ContainVisitor.h">
@@ -50,13 +50,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CollidableOrientedBox.cpp">
+    <ClCompile Include="ACollidableOrientedBox.cpp">
       <Filter>소스 파일\Acceptor</Filter>
     </ClCompile>
-    <ClCompile Include="CollidableSphere.cpp">
+    <ClCompile Include="ACollidableSphere.cpp">
       <Filter>소스 파일\Acceptor</Filter>
     </ClCompile>
-    <ClCompile Include="CollidableFrustum.cpp">
+    <ClCompile Include="ACollidableFrustum.cpp">
       <Filter>소스 파일\Acceptor</Filter>
     </ClCompile>
     <ClCompile Include="ContainVisitor.cpp">

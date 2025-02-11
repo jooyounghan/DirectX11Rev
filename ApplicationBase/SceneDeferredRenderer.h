@@ -11,17 +11,17 @@ class RTVOption;
 struct ID3D11ShaderResourceView;
 struct ID3D11RenderTargetView;
 
-class SceneDefferedRenderer : public ASceneRenderer
+class SceneDeferredRenderer : public ASceneRenderer
 {
 public:
-	SceneDefferedRenderer(
+	SceneDeferredRenderer(
 		ID3D11Device* const* deviceAddress,
 		ID3D11DeviceContext* const* deviceContextAddress,
 		ComponentPSOManager* componentPsoManager,
 		CameraComponent* const* cameraComponentAddress,
 		Scene* const* sceneAddress
 	);
-	~SceneDefferedRenderer() override;
+	~SceneDeferredRenderer() override;
 
 
 protected:

@@ -133,9 +133,9 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 
-	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_DEFFERED] = new GraphicsPSOObject(
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_Deferred] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::STATIC_MESH),
-		GetComponentPSOPixelShader(EComponentPSOPixelShader::DEFFERED_MESH),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::Deferred_MESH),
 		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
 		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
 		nullptr,
@@ -144,9 +144,9 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 
-	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_DEFFERED] = new GraphicsPSOObject(
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_Deferred] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::SKELETAL_MESH),
-		GetComponentPSOPixelShader(EComponentPSOPixelShader::DEFFERED_MESH),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::Deferred_MESH),
 		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
 		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
 		nullptr,
@@ -155,7 +155,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 
-	m_graphicPSOObjects[EComopnentGraphicsPSOObject::DEFFERED_GBUFFER_RESOLVE] = new GraphicsPSOObject(
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::Deferred_GBUFFER_RESOLVE] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::GBUFFER_RESOLVE),
 		GetComponentPSOPixelShader(EComponentPSOPixelShader::GBUFFER_RESOLVE),
 		nullptr,
@@ -284,5 +284,5 @@ void ComponentPSOManager::RegisterPSForComponent(ID3D11Device* device)
 	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::GBUFFER_RESOLVE), 1, L"../Shaders/GBufferResolvePS.hlsl", "main", "ps_5_0", device);
 	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::SCENE), 1, L"../Shaders/ForwardScenePS.hlsl", "main", "ps_5_0", device);
 	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::FORWARD_MESH), 2, L"../Shaders/ForwardMeshComponentPS.hlsl", "main", "ps_5_0", device);
-	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::DEFFERED_MESH), 6, L"../Shaders/DefferedMeshComponentPS.hlsl", "main", "ps_5_0", device);
+	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::Deferred_MESH), 6, L"../Shaders/DeferredMeshComponentPS.hlsl", "main", "ps_5_0", device);
 }

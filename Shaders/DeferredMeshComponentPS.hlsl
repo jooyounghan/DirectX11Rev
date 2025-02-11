@@ -34,9 +34,9 @@ Texture2D MaterialTexture[7] : register(t0);
 
 SamplerState WrapSampler : register(s0);
 
-DefferedMeshComponentPixelOutput main(MeshComponentDomainOutput Input)
+DeferredMeshComponentPixelOutput main(MeshComponentDomainOutput Input)
 {
-    DefferedMeshComponentPixelOutput Result;
+    DeferredMeshComponentPixelOutput Result;
     
     float AmbientOcculusion = IsAmbientOcculusionSet ? MaterialTexture[AO_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r : 1.0f;
     float3 Specular = IsSpecularSet ? MaterialTexture[SPECULAR_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(0.0, 0.0, 0.0);

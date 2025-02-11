@@ -1,11 +1,11 @@
 #pragma once
 #include "ICollisionAcceptor.h"
 
-class CollidableFrustum : public ICollisionAcceptor, public DirectX::BoundingFrustum
+class ACollidableSphere : public ICollisionAcceptor, public DirectX::BoundingSphere
 {
 public:
-	CollidableFrustum() = default;
-	~CollidableFrustum() override = default;
+	ACollidableSphere() = default;
+	~ACollidableSphere() override = default;
 
 public:
 	virtual bool Accept(ICollisionVisitor& collisionVisitor) const override;
@@ -13,5 +13,9 @@ public:
 
 public:
 	virtual DirectX::BoundingBox GetBoundingBox(const float& margin) const override;
+	void SetBoundingProperties(
+		const DirectX::XMVECTOR& center,
+		const float& radius
+	);
 };
 

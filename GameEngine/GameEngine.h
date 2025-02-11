@@ -7,7 +7,7 @@
 
 #include <memory>
 
-class DefferedContext;
+class DeferredContext;
 class TaskManager;
 class SessionManager;
 class AssetManager;
@@ -55,7 +55,7 @@ private:
 	void CreateEditor();
 
 private:
-	void CreateDefferedContext();
+	void CreateDeferredContext();
 	void CreateSessionManager();
 	void CreateAssetManager();
 	void CreateComponentManager();

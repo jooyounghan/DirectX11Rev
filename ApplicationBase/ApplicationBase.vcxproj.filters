@@ -43,9 +43,6 @@
     <ClInclude Include="SceneForwardRenderer.h">
       <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="SceneDefferedRenderer.h">
-      <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="ASceneRenderer.h">
       <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
     </ClInclude>
@@ -136,7 +133,10 @@
     <ClInclude Include="ComponentCollector.h">
       <Filter>헤더 파일\Component\Visitor\Collector</Filter>
     </ClInclude>
-    <ClInclude Include="DefferedContextID.h">
+    <ClInclude Include="SceneDeferredRenderer.h">
+      <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredContextID.h">
       <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
@@ -317,9 +317,6 @@
     <ClCompile Include="ComponentManager.cpp">
       <Filter>소스 파일\Component</Filter>
     </ClCompile>
-    <ClCompile Include="SceneDefferedRenderer.cpp">
-      <Filter>소스 파일\Component\Visitor\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="ASceneRenderer.cpp">
       <Filter>소스 파일\Component\Visitor\Rendering</Filter>
     </ClCompile>
@@ -398,11 +395,14 @@
     <ClCompile Include="ComponentCollector.cpp">
       <Filter>소스 파일\Component\Visitor\Collector</Filter>
     </ClCompile>
-    <ClCompile Include="DefferedContextID.cpp">
-      <Filter>소스 파일\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="AViewEntity.cpp">
       <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneDeferredRenderer.cpp">
+      <Filter>소스 파일\Component\Visitor\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredContextID.cpp">
+      <Filter>소스 파일\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -431,9 +431,6 @@
   <ItemGroup>
     <FxCompile Include="Shaders\DebugComponentVS.hlsl">
       <Filter>Shader\DebugComponent</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\DefferedMeshComponentPS.hlsl">
-      <Filter>Shader\MeshComponent</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\ForwardScenePS.hlsl">
       <Filter>Shader\Scene</Filter>
@@ -470,6 +467,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\StaticMeshDepthTestVS.hlsl">
       <Filter>Shader\DepthTest</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DeferredMeshComponentPS.hlsl">
+      <Filter>Shader\MeshComponent</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

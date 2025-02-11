@@ -8,44 +8,44 @@ public:
 	~IntersectVisitor() override = default;
 
 public:
-	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
-	virtual bool Visit(const CollidableOrientedBox* const collidableOrientedBox)const override;
-	virtual bool Visit(const CollidableFrustum* const collidableFrustum) const override;
+	virtual bool Visit(const ACollidableSphere* const collidableSphere) const override;
+	virtual bool Visit(const ACollidableOrientedBox* const collidableOrientedBox)const override;
+	virtual bool Visit(const ACollidableFrustum* const collidableFrustum) const override;
 };
 
-class IntersectSphereVisitor : public ACollisionSpecifiedVisitor<CollidableSphere>
+class IntersectSphereVisitor : public ACollisionSpecifiedVisitor<ACollidableSphere>
 {
 public:
-	IntersectSphereVisitor(const CollidableSphere* const collidableSphere);
+	IntersectSphereVisitor(const ACollidableSphere* const collidableSphere);
 	~IntersectSphereVisitor() override = default;
 
 public:
-	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
-	virtual bool Visit(const CollidableOrientedBox* const collidableOrientedBox) const override;
-	virtual bool Visit(const CollidableFrustum* const collidableFrustum) const override;
+	virtual bool Visit(const ACollidableSphere* const collidableSphere) const override;
+	virtual bool Visit(const ACollidableOrientedBox* const collidableOrientedBox) const override;
+	virtual bool Visit(const ACollidableFrustum* const collidableFrustum) const override;
 };
 
-class IntersectOrientedBoxVisitor : public ACollisionSpecifiedVisitor<CollidableOrientedBox>
+class IntersectOrientedBoxVisitor : public ACollisionSpecifiedVisitor<ACollidableOrientedBox>
 {
 public:
-	IntersectOrientedBoxVisitor(const CollidableOrientedBox* const collidableOrientedBox);
+	IntersectOrientedBoxVisitor(const ACollidableOrientedBox* const collidableOrientedBox);
 	~IntersectOrientedBoxVisitor() override = default;
 
 public:
-	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
-	virtual bool Visit(const CollidableOrientedBox* const collidableOrientedBox) const override;
-	virtual bool Visit(const CollidableFrustum* const collidableFrustum) const override;
+	virtual bool Visit(const ACollidableSphere* const collidableSphere) const override;
+	virtual bool Visit(const ACollidableOrientedBox* const collidableOrientedBox) const override;
+	virtual bool Visit(const ACollidableFrustum* const collidableFrustum) const override;
 };
 
 
-class IntersectFrustumVisitor : public ACollisionSpecifiedVisitor<CollidableFrustum>
+class IntersectFrustumVisitor : public ACollisionSpecifiedVisitor<ACollidableFrustum>
 {
 public:
-	IntersectFrustumVisitor(const CollidableFrustum* const collidableFrustum);
+	IntersectFrustumVisitor(const ACollidableFrustum* const collidableFrustum);
 	~IntersectFrustumVisitor() override = default;
 
 public:
-	virtual bool Visit(const CollidableSphere* const collidableSphere) const override;
-	virtual bool Visit(const CollidableOrientedBox* const collidableOrientedBox) const override;
-	virtual bool Visit(const CollidableFrustum* const collidableFrustum) const override;
+	virtual bool Visit(const ACollidableSphere* const collidableSphere) const override;
+	virtual bool Visit(const ACollidableOrientedBox* const collidableOrientedBox) const override;
+	virtual bool Visit(const ACollidableFrustum* const collidableFrustum) const override;
 };
