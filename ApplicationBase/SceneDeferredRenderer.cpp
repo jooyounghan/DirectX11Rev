@@ -68,7 +68,7 @@ SceneDeferredRenderer::~SceneDeferredRenderer()
 void SceneDeferredRenderer::Visit(StaticMeshComponent* staticMeshComponent)
 {
 	static GraphicsPSOObject* staticMeshGraphicsPSOObject
-		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::STATIC_MESH_Deferred);
+		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::STATIC_MESH_DEFERRED);
 
     ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
     CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
@@ -118,7 +118,7 @@ void SceneDeferredRenderer::Visit(StaticMeshComponent* staticMeshComponent)
 void SceneDeferredRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
     static GraphicsPSOObject* skeletalMeshGraphicsPSOObject
-		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::SKELETAL_MESH_Deferred);
+		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::SKELETAL_MESH_DEFERRED);
 
     ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
     CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
@@ -188,7 +188,7 @@ void SceneDeferredRenderer::ClearRenderTargets()
 
 void SceneDeferredRenderer::PostProcess()
 {
-	static GraphicsPSOObject* graphicsPSOObject = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::Deferred_GBUFFER_RESOLVE);
+	static GraphicsPSOObject* graphicsPSOObject = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::DEFERRED_GBUFFER_RESOLVE);
 
 	ScreenQuad* screenQuad = ScreenQuad::GetInstance();
 

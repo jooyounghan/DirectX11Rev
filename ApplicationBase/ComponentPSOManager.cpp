@@ -133,7 +133,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 
-	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_Deferred] = new GraphicsPSOObject(
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_DEFERRED] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::STATIC_MESH),
 		GetComponentPSOPixelShader(EComponentPSOPixelShader::Deferred_MESH),
 		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
@@ -144,7 +144,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 
-	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_Deferred] = new GraphicsPSOObject(
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_DEFERRED] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::SKELETAL_MESH),
 		GetComponentPSOPixelShader(EComponentPSOPixelShader::Deferred_MESH),
 		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
@@ -155,7 +155,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 
-	m_graphicPSOObjects[EComopnentGraphicsPSOObject::Deferred_GBUFFER_RESOLVE] = new GraphicsPSOObject(
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::DEFERRED_GBUFFER_RESOLVE] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::GBUFFER_RESOLVE),
 		GetComponentPSOPixelShader(EComponentPSOPixelShader::GBUFFER_RESOLVE),
 		nullptr,
