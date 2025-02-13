@@ -2,32 +2,25 @@
 
 cbuffer CameraViewConstantBuffer : register(b0)
 {
-    matrix ViewProjMatrix;
-    matrix ViewProjInvMatrix;
-    float3 ViewPosition;
-    float Dummy;
+    matrix viewProjMatrix;
+    matrix viewProjInvMatrix;
+    float3 viewPosition;
+    float dummy;
 };
 
-cbuffer ModelConstantBuffer : register(b1)
+MeshComponentVertexOutput main(StaticComponentVertexInput input)
 {
-    matrix ModelMatrix;
-    matrix ModelInvMatrix;
-};
-
-
-MeshComponentVertexOutput main(StaticComponentVertexInput Input)
-{
-    MeshComponentVertexOutput Result;
+    MeshComponentVertexOutput result;
        
-    float d = distance(Input.f3WorldPos, ViewPosition);
+    float d = distance(input.f3WorldPos, viewPosition);
 
-    Result.fTessFactor = 1.f;
+    result.fTessFactor = 1.f;
     //Result.fTessFactor = getTessFactor(d);
-    Result.fLODLevel = 2.f;
+    result.fLODLevel = 2.f;
     
-    Result.f3WorldNormal = Input.f3WorldNormal;
-    Result.f2TexCoord = Input.f2TexCoord;
-    Result.f4WorldjPos = float4(Input.f3WorldPos, 1.f);
+    result.f3WorldNormal = input.f3WorldNormal;
+    result.f2TexCoord = input.f2TexCoord;
+    result.f4WorldjPos = float4(input.f3WorldPos, 1.f);
 
-    return Result;
+    return result;
 }

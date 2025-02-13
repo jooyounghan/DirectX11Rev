@@ -2,21 +2,21 @@
 
 
 PatchTess CalcHSPatchConstants(
-	InputPatch<MeshComponentVertexOutput, NUM_CONTROL_POINTS> Patch,
-	uint PatchID : SV_PrimitiveID)
+	InputPatch<MeshComponentVertexOutput, NUM_CONTROL_POINTS> patch,
+	uint patchID : SV_PrimitiveID)
 {
-    PatchTess Output;
+    PatchTess output;
 
     [unroll]
     for (int edge = 0; edge < 3; ++edge)
     {
         int nextEdge = (edge + 1) % 3;
         int previousEdge = (edge + 2) % 3;
-        Output.EdgeTessFactor[edge] = 0.5f * (Patch[nextEdge].fTessFactor + Patch[previousEdge].fTessFactor);
+        output.EdgeTessFactor[edge] = 0.5f * (patch[nextEdge].fTessFactor + patch[previousEdge].fTessFactor);
     }
-    Output.InsideTessFactor = (Output.EdgeTessFactor[0] + Output.EdgeTessFactor[1] + Output.EdgeTessFactor[2]) / 3.f;
+    output.InsideTessFactor = (output.EdgeTessFactor[0] + output.EdgeTessFactor[1] + output.EdgeTessFactor[2]) / 3.f;
 	
-	return Output;
+    return output;
 }
 
 [domain("tri")]
@@ -25,16 +25,16 @@ PatchTess CalcHSPatchConstants(
 [outputcontrolpoints(3)]
 [patchconstantfunc("CalcHSPatchConstants")]
 MeshComponentHullOutput main(
-	InputPatch<MeshComponentVertexOutput, NUM_CONTROL_POINTS> Patch,
+	InputPatch<MeshComponentVertexOutput, NUM_CONTROL_POINTS> patch,
 	uint i : SV_OutputControlPointID,
-	uint PatchID : SV_PrimitiveID )
+	uint patchID : SV_PrimitiveID )
 {
-    MeshComponentHullOutput Output;
+    MeshComponentHullOutput output;
     
-    Output.f4WorldPos = Patch[i].f4WorldjPos;
-    Output.f2TexCoord = Patch[i].f2TexCoord;
-    Output.f3WorldNormal = normalize(Patch[i].f3WorldNormal);
-    Output.fLODLevel = Patch[i].fLODLevel;
+    output.f4WorldPos = patch[i].f4WorldjPos;
+    output.f2TexCoord = patch[i].f2TexCoord;
+    output.f3WorldNormal = normalize(patch[i].f3WorldNormal);
+    output.fLODLevel = patch[i].fLODLevel;
 
-	return Output;
+    return output;
 }

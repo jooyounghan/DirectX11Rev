@@ -3,13 +3,13 @@
 cbuffer ComponentBuffer : register(b0)
 {
     uint IDValues;
-    float3 DebugColor;
+    float3 debugColor;
 };
 
-DebugComponentPixelOutPut main(DebugComponentVertexOutPut Input)
+DebugComponentPixelOutPut main(DebugComponentVertexOutPut input)
 {
-    DebugComponentPixelOutPut Result;
-    Result.f4Color = float4(DebugColor, 1.f);
-    Result.uiID = IDValues;
-    return Result;
+    DebugComponentPixelOutPut result;
+    result.f4Color = float4(debugColor, 1.f);
+    result.uiID = IDValues;
+    return result;
 }

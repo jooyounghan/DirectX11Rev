@@ -31,7 +31,6 @@ protected:
 	Texture2DInstance<SRVOption, RTVOption>* m_aoMetallicRoughnessGBuffer = nullptr;
 	Texture2DInstance<SRVOption, RTVOption>* m_normalGBuffer = nullptr;
 	Texture2DInstance<SRVOption, RTVOption>* m_emissiveGBuffer = nullptr;
-	Texture2DInstance<SRVOption, RTVOption>* m_fresnelReflectanceGBuffer = nullptr;
 
 protected:
 	std::vector<ID3D11ShaderResourceView*> m_gBufferShaderResourceViews;
@@ -44,7 +43,6 @@ public:
 	inline Texture2DInstance<SRVOption, RTVOption>* GetAoMetallicRoughnessGBuffer() const { return m_aoMetallicRoughnessGBuffer; }
 	inline Texture2DInstance<SRVOption, RTVOption>* GetNormalGBuffer() const { return m_normalGBuffer; }
 	inline Texture2DInstance<SRVOption, RTVOption>* GetEmissiveGBuffer() const { return m_emissiveGBuffer; }
-	inline Texture2DInstance<SRVOption, RTVOption>* GetFresnelReflectanceGBuffer() const { return m_fresnelReflectanceGBuffer; }
 
 public:
 	inline const std::vector<ID3D11ShaderResourceView*> GetGBufferSRVs() const { return m_gBufferShaderResourceViews; }

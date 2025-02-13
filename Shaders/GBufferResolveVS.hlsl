@@ -1,10 +1,10 @@
 #include "GBufferResolverHeader.hlsli"
 
-GBufferResolveVertexOutput main(GBufferResolveVertexInput Input)
+GBufferResolveVertexOutput main(GBufferResolveVertexInput input)
 {
-    GBufferResolveVertexOutput Result;
+    GBufferResolveVertexOutput result;
 
-    Result.f4WorldjPos = float4(Input.f3WorldPos, 1.f);
-    Result.f2TexCoord = Input.f2TexCoord;
-    return Result;
+    result.f4WorldjPos = float4(input.f3WorldPos, 1.f);
+    result.f2TexCoord = input.f2TexCoord;
+    return result;
 }

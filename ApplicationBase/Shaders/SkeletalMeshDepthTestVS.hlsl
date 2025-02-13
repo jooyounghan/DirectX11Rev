@@ -2,35 +2,35 @@
 
 cbuffer CameraViewConstantBuffer : register(b0)
 {
-    matrix ViewProjMatrix;
-    matrix ViewProjInvMatrix;
-    float3 ViewPosition;
-    float Dummy;
+    matrix viewProjMatrix;
+    matrix viewProjInvMatrix;
+    float3 viewPosition;
+    float dummy;
 };
 
 cbuffer ModelConstantBuffer : register(b1)
 {
-    matrix ModelMatrix;
-    matrix ModelInvMatrix;
+    matrix modelMatrix;
+    matrix modelInvMatrix;
 };
 
-StructuredBuffer<float4x4> BoneTransformation : register(t0);
+StructuredBuffer<float4x4> boneTransformation : register(t0);
 
-float4 main(SkeletalMeshVertexInputForDepthTest Input) : SV_POSITION
+float4 main(SkeletalMeshVertexInputForDepthTest input) : SV_POSITION
 {
-    float4 f4WorldPosIn = float4(Input.f3WorldPos, 1.f);
+    float4 f4WorldPosIn = float4(input.f3WorldPos, 1.f);
     float4 f4ProjPos = float4(0.f, 0.f, 0.f, 0.f);
     
     [unroll]
     for (int i = 0; i < 4; ++i)
     {
-        float weight = Input.f4BlendWeight[i];
-        uint index = Input.f4BlendIndices[i];
-        float4x4 boneTransform = BoneTransformation[index];
+        float weight = input.f4BlendWeight[i];
+        uint index = input.f4BlendIndices[i];
+        float4x4 boneTransform = boneTransformation[index];
         
         f4ProjPos += weight * mul(f4WorldPosIn, boneTransform);
     }
-    f4ProjPos = mul(float4(Input.f3WorldPos, 1.f), ModelMatrix);
-    f4ProjPos = mul(f4ProjPos, ViewProjMatrix);
+    f4ProjPos = mul(float4(input.f3WorldPos, 1.f), modelMatrix);
+    f4ProjPos = mul(f4ProjPos, viewProjMatrix);
     return f4ProjPos;
 }

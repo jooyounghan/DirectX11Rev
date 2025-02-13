@@ -2,24 +2,24 @@
 
 cbuffer CameraViewProj : register(b0)
 {
-    matrix ViewProjMatrix;
-    matrix ViewProjInvMatrix;
-    float3 ViewPosition;
-    float Dummy;
+    matrix viewProjMatrix;
+    matrix viewProjInvMatrix;
+    float3 viewPosition;
+    float dummy;
 };
 
 cbuffer ModelMatrix : register(b1)
 {
-    matrix ModelMatrix;
-    matrix ModelInvMatrix;
+    matrix modelMatrix;
+    matrix modelInvMatrix;
 };
 
-DebugComponentVertexOutPut main(DebugComponentVertexInput Input)
+DebugComponentVertexOutPut main(DebugComponentVertexInput input)
 {
-    DebugComponentVertexOutPut Result;
+    DebugComponentVertexOutPut result;
 
-    Result.f4ProjPos = mul(float4(Input.f3WorldPos, 1.f), ModelMatrix);
-    Result.f4ProjPos = mul(Result.f4ProjPos, ViewProjMatrix);
+    result.f4ProjPos = mul(float4(input.f3WorldPos, 1.f), modelMatrix);
+    result.f4ProjPos = mul(result.f4ProjPos, viewProjMatrix);
     
-    return Result;
+    return result;
 }

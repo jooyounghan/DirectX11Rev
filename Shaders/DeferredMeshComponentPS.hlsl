@@ -5,62 +5,61 @@
 cbuffer ComponentBuffer : register(b0)
 {
     uint IDValues;
-    float3 DebugColor;
+    float3 debugColor;
 };
 
 cbuffer CameraViewConstantBuffer : register(b1)
 {
-    matrix ViewProjMatrix;
-    matrix ViewProjInvMatrix;
-    float3 ViewPosition;
-    float Dummy;
+    matrix viewProjMatrix;
+    matrix viewProjInvMatrix;
+    float3 viewPosition;
+    float dummy;
 };
 
 cbuffer MaterialAssetData : register(b2)
 {
-    bool IsAmbientOcculusionSet;
-    bool IsSpecularSet;
-    bool IsDiffuseSet;
-    bool IsRoughnessSet;
-    bool IsMetalicSet;
-    bool IsNormalSet;
-    bool IsHeightSet;
-    bool IsEmissiveSet;
-    float3 F0;
-    bool Dummy1;
+    bool isAmbientOcculusionSet;
+    bool isSpecularSet;
+    bool isDiffuseSet;
+    bool isRoughnessSet;
+    bool isMetalicSet;
+    bool isNormalSet;
+    bool isHeightSet;
+    bool isEmissiveSet;
+    float3 f0;
+    bool dummy1;
 };
 
-Texture2D MaterialTexture[7] : register(t0);
+Texture2D materialTexture[7] : register(t0);
 
-SamplerState WrapSampler : register(s0);
+SamplerState wrapSampler : register(s0);
 
-DeferredMeshComponentPixelOutput main(MeshComponentDomainOutput Input)
+DeferredMeshComponentPixelOutput main(MeshComponentDomainOutput input)
 {
-    DeferredMeshComponentPixelOutput Result;
+    DeferredMeshComponentPixelOutput result;
     
-    float AmbientOcculusion = IsAmbientOcculusionSet ? MaterialTexture[AO_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r : 1.0f;
-    float3 Specular = IsSpecularSet ? MaterialTexture[SPECULAR_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(0.0, 0.0, 0.0);
-    float3 Diffuse = IsDiffuseSet ? MaterialTexture[DIFFUSE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(1.0, 1.0, 1.0);
-    float Metallic = IsMetalicSet ? MaterialTexture[METALIC_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r : 0.0f;
-    float Roughness = IsRoughnessSet ? MaterialTexture[ROUGHNESS_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).r : 1.0f;
-    float3 Emissive = IsEmissiveSet ? MaterialTexture[EMISSIVE_IDX].SampleLevel(WrapSampler, Input.f2TexCoord, Input.fLODLevel).rgb : float3(0.0, 0.0, 0.0);
+    float ambientOcculusion = isAmbientOcculusionSet ? materialTexture[AO_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).r : 1.0f;
+    float3 specular = isSpecularSet ? materialTexture[SPECULAR_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).rgb : f0;
+    float3 diffuse = isDiffuseSet ? materialTexture[DIFFUSE_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).rgb : float3(1.0, 1.0, 1.0);
+    float metallic = isMetalicSet ? materialTexture[METALIC_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).r : 0.0f;
+    float roughness = isRoughnessSet ? materialTexture[ROUGHNESS_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).r : 1.0f;
+    float3 emissive = isEmissiveSet ? materialTexture[EMISSIVE_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).rgb : float3(0.0, 0.0, 0.0);
     
-    float3 Normal = Input.f3ModelNormal;
-    if (IsNormalSet)
+    float3 normal = input.f3ModelNormal;
+    if (isNormalSet)
     {
-        float3 Bitangent = normalize(cross(Input.f3ModelNormal, Input.f3ModelTangent));
-        Normal = GetNormalFromMap(Input.f3ModelNormal, Bitangent, Input.f3ModelTangent, Input.fLODLevel, Input.f2TexCoord, MaterialTexture[NORMAL_IDX], WrapSampler);
+        float3 bitangent = normalize(cross(input.f3ModelNormal, input.f3ModelTangent));
+        normal = GetNormalFromMap(input.f3ModelNormal, bitangent, input.f3ModelTangent, input.fLODLevel, input.f2TexCoord, materialTexture[NORMAL_IDX], wrapSampler);
     }
     
-    Result.f4Position = Input.f4ModelPos;    
-    Result.f4Specular = float4(Specular, 1.f);
-    Result.f4Diffuse = float4(Diffuse, 1.f);
-    Result.AO_Metallic_Roughness = float4(AmbientOcculusion, Metallic, Roughness, 1.f);
-    Result.f4Normal = float4(Normal, 1.f);
-    Result.Emissive = float4(Emissive, 1.f);
-    Result.FresnelReflectance = float4(F0, 1.f);
+    result.f4Position = input.f4ModelPos;    
+    result.f4Specular = float4(specular, 1.f);
+    result.f4Diffuse = float4(diffuse, 1.f);
+    result.AO_Metallic_Roughness = float4(ambientOcculusion, metallic, roughness, 1.f);
+    result.f4Normal = float4(normal, 1.f);
+    result.Emissive = float4(emissive, 1.f);
     
-    Result.uiID = IDValues;
+    result.uiID = IDValues;
     
-    return Result;
+    return result;
 }
