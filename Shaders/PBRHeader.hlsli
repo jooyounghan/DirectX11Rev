@@ -35,7 +35,7 @@ float3 GetIBLDiffuseTerm(float3 kd, float3 diffuseColor, float3 halfVector, Text
     return kd * diffuseColor * diffuseIBL;
 }
 
-float3 GetIBLSpecularTerm(float3 ks, float3 specularColor, float3 halfVector, float3 toEye, float metallic, float roughness, TextureCube specularIBLTexture, Texture2D brdfLUTTextrure, SamplerState clampSampler)
+float3 GetIBLSpecularTerm(float3 ks, float3 specularColor, float3 halfVector, float3 toEye, float roughness, TextureCube specularIBLTexture, Texture2D brdfLUTTextrure, SamplerState clampSampler)
 {
     float2 brdfLUT = brdfLUTTextrure.SampleLevel(clampSampler, float2(dot(halfVector, toEye), 1.0 - roughness), 0.0f).rg;
     float3 specularIBL = specularIBLTexture.SampleLevel(clampSampler, halfVector, roughness * 5.0f).rgb;
@@ -50,11 +50,10 @@ float3 CalculateIBL(
     Texture2D brdfLUTTextrure, SamplerState clampSampler
 )
 {   
-    float3 f0 = lerp(specularColor, diffuseColor, metallic);
-    float3 ks = SchlickFresnelReflectTerm(f0, max(0.0, dot(fromLight, halfVector)));
+    float3 ks = SchlickFresnelReflectTerm(specularColor, max(0.0, dot(fromLight, halfVector)));
     float3 kd = ks * (1.0 - metallic);
     
     float3 diffuseTerm = GetIBLDiffuseTerm(kd, diffuseColor, halfVector, diffuseIBLTexture, clampSampler);
-    float3 specularTerm = GetIBLSpecularTerm(ks, specularColor, halfVector, toEye, metallic, roughness, specularIBLTexture, brdfLUTTextrure, clampSampler);
+    float3 specularTerm = GetIBLSpecularTerm(ks, specularColor, halfVector, toEye, roughness, specularIBLTexture, brdfLUTTextrure, clampSampler);
     return (diffuseTerm + specularTerm) * ambientOcculusion;
 }

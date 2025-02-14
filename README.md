@@ -1,4 +1,5 @@
-﻿# DirectX11 Portfolio
+﻿
+# DirectX11 Portfolio
 
 본 포트폴리오는 **DirectX11** 기반의 엔진 프로그램을 개발하는 것을 목표로 한다.
 
@@ -140,7 +141,14 @@ L_{o}(P, \vec v)$ = $\int_{\Omega}f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdo
 
 지역 조명에 대한 BRDF를 아래와 같이 표현할 수 있다.
 
-1. Specular Term
+1. Diffuse Term
+대부분 Diffuse Term은 **Lambertian BRDF**를 채택하여 기술한다. 이는 아래와 같이 표현된다. 이때 상수 $c_{diff}$는, $c_{spec}$와 같이 RGB 벡터이다.
+
+```math
+f_{Lambertian}(\vec l, \vec v) = \frac{c_{diff}}{\pi}
+```
+
+2. Specular Term
 대부분 Specular Term은 **Microfacet Theory**를 채택하여 기술한다. 물체는 무수한 미세면들로 이루어져 있고, 이 미세면들에 의해 빛은 상호작용 한다. 우리는 이 미세면 중 BRDF 함수의 정의에 따라 $\vec l$ 로 빛이 들어올 때 $\vec v$로 반사되는 미세면에 대해서만 관심이 있다. 이 미세면을 Active Microfacet이라고 하며, 이때 이 미세면의 법선 방향 벡터는 $\vec h$(half-way vector)로 표현될 수 있다.
 최종적으로 표면 반사에 대한 BRDF는 다음과 같이 표현된다.
 
@@ -180,17 +188,24 @@ G_{Schlick​}(\vec x) = \frac{\vec x \cdot \vec n}{(\vec x \cdot \vec n)( 1 - k
 D_{GGX}(\vec h) = \frac{\alpha^{2}}{\pi ((\vec n \cdot \vec h)^{2}(\alpha^{2} - 1)+ 1)^{2}}
 ```
 
+따라서 N개의 지역 조명은 아래와 같이 계산할 수 있다. 이때 $L_{i}(P)$ 는 점 P에 대한 $i$ 번째 조명의 세기이다.
 
-2. Diffuse Term
-대부분 Diffuse Term은 **Lambertian BRDF**를 채택하여 기술한다. 이는 아래와 같이 표현된다. 이때 상수 $c_{diff}$는, $c_{spec}$와 같이 RGB 벡터이다.
+$$L_{o}(P, \vec v) \approx  \sum_{i = 1}^{N} (\frac{c_{diff}}{\pi} + \frac{F(\vec l_{i}, \vec h_{i}) G(\vec l_{i}, \vec v, \vec h_{i}) D(\vec h_{i})}{4(\vec n \cdot \vec l_{i})(\vec n \cdot \vec v_{i})} ) L_{i}(P) (\vec n \cdot \vec l_{i})  $$
+
+전역 조명의 경우, **IBL(Image-Based Lighting)** 를 통하여 BRDF를 활용한다. 환경에 대한 빛의 처리는 Monte-Carlo 샘플링을 활용하여 아래와 같은 수식을 통하여 처리할 수 있다.
 
 ```math
-f_{Lambertian}(\vec l, \vec v) = \frac{c_{diff}}{\pi}
+L_{o}(P, \vec v) \approx \frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)}
 ```
+이때 $p(\vec l_{i}, \vec v)$는 중요도 샘플링을 위한 확률 밀도 함수이다. 실시간으로 이에 대한 샘플링을 수행하고 계산하는 것이 비효율적이다. 따라서 사전 계산된 Texture와 **LUT (Look-Up Table)** 을 활용하여 성능을 최적화 한다. 'IBLBaker'와 같은 프로그램을 통해 IBL에 사용하기 위한 데이터를 사전에 계산하여 생성할 수 있다.
+![Image](https://github.com/user-attachments/assets/91127aa6-835c-4753-bd39-7d2450a8c48a)
+> 위 프로그램은 IBLBaker로, 좌측을 보면 Environment에 따른 BRDF LUT와  Specular IBL, Irradiance IBL 텍스쳐를 생성할 수 사전에 샘플링하여 계산할 수 있다.
 
-
-전역 조명의 경우, **IBL(Image-Based Lighting)** 를 통하여 BRDF를 활용한다.  
-
+1. Diffuse Term
+	미리 계산된 Irradiance IBL 텍스쳐를 샘플링하여 사용하여 간단히 계산할 수 있다.(작성 중)
+	
+2. Specular Term
+	미리 계산된 Specular IBL 텍스쳐와 BRDF LUT를 샘플링하여 간단히 계산할 수 있다.(작성 중)
 
 
 ### 3. Deferred Shading
