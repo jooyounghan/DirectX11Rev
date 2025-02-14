@@ -59,13 +59,16 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
     float3 toEye = normalize(viewPosition - input.f4ModelPos.xyz);
     float3 fromLight = -reflect(toEye, normal);
     
-    Result.f4Color = float4(
-        CalculateIBL(
-            specular, diffuse, ambientOcculusion, metallic, roughness, 
-            normal, fromLight, toEye, 
-            specularIBLTexture, diffuseIBLTexture, brdfLUTTexture, clampSampler
-        ) + emissive, 1.f
-    );
+    float3 color = CalculateIBL(
+        specular, diffuse, ambientOcculusion, metallic, roughness,
+        normal, fromLight, toEye,
+        specularIBLTexture, diffuseIBLTexture, brdfLUTTexture, clampSampler
+    ) + emissive;
+    
+    
+    Result.f4Color = float4(color, 1.f);
+    
+    
     Result.uiID = IDValues;
     
     return Result;

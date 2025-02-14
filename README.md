@@ -122,7 +122,7 @@ Bounding Volume Hierachy는 내부에서 ICollisionAcceptor를 관리하며, 이
 > [!IMPORTANT]
 > PBR, BRDF, Microfacet Theory, IBL
 
-물체의 특정 위치가 빛과 상호작용하는 물리학적 모델을 구축하고, 이를 통해 렌더링을 수행하여 **PBR(Physically Based Rendering)** 을 수행한다. 이때 지역 조명과 전역 조명에 대하여 구분된 모델을 구축한다.
+물체의 특정 위치가 빛과 상호작용하는 물리학적 모델을 구축하고, 이를 통해 렌더링을 수행하여 **PBR(Physically Based Rendering)** 을 수행한다.
 
 점 $P$가 $\vec v$방향으로 반사하는 빛은 다음과 같이 표현할 수 있다.
 ```math 
@@ -148,7 +148,7 @@ L_{o}(P, \vec v)$ = $\int_{\Omega}f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdo
 f_{Lambertian}(\vec l, \vec v) = \frac{c_{diff}}{\pi}
 ```
 
-2. Specular Term
+2. Specular  BRDF Term
 대부분 Specular Term은 **Microfacet Theory**를 채택하여 기술한다. 물체는 무수한 미세면들로 이루어져 있고, 이 미세면들에 의해 빛은 상호작용 한다. 우리는 이 미세면 중 BRDF 함수의 정의에 따라 $\vec l$ 로 빛이 들어올 때 $\vec v$로 반사되는 미세면에 대해서만 관심이 있다. 이 미세면을 Active Microfacet이라고 하며, 이때 이 미세면의 법선 방향 벡터는 $\vec h$(half-way vector)로 표현될 수 있다.
 최종적으로 표면 반사에 대한 BRDF는 다음과 같이 표현된다.
 
@@ -162,7 +162,7 @@ f(\vec l, \vec v)_{specualr} = \frac{F(\vec l, \vec h) G(\vec l, \vec v, \vec h)
 	 - 이에 따라 Schilick은 프레넬 반사항에 대한 방정식을 모사할 수 있는 아래 식을 제안하였다.
 
 ```math
-F_{Schlick}(c_{spec}, \vec l, \vec h) = c_{spec} + (1 - c_{spec}) ( 1 - (\vec l \cdot \vec h)^{5})
+F_{Schlick}(c_{spec}, \vec l, \vec h) = c_{spec} + (1 - c_{spec}) ( 1 - \vec l \cdot \vec h)^{5}
 ```
 
  - $G(\vec l, \vec v, \vec h)$, 기하 감쇠 항(Geometry Term)
@@ -192,20 +192,58 @@ D_{GGX}(\vec h) = \frac{\alpha^{2}}{\pi ((\vec n \cdot \vec h)^{2}(\alpha^{2} - 
 
 $$L_{o}(P, \vec v) \approx  \sum_{i = 1}^{N} (\frac{c_{diff}}{\pi} + \frac{F(\vec l_{i}, \vec h_{i}) G(\vec l_{i}, \vec v, \vec h_{i}) D(\vec h_{i})}{4(\vec n \cdot \vec l_{i})(\vec n \cdot \vec v_{i})} ) L_{i}(P) (\vec n \cdot \vec l_{i})  $$
 
-전역 조명의 경우, **IBL(Image-Based Lighting)** 를 통하여 BRDF를 활용한다. 환경에 대한 빛의 처리는 Monte-Carlo 샘플링을 활용하여 아래와 같은 수식을 통하여 처리할 수 있다.
+전역 조명의 경우, **IBL(Image-Based Lighting)** 를 통하여 빛의 반사 상호작용을 기술한다. 환경에 대한 빛의 처리는 Monte-Carlo 샘플링을 활용하여 아래와 같은 수식을 통하여 처리할 수 있다.
 
 ```math
-L_{o}(P, \vec v) \approx \frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)}
+L_{o}(P, \vec v) = \int_{\Omega} \frac{f(\vec l, \vec v) L_{i}(P, \vec l) (\vec n \cdot \vec l) }{p(\vec l, \vec v)}p(\vec l, \vec v)  d\Omega \approx \frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)}
 ```
-이때 $p(\vec l_{i}, \vec v)$는 중요도 샘플링을 위한 확률 밀도 함수이다. 실시간으로 이에 대한 샘플링을 수행하고 계산하는 것이 비효율적이다. 따라서 사전 계산된 Texture와 **LUT (Look-Up Table)** 을 활용하여 성능을 최적화 한다. 'IBLBaker'와 같은 프로그램을 통해 IBL에 사용하기 위한 데이터를 사전에 계산하여 생성할 수 있다.
+
+이때 $p(\vec l, \vec v)$는 중요도 샘플링을 위한 확률 밀도 함수이다. Diffuse에 대한 중요도 샘플링에는 Cosine-weighted Sampling($p_{cos-weighted}(\vec l, \vec v) = \frac{\vec l \cdot \vec n}{\pi}$)이 주로 사용되고,  Specular에 대한 중요도 샘플링에는 GGX Importance Sampling($p_{GGX-importance}(\vec l, \vec v) = \frac{D(\vec h)(\vec h \cdot \vec n)}{4(\vec h \cdot \vec v)}$)가 주로 사용된다.
+
+실시간으로 이에 대한 샘플링을 수행하고 계산하는 것이 비효율적이다. 따라서 사전 계산된 Texture와 **LUT (Look-Up Table)** 을 활용하여 성능을 최적화 한다. 'IBLBaker'와 같은 프로그램을 통해 IBL에 사용하기 위한 데이터를 사전에 계산하여 생성할 수 있다.
 ![Image](https://github.com/user-attachments/assets/91127aa6-835c-4753-bd39-7d2450a8c48a)
 > 위 프로그램은 IBLBaker로, 좌측을 보면 Environment에 따른 BRDF LUT와  Specular IBL, Irradiance IBL 텍스쳐를 생성할 수 사전에 샘플링하여 계산할 수 있다.
 
-1. Diffuse Term
-	미리 계산된 Irradiance IBL 텍스쳐를 샘플링하여 사용하여 간단히 계산할 수 있다.(작성 중)
+샘플링을 통해 텍스쳐를 생성하고 이를 활용하기 위해, Monte-Carlo 샘플링을 통한 환경에 대한 빛의 처리식을 두 개로 분리할 수 있다.
+
+```math
+L_{o}(P, \vec v)  \approx \frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)} = (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \vec l))(\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)})
+```
+
+빛에 대한 상호작용을 각 Diffuse, Specular로 분리하여 대해 정리해보자.
+```math
+L_{o_{diffuse}}(P, \vec v) \approx (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \vec l))(\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)})
+```
+여기서 좌항은 Irradiance IBL 텍스쳐로 생성하여 단순한 샘플링을 통해 계산될 수 있다. 우항은 $p(\vec l_{i}, \vec v)$ = $p_{cos-weighted}(\vec l, \vec v) = \frac{\vec l \cdot \vec n}{\pi}$ 이고, 앞서 살펴본 Lambertian BRDF($\frac{c_{diff}}{\pi}$)를 통해 정리될 수 있다. 최종적인 식은 아래와 같다.
+
+```math
+L_{o_{diffuse}}(P, \vec v)  \approx  (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \vec l))(\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)}) = (Sample_{IBL_{diff}})(c_{diff})
+```
 	
 2. Specular Term
-	미리 계산된 Specular IBL 텍스쳐와 BRDF LUT를 샘플링하여 간단히 계산할 수 있다.(작성 중)
+```math
+L_{o_{specular}}(P, \vec v) \approx (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \vec l))(\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)})
+```
+여기서 좌항은 specular IBL 텍스쳐로 생성하여 단순한 샘플링을 통해 계산될 수 있다. 우항은 $\gamma = ( 1 - \vec l \cdot \vec h)^{5})$ 일 때, 다음과 같이 정리될 수 있다.
+
+```math
+\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)} =\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l }{p(\vec l_{i}, \vec v) F_{Schlick}(\vec l, \vec h)}F_{Schlick}(\vec l, \vec h)
+```
+```math
+=\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l }{p(\vec l_{i}, \vec v) F_{Schlick}(\vec l, \vec h)}( c_{spec} + (1 - c_{spec}) ( 1 - \vec l \cdot \vec h)^{5})
+```
+```math
+=\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l }{p(\vec l_{i}, \vec v) F_{Schlick}(\vec l, \vec h)}( c_{spec} + (1 - c_{spec}) \gamma)
+```
+```math
+=\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l }{p(\vec l_{i}, \vec v) F_{Schlick}(\vec l, \vec h)}((1 - \gamma)c_{spec} +  \gamma)
+```
+```math
+=\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l }{p(\vec l_{i}, \vec v) F_{Schlick}(\vec l, \vec h)}(1 - \gamma)c_{spec} + \frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l }{p(\vec l_{i}, \vec v) F_{Schlick}(\vec l, \vec h)}\gamma
+```
+
+이를 통해서 우항을  $c_{spec}$에 대한 선형식($ac_{spec} + b$)으로 표현할 수 있다. 이때 a와 b에 대한 값을 ($\vec h \cdot \vec v$, roughness)로 샘플링 할 수 있게 BRDF LUT를 생성할 수 있다. 따라서 최종적인 식은 다음과 같다.
+$L_{o_{diffuse}}(P, \vec v)  \approx  (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \vec l))(\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)}) = (Sample_{IBL_{spec}})(Sample_{LUT_{\vec h \cdot \vec v}} c_{spec} + Sample_{LUT_{roughness}})$
 
 
 ### 3. Deferred Shading
