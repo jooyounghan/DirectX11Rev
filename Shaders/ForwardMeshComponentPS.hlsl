@@ -37,6 +37,7 @@ Texture2D brdfLUTTexture : register(t2);
 Texture2D materialTexture[7] : register(t3);
 
 SamplerState wrapSampler : register(s0);
+SamplerState clampSampler : register(s1);
 
 MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
 {        
@@ -62,7 +63,7 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
         CalculateIBL(
             specular, diffuse, ambientOcculusion, metallic, roughness, 
             normal, fromLight, toEye, 
-            specularIBLTexture, diffuseIBLTexture, brdfLUTTexture, wrapSampler
+            specularIBLTexture, diffuseIBLTexture, brdfLUTTexture, clampSampler
         ) + emissive, 1.f
     );
     Result.uiID = IDValues;

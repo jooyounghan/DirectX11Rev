@@ -1,15 +1,15 @@
-﻿
-# DirectX11 Portfolio
+﻿# DirectX11 Portfolio
 
 본 포트폴리오는 **DirectX11** 기반의 엔진 프로그램을 개발하는 것을 목표로 한다.
 
 ## Features & Techniques
 - 본 포트폴리오는 다음과 같은 주요 기능과 기술을 구현하였다.
 	1. Collision(충돌 감지/처리)
-	2. Deffered Shading
-	3. Animation System
-	4. Managing Asset & Component
-	5. Lighting and Shadows (조명 및 그림자)
+	2. PBR(Physically Based Rendering)
+	3. Deffered Shading
+	4. Animation System
+	5. Managing Asset & Component
+	6. Lighting and Shadows (조명 및 그림자)
 		- 현재 개발 중(Shadow Map 생성 기능까지 개발 완료)
 
 ## Details
@@ -116,10 +116,87 @@ virtual void OnCollide(ICollisionAcceptor*) = 0;
 위 동영상은 BVH를 시각적으로 표현한 동영상이며, `BVH_FrustumCulling` 브랜치를 통하여 확인할 수 있다.
 Bounding Volume Hierachy는 내부에서 ICollisionAcceptor를 관리하며, 이를 순회하여 충돌 여부를 이진 트리 탐색을 통하여 수행한다. 이를 Frustum Culling, Shadow Map 생성 등에 활용할 수 있다. 탐색은 $O(N)$ ~ $O(logN)$의 시간 복잡도를 가진다. 여기서 Bounding Volume 간 계층적 구조가 불균형한 경우(Sorted Input  Incremental 등) 최악의 상황이 발생할 수 있다. 따라서 이를 방지하기 위하여 Volume에 대한 크기를 최소화하는 방향으로 부모들을 재구성하는 **Tree Rotation** 기능을 포함하였다.
 
-### 2. Deferred Shading
+### 2. PBR(Physically Based Rendering)
 
 > [!IMPORTANT]
-> MRT(Multiple Render Targets)
+> PBR, BRDF, Microfacet Theory, IBL
+
+물체의 특정 위치가 빛과 상호작용하는 물리학적 모델을 구축하고, 이를 통해 렌더링을 수행하여 **PBR(Physically Based Rendering)** 을 수행한다. 이때 지역 조명과 전역 조명에 대하여 구분된 모델을 구축한다.
+
+점 $P$가 $\vec v$방향으로 반사하는 빛은 다음과 같이 표현할 수 있다.
+```math 
+L_{o}(P, \vec v)$ = $\int_{\Omega}f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdot \vec l d\Omega
+```
+
+위 식의 의미 다음과 같다.
+- $f(\vec l, \vec v) =  \vec l$ 로 들어오는 빛이 $\vec v$로 반사되는 관계를 나타내는 방정식
+- $L_{i}(P, \vec l)$ = 점 $P$로  $\vec l$방향으로 들어오는 빛
+- $\vec n \cdot \vec l$ = 점 $P$의 Normal 벡터 $\vec n$과  $\vec l$의 내적
+
+위 결과를 [Physically-Based Shading Models in Film and Game Production SIGGRAPH 2010 Course Notes](https://renderwonk.com/publications/s2010-shading-course/hoffman/s2010_physically_based_shading_hoffman_a_notes.pdf) 에서는 다음과 같이 표현한다.
+> Although this equation may seem a bit daunting, its meaning is straightforward: outgoing radiance equals the integral (over all directions above the surface) of incoming radiance times the BRDF and a cosine factor.
+
+**BRDF(Bidirectional reflectance distribution function)** 는 명칭에서 알 수 있듯 두가지 방향에 대해 종속성을 가지는 함수이다. $f(\vec l, \vec v)$ 항을 BRDF 라고 부르며, 물리적인 특성에  표면 반사(surface reflection, Specular Term), 아래층 산란(subsurface scattering, Diffuse Term)으로 구분된다.  
+
+지역 조명에 대한 BRDF를 아래와 같이 표현할 수 있다.
+
+1. Specular Term
+대부분 Specular Term은 **Microfacet Theory**를 채택하여 기술한다. 물체는 무수한 미세면들로 이루어져 있고, 이 미세면들에 의해 빛은 상호작용 한다. 우리는 이 미세면 중 BRDF 함수의 정의에 따라 $\vec l$ 로 빛이 들어올 때 $\vec v$로 반사되는 미세면에 대해서만 관심이 있다. 이 미세면을 Active Microfacet이라고 하며, 이때 이 미세면의 법선 방향 벡터는 $\vec h$(half-way vector)로 표현될 수 있다.
+최종적으로 표면 반사에 대한 BRDF는 다음과 같이 표현된다.
+
+```math
+f(\vec l, \vec v)_{specualr} = \frac{F(\vec l, \vec h) G(\vec l, \vec v, \vec h) D(\vec h)}{4(\vec n \cdot \vec l)(\vec n \cdot \vec v)}
+```
+
+ - $F(\vec l, \vec h)$, 프레넬 반사항(Fresnel Reflectance Term)
+	 - 프레넬 반사항은 광학적으로 물체에 빛이 입사되었을 때 반사하는 빛의 비율 나타내는 항이다. 이는 물체의 고유 특성인 굴절률과 입사각에 따라 달라진다.
+	 - 프레넬 반사항은 복잡한 비선형적 형태를 띄고 있어 모사하기에 복잡한 어려움이 있다. 하지만 주요 특징으로 입사각이 $0^{o}$ ~  $45^{o}$일 경우 상수($c_{spec})$에 가깝고, 이후 급격하게 RGB 벡터가 1로 수렴한다는 점이다.
+	 - 이에 따라 Schilick은 프레넬 반사항에 대한 방정식을 모사할 수 있는 아래 식을 제안하였다.
+
+```math
+F_{Schlick}(c_{spec}, \vec l, \vec h) = c_{spec} + (1 - c_{spec}) ( 1 - (\vec l \cdot \vec h)^{5})
+```
+
+ - $G(\vec l, \vec v, \vec h)$, 기하 감쇠 항(Geometry Term)
+	 - 기하 감쇠항은 미세면이 $\vec l$과 $\vec v$에 대해서 동시에 보일 확률을 나타내는 확률 밀도 함수이다. 따라서 정규분포항과 다르게 0 ~ 1 사이의 스칼라이다.
+	 - 포트폴리오에는 Roughness를 $\alpha$ 항으로 받는 Schlick Geometry Function을 채택하며, 이는 아래와 같다. 이때 $\vec n$는 거시표면의 법선이다.
+
+```math
+G_{Schlick​}(\vec l, \vec v) = G_{Schlick}(\vec l)G_{Schlick}(\vec v)
+```
+```math
+k = \alpha / 2
+```
+```math
+G_{Schlick​}(\vec x) = \frac{\vec x \cdot \vec n}{(\vec x \cdot \vec n)( 1 - k) + k}
+```
+
+ - $D(\vec h)$, 정규분포항(Normal Distribution Term)
+	 - 정규분포항은 미세면의 법선 분포 밀도 함수이며, 미세면의 법선이 균동 분포할 경우에 대비하여 얼마나 집중되어 있는지를 의미하지, 확률 밀도 함수가 아니다. 따라서 값은 스칼라이고 음수가 아니며 1보다 클 수도 있다.
+	 - Active Microfacet에 대한 법선 분포 밀도가 어떻게 구성되어 있는지 알기 위해, 미세면의 법선이 $\vec h$인 경우에 대한 식으로 표현할 수 있으며, GGX, Beckmann 등 다양한 모델이 있다.
+	 - 포트폴리오에서는 Roughness를 $\alpha$ 항으로 받는 GGX를 정규분포항으로 채택하며, 이는 아래와 같다. 이때 $\vec n$는 거시표면의 법선이다.
+
+```math
+D_{GGX}(\vec h) = \frac{\alpha^{2}}{\pi ((\vec n \cdot \vec h)^{2}(\alpha^{2} - 1)+ 1)^{2}}
+```
+
+
+2. Diffuse Term
+대부분 Diffuse Term은 **Lambertian BRDF**를 채택하여 기술한다. 이는 아래와 같이 표현된다. 이때 상수 $c_{diff}$는, $c_{spec}$와 같이 RGB 벡터이다.
+
+```math
+f_{Lambertian}(\vec l, \vec v) = \frac{c_{diff}}{\pi}
+```
+
+
+전역 조명의 경우, **IBL(Image-Based Lighting)** 를 통하여 BRDF를 활용한다.  
+
+
+
+### 3. Deferred Shading
+
+> [!IMPORTANT]
+> GBuffer, MRT
 
 각 Component를 어떻게 그릴지에 대한 함수는 Component에 대한 Visitor 인터페이스 클래스` IComponentVisitor`를 상속 받아서 구현한다. 포트폴리오에는 Forward Shading을 위한  `SceneForwardRenderer`와 Deferred Shading을 위한 `SceneDeferredRenderer`를 통해서 `IComponentVisitor` 내부 각 Component에 대한 함수를 오버라이딩하여 구현한다.
 [![Video Label](http://img.youtube.com/vi/OOfiCmd-ark/0.jpg)](https://youtu.be/OOfiCmd-ark)
@@ -135,7 +212,7 @@ GBuffer는 다음과 같이 구성하였다.
 6. Emissive Color
 7. Fresnel Reflectance
 
-Component 당 Draw 콜이 있을 때, GBuffer에 해당하는 **MRT(Multiple Render Targets)** 에 각 데이터를 입력하고, 마지막으로 GBuffer들을 Shader Resource View로 활용하여 렌더링을 수행한다.
+Component 당 Draw 콜이 있을 때, GBuffer에 해당하는 **MRT(Multiple Render Targets)** 에 각 데이터를 입력하고, 마지막으로 GBuffer들을 Shader Resource View로 활용하여 렌더링을 수행한다. 
 
 ### 3. Animation System
 
@@ -278,3 +355,4 @@ std::set<AComponent*> m_updateToDBComponentsWorker;
 메인 스레드는 `m_updateToDBComponentsMain` 에 변경사항이 존재하는 AComponent의 포인터를 삽입하고, Database에 업데이트를 수행하는 작업자 스레드는 특정 주기(1초)마다 `m_updateToDBComponentsMain`를 `m_updateToDBComponentsWorker`로 복사하고 `m_updateToDBComponentsWorker`를 활용한다. 만약 Transaction이 실패할 경우, `m_updateToDBComponentsWorker`의 원소를 다시 `m_updateToDBComponentsMain`에 삽입한다.
 
 ### 5. Lighting And Shadow(개발 진행 중)
+

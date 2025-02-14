@@ -21,6 +21,7 @@ Texture2D normalGBuffer : register(t7);
 Texture2D emissiveGBuffer : register(t8);
 
 SamplerState wrapSampler : register(s0);
+SamplerState clampSampler : register(s1);
 
 float4 main(GBufferResolveVertexOutput input) : SV_TARGET
 {
@@ -42,7 +43,7 @@ float4 main(GBufferResolveVertexOutput input) : SV_TARGET
         CalculateIBL(
             specular, diffuse, ambientOcculusion, metallic, roughness, 
             normal, fromLight, toEye,
-            specularIBLTexture, diffuseIBLTexture, brdfLUTTexture, wrapSampler
+            specularIBLTexture, diffuseIBLTexture, brdfLUTTexture, clampSampler
         ) + emissive, 1.f
     );
 }

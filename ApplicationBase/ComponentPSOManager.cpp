@@ -119,7 +119,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		nullptr,
 		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), NULL,
 		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS), 
-		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP), GetComponentPSOSamplerState(EComponentPSOSamplerState::CLAMP) }
 	);
 
 	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_FORWARD] = new GraphicsPSOObject(
@@ -130,7 +130,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		nullptr,
 		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), NULL,
 		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS), 
-		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP), GetComponentPSOSamplerState(EComponentPSOSamplerState::CLAMP) }
 	);
 
 	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_DEFERRED] = new GraphicsPSOObject(
@@ -163,7 +163,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		nullptr,
 		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), 1,
 		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_DONTCARE_STENCIL_REPLACE),
-		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP), GetComponentPSOSamplerState(EComponentPSOSamplerState::CLAMP) }
 	);
 
 	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_DEPTH_TEST] = new GraphicsPSOObject(
