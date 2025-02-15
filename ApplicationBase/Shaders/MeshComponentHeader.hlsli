@@ -43,7 +43,6 @@ struct MeshComponentDomainOutput
     float4 f4ModelPos : POSITIONT;
     float2 f2TexCoord : TEXCOORD;
     float3 f3ModelNormal : NORMAL;
-    float3 f3ModelTangent : TANGENT;
 };
 
 struct MeshComponentPixelOutput
@@ -62,3 +61,21 @@ struct DeferredMeshComponentPixelOutput
     float4 Emissive : SV_Target5;
     uint uiID : SV_Target6;
 };
+
+void GetTB(float3 pos, float2 uv, float3 normal, out float3 tangent, out float3 bitangent)
+{
+    float3 dpdx = ddx(pos);
+    float3 dpdy = ddy(pos);
+    float2 duvdx = ddx(uv);
+    float2 duvdy = ddy(uv);
+    
+    tangent = normalize(duvdx.y * dpdy - duvdy.y * dpdx);
+    bitangent = normalize(-duvdx.x * dpdy + duvdy.x * dpdx);
+    
+
+    float3 x = cross(normal, tangent);
+    tangent = normalize(cross(x, normal));
+
+    x = cross(normal, bitangent);
+    bitangent = normalize(cross(normal, x));
+}

@@ -121,7 +121,7 @@ CREATE TABLE `components` (
 
 LOCK TABLES `components` WRITE;
 /*!40000 ALTER TABLE `components` DISABLE KEYS */;
-INSERT INTO `components` VALUES (1,0,'SphereCollision1',0,0,600,0,0,0,1,1,1,1),(2,1,'SkeletalMeshComponent1',0,-88,0,0,0,19.7,1,1,1,1),(3,0,'SphereCollision2',-1000,0,0,0,0,0,1,1,1,1),(4,3,'SkeletalMeshComponent2',0,-88,0,0,0,0,1,1,1,1),(5,0,'SphereCollision3',0,1000,0,0,0,0,1,1,1,1),(6,5,'SkeletalMeshComponent3',0,-88,0,0,0,0,1,1,1,1),(7,0,'OrientedBoxCollision1',0,-1000,0,0,0,0,1,1,1,1),(8,7,'SkeletalMeshComponent4',0,-88,0,0,0,0,1,1,1,1),(9,0,'OrientedBoxCollision2',0,0,500,0,0,0,1,1,1,1),(10,9,'SkeletalMeshComponent5',0,-88,0,0,0,0,1,1,1,1),(11,0,'OrientedBoxCollision3',0,0,-1000,0,0,0,1,1,1,1),(12,11,'SkeletalMeshComponent6',0,-88,0,0,0,0,1,1,1,1),(13,0,'SpotLightComponent1',0,0,0,0,0,0,1,1,1,1),(14,0,'PointLightComponent1',0,0,0,0,0,0,1,1,1,1),(15,0,'Vanguard',-150,-100,500,0,40.9,0,1,1,1,2),(16,0,'Warrok',0,-100,500,-2.8,75.6,10.4,1,1,1,2),(17,0,'Paladin',150,-100,500,0,0,0,1,1,1,2),(18,0,'Model1',135,0,200,0,0,0,30,30,30,3),(19,0,'Model2',45,0,200,0,0,0,30,30,30,3),(20,0,'Model3',-45,0,200,0,0,0,30,30,30,3),(21,0,'Model4',-135,0,200,0,0,0,30,30,30,3);
+INSERT INTO `components` VALUES (1,0,'SphereCollision1',0,0,600,0,0,0,1,1,1,1),(2,1,'SkeletalMeshComponent1',0,-88,0,0,0,19.7,1,1,1,1),(3,0,'SphereCollision2',-1000,0,0,0,0,0,1,1,1,1),(4,3,'SkeletalMeshComponent2',0,-88,0,0,0,0,1,1,1,1),(5,0,'SphereCollision3',0,1000,0,0,0,0,1,1,1,1),(6,5,'SkeletalMeshComponent3',0,-88,0,0,0,0,1,1,1,1),(7,0,'OrientedBoxCollision1',0,-1000,0,0,0,0,1,1,1,1),(8,7,'SkeletalMeshComponent4',0,-88,0,0,0,0,1,1,1,1),(9,0,'OrientedBoxCollision2',0,0,500,0,0,0,1,1,1,1),(10,9,'SkeletalMeshComponent5',0,-88,0,0,0,0,1,1,1,1),(11,0,'OrientedBoxCollision3',0,0,-1000,0,0,0,1,1,1,1),(12,11,'SkeletalMeshComponent6',0,-88,0,0,0,0,1,1,1,1),(13,0,'SpotLightComponent1',0,0,0,0,0,0,1,1,1,1),(14,0,'PointLightComponent1',0,0,0,0,0,0,1,1,1,1),(15,0,'Vanguard',-150,-100,500,0,0,0,1,1,1,2),(16,0,'Warrok',0,-100,500,0,0,0,1,1,1,2),(17,0,'Paladin',150,-100,500,0,0,0,1,1,1,2),(18,0,'Model1',135,0,200,0,0,0,30,30,30,3),(19,0,'Model2',45,0,200,0,0,0,30,30,30,3),(20,0,'Model3',-45,0,200,0,0,0,30,30,30,3),(21,0,'Model4',-135,0,200,0,0,0,30,30,30,3);
 /*!40000 ALTER TABLE `components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -377,4 +377,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-15 10:34:49
+-- Dump completed on 2025-02-15 12:14:13

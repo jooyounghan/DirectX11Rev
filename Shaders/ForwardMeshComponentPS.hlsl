@@ -50,10 +50,14 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
     float roughness = isRoughnessSet ? materialTexture[ROUGHNESS_IDX].Sample(wrapSampler, input.f2TexCoord).r : 1.0f;
     float3 emissive = isEmissiveSet ? materialTexture[EMISSIVE_IDX].Sample(wrapSampler, input.f2TexCoord).rgb : float3(0.0, 0.0, 0.0);
     float3 normal = input.f3ModelNormal;
+    
+    float3 tangent;
+    float3 bitangent;
+    GetTB(input.f4ModelPos.xyz, input.f2TexCoord, input.f3ModelNormal, tangent, bitangent);
+        
     if (isNormalSet)
     {
-        float3 bitangent = normalize(cross(input.f3ModelNormal, input.f3ModelTangent));
-        normal = GetNormalFromMap(input.f3ModelNormal, bitangent, input.f3ModelTangent, input.f2TexCoord, materialTexture[NORMAL_IDX], wrapSampler);
+        normal = GetNormalFromMap(input.f3ModelNormal, bitangent, tangent, input.f2TexCoord, materialTexture[NORMAL_IDX], wrapSampler);
     }
     
     float3 toEye = normalize(viewPosition - input.f4ModelPos.xyz);

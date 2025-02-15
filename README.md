@@ -130,8 +130,8 @@ L_{o}(P, \vec v)$ = $\int_{\Omega}f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdo
 ```
 
 위 식의 의미 다음과 같다.
-- $f(\vec l, \vec v) =  \vec l$ 로 들어오는 빛이 $\vec v$로 반사되는 관계를 나타내는 방정식
-- $L_{i}(P, \vec l)$ = 점 $P$로  $\vec l$방향으로 들어오는 빛
+- $f(\vec l, \vec v)$ =  광원의 위치벡터 $\vec l$ 로 부터 들어오는 빛이 시점의 위치벡터 $\vec v$로 반사되는 관계를 나타내는 방정식
+- $L_{i}(P, \vec l)$ = 점 $P$로  광원의 위치벡터 $\vec l$방향으로 부터 들어오는 빛
 - $\vec n \cdot \vec l$ = 점 $P$의 Normal 벡터 $\vec n$과  $\vec l$의 내적
 
 위 결과를 [Physically-Based Shading Models in Film and Game Production SIGGRAPH 2010 Course Notes](https://renderwonk.com/publications/s2010-shading-course/hoffman/s2010_physically_based_shading_hoffman_a_notes.pdf) 에서는 다음과 같이 표현한다.
@@ -149,7 +149,7 @@ f_{Lambertian}(\vec l, \vec v) = \frac{c_{diff}}{\pi}
 ```
 
 2. Specular  BRDF Term
-대부분 Specular Term은 **Microfacet Theory**를 채택하여 기술한다. 물체는 무수한 미세면들로 이루어져 있고, 이 미세면들에 의해 빛은 상호작용 한다. 우리는 이 미세면 중 BRDF 함수의 정의에 따라 $\vec l$ 로 빛이 들어올 때 $\vec v$로 반사되는 미세면에 대해서만 관심이 있다. 이 미세면을 Active Microfacet이라고 하며, 이때 이 미세면의 법선 방향 벡터는 $\vec h$(half-way vector)로 표현될 수 있다.
+대부분 Specular Term은 **Microfacet Theory**를 채택하여 기술한다. 물체는 무수한 미세면들로 이루어져 있고, 이 미세면들에 의해 빛은 상호작용 한다. 우리는 이 미세면 중 BRDF 함수의 정의에 따라 $\vec l$ 에서  빛이 들어올 때 $\vec v$로 반사되는 미세면에 대해서만 관심이 있다. 이 미세면을 Active Microfacet이라고 하며, 이때 이 미세면의 법선 방향 벡터는 $\vec h$(half-way vector)로 표현될 수 있다.
 최종적으로 표면 반사에 대한 BRDF는 다음과 같이 표현된다.
 
 ```math
