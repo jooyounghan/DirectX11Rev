@@ -18,7 +18,6 @@ MeshComponentVertexOutput main(SkeletalComponentVertexInput input)
      
     result.fTessFactor = 1.f;
     //Result.fTessFactor = getTessFactor(d);
-    result.fLODLevel = 2.f;
     
     float4 f4WorldNormalIn = float4(input.f3WorldNormal, 0.f);
     float4 f4WorldPosIn = float4(input.f3WorldPos, 1.f);

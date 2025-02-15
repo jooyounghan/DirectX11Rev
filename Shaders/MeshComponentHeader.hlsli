@@ -20,7 +20,6 @@ struct MeshComponentVertexOutput
     float2 f2TexCoord : TEXCOORD;
     float3 f3WorldNormal : NORMAL;
     float fTessFactor : TESSFACTOR;
-    float fLODLevel : LOD_LEVEL;
 };
 
 #define NUM_CONTROL_POINTS 3
@@ -36,7 +35,6 @@ struct MeshComponentHullOutput
     float4 f4WorldPos : POSITION;
     float2 f2TexCoord : TEXCOORD;
     float3 f3WorldNormal : NORMAL;
-    float fLODLevel : LOD_LEVEL;
 };
 
 struct MeshComponentDomainOutput
@@ -46,7 +44,6 @@ struct MeshComponentDomainOutput
     float2 f2TexCoord : TEXCOORD;
     float3 f3ModelNormal : NORMAL;
     float3 f3ModelTangent : TANGENT;
-    float fLODLevel : LOD_LEVEL;
 };
 
 struct MeshComponentPixelOutput

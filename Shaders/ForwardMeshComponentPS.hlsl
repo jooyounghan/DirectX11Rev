@@ -43,32 +43,30 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
 {        
     MeshComponentPixelOutput Result;
     
-    float ambientOcculusion = isAmbientOcculusionSet ? materialTexture[AO_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).r : 1.0f;
-    float3 specular = isSpecularSet ? materialTexture[SPECULAR_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).rgb : f0;
-    float3 diffuse = isDiffuseSet ? materialTexture[DIFFUSE_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).rgb : float3(1.0, 1.0, 1.0);
-    float metallic = isMetalicSet ? materialTexture[METALIC_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).r : 0.0f;
-    float roughness = isRoughnessSet ? materialTexture[ROUGHNESS_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).r : 1.0f;
-    float3 emissive = isEmissiveSet ? materialTexture[EMISSIVE_IDX].SampleLevel(wrapSampler, input.f2TexCoord, input.fLODLevel).rgb : float3(0.0, 0.0, 0.0);
+    float ambientOcculusion = isAmbientOcculusionSet ? materialTexture[AO_IDX].Sample(wrapSampler, input.f2TexCoord).r : 1.0f;
+    float3 specular = isSpecularSet ? materialTexture[SPECULAR_IDX].Sample(wrapSampler, input.f2TexCoord).rgb : f0;
+    float3 diffuse = isDiffuseSet ? materialTexture[DIFFUSE_IDX].Sample(wrapSampler, input.f2TexCoord).rgb : float3(1.0, 1.0, 1.0);
+    float metallic = isMetalicSet ? materialTexture[METALIC_IDX].Sample(wrapSampler, input.f2TexCoord).r : 0.0f;
+    float roughness = isRoughnessSet ? materialTexture[ROUGHNESS_IDX].Sample(wrapSampler, input.f2TexCoord).r : 1.0f;
+    float3 emissive = isEmissiveSet ? materialTexture[EMISSIVE_IDX].Sample(wrapSampler, input.f2TexCoord).rgb : float3(0.0, 0.0, 0.0);
     float3 normal = input.f3ModelNormal;
     if (isNormalSet)
     {
         float3 bitangent = normalize(cross(input.f3ModelNormal, input.f3ModelTangent));
-        normal = GetNormalFromMap(input.f3ModelNormal, bitangent, input.f3ModelTangent, input.fLODLevel, input.f2TexCoord, materialTexture[NORMAL_IDX], wrapSampler);
+        normal = GetNormalFromMap(input.f3ModelNormal, bitangent, input.f3ModelTangent, input.f2TexCoord, materialTexture[NORMAL_IDX], wrapSampler);
     }
     
     float3 toEye = normalize(viewPosition - input.f4ModelPos.xyz);
-    float3 fromLight = -reflect(toEye, normal);
+    float3 toLight = -reflect(toEye, normal);
     
     float3 color = CalculateIBL(
-        specular, diffuse, ambientOcculusion, metallic, roughness,
-        normal, fromLight, toEye,
+        specular, diffuse, metallic, roughness,
+        normal, toLight, toEye,
         specularIBLTexture, diffuseIBLTexture, brdfLUTTexture, clampSampler
-    ) + emissive;
+    ) * ambientOcculusion + emissive;
     
     
-    Result.f4Color = float4(color, 1.f);
-    
-    
+    Result.f4Color = float4(color, 1.f);   
     Result.uiID = IDValues;
     
     return Result;

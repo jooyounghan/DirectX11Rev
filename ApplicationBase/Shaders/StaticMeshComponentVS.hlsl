@@ -16,7 +16,6 @@ MeshComponentVertexOutput main(StaticComponentVertexInput input)
 
     result.fTessFactor = 1.f;
     //Result.fTessFactor = getTessFactor(d);
-    result.fLODLevel = 2.f;
     
     result.f3WorldNormal = input.f3WorldNormal;
     result.f2TexCoord = input.f2TexCoord;

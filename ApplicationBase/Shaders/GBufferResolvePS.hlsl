@@ -37,13 +37,13 @@ float4 main(GBufferResolveVertexOutput input) : SV_TARGET
     float roughness = ao_metallic_roughness.z;
     
     float3 toEye = normalize(viewPosition - position);
-    float3 fromLight = -reflect(toEye, normal);
+    float3 toLight = -reflect(toEye, normal);
     
     return float4(
         CalculateIBL(
-            specular, diffuse, ambientOcculusion, metallic, roughness, 
-            normal, fromLight, toEye,
+            specular, diffuse, metallic, roughness, 
+            normal, toLight, toEye,
             specularIBLTexture, diffuseIBLTexture, brdfLUTTexture, clampSampler
-        ) + emissive, 1.f
+        ) * ambientOcculusion + emissive, 1.f
     );
 }

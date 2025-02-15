@@ -42,11 +42,10 @@ MeshComponentDomainOutput main(
     float4 f4WorldPos = tri[0].f4WorldPos * domain.x + tri[1].f4WorldPos * domain.y + tri[2].f4WorldPos * domain.z;
     result.f2TexCoord = tri[0].f2TexCoord * domain.x + tri[1].f2TexCoord * domain.y + tri[2].f2TexCoord * domain.z;
     float3 f3WorldNormal = normalize(tri[0].f3WorldNormal * domain.x + tri[1].f3WorldNormal * domain.y + tri[2].f3WorldNormal * domain.z);
-    result.fLODLevel = tri[0].fLODLevel * domain.x + tri[1].fLODLevel * domain.y + tri[2].fLODLevel * domain.z;
 
     if (isHeightSet)
     {
-        float height = heightMap.SampleLevel(wrapSampler, result.f2TexCoord, result.fLODLevel).x;
+        float height = heightMap.SampleLevel(wrapSampler, result.f2TexCoord, 0.f).x;
         height = (2.f * height - 1.f) * heightScale;
         f4WorldPos += float4(height * f3WorldNormal, 0.f);
     }
@@ -66,7 +65,7 @@ MeshComponentDomainOutput main(
     
     float dotNT = dot(result.f3ModelNormal, result.f3ModelTangent);
     result.f3ModelTangent = normalize(result.f3ModelTangent - dotNT * result.f3ModelNormal);
-
+    
     result.f4ModelPos = mul(f4WorldPos, modelMatrix);
     result.f4ProjPos = mul(result.f4ModelPos, viewProjMatrix);
     

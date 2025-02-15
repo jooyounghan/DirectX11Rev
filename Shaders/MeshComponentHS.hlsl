@@ -34,7 +34,6 @@ MeshComponentHullOutput main(
     output.f4WorldPos = patch[i].f4WorldjPos;
     output.f2TexCoord = patch[i].f2TexCoord;
     output.f3WorldNormal = normalize(patch[i].f3WorldNormal);
-    output.fLODLevel = patch[i].fLODLevel;
 
     return output;
 }
