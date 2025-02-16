@@ -16,9 +16,6 @@
     <ClInclude Include="AMeshComponent.h">
       <Filter>헤더 파일\Component\Model</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentEntity.h">
-      <Filter>헤더 파일\Component\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="CameraComponent.h">
       <Filter>헤더 파일\Component\Camera</Filter>
     </ClInclude>
@@ -76,10 +73,10 @@
     <ClInclude Include="AnimationPlayer.h">
       <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentEntityInitializer.h">
+    <ClInclude Include="ComponentInitializer.h">
       <Filter>헤더 파일\Component\Visitor\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentEntityUpdater.h">
+    <ClInclude Include="ComponentUpdater.h">
       <Filter>헤더 파일\Component\Visitor\Entity</Filter>
     </ClInclude>
     <ClInclude Include="ScreenQuad.h">
@@ -164,12 +161,6 @@
     </Filter>
     <Filter Include="소스 파일\Component\Model">
       <UniqueIdentifier>{f8560266-a5a0-406d-bdef-9d8e161c291b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Entity">
-      <UniqueIdentifier>{a5b22167-bec1-40eb-be85-0f833135d1f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Component\Entity">
-      <UniqueIdentifier>{72b52730-d056-46b5-8f8b-e186ff5a1624}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Component\Camera">
       <UniqueIdentifier>{3c740a55-9f10-4cfd-94db-d708a2cb83a5}</UniqueIdentifier>
@@ -299,9 +290,6 @@
     <ClCompile Include="AMeshComponent.cpp">
       <Filter>소스 파일\Component\Model</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentEntity.cpp">
-      <Filter>소스 파일\Component\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="CameraComponent.cpp">
       <Filter>소스 파일\Component\Camera</Filter>
     </ClCompile>
@@ -347,10 +335,10 @@
     <ClCompile Include="AnimationPlayer.cpp">
       <Filter>소스 파일\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentEntityInitializer.cpp">
+    <ClCompile Include="ComponentInitializer.cpp">
       <Filter>소스 파일\Component\Visitor\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentEntityUpdater.cpp">
+    <ClCompile Include="ComponentUpdater.cpp">
       <Filter>소스 파일\Component\Visitor\Entity</Filter>
     </ClCompile>
     <ClCompile Include="ScreenQuad.cpp">

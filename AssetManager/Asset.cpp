@@ -10,11 +10,6 @@ AAsset::AAsset(const string& assetName)
 {
 }
 
-void AAsset::SetIsModified(const bool& isModified)
-{
-	m_isModified.store(isModified);
-}
-
 void AAsset::Serialize(FILE* fileIn) const
 {
 	SerializeHelper::SerializeString(m_assetName, fileIn);

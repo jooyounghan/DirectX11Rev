@@ -194,12 +194,11 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="SphereCollisionComponent.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="ComponentDBCreator.cpp" />
-    <ClCompile Include="ComponentEntityInitializer.cpp" />
-    <ClCompile Include="ComponentEntityUpdater.cpp" />
+    <ClCompile Include="ComponentInitializer.cpp" />
+    <ClCompile Include="ComponentUpdater.cpp" />
     <ClCompile Include="ComponentPSOManager.cpp" />
     <ClCompile Include="ComponentDBInitializer.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
-    <ClCompile Include="ComponentEntity.cpp" />
     <ClCompile Include="ComponentDBRemover.cpp" />
     <ClCompile Include="ComponentDBUpdater.cpp" />
     <ClCompile Include="InputEventManager.cpp" />
@@ -237,8 +236,8 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="SphereCollisionComponent.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="ComponentDBCreator.h" />
-    <ClInclude Include="ComponentEntityInitializer.h" />
-    <ClInclude Include="ComponentEntityUpdater.h" />
+    <ClInclude Include="ComponentInitializer.h" />
+    <ClInclude Include="ComponentUpdater.h" />
     <ClInclude Include="ComponentPSOManager.h" />
     <ClInclude Include="ComponentDBInitializer.h" />
     <ClInclude Include="ComponentManager.h" />
@@ -255,7 +254,6 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="SceneDeferredRenderer.h" />
     <ClInclude Include="SceneForwardRenderer.h" />
     <ClInclude Include="IComponentVisitor.h" />
-    <ClInclude Include="ComponentEntity.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ScreenQuad.h" />
     <ClInclude Include="SkeletalMeshComponent.h" />

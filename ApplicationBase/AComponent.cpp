@@ -1,9 +1,15 @@
 #include "AComponent.h"
-
-#include <DirectXMath.h>
+#include "DynamicBuffer.h"
+#include "ConstantBuffer.h"
 
 using namespace std;
 using namespace DirectX;
+
+SComponent::SComponent(const uint32_t& componentID)
+	: m_componentID(componentID), dummy{ 0.f, 0.f, 0.f }
+{
+}
+
 
 AComponent::AComponent(
 	const string& componentName,
@@ -12,7 +18,13 @@ AComponent::AComponent(
 	const XMFLOAT3& localAngle,
 	const XMFLOAT3& localScale
 )	: 
-	ComponentEntity(componentID, localPosition, localAngle, localScale), 
+	m_localPosition(XMVectorSet(localPosition.x, localPosition.y, localPosition.z, 0.f)),
+	m_localAngle(XMVectorSet(localAngle.x, localAngle.y, localAngle.z, 0.f)),
+	m_localScale(XMVectorSet(localScale.x, localScale.y, localScale.z, 0.f)),
+	m_transformationBuffer(new DynamicBuffer(sizeof(STransformation), 1, &m_transformation)),
+	m_transformation(),
+	m_componentConstant(componentID),
+	m_componentBuffer(new DynamicBuffer(sizeof(SComponent), 1, &m_componentConstant)),
 	m_componentName(componentName)
 {
 	m_absolutePosition = XMLoadFloat3(&localPosition);
@@ -20,7 +32,22 @@ AComponent::AComponent(
 	m_absoluteScale = XMLoadFloat3(&localScale);
 }
 
-bool AComponent::GetDefaultRenderable() 
+AComponent::~AComponent()
+{
+	delete m_transformationBuffer;
+	delete m_componentBuffer;
+}
+
+void AComponent::SetIsModified(const bool& isModified)
+{
+	m_isModified.store(isModified);
+	for (auto& childComponent : m_childComponents)
+	{
+		childComponent->SetIsModified(isModified);
+	}
+};
+
+bool AComponent::GetDefaultRenderable()
 { 
 	return true; 
 }
@@ -46,12 +73,31 @@ void AComponent::RemoveFromParent()
 	UpdateAbsoluteEntities();
 }
 
+const DirectX::XMVECTOR AComponent::GetLocalRotationQuaternion()
+{
+	return XMQuaternionRotationRollPitchYaw(
+		XMConvertToRadians(XMVectorGetX(m_localAngle)),
+		XMConvertToRadians(XMVectorGetY(m_localAngle)),
+		XMConvertToRadians(XMVectorGetZ(m_localAngle))
+	);
+}
+
 const XMVECTOR AComponent::GetAbsoluteRotationQuaternion() const
 {
 	return XMQuaternionRotationRollPitchYaw(
 		XMConvertToRadians(XMVectorGetX(m_absoluteAngle)),
 		XMConvertToRadians(XMVectorGetY(m_absoluteAngle)),
 		XMConvertToRadians(XMVectorGetZ(m_absoluteAngle))
+	);
+}
+
+DirectX::XMMATRIX AComponent::GetLocalTranformation()
+{
+	return XMMatrixAffineTransformation(
+		m_localScale,
+		XMQuaternionIdentity(),
+		GetLocalRotationQuaternion(),
+		m_localPosition
 	);
 }
 
@@ -80,12 +126,3 @@ void AComponent::UpdateComponentTransformation()
 	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
 	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
 }
-
-void AComponent::SetIsModified(const bool& isModified)
-{
-	m_isModified.store(isModified);
-	for (auto& childComponent : m_childComponents)
-	{
-		childComponent->SetIsModified(isModified);
-	}
-};

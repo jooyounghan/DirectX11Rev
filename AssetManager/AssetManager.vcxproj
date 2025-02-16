@@ -174,7 +174,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AModifiable.h" />
     <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationRetargeter.h" />
     <ClInclude Include="AssetInitializer.h" />
@@ -209,7 +208,6 @@
     <ClInclude Include="TopologySorter.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AModifiable.cpp" />
     <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationRetargeter.cpp" />
     <ClCompile Include="AssetInitializer.cpp" />

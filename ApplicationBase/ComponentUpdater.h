@@ -5,15 +5,15 @@
 class AViewComponent;
 class LightEntity;
 
-class ComponentEntityInitializer : public IComponentVisitor
+class ComponentUpdater : public IComponentVisitor
 {
 public:
-	ComponentEntityInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
-	~ComponentEntityInitializer() override = default;
+	ComponentUpdater(ID3D11DeviceContext* deviceContext, const float& deltaTime);
+	~ComponentUpdater() override = default;
 
 protected:
-	ID3D11Device* m_deviceCached = nullptr;
 	ID3D11DeviceContext* m_deviceContextCached = nullptr;
+	const float& m_deltaTime;
 
 public:
 	virtual void Visit(StaticMeshComponent* staticModelComponent) override;
@@ -31,8 +31,7 @@ public:
 	virtual void Visit(PointLightComponent* pointLightComponent) override final;
 
 private:
-	void InitBaseComponent(AComponent* component);
-	void InitViewComponent(AViewComponent* viewComponent);
-	void InitLightComponent(LightEntity* lightEntity);
+	void UpdateBaseComponent(AComponent* component);
+	void UpdateViewComponent(AViewComponent* viewComponent);
+	void UpdateLightComponent(LightEntity* lightComponent);
 };
-

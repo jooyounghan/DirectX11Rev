@@ -252,7 +252,7 @@ $L_{o_{diffuse}}(P, \vec v)  \approx  (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \vec
 > GBuffer, MRT
 
 각 Component를 어떻게 그릴지에 대한 함수는 Component에 대한 Visitor 인터페이스 클래스` IComponentVisitor`를 상속 받아서 구현한다. 포트폴리오에는 Forward Shading을 위한  `SceneForwardRenderer`와 Deferred Shading을 위한 `SceneDeferredRenderer`를 통해서 `IComponentVisitor` 내부 각 Component에 대한 함수를 오버라이딩하여 구현한다.
-[![Video Label](http://img.youtube.com/vi/OOfiCmd-ark/0.jpg)](https://youtu.be/OOfiCmd-ark)
+[![Video Label](http://img.youtube.com/vi/c-_aR995ip4/0.jpg)](https://youtu.be/c-_aR995ip4)
 
 Renderer를 선택하면 `SceneForwardRenderer`와 `SceneDeferredRenderer`를 선택할 수 있고, 선택한 렌더링 기법을 활용하여 렌더링이 시작된다.
 `SceneDeferredRenderer` 선택 시, Viewport 상단에 Deferred Shading을 위한 GBuffer가 디버깅 목적으로 그려지는 것을 확인할 수 있다.

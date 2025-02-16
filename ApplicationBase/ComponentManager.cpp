@@ -19,8 +19,8 @@
 #include "ComponentDBRemover.h"
 #include "ComponentDBCreator.h"
 
-#include "ComponentEntityInitializer.h"
-#include "ComponentEntityUpdater.h"
+#include "ComponentInitializer.h"
+#include "ComponentUpdater.h"
 
 
 using namespace std;
@@ -35,7 +35,6 @@ ComponentManager::ComponentManager(
 	m_deviceAddressCached(deviceAddress),
 	m_DeferredContext(DeferredContext)
 {
-	UpdateComponentToDBThread();
 }
 
 ComponentManager::~ComponentManager()
@@ -62,6 +61,7 @@ void ComponentManager::InitComponentManager()
 		LoadScenes();
 		LoadComponents();
 		Initialize();
+		UpdateComponentToDBThread();
 		m_isInitialized = true;
 	}
 	catch (const std::exception& ex)
@@ -254,14 +254,14 @@ void ComponentManager::Initialize()
 	try
 	{
 		ComponentDBInitializer componentDBInitializer(this);
-		ComponentEntityInitializer componentEntityInitializer(*m_deviceAddressCached, m_DeferredContext->GetDeferredContext());
+		ComponentInitializer componentInitializer(*m_deviceAddressCached, m_DeferredContext->GetDeferredContext());
 		m_sessionManager->startTransaction();
 		{
 			shared_lock InitLoadedComponentsLock(m_componentMutex);
 			for (auto& componentIDToComponent : m_componentIDsToComponent)
 			{
 				componentIDToComponent.second->Accept(&componentDBInitializer);
-				componentIDToComponent.second->Accept(&componentEntityInitializer);
+				componentIDToComponent.second->Accept(&componentInitializer);
 			}
 		}
 		m_sessionManager->commit();
@@ -385,7 +385,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 {
 	if (m_isInitialized)
 	{
-		ComponentEntityUpdater componentEntityUpdater(m_DeferredContext->GetDeferredContext(), deltaTime);
+		ComponentUpdater componentUpdater(m_DeferredContext->GetDeferredContext(), deltaTime);
 
 		{
 			shared_lock updateComponent(m_componentMutex);
@@ -393,7 +393,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 			{
 				if (m_componentIDToComponent.second->ComsumeIsModified())
 				{
-					m_componentIDToComponent.second->Accept(&componentEntityUpdater);
+					m_componentIDToComponent.second->Accept(&componentUpdater);
 					{
 						unique_lock writeLock(m_updateSetMutex);
 						m_updateToDBComponentsMain.insert(m_componentIDToComponent.second);

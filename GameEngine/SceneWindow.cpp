@@ -297,7 +297,7 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
         if (IsItemFocused())
         {
             XMVECTOR& relativePos = const_cast<XMVECTOR&>(m_selectedCamera->GetLocalPosition());
-            const XMVECTOR rotationQuaternion = m_selectedCamera->GetLocalQuaternion();
+            const XMVECTOR rotationQuaternion = m_selectedCamera->GetLocalRotationQuaternion();
 
             XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, rotationQuaternion);
             XMVECTOR currentRight = XMVector3Rotate(GDefaultRight, rotationQuaternion);

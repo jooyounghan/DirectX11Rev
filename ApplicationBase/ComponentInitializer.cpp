@@ -1,4 +1,4 @@
-#include "ComponentEntityInitializer.h"
+#include "ComponentInitializer.h"
 
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
@@ -21,17 +21,17 @@
 #include "UAVOption.h"
 #include "DSVOption.h"
 
-ComponentEntityInitializer::ComponentEntityInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+ComponentInitializer::ComponentInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 	: m_deviceCached(device), m_deviceContextCached(deviceContext)
 {
 }
 
-void ComponentEntityInitializer::Visit(StaticMeshComponent* staticModelComponent)
+void ComponentInitializer::Visit(StaticMeshComponent* staticModelComponent)
 {
 	InitBaseComponent(staticModelComponent);
 }
 
-void ComponentEntityInitializer::Visit(SkeletalMeshComponent* skeletalModelComponent)
+void ComponentInitializer::Visit(SkeletalMeshComponent* skeletalModelComponent)
 {
 	InitBaseComponent(skeletalModelComponent);
 
@@ -44,7 +44,7 @@ void ComponentEntityInitializer::Visit(SkeletalMeshComponent* skeletalModelCompo
 	}
 }
 
-void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
+void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 {
 	InitBaseComponent(cameraComponent);
 	InitViewComponent(cameraComponent);
@@ -71,21 +71,17 @@ void ComponentEntityInitializer::Visit(CameraComponent* cameraComponent)
 
 }
 
-void ComponentEntityInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
+void ComponentInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
 	InitBaseComponent(sphereCollisionComponent);
-	
-	sphereCollisionComponent->SetComponentColor({ 1.f, 0.f, 0.f });
 }
 
-void ComponentEntityInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
+void ComponentInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
 	InitBaseComponent(orientedBoxCollisionComponent);
-	
-	orientedBoxCollisionComponent->SetComponentColor({ 1.f, 0.f, 0.f });
 }
 
-void ComponentEntityInitializer::Visit(SpotLightComponent* spotLightComponent)
+void ComponentInitializer::Visit(SpotLightComponent* spotLightComponent)
 {
 	InitBaseComponent(spotLightComponent);
 	InitViewComponent(spotLightComponent);
@@ -97,7 +93,7 @@ void ComponentEntityInitializer::Visit(SpotLightComponent* spotLightComponent)
 	));
 }
 
-void ComponentEntityInitializer::Visit(PointLightComponent* pointLightComponent)
+void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
 {
 	InitBaseComponent(pointLightComponent);
 	InitLightComponent(pointLightComponent);
@@ -129,7 +125,7 @@ void ComponentEntityInitializer::Visit(PointLightComponent* pointLightComponent)
 	}
 }
 
-void ComponentEntityInitializer::InitBaseComponent(AComponent* component)
+void ComponentInitializer::InitBaseComponent(AComponent* component)
 {
 	component->UpdateAbsoluteEntities();
 	component->UpdateComponentTransformation();
@@ -140,14 +136,14 @@ void ComponentEntityInitializer::InitBaseComponent(AComponent* component)
 	comopnentBuffer->InitializeBuffer(m_deviceCached);
 }
 
-void ComponentEntityInitializer::InitViewComponent(AViewComponent* viewComponent)
+void ComponentInitializer::InitViewComponent(AViewComponent* viewComponent)
 {
 	viewComponent->UpdateViewEntity();
 	DynamicBuffer* viewProjMatrixBuffer = viewComponent->GetViewProjMatrixBuffer();
 	viewProjMatrixBuffer->InitializeBuffer(m_deviceCached);
 }
 
-void ComponentEntityInitializer::InitLightComponent(LightEntity* lightEntity)
+void ComponentInitializer::InitLightComponent(LightEntity* lightEntity)
 {
 	DynamicBuffer* lightBuffer = lightEntity->GetLightEntityBuffer();
 	lightBuffer->InitializeBuffer(m_deviceCached);

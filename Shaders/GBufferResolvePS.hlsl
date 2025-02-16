@@ -66,7 +66,7 @@ float4 main(GBufferResolveVertexOutput input) : SV_TARGET
     
     float3 directDiffuseBRDF = (kd * diffuse / 3.141592);
     float3 directSpecularBRDF = SchlickFresnelReflectRoughnessTerm(ks, spotLDotH, roughness)
-    * SchlickGeometryModel(dot(toSpotLight, normal), dot(toEye, normal), roughness)
+    * SchlickGeometryModel(spotLDotN, spotVDotN, roughness)
     * NormalDistributionGGXTerm(spotNDotH, roughness)
     / max((4 * spotLDotN * spotVDotN), 1E-6);
     
