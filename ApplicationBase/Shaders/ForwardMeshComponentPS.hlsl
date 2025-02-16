@@ -63,12 +63,39 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
     float3 toEye = normalize(viewPosition - input.f4ModelPos.xyz);
     float3 toLight = -reflect(toEye, normal);
     
+    float VDotH = max(dot(normal, toEye), 0.f);
+    
+    float3 f0 = lerp(specular, diffuse, metallic);
+    float3 ks = SchlickFresnelReflectRoughnessTerm(f0, max(0.0, dot(toLight, normal)), roughness);
+    float3 kd = (1.0f - ks) * (1 - metallic);
+    
+    
     float3 color = CalculateIBL(
-        specular, diffuse, metallic, roughness,
-        normal, toLight, toEye,
+        kd, ks, diffuse, metallic, roughness,
+        normal, toLight, VDotH,
         specularIBLTexture, diffuseIBLTexture, brdfLUTTexture, clampSampler
     ) * ambientOcculusion + emissive;
     
+    
+    // Direct Lighting Test ==============================================================
+    float3 spotLightPos = float3(0.f, 0.f, 0.f);
+    float3 toSpotLight = normalize(spotLightPos - input.f4ModelPos.xyz);
+    float3 spotLightPower = 1.f;
+    float3 spotHalfVector = (toEye + toSpotLight) / 2.f;
+    
+    float spotLDotH = max(0.f, dot(toSpotLight, spotHalfVector));
+    float spotNDotH = max(0.f, dot(normal, spotHalfVector));
+    float spotLDotN = max(0.f, dot(toSpotLight, normal));
+    float spotVDotN = max(0.f, dot(toEye, normal));
+    
+    float3 directDiffuseBRDF = (kd * diffuse / 3.141592);
+    float3 directSpecularBRDF = SchlickFresnelReflectRoughnessTerm(ks, spotLDotH, roughness)
+    * SchlickGeometryModel(dot(toSpotLight, normal), dot(toEye, normal), roughness)
+    * NormalDistributionGGXTerm(spotNDotH, roughness)
+    / max((4 * spotLDotN * spotVDotN), 1E-6);
+    
+    color += (directDiffuseBRDF + directSpecularBRDF) * spotLightPower * spotLDotN;
+    // ===================================================================================
     
     Result.f4Color = float4(color, 1.f);   
     Result.uiID = IDValues;

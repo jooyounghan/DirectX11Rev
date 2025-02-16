@@ -153,8 +153,11 @@
     <ClInclude Include="PSOEnumDefinition.h">
       <Filter>헤더 파일\PSOManager</Filter>
     </ClInclude>
-    <ClInclude Include="DeferredContext.h">
+    <ClInclude Include="BufferManager.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredContext.h">
+      <Filter>헤더 파일\DeferredContext</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -221,8 +224,11 @@
     <ClCompile Include="GraphicsPSOObject.cpp">
       <Filter>소스 파일\PSOManager</Filter>
     </ClCompile>
-    <ClCompile Include="DeferredContext.cpp">
+    <ClCompile Include="BufferManager.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredContext.cpp">
+      <Filter>소스 파일\DeferredContext</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
