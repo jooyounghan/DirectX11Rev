@@ -10,6 +10,7 @@
 #include "AssetManager.h"
 #include "TaskManager.h"
 #include "ComponentPSOManager.h"
+#include "SessionVariable.h"
 #include "SessionManager.h"
 #include "ComponentManager.h"
 
@@ -251,7 +252,7 @@ void GameEngine::CreateDeferredContext()
 
 void GameEngine::CreateSessionManager()
 {
-	m_sessionManager = new SessionManager("localhost", 33060, "gameEngineSession", "YHengine12!@");
+	m_sessionManager = new SessionManager("localhost", 33060, SESSION_NAME, SESSION_PWD);
 }
 
 void GameEngine::CreateAssetManager()

@@ -147,6 +147,7 @@
     <ClInclude Include="SchemaManager.h" />
     <ClInclude Include="DBErrorHandler.h" />
     <ClInclude Include="SessionManager.h" />
+    <ClInclude Include="SessionVariable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SchemaManager.cpp" />
