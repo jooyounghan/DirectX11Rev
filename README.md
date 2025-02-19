@@ -3,6 +3,11 @@
 
 본 포트폴리오는 **DirectX11** 기반의 엔진 프로그램을 개발하는 것을 목표로 한다.
 
+## Before Launch
+본 포트폴리오를 정상적으로 실행하기 위해서는 아래 절차를 먼저 수행해야한다.
+- GameEngine 폴더 내에 있는 `ComponentDBModels_example.sql` 파일을 통해 MySQL 쿼리문을 수행하여 포트폴리오를 위한 데이터베이스를 구축한다. 
+- DBManager 폴더 내에 있는 `SessionVariable.h` 파일을 통해 MySQL에 대한 세션 정보를 사용자에 맞게 설정한다.
+
 ## Features & Techniques
 - 본 포트폴리오는 다음과 같은 주요 기능과 기술을 구현하였다.
 	1. Collision(충돌 감지/처리)
