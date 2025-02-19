@@ -17,14 +17,3 @@ DirectX::BoundingBox ACollidableOrientedBox::GetBoundingBox(const float& margin)
 {
     return BoundingBox(Center, XMFLOAT3(Extents.x + margin, Extents.y + margin, Extents.z + margin));
 }
-
-void ACollidableOrientedBox::SetBoundingProperties(
-    const DirectX::XMVECTOR& center,
-    const DirectX::XMFLOAT3& extents,
-    const DirectX::XMVECTOR& rotationQuaternion
-)
-{
-    XMStoreFloat3(&Center, center);
-    Extents = extents;
-    XMStoreFloat4(&Orientation, rotationQuaternion);
-}

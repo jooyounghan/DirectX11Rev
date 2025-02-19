@@ -17,12 +17,3 @@ DirectX::BoundingBox ACollidableSphere::GetBoundingBox(const float& margin) cons
 {
 	return DirectX::BoundingBox(Center, XMFLOAT3(Radius + margin, Radius + margin, Radius + margin));
 }
-
-void ACollidableSphere::SetBoundingProperties(
-	const DirectX::XMVECTOR& center,
-	const float& radius
-)
-{
-	XMStoreFloat3(&Center, center);
-	Radius = radius;
-}

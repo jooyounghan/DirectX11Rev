@@ -127,19 +127,19 @@ void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
 
 void ComponentInitializer::InitBaseComponent(AComponent* component)
 {
-	component->UpdateAbsoluteEntities();
-	component->UpdateComponentTransformation();
-	DynamicBuffer* transformationBuffer = component->GetTransformationBuffer();
-	DynamicBuffer* comopnentBuffer = component->GetComponentBuffer();
+	component->UpdateEntity();
+	DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
+	DynamicBuffer& comopnentEntityBuffer = component->GetComponentEntityBuffer();
 
-	transformationBuffer->InitializeBuffer(m_deviceCached);
-	comopnentBuffer->InitializeBuffer(m_deviceCached);
+	transformationEntityBuffer.InitializeBuffer(m_deviceCached);
+	comopnentEntityBuffer.InitializeBuffer(m_deviceCached);
 }
 
 void ComponentInitializer::InitViewComponent(AViewComponent* viewComponent)
 {
 	viewComponent->UpdateViewEntity();
 	DynamicBuffer* viewProjMatrixBuffer = viewComponent->GetViewProjMatrixBuffer();
+
 	viewProjMatrixBuffer->InitializeBuffer(m_deviceCached);
 }
 

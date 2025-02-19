@@ -106,7 +106,7 @@ void ComponentDBCreator::AddComponent(Scene* scene, AComponent* parentComponent,
 
 	const XMVECTOR& position = component->GetLocalPosition();
 	const XMVECTOR& angle = component->GetLocalAngle();
-	const XMVECTOR& scale = component->GetLocalScale();
+	const XMVECTOR& scale = component->GetScale();
 
 	componentsTable.insert("component_id", "parent_component_id", "component_name", 
 		"position_x", "position_y", "position_z",

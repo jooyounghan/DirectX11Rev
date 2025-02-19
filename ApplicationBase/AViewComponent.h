@@ -34,7 +34,6 @@ public:
 
 protected:
 	float m_fovAngle;
-	static ConstantBuffer* ScreenQuadBuffer;
 
 public:
 	inline const float& GetFovAngle() { return m_fovAngle; }

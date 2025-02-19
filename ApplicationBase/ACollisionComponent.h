@@ -11,7 +11,8 @@ public:
 		const std::string& componentName,
 		const uint32_t& componentID,
 		const DirectX::XMFLOAT3& localPosition,
-		const DirectX::XMFLOAT3& localAngle
+		const DirectX::XMFLOAT3& localAngle,
+		const DirectX::XMFLOAT3& scale
 	);
 	~ACollisionComponent() override;
 

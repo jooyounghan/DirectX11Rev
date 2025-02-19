@@ -172,9 +172,9 @@ void ASceneRenderer::RenderCollisionComponent(ACollisionComponent* collisionComp
 
                 vector<ID3D11Buffer*> vsConstantBuffers{
                     cameraComponent->GetViewProjMatrixBuffer()->GetBuffer(),
-                    collisionComponent->GetTransformationBuffer()->GetBuffer()
+                    collisionComponent->GetTransformationEntityBuffer().GetBuffer()
                 };
-                vector<ID3D11Buffer*> psConstantBuffers{ collisionComponent->GetComponentBuffer()->GetBuffer() };
+                vector<ID3D11Buffer*> psConstantBuffers{ collisionComponent->GetComponentEntityBuffer().GetBuffer() };
 
                 deviceContext->VSSetConstantBuffers(0, static_cast<UINT>(vsConstantBuffers.size()), vsConstantBuffers.data());
                 deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());

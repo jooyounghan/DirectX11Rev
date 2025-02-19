@@ -2,6 +2,7 @@
 
 #include "AComponent.h"
 #include "BoneAsset.h"
+#include "SkeletalMeshComponent.h"
 #include "AnimationAsset.h"
 
 #include "StructuredBuffer.h"
@@ -9,8 +10,8 @@
 using namespace std;
 using namespace DirectX;
 
-AnimationPlayer::AnimationPlayer(AComponent* parentcomponent, const BoneAsset* boneAsset)
-	: m_parentcomponent(parentcomponent), m_boneAssetCached(boneAsset)
+AnimationPlayer::AnimationPlayer(SkeletalMeshComponent* skeletalMeshComponent, const BoneAsset* boneAsset)
+	: m_parentSkeletalMeshComponent(skeletalMeshComponent), m_boneAssetCached(boneAsset)
 {
 }
 
@@ -21,7 +22,7 @@ void AnimationPlayer::PlayAnimation(const AnimationAsset* animationAssetIn, cons
 		m_animationAssetCached = animationAssetIn;
 		m_playCount = playCountIn;
 		m_playTime = 0.f;
-		m_parentcomponent->SetIsModified(true);
+		m_parentSkeletalMeshComponent->SetIsModified(true);
 	}
 }
 

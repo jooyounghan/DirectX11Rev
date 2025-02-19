@@ -9,23 +9,28 @@ public:
 		const std::string& componentName,
 		const uint32_t& componentID,
 		const DirectX::XMFLOAT3& localPosition,
+		const DirectX::XMFLOAT3& scale,
 		const float& radius
 	);
 	~SphereCollisionComponent() override;
 
-public:
-	virtual bool GetDefaultRenderable() override;
+protected:
+	float m_radius;
 
 public:
+	inline void SetRadius(const float& radius) { m_radius = radius; }
+	inline const float& GetRadius() { return m_radius; }
+
+public:
+	virtual DirectX::XMMATRIX GetLocalTransformation() const override;
+	virtual bool GetDefaultRenderable() const override;
 	virtual void Accept(IComponentVisitor* visitor) override;
-
-public:
-	virtual void UpdateAbsoluteEntities() override;
-	virtual void UpdateComponentTransformation() override;
+	virtual void UpdateEntity() override;
 
 public:
 	virtual void SetCollisionOption(ICollisionOption* collisionOption) override;
 	virtual void UpdateBoundingVolumeHierarchy() override;
+	virtual void UpdateBoundingProperty() override;
 	virtual void OnCollide(ICollisionAcceptor* accpetor) override;
 };
 

@@ -9,11 +9,13 @@ SphereCollisionComponent::SphereCollisionComponent(
 	const string& componentName, 
 	const uint32_t& componentID, 
 	const XMFLOAT3& localPosition, 
+	const XMFLOAT3& scale,
 	const float& radius
 )
-	: ACollisionComponent(componentName, componentID, localPosition, XMFLOAT3(0.f, 0.f, 0.f))
+	: ACollisionComponent(componentName, componentID, localPosition, XMFLOAT3(0.f, 0.f, 0.f), scale),
+	m_radius(radius)
 {
-	SetBoundingProperties(m_localPosition, radius);
+	UpdateBoundingProperty();
 }
 
 SphereCollisionComponent::~SphereCollisionComponent()
@@ -21,7 +23,17 @@ SphereCollisionComponent::~SphereCollisionComponent()
 	m_collisionOption->RemoveBVHImpl(this);
 }
 
-bool SphereCollisionComponent::GetDefaultRenderable()
+DirectX::XMMATRIX SphereCollisionComponent::GetLocalTransformation() const
+{
+	return XMMatrixAffineTransformation(
+		XMVectorScale(m_scale, m_radius),
+		XMQuaternionIdentity(),
+		GetLocalRotationQuaternion(),
+		m_localPosition
+	);
+}
+
+bool SphereCollisionComponent::GetDefaultRenderable() const
 {
 	return false;
 }
@@ -31,17 +43,10 @@ void SphereCollisionComponent::Accept(IComponentVisitor* visitor)
 	visitor->Visit(this);
 }
 
-void SphereCollisionComponent::UpdateAbsoluteEntities()
+void SphereCollisionComponent::UpdateEntity()
 {
-	AComponent::UpdateAbsoluteEntities();
-	SetBoundingProperties(m_absolutePosition, Radius);
-}
-
-void SphereCollisionComponent::UpdateComponentTransformation()
-{
-	m_transformation.m_transformation = XMMatrixScaling(Radius, Radius, Radius) * GetAbsoluteTransformation();
-	m_transformation.m_invTransformation = XMMatrixInverse(nullptr, m_transformation.m_transformation);
-	m_transformation.m_transformation = XMMatrixTranspose(m_transformation.m_transformation);
+	AComponent::UpdateEntity();
+	UpdateBoundingProperty();
 }
 
 void SphereCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)
@@ -54,6 +59,12 @@ void SphereCollisionComponent::SetCollisionOption(ICollisionOption* collisionOpt
 void SphereCollisionComponent::UpdateBoundingVolumeHierarchy()
 {
 	m_collisionOption->UpdateBVHImpl(this);
+}
+
+void SphereCollisionComponent::UpdateBoundingProperty()
+{
+	XMStoreFloat3(&Center, m_absolutePosition);
+	Radius = m_scale.m128_f32[0] * m_radius;
 }
 
 void SphereCollisionComponent::OnCollide(ICollisionAcceptor* accpetor)

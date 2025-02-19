@@ -6,6 +6,7 @@
 
 class Bone;
 class BoneAsset;
+class SkeletalMeshComponent;
 class AnimationAsset;
 class StructuredBuffer;
 
@@ -22,17 +23,18 @@ class AComponent;
 class AnimationPlayer
 {
 public:
-	AnimationPlayer(AComponent* parentcomponent, const BoneAsset* boneAsset);
+	AnimationPlayer(SkeletalMeshComponent* skeletalMeshComponent, const BoneAsset* boneAsset);
 	~AnimationPlayer() = default;
 
 protected:
-	AComponent* m_parentcomponent = nullptr;
+	AComponent*				m_parentSkeletalMeshComponent = nullptr;
 	const BoneAsset*		m_boneAssetCached = nullptr;
 	const AnimationAsset*	m_animationAssetCached = nullptr;
-	size_t m_playCount = false;
-	float m_playTime = 0.f;
-	bool m_firstUpdated = false;
-//	std::unordered_map<std::string, AnimationNotify> AnimNotifies;
+	size_t					m_playCount = false;
+	float					m_playTime = 0.f;
+	bool					m_firstUpdated = false;
+
+	//	std::unordered_map<std::string, AnimationNotify> AnimNotifies;
 
 protected:
 	std::vector<DirectX::XMMATRIX>	m_boneTransformation;

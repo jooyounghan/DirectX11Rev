@@ -70,13 +70,12 @@ void ComponentUpdater::Visit(PointLightComponent* pointLightComponent)
 
 void ComponentUpdater::UpdateBaseComponent(AComponent* component)
 {
-	DynamicBuffer* componentBuffer = component->GetComponentBuffer();
-	componentBuffer->Upload(m_deviceContextCached);
+	DynamicBuffer& componentEntityBuffer = component->GetComponentEntityBuffer();
+	componentEntityBuffer.Upload(m_deviceContextCached);
 
-	component->UpdateAbsoluteEntities();
-	component->UpdateComponentTransformation();
-	DynamicBuffer* transformationBuffer = component->GetTransformationBuffer();
-	transformationBuffer->Upload(m_deviceContextCached);
+	component->UpdateEntity();
+	DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
+	transformationEntityBuffer.Upload(m_deviceContextCached);
 }
 
 void ComponentUpdater::UpdateViewComponent(AViewComponent* viewComponent)

@@ -10,23 +10,28 @@ public:
 		const uint32_t& componentID,
 		const DirectX::XMFLOAT3& localPosition,
 		const DirectX::XMFLOAT3& localAngle,
-		const DirectX::XMFLOAT3& extends
+		const DirectX::XMFLOAT3& scale,
+		const DirectX::XMFLOAT3& extents
 	);
 	~OrientedBoxCollisionComponent() override;
 
-public:
-	virtual bool GetDefaultRenderable() override;
+protected:
+	DirectX::XMVECTOR m_extents;
 
 public:
+	inline void SetExtents(const DirectX::XMVECTOR& extents) { m_extents = extents; }
+	const DirectX::XMVECTOR& GetExtents() { return m_extents; }
+
+public:
+	virtual DirectX::XMMATRIX GetLocalTransformation() const override;
+	virtual bool GetDefaultRenderable() const override;
 	virtual void Accept(IComponentVisitor* visitor) override;
-
-public:
-	virtual void UpdateAbsoluteEntities() override;
-	virtual void UpdateComponentTransformation() override;
+	virtual void UpdateEntity() override;
 
 public:
 	virtual void SetCollisionOption(ICollisionOption* collisionOption) override;
 	virtual void UpdateBoundingVolumeHierarchy() override;
+	virtual void UpdateBoundingProperty() override;
 	virtual void OnCollide(ICollisionAcceptor* accpetor) override;
 };
 
