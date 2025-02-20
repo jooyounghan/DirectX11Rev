@@ -39,7 +39,6 @@ void ComponentDBUpdater::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 void ComponentDBUpdater::Visit(CameraComponent* cameraComponent)
 {
 	UpdateComponent(cameraComponent);
-	UpdateViewComponent(cameraComponent);
 	UpdateCameraComponent(cameraComponent);
 }
 
@@ -58,14 +57,14 @@ void ComponentDBUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisi
 void ComponentDBUpdater::Visit(SpotLightComponent* spotLightComponent)
 {
 	UpdateComponent(spotLightComponent);
-	UpdateViewComponent(spotLightComponent);
-	UpdateLightEntity(spotLightComponent, spotLightComponent);
+	UpdateLightComponent(spotLightComponent);
+	UpdateSpotLightComponent(spotLightComponent);
 }
 
 void ComponentDBUpdater::Visit(PointLightComponent* pointLightComponent)
 {
 	UpdateComponent(pointLightComponent);
-	UpdateLightEntity(pointLightComponent, pointLightComponent);
+	UpdateLightComponent(pointLightComponent);
 }
 
 void ComponentDBUpdater::UpdateComponent(AComponent* component)
@@ -77,7 +76,7 @@ void ComponentDBUpdater::UpdateComponent(AComponent* component)
 		
 	const XMVECTOR& position = component->GetLocalPosition();
 	const XMVECTOR& angle = component->GetLocalAngle();
-	const XMVECTOR& scale = component->GetLocalScale();
+	const XMVECTOR& scale = component->GetScale();
 
 	componentTable.update()
 		.set("position_x", position.m128_f32[0])
@@ -137,25 +136,16 @@ void ComponentDBUpdater::UpdateSkeletalMeshComponent(SkeletalMeshComponent* skel
 		.bind("skeletal_mesh_component_id", componentID).execute();
 }
 
-void ComponentDBUpdater::UpdateViewComponent(AViewComponent* viewComponent)
-{
-	const uint32_t& componentID = viewComponent->GetComponentID();
-	const std::string viewComponentTableName = "view_components";
-	Table viewComponentTable = m_schemaCached->getTable(viewComponentTableName, true);
-	viewComponentTable.update()
-		.set("width", viewComponent->Width)
-		.set("height", viewComponent->Height)
-		.set("fov_angle", viewComponent->GetFovAngle())
-		.where("view_component_id = :view_component_id")
-		.bind("view_component_id", componentID).execute();
-}
-
 void ComponentDBUpdater::UpdateCameraComponent(CameraComponent* cameraComponent)
 {
 	const uint32_t& componentID = cameraComponent->GetComponentID();
 	const std::string cameraTableName = "camera_components";
+	const D3D11_VIEWPORT& viewport = cameraComponent->GetViewport();
 	Table cameraTable = m_schemaCached->getTable(cameraTableName, true);
 	cameraTable.update()
+		.set("width", viewport.Width)
+		.set("height", viewport.Height)
+		.set("fov_angle", cameraComponent->GetFovAngle())
 		.set("near_z", cameraComponent->GetNearZ())
 		.set("far_z", cameraComponent->GetFarZ())
 		.where("camera_component_id = :camera_component_id")
@@ -186,20 +176,35 @@ void ComponentDBUpdater::UpdateOrientedBoxCollisionComponent(OrientedBoxCollisio
 		.bind("oriented_box_collision_component_id", componentID).execute();
 }
 
-void ComponentDBUpdater::UpdateLightEntity(AComponent* component, LightEntity* ligthEntity)
+void ComponentDBUpdater::UpdateLightComponent(LightComponent* ligthComponent)
 {
-	const uint32_t& componentID = component->GetComponentID();
+	const uint32_t& componentID = ligthComponent->GetComponentID();
 
-	const std::string lightsTableName = "lights";
-	Table lightsTable = m_schemaCached->getTable(lightsTableName, true);
+	const std::string lightComponentTableName = "light_components";
+	Table lightComponentTable = m_schemaCached->getTable(lightComponentTableName, true);
 
-	const SLightEntity& lightEntityValue = ligthEntity->GetLightEntity();
+	SLightEntity* lightEntity = ligthComponent->GetLightEntityAddress();
 
-	lightsTable.update()
-		.set("light_power", lightEntityValue.m_lightPower)
-		.set("falloff_start", lightEntityValue.m_fallOffStart)
-		.set("falloff_end", lightEntityValue.m_fallOffEnd)
-		.set("spot_power", lightEntityValue.m_spotPower)
+	lightComponentTable.update()
+		.set("light_power", lightEntity->m_lightPower)
+		.set("falloff_start", lightEntity->m_fallOffStart)
+		.set("falloff_end", lightEntity->m_fallOffEnd)
+		.set("spot_power", lightEntity->m_spotPower)
 		.where("light_component_id = :light_component_id")
 		.bind("light_component_id", componentID).execute();
+}
+
+void ComponentDBUpdater::UpdateSpotLightComponent(SpotLightComponent* spotLigthComponent)
+{
+	const uint32_t& componentID = spotLigthComponent->GetComponentID();
+
+	const std::string spotLightComponentTableName = "spot_light_components";
+	Table spotLightComponentTable = m_schemaCached->getTable(spotLightComponentTableName, true);
+
+	const float& fovAngle = spotLigthComponent->GetFovAngle();
+
+	spotLightComponentTable.update()
+		.set("fov_angle", fovAngle)
+		.where("spot_light_component_id = :spot_light_component_id")
+		.bind("spot_light_component_id", componentID).execute();
 }

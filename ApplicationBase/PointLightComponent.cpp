@@ -1,105 +1,90 @@
 #include "PointLightComponent.h"
 
-#include "Texture2DInstance.h"
-#include "SRVOption.h"
-#include "DSVOption.h"
-
 #include "DepthTestRenderer.h"
 #include "RenderControlOption.h"
-
-#include "DynamicBuffer.h"
+#include "StructuredBuffer.h"
 
 using namespace std;
 using namespace DirectX;
 
-PointLightFrustumPart::PointLightFrustumPart(
-	const XMFLOAT3& rotationRadian, 
-	D3D11_VIEWPORT& viewport,
-	XMVECTOR& absolutePosition,
-	float& fallOffEnd
+PointLightFrustum::PointLightFrustum(
+	const XMVECTOR& absolutePositionCached,
+	const XMVECTOR& absoluteRadianOffset,
+	const float& fallOffEndCached,
+	SViewEntity* viewEntityCached
 )
-	: m_rotationRadian(rotationRadian), m_viewport(viewport), m_absolutePosition(absolutePosition), m_fallOffEnd(fallOffEnd)
+	: m_absolutePositionCached(absolutePositionCached), 
+	m_absoluteRadianOffset(absoluteRadianOffset),
+	m_fallOffEndCached(fallOffEndCached),
+	m_viewEntityCached(viewEntityCached)
 {
 }
 
-DirectX::XMMATRIX PointLightFrustumPart::GetViewMatrix() const
-{
-	const XMVECTOR quaternion = XMQuaternionRotationRollPitchYaw(
-		m_rotationRadian.x,
-		m_rotationRadian.y,
-		m_rotationRadian.z
-	);
-
+void PointLightFrustum::UpdateViewEntity()
+{	
+	const XMVECTOR quaternion = XMQuaternionRotationRollPitchYawFromVector(m_absoluteRadianOffset);
 	XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
 	XMVECTOR currentUp = XMVector3Rotate(GDefaultUp, quaternion);
-	return XMMatrixLookToLH(m_absolutePosition, currentForward, currentUp);
+
+	m_viewMatrix = XMMatrixLookToLH(m_absolutePositionCached, currentForward, currentUp);
+	m_projMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(90.f), 1.f, GDefaultNearZ, m_fallOffEndCached);
+
+	m_viewEntityCached->m_viewProj = m_viewMatrix * m_projMatrix;
+	m_viewEntityCached->m_invViewProj = XMMatrixInverse(nullptr, m_viewEntityCached->m_viewProj);
+	m_viewEntityCached->m_viewProj = XMMatrixTranspose(m_viewEntityCached->m_viewProj);
+
+	XMStoreFloat3(&m_viewEntityCached->m_viewPosition, m_absolutePositionCached);
+
+	UpdateBoundingProperty();
 }
 
-DirectX::XMMATRIX PointLightFrustumPart::GetProjectionMatrix() const
+void PointLightFrustum::UpdateBoundingProperty()
 {
-	return XMMatrixPerspectiveFovLH(XMConvertToRadians(90.f), m_viewport.Width / m_viewport.Height, 0.01f, m_fallOffEnd);
+	BoundingFrustum::CreateFromMatrix(*this, m_projMatrix);
+	this->Transform(*this, XMMatrixInverse(nullptr, m_viewMatrix));
 }
 
-void PointLightFrustumPart::UpdateViewEntity()
-{
-	const XMMATRIX viewMatrix = GetViewMatrix();
-	const XMMATRIX projectionMatrix = GetProjectionMatrix();
-
-	UpdateViewEntityImpl(viewMatrix, projectionMatrix, m_absolutePosition);
-
-	BoundingFrustum::CreateFromMatrix(*this, projectionMatrix);
-	this->Transform(*this, XMMatrixInverse(nullptr, viewMatrix));
-}
-
-void PointLightFrustumPart::OnCollide(ICollisionAcceptor*)
+void PointLightFrustum::OnCollide(ICollisionAcceptor*)
 {
 }
-
 
 PointLightComponent::PointLightComponent(
-	const std::string& componentName,
+	const string& componentName,
 	const uint32_t& componentID,
-	const XMFLOAT3& position,
-	const XMFLOAT3& angle,
-	const XMFLOAT3& scale,
-	const uint32_t& width,
-	const uint32_t& height
+	const XMFLOAT3& localPosition,
+	const float& lightPower,
+	const float& fallOffStart,
+	const float& fallOffEnd,
+	const float& spotPower,
+	const uint32_t& lightIndex,
+	SLightEntity* lightEntityCached,
+	StructuredBuffer* lightEntityCachedBuffer,
+	const array<SViewEntity*, 6>& viewEntityCached,
+	StructuredBuffer* viewCubeEntityCachedBuffer
 )
-	: AComponent(componentName, componentID, position, angle, scale),
-	m_pointLightFrustumPart{
-		PointLightFrustumPart(XMFLOAT3(0.0f, XM_PIDIV2, 0.0f), m_viewport, m_absolutePosition, m_lightEntity.m_fallOffEnd),
-		PointLightFrustumPart(XMFLOAT3(0.0f, -XM_PIDIV2, 0.0f), m_viewport, m_absolutePosition, m_lightEntity.m_fallOffEnd),
-		PointLightFrustumPart(XMFLOAT3(-XM_PIDIV2, 0.0f, 0.0f), m_viewport, m_absolutePosition, m_lightEntity.m_fallOffEnd),
-		PointLightFrustumPart(XMFLOAT3(XM_PIDIV2, 0.0f, 0.0f), m_viewport, m_absolutePosition, m_lightEntity.m_fallOffEnd),
-		PointLightFrustumPart(XMFLOAT3(0.0f, 0.f, 0.0f), m_viewport, m_absolutePosition, m_lightEntity.m_fallOffEnd),
-		PointLightFrustumPart(XMFLOAT3(0.0f, XM_PI, 0.0f), m_viewport, m_absolutePosition, m_lightEntity.m_fallOffEnd)
-	}
+	: LightComponent(componentName, componentID, localPosition, XMFLOAT3(0.f, 0.f, 0.f), lightPower, 
+		fallOffStart, fallOffEnd, spotPower, lightIndex, lightEntityCached, lightEntityCachedBuffer
+	), m_viewport{ 0.f, 0.f, static_cast<FLOAT>(GDefaultShadowMapWidth), static_cast<FLOAT>(GDefaultShadowMapHeight), 0.f, 1.f },
+	m_pointLightFrustums{
+		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, XM_PIDIV2, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntityCached[0]),
+		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, -XM_PIDIV2, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntityCached[1]),
+		PointLightFrustum(m_absolutePosition, XMVectorSet(-XM_PIDIV2, 0.0f, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntityCached[2]),
+		PointLightFrustum(m_absolutePosition, XMVectorSet(XM_PIDIV2, 0.0f, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntityCached[3]),
+		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, 0.f, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntityCached[4]),
+		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, XM_PI, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntityCached[5]),
+	},
+	m_viewCubeEntityCachedBuffer(viewCubeEntityCachedBuffer),
+	m_deptTestViewCube(GDefaultShadowMapWidth, GDefaultShadowMapHeight, 6, 1, NULL, D3D11_RESOURCE_MISC_TEXTURECUBE, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_TYPELESS, D3D11_BIND_DEPTH_STENCIL)
 {
-	m_viewport.TopLeftX = 0.f;
-	m_viewport.TopLeftY = 0.f;
-	m_viewport.Width = static_cast<float>(width);
-	m_viewport.Height = static_cast<float>(height);
-	m_viewport.MinDepth = 0.f;
-	m_viewport.MaxDepth = 1.f;
 }
 
-PointLightComponent::~PointLightComponent()
-{
-	if (m_deptTestViewCube) delete m_deptTestViewCube;
-}
-
-void PointLightComponent::SetDepthTestViewCube(Texture2DInstance<SRVOption>* depthTestViewCube)
-{
-	if (m_deptTestViewCube) delete m_deptTestViewCube;
-	m_deptTestViewCube = depthTestViewCube;
-}
-
-void PointLightComponent::UpdatePointLightParts()
+void PointLightComponent::UpdatePointLightFrustums()
 {
 	for (size_t idx = 0; idx < 6; ++idx)
 	{
-		m_pointLightFrustumPart[idx].UpdateViewEntity();
+		m_pointLightFrustums[idx].UpdateViewEntity();
 	}
+	SetModifiedOption(GetComponentUpdateOption(EPointLightComponentUpdateOption::VIEW_ENTITY));
 }
 
 void PointLightComponent::Accept(IComponentVisitor* visitor)
@@ -108,22 +93,24 @@ void PointLightComponent::Accept(IComponentVisitor* visitor)
 }
 
 void PointLightComponent::GenerateShadowMap(
-	ID3D11DeviceContext* const* deviceContextAddress, 
+	ID3D11DeviceContext* deviceContext, 
 	ComponentPSOManager* componentPsoManager, 
 	const vector<AComponent*>& components
 )
 {
 	for (size_t idx = 0; idx < 6; ++idx)
 	{
-		PointLightFrustumPart& pointLightFrustumPart = m_pointLightFrustumPart[idx];
-		vector<AComponent*> renderableComponents = RenderControlOption::GetRenderableComponents(m_parentSceneID, &pointLightFrustumPart, components);
+		PointLightFrustum& pointLightFrustum = m_pointLightFrustums[idx];
+		vector<AComponent*> renderableComponents = RenderControlOption::GetRenderableComponents(m_parentSceneID, &pointLightFrustum, components);
 
-		(*deviceContextAddress)->ClearDepthStencilView(pointLightFrustumPart.GetDepthTestDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+		deviceContext->ClearDepthStencilView(pointLightFrustum.GetDepthTestDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 		DepthTestRenderer depthTestRenderer = DepthTestRenderer(
-			deviceContextAddress, componentPsoManager,
-			pointLightFrustumPart.GetViewProjMatrixBuffer()->GetBuffer(),
+			deviceContext, componentPsoManager,
+			m_componentEntityBuffer.GetBuffer(),
+			m_viewCubeEntityCachedBuffer->GetSRV(),
+			m_lightEntityCachedBuffer->GetSRV(),
 			&m_viewport,
-			pointLightFrustumPart.GetDepthTestDSV()
+			pointLightFrustum.GetDepthTestDSV()
 		);
 
 		for (AComponent* renderableComponent : renderableComponents)

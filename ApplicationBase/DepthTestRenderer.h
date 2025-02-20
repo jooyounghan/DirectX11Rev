@@ -2,6 +2,7 @@
 #include "IComponentVisitor.h"
 
 struct ID3D11Buffer;
+struct ID3D11ShaderResourceView;
 struct ID3D11DeviceContext;
 struct ID3D11DepthStencilView;
 struct D3D11_VIEWPORT;
@@ -14,19 +15,23 @@ class DepthTestRenderer : public IComponentVisitor
 {
 public:
 	DepthTestRenderer(
-		ID3D11DeviceContext* const* deviceContextAddress,
+		ID3D11DeviceContext* deviceContext,
 		ComponentPSOManager* componentPsoManager,
-		ID3D11Buffer* viewProjMatrix,
-		D3D11_VIEWPORT* viewport,
+		ID3D11Buffer* componentEntityBuffer,
+		ID3D11ShaderResourceView* const viewEntityStructuredBuffer,
+		ID3D11ShaderResourceView* const lightEntityStructuredBuffer,
+		const D3D11_VIEWPORT* viewport,
 		ID3D11DepthStencilView* depthStencilView
 	);
 	~DepthTestRenderer() override = default;
 
 protected:
-	ID3D11DeviceContext* const* m_deviceContextAddress = nullptr;
+	ID3D11DeviceContext* m_deviceContext = nullptr;
 	ComponentPSOManager* m_componentPsoManagerCached = nullptr;
-	ID3D11Buffer* m_viewProjMatrix = nullptr;
-	D3D11_VIEWPORT* m_viewport = nullptr;
+	ID3D11Buffer* m_componentEntityBuffer = nullptr;
+	ID3D11ShaderResourceView* const m_viewEntityStructuredBuffer = nullptr;
+	ID3D11ShaderResourceView* const m_lightEntityStructuredBuffer = nullptr;
+	const D3D11_VIEWPORT* m_viewport = nullptr;
 	ID3D11DepthStencilView* m_depthStencilView = nullptr;
 
 public:
@@ -45,8 +50,5 @@ public:
 	virtual void Visit(PointLightComponent* pointLightComponent) override;
 
 protected:
-	void DepthTestMeshParts(
-		ID3D11DeviceContext* const deviceContext,
-		const AMeshPartsData* const meshPartsData
-	);
+	void DepthTestMeshParts(const AMeshPartsData* const meshPartsData);
 };

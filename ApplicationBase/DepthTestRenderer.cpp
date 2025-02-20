@@ -23,15 +23,19 @@
 using namespace std;
 
 DepthTestRenderer::DepthTestRenderer(
-	ID3D11DeviceContext* const* deviceContextAddress, 
-	ComponentPSOManager* componentPsoManager, 
-    ID3D11Buffer* viewProjMatrix,
-    D3D11_VIEWPORT* viewport,
+    ID3D11DeviceContext* deviceContext,
+    ComponentPSOManager* componentPsoManager,
+    ID3D11Buffer* componentEntityBuffer,
+    ID3D11ShaderResourceView* const viewEntityStructuredBuffer,
+    ID3D11ShaderResourceView* const lightEntityStructuredBuffer,
+    const D3D11_VIEWPORT* viewport,
     ID3D11DepthStencilView* depthStencilView
 )
-    : m_deviceContextAddress(deviceContextAddress),
+    : m_deviceContext(deviceContext),
     m_componentPsoManagerCached(componentPsoManager),
-    m_viewProjMatrix(viewProjMatrix),
+    m_componentEntityBuffer(componentEntityBuffer),
+    m_viewEntityStructuredBuffer(viewEntityStructuredBuffer),
+    m_lightEntityStructuredBuffer(lightEntityStructuredBuffer),
     m_viewport(viewport),
     m_depthStencilView(depthStencilView)
 {
@@ -42,29 +46,33 @@ void DepthTestRenderer::Visit(StaticMeshComponent* staticMeshComponent)
     static GraphicsPSOObject* staticMeshGraphicsPSOObject
         = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::STATIC_MESH_DEPTH_TEST);
 
-    ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
-
     if (staticMeshComponent != nullptr)
     {
         if (const StaticMeshAsset* staticMeshAsset = staticMeshComponent->GetStaticMetalAsset())
         {
             if (AMeshPartsData* meshPartsData = staticMeshAsset->GetMeshPartData(NULL))
             {
-                staticMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
+                staticMeshGraphicsPSOObject->ApplyPSOObject(m_deviceContext);
 
                 ID3D11RenderTargetView* nullRTV = nullptr;
-                deviceContext->OMSetRenderTargets(0, &nullRTV, m_depthStencilView);
-                deviceContext->RSSetViewports(1, m_viewport);
+                m_deviceContext->OMSetRenderTargets(0, &nullRTV, m_depthStencilView);
+                m_deviceContext->RSSetViewports(1, m_viewport);
 
                 // =============================== VS ===============================
                 vector<ID3D11Buffer*> vsConstantBuffers{
-                    m_viewProjMatrix,
-                    staticMeshComponent->GetTransformationBuffer()->GetBuffer()
+                    m_componentEntityBuffer,
+                    staticMeshComponent->GetTransformationEntityBuffer().GetBuffer()
                 };
-                deviceContext->VSSetConstantBuffers(0, 2, vsConstantBuffers.data());
+                vector<ID3D11ShaderResourceView*> vsSRVs{
+                    m_viewEntityStructuredBuffer,
+                    m_lightEntityStructuredBuffer
+                };
+
+                m_deviceContext->VSSetConstantBuffers(0, static_cast<UINT>(vsConstantBuffers.size()), vsConstantBuffers.data());
+                m_deviceContext->VSSetShaderResources(0, static_cast<UINT>(vsSRVs.size()), vsSRVs.data());
                 // ===================================================================
 
-                DepthTestMeshParts(deviceContext, meshPartsData);
+                DepthTestMeshParts(meshPartsData);
             }
         }
     }
@@ -76,32 +84,35 @@ void DepthTestRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
     static GraphicsPSOObject* skeletalMeshGraphicsPSOObject
         = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::SKELETAL_MESH_DEPTH_TEST);
 
-    ID3D11DeviceContext* const deviceContext = *m_deviceContextAddress;
-
     if (skeletalMeshComponent != nullptr)
     {
         if (const SkeletalMeshAsset* skeletalMeshAsset = skeletalMeshComponent->GetSkeletalMetalAsset())
         {
             if (AMeshPartsData* meshPartsData = skeletalMeshAsset->GetMeshPartData(NULL))
             {
-                skeletalMeshGraphicsPSOObject->ApplyPSOObject(deviceContext);
+                skeletalMeshGraphicsPSOObject->ApplyPSOObject(m_deviceContext);
 
                 ID3D11RenderTargetView* nullRTV = nullptr;
-                deviceContext->OMSetRenderTargets(0, &nullRTV, m_depthStencilView);
-                deviceContext->RSSetViewports(1, m_viewport);
+                m_deviceContext->OMSetRenderTargets(0, &nullRTV, m_depthStencilView);
+                m_deviceContext->RSSetViewports(1, m_viewport);
 
                 // =============================== VS ===============================
                 vector<ID3D11Buffer*> vsConstantBuffers{
-                    m_viewProjMatrix,
-                    skeletalMeshComponent->GetTransformationBuffer()->GetBuffer()
+                    m_componentEntityBuffer,
+                    skeletalMeshComponent->GetTransformationEntityBuffer().GetBuffer()
                 };
-                vector<ID3D11ShaderResourceView*> vsSRVs{ skeletalMeshComponent->GetAnimationPlayer()->GetBoneTransformationBuffer()->GetSRV() };
 
-                deviceContext->VSSetConstantBuffers(0, 2, vsConstantBuffers.data());
-                deviceContext->VSSetShaderResources(0, 1, vsSRVs.data());
+                vector<ID3D11ShaderResourceView*> vsSRVs{
+                    m_viewEntityStructuredBuffer,
+                    m_lightEntityStructuredBuffer,
+                    skeletalMeshComponent->GetAnimationPlayer()->GetBoneTransformationBuffer()->GetSRV()
+                };
+
+                m_deviceContext->VSSetConstantBuffers(0, static_cast<UINT>(vsConstantBuffers.size()), vsConstantBuffers.data());
+                m_deviceContext->VSSetShaderResources(0, static_cast<UINT>(vsSRVs.size()), vsSRVs.data());
                 // ===================================================================
 
-                DepthTestMeshParts(deviceContext, meshPartsData);
+                DepthTestMeshParts(meshPartsData);
             }
         }
     }
@@ -132,7 +143,7 @@ void DepthTestRenderer::Visit(PointLightComponent* pointLightComponent)
 	// Do Nothing
 }
 
-void DepthTestRenderer::DepthTestMeshParts(ID3D11DeviceContext* const deviceContext, const AMeshPartsData* const meshPartsData)
+void DepthTestRenderer::DepthTestMeshParts(const AMeshPartsData* const meshPartsData)
 {
     const size_t& meshPartCount = meshPartsData->GetPartsCount();
     const vector<UINT>& indicesOffsets = meshPartsData->GetIndexOffsets();
@@ -145,9 +156,9 @@ void DepthTestRenderer::DepthTestMeshParts(ID3D11DeviceContext* const deviceCont
     {
         const UINT indexCount = (idx + 1 == meshPartCount ? totalIndicesCount : indicesOffsets[idx + 1]) - indicesOffsets[idx];
 
-        deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
-        deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
-        deviceContext->DrawIndexed(indexCount, indicesOffsets[idx], NULL);
+        m_deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
+        m_deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
+        m_deviceContext->DrawIndexed(indexCount, indicesOffsets[idx], NULL);
         PerformanceAnalyzer::DepthTestDrawCount += indexCount;
     }
 }

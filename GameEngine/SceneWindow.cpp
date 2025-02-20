@@ -23,20 +23,20 @@ using namespace DirectX;
 
 SceneWindow::SceneWindow(
     const string& windowID,
-    ID3D11Device* const* deviceAddress,
-    ID3D11DeviceContext* const* immediateContextAddress,
-    ID3D11DeviceContext* const* componentRenderDeferredContextAddress,
+    ID3D11Device* device,
+    ID3D11DeviceContext* immediateContext,
+    ID3D11DeviceContext* componentRenderDeferredContext,
     ComponentManager* componentManager,
     ComponentPSOManager* componentPsoManager
 )
     : AWindow(windowID, true, nullptr),
-    m_immediateContextAddress(immediateContextAddress),
-    m_componentRenderDeferredContextAddress(componentRenderDeferredContextAddress),
+    m_immediateContext(immediateContext),
+    m_componentRenderDeferredContext(componentRenderDeferredContext),
     m_componentManagerCached(componentManager),
     m_componentPsoManageCached(componentPsoManager),
     m_componentHandler(componentManager),
-    m_forwardRenderer(componentRenderDeferredContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
-    m_DeferredRenderer(deviceAddress, componentRenderDeferredContextAddress, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
+    m_forwardRenderer(componentRenderDeferredContext, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
+    m_DeferredRenderer(device, componentRenderDeferredContext, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
     m_rendererComboBox.SetSelectableItems("Select Rederer", { "Forward Renderer", "Deferred Renderer" });
@@ -80,7 +80,7 @@ void SceneWindow::PrepareWindow()
         for (SpotLightComponent* spotLight : spotLights)
         {
             spotLight->GenerateShadowMap(
-                m_componentRenderDeferredContextAddress, 
+                m_componentRenderDeferredContext, 
                 m_componentPsoManageCached, 
                 sceneRootComponents
             );
@@ -89,7 +89,7 @@ void SceneWindow::PrepareWindow()
         for (PointLightComponent* pointLight : pointLights)
         {
             pointLight->GenerateShadowMap(
-                m_componentRenderDeferredContextAddress,
+                m_componentRenderDeferredContext,
                 m_componentPsoManageCached,
                 sceneRootComponents
             );
@@ -161,8 +161,8 @@ void SceneWindow::DrawScene()
     const ImVec2 cursorPos = GetCursorPos();
     const ImVec2 contentAvailRegion = GetContentRegionAvail();
 
-    const Texture2DInstance<SRVOption, RTVOption, UAVOption>* const film = m_selectedCamera->GetFilm();
-    Image((ImU64)(film != nullptr ? film->GetSRV() : nullptr), contentAvailRegion);
+    Texture2DInstance<SRVOption, RTVOption, UAVOption>& film = m_selectedCamera->GetFilm();
+    Image((ImU64)(film.GetSRV()), contentAvailRegion);
 
     if (m_isDeferredRenderer)
     {
@@ -290,7 +290,7 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
 
                 yaw += 360.f * (mouseDelta.x / size.x);
                 pitch += 360.f * (mouseDelta.y / size.y);
-                m_selectedCamera->SetIsModified(true);
+                m_selectedCamera->SetModifiedOption(GetComponentUpdateOption(ECameraComponentUpdateOption::VIEW_ENTITY));
             }
         }
 
@@ -318,7 +318,7 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
             {
                 relativePos += currentRight;
             }
-            m_selectedCamera->SetIsModified(true);
+            m_selectedCamera->SetModifiedOption(GetComponentUpdateOption(ECameraComponentUpdateOption::VIEW_ENTITY));
         }
     }
 }
@@ -330,16 +330,16 @@ uint32_t SceneWindow::GetMouseClickedComponentID()
     {
         ImGuiIO& io = GetIO();
     
-        ID3D11DeviceContext* immediateContext = (*m_immediateContextAddress);
-        ID3D11Texture2D* idFilm = m_selectedCamera->GetIDFilm()->GetTexture2D();
-        ID3D11Texture2D* idStagingFilm = m_selectedCamera->GetIDStatgingFilm()->GetTexture2D();
+        ID3D11Texture2D* idFilm = m_selectedCamera->GetIDFilm().GetTexture2D();
+        ID3D11Texture2D* idStagingFilm = m_selectedCamera->GetIDStatgingFilm().GetTexture2D();
 
         const ImVec2 windowPos = GetWindowPos();
         const ImVec2 windowSize = GetWindowSize();
         const ImVec2& mousePos = io.MousePos;
 
-        uint32_t posXOnWindow = static_cast<uint32_t>(((mousePos.x - windowPos.x) / windowSize.x) * m_selectedCamera->Width);
-        uint32_t posYOnWindow = static_cast<uint32_t>(((mousePos.y - windowPos.y) / windowSize.y) * m_selectedCamera->Height);
+        const D3D11_VIEWPORT& viewport = m_selectedCamera->GetViewport();
+        uint32_t posXOnWindow = static_cast<uint32_t>(((mousePos.x - windowPos.x) / windowSize.x) * viewport.Width);
+        uint32_t posYOnWindow = static_cast<uint32_t>(((mousePos.y - windowPos.y) / windowSize.y) * viewport.Height);
 
         D3D11_BOX BoxData;
         AutoZeroMemory(BoxData);
@@ -350,13 +350,13 @@ uint32_t SceneWindow::GetMouseClickedComponentID()
         BoxData.front = 0;
         BoxData.back = 1;
 
-        immediateContext->CopySubresourceRegion(idStagingFilm, 0, 0, 0, 0, idFilm, 0, &BoxData);
+        m_immediateContext->CopySubresourceRegion(idStagingFilm, 0, 0, 0, 0, idFilm, 0, &BoxData);
 
         D3D11_MAPPED_SUBRESOURCE idSelectedSubresource;
         AutoZeroMemory(idSelectedSubresource);
-        immediateContext->Map(idStagingFilm, 0, D3D11_MAP_READ, NULL, &idSelectedSubresource);
+        m_immediateContext->Map(idStagingFilm, 0, D3D11_MAP_READ, NULL, &idSelectedSubresource);
         memcpy(&IDResult, idSelectedSubresource.pData, sizeof(uint32_t));
-        immediateContext->Unmap(idStagingFilm, 0);
+        m_immediateContext->Unmap(idStagingFilm, 0);
     }
     return IDResult;
 }

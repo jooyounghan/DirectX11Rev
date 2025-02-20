@@ -17,12 +17,14 @@ ComponentUpdater::ComponentUpdater(ID3D11DeviceContext* deviceContext, const flo
 
 void ComponentUpdater::Visit(StaticMeshComponent* staticModelComponent)
 {
-	UpdateBaseComponent(staticModelComponent);
+	uint8_t modifiedOption = staticModelComponent->ComsumeModifiedOption();
+	UpdateBaseComponent(staticModelComponent, modifiedOption);
 }
 
 void ComponentUpdater::Visit(SkeletalMeshComponent* skeletalModelComponent)
 {
-	UpdateBaseComponent(skeletalModelComponent);
+	uint8_t modifiedOption = skeletalModelComponent->ComsumeModifiedOption();
+	UpdateBaseComponent(skeletalModelComponent, modifiedOption);
 
 	AnimationPlayer* animationPlayer = skeletalModelComponent->GetAnimationPlayer();
 	if (animationPlayer) animationPlayer->UpdateAnimationPlayer(m_deviceContextCached, m_deltaTime);
@@ -30,65 +32,83 @@ void ComponentUpdater::Visit(SkeletalMeshComponent* skeletalModelComponent)
 
 void ComponentUpdater::Visit(CameraComponent* cameraComponent)
 {
-	UpdateBaseComponent(cameraComponent);
-	UpdateViewComponent(cameraComponent);
+	uint8_t modifiedOption = cameraComponent->ComsumeModifiedOption();
+	UpdateBaseComponent(cameraComponent, modifiedOption);
+
+	if (modifiedOption & GetComponentUpdateOption(ECameraComponentUpdateOption::VIEW_ENTITY))
+	{
+		DynamicBuffer& viewEntityBufer = cameraComponent->GetViewEntityBuffer();
+		viewEntityBufer.Upload(m_deviceContextCached);
+	}
 }
 
 void ComponentUpdater::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
-	UpdateBaseComponent(sphereCollisionComponent);
-	sphereCollisionComponent->UpdateBoundingVolumeHierarchy();
+	uint8_t modifiedOption = sphereCollisionComponent->ComsumeModifiedOption();
+	UpdateBaseComponent(sphereCollisionComponent, modifiedOption);
+
+	if (modifiedOption & GetComponentUpdateOption(EComponentUpdateOption::TRANSFORMATION_ENTITY))
+	{
+		sphereCollisionComponent->UpdateBoundingVolumeHierarchy();
+	}
 }
 
 void ComponentUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
-	UpdateBaseComponent(orientedBoxCollisionComponent);
-	orientedBoxCollisionComponent->UpdateBoundingVolumeHierarchy();
+	uint8_t modifiedOption = orientedBoxCollisionComponent->ComsumeModifiedOption();
+	UpdateBaseComponent(orientedBoxCollisionComponent, modifiedOption);
+
+	if (modifiedOption & GetComponentUpdateOption(EComponentUpdateOption::TRANSFORMATION_ENTITY))
+	{
+		orientedBoxCollisionComponent->UpdateBoundingVolumeHierarchy();
+	}
 }
 
 void ComponentUpdater::Visit(SpotLightComponent* spotLightComponent)
 {
-	UpdateBaseComponent(spotLightComponent);
-	UpdateViewComponent(spotLightComponent);
-	UpdateLightComponent(spotLightComponent);
+	uint8_t modifiedOption = spotLightComponent->ComsumeModifiedOption();
+	UpdateBaseComponent(spotLightComponent, modifiedOption);
+
+	//if (modifiedOption & GetComponentUpdateOption(ELightComponentUpdateOption::LIGHT_ENTITY))
+	//{
+	//	DynamicBuffer* lightBuffer = lightComponent->GetLightEntityBuffer();
+	//	lightBuffer->Upload(m_deviceContextCached);
+	//}
+
+	//if (modifiedOption & GetComponentUpdateOption(ESpotLightComponentUpdateOption::VIEW_ENTITY))
+	//{
+	//	DynamicBuffer& viewEntityBufer = spotLightComponent->GetViewEntityBuffer();
+	//	viewEntityBufer.Upload(m_deviceContextCached);
+	//}
 }
 
 void ComponentUpdater::Visit(PointLightComponent* pointLightComponent)
 {
-	UpdateBaseComponent(pointLightComponent);
-	pointLightComponent->UpdatePointLightParts();
-	UpdateLightComponent(pointLightComponent);
+	uint8_t modifiedOption = pointLightComponent->ComsumeModifiedOption();
+	UpdateBaseComponent(pointLightComponent, modifiedOption);
 
-	for (size_t idx = 0; idx < 6; ++idx)
+	//pointLightComponent->UpdatePointLightParts();
+	//UpdateLightComponent(pointLightComponent);
+
+	//for (size_t idx = 0; idx < 6; ++idx)
+	//{
+	//	PointLightFrustum* pointLightFrustumPart = pointLightComponent->GetPointLightFrustumPart(idx);
+
+	//	DynamicBuffer* viewProjMatrixBuffer = pointLightFrustumPart->GetViewProjMatrixBuffer();
+	//	viewProjMatrixBuffer->Upload(m_deviceContextCached);
+	//}
+}
+
+void ComponentUpdater::UpdateBaseComponent(AComponent* component, const UINT8& modifiedOption)
+{
+	if (modifiedOption & GetComponentUpdateOption(EComponentUpdateOption::COMPONENT_ENTITY))
 	{
-		PointLightFrustumPart* pointLightFrustumPart = pointLightComponent->GetPointLightFrustumPart(idx);
-
-		DynamicBuffer* viewProjMatrixBuffer = pointLightFrustumPart->GetViewProjMatrixBuffer();
-		viewProjMatrixBuffer->Upload(m_deviceContextCached);
+		DynamicBuffer& componentEntityBuffer = component->GetComponentEntityBuffer();
+		componentEntityBuffer.Upload(m_deviceContextCached);
+	}
+	if (modifiedOption & GetComponentUpdateOption(EComponentUpdateOption::TRANSFORMATION_ENTITY))
+	{
+		DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
+		transformationEntityBuffer.Upload(m_deviceContextCached);
 	}
 }
-
-void ComponentUpdater::UpdateBaseComponent(AComponent* component)
-{
-	DynamicBuffer& componentEntityBuffer = component->GetComponentEntityBuffer();
-	componentEntityBuffer.Upload(m_deviceContextCached);
-
-	component->UpdateEntity();
-	DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
-	transformationEntityBuffer.Upload(m_deviceContextCached);
-}
-
-void ComponentUpdater::UpdateViewComponent(AViewComponent* viewComponent)
-{
-	viewComponent->UpdateViewEntity();
-	DynamicBuffer* viewProjMatrixBuffer = viewComponent->GetViewProjMatrixBuffer();
-	viewProjMatrixBuffer->Upload(m_deviceContextCached);
-}
-
-void ComponentUpdater::UpdateLightComponent(LightEntity* lightComponent)
-{
-	DynamicBuffer* lightBuffer = lightComponent->GetLightEntityBuffer();
-	lightBuffer->Upload(m_deviceContextCached);
-
-}
-

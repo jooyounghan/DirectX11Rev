@@ -5,7 +5,7 @@
 
 struct ID3D11DeviceContext;
 class AViewComponent;
-class LightEntity;
+class LightComponent;
 
 class ComponentDBUpdater : public IComponentVisitor
 {
@@ -40,7 +40,6 @@ private:
 	void UpdateSkeletalMeshComponent(SkeletalMeshComponent* skeletalMeshComponent);
 
 private:
-	void UpdateViewComponent(AViewComponent* viewComponent);
 	void UpdateCameraComponent(CameraComponent* cameraComponent);
 
 private:
@@ -48,6 +47,7 @@ private:
 	void UpdateOrientedBoxCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent);
 
 private:
-	void UpdateLightEntity(AComponent* component, LightEntity* ligthEntity);
+	void UpdateLightComponent(LightComponent* ligthComponent);
+	void UpdateSpotLightComponent(SpotLightComponent* spotLigthComponent);
 };
 

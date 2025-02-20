@@ -5,7 +5,7 @@ class SceneForwardRenderer : public ASceneRenderer
 {
 public:
 	SceneForwardRenderer(
-		ID3D11DeviceContext* const* deviceContextAddress,
+		ID3D11DeviceContext* deviceContext,
 		ComponentPSOManager* componentPsoManager,
 		CameraComponent* const* cameraComponentAddress,
 		Scene* const* sceneAddress

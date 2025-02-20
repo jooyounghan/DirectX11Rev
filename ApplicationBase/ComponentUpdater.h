@@ -31,7 +31,5 @@ public:
 	virtual void Visit(PointLightComponent* pointLightComponent) override final;
 
 private:
-	void UpdateBaseComponent(AComponent* component);
-	void UpdateViewComponent(AViewComponent* viewComponent);
-	void UpdateLightComponent(LightEntity* lightComponent);
+	void UpdateBaseComponent(AComponent* component, const UINT8& modifiedOption);
 };

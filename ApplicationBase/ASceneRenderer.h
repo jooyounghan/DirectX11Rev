@@ -22,7 +22,7 @@ class ASceneRenderer : public IComponentVisitor, public ISceneVisitor
 {
 public:
 	ASceneRenderer(
-		ID3D11DeviceContext* const* deviceContextAddress,
+		ID3D11DeviceContext* deviceContex,
 		ComponentPSOManager* componentPsoManager,
 		CameraComponent* const* cameraComponentAddress,
 		Scene* const* sceneAddress
@@ -30,7 +30,7 @@ public:
 	~ASceneRenderer() override = default;
 
 protected:
-	ID3D11DeviceContext* const* m_deviceContextAddress = nullptr;
+	ID3D11DeviceContext* m_deviceContext = nullptr;
 	ComponentPSOManager* m_componentPsoManagerCached = nullptr;
 	CameraComponent* const* m_selectedCameraComponentAddressCached = nullptr;
 	Scene* const* m_sceneAddressCached = nullptr;
@@ -72,11 +72,11 @@ protected:
 protected:
 	virtual void ApplyRenderTargets(
 		ID3D11DeviceContext* const deviceContext, 
-		const CameraComponent* const cameraComponent
+		CameraComponent* const cameraComponent
 	) const ;
 	virtual void ApplyRenderTargetsWithID(
 		ID3D11DeviceContext* const deviceContext,
-		const CameraComponent* const cameraComponent
+		CameraComponent* const cameraComponent
 	) const;
 
 	virtual void RenderMeshPartHandler(const size_t& idx) = 0;

@@ -32,7 +32,5 @@ public:
 
 private:
 	void InitBaseComponent(AComponent* component);
-	void InitViewComponent(AViewComponent* viewComponent);
-	void InitLightComponent(LightEntity* lightEntity);
 };
 

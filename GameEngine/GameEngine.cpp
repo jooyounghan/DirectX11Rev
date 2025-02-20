@@ -244,7 +244,6 @@ void GameEngine::CreateEditor()
 
 void GameEngine::CreateDeferredContext()
 {
-	ID3D11Device* const* deviceAddress = m_engine->GetDeviceAddress();
 	m_engine->AddDeferredContext(DeferredContextID(EDeferredContextType::ASSETS_LOAD));
 	m_engine->AddDeferredContext(DeferredContextID(EDeferredContextType::COMPONENT_UPDATE));
 	m_engine->AddDeferredContext(DeferredContextID(EDeferredContextType::COMPONENT_RENDER));
@@ -278,6 +277,9 @@ void GameEngine::CreatePSOManager()
 
 void GameEngine::CreateWindows()
 {
+	ID3D11Device* device = m_engine->GetDevice();
+	ID3D11DeviceContext* immediateDeviceContext = m_engine->GetDeviceContext();
+
 	ID3D11Device* const* deviceAddress = m_engine->GetDeviceAddress();
 	ID3D11DeviceContext* const* immediateDeviceContextAddress = m_engine->GetDeviceContextAddress();
 
@@ -287,8 +289,8 @@ void GameEngine::CreateWindows()
 	));
 
 	SceneWindow* sceneWindow = new SceneWindow(
-		"SceneWindow", deviceAddress, immediateDeviceContextAddress,
-		m_engine->GetDeferredContext(DeferredContextID(EDeferredContextType::COMPONENT_RENDER))->GetDeferredContextAddress(),
+		"SceneWindow", device, immediateDeviceContext,
+		m_engine->GetDeferredContext(DeferredContextID(EDeferredContextType::COMPONENT_RENDER))->GetDeferredContext(),
 		m_componentManager, m_componentPSOManager
 	);
 	sceneWindow->SetCameraComponent(m_editorCamera);

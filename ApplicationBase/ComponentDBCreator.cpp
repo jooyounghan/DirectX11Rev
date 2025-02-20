@@ -47,11 +47,13 @@ void ComponentDBCreator::Visit(CameraComponent* cameraComponent)
 {
 	AddComponetToType(cameraComponent, EComponentType::CAMERA_COMPONENT);
 
+	const D3D11_VIEWPORT& viewport = cameraComponent->GetViewport();
+
 	const uint32_t& componentID = cameraComponent->GetComponentID();
 	const std::string cameraTableName = "camera_components";
 	Table cameraTable = m_schemaCached->getTable(cameraTableName, true);
 	cameraTable.insert("camera_component_id", "width", "height", "near_z", "far_z", "fov_angle")
-		.values(componentID, cameraComponent->Width, cameraComponent->Height,
+		.values(componentID, viewport.Width, viewport.Height,
 			cameraComponent->GetNearZ(), cameraComponent->GetFarZ(),
 			cameraComponent->GetFovAngle()
 		);

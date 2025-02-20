@@ -1,8 +1,22 @@
 #pragma once
-#include "AViewComponent.h"
+#include "AComponent.h"
 #include "ACollidableFrustum.h"
+#include "ViewEntity.h"
 
-class CameraComponent : public AViewComponent
+#include "Texture2DInstance.h"
+#include "RTVOption.h"
+#include "SRVOption.h"
+#include "UAVOption.h"
+#include "DSVOption.h"
+
+enum class ECameraComponentUpdateOption
+{
+	VIEW_ENTITY = EComponentUpdateOption::COMPONENT_UPDATE_OPTION_OFFSET,
+	CAMERA_UPDATE_OPTION_OFFSET,
+};
+
+
+class CameraComponent : public AComponent, public ACollidableFrustum
 {
 public:
 	CameraComponent(
@@ -17,38 +31,59 @@ public:
 		const float& nearZ = GDefaultNearZ,
 		const float& farZ = GDefaultFarZ
 	);
-	~CameraComponent() override;
+	~CameraComponent() override = default;
 
 protected:
-	Texture2DInstance<SRVOption, RTVOption, UAVOption>* m_film = nullptr;
-	Texture2DInstance<RTVOption>*						m_idFilm = nullptr;
-	Texture2DInstance<PureTextureOption>*				m_idStagingFilm = nullptr;
-	Texture2DInstance<DSVOption>*						m_depthStencilView = nullptr;
+	SViewEntity m_viewEntity;
+	DynamicBuffer m_viewEntityBuffer;
+
+public:
+	DynamicBuffer& GetViewEntityBuffer() { return m_viewEntityBuffer; }
+
+protected:
+	Texture2DInstance<SRVOption, RTVOption, UAVOption>	m_film;
+	Texture2DInstance<RTVOption>						m_idFilm;
+	Texture2DInstance<PureTextureOption>				m_idStagingFilm;
+	Texture2DInstance<DSVOption>						m_depthStencilView;
 
 protected:
 	float m_nearZ;
 	float m_farZ;
+	float m_fovAngle;
+	D3D11_VIEWPORT m_viewport;
 
 public:
-	inline const float& GetNearZ() { return m_nearZ; }
-	inline const float& GetFarZ() { return m_farZ; }
+	inline const float& GetNearZ() const { return m_nearZ; }
+	inline const float& GetFarZ() const { return m_farZ; }
+	inline const float& GetFovAngle() const { return m_fovAngle; }
+	inline const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 	inline void SetNearZ(const float& nearZ) { m_nearZ = nearZ; }
 	inline void SetFarZ(const float& farZ) { m_farZ = farZ; }
+	inline void SetFovAngle(const float& fovAngle) { m_fovAngle = fovAngle; }
+	inline void SetViewport(const uint32_t& width, const uint32_t& height);
 
 public:
-	void SetFilm(Texture2DInstance<SRVOption, RTVOption, UAVOption>* film);
-	void SetIDFilm(Texture2DInstance<RTVOption>* idFilm);
-	void SetIDStagingFilm(Texture2DInstance<PureTextureOption>* idStagingFilm);
-	void SetDepthStencilView(Texture2DInstance<DSVOption>* depthStencilViewBuffer);
+	inline Texture2DInstance<SRVOption, RTVOption, UAVOption>& GetFilm() { return m_film; }
+	inline Texture2DInstance<RTVOption>& GetIDFilm() { return m_idFilm; }
+	inline Texture2DInstance<PureTextureOption>& GetIDStatgingFilm() { return m_idStagingFilm; }
+	inline Texture2DInstance<DSVOption>& GetDepthStencilView() { return m_depthStencilView; }
+
+protected:
+	DirectX::XMMATRIX m_viewMatrix;
+	DirectX::XMMATRIX m_projMatrix;
 
 public:
-	inline const Texture2DInstance<SRVOption, RTVOption, UAVOption>* GetFilm() const { return m_film; }
-	inline const Texture2DInstance<RTVOption>* GetIDFilm() const { return m_idFilm; }
-	inline const Texture2DInstance<PureTextureOption>* GetIDStatgingFilm() const { return m_idStagingFilm; }
-	inline const Texture2DInstance<DSVOption>* GetDepthStencilViewBuffer() const { return m_depthStencilView; }
+	const DirectX::XMMATRIX& GetViewMatrix() const { return m_viewMatrix; }
+	const DirectX::XMMATRIX& GetProjMatrix() const { return m_projMatrix; }
 
 public:
-	virtual DirectX::XMMATRIX GetProjectionMatrix() const override;
+	void UpdateViewEntity();
+
+public:
 	virtual void Accept(IComponentVisitor* visitor) override;
+
+public:
+	virtual void UpdateBoundingProperty() override;
+	virtual void OnCollide(ICollisionAcceptor*) override;
 };
 

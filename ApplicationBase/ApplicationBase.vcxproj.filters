@@ -103,7 +103,7 @@
     <ClInclude Include="BoundingVolumeNode.h">
       <Filter>헤더 파일\Component\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="LightEntity.h">
+    <ClInclude Include="LightComponent.h">
       <Filter>헤더 파일\Component\Light</Filter>
     </ClInclude>
     <ClInclude Include="PointLightComponent.h">
@@ -111,9 +111,6 @@
     </ClInclude>
     <ClInclude Include="SpotLightComponent.h">
       <Filter>헤더 파일\Component\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="AViewComponent.h">
-      <Filter>헤더 파일\Component</Filter>
     </ClInclude>
     <ClInclude Include="ILightVisitor.h">
       <Filter>헤더 파일\Component\Visitor\Light</Filter>
@@ -124,7 +121,7 @@
     <ClInclude Include="DepthTestRenderer.h">
       <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="AViewEntity.h">
+    <ClInclude Include="ViewEntity.h">
       <Filter>헤더 파일\Component</Filter>
     </ClInclude>
     <ClInclude Include="ComponentCollector.h">
@@ -362,7 +359,7 @@
     <ClCompile Include="BoundingVolumeNode.cpp">
       <Filter>소스 파일\Component\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="LightEntity.cpp">
+    <ClCompile Include="LightComponent.cpp">
       <Filter>소스 파일\Component\Light</Filter>
     </ClCompile>
     <ClCompile Include="PointLightComponent.cpp">
@@ -370,9 +367,6 @@
     </ClCompile>
     <ClCompile Include="SpotLightComponent.cpp">
       <Filter>소스 파일\Component\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="AViewComponent.cpp">
-      <Filter>소스 파일\Component</Filter>
     </ClCompile>
     <ClCompile Include="BoundingVolumeHierarchy.cpp">
       <Filter>소스 파일\Utilities</Filter>
@@ -382,9 +376,6 @@
     </ClCompile>
     <ClCompile Include="ComponentCollector.cpp">
       <Filter>소스 파일\Component\Visitor\Collector</Filter>
-    </ClCompile>
-    <ClCompile Include="AViewEntity.cpp">
-      <Filter>소스 파일\Component</Filter>
     </ClCompile>
     <ClCompile Include="SceneDeferredRenderer.cpp">
       <Filter>소스 파일\Component\Visitor\Rendering</Filter>

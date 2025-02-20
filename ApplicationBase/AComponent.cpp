@@ -4,7 +4,7 @@ using namespace std;
 using namespace DirectX;
 
 SComponentEntity::SComponentEntity(const uint32_t& componentID)
-	: m_componentID(componentID), dummy{ 0.f, 0.f, 0.f }
+	: m_componentID(componentID), m_componentVariable1(NULL), m_componentVariable2(NULL), m_componentVariable3(NULL)
 {
 }
 
@@ -99,5 +99,5 @@ void AComponent::UpdateEntity()
 		childComponent->UpdateEntity();
 	}
 
-	m_isModified.store(true);
+	SetModifiedOption(GetComponentUpdateOption(EComponentUpdateOption::TRANSFORMATION_ENTITY));
 }

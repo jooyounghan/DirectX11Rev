@@ -27,17 +27,17 @@ class SceneWindow : public AWindow
 public:
 	SceneWindow(
 		const std::string& windowID,
-		ID3D11Device* const* deviceAddress,
-		ID3D11DeviceContext* const* immediateContextAddress,
-		ID3D11DeviceContext* const* componentRenderDeferredContextAddress,
+		ID3D11Device* device,
+		ID3D11DeviceContext* immediateContext,
+		ID3D11DeviceContext* componentRenderDeferredContext,
 		ComponentManager* componentManager, 
 		ComponentPSOManager* componentPsoManager
 	);
 	~SceneWindow() override = default;
 
 private:
-	ID3D11DeviceContext* const* m_immediateContextAddress = nullptr;
-	ID3D11DeviceContext* const* m_componentRenderDeferredContextAddress = nullptr;
+	ID3D11DeviceContext* m_immediateContext = nullptr;
+	ID3D11DeviceContext* m_componentRenderDeferredContext = nullptr;
 	Scene* m_selectedScene = nullptr;
 	ComponentManager* m_componentManagerCached = nullptr;
 	ComponentPSOManager* m_componentPsoManageCached = nullptr;

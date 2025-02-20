@@ -6,7 +6,7 @@
 struct ID3D11Device;
 class AViewComponent;
 class ICollisionOption;
-class LightEntity;
+class LightComponent;
 
 class ComponentDBInitializer : public IComponentVisitor
 {
@@ -38,15 +38,13 @@ private:
 	void LoadModelMaterials(AMeshComponent* meshComponent);
 
 private:
-	void LoadViewComponent(AViewComponent* viewComponent);
 	void LoadCameraComponent(CameraComponent* cameraComponent);
 
 private:
 	void LoadSphereColiisionComponent(SphereCollisionComponent* sphereCollisionComponent);
 	void LoadOrientedBoxCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent);
 	ICollisionOption* CreateCollisionOption(const uint32_t& sceneID, const uint32_t& collitionOptionID);
-
-private:
-	void LoadLightEntity(AComponent* lightComponent, LightEntity* lightEntity);
+	void LoadLightComponent(LightComponent* lightComponent);
+	void LoadSpotLightComponent(SpotLightComponent* spotLightComponent);
 };
 

@@ -10,11 +10,29 @@
 #include <string>
 #include <atomic>
 
+enum class EComponentUpdateOption
+{
+	COMPONENT_ENTITY,
+	TRANSFORMATION_ENTITY,
+	COMPONENT_UPDATE_OPTION_OFFSET
+};
+
+template <typename T>
+concept EnumClass = std::is_enum_v<T> && !std::is_convertible_v<T, int>;
+
+template<EnumClass T>
+constexpr uint8_t GetComponentUpdateOption(T updateOption)
+{
+	return 1 << static_cast<size_t>(updateOption);
+}
+
 struct SComponentEntity
 {
 	SComponentEntity(const uint32_t& componentID);
 	const uint32_t m_componentID;
-	DirectX::XMFLOAT3 dummy;
+	uint32_t m_componentVariable1;
+	uint32_t m_componentVariable2;
+	uint32_t m_componentVariable3;
 };
 
 struct STransformationEntity
@@ -83,10 +101,12 @@ public:
 
 protected:
 	bool m_isRenderable = true;
-	std::atomic_bool m_isModified = false;
+	std::atomic_uchar m_modifiedOption = NULL;
 
 public:
-	inline const bool ComsumeIsModified() { return m_isModified.exchange(false, std::memory_order_acquire); }
+	inline void SetModifiedOption(const uint8_t& modifiedOption) { m_modifiedOption.fetch_or(modifiedOption); }
+	inline uint8_t GetModifiedOption() { return m_modifiedOption.load(); }
+	inline uint8_t ComsumeModifiedOption() { return m_modifiedOption.exchange(NULL); }
 	inline const bool& IsRenderable() const { return m_isRenderable; }
 	inline void SetRenderable(const bool& isRenderable) { m_isRenderable = isRenderable; }
 

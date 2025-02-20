@@ -7,7 +7,7 @@ class AMeshComponent;
 class AViewComponent;
 
 class ComponentEntity;
-class LightEntity;
+class LightComponent;
 
 class AssetManager;
 class ComponentManager;
@@ -32,14 +32,12 @@ protected:
 private:
 	ImGuiComboBox m_absRelativeComboPosition;
 	ImGuiComboBox m_absRelativeComboAngle;
-	ImGuiComboBox m_absRelativeComboScale;
 	ImGuiComboBox m_animationPreview;
 	std::string m_selectedAnimationName;
 
 private:
 	static bool IsPositionAbsolute;
 	static bool IsAngleAbsolute;
-	static bool IsScaleAbsolute;
 
 public:
 	virtual void Visit(StaticMeshComponent* staticMeshComponent) override;
@@ -70,9 +68,8 @@ private:
 	void HandleAnimationPlayer(SkeletalMeshComponent* skeletalMeshComponent);
 	void HandleMeshComponent(AMeshComponent* meshComponent);
 	void HandleSphereCollisionComponent(SphereCollisionComponent* sphereCollisionComponent);
-	void HandleViewComponent(AViewComponent* viewComponent);
 	void HandleOrientedCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent);
-	void HandleLightEntity(AComponent* component, LightEntity* lightEntity, const bool& isHandleSpotPower);
+	void HandleLightEntity(AComponent* component, LightComponent* lightComponent, const bool& isHandleSpotPower);
 
 private:
 	void RenderTransformationEntity(

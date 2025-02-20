@@ -105,21 +105,21 @@ void ComponentManager::LoadComponentMakers()
 			break;
 		case EComponentType::SPHERE_COLLISION_COMPONENT:
 			m_componentTypesToMaker.emplace(componentType, bind(
-				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& dummy1, const DirectX::XMFLOAT3& dummy2)
-				{ return new SphereCollisionComponent(componentName, componentID, position, 0.f); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+				{ return new SphereCollisionComponent(componentName, componentID, position, scale, NULL); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
 			));
 			break;
 		case EComponentType::ORIENTED_BOX_COLLISION_COMPONENT:
 			m_componentTypesToMaker.emplace(componentType, bind(
-				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& extends)
-				{ return new OrientedBoxCollisionComponent(componentName, componentID, position, angle, extends); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+				{ return new OrientedBoxCollisionComponent(componentName, componentID, position, angle, scale, XMFLOAT3(0.f, 0.f, 0.f)); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
 			));
 			break;
 		case EComponentType::SPOT_LIGHT_COMPONENT:
 			m_componentTypesToMaker.emplace(componentType, bind(
 				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
 				{ 
-					SpotLightComponent* spotLightComponent = new SpotLightComponent(componentName, componentID, position, angle, scale);
+					SpotLightComponent* spotLightComponent = new SpotLightComponent(componentName, componentID, position, angle, 0.f, 0.f, 0.f, 0.f, NULL, nullptr, nullptr, nullptr, nullptr, 0.f);
 					m_componentIDsToSpotLight.emplace(componentID, spotLightComponent);
 					return spotLightComponent; 
 				}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
@@ -129,7 +129,9 @@ void ComponentManager::LoadComponentMakers()
 			m_componentTypesToMaker.emplace(componentType, bind(
 				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
 				{ 
-					PointLightComponent* pointLightComponent = new PointLightComponent(componentName, componentID, position, angle, scale);
+					PointLightComponent* pointLightComponent = new PointLightComponent(
+						componentName, componentID, position, 0.f, 0.f, 0.f, 0.f, NULL, nullptr, nullptr, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, nullptr
+					);
 					m_componentIDsToPointLight.emplace(componentID, pointLightComponent);
 					return pointLightComponent;
 				}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
@@ -391,7 +393,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 			shared_lock updateComponent(m_componentMutex);
 			for (auto& m_componentIDToComponent : m_componentIDsToComponent)
 			{
-				if (m_componentIDToComponent.second->ComsumeIsModified())
+				if (m_componentIDToComponent.second->GetModifiedOption())
 				{
 					m_componentIDToComponent.second->Accept(&componentUpdater);
 					{
