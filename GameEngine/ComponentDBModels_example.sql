@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `component_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `component_db`;
 -- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: component_db
@@ -26,10 +24,13 @@ DROP TABLE IF EXISTS `camera_components`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `camera_components` (
   `camera_component_id` int unsigned NOT NULL,
+  `width` int unsigned NOT NULL,
+  `height` int unsigned NOT NULL,
+  `fov_angle` float NOT NULL,
   `near_z` float NOT NULL,
   `far_z` float NOT NULL,
-  KEY `view_component_id_fk1_idx` (`camera_component_id`),
-  CONSTRAINT `view_component_id_fk1` FOREIGN KEY (`camera_component_id`) REFERENCES `view_components` (`view_component_id`) ON UPDATE CASCADE
+  KEY `component_id_fk6_idx` (`camera_component_id`),
+  CONSTRAINT `component_id_fk5` FOREIGN KEY (`camera_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -51,7 +52,7 @@ DROP TABLE IF EXISTS `collision_options`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `collision_options` (
   `collision_option_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `collision_option_description` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `collision_option_description` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   PRIMARY KEY (`collision_option_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -100,7 +101,7 @@ DROP TABLE IF EXISTS `components`;
 CREATE TABLE `components` (
   `component_id` int unsigned NOT NULL AUTO_INCREMENT,
   `parent_component_id` int unsigned NOT NULL DEFAULT '0',
-  `component_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'NULL',
+  `component_name` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'NULL',
   `position_x` float NOT NULL DEFAULT '0',
   `position_y` float NOT NULL DEFAULT '0',
   `position_z` float NOT NULL DEFAULT '0',
@@ -155,32 +156,31 @@ INSERT INTO `components_to_type` VALUES (18,1),(19,1),(20,1),(21,1),(2,2),(4,2),
 UNLOCK TABLES;
 
 --
--- Table structure for table `lights`
+-- Table structure for table `light_components`
 --
 
-DROP TABLE IF EXISTS `lights`;
+DROP TABLE IF EXISTS `light_components`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `lights` (
+CREATE TABLE `light_components` (
   `light_component_id` int unsigned NOT NULL AUTO_INCREMENT,
   `light_power` float NOT NULL,
   `falloff_start` float NOT NULL,
   `falloff_end` float NOT NULL,
   `spot_power` float NOT NULL,
   PRIMARY KEY (`light_component_id`),
-  CONSTRAINT `component_id_fk9` FOREIGN KEY (`light_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE,
-  CONSTRAINT `view_component_id_fk2` FOREIGN KEY (`light_component_id`) REFERENCES `view_components` (`view_component_id`) ON UPDATE CASCADE
+  CONSTRAINT `component_id_fk8` FOREIGN KEY (`light_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `lights`
+-- Dumping data for table `light_components`
 --
 
-LOCK TABLES `lights` WRITE;
-/*!40000 ALTER TABLE `lights` DISABLE KEYS */;
-INSERT INTO `lights` VALUES (13,2,0,1000,5),(14,1.5,0,1149,1);
-/*!40000 ALTER TABLE `lights` ENABLE KEYS */;
+LOCK TABLES `light_components` WRITE;
+/*!40000 ALTER TABLE `light_components` DISABLE KEYS */;
+INSERT INTO `light_components` VALUES (13,2,0,1000,5),(14,1.5,0,1149,1);
+/*!40000 ALTER TABLE `light_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -195,7 +195,7 @@ CREATE TABLE `mesh_component_informations` (
   `material_names` json DEFAULT NULL,
   PRIMARY KEY (`mesh_component_id`),
   KEY `mesh_component_id_idx` (`mesh_component_id`),
-  CONSTRAINT `component_id_fk3` FOREIGN KEY (`mesh_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
+  CONSTRAINT `component_id_fk2` FOREIGN KEY (`mesh_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -225,7 +225,7 @@ CREATE TABLE `oriented_box_collision_components` (
   PRIMARY KEY (`oriented_box_collision_component_id`),
   KEY `collision_option_fk2_idx` (`collision_option_id`),
   CONSTRAINT `collision_option_fk2` FOREIGN KEY (`collision_option_id`) REFERENCES `collision_options` (`collision_option_id`) ON UPDATE CASCADE,
-  CONSTRAINT `component_id_fk8` FOREIGN KEY (`oriented_box_collision_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
+  CONSTRAINT `component_id_fk7` FOREIGN KEY (`oriented_box_collision_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -249,8 +249,8 @@ DROP TABLE IF EXISTS `scenes`;
 CREATE TABLE `scenes` (
   `scene_id` int unsigned NOT NULL AUTO_INCREMENT,
   `scene_description` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `scene_static_mesh_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `scene_ibl_material_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `scene_static_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `scene_ibl_material_name` varchar(45) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   PRIMARY KEY (`scene_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -274,7 +274,7 @@ DROP TABLE IF EXISTS `skeletal_mesh_components`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `skeletal_mesh_components` (
   `skeletal_mesh_component_id` int unsigned NOT NULL,
-  `skeletal_mesh_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `skeletal_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`skeletal_mesh_component_id`),
   CONSTRAINT `component_id_fk4` FOREIGN KEY (`skeletal_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -304,7 +304,7 @@ CREATE TABLE `sphere_collision_components` (
   PRIMARY KEY (`sphere_collision_component_id`),
   KEY `collision_option_fk1_idx` (`collision_option_id`),
   CONSTRAINT `collision_option_fk1` FOREIGN KEY (`collision_option_id`) REFERENCES `collision_options` (`collision_option_id`) ON UPDATE CASCADE,
-  CONSTRAINT `component_id_fk7` FOREIGN KEY (`sphere_collision_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
+  CONSTRAINT `component_id_fk6` FOREIGN KEY (`sphere_collision_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -319,6 +319,31 @@ INSERT INTO `sphere_collision_components` VALUES (1,180,1),(3,190,1),(5,200,1);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `spot_light_components`
+--
+
+DROP TABLE IF EXISTS `spot_light_components`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `spot_light_components` (
+  `spot_ligth_component_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `fov_angle` float NOT NULL,
+  PRIMARY KEY (`spot_ligth_component_id`),
+  CONSTRAINT `component_id_fk9` FOREIGN KEY (`spot_ligth_component_id`) REFERENCES `light_components` (`light_component_id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `spot_light_components`
+--
+
+LOCK TABLES `spot_light_components` WRITE;
+/*!40000 ALTER TABLE `spot_light_components` DISABLE KEYS */;
+INSERT INTO `spot_light_components` VALUES (13,120);
+/*!40000 ALTER TABLE `spot_light_components` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `static_mesh_components`
 --
 
@@ -327,9 +352,9 @@ DROP TABLE IF EXISTS `static_mesh_components`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `static_mesh_components` (
   `static_mesh_component_id` int unsigned NOT NULL,
-  `static_mesh_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `static_mesh_name` varchar(45) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`static_mesh_component_id`),
-  CONSTRAINT `component_id_fk5` FOREIGN KEY (`static_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`) ON UPDATE CASCADE
+  CONSTRAINT `component_id_fk3` FOREIGN KEY (`static_mesh_component_id`) REFERENCES `mesh_component_informations` (`mesh_component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -342,33 +367,6 @@ LOCK TABLES `static_mesh_components` WRITE;
 INSERT INTO `static_mesh_components` VALUES (18,'sphere_model_Static'),(19,'sphere_model_Static'),(20,'sphere_model_Static'),(21,'sphere_model_Static');
 /*!40000 ALTER TABLE `static_mesh_components` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `view_components`
---
-
-DROP TABLE IF EXISTS `view_components`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `view_components` (
-  `view_component_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `width` int NOT NULL,
-  `height` int NOT NULL,
-  `fov_angle` float NOT NULL,
-  PRIMARY KEY (`view_component_id`),
-  CONSTRAINT `component_id_fk6` FOREIGN KEY (`view_component_id`) REFERENCES `components` (`component_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `view_components`
---
-
-LOCK TABLES `view_components` WRITE;
-/*!40000 ALTER TABLE `view_components` DISABLE KEYS */;
-INSERT INTO `view_components` VALUES (13,512,512,60);
-/*!40000 ALTER TABLE `view_components` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -379,4 +377,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-19 19:43:44
+-- Dump completed on 2025-02-20 22:13:24
