@@ -14,6 +14,7 @@
 
 #include "SpotLightComponent.h"
 #include "PointLightComponent.h"
+#include "LightManager.h"
 
 #include "ComponentDBInitializer.h"
 #include "ComponentDBUpdater.h"
@@ -129,15 +130,6 @@ void ComponentManager::LoadComponents()
 			else
 			{
 				m_sceneIDsToScene[parentSceneID]->AddRootComponent(component);
-			}
-
-			if (m_componentIDsToSpotLight.find(componentID) != m_componentIDsToSpotLight.end())
-			{
-				m_sceneIDsToScene[parentSceneID]->AddSpotLight(m_componentIDsToSpotLight[componentID]);
-			}
-			else if (m_componentIDsToPointLight.find(componentID) != m_componentIDsToPointLight.end())
-			{
-				m_sceneIDsToScene[parentSceneID]->AddPointLight(m_componentIDsToPointLight[componentID]);
 			}
 		}
 	}
@@ -297,7 +289,9 @@ void ComponentManager::LoadMeshComponent(vector<pair<AComponent*, ComponentID>>&
 			"FROM {}.components c "
 			"JOIN {}.components_to_type ctt ON c.component_id = ctt.component_id "
 			"WHERE ctt.component_type IN ({}, {}) LOCK IN SHARE MODE",
-			schemaName, schemaName, EComponentType::STATIC_COMPONENT, EComponentType::SKELETAL_COMPONENT
+			schemaName, schemaName, 
+			static_cast<uint32_t>(EComponentType::STATIC_COMPONENT), 
+			static_cast<uint32_t>(EComponentType::SKELETAL_COMPONENT)
 		)
 	).execute();
 
@@ -363,9 +357,9 @@ void ComponentManager::LoadCameraComponent(vector<pair<AComponent*, ComponentID>
 			const SceneID sceneID = rowResult[13].get<SceneID>();
 			const uint32_t width = rowResult[14].get<uint32_t>();
 			const uint32_t height = rowResult[15].get<uint32_t>();
-			const uint32_t fovAngle = rowResult[16].get<uint32_t>();
-			const uint32_t nearZ = rowResult[17].get<uint32_t>();
-			const uint32_t farZ = rowResult[18].get<uint32_t>();
+			const float fovAngle = rowResult[16].get<float>();
+			const float nearZ = rowResult[17].get<float>();
+			const float farZ = rowResult[18].get<float>();
 
 
 			CameraComponent* addedComponent = new CameraComponent(
@@ -505,12 +499,19 @@ void ComponentManager::LoadSpotLightComponent(vector<pair<AComponent*, Component
 			const float spotPower = rowResult[17].get<float>();
 			const float fovAngle = rowResult[18].get<float>();
 
-			SpotLightComponent* addedComponent = new SpotLightComponent(
-				componentName, componentID, localPosition, localAngle, lightPower, fallOffStart, fallOffEnd, spotPower,
-				NULL, nullptr, nullptr, nullptr, nullptr, fovAngle
-			);
+			if (m_sceneIDsToScene.find(sceneID) != m_sceneIDsToScene.end())
+			{
+				Scene* scene = m_sceneIDsToScene[sceneID];
+				LightManager& lightManager = scene->GetLightManager();
 
-			AddComponentToLoadedList(loadedComponentToParentIDs, componentID, parentComponentID, sceneID, addedComponent);
+				SpotLightComponent* addedComponent = lightManager.CreateSpotLight(
+					componentName, componentID, localPosition, localAngle, 
+					lightPower, fallOffStart, fallOffEnd, spotPower, 
+					fovAngle
+				);
+				AddComponentToLoadedList(loadedComponentToParentIDs, componentID, parentComponentID, sceneID, addedComponent);
+			}
+
 		}
 	}
 }
@@ -530,7 +531,7 @@ void ComponentManager::LoadPointLightComponent(vector<pair<AComponent*, Componen
 			"JOIN {}.light_components light ON c.component_id = light.light_component_id "
 			"WHERE ctt.component_type = {} "
 			"LOCK IN SHARE MODE",
-			schemaName, schemaName, schemaName, EComponentType::POINT_LIGHT_COMPONENT
+			schemaName, schemaName, schemaName, static_cast<uint32_t>(EComponentType::POINT_LIGHT_COMPONENT)
 		)
 	).execute();
 
@@ -548,12 +549,17 @@ void ComponentManager::LoadPointLightComponent(vector<pair<AComponent*, Componen
 			const float fallOffStart = rowResult[15].get<float>();
 			const float fallOffEnd = rowResult[16].get<float>();
 
-			PointLightComponent* addedComponent = new PointLightComponent(
-				componentName, componentID, localPosition, lightPower, fallOffStart, fallOffEnd,
-				NULL, nullptr, nullptr, {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, nullptr
-			);
+			if (m_sceneIDsToScene.find(sceneID) != m_sceneIDsToScene.end())
+			{
+				Scene* scene = m_sceneIDsToScene[sceneID];
+				LightManager& lightManager = scene->GetLightManager();
 
-			AddComponentToLoadedList(loadedComponentToParentIDs, componentID, parentComponentID, sceneID, addedComponent);
+				PointLightComponent* addedComponent = lightManager.CreatePointLight(
+					componentName, componentID, localPosition, 
+					lightPower, fallOffStart, fallOffEnd
+				);
+				AddComponentToLoadedList(loadedComponentToParentIDs, componentID, parentComponentID, sceneID, addedComponent);
+			}
 		}
 	}
 }

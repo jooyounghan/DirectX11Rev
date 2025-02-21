@@ -1,5 +1,6 @@
 #pragma once
 #include "ISceneVisitor.h"
+#include "LightManager.h"
 
 #include <string>
 #include <vector>
@@ -10,8 +11,6 @@ class StaticMeshAsset;
 class IBLMaterialAsset;
 class IStaticMeshProvider;
 class IIBLMaterialProvider;
-class SpotLightComponent;
-class PointLightComponent;
 
 class Scene
 {
@@ -48,19 +47,15 @@ public:
 	inline const IBLMaterialAsset* const GetIBLMaterialAsset() { return m_sceneIBLMaterialAsset; }
 
 protected:
+	LightManager m_lightManager;
 	std::vector<AComponent*> m_rootComponentsCached;
-	std::vector<SpotLightComponent*> m_spotLights;
-	std::vector<PointLightComponent*> m_pointLights;
 
 public:
+	inline LightManager& GetLightManager() { return m_lightManager; }
 	inline void AddRootComponent(AComponent* component) { m_rootComponentsCached.push_back(component); }
-	inline void AddSpotLight(SpotLightComponent* spotLight) { m_spotLights.push_back(spotLight); }
-	inline void AddPointLight(PointLightComponent* pointLight) { m_pointLights.push_back(pointLight); }
 
 public:
 	inline const std::vector<AComponent*>& GetRootComponents() { return m_rootComponentsCached; }
-	inline const std::vector<SpotLightComponent*>& GetSpotLights() { return m_spotLights; }
-	inline const std::vector<PointLightComponent*>& GetPointLights() { return m_pointLights; }
 
 public:
 	void Accept(ISceneVisitor* visitor);

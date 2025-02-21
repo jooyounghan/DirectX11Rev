@@ -185,8 +185,9 @@ void SceneDeferredRenderer::PostProcess()
 		graphicsPSOObject->ApplyPSOObject(m_deviceContext);
 		ASceneRenderer::ApplyRenderTargets(m_deviceContext, cameraComponent);
 
-        const vector<SpotLightComponent*>& spotLights = scene->GetSpotLights();
-        const vector<PointLightComponent*>& pointLights = scene->GetPointLights();
+        LightManager& lightManager = scene->GetLightManager();
+        const vector<SpotLightComponent*>& spotLights = lightManager.GetSpotLights();
+        const vector<PointLightComponent*>& pointLights = lightManager.GetPointLights();
 
         // =============================== PS ===============================
         vector<ID3D11Buffer*> psConstantBuffers{

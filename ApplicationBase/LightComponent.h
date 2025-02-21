@@ -19,6 +19,8 @@ struct SLightEntity
 	float m_fallOffStart = 0.f;
 	float m_fallOffEnd = 0.f;
 	float m_spotPower = 0.f;
+	uint32_t m_lightIndex = NULL;
+	uint32_t dummy[3] = { NULL, NULL, NULL };
 };
 
 class LightComponent : public AComponent
@@ -33,7 +35,6 @@ public:
 		const float& fallOffStart,
 		const float& fallOffEnd,
 		const float& spotPower,
-		const uint32_t& lightIndex,
 		SLightEntity* lightEntityCached,
 		StructuredBuffer* lightEntityCachedBuffer
 	);

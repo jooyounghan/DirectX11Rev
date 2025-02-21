@@ -328,10 +328,10 @@ DROP TABLE IF EXISTS `spot_light_components`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `spot_light_components` (
-  `spot_ligth_component_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `spot_light_component_id` int unsigned NOT NULL AUTO_INCREMENT,
   `fov_angle` float NOT NULL,
-  PRIMARY KEY (`spot_ligth_component_id`),
-  CONSTRAINT `component_id_fk9` FOREIGN KEY (`spot_ligth_component_id`) REFERENCES `light_components` (`light_component_id`) ON UPDATE CASCADE
+  PRIMARY KEY (`spot_light_component_id`),
+  CONSTRAINT `component_id_fk9` FOREIGN KEY (`spot_light_component_id`) REFERENCES `light_components` (`light_component_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -379,4 +379,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-21 12:56:21
+-- Dump completed on 2025-02-21 15:34:29

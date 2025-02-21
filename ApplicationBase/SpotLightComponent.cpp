@@ -16,14 +16,13 @@ SpotLightComponent::SpotLightComponent(
 	const float& fallOffStart, 
 	const float& fallOffEnd,
 	const float& spotPower,
-	const uint32_t& lightIndex,
 	SLightEntity* lightEntityCached,
 	StructuredBuffer* lightEntityCachedBuffer,
 	SViewEntity* viewEntityCached,
 	StructuredBuffer* viewEntityCachedBuffer,
 	const float& fovAngle
 )
-	: LightComponent(componentName, componentID, localPosition, localAngle, lightPower, fallOffStart, fallOffEnd, spotPower, lightIndex,lightEntityCached, lightEntityCachedBuffer),
+	: LightComponent(componentName, componentID, localPosition, localAngle, lightPower, fallOffStart, fallOffEnd, spotPower,lightEntityCached, lightEntityCachedBuffer),
 	m_viewEntityCached(viewEntityCached), m_viewEntityCachedBuffer(viewEntityCachedBuffer), m_fovAngle(fovAngle),
 	m_viewport{0.f, 0.f, static_cast<FLOAT>(GDefaultShadowMapWidth), static_cast<FLOAT>(GDefaultShadowMapHeight), 0.f, 1.f },
 	m_depthTestView(GDefaultShadowMapWidth, GDefaultShadowMapHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_TYPELESS)

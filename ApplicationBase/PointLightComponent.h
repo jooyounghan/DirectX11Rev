@@ -71,10 +71,9 @@ public:
 		const float& lightPower,
 		const float& fallOffStart,
 		const float& fallOffEnd,
-		const uint32_t& lightIndex,
 		SLightEntity* lightEntityCached,
 		StructuredBuffer* lightEntityCachedBuffer,
-		const std::array<SViewEntity*, 6>& viewEntityCached,
+		std::array<SViewEntity, 6>* viewEntityCached,
 		StructuredBuffer* viewCubeEntityCachedBuffer
 	);
 	~PointLightComponent() override = default;

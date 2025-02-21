@@ -13,7 +13,6 @@ LightComponent::LightComponent(
 	const float& fallOffStart,
 	const float& fallOffEnd,
 	const float& spotPower,
-	const uint32_t& lightIndex,
 	SLightEntity* lightEntityCached,
 	StructuredBuffer* lightEntityCachedBuffer
 )
@@ -21,9 +20,6 @@ LightComponent::LightComponent(
 	m_lightEntityCached(lightEntityCached), m_lightEntityCachedBuffer(lightEntityCachedBuffer)
 {
 	SetLightEntity(lightPower, fallOffStart, fallOffEnd, spotPower);
-
-	m_componentEntity.m_componentVariable1 = lightIndex;
-	SetModifiedOption(GetComponentUpdateOption(EComponentUpdateOption::COMPONENT_ENTITY));
 }
 
 void LightComponent::SetLightEntity(const float& lightPower, const float& fallOffStart, const float& fallOffEnd, const float& spotPower)

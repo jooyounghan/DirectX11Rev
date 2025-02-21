@@ -20,9 +20,6 @@ class ComponentManager : public SchemaManager
 {
 	typedef uint32_t ComponentID;
 	typedef uint32_t SceneID;
-	typedef std::function<AComponent* 
-		(const std::string&, const ComponentID&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&)
-	> ComponentConstructor;
 
 public:
 	ComponentManager(
@@ -45,10 +42,7 @@ protected:
 
 protected:
 	bool m_isInitialized = false;
-	std::unordered_map<EComponentType, ComponentConstructor> m_componentTypesToMaker;
 	std::unordered_map<ComponentID, AComponent*> m_componentIDsToComponent;
-	std::unordered_map<ComponentID, SpotLightComponent*> m_componentIDsToSpotLight;
-	std::unordered_map<ComponentID, PointLightComponent*> m_componentIDsToPointLight;
 	std::shared_mutex							m_componentMutex;
 
 protected:
@@ -71,8 +65,6 @@ private:
 	void LoadComponents();
 	void Initialize();
 	void LoadLastAutoIncrementIDFromTable(const std::string& tableName, uint32_t& autoIncrementID);
-
-
 
 private:
 	void UpdateComponentToDBThread();

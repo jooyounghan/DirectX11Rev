@@ -10,6 +10,7 @@
 #include "UAVOption.h"
 #include "DSVOption.h"
 
+#include "LightManager.h"
 #include "SpotLightComponent.h"
 #include "PointLightComponent.h"
 
@@ -69,8 +70,9 @@ void SceneWindow::PrepareWindow()
         m_selectedRenderer->ClearRenderTargets();
         m_selectedScene->Accept(m_selectedRenderer);
 
-        const vector<SpotLightComponent*>& spotLights =  m_selectedScene->GetSpotLights();
-        const vector<PointLightComponent*>& pointLights = m_selectedScene->GetPointLights();
+        LightManager& lightManager = m_selectedScene->GetLightManager();
+        const vector<SpotLightComponent*>& spotLights = lightManager.GetSpotLights();
+        const vector<PointLightComponent*>& pointLights = lightManager.GetPointLights();
 
         const vector<AComponent*>& sceneRootComponents = m_selectedScene->GetRootComponents();
 
