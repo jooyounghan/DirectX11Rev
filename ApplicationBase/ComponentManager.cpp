@@ -57,7 +57,6 @@ void ComponentManager::InitComponentManager()
 {
 	try
 	{
-		LoadComponentMakers();
 		LoadScenes();
 		LoadComponents();
 		Initialize();
@@ -67,77 +66,6 @@ void ComponentManager::InitComponentManager()
 	catch (const std::exception& ex)
 	{
 		OnErrorOccurs(ex.what());
-	}
-}
-
-void ComponentManager::LoadComponentMakers()
-{
-	const std::string& componentsTypeTableName = "component_types";
-
-	Table componentsTypeTable = getTable(componentsTypeTableName, true);
-	RowResult componentTypeResults = componentsTypeTable.select("*").lockShared().execute();
-
-	Row componentTypeResult;
-	while ((componentTypeResult = componentTypeResults.fetchOne()))
-	{
-		const EComponentType componentType = static_cast<EComponentType>(componentTypeResult[0].get<uint32_t>());
-		const std::string typeDescription = componentTypeResult[1].get<std::string>();
-
-		switch (componentType)
-		{
-		case EComponentType::STATIC_COMPONENT:
-			m_componentTypesToMaker.emplace(componentType, bind(
-				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-				{ return new StaticMeshComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5)
-			);
-			break;
-		case EComponentType::SKELETAL_COMPONENT:
-			m_componentTypesToMaker.emplace(componentType, bind(
-				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-				{ return new SkeletalMeshComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5)
-			);
-			break;
-		case EComponentType::CAMERA_COMPONENT:
-			m_componentTypesToMaker.emplace(componentType, bind(
-				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-				{ return new CameraComponent(componentName, componentID, position, angle, scale); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
-			));
-			break;
-		case EComponentType::SPHERE_COLLISION_COMPONENT:
-			m_componentTypesToMaker.emplace(componentType, bind(
-				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-				{ return new SphereCollisionComponent(componentName, componentID, position, scale, NULL); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
-			));
-			break;
-		case EComponentType::ORIENTED_BOX_COLLISION_COMPONENT:
-			m_componentTypesToMaker.emplace(componentType, bind(
-				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-				{ return new OrientedBoxCollisionComponent(componentName, componentID, position, angle, scale, XMFLOAT3(0.f, 0.f, 0.f)); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
-			));
-			break;
-		case EComponentType::SPOT_LIGHT_COMPONENT:
-			m_componentTypesToMaker.emplace(componentType, bind(
-				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-				{ 
-					SpotLightComponent* spotLightComponent = new SpotLightComponent(componentName, componentID, position, angle, 0.f, 0.f, 0.f, 0.f, NULL, nullptr, nullptr, nullptr, nullptr, 0.f);
-					m_componentIDsToSpotLight.emplace(componentID, spotLightComponent);
-					return spotLightComponent; 
-				}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
-			));
-			break;
-		case EComponentType::POINT_LIGHT_COMPONENT:
-			m_componentTypesToMaker.emplace(componentType, bind(
-				[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-				{ 
-					PointLightComponent* pointLightComponent = new PointLightComponent(
-						componentName, componentID, position, 0.f, 0.f, 0.f, 0.f, NULL, nullptr, nullptr, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, nullptr
-					);
-					m_componentIDsToPointLight.emplace(componentID, pointLightComponent);
-					return pointLightComponent;
-				}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
-			));
-			break;
-		}
 	}
 }
 
@@ -201,19 +129,21 @@ void ComponentManager::LoadComponents()
 			const EComponentType componentType = static_cast<EComponentType>(rowResult[2].get<uint32_t>());
 			const std::string componentName = rowResult[3].get<std::string>();
 
-			XMFLOAT3 position = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
-			XMFLOAT3 angle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
+			XMFLOAT3 localPosition = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
+			XMFLOAT3 localAngle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
 			XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
-			
 			SceneID sceneID = rowResult[13].get<SceneID>();
-			if (m_componentTypesToMaker.find(componentType) != m_componentTypesToMaker.end())
-			{
-				AComponent* addedComponent = m_componentTypesToMaker[componentType](componentName, componentID, position, angle, scale);
-				m_componentIDsToComponent.emplace(componentID, addedComponent);
-				addedComponent->SetParentSceneID(sceneID);
+			
+			AComponent* addedComponent = CreateComponent(
+				componentID, parentComponentID,
+				componentType, componentName,
+				localPosition, localAngle, scale, sceneID
+			);
 
-				componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));
-			}
+			m_componentIDsToComponent.emplace(componentID, addedComponent);
+			addedComponent->SetParentSceneID(sceneID);
+
+			componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));
 		}
 	}
 
@@ -253,27 +183,11 @@ void ComponentManager::LoadComponents()
 
 void ComponentManager::Initialize()
 {
-	try
+	shared_lock InitLoadedComponentsLock(m_componentMutex);
+	ComponentInitializer componentInitializer(*m_deviceAddressCached, m_DeferredContext->GetDeferredContext());
+	for (auto& componentIDToComponent : m_componentIDsToComponent)
 	{
-		ComponentDBInitializer componentDBInitializer(this);
-		ComponentInitializer componentInitializer(*m_deviceAddressCached, m_DeferredContext->GetDeferredContext());
-		m_sessionManager->startTransaction();
-		{
-			shared_lock InitLoadedComponentsLock(m_componentMutex);
-			for (auto& componentIDToComponent : m_componentIDsToComponent)
-			{
-				componentIDToComponent.second->Accept(&componentDBInitializer);
-				componentIDToComponent.second->Accept(&componentInitializer);
-			}
-		}
-		m_sessionManager->commit();
-	}
-	catch (const exception& ex)
-	{
-		m_sessionManager->rollback();
-
-		OnErrorOccurs(ex.what());
-
+		componentIDToComponent.second->Accept(&componentInitializer);
 	}
 }
 
@@ -338,6 +252,104 @@ void ComponentManager::UpdateComponentToDBThread()
 		}
 		});
 }
+
+AComponent* ComponentManager::CreateComponent(
+	const ComponentID& componentID, 
+	const ComponentID& parentComponentID, 
+	const EComponentType& componentType, 
+	const std::string& componentName, 
+	const XMFLOAT3& localPosition, 
+	const XMFLOAT3& localAngle, 
+	const XMFLOAT3& scale, 
+	const SceneID& sceneID
+)
+{
+	AComponent* result = nullptr;
+	switch (componentType)
+	{
+	case EComponentType::STATIC_COMPONENT:
+	{
+		result = CreateComponentImpl<StaticMeshComponent>(componentName, componentID, localPosition, localAngle, scale);
+		break;
+	}
+	case EComponentType::SKELETAL_COMPONENT:
+	{
+		result = CreateComponentImpl<SkeletalMeshComponent>(componentName, componentID, localPosition, localAngle, scale);
+		break;
+	}
+	case EComponentType::CAMERA_COMPONENT:
+	{
+		const uint32_t& width = GDefaultViewWidth;
+		const uint32_t& height = GDefaultViewHeight;
+		const float& fovAngle = GDefaultFovAngle;
+		const float& nearZ = GDefaultNearZ;
+		const float& farZ = GDefaultFarZ;	
+		result = CreateComponentImpl<CameraComponent>(
+			componentName, componentID, localPosition, localAngle, scale, 
+			width, height, fovAngle, nearZ, farZ
+		);
+		break;
+	}
+	case EComponentType::SPHERE_COLLISION_COMPONENT:
+	{
+		m_componentTypesToMaker.emplace(componentType, bind(
+			[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+			{ return new SphereCollisionComponent(componentName, componentID, position, scale, NULL); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+		));
+		break;
+	}
+	case EComponentType::ORIENTED_BOX_COLLISION_COMPONENT:
+	{
+		m_componentTypesToMaker.emplace(componentType, bind(
+			[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+			{ return new OrientedBoxCollisionComponent(componentName, componentID, position, angle, scale, XMFLOAT3(0.f, 0.f, 0.f)); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+		));
+		break;
+	}
+
+	case EComponentType::SPOT_LIGHT_COMPONENT:
+	{
+		m_componentTypesToMaker.emplace(componentType, bind(
+			[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+			{
+				SpotLightComponent* spotLightComponent = new SpotLightComponent(componentName, componentID, position, angle, 0.f, 0.f, 0.f, 0.f, NULL, nullptr, nullptr, nullptr, nullptr, 0.f);
+				m_componentIDsToSpotLight.emplace(componentID, spotLightComponent);
+				return spotLightComponent;
+			}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+		));
+		break;
+	}
+
+	case EComponentType::POINT_LIGHT_COMPONENT:
+	{
+		m_componentTypesToMaker.emplace(componentType, bind(
+			[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
+			{
+				PointLightComponent* pointLightComponent = new PointLightComponent(
+					componentName, componentID, position, 0.f, 0.f, 0.f, 0.f, NULL, nullptr, nullptr, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, nullptr
+				);
+				m_componentIDsToPointLight.emplace(componentID, pointLightComponent);
+				return pointLightComponent;
+			}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
+		));
+		break;
+	}
+	}
+}
+
+template<typename T, typename ...Args>
+inline T* ComponentManager::CreateComponentImpl(
+	const std::string& componentName,
+	const uint32_t& componentID,
+	const XMFLOAT3& localPosition,
+	const XMFLOAT3& localAngle,
+	const XMFLOAT3& scale,
+	Args&& ...args
+)
+{
+	return new T(componentName, componentID, localPosition, localAngle, scale, std::forward<Args>(args)...);
+}
+
 
 void ComponentManager::AddComponent(Scene* scene, AComponent* component)
 {

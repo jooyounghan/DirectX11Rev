@@ -66,11 +66,12 @@ public:
 	void InitComponentManager();
 
 private:
-	void LoadComponentMakers();
 	void LoadScenes();
 	void LoadComponents();
 	void Initialize();
 	void LoadLastAutoIncrementIDFromTable(const std::string& tableName, uint32_t& autoIncrementID);
+
+
 
 private:
 	void UpdateComponentToDBThread();
@@ -81,6 +82,25 @@ public:
 	void RemoveComponent(AComponent* component);
 	void UpdateComponents(const float& deltaTime);
 
+private:
+	AComponent* CreateComponent(
+		const ComponentID& componentID, const ComponentID& parentComponentID,
+		const EComponentType& componentType, const std::string& componentName,
+		const DirectX::XMFLOAT3& localPosition,
+		const DirectX::XMFLOAT3& localAngle,
+		const DirectX::XMFLOAT3& localScale,
+		const SceneID& sceneID
+	);
+	template<typename T, typename ...Args>
+	T* CreateComponentImpl(
+		const std::string& componentName,
+		const uint32_t& componentID,
+		const DirectX::XMFLOAT3& localPosition,
+		const DirectX::XMFLOAT3& localAngle,
+		const DirectX::XMFLOAT3& scale,
+		Args&& ...args
+	);
+
 public:
 	void MonitorComponent(AComponent* component);
 	void UnmonitorComponent(AComponent* component);
@@ -89,4 +109,3 @@ public:
 	inline const std::unordered_map<Scene*, std::string>& GetScenesWithDescription() { return m_scenesToDescription; }
 	AComponent* GetComponent(const ComponentID& componentID);
 };
-
