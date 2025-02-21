@@ -49,7 +49,7 @@ GameEngine::GameEngine()
 	CreateComponentManager();
 	CreatePSOManager();
 	
-	m_componentManager->MonitorComponent(m_editorCamera);
+	m_componentManager->StartMonitoringComponent(m_editorCamera);
 
 	/* Bind Event Handler */
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { m_engine->ResizeSwapChain(widthIn, heightIn); };

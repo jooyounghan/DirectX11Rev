@@ -71,7 +71,6 @@ public:
 		const float& lightPower,
 		const float& fallOffStart,
 		const float& fallOffEnd,
-		const float& spotPower,
 		const uint32_t& lightIndex,
 		SLightEntity* lightEntityCached,
 		StructuredBuffer* lightEntityCachedBuffer,

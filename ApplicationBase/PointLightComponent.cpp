@@ -55,7 +55,6 @@ PointLightComponent::PointLightComponent(
 	const float& lightPower,
 	const float& fallOffStart,
 	const float& fallOffEnd,
-	const float& spotPower,
 	const uint32_t& lightIndex,
 	SLightEntity* lightEntityCached,
 	StructuredBuffer* lightEntityCachedBuffer,
@@ -63,7 +62,7 @@ PointLightComponent::PointLightComponent(
 	StructuredBuffer* viewCubeEntityCachedBuffer
 )
 	: LightComponent(componentName, componentID, localPosition, XMFLOAT3(0.f, 0.f, 0.f), lightPower, 
-		fallOffStart, fallOffEnd, spotPower, lightIndex, lightEntityCached, lightEntityCachedBuffer
+		fallOffStart, fallOffEnd, 1.f, lightIndex, lightEntityCached, lightEntityCachedBuffer
 	), m_viewport{ 0.f, 0.f, static_cast<FLOAT>(GDefaultShadowMapWidth), static_cast<FLOAT>(GDefaultShadowMapHeight), 0.f, 1.f },
 	m_pointLightFrustums{
 		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, XM_PIDIV2, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntityCached[0]),

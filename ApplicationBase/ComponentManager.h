@@ -12,6 +12,7 @@
 class Scene;
 class AComponent;
 class DeferredContext;
+class ICollisionOption;
 class SpotLightComponent;
 class PointLightComponent;
 
@@ -83,27 +84,24 @@ public:
 	void UpdateComponents(const float& deltaTime);
 
 private:
-	AComponent* CreateComponent(
-		const ComponentID& componentID, const ComponentID& parentComponentID,
-		const EComponentType& componentType, const std::string& componentName,
-		const DirectX::XMFLOAT3& localPosition,
-		const DirectX::XMFLOAT3& localAngle,
-		const DirectX::XMFLOAT3& localScale,
-		const SceneID& sceneID
+	void LoadMeshComponent(std::vector<std::pair<AComponent*, ComponentID>>& loadedComponentToParentIDs);
+	void LoadCameraComponent(std::vector<std::pair<AComponent*, ComponentID>>& loadedComponentToParentIDs);
+	void LoadSphereCollisionComponentComponent(std::vector<std::pair<AComponent*, ComponentID>>& loadedComponentToParentIDs);
+	void LoadOrientedBoxCollisionComponent(std::vector<std::pair<AComponent*, ComponentID>>& loadedComponentToParentIDs);
+	void LoadSpotLightComponent(std::vector<std::pair<AComponent*, ComponentID>>& loadedComponentToParentIDs);
+	void LoadPointLightComponent(std::vector<std::pair<AComponent*, ComponentID>>& loadedComponentToParentIDs);
+	void AddComponentToLoadedList(
+		std::vector<std::pair<AComponent*, ComponentID>>& loadedComponentToParentIDs, 
+		const ComponentID& componentID,
+		const ComponentID& parentComponentID,
+		const SceneID& sceneID,
+		AComponent* component
 	);
-	template<typename T, typename ...Args>
-	T* CreateComponentImpl(
-		const std::string& componentName,
-		const uint32_t& componentID,
-		const DirectX::XMFLOAT3& localPosition,
-		const DirectX::XMFLOAT3& localAngle,
-		const DirectX::XMFLOAT3& scale,
-		Args&& ...args
-	);
+	ICollisionOption* CreateCollisionOption(const uint32_t& sceneID, const uint32_t& collitionOptionID);
 
 public:
-	void MonitorComponent(AComponent* component);
-	void UnmonitorComponent(AComponent* component);
+	void StartMonitoringComponent(AComponent* component);
+	void StopMonitoringComponent(AComponent* component);
 
 public:
 	inline const std::unordered_map<Scene*, std::string>& GetScenesWithDescription() { return m_scenesToDescription; }

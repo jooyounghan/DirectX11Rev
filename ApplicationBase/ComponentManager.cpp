@@ -10,6 +10,7 @@
 
 #include "SphereCollisionComponent.h"
 #include "OrientedBoxCollisionComponent.h"
+#include "RenderControlOption.h"
 
 #include "SpotLightComponent.h"
 #include "PointLightComponent.h"
@@ -102,50 +103,14 @@ void ComponentManager::LoadScenes()
 
 void ComponentManager::LoadComponents()
 {
-	const std::string& componentsTableName = "components";
-	const std::string& componentsToTypeTableName = "components_to_type";
-	const std::string schemaName = getName();
-	RowResult result = m_sessionManager->sql(
-		format(
-			"SELECT c.component_id, c.parent_component_id, ctt.component_type, "
-			"c.component_name, c.position_x, c.position_y, c.position_z, "
-			"c.angle_x, c.angle_y, c.angle_z, "
-			"c.scale_x, c.scale_y, c.scale_z, c.scene_id "
-			"FROM {}.{} c "
-			"JOIN {}.{} ctt ON c.component_id = ctt.component_id LOCK IN SHARE MODE",
-			schemaName, componentsTableName, schemaName, componentsToTypeTableName
-		)
-	).execute();
-
-	Row rowResult;
 	vector<pair<AComponent*, ComponentID>> componentsToParentID;
 
-	{
-		unique_lock loadComponentLock(m_componentMutex);
-		while ((rowResult = result.fetchOne()))
-		{
-			const ComponentID componentID = rowResult[0].get<ComponentID>();
-			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
-			const EComponentType componentType = static_cast<EComponentType>(rowResult[2].get<uint32_t>());
-			const std::string componentName = rowResult[3].get<std::string>();
-
-			XMFLOAT3 localPosition = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
-			XMFLOAT3 localAngle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
-			XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
-			SceneID sceneID = rowResult[13].get<SceneID>();
-			
-			AComponent* addedComponent = CreateComponent(
-				componentID, parentComponentID,
-				componentType, componentName,
-				localPosition, localAngle, scale, sceneID
-			);
-
-			m_componentIDsToComponent.emplace(componentID, addedComponent);
-			addedComponent->SetParentSceneID(sceneID);
-
-			componentsToParentID.emplace_back(make_pair(addedComponent, parentComponentID));
-		}
-	}
+	LoadMeshComponent(componentsToParentID);
+	LoadCameraComponent(componentsToParentID);
+	LoadSphereCollisionComponentComponent(componentsToParentID);
+	LoadOrientedBoxCollisionComponent(componentsToParentID);
+	LoadSpotLightComponent(componentsToParentID);
+	LoadPointLightComponent(componentsToParentID);
 
 	{
 		shared_lock parentLinkLock(m_componentMutex);
@@ -177,8 +142,7 @@ void ComponentManager::LoadComponents()
 		}
 	}
 
-
-	LoadLastAutoIncrementIDFromTable(componentsTableName, m_componentIssuedID);
+	//LoadLastAutoIncrementIDFromTable(componentsTableName, m_componentIssuedID);
 }
 
 void ComponentManager::Initialize()
@@ -253,104 +217,6 @@ void ComponentManager::UpdateComponentToDBThread()
 		});
 }
 
-AComponent* ComponentManager::CreateComponent(
-	const ComponentID& componentID, 
-	const ComponentID& parentComponentID, 
-	const EComponentType& componentType, 
-	const std::string& componentName, 
-	const XMFLOAT3& localPosition, 
-	const XMFLOAT3& localAngle, 
-	const XMFLOAT3& scale, 
-	const SceneID& sceneID
-)
-{
-	AComponent* result = nullptr;
-	switch (componentType)
-	{
-	case EComponentType::STATIC_COMPONENT:
-	{
-		result = CreateComponentImpl<StaticMeshComponent>(componentName, componentID, localPosition, localAngle, scale);
-		break;
-	}
-	case EComponentType::SKELETAL_COMPONENT:
-	{
-		result = CreateComponentImpl<SkeletalMeshComponent>(componentName, componentID, localPosition, localAngle, scale);
-		break;
-	}
-	case EComponentType::CAMERA_COMPONENT:
-	{
-		const uint32_t& width = GDefaultViewWidth;
-		const uint32_t& height = GDefaultViewHeight;
-		const float& fovAngle = GDefaultFovAngle;
-		const float& nearZ = GDefaultNearZ;
-		const float& farZ = GDefaultFarZ;	
-		result = CreateComponentImpl<CameraComponent>(
-			componentName, componentID, localPosition, localAngle, scale, 
-			width, height, fovAngle, nearZ, farZ
-		);
-		break;
-	}
-	case EComponentType::SPHERE_COLLISION_COMPONENT:
-	{
-		m_componentTypesToMaker.emplace(componentType, bind(
-			[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-			{ return new SphereCollisionComponent(componentName, componentID, position, scale, NULL); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
-		));
-		break;
-	}
-	case EComponentType::ORIENTED_BOX_COLLISION_COMPONENT:
-	{
-		m_componentTypesToMaker.emplace(componentType, bind(
-			[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-			{ return new OrientedBoxCollisionComponent(componentName, componentID, position, angle, scale, XMFLOAT3(0.f, 0.f, 0.f)); }, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
-		));
-		break;
-	}
-
-	case EComponentType::SPOT_LIGHT_COMPONENT:
-	{
-		m_componentTypesToMaker.emplace(componentType, bind(
-			[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-			{
-				SpotLightComponent* spotLightComponent = new SpotLightComponent(componentName, componentID, position, angle, 0.f, 0.f, 0.f, 0.f, NULL, nullptr, nullptr, nullptr, nullptr, 0.f);
-				m_componentIDsToSpotLight.emplace(componentID, spotLightComponent);
-				return spotLightComponent;
-			}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
-		));
-		break;
-	}
-
-	case EComponentType::POINT_LIGHT_COMPONENT:
-	{
-		m_componentTypesToMaker.emplace(componentType, bind(
-			[&](const std::string& componentName, const ComponentID& componentID, const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& angle, const DirectX::XMFLOAT3& scale)
-			{
-				PointLightComponent* pointLightComponent = new PointLightComponent(
-					componentName, componentID, position, 0.f, 0.f, 0.f, 0.f, NULL, nullptr, nullptr, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, nullptr
-				);
-				m_componentIDsToPointLight.emplace(componentID, pointLightComponent);
-				return pointLightComponent;
-			}, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4, placeholders::_5
-		));
-		break;
-	}
-	}
-}
-
-template<typename T, typename ...Args>
-inline T* ComponentManager::CreateComponentImpl(
-	const std::string& componentName,
-	const uint32_t& componentID,
-	const XMFLOAT3& localPosition,
-	const XMFLOAT3& localAngle,
-	const XMFLOAT3& scale,
-	Args&& ...args
-)
-{
-	return new T(componentName, componentID, localPosition, localAngle, scale, std::forward<Args>(args)...);
-}
-
-
 void ComponentManager::AddComponent(Scene* scene, AComponent* component)
 {
 	if (component != nullptr)
@@ -358,7 +224,7 @@ void ComponentManager::AddComponent(Scene* scene, AComponent* component)
 		ComponentDBCreator componentDBCreator(this);
 
 		scene->AddRootComponent(component);
-		MonitorComponent(component);
+		StartMonitoringComponent(component);
 
 		componentDBCreator.AddComponent(scene, nullptr, component);
 		component->Accept(&componentDBCreator);
@@ -374,7 +240,7 @@ void ComponentManager::AddComponent(AComponent* parentComponent, AComponent* com
 	ComponentDBCreator componentDBCreator(this);
 	component->RemoveFromParent();
 	parentComponent->AttachChildComponent(component);
-	MonitorComponent(component);
+	StartMonitoringComponent(component);
 
 	componentDBCreator.AddComponent(nullptr, parentComponent, component);
 	component->Accept(&componentDBCreator);
@@ -382,7 +248,7 @@ void ComponentManager::AddComponent(AComponent* parentComponent, AComponent* com
 
 void ComponentManager::RemoveComponent(AComponent* component)
 {
-	UnmonitorComponent(component);
+	StopMonitoringComponent(component);
 	component->RemoveFromParent();
 
 	const vector<AComponent*>& childComponents = component->GetChildComponents();
@@ -419,7 +285,445 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 	}
 }
 
-void ComponentManager::MonitorComponent(AComponent* component)
+void ComponentManager::LoadMeshComponent(vector<pair<AComponent*, ComponentID>>& loadedComponentToParentIDs)
+{	
+	const std::string schemaName = getName();
+	RowResult result = m_sessionManager->sql(
+		format(
+			"SELECT c.component_id, c.parent_component_id, ctt.component_type, "
+			"c.component_name, c.position_x, c.position_y, c.position_z, "
+			"c.angle_x, c.angle_y, c.angle_z, "
+			"c.scale_x, c.scale_y, c.scale_z, c.scene_id "
+			"FROM {}.components c "
+			"JOIN {}.components_to_type ctt ON c.component_id = ctt.component_id "
+			"WHERE ctt.component_type IN ({}, {}) LOCK IN SHARE MODE",
+			schemaName, schemaName, EComponentType::STATIC_COMPONENT, EComponentType::SKELETAL_COMPONENT
+		)
+	).execute();
+
+	Row rowResult;
+	{
+		while ((rowResult = result.fetchOne()))
+		{
+			const ComponentID componentID = rowResult[0].get<ComponentID>();
+			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
+			const EComponentType componentType = static_cast<EComponentType>(rowResult[2].get<uint32_t>());
+			const std::string componentName = rowResult[3].get<std::string>();
+
+			XMFLOAT3 localPosition = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
+			XMFLOAT3 localAngle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
+			XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
+			SceneID sceneID = rowResult[13].get<SceneID>();
+			
+			AComponent* addedComponent = nullptr;
+			switch (componentType)
+			{
+			case EComponentType::STATIC_COMPONENT:
+				addedComponent = new StaticMeshComponent(componentName, componentID, localPosition, localAngle, scale);
+				break;
+			case EComponentType::SKELETAL_COMPONENT:
+				addedComponent = new SkeletalMeshComponent(componentName, componentID, localPosition, localAngle, scale);
+				break;
+			}
+
+			AddComponentToLoadedList(loadedComponentToParentIDs, componentID, parentComponentID, sceneID, addedComponent);
+		}
+	}
+}
+
+void ComponentManager::LoadCameraComponent(vector<pair<AComponent*, ComponentID>>& loadedComponentToParentIDs)
+{
+	const std::string schemaName = getName();
+
+	RowResult result = m_sessionManager->sql(
+		format(
+			"SELECT c.component_id, c.parent_component_id, ctt.component_type, c.component_name, c.position_x, c.position_y, c.position_z, "
+			"c.angle_x, c.angle_y, c.angle_z, "
+			"c.scale_x, c.scale_y, c.scale_z, c.scene_id, "
+			"cmr.width, cmr.height, cmr.fov_angle, cmr.near_z, cmr.far_z "
+			"FROM {}.components c "
+			"JOIN {}.components_to_type ctt ON c.component_id = ctt.component_id "
+			"JOIN {}.camera_components cmr ON c.component_id = cmr.camera_component_id "
+			"LOCK IN SHARE MODE",
+			schemaName, schemaName, schemaName
+		)
+	).execute();
+
+	Row rowResult;
+	{
+		while ((rowResult = result.fetchOne()))
+		{
+			const ComponentID componentID = rowResult[0].get<ComponentID>();
+			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
+			const std::string componentName = rowResult[3].get<std::string>();
+
+			const XMFLOAT3 localPosition = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
+			const XMFLOAT3 localAngle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
+			const XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
+			const SceneID sceneID = rowResult[13].get<SceneID>();
+			const uint32_t width = rowResult[14].get<uint32_t>();
+			const uint32_t height = rowResult[15].get<uint32_t>();
+			const uint32_t fovAngle = rowResult[16].get<uint32_t>();
+			const uint32_t nearZ = rowResult[17].get<uint32_t>();
+			const uint32_t farZ = rowResult[18].get<uint32_t>();
+
+
+			CameraComponent* addedComponent = new CameraComponent(
+				componentName, componentID, localPosition, localAngle, scale,
+				width, height, fovAngle, nearZ, farZ
+			);
+
+			AddComponentToLoadedList(loadedComponentToParentIDs, componentID, parentComponentID, sceneID, addedComponent);
+		}
+	}
+}
+
+void ComponentManager::LoadSphereCollisionComponentComponent(vector<pair<AComponent*, ComponentID>>& loadedComponentToParentIDs)
+{
+	const std::string schemaName = getName();
+
+	RowResult result = m_sessionManager->sql(
+		format(
+			"SELECT c.component_id, c.parent_component_id, ctt.component_type, c.component_name, c.position_x, c.position_y, c.position_z, "
+			"c.angle_x, c.angle_y, c.angle_z, "
+			"c.scale_x, c.scale_y, c.scale_z, c.scene_id, "
+			"sphere.radius, sphere.collision_option_id "
+			"FROM {}.components c "
+			"JOIN {}.components_to_type ctt ON c.component_id = ctt.component_id "
+			"JOIN {}.sphere_collision_components sphere ON c.component_id = sphere.sphere_collision_component_id "
+			"LOCK IN SHARE MODE",
+			schemaName, schemaName, schemaName
+		)
+	).execute();
+
+	Row rowResult;
+	{
+		while ((rowResult = result.fetchOne()))
+		{
+			const ComponentID componentID = rowResult[0].get<ComponentID>();
+			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
+			const std::string componentName = rowResult[3].get<std::string>();
+
+			const XMFLOAT3 localPosition = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
+			const XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
+			const SceneID sceneID = rowResult[13].get<SceneID>();
+			const float radius = rowResult[14].get<float>();
+			const uint32_t collisionOptionID = rowResult[15].get<uint32_t>();
+
+			SphereCollisionComponent* addedComponent = new SphereCollisionComponent(
+				componentName, componentID, localPosition, scale, radius
+			);
+			ICollisionOption* collisionOption = CreateCollisionOption(sceneID, collisionOptionID);
+			addedComponent->SetCollisionOption(collisionOption);
+
+			AddComponentToLoadedList(loadedComponentToParentIDs, componentID, parentComponentID, sceneID, addedComponent);
+		}
+	}
+}
+
+void ComponentManager::LoadOrientedBoxCollisionComponent(vector<pair<AComponent*, ComponentID>>& loadedComponentToParentIDs)
+{
+	const std::string schemaName = getName();
+
+	RowResult result = m_sessionManager->sql(
+		format(
+			"SELECT c.component_id, c.parent_component_id, ctt.component_type, c.component_name, c.position_x, c.position_y, c.position_z, "
+			"c.angle_x, c.angle_y, c.angle_z, "
+			"c.scale_x, c.scale_y, c.scale_z, c.scene_id, "
+			"oob.extent_x, oob.extent_y, oob.extent_z, oob.collision_option_id "
+			"FROM {}.components c "
+			"JOIN {}.components_to_type ctt ON c.component_id = ctt.component_id "
+			"JOIN {}.oriented_box_collision_components oob ON c.component_id = oob.oriented_box_collision_component_id "
+			"LOCK IN SHARE MODE",
+			schemaName, schemaName, schemaName
+		)
+	).execute();
+
+	Row rowResult;
+	{
+		while ((rowResult = result.fetchOne()))
+		{
+			const ComponentID componentID = rowResult[0].get<ComponentID>();
+			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
+			const std::string componentName = rowResult[3].get<std::string>();
+
+			const XMFLOAT3 localPosition = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
+			const XMFLOAT3 localAngle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
+			const XMFLOAT3 scale = XMFLOAT3(rowResult[10].get<float>(), rowResult[11].get<float>(), rowResult[12].get<float>());
+			const SceneID sceneID = rowResult[13].get<SceneID>();
+			const float extentX = rowResult[14].get<float>();
+			const float extentY = rowResult[15].get<float>();
+			const float extentZ = rowResult[16].get<float>();
+			const uint32_t collisionOptionID = rowResult[17].get<uint32_t>();
+
+			OrientedBoxCollisionComponent* addedComponent = new OrientedBoxCollisionComponent(
+				componentName, componentID, localPosition, localAngle, scale, XMFLOAT3(extentX, extentY, extentZ)
+			);
+
+			ICollisionOption* collisionOption = CreateCollisionOption(sceneID, collisionOptionID);
+			addedComponent->SetCollisionOption(collisionOption);
+
+			AddComponentToLoadedList(loadedComponentToParentIDs, componentID, parentComponentID, sceneID, addedComponent);
+		}
+	}
+}
+
+void ComponentManager::LoadSpotLightComponent(vector<pair<AComponent*, ComponentID>>& loadedComponentToParentIDs)
+{
+	const std::string schemaName = getName();
+
+	RowResult result = m_sessionManager->sql(
+		format(
+			"SELECT c.component_id, c.parent_component_id, ctt.component_type, c.component_name, c.position_x, c.position_y, c.position_z, "
+			"c.angle_x, c.angle_y, c.angle_z, "
+			"c.scale_x, c.scale_y, c.scale_z, c.scene_id, "
+			"light.light_power, light.falloff_start, light.falloff_end, light.spot_power, "
+			"spot.fov_angle "
+			"FROM {}.components c "
+			"JOIN {}.components_to_type ctt ON c.component_id = ctt.component_id "
+			"JOIN {}.light_components light ON c.component_id = light.light_component_id "
+			"JOIN {}.spot_light_components spot ON c.component_id = spot.spot_light_component_id "
+			"LOCK IN SHARE MODE",
+			schemaName, schemaName, schemaName, schemaName
+		)
+	).execute();
+
+	Row rowResult;
+	{
+		while ((rowResult = result.fetchOne()))
+		{
+			const ComponentID componentID = rowResult[0].get<ComponentID>();
+			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
+			const std::string componentName = rowResult[3].get<std::string>();
+
+			const XMFLOAT3 localPosition = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
+			const XMFLOAT3 localAngle = XMFLOAT3(rowResult[7].get<float>(), rowResult[8].get<float>(), rowResult[9].get<float>());
+			const SceneID sceneID = rowResult[13].get<SceneID>();
+			const float lightPower = rowResult[14].get<float>();
+			const float fallOffStart = rowResult[15].get<float>();
+			const float fallOffEnd = rowResult[16].get<float>();
+			const float spotPower = rowResult[17].get<float>();
+			const float fovAngle = rowResult[18].get<float>();
+
+			SpotLightComponent* addedComponent = new SpotLightComponent(
+				componentName, componentID, localPosition, localAngle, lightPower, fallOffStart, fallOffEnd, spotPower,
+				NULL, nullptr, nullptr, nullptr, nullptr, fovAngle
+			);
+
+			AddComponentToLoadedList(loadedComponentToParentIDs, componentID, parentComponentID, sceneID, addedComponent);
+		}
+	}
+}
+
+void ComponentManager::LoadPointLightComponent(vector<pair<AComponent*, ComponentID>>& loadedComponentToParentIDs)
+{
+	const std::string schemaName = getName();
+
+	RowResult result = m_sessionManager->sql(
+		format(
+			"SELECT c.component_id, c.parent_component_id, ctt.component_type, c.component_name, c.position_x, c.position_y, c.position_z, "
+			"c.angle_x, c.angle_y, c.angle_z, "
+			"c.scale_x, c.scale_y, c.scale_z, c.scene_id, "
+			"light.light_power, light.falloff_start, light.falloff_end, light.spot_power "
+			"FROM {}.components c "
+			"JOIN {}.components_to_type ctt ON c.component_id = ctt.component_id "
+			"JOIN {}.light_components light ON c.component_id = light.light_component_id "
+			"WHERE ctt.component_type = {} "
+			"LOCK IN SHARE MODE",
+			schemaName, schemaName, schemaName, EComponentType::POINT_LIGHT_COMPONENT
+		)
+	).execute();
+
+	Row rowResult;
+	{
+		while ((rowResult = result.fetchOne()))
+		{
+			const ComponentID componentID = rowResult[0].get<ComponentID>();
+			const ComponentID parentComponentID = rowResult[1].get<ComponentID>();
+			const std::string componentName = rowResult[3].get<std::string>();
+
+			const XMFLOAT3 localPosition = XMFLOAT3(rowResult[4].get<float>(), rowResult[5].get<float>(), rowResult[6].get<float>());
+			const SceneID sceneID = rowResult[13].get<SceneID>();
+			const float lightPower = rowResult[14].get<float>();
+			const float fallOffStart = rowResult[15].get<float>();
+			const float fallOffEnd = rowResult[16].get<float>();
+
+			PointLightComponent* addedComponent = new PointLightComponent(
+				componentName, componentID, localPosition, lightPower, fallOffStart, fallOffEnd,
+				NULL, nullptr, nullptr, {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, nullptr
+			);
+
+			AddComponentToLoadedList(loadedComponentToParentIDs, componentID, parentComponentID, sceneID, addedComponent);
+		}
+	}
+}
+
+void ComponentManager::AddComponentToLoadedList(
+	vector<pair<AComponent*, ComponentID>>& loadedComponentToParentIDs, 
+	const ComponentID& componentID, 
+	const ComponentID& parentComponentID,
+	const SceneID& sceneID,
+	AComponent* component
+)
+{
+	{
+		unique_lock loadComponentLock(m_componentMutex);
+		m_componentIDsToComponent.emplace(componentID, component);
+	}
+	component->SetParentSceneID(sceneID);
+
+	loadedComponentToParentIDs.emplace_back(make_pair(component, parentComponentID));
+}
+
+ICollisionOption* ComponentManager::CreateCollisionOption(const uint32_t& sceneID, const uint32_t& collitionOptionID)
+{
+	const ECollisionOptionType collisionType = static_cast<ECollisionOptionType>(collitionOptionID);
+	switch (collisionType)
+	{
+	case ECollisionOptionType::RENDER_CONTROL:
+		return new RenderControlOption(sceneID);
+		break;
+	}
+	return nullptr;
+}
+
+//
+//void ComponentDBInitializer::LoadCameraComponent(CameraComponent* cameraComponent)
+//{
+//	const uint32_t componentID = cameraComponent->GetComponentID();
+//	const std::string cameraComponentTableName = "camera_components";
+//
+//	Table cameraComponentTable = m_schemaCached->getTable(cameraComponentTableName, true);
+//	RowResult rowResult = cameraComponentTable
+//		.select("width", "height", "fov_angle", "near_z", "far_z").where("camera_component_id = :camera_component_id")
+//		.bind("camera_component_id", componentID).lockShared().execute();
+//
+//	auto row = rowResult.fetchOne();
+//	if (!row.isNull())
+//	{
+//		const uint32_t width = row[0].get<uint32_t>();
+//		const uint32_t height = row[1].get<uint32_t>();
+//		const float fovAngle = row[2].get<float>();
+//		const float near_z = row[3].get<float>();
+//		const float far_z = row[4].get<float>();
+//
+//		cameraComponent->SetViewport(width, height);
+//		cameraComponent->SetFovAngle(fovAngle);
+//		cameraComponent->SetNearZ(near_z);
+//		cameraComponent->SetFarZ(far_z);
+//
+//		cameraComponent->UpdateViewEntity();
+//	}
+//}
+//
+//void ComponentDBInitializer::LoadSphereColiisionComponent(SphereCollisionComponent* sphereCollisionComponent)
+//{
+//	const uint32_t componentID = sphereCollisionComponent->GetComponentID();
+//	const uint32_t& sceneID = sphereCollisionComponent->GetParentSceneID();
+//
+//	const std::string sphereCollisionComponentTableName = "sphere_collision_components";
+//	Table sphereCollisionComponentTable = m_schemaCached->getTable(sphereCollisionComponentTableName, true);
+//	RowResult rowResult = sphereCollisionComponentTable
+//		.select("radius", "collision_option_id").where("sphere_collision_component_id = :sphere_collision_component_id")
+//		.bind("sphere_collision_component_id", componentID).lockShared().execute();
+//
+//	auto row = rowResult.fetchOne();
+//	if (!row.isNull())
+//	{
+//		const float radius = row[0].get<float>();
+//		const uint32_t collisionOptionID = row[1].get<uint32_t>();
+//
+//		sphereCollisionComponent->SetRadius(radius);
+//		sphereCollisionComponent->UpdateEntity();
+//
+//		ICollisionOption* collisionOption = CreateCollisionOption(sceneID, collisionOptionID);
+//		sphereCollisionComponent->SetCollisionOption(collisionOption);
+//	}
+//}
+//
+//void ComponentDBInitializer::LoadOrientedBoxCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
+//{
+//	const uint32_t& componentID = orientedBoxCollisionComponent->GetComponentID();
+//	const uint32_t& sceneID = orientedBoxCollisionComponent->GetParentSceneID();
+//
+//	const std::string orientedBoxCollisionComponentTableName = "oriented_box_collision_components";
+//
+//	Table orientedBoxCollisionComponentTable = m_schemaCached->getTable(orientedBoxCollisionComponentTableName, true);
+//	RowResult rowResult = orientedBoxCollisionComponentTable
+//		.select("extent_x", "extent_y", "extent_z", "collision_option_id").where("oriented_box_collision_component_id = :oriented_box_collision_component_id")
+//		.bind("oriented_box_collision_component_id", componentID).lockShared().execute();
+//
+//	auto row = rowResult.fetchOne();
+//	if (!row.isNull())
+//	{
+//		const float extendX = row[0].get<float>();
+//		const float extendY = row[1].get<float>();
+//		const float extendZ = row[2].get<float>();
+//		const uint32_t collisionOptionID = row[3].get<uint32_t>();
+//
+//		orientedBoxCollisionComponent->SetExtents(XMVectorSet(extendX, extendY, extendZ, 0.f));
+//		orientedBoxCollisionComponent->UpdateEntity();
+//
+//		ICollisionOption* collisionOption = CreateCollisionOption(sceneID, collisionOptionID);
+//		orientedBoxCollisionComponent->SetCollisionOption(collisionOption);
+//	}
+//
+//}
+//
+//ICollisionOption* ComponentDBInitializer::CreateCollisionOption(const uint32_t& sceneID, const uint32_t& collitionOptionID)
+//{
+//	const ECollisionOptionType collisionType = static_cast<ECollisionOptionType>(collitionOptionID);
+//	switch (collisionType)
+//	{
+//	case ECollisionOptionType::RENDER_CONTROL:
+//		return new RenderControlOption(sceneID);
+//		break;
+//	}
+//	return nullptr;
+//}
+//
+//void ComponentDBInitializer::LoadLightComponent(LightComponent* lightComponent)
+//{
+//	const uint32_t componentID = lightComponent->GetComponentID();
+//	const std::string lightsTableName = "light_components";
+//
+//	Table lightsTable = m_schemaCached->getTable(lightsTableName, true);
+//	RowResult rowResult = lightsTable
+//		.select("light_power", "falloff_start", "falloff_end", "spot_power").where("light_component_id = :light_component_id")
+//		.bind("light_component_id", componentID).lockShared().execute();
+//
+//	auto row = rowResult.fetchOne();
+//	if (!row.isNull())
+//	{
+//		const float lightPower = row[0].get<float>();
+//		const float falloffStart = row[1].get<float>();
+//		const float falloffEnd = row[2].get<float>();
+//		const float spotPower = row[3].get<float>();
+//
+//		lightComponent->SetLightEntity(lightPower, falloffStart, falloffEnd, spotPower);
+//	}
+//}
+//
+//void ComponentDBInitializer::LoadSpotLightComponent(SpotLightComponent* spotLightComponent)
+//{
+//	const uint32_t componentID = spotLightComponent->GetComponentID();
+//	const std::string spotLightsTableName = "spot_light_components";
+//
+//	Table spotLightsTable = m_schemaCached->getTable(spotLightsTableName, true);
+//	RowResult rowResult = spotLightsTable
+//		.select("fov_angle").where("spot_light_component_id = :spot_light_component_id")
+//		.bind("spot_light_component_id", componentID).lockShared().execute();
+//
+//	auto row = rowResult.fetchOne();
+//	if (!row.isNull())
+//	{
+//		const float fovAngle = row[0].get<float>();
+//		spotLightComponent->SetFovAngle(fovAngle);
+//	}
+//}
+
+
+void ComponentManager::StartMonitoringComponent(AComponent* component)
 {
 	{
 		unique_lock addComponentLock(m_componentMutex);
@@ -427,7 +731,7 @@ void ComponentManager::MonitorComponent(AComponent* component)
 	}
 }
 
-void ComponentManager::UnmonitorComponent(AComponent* component)
+void ComponentManager::StopMonitoringComponent(AComponent* component)
 {
 	{
 		unique_lock removeComponentLock(m_componentMutex);

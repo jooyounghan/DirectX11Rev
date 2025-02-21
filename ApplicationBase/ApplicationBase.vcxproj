@@ -184,6 +184,7 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="DeferredContextID.cpp" />
     <ClCompile Include="DepthTestRenderer.cpp" />
     <ClCompile Include="LightComponent.cpp" />
+    <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="OrientedBoxCollisionComponent.cpp" />
     <ClCompile Include="ASceneRenderer.cpp" />
     <ClCompile Include="PerformanceAnalyzer.cpp" />
@@ -223,6 +224,7 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="DeferredContextID.h" />
     <ClInclude Include="DepthTestRenderer.h" />
     <ClInclude Include="ILightVisitor.h" />
+    <ClInclude Include="LightManager.h" />
     <ClInclude Include="ViewEntity.h" />
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="OrientedBoxCollisionComponent.h" />
