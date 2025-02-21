@@ -44,12 +44,12 @@ SceneDeferredRenderer::SceneDeferredRenderer(
 	m_normalGBuffer(GDefaultViewWidth, GDefaultViewHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R16G16B16A16_FLOAT),
 	m_emissiveGBuffer(GDefaultViewWidth, GDefaultViewHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM)
 {
-    m_positionGBuffer.InitializeByOption(m_positionGBuffer.GetTexture2D(), device, deviceContext);
-    m_specularGBuffer.InitializeByOption(m_specularGBuffer.GetTexture2D(), device, deviceContext);
-    m_diffuseGBuffer.InitializeByOption(m_diffuseGBuffer.GetTexture2D(), device, deviceContext);
-    m_aoMetallicRoughnessGBuffer.InitializeByOption(m_aoMetallicRoughnessGBuffer.GetTexture2D(), device, deviceContext);
-    m_normalGBuffer.InitializeByOption(m_normalGBuffer.GetTexture2D(), device, deviceContext);
-    m_emissiveGBuffer.InitializeByOption(m_emissiveGBuffer.GetTexture2D(), device, deviceContext);
+    m_positionGBuffer.InitializeByOption(device, deviceContext);
+    m_specularGBuffer.InitializeByOption(device, deviceContext);
+    m_diffuseGBuffer.InitializeByOption(device, deviceContext);
+    m_aoMetallicRoughnessGBuffer.InitializeByOption(device, deviceContext);
+    m_normalGBuffer.InitializeByOption(device, deviceContext);
+    m_emissiveGBuffer.InitializeByOption(device, deviceContext);
 
     m_gBufferShaderResourceViews = { m_positionGBuffer.GetSRV(), m_specularGBuffer.GetSRV(), m_diffuseGBuffer.GetSRV(),m_aoMetallicRoughnessGBuffer.GetSRV(), m_normalGBuffer.GetSRV(), m_emissiveGBuffer.GetSRV() };
     m_gBufferRenderTargetViews = { m_positionGBuffer.GetRTV(), m_specularGBuffer.GetRTV(), m_diffuseGBuffer.GetRTV(),m_aoMetallicRoughnessGBuffer.GetRTV(), m_normalGBuffer.GetRTV(), m_emissiveGBuffer.GetRTV() };

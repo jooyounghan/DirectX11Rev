@@ -56,7 +56,7 @@ private:
 
 private:
 	SceneForwardRenderer m_forwardRenderer;
-	SceneDeferredRenderer m_DeferredRenderer;
+	SceneDeferredRenderer m_deferredRenderer;
 	ASceneRenderer* m_selectedRenderer = nullptr;
 	bool m_isDeferredRenderer = false;
 

@@ -37,7 +37,7 @@ protected:
 	Texture2DInstance<SRVOption, RTVOption>* m_resource = nullptr;
 
 public:
-	inline Texture2DInstance<SRVOption, RTVOption>** GetResourceAddress() { return &m_resource; }
+	inline void SetResource(Texture2DInstance<SRVOption, RTVOption>* resource) { m_resource = resource; }
 	inline const std::vector<std::vector<uint8_t>> GetImageBuffers() { return m_imageBuffers; }
 
 public:

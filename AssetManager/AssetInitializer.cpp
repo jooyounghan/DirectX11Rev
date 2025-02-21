@@ -77,23 +77,28 @@ void AssetInitializer::Visit(SkeletalMeshPartsData* skeletalMeshPartsData)
 
 void AssetInitializer::Visit(BaseTextureAsset* baseTextureAsset)
 {
-	*baseTextureAsset->GetResourceAddress() = new Texture2DInstance<SRVOption, RTVOption>(
-		baseTextureAsset->GetWidth(), baseTextureAsset->GetHeight(), baseTextureAsset->GetArraySize(), 0,
-		baseTextureAsset->GetImageBuffers(), baseTextureAsset->GetRowPitchArray(),
-		NULL, D3D11_RESOURCE_MISC_GENERATE_MIPS, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM,
-		m_deviceCached, m_deviceContextCached
+	Texture2DInstance<SRVOption, RTVOption>* baseTexture = new Texture2DInstance<SRVOption, RTVOption>(
+		baseTextureAsset->GetWidth(), baseTextureAsset->GetHeight(), 
+		baseTextureAsset->GetArraySize(), 0,
+		NULL, D3D11_RESOURCE_MISC_GENERATE_MIPS, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R8G8B8A8_UNORM
 	);
+	baseTexture->InitializeByOption(m_deviceCached, m_deviceContextCached);
+	baseTexture->UpdateTextureByBuffer(baseTextureAsset->GetImageBuffers(), baseTextureAsset->GetRowPitchArray(), m_deviceContextCached);
+		
+	baseTextureAsset->SetResource(baseTexture);
 }
 
 void AssetInitializer::Visit(ScratchTextureAsset* scratchTextureAsset)
 {
-	*scratchTextureAsset->GetResourceAddress() = new Texture2DInstance<SRVOption, RTVOption>(
-		scratchTextureAsset->GetWidth(), scratchTextureAsset->GetHeight(), 
+	Texture2DInstance<SRVOption, RTVOption>* scratchTexture = new Texture2DInstance<SRVOption, RTVOption>(
+		scratchTextureAsset->GetWidth(), scratchTextureAsset->GetHeight(),
 		scratchTextureAsset->GetArraySize(), scratchTextureAsset->GetMipLevels(),
-		scratchTextureAsset->GetImageBuffers(), scratchTextureAsset->GetRowPitchArray(),
-		NULL, scratchTextureAsset->GetMiscFlag(), D3D11_USAGE_DEFAULT, scratchTextureAsset->GetFormat(),
-		m_deviceCached, m_deviceContextCached
+		NULL, scratchTextureAsset->GetMiscFlag(), D3D11_USAGE_DEFAULT, scratchTextureAsset->GetFormat()
 	);
+
+	scratchTexture->InitializeByOption(m_deviceCached, m_deviceContextCached);
+	scratchTexture->UpdateTextureByBuffer(scratchTextureAsset->GetImageBuffers(), scratchTextureAsset->GetRowPitchArray(), m_deviceContextCached);
+	scratchTextureAsset->SetResource(scratchTexture);
 }
 
 void AssetInitializer::Visit(ModelMaterialAsset* modelMaterialAsset)

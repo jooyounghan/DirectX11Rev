@@ -36,7 +36,7 @@ SceneWindow::SceneWindow(
     m_componentPsoManageCached(componentPsoManager),
     m_componentHandler(componentManager),
     m_forwardRenderer(componentRenderDeferredContext, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
-    m_DeferredRenderer(device, componentRenderDeferredContext, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
+    m_deferredRenderer(device, componentRenderDeferredContext, m_componentPsoManageCached, &m_selectedCamera, &m_selectedScene),
     m_rendererComboBox("RendererComboBox", "", ImGuiComboFlags_WidthFitPreview)
 {
     m_rendererComboBox.SetSelectableItems("Select Rederer", { "Forward Renderer", "Deferred Renderer" });
@@ -50,7 +50,7 @@ SceneWindow::SceneWindow(
                 m_isDeferredRenderer = false;
                 break;
             case ERendererType::Deferred_RENDERING:
-                m_selectedRenderer = &m_DeferredRenderer;
+                m_selectedRenderer = &m_deferredRenderer;
                 m_isDeferredRenderer = true;
                 break;
             default:
@@ -167,7 +167,7 @@ void SceneWindow::DrawScene()
     if (m_isDeferredRenderer)
     {
         ImVec2 currentDebugImagePos = cursorPos;
-        const vector<ID3D11ShaderResourceView*> gBufferSRVs = m_DeferredRenderer.GetGBufferSRVs();
+        const vector<ID3D11ShaderResourceView*> gBufferSRVs = m_deferredRenderer.GetGBufferSRVs();
         const ImVec2 debugImageRect = ImVec2(contentAvailRegion.x / gBufferSRVs.size(), contentAvailRegion.y / 10.f);
         for (ID3D11ShaderResourceView* srv : gBufferSRVs)
         {

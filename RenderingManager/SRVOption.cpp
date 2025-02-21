@@ -3,7 +3,11 @@
 
 using namespace std;
 
-void SRVOption::InitializeByOption(ID3D11Resource* resource, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+void SRVOption::InitializeByOption(
+    ID3D11Device* device,
+    ID3D11DeviceContext* deviceContext,
+    ID3D11Resource* resource
+)
 {
     ID3D11Texture2D* texture2D = nullptr;
     HRESULT hr = resource->QueryInterface(__uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&texture2D));

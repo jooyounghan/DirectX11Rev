@@ -13,7 +13,11 @@ concept IsTextureOption = requires (T option, ID3D11Resource * resource, ID3D11D
 class ITextureOption
 {
 protected:
-	virtual void InitializeByOption(ID3D11Resource* resource, ID3D11Device* device, ID3D11DeviceContext* deviceContext) = 0;
+	virtual void InitializeByOption(
+		ID3D11Device* device, 
+		ID3D11DeviceContext* deviceContext,
+		ID3D11Resource* resource
+	) = 0;
 };
 
 class PureTextureOption : public ITextureOption
@@ -25,6 +29,10 @@ protected:
 	}
 
 protected:
-	virtual void InitializeByOption(ID3D11Resource* resource, ID3D11Device* device, ID3D11DeviceContext* deviceContext) override {};
+	virtual void InitializeByOption(
+		ID3D11Device* device, 
+		ID3D11DeviceContext* deviceContext,
+		ID3D11Resource* resource
+	) override {};
 
 };

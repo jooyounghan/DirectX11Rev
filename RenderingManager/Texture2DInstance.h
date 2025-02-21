@@ -39,9 +39,9 @@ public:
 		ID3D11DeviceContext* deviceContext
 	);
 	virtual void InitializeByOption(
-		ID3D11Resource* resource, 
 		ID3D11Device* device, 
-		ID3D11DeviceContext* deviceContext
+		ID3D11DeviceContext* deviceContext,
+		ID3D11Resource* resource = nullptr 
 	) override;
 };
 
@@ -92,12 +92,12 @@ inline void Texture2DInstance<IsTextureOption...>::UpdateTextureByBuffer(
 
 template<typename ...IsTextureOption>
 inline void Texture2DInstance<IsTextureOption...>::InitializeByOption(
-	ID3D11Resource* resource, 
 	ID3D11Device* device,
-	ID3D11DeviceContext* deviceContext
+	ID3D11DeviceContext* deviceContext,
+	ID3D11Resource* resource
 )
 {
 	AssertIfFailed(device->CreateTexture2D(&m_texture2DDesc, NULL, m_texture2D.GetAddressOf()));
-	(IsTextureOption::InitializeByOption(resource, device, deviceContext), ...);
+	(IsTextureOption::InitializeByOption(device, deviceContext, m_texture2D.Get()), ...);
 }
 

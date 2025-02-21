@@ -56,10 +56,10 @@ void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 	auto& idStagingFilm = cameraComponent->GetIDStatgingFilm();
 	auto& depthStencilView = cameraComponent->GetDepthStencilView();
 
-	film.InitializeByOption(film.GetTexture2D(), m_deviceCached, m_deviceContextCached);
-	idFilm.InitializeByOption(idFilm.GetTexture2D(), m_deviceCached, m_deviceContextCached);
-	idStagingFilm.InitializeByOption(idStagingFilm.GetTexture2D(), m_deviceCached, m_deviceContextCached);
-	depthStencilView.InitializeByOption(depthStencilView.GetTexture2D(), m_deviceCached, m_deviceContextCached);
+	film.InitializeByOption(m_deviceCached, m_deviceContextCached);
+	idFilm.InitializeByOption(m_deviceCached, m_deviceContextCached);
+	idStagingFilm.InitializeByOption(m_deviceCached, m_deviceContextCached);
+	depthStencilView.InitializeByOption(m_deviceCached, m_deviceContextCached);
 }
 
 void ComponentInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
@@ -77,7 +77,7 @@ void ComponentInitializer::Visit(SpotLightComponent* spotLightComponent)
 	InitBaseComponent(spotLightComponent);
 
 	auto& depthTestView = spotLightComponent->GetDepthTestView();
-	depthTestView.InitializeByOption(depthTestView.GetTexture2D(), m_deviceCached, m_deviceContextCached);
+	depthTestView.InitializeByOption(m_deviceCached, m_deviceContextCached);
 }
 
 void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
@@ -85,7 +85,7 @@ void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
 	InitBaseComponent(pointLightComponent);
 
 	auto& deptTestViewCube = pointLightComponent->GetDepthTestViewCube();
-	deptTestViewCube.InitializeByOption(deptTestViewCube.GetTexture2D(), m_deviceCached, m_deviceContextCached);
+	deptTestViewCube.InitializeByOption(m_deviceCached, m_deviceContextCached);
 
 	for (size_t idx = 0; idx < 6; ++idx)
 	{
