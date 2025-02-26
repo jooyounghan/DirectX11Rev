@@ -84,13 +84,15 @@ DirectX::XMMATRIX AComponent::GetLocalTransformation() const
 	);
 }
 
+const DirectX::XMMATRIX& AComponent::GetAbsoluteTranformation() const { return m_transformation; }
+
 void AComponent::UpdateEntity()
 {
 	m_absolutePosition = m_parentComponent ? m_parentComponent->GetAbsolutePosition() + m_localPosition : m_localPosition;
 	m_absoluteAngle = m_parentComponent ? m_parentComponent->GetAbsoluteAngle() + m_localAngle : m_localAngle;
 
 	const XMMATRIX parentTransformation = m_parentComponent ? m_parentComponent->GetAbsoluteTranformation() : XMMatrixIdentity();
-	m_transformation = parentTransformation * GetLocalTransformation();
+	m_transformation = GetLocalTransformation() * parentTransformation;
 	m_transformationEntity.m_invTransformation = XMMatrixInverse(nullptr, m_transformation);
 	m_transformationEntity.m_transformation = XMMatrixTranspose(m_transformation);
 

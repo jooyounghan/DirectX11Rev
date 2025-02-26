@@ -75,7 +75,7 @@ public:
 	DirectX::XMVECTOR GetLocalRotationQuaternion() const;
 	DirectX::XMVECTOR GetAbsoluteRotationQuaternion() const;
 	virtual DirectX::XMMATRIX GetLocalTransformation() const;
-	inline const DirectX::XMMATRIX& GetAbsoluteTranformation() const { return m_transformation; }
+	virtual const DirectX::XMMATRIX& GetAbsoluteTranformation() const;
 
 protected:
 	STransformationEntity m_transformationEntity;

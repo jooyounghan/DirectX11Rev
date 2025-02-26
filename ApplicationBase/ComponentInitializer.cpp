@@ -21,6 +21,8 @@
 #include "UAVOption.h"
 #include "DSVOption.h"
 
+constexpr uint8_t initializeOption = ~((uint8_t)0);
+
 ComponentInitializer::ComponentInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 	: m_deviceCached(device), m_deviceContextCached(deviceContext)
 {
@@ -47,6 +49,7 @@ void ComponentInitializer::Visit(SkeletalMeshComponent* skeletalModelComponent)
 void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 {
 	InitBaseComponent(cameraComponent);
+	cameraComponent->UpdateViewEntity();
 
 	DynamicBuffer& viewProjMatrixBuffer = cameraComponent->GetViewEntityBuffer();
 	viewProjMatrixBuffer.InitializeBuffer(m_deviceCached);
@@ -75,6 +78,8 @@ void ComponentInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxColli
 void ComponentInitializer::Visit(SpotLightComponent* spotLightComponent)
 {
 	InitBaseComponent(spotLightComponent);
+	spotLightComponent->UpdateViewEntity();
+	spotLightComponent->UpdateLightEntity();
 
 	auto& depthTestView = spotLightComponent->GetDepthTestView();
 	depthTestView.InitializeByOption(m_deviceCached, m_deviceContextCached);
@@ -83,6 +88,8 @@ void ComponentInitializer::Visit(SpotLightComponent* spotLightComponent)
 void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
 {
 	InitBaseComponent(pointLightComponent);
+	pointLightComponent->UpdatePointLightFrustums();
+	pointLightComponent->UpdateLightEntity();
 
 	auto& deptTestViewCube = pointLightComponent->GetDepthTestViewCube();
 	deptTestViewCube.InitializeByOption(m_deviceCached, m_deviceContextCached);
@@ -105,6 +112,8 @@ void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
 
 void ComponentInitializer::InitBaseComponent(AComponent* component)
 {
+	component->UpdateEntity();
+
 	DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
 	DynamicBuffer& comopnentEntityBuffer = component->GetComponentEntityBuffer();
 

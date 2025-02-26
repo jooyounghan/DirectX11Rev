@@ -27,6 +27,7 @@ public:
 	inline const std::vector<SpotLightComponent*>& GetSpotLights() const { return m_spotLights; }
 	inline const std::vector<PointLightComponent*>& GetPointLights() const { return m_pointLights; }
 
+public:
 	SpotLightComponent* CreateSpotLight(
 		const std::string& componentName,
 		const uint32_t& componentID,
@@ -60,7 +61,7 @@ protected:
 	StructuredBuffer m_pointLightViewCubeEntityBuffer;
 	uint32_t m_lastPointLightIndex = 0;
 
-	// LightComponent에 OnDispose 함수를 통한 연결 필요
+	// LightComponent에 OnDispose 함수를 통한 ComponentManager과 연결 필요
 
 public:
 

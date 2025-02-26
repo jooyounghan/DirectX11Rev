@@ -23,6 +23,13 @@ SphereCollisionComponent::~SphereCollisionComponent()
 	m_collisionOption->RemoveBVHImpl(this);
 }
 
+const XMMATRIX& SphereCollisionComponent::GetAbsoluteTranformation() const
+{
+	static XMMATRIX pureTransformation = XMMatrixIdentity();
+	pureTransformation = XMMatrixScaling(1.f / m_radius, 1.f / m_radius, 1.f / m_radius) * m_transformation;
+	return pureTransformation;
+}
+
 DirectX::XMMATRIX SphereCollisionComponent::GetLocalTransformation() const
 {
 	return XMMatrixAffineTransformation(

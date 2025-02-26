@@ -23,7 +23,7 @@ ACollisionComponent::~ACollisionComponent()
 	}
 }
 
-void ACollisionComponent::SetCollisionOption(ICollisionOption* collisionOption) 
+void ACollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)
 { 
 	if (m_collisionOption) delete m_collisionOption;
 	m_collisionOption = collisionOption; 

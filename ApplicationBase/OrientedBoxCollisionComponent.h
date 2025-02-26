@@ -21,6 +21,7 @@ protected:
 public:
 	inline void SetExtents(const DirectX::XMVECTOR& extents) { m_extents = extents; }
 	const DirectX::XMVECTOR& GetExtents() { return m_extents; }
+	virtual const DirectX::XMMATRIX& GetAbsoluteTranformation() const;
 
 public:
 	virtual DirectX::XMMATRIX GetLocalTransformation() const override;

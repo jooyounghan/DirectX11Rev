@@ -292,7 +292,8 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
 
                 yaw += 360.f * (mouseDelta.x / size.x);
                 pitch += 360.f * (mouseDelta.y / size.y);
-                m_selectedCamera->SetModifiedOption(GetComponentUpdateOption(ECameraComponentUpdateOption::VIEW_ENTITY));
+
+                m_selectedCamera->UpdateViewEntity();
             }
         }
 
@@ -320,7 +321,7 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
             {
                 relativePos += currentRight;
             }
-            m_selectedCamera->SetModifiedOption(GetComponentUpdateOption(ECameraComponentUpdateOption::VIEW_ENTITY));
+            m_selectedCamera->UpdateEntity();
         }
     }
 }

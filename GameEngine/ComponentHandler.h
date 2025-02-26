@@ -69,7 +69,7 @@ private:
 	void HandleMeshComponent(AMeshComponent* meshComponent);
 	void HandleSphereCollisionComponent(SphereCollisionComponent* sphereCollisionComponent);
 	void HandleOrientedCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent);
-	void HandleLightEntity(AComponent* component, LightComponent* lightComponent, const bool& isHandleSpotPower);
+	void HandleLightEntity(LightComponent* lightComponent, const bool& isHandleSpotPower);
 
 private:
 	void RenderTransformationEntity(

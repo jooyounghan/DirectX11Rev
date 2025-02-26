@@ -26,8 +26,11 @@ void ComponentUpdater::Visit(SkeletalMeshComponent* skeletalModelComponent)
 	uint8_t modifiedOption = skeletalModelComponent->ComsumeModifiedOption();
 	UpdateBaseComponent(skeletalModelComponent, modifiedOption);
 
-	AnimationPlayer* animationPlayer = skeletalModelComponent->GetAnimationPlayer();
-	if (animationPlayer) animationPlayer->UpdateAnimationPlayer(m_deviceContextCached, m_deltaTime);
+	if (modifiedOption & GetComponentUpdateOption(ESkeletalMeshComponentUpdateOption::ANIMATION_ENTITY))
+	{
+		AnimationPlayer* animationPlayer = skeletalModelComponent->GetAnimationPlayer();
+		if (animationPlayer) animationPlayer->UpdateAnimationPlayer(m_deviceContextCached, m_deltaTime);
+	}
 }
 
 void ComponentUpdater::Visit(CameraComponent* cameraComponent)

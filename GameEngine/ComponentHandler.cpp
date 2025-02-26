@@ -66,7 +66,7 @@ void ComponentHandler::Visit(CameraComponent* cameraComponent)
 	float& fovAngle = const_cast<float&>(cameraComponent->GetFovAngle());
 	if (DragFloat("", &fovAngle, 0.1f, 60.f, 160.f))
 	{
-		cameraComponent->SetModifiedOption(GetComponentUpdateOption(ECameraComponentUpdateOption::VIEW_ENTITY));
+		cameraComponent->UpdateViewEntity();
 	}
 	PopID();
 }
@@ -96,11 +96,11 @@ void ComponentHandler::Visit(SpotLightComponent* spotLightComponent)
 	float& fovAngle = const_cast<float&>(spotLightComponent->GetFovAngle());
 	if (DragFloat("", &fovAngle, 0.1f, 60.f, 160.f))
 	{
-		spotLightComponent->SetModifiedOption(GetComponentUpdateOption(ESpotLightComponentUpdateOption::VIEW_ENTITY));
+		spotLightComponent->UpdateViewEntity();
 	}
 	PopID();
 
-	HandleLightEntity(spotLightComponent, spotLightComponent, true);
+	HandleLightEntity(spotLightComponent, true);
 }
 
 void ComponentHandler::Visit(PointLightComponent* pointLightComponent)
@@ -108,7 +108,7 @@ void ComponentHandler::Visit(PointLightComponent* pointLightComponent)
 	HandleComponentName(pointLightComponent, "Point Light Component");
 	HandleComponentTransformation(pointLightComponent, true, true, false);
 
-	HandleLightEntity(pointLightComponent, pointLightComponent, false);
+	HandleLightEntity(pointLightComponent, false);
 }
 
 void ComponentHandler::HandleComponentName(AComponent* component, const string& componentDescription)
@@ -199,7 +199,7 @@ void ComponentHandler::HandleSphereCollisionComponent(SphereCollisionComponent* 
 	PushID("SphereCollisionComponentRadius");
 	if (DragFloat("", &sphereCollisionComponent->Radius, 0.1f, 0.0f))
 	{
-		sphereCollisionComponent->SetModifiedOption(GetComponentUpdateOption(EComponentUpdateOption::TRANSFORMATION_ENTITY));
+		sphereCollisionComponent->UpdateEntity();
 	}
 	PopID();
 }
@@ -211,12 +211,12 @@ void ComponentHandler::HandleOrientedCollisionComponent(OrientedBoxCollisionComp
 	PushID("OrientedBoxCollisionComponentExtents");
 	if (DragFloat3("", &orientedBoxCollisionComponent->Extents.x, 0.1f, 0.0f))
 	{
-		orientedBoxCollisionComponent->SetModifiedOption(GetComponentUpdateOption(EComponentUpdateOption::TRANSFORMATION_ENTITY));
+		orientedBoxCollisionComponent->UpdateEntity();
 	}
 	PopID();
 }
 
-void ComponentHandler::HandleLightEntity(AComponent* component, LightComponent* lightComponent, const bool& isHandleSpotPower)
+void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const bool& isHandleSpotPower)
 {
 	constexpr uint8_t lightEntityUpdateOption = GetComponentUpdateOption(ELightComponentUpdateOption::LIGHT_ENTITY);
 
@@ -227,7 +227,7 @@ void ComponentHandler::HandleLightEntity(AComponent* component, LightComponent* 
 	Text("Light Power");
 	if (DragFloat("", &lightEntity->m_lightPower, 0.1f, 0.f, 1.f))
 	{
-		component->SetModifiedOption(lightEntityUpdateOption);
+		lightComponent->UpdateLightEntity();
 	};
 	PopID();
 
@@ -235,7 +235,7 @@ void ComponentHandler::HandleLightEntity(AComponent* component, LightComponent* 
 	Text("Fall-Off Start Distance");
 	if (DragFloat("", &lightEntity->m_fallOffStart, 1.f, 0.f, 1E6))
 	{
-		component->SetModifiedOption(lightEntityUpdateOption);
+		lightComponent->UpdateLightEntity();
 	}
 	PopID();
 
@@ -243,7 +243,7 @@ void ComponentHandler::HandleLightEntity(AComponent* component, LightComponent* 
 	Text("Fall-Off End Distance");
 	if (DragFloat("", &lightEntity->m_fallOffEnd, 1.f, lightEntity->m_fallOffStart + 100, 1E6))
 	{
-		component->SetModifiedOption(lightEntityUpdateOption);
+		lightComponent->UpdateLightEntity();
 	}
 	PopID();
 
@@ -253,7 +253,7 @@ void ComponentHandler::HandleLightEntity(AComponent* component, LightComponent* 
 		Text("Spot Power");
 		if (DragFloat("", &lightEntity->m_spotPower, 0.1f, 0.f, 10.f))
 		{
-			component->SetModifiedOption(lightEntityUpdateOption);
+			lightComponent->UpdateLightEntity();
 		}
 		PopID();
 	}
@@ -265,6 +265,9 @@ void ComponentHandler::RenderTransformationEntity(
 	const float& valueSpeed, const float& minValue, const float& maxValue
 )
 {
+	static const XMVECTOR zeroVector = XMVectorZero();
+	static const XMVECTOR defaultScale = XMVectorSet(1.f, 1.f, 1.f, 0.f);
+
 	AComponent* parentComponent = component->GetParentComponent();
 	XMVECTOR absoluteParentEntity = XMVectorZero();
 	XMVECTOR absoluteEntity = XMVectorZero();
@@ -274,9 +277,9 @@ void ComponentHandler::RenderTransformationEntity(
 		{
 			switch (entityType)
 			{
-			case EComponentEntityType::ENTITY_POSITION: return parentComponent ? parentComponent->GetAbsolutePosition() : XMVectorZero();
-			case EComponentEntityType::ENTITY_ANGLE: return parentComponent ? parentComponent->GetAbsoluteAngle() : XMVectorZero();
-			case EComponentEntityType::ENTITY_SCALE: return XMVectorSet(1.f, 1.f, 1.f, 0.f);
+			case EComponentEntityType::ENTITY_POSITION: return parentComponent ? parentComponent->GetAbsolutePosition() : zeroVector;
+			case EComponentEntityType::ENTITY_ANGLE: return parentComponent ? parentComponent->GetAbsoluteAngle() : zeroVector;
+			case EComponentEntityType::ENTITY_SCALE: return defaultScale;
 			default: throw invalid_argument("Invalid entity type");
 			}
 		};
@@ -291,7 +294,7 @@ void ComponentHandler::RenderTransformationEntity(
 			}
 		};
 
-	const auto RenderAbsoluteRelativeSelector = [&]() -> bool
+	const auto RenderAbsoluteRelativeSelector = [&]() -> void
 		{
 			if (parentComponent == nullptr)
 			{
@@ -302,7 +305,6 @@ void ComponentHandler::RenderTransformationEntity(
 				case EComponentEntityType::ENTITY_SCALE: break;
 				default: throw invalid_argument("Invalid entity type");
 				}
-				return false;
 			}
 
 			switch (entityType) 
@@ -363,14 +365,14 @@ void ComponentHandler::RenderTransformationEntity(
 		{
 			XMVECTOR updatedRelativeEntity = EntityInverseHandler(absoluteEntity, absoluteParentEntity);
 			memcpy(relativeEntityAddress, &updatedRelativeEntity.m128_f32[0], sizeof(updatedRelativeEntity));
-			component->SetModifiedOption(GetComponentUpdateOption(EComponentUpdateOption::TRANSFORMATION_ENTITY));
+			component->UpdateEntity();
 		}
 	}
 	else 
 	{
 		if (DragFloat3("", relativeEntityAddress, valueSpeed, minValue, maxValue))
 		{
-			component->SetModifiedOption(GetComponentUpdateOption(EComponentUpdateOption::TRANSFORMATION_ENTITY));
+			component->UpdateEntity();
 		}
 	}
 

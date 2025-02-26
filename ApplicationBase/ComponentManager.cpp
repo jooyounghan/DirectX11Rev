@@ -140,9 +140,12 @@ void ComponentManager::LoadComponents()
 void ComponentManager::Initialize()
 {
 	shared_lock InitLoadedComponentsLock(m_componentMutex);
+	ComponentDBInitializer componentDBInitializer(this);
 	ComponentInitializer componentInitializer(*m_deviceAddressCached, m_DeferredContext->GetDeferredContext());
 	for (auto& componentIDToComponent : m_componentIDsToComponent)
 	{
+		
+		componentIDToComponent.second->Accept(&componentDBInitializer);
 		componentIDToComponent.second->Accept(&componentInitializer);
 	}
 }
@@ -592,141 +595,6 @@ ICollisionOption* ComponentManager::CreateCollisionOption(const uint32_t& sceneI
 	}
 	return nullptr;
 }
-
-//
-//void ComponentDBInitializer::LoadCameraComponent(CameraComponent* cameraComponent)
-//{
-//	const uint32_t componentID = cameraComponent->GetComponentID();
-//	const std::string cameraComponentTableName = "camera_components";
-//
-//	Table cameraComponentTable = m_schemaCached->getTable(cameraComponentTableName, true);
-//	RowResult rowResult = cameraComponentTable
-//		.select("width", "height", "fov_angle", "near_z", "far_z").where("camera_component_id = :camera_component_id")
-//		.bind("camera_component_id", componentID).lockShared().execute();
-//
-//	auto row = rowResult.fetchOne();
-//	if (!row.isNull())
-//	{
-//		const uint32_t width = row[0].get<uint32_t>();
-//		const uint32_t height = row[1].get<uint32_t>();
-//		const float fovAngle = row[2].get<float>();
-//		const float near_z = row[3].get<float>();
-//		const float far_z = row[4].get<float>();
-//
-//		cameraComponent->SetViewport(width, height);
-//		cameraComponent->SetFovAngle(fovAngle);
-//		cameraComponent->SetNearZ(near_z);
-//		cameraComponent->SetFarZ(far_z);
-//
-//		cameraComponent->UpdateViewEntity();
-//	}
-//}
-//
-//void ComponentDBInitializer::LoadSphereColiisionComponent(SphereCollisionComponent* sphereCollisionComponent)
-//{
-//	const uint32_t componentID = sphereCollisionComponent->GetComponentID();
-//	const uint32_t& sceneID = sphereCollisionComponent->GetParentSceneID();
-//
-//	const std::string sphereCollisionComponentTableName = "sphere_collision_components";
-//	Table sphereCollisionComponentTable = m_schemaCached->getTable(sphereCollisionComponentTableName, true);
-//	RowResult rowResult = sphereCollisionComponentTable
-//		.select("radius", "collision_option_id").where("sphere_collision_component_id = :sphere_collision_component_id")
-//		.bind("sphere_collision_component_id", componentID).lockShared().execute();
-//
-//	auto row = rowResult.fetchOne();
-//	if (!row.isNull())
-//	{
-//		const float radius = row[0].get<float>();
-//		const uint32_t collisionOptionID = row[1].get<uint32_t>();
-//
-//		sphereCollisionComponent->SetRadius(radius);
-//		sphereCollisionComponent->UpdateEntity();
-//
-//		ICollisionOption* collisionOption = CreateCollisionOption(sceneID, collisionOptionID);
-//		sphereCollisionComponent->SetCollisionOption(collisionOption);
-//	}
-//}
-//
-//void ComponentDBInitializer::LoadOrientedBoxCollisionComponent(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
-//{
-//	const uint32_t& componentID = orientedBoxCollisionComponent->GetComponentID();
-//	const uint32_t& sceneID = orientedBoxCollisionComponent->GetParentSceneID();
-//
-//	const std::string orientedBoxCollisionComponentTableName = "oriented_box_collision_components";
-//
-//	Table orientedBoxCollisionComponentTable = m_schemaCached->getTable(orientedBoxCollisionComponentTableName, true);
-//	RowResult rowResult = orientedBoxCollisionComponentTable
-//		.select("extent_x", "extent_y", "extent_z", "collision_option_id").where("oriented_box_collision_component_id = :oriented_box_collision_component_id")
-//		.bind("oriented_box_collision_component_id", componentID).lockShared().execute();
-//
-//	auto row = rowResult.fetchOne();
-//	if (!row.isNull())
-//	{
-//		const float extendX = row[0].get<float>();
-//		const float extendY = row[1].get<float>();
-//		const float extendZ = row[2].get<float>();
-//		const uint32_t collisionOptionID = row[3].get<uint32_t>();
-//
-//		orientedBoxCollisionComponent->SetExtents(XMVectorSet(extendX, extendY, extendZ, 0.f));
-//		orientedBoxCollisionComponent->UpdateEntity();
-//
-//		ICollisionOption* collisionOption = CreateCollisionOption(sceneID, collisionOptionID);
-//		orientedBoxCollisionComponent->SetCollisionOption(collisionOption);
-//	}
-//
-//}
-//
-//ICollisionOption* ComponentDBInitializer::CreateCollisionOption(const uint32_t& sceneID, const uint32_t& collitionOptionID)
-//{
-//	const ECollisionOptionType collisionType = static_cast<ECollisionOptionType>(collitionOptionID);
-//	switch (collisionType)
-//	{
-//	case ECollisionOptionType::RENDER_CONTROL:
-//		return new RenderControlOption(sceneID);
-//		break;
-//	}
-//	return nullptr;
-//}
-//
-//void ComponentDBInitializer::LoadLightComponent(LightComponent* lightComponent)
-//{
-//	const uint32_t componentID = lightComponent->GetComponentID();
-//	const std::string lightsTableName = "light_components";
-//
-//	Table lightsTable = m_schemaCached->getTable(lightsTableName, true);
-//	RowResult rowResult = lightsTable
-//		.select("light_power", "falloff_start", "falloff_end", "spot_power").where("light_component_id = :light_component_id")
-//		.bind("light_component_id", componentID).lockShared().execute();
-//
-//	auto row = rowResult.fetchOne();
-//	if (!row.isNull())
-//	{
-//		const float lightPower = row[0].get<float>();
-//		const float falloffStart = row[1].get<float>();
-//		const float falloffEnd = row[2].get<float>();
-//		const float spotPower = row[3].get<float>();
-//
-//		lightComponent->SetLightEntity(lightPower, falloffStart, falloffEnd, spotPower);
-//	}
-//}
-//
-//void ComponentDBInitializer::LoadSpotLightComponent(SpotLightComponent* spotLightComponent)
-//{
-//	const uint32_t componentID = spotLightComponent->GetComponentID();
-//	const std::string spotLightsTableName = "spot_light_components";
-//
-//	Table spotLightsTable = m_schemaCached->getTable(spotLightsTableName, true);
-//	RowResult rowResult = spotLightsTable
-//		.select("fov_angle").where("spot_light_component_id = :spot_light_component_id")
-//		.bind("spot_light_component_id", componentID).lockShared().execute();
-//
-//	auto row = rowResult.fetchOne();
-//	if (!row.isNull())
-//	{
-//		const float fovAngle = row[0].get<float>();
-//		spotLightComponent->SetFovAngle(fovAngle);
-//	}
-//}
 
 
 void ComponentManager::StartMonitoringComponent(AComponent* component)

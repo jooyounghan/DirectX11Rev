@@ -19,10 +19,19 @@ LightComponent::LightComponent(
 	: AComponent(componentName, componentID, localPosition, localAngle, XMFLOAT3(1.f, 1.f, 1.f)),
 	m_lightEntityCached(lightEntityCached), m_lightEntityCachedBuffer(lightEntityCachedBuffer)
 {
-	SetLightEntity(lightPower, fallOffStart, fallOffEnd, spotPower);
+	UpdateLightEntity(lightPower, fallOffStart, fallOffEnd, spotPower);
 }
 
-void LightComponent::SetLightEntity(const float& lightPower, const float& fallOffStart, const float& fallOffEnd, const float& spotPower)
+void LightComponent::UpdateLightEntity()
+{
+	if (m_lightEntityCached)
+	{
+		SetModifiedOption(GetComponentUpdateOption(ELightComponentUpdateOption::LIGHT_ENTITY));
+	}
+}
+
+
+void LightComponent::UpdateLightEntity(const float& lightPower, const float& fallOffStart, const float& fallOffEnd, const float& spotPower)
 {
 	if (m_lightEntityCached)
 	{

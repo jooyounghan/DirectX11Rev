@@ -22,6 +22,10 @@ void AnimationPlayer::PlayAnimation(const AnimationAsset* animationAssetIn, cons
 		m_animationAssetCached = animationAssetIn;
 		m_playCount = playCountIn;
 		m_playTime = 0.f;
+		
+		m_parentSkeletalMeshComponent->SetModifiedOption(
+			GetComponentUpdateOption(ESkeletalMeshComponentUpdateOption::ANIMATION_ENTITY)
+		);
 	}
 }
 
@@ -81,10 +85,6 @@ void AnimationPlayer::UpdateAnimationPlayer(ID3D11DeviceContext* const deviceCon
 {
 	if (IsPlaying())
 	{
-		m_parentSkeletalMeshComponent->SetModifiedOption(
-			GetComponentUpdateOption(ESkeletalMeshComponentUpdateOption::ANIMATION_ENTITY)
-		);
-
 		m_playTime += deltaTime * m_animationAssetCached->GetTicksPerSecond();
 
 		const float Duration = m_animationAssetCached->GetDuration();
@@ -99,7 +99,9 @@ void AnimationPlayer::UpdateAnimationPlayer(ID3D11DeviceContext* const deviceCon
 
 		if (m_playCount > 0) // 플레이 중일 경우
 		{
-
+			m_parentSkeletalMeshComponent->SetModifiedOption(
+				GetComponentUpdateOption(ESkeletalMeshComponentUpdateOption::ANIMATION_ENTITY)
+			);
 		}
 		else // 플레이가 끝난 경우
 		{

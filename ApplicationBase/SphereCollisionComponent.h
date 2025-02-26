@@ -20,6 +20,7 @@ protected:
 public:
 	inline void SetRadius(const float& radius) { m_radius = radius; }
 	inline const float& GetRadius() { return m_radius; }
+	virtual const DirectX::XMMATRIX& GetAbsoluteTranformation() const;
 
 public:
 	virtual DirectX::XMMATRIX GetLocalTransformation() const override;

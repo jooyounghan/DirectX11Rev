@@ -46,7 +46,8 @@ protected:
 
 public:
 	SLightEntity* GetLightEntityAddress() { return m_lightEntityCached; }
-	void SetLightEntity(
+	void UpdateLightEntity();
+	void UpdateLightEntity(
 		const float& lightPower,
 		const float& fallOffStart,
 		const float& fallOffEnd,
