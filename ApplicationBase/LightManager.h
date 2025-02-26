@@ -16,8 +16,8 @@ class PointLightComponent;
 class LightManager
 {
 public:
-	LightManager();
-	~LightManager() = default;
+	LightManager(ID3D11Device* const device);
+	~LightManager();
 
 protected:
 	std::vector<SpotLightComponent*> m_spotLights;
@@ -39,6 +39,7 @@ public:
 		const float& spotPower,
 		const float& fovAngle
 	);
+
 	PointLightComponent* CreatePointLight(
 		const std::string& componentName,
 		const uint32_t& componentID,
@@ -49,17 +50,28 @@ public:
 	);
 
 protected:
-	std::array<SLightEntity, MaxSpotLightCount> m_spotLightEntities;
+	std::array<SLightEntity, MaxSpotLightCount>* m_spotLightEntities;
 	StructuredBuffer m_spotLightEntityBuffer;
-	std::array<SViewEntity, MaxSpotLightCount> m_spotLightViewEntities;
+	std::array<SViewEntity, MaxSpotLightCount>* m_spotLightViewEntities;
 	StructuredBuffer m_spotLightViewEntityBuffer;
 	uint32_t m_lastSpotLightIndex = 0;
 
-	std::array<SLightEntity, MaxPointLightCount> m_pointLightEntities;
+	std::array<SLightEntity, MaxPointLightCount>* m_pointLightEntities;
 	StructuredBuffer m_pointLightEntityBuffer;
-	std::array<std::array<SViewEntity, 6>, MaxPointLightCount> m_pointLightViewCubeEntities;
-	StructuredBuffer m_pointLightViewCubeEntityBuffer;
+	std::array<SViewEntity, MaxPointLightCount>* m_pointLightXViewEntities;
+	std::array<SViewEntity, MaxPointLightCount>* m_pointLightNegativeXViewEntities;
+	std::array<SViewEntity, MaxPointLightCount>* m_pointLightYViewEntities;
+	std::array<SViewEntity, MaxPointLightCount>* m_pointLightNegativeYViewEntities;
+	std::array<SViewEntity, MaxPointLightCount>* m_pointLightZViewEntities;
+	std::array<SViewEntity, MaxPointLightCount>* m_pointLightNegativeZViewEntities;
+	StructuredBuffer m_pointLightXViewEntityBuffer;
+	StructuredBuffer m_pointLightNegativeXViewEntityBuffer;
+	StructuredBuffer m_pointLightYViewEntityBuffer;
+	StructuredBuffer m_pointLightNegativeYViewEntityBuffer;
+	StructuredBuffer m_pointLightZViewEntityBuffer;
+	StructuredBuffer m_pointLightNegativeZViewEntityBuffer;
 	uint32_t m_lastPointLightIndex = 0;
+
 
 	// LightComponent에 OnDispose 함수를 통한 ComponentManager과 연결 필요
 

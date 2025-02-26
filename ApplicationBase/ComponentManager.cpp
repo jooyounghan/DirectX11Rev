@@ -31,11 +31,12 @@ using namespace DirectX;
 
 ComponentManager::ComponentManager(
 	SessionManager* sessionManager, 
-	ID3D11Device* const* deviceAddress, 
-	DeferredContext* DeferredContext)
+	ID3D11Device* device,
+	DeferredContext* defferedContext
+)
 	: SchemaManager(sessionManager, "component_db"),
-	m_deviceAddressCached(deviceAddress),
-	m_DeferredContext(DeferredContext)
+	m_deviceCached(device),
+	m_deferredContextCached(defferedContext)
 {
 }
 
@@ -88,7 +89,7 @@ void ComponentManager::LoadScenes()
 		const std::string staticMeshName = sceneResult[2].get<std::string>();
 		const std::string iblMaterialName = sceneResult[3].get<std::string>();
 
-		Scene* scene = new Scene(sceneID, sceneDescription);
+		Scene* scene = new Scene(sceneID, sceneDescription, LightManager(m_deviceCached));
 		scene->SetSceneStaticMeshName(staticMeshName);
 		scene->SetIBLMaterialName(iblMaterialName);
 
@@ -141,7 +142,7 @@ void ComponentManager::Initialize()
 {
 	shared_lock InitLoadedComponentsLock(m_componentMutex);
 	ComponentDBInitializer componentDBInitializer(this);
-	ComponentInitializer componentInitializer(*m_deviceAddressCached, m_DeferredContext->GetDeferredContext());
+	ComponentInitializer componentInitializer(m_deviceCached, m_deferredContextCached->GetDeferredContext());
 	for (auto& componentIDToComponent : m_componentIDsToComponent)
 	{
 		
@@ -260,7 +261,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 {
 	if (m_isInitialized)
 	{
-		ComponentUpdater componentUpdater(m_DeferredContext->GetDeferredContext(), deltaTime);
+		ComponentUpdater componentUpdater(m_deferredContextCached->GetDeferredContext(), deltaTime);
 
 		{
 			shared_lock updateComponent(m_componentMutex);
@@ -276,7 +277,8 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 				}
 			}
 		}
-		m_DeferredContext->RecordToCommandList();
+
+		m_deferredContextCached->RecordToCommandList();
 	}
 }
 

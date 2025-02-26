@@ -25,17 +25,15 @@ using namespace std;
 DepthTestRenderer::DepthTestRenderer(
     ID3D11DeviceContext* deviceContext,
     ComponentPSOManager* componentPsoManager,
-    ID3D11Buffer* componentEntityBuffer,
+    ID3D11Buffer* lightComponentEntityBuffer,
     ID3D11ShaderResourceView* const viewEntityStructuredBuffer,
-    ID3D11ShaderResourceView* const lightEntityStructuredBuffer,
     const D3D11_VIEWPORT* viewport,
     ID3D11DepthStencilView* depthStencilView
 )
     : m_deviceContext(deviceContext),
     m_componentPsoManagerCached(componentPsoManager),
-    m_componentEntityBuffer(componentEntityBuffer),
+    m_lightComponentEntityBuffer(lightComponentEntityBuffer),
     m_viewEntityStructuredBuffer(viewEntityStructuredBuffer),
-    m_lightEntityStructuredBuffer(lightEntityStructuredBuffer),
     m_viewport(viewport),
     m_depthStencilView(depthStencilView)
 {
@@ -60,12 +58,11 @@ void DepthTestRenderer::Visit(StaticMeshComponent* staticMeshComponent)
 
                 // =============================== VS ===============================
                 vector<ID3D11Buffer*> vsConstantBuffers{
-                    m_componentEntityBuffer,
+                    m_lightComponentEntityBuffer,
                     staticMeshComponent->GetTransformationEntityBuffer().GetBuffer()
                 };
                 vector<ID3D11ShaderResourceView*> vsSRVs{
                     m_viewEntityStructuredBuffer,
-                    m_lightEntityStructuredBuffer
                 };
 
                 m_deviceContext->VSSetConstantBuffers(0, static_cast<UINT>(vsConstantBuffers.size()), vsConstantBuffers.data());
@@ -98,13 +95,12 @@ void DepthTestRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 
                 // =============================== VS ===============================
                 vector<ID3D11Buffer*> vsConstantBuffers{
-                    m_componentEntityBuffer,
+                    m_lightComponentEntityBuffer,
                     skeletalMeshComponent->GetTransformationEntityBuffer().GetBuffer()
                 };
 
                 vector<ID3D11ShaderResourceView*> vsSRVs{
                     m_viewEntityStructuredBuffer,
-                    m_lightEntityStructuredBuffer,
                     skeletalMeshComponent->GetAnimationPlayer()->GetBoneTransformationBuffer()->GetSRV()
                 };
 

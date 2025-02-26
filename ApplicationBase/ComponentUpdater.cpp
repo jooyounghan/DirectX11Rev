@@ -9,6 +9,7 @@
 #include "PointLightComponent.h"
 
 #include "DynamicBuffer.h"
+#include "StructuredBuffer.h"
 
 ComponentUpdater::ComponentUpdater(ID3D11DeviceContext* deviceContext, const float& deltaTime)
 	: m_deviceContextCached(deviceContext), m_deltaTime(deltaTime)
@@ -71,35 +72,29 @@ void ComponentUpdater::Visit(SpotLightComponent* spotLightComponent)
 {
 	uint8_t modifiedOption = spotLightComponent->ComsumeModifiedOption();
 	UpdateBaseComponent(spotLightComponent, modifiedOption);
+	UpdateLightComponent(spotLightComponent, modifiedOption);
 
-	//if (modifiedOption & GetComponentUpdateOption(ELightComponentUpdateOption::LIGHT_ENTITY))
-	//{
-	//	DynamicBuffer* lightBuffer = lightComponent->GetLightEntityBuffer();
-	//	lightBuffer->Upload(m_deviceContextCached);
-	//}
-
-	//if (modifiedOption & GetComponentUpdateOption(ESpotLightComponentUpdateOption::VIEW_ENTITY))
-	//{
-	//	DynamicBuffer& viewEntityBufer = spotLightComponent->GetViewEntityBuffer();
-	//	viewEntityBufer.Upload(m_deviceContextCached);
-	//}
+	if (modifiedOption & GetComponentUpdateOption(ESpotLightComponentUpdateOption::VIEW_ENTITY))
+	{
+		StructuredBuffer* viewEntityBuferAddress = spotLightComponent->GetViewEntitiesBufferAddress();
+		viewEntityBuferAddress->Upload(m_deviceContextCached);
+	}
 }
 
 void ComponentUpdater::Visit(PointLightComponent* pointLightComponent)
 {
 	uint8_t modifiedOption = pointLightComponent->ComsumeModifiedOption();
 	UpdateBaseComponent(pointLightComponent, modifiedOption);
+	UpdateLightComponent(pointLightComponent, modifiedOption);
 
-	//pointLightComponent->UpdatePointLightParts();
-	//UpdateLightComponent(pointLightComponent);
-
-	//for (size_t idx = 0; idx < 6; ++idx)
-	//{
-	//	PointLightFrustum* pointLightFrustumPart = pointLightComponent->GetPointLightFrustumPart(idx);
-
-	//	DynamicBuffer* viewProjMatrixBuffer = pointLightFrustumPart->GetViewProjMatrixBuffer();
-	//	viewProjMatrixBuffer->Upload(m_deviceContextCached);
-	//}
+	if (modifiedOption & GetComponentUpdateOption(ESpotLightComponentUpdateOption::VIEW_ENTITY))
+	{
+		for (size_t idx = 0; idx < 6; ++idx)
+		{
+			StructuredBuffer* viewEntityBufferAddress = pointLightComponent->GetPointLightFrustum(idx).GetViewEntityBufferAddress();
+			viewEntityBufferAddress->Upload(m_deviceContextCached);
+		}
+	}
 }
 
 void ComponentUpdater::UpdateBaseComponent(AComponent* component, const UINT8& modifiedOption)
@@ -113,5 +108,14 @@ void ComponentUpdater::UpdateBaseComponent(AComponent* component, const UINT8& m
 	{
 		DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
 		transformationEntityBuffer.Upload(m_deviceContextCached);
+	}
+}
+
+void ComponentUpdater::UpdateLightComponent(LightComponent* lightComponent, const UINT8& modifiedOption)
+{
+	if (modifiedOption & GetComponentUpdateOption(ELightComponentUpdateOption::LIGHT_ENTITY))
+	{
+		StructuredBuffer* lightEntityBufferAddress = lightComponent->GetLightEntityBufferAddress();
+		lightEntityBufferAddress->Upload(m_deviceContextCached);
 	}
 }

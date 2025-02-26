@@ -17,12 +17,12 @@ public:
 	void InitDeferredContext();
 
 protected:
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_DeferredContext;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_deferredContext;
 	Concurrency::concurrent_queue<ID3D11CommandList*> m_commandListsQueue;
 
 public:
-	inline ID3D11DeviceContext* GetDeferredContext() { return m_DeferredContext.Get(); }
-	inline ID3D11DeviceContext* const* GetDeferredContextAddress() { return m_DeferredContext.GetAddressOf(); }
+	inline ID3D11DeviceContext* GetDeferredContext() { return m_deferredContext.Get(); }
+	inline ID3D11DeviceContext* const* GetDeferredContextAddress() { return m_deferredContext.GetAddressOf(); }
 
 public:
 	void RecordToCommandList();

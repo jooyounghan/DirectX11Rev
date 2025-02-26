@@ -15,7 +15,12 @@ class IIBLMaterialProvider;
 class Scene
 {
 public:
-	Scene(const uint32_t sceneID, const std::string& sceneDescription);
+	Scene(
+		const uint32_t sceneID,
+		const std::string& sceneDescription,
+		LightManager&& lightManager
+	);
+
 	~Scene() = default;
 
 protected:

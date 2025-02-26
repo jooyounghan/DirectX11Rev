@@ -412,6 +412,9 @@
     <None Include="Shaders\DepthTestHeader.hlsli">
       <Filter>Shader\Header</Filter>
     </None>
+    <None Include="Shaders\LightEntityHeader.hlsli">
+      <Filter>Shader\Header</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\DebugComponentVS.hlsl">

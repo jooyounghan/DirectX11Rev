@@ -46,10 +46,6 @@ GameEngine::GameEngine()
 	CreateDeferredContext();
 	CreateSessionManager();
 	CreateAssetManager();
-	CreateComponentManager();
-	CreatePSOManager();
-	
-	m_componentManager->StartMonitoringComponent(m_editorCamera);
 
 	/* Bind Event Handler */
 	m_onWindowSizeMoveHandler = [&](const UINT& widthIn, const UINT& heightIn) { m_engine->ResizeSwapChain(widthIn, heightIn); };
@@ -79,6 +75,11 @@ void GameEngine::Init(const wchar_t* className, const wchar_t* applicaitonName)
 	AApplication::Init(className, applicaitonName);
 
 	m_engine->InitEngine(m_appSize.m_width, m_appSize.m_height, m_mainWindow);
+
+	CreateComponentManager();
+	CreatePSOManager();
+
+	m_componentManager->StartMonitoringComponent(m_editorCamera);
 
 	ID3D11Device* device = m_engine->GetDevice();
 	ID3D11DeviceContext* deviceContext = m_engine->GetDeviceContext();
@@ -263,9 +264,9 @@ void GameEngine::CreateAssetManager()
 
 void GameEngine::CreateComponentManager()
 {
-	ID3D11Device* const* deviceAddress = m_engine->GetDeviceAddress();
+	ID3D11Device* device = m_engine->GetDevice();
 	m_componentManager = new ComponentManager(
-		m_sessionManager, deviceAddress, 
+		m_sessionManager, device, 
 		m_engine->GetDeferredContext(DeferredContextID(EDeferredContextType::COMPONENT_UPDATE))
 	);
 }

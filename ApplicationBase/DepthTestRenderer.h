@@ -17,9 +17,8 @@ public:
 	DepthTestRenderer(
 		ID3D11DeviceContext* deviceContext,
 		ComponentPSOManager* componentPsoManager,
-		ID3D11Buffer* componentEntityBuffer,
+		ID3D11Buffer* lightComponentEntityBuffer,
 		ID3D11ShaderResourceView* const viewEntityStructuredBuffer,
-		ID3D11ShaderResourceView* const lightEntityStructuredBuffer,
 		const D3D11_VIEWPORT* viewport,
 		ID3D11DepthStencilView* depthStencilView
 	);
@@ -28,9 +27,8 @@ public:
 protected:
 	ID3D11DeviceContext* m_deviceContext = nullptr;
 	ComponentPSOManager* m_componentPsoManagerCached = nullptr;
-	ID3D11Buffer* m_componentEntityBuffer = nullptr;
+	ID3D11Buffer* m_lightComponentEntityBuffer = nullptr;
 	ID3D11ShaderResourceView* const m_viewEntityStructuredBuffer = nullptr;
-	ID3D11ShaderResourceView* const m_lightEntityStructuredBuffer = nullptr;
 	const D3D11_VIEWPORT* m_viewport = nullptr;
 	ID3D11DepthStencilView* m_depthStencilView = nullptr;
 

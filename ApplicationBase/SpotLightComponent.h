@@ -24,6 +24,7 @@ public:
 		const float& fallOffStart,
 		const float& fallOffEnd,
 		const float& spotPower,
+		const uint32_t& lightIdx,
 		SLightEntity* lightEntityCached,
 		StructuredBuffer* lightEntityCachedBuffer,
 		SViewEntity* viewEntityCached,
@@ -40,10 +41,12 @@ protected:
 
 public:
 	inline const float& GetFovAngle() const { return m_fovAngle; }
-	inline SViewEntity* GetViewEntityAddress() const { return m_viewEntityCached; }
 	inline const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
+	inline SViewEntity* GetViewEntityAddress() const { return m_viewEntityCached; }
+	inline StructuredBuffer* GetViewEntitiesBufferAddress() { return m_viewEntityCachedBuffer; }
+
+public:
 	inline void SetFovAngle(const float& fovAngle) { m_fovAngle = fovAngle; }
-	inline void SetViewEntityAddress(SViewEntity* viewEntityCached) { m_viewEntityCached = viewEntityCached; }
 
 protected:
 	Texture2DInstance<SRVOption, DSVOption> m_depthTestView;

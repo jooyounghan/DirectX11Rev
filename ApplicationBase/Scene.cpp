@@ -2,8 +2,13 @@
 #include "IBLMaterialAsset.h"
 #include "StaticMeshAsset.h"
 
-Scene::Scene(const uint32_t sceneID, const std::string& sceneDescription)
-	: m_sceneID(sceneID), m_sceneDescription(sceneDescription)
+Scene::Scene(
+	const uint32_t sceneID, 
+	const std::string& sceneDescription,
+	LightManager&& lightManager
+
+)
+	: m_sceneID(sceneID), m_sceneDescription(sceneDescription), m_lightManager(lightManager)
 {
 }
 

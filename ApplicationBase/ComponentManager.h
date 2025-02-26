@@ -24,14 +24,14 @@ class ComponentManager : public SchemaManager
 public:
 	ComponentManager(
 		SessionManager* sessionManager,
-		ID3D11Device* const* deviceAddress,
-		DeferredContext* DeferredContext
+		ID3D11Device* device,
+		DeferredContext* defferedContext
 	);
 	~ComponentManager() override;
 
 protected:
-	ID3D11Device* const* m_deviceAddressCached = nullptr;
-	DeferredContext* m_DeferredContext = nullptr;
+	ID3D11Device* m_deviceCached = nullptr;
+	DeferredContext* m_deferredContextCached = nullptr;
 
 protected:
 	std::thread											m_workThread;

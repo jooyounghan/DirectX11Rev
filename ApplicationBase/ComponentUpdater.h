@@ -2,8 +2,7 @@
 #include "IComponentVisitor.h"
 #include <d3d11.h>
 
-class AViewComponent;
-class LightEntity;
+class LightComponent;
 
 class ComponentUpdater : public IComponentVisitor
 {
@@ -32,4 +31,5 @@ public:
 
 private:
 	void UpdateBaseComponent(AComponent* component, const UINT8& modifiedOption);
+	void UpdateLightComponent(LightComponent* lightComponent, const UINT8& modifiedOption);
 };

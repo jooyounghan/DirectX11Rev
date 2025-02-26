@@ -9,13 +9,13 @@ DeferredContext::DeferredContext(ID3D11Device* const* deviceAddress)
 
 void DeferredContext::InitDeferredContext()
 {
-	(*m_deviceAddressCached)->CreateDeferredContext(NULL, m_DeferredContext.GetAddressOf());
+	(*m_deviceAddressCached)->CreateDeferredContext(NULL, m_deferredContext.GetAddressOf());
 }
 
 void DeferredContext::RecordToCommandList()
 {
 	ID3D11CommandList* commandList;
-	m_DeferredContext->FinishCommandList(TRUE, &commandList);
+	m_deferredContext->FinishCommandList(TRUE, &commandList);
 	m_commandListsQueue.push(commandList);
 }
 

@@ -114,9 +114,9 @@ void ComponentInitializer::InitBaseComponent(AComponent* component)
 {
 	component->UpdateEntity();
 
-	DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
 	DynamicBuffer& comopnentEntityBuffer = component->GetComponentEntityBuffer();
+	DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
 
-	transformationEntityBuffer.InitializeBuffer(m_deviceCached);
 	comopnentEntityBuffer.InitializeBuffer(m_deviceCached);
+	transformationEntityBuffer.InitializeBuffer(m_deviceCached);
 }

@@ -280,6 +280,7 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
             m_selectedComponent = m_componentManagerCached->GetComponent(selectedComponentID);
         }
 
+        bool isChanged = false;
         if (IsItemHovered(ImGuiHoveredFlags_::ImGuiHoveredFlags_None))
         {
             if (io.MouseDown[ImGuiMouseButton_::ImGuiMouseButton_Middle])
@@ -293,7 +294,7 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
                 yaw += 360.f * (mouseDelta.x / size.x);
                 pitch += 360.f * (mouseDelta.y / size.y);
 
-                m_selectedCamera->UpdateViewEntity();
+                isChanged |= true;
             }
         }
 
@@ -308,20 +309,30 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
             if (IsKeyDown(ImGuiKey::ImGuiKey_W))
             {
                 relativePos += currentForward;
+                isChanged |= true;
             }
             if (IsKeyDown(ImGuiKey::ImGuiKey_S))
             {
                 relativePos -= currentForward;
+                isChanged |= true;
             }
             if (IsKeyDown(ImGuiKey::ImGuiKey_A))
             {
                 relativePos -= currentRight;
+                isChanged |= true;
             }
             if (IsKeyDown(ImGuiKey::ImGuiKey_D))
             {
                 relativePos += currentRight;
+                isChanged |= true;
             }
+
+        }
+
+        if (isChanged)
+        {
             m_selectedCamera->UpdateEntity();
+            m_selectedCamera->UpdateViewEntity();
         }
     }
 }
