@@ -1,5 +1,8 @@
 #include "ComponentInitializer.h"
 
+#include "Scene.h"
+#include "LightManager.h"
+
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
@@ -26,6 +29,24 @@ constexpr uint8_t initializeOption = ~((uint8_t)0);
 ComponentInitializer::ComponentInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 	: m_deviceCached(device), m_deviceContextCached(deviceContext)
 {
+}
+
+void ComponentInitializer::Visit(Scene* scene)
+{
+	LightManager& lightManager = scene->GetLightManager();
+	
+	lightManager.GetLightManagerEntityBuffer().InitializeBuffer(m_deviceCached);
+
+	lightManager.GetSpotLightEntityBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetSpotLightViewEntityBuffer().InitializeBuffer(m_deviceCached);
+
+	lightManager.GetPointLightEntityBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetPointLightXViewEntityBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetPointLightNegativeXViewEntityBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetPointLightYViewEntityBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetPointLightNegativeYViewEntityBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetPointLightZViewEntityBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetPointLightNegativeZViewEntityBuffer().InitializeBuffer(m_deviceCached);
 }
 
 void ComponentInitializer::Visit(StaticMeshComponent* staticModelComponent)

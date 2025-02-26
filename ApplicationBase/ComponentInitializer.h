@@ -1,11 +1,13 @@
 #pragma once
 #include "IComponentVisitor.h"
+#include "ISceneVisitor.h"
+
 #include <d3d11.h>
 
 class AViewComponent;
 class LightEntity;
 
-class ComponentInitializer : public IComponentVisitor
+class ComponentInitializer : public IComponentVisitor, public ISceneVisitor
 {
 public:
 	ComponentInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
@@ -14,6 +16,9 @@ public:
 protected:
 	ID3D11Device* m_deviceCached = nullptr;
 	ID3D11DeviceContext* m_deviceContextCached = nullptr;
+
+public:
+	virtual void Visit(Scene* scene) override;
 
 public:
 	virtual void Visit(StaticMeshComponent* staticModelComponent) override;

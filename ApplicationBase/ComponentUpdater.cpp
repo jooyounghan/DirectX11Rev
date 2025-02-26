@@ -1,5 +1,8 @@
 #include "ComponentUpdater.h"
 
+#include "Scene.h"
+#include "LightManager.h"
+
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
 #include "CameraComponent.h"
@@ -14,6 +17,16 @@
 ComponentUpdater::ComponentUpdater(ID3D11DeviceContext* deviceContext, const float& deltaTime)
 	: m_deviceContextCached(deviceContext), m_deltaTime(deltaTime)
 {
+}
+
+void ComponentUpdater::Visit(Scene* scene)
+{
+	LightManager& lightManager = scene->GetLightManager();
+	if (lightManager.ConsumeIsLightCountChanged())
+	{
+		DynamicBuffer& lightManagerEntityBuffer = lightManager.GetLightManagerEntityBuffer();
+		lightManagerEntityBuffer.Upload(m_deviceContextCached);
+	}
 }
 
 void ComponentUpdater::Visit(StaticMeshComponent* staticModelComponent)

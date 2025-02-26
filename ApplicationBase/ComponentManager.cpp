@@ -89,7 +89,7 @@ void ComponentManager::LoadScenes()
 		const std::string staticMeshName = sceneResult[2].get<std::string>();
 		const std::string iblMaterialName = sceneResult[3].get<std::string>();
 
-		Scene* scene = new Scene(sceneID, sceneDescription, LightManager(m_deviceCached));
+		Scene* scene = new Scene(sceneID, sceneDescription);
 		scene->SetSceneStaticMeshName(staticMeshName);
 		scene->SetIBLMaterialName(iblMaterialName);
 
@@ -143,9 +143,14 @@ void ComponentManager::Initialize()
 	shared_lock InitLoadedComponentsLock(m_componentMutex);
 	ComponentDBInitializer componentDBInitializer(this);
 	ComponentInitializer componentInitializer(m_deviceCached, m_deferredContextCached->GetDeferredContext());
+
+	for (auto& m_sceneIDToScene : m_sceneIDsToScene)
+	{
+		m_sceneIDToScene.second->Accept(&componentInitializer);
+	}
+
 	for (auto& componentIDToComponent : m_componentIDsToComponent)
 	{
-		
 		componentIDToComponent.second->Accept(&componentDBInitializer);
 		componentIDToComponent.second->Accept(&componentInitializer);
 	}
@@ -262,7 +267,11 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 	if (m_isInitialized)
 	{
 		ComponentUpdater componentUpdater(m_deferredContextCached->GetDeferredContext(), deltaTime);
-
+		for (auto& m_sceneIDToScene : m_sceneIDsToScene)
+		{
+			m_sceneIDToScene.second->Accept(&componentUpdater);
+		}
+		
 		{
 			shared_lock updateComponent(m_componentMutex);
 			for (auto& m_componentIDToComponent : m_componentIDsToComponent)
@@ -277,6 +286,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 				}
 			}
 		}
+
 
 		m_deferredContextCached->RecordToCommandList();
 	}

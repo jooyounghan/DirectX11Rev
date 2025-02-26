@@ -1,6 +1,7 @@
 #include "MeshComponentHeader.hlsli"
 #include "MaterialComponentHeader.hlsli"
 #include "PBRHeader.hlsli"
+#include "LightEntityHeader.hlsli"
 
 cbuffer ComponentBuffer : register(b0)
 {
@@ -13,10 +14,17 @@ cbuffer CameraViewConstantBuffer : register(b1)
     matrix viewProjMatrix;
     matrix viewProjInvMatrix;
     float3 viewPosition;
-    float dummy;
+    float b1Dummy;
 };
 
-cbuffer MaterialAssetData : register(b2)
+cbuffer LightManagerEntityBuffer : register(b2)
+{
+    uint spotLightCount;
+    uint pointLightCount;
+    uint2 b2Dummy;
+}
+
+cbuffer MaterialAssetData : register(b3)
 {
     bool    isAmbientOcculusionSet;
     bool    isSpecularSet;
@@ -33,8 +41,9 @@ cbuffer MaterialAssetData : register(b2)
 TextureCube specularIBLTexture : register(t0);
 TextureCube diffuseIBLTexture : register(t1);
 Texture2D brdfLUTTexture : register(t2);
-
-Texture2D materialTexture[7] : register(t3);
+StructuredBuffer<LightEntity> spotLightEntity : register(t3);
+StructuredBuffer<LightViewEntity> spotLightViewEntity : register(t4);
+Texture2D materialTexture[7] : register(t5);
 
 SamplerState wrapSampler : register(s0);
 SamplerState clampSampler : register(s1);
@@ -78,23 +87,32 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
     
     
     // Direct Lighting Test ==============================================================
-    float3 spotLightPos = float3(0.f, 0.f, 0.f);
-    float3 toSpotLight = normalize(spotLightPos - input.f4ModelPos.xyz);
-    float3 spotLightPower = 1.f;
-    float3 spotHalfVector = (toEye + toSpotLight) / 2.f;
+    for (uint spotLightIdx = 0; spotLightIdx < spotLightCount; ++spotLightIdx)
+    {
+        float3 spotLightPos = spotLightViewEntity[spotLightIdx].viewPosition;
+        float3 toSpotLight = spotLightPos - input.f4ModelPos.xyz;
+        float lightPower = spotLightEntity[spotLightIdx].lightPower;
+        float fallOffStart = spotLightEntity[spotLightIdx].fallOffStart;
+        float fallOffEnd = spotLightEntity[spotLightIdx].fallOffEnd;
+        
+        lightPower = clamp(lightPower * (length(toSpotLight) - fallOffEnd) / (fallOffStart - fallOffEnd), 0.0f, lightPower);
+        toSpotLight = normalize(toSpotLight);
+               
+        float3 spotHalfVector = (toEye + toSpotLight) / 2.f;
+        float spotLDotH = max(0.f, dot(toSpotLight, spotHalfVector));
+        float spotNDotH = max(0.f, dot(normal, spotHalfVector));
+        float spotLDotN = max(0.f, dot(toSpotLight, normal));
+        float spotVDotN = max(0.f, dot(toEye, normal));
     
-    float spotLDotH = max(0.f, dot(toSpotLight, spotHalfVector));
-    float spotNDotH = max(0.f, dot(normal, spotHalfVector));
-    float spotLDotN = max(0.f, dot(toSpotLight, normal));
-    float spotVDotN = max(0.f, dot(toEye, normal));
+        float3 directDiffuseBRDF = (kd * diffuse / 3.141592);
+        float3 directSpecularBRDF = SchlickFresnelReflectRoughnessTerm(ks, spotLDotH, roughness)
+            * SchlickGeometryModel(spotLDotN, spotVDotN, roughness)
+            * NormalDistributionGGXTerm(spotNDotH, roughness)
+            / max((4 * spotLDotN * spotVDotN), 1E-6);
     
-    float3 directDiffuseBRDF = (kd * diffuse / 3.141592);
-    float3 directSpecularBRDF = SchlickFresnelReflectRoughnessTerm(ks, spotLDotH, roughness)
-    * SchlickGeometryModel(spotLDotN, spotVDotN, roughness)
-    * NormalDistributionGGXTerm(spotNDotH, roughness)
-    / max((4 * spotLDotN * spotVDotN), 1E-6);
-    
-    color += (directDiffuseBRDF + directSpecularBRDF) * spotLightPower * spotLDotN;
+        color += (directDiffuseBRDF + directSpecularBRDF) * lightPower * max(0.f, pow(spotLDotN, spotLightEntity[spotLightIdx].spotPower));
+    }
+
     // ===================================================================================
     
     Result.f4Color = float4(color, 1.f);   

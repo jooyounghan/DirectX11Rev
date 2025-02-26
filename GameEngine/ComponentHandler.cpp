@@ -57,14 +57,25 @@ void ComponentHandler::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 
 void ComponentHandler::Visit(CameraComponent* cameraComponent)
 {
+	bool isViewChanged = false;
 	HandleComponentName(cameraComponent, "Camera Model Component");
-	HandleComponentTransformation(cameraComponent, true, true, false);
+
+
+	if (HandleComponentTransformation(cameraComponent, true, true, false))
+	{
+		isViewChanged = true;
+	}
 
 	SeparatorText("View Properties");
 	Text("Fov Angle");
 	PushID("FovAngle");
 	float& fovAngle = const_cast<float&>(cameraComponent->GetFovAngle());
 	if (DragFloat("", &fovAngle, 0.1f, 60.f, 160.f))
+	{
+		isViewChanged = true;
+	}
+
+	if (isViewChanged)
 	{
 		cameraComponent->UpdateViewEntity();
 	}
@@ -87,14 +98,23 @@ void ComponentHandler::Visit(OrientedBoxCollisionComponent* orientedBoxCollision
 
 void ComponentHandler::Visit(SpotLightComponent* spotLightComponent)
 {
+	bool isViewChanged = false;
 	HandleComponentName(spotLightComponent, "Spot Light Component");
-	HandleComponentTransformation(spotLightComponent, true, true, false);
+	if (HandleComponentTransformation(spotLightComponent, true, true, false))
+	{
+		isViewChanged = true;
+	}
 
 	SeparatorText("View Properties");
 	Text("Fov Angle");
 	PushID("FovAngle");
 	float& fovAngle = const_cast<float&>(spotLightComponent->GetFovAngle());
 	if (DragFloat("", &fovAngle, 0.1f, 60.f, 160.f))
+	{		
+		isViewChanged = true;
+	}
+
+	if (isViewChanged)
 	{
 		spotLightComponent->UpdateViewEntity();
 	}
@@ -107,7 +127,6 @@ void ComponentHandler::Visit(PointLightComponent* pointLightComponent)
 {
 	HandleComponentName(pointLightComponent, "Point Light Component");
 	HandleComponentTransformation(pointLightComponent, true, true, false);
-
 	HandleLightEntity(pointLightComponent, false);
 }
 
@@ -122,13 +141,14 @@ void ComponentHandler::HandleComponentName(AComponent* component, const string& 
 	Text(componentDescription.c_str());
 }
 
-void ComponentHandler::HandleComponentTransformation(
+bool ComponentHandler::HandleComponentTransformation(
 	AComponent* component,
 	const bool& isHandlePosition,
 	const bool& isHandleAngle ,
 	const bool& isHandleScale
 )
 {
+	bool result = false;
 	SeparatorText("Transformation");
 
 	static bool isAbsolutePosition = false;
@@ -139,7 +159,7 @@ void ComponentHandler::HandleComponentTransformation(
 
 	if (isHandlePosition)
 	{
-		RenderTransformationEntity(
+		result |= RenderTransformationEntity(
 			"RenderPositionEntity", "Position", 
 			component, EComponentEntityType::ENTITY_POSITION,
 			1.f, -1E9f, 1E9f
@@ -147,7 +167,7 @@ void ComponentHandler::HandleComponentTransformation(
 	}
 	if (isHandleAngle)
 	{
-		RenderTransformationEntity(
+		result |= RenderTransformationEntity(
 			"RenderAngleEntity", "Angle",
 			component, EComponentEntityType::ENTITY_ANGLE,
 			0.1f, -360.f, 360.f
@@ -155,12 +175,13 @@ void ComponentHandler::HandleComponentTransformation(
 	}
 	if (isHandleScale)
 	{
-		RenderTransformationEntity(
+		result |= RenderTransformationEntity(
 			"RenderScaleEntity", "Scale",
 			component, EComponentEntityType::ENTITY_SCALE,
 			0.01f, 1E-3f, 10.f
 		);
 	}
+	return result;
 }
 
 void ComponentHandler::HandleAnimationPlayer(SkeletalMeshComponent* skeletalMeshComponent)
@@ -219,15 +240,16 @@ void ComponentHandler::HandleOrientedCollisionComponent(OrientedBoxCollisionComp
 void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const bool& isHandleSpotPower)
 {
 	constexpr uint8_t lightEntityUpdateOption = GetComponentUpdateOption(ELightComponentUpdateOption::LIGHT_ENTITY);
+	bool isChanged = false;
 
 	SeparatorText("Light Entities");
 	SLightEntity* lightEntity = lightComponent->GetLightEntityAddress();
 	
 	PushID("lightPowerEntity");
 	Text("Light Power");
-	if (DragFloat("", &lightEntity->m_lightPower, 0.1f, 0.f, 1.f))
+	if (DragFloat("", &lightEntity->m_lightPower, 0.01f, 0.f, 1.f))
 	{
-		lightComponent->UpdateLightEntity();
+		isChanged |= true;
 	};
 	PopID();
 
@@ -235,7 +257,7 @@ void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const b
 	Text("Fall-Off Start Distance");
 	if (DragFloat("", &lightEntity->m_fallOffStart, 1.f, 0.f, 1E6))
 	{
-		lightComponent->UpdateLightEntity();
+		isChanged |= true;
 	}
 	PopID();
 
@@ -243,7 +265,7 @@ void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const b
 	Text("Fall-Off End Distance");
 	if (DragFloat("", &lightEntity->m_fallOffEnd, 1.f, lightEntity->m_fallOffStart + 100, 1E6))
 	{
-		lightComponent->UpdateLightEntity();
+		isChanged |= true;
 	}
 	PopID();
 
@@ -253,18 +275,21 @@ void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const b
 		Text("Spot Power");
 		if (DragFloat("", &lightEntity->m_spotPower, 0.1f, 0.f, 10.f))
 		{
-			lightComponent->UpdateLightEntity();
+			isChanged |= true;
 		}
 		PopID();
 	}
+
+	if (isChanged) lightComponent->UpdateLightEntity();
 }
 
-void ComponentHandler::RenderTransformationEntity(
+bool ComponentHandler::RenderTransformationEntity(
 	const char* groupID, const char* entityName, 
 	AComponent* component, const EComponentEntityType& entityType,
 	const float& valueSpeed, const float& minValue, const float& maxValue
 )
 {
+	bool result = false;
 	static const XMVECTOR zeroVector = XMVectorZero();
 	static const XMVECTOR defaultScale = XMVectorSet(1.f, 1.f, 1.f, 0.f);
 
@@ -366,6 +391,7 @@ void ComponentHandler::RenderTransformationEntity(
 			XMVECTOR updatedRelativeEntity = EntityInverseHandler(absoluteEntity, absoluteParentEntity);
 			memcpy(relativeEntityAddress, &updatedRelativeEntity.m128_f32[0], sizeof(updatedRelativeEntity));
 			component->UpdateEntity();
+			result |= true;
 		}
 	}
 	else 
@@ -373,8 +399,10 @@ void ComponentHandler::RenderTransformationEntity(
 		if (DragFloat3("", relativeEntityAddress, valueSpeed, minValue, maxValue))
 		{
 			component->UpdateEntity();
+			result |= true;
 		}
 	}
 
 	PopID();
+	return result;
 }

@@ -1,7 +1,8 @@
 #pragma once
-#include "StructuredBuffer.h"
 #include "LightComponent.h"
 #include "ViewEntity.h"
+#include "StructuredBuffer.h"
+#include "DynamicBuffer.h"
 
 #include <vector>
 #include <array>
@@ -13,10 +14,17 @@ constexpr size_t MaxPointLightCount = 1024;
 class SpotLightComponent;
 class PointLightComponent;
 
+struct SLightManagerEntity
+{
+	uint32_t m_spotLightCount;
+	uint32_t m_pointLightCount;
+	uint32_t dummy[2];
+};
+
 class LightManager
 {
 public:
-	LightManager(ID3D11Device* const device);
+	LightManager();
 	~LightManager();
 
 protected:
@@ -26,6 +34,18 @@ protected:
 public:
 	inline const std::vector<SpotLightComponent*>& GetSpotLights() const { return m_spotLights; }
 	inline const std::vector<PointLightComponent*>& GetPointLights() const { return m_pointLights; }
+
+protected:
+	SLightManagerEntity m_lightManagerEntity;
+	DynamicBuffer m_lightManagerEntityBuffer;
+	std::atomic_bool m_isLightCountChanged = false;
+
+public:
+	inline DynamicBuffer& GetLightManagerEntityBuffer() { return m_lightManagerEntityBuffer; }
+	inline bool ConsumeIsLightCountChanged() { return m_isLightCountChanged.exchange(false); }
+	inline void SetIsLightCountChanged(const bool& isLightCountChanged) { m_isLightCountChanged = isLightCountChanged; }
+
+
 
 public:
 	SpotLightComponent* CreateSpotLight(
@@ -56,6 +76,11 @@ protected:
 	StructuredBuffer m_spotLightViewEntityBuffer;
 	uint32_t m_lastSpotLightIndex = 0;
 
+public:
+	inline StructuredBuffer& GetSpotLightEntityBuffer() { return m_spotLightEntityBuffer; }
+	inline StructuredBuffer& GetSpotLightViewEntityBuffer() { return m_spotLightViewEntityBuffer; }
+
+protected:
 	std::array<SLightEntity, MaxPointLightCount>* m_pointLightEntities;
 	StructuredBuffer m_pointLightEntityBuffer;
 	std::array<SViewEntity, MaxPointLightCount>* m_pointLightXViewEntities;
@@ -72,10 +97,13 @@ protected:
 	StructuredBuffer m_pointLightNegativeZViewEntityBuffer;
 	uint32_t m_lastPointLightIndex = 0;
 
-
-	// LightComponent에 OnDispose 함수를 통한 ComponentManager과 연결 필요
-
 public:
-
+	inline StructuredBuffer& GetPointLightEntityBuffer() { return m_pointLightEntityBuffer; }
+	inline StructuredBuffer& GetPointLightXViewEntityBuffer() { return m_pointLightXViewEntityBuffer; }
+	inline StructuredBuffer& GetPointLightNegativeXViewEntityBuffer() { return m_pointLightNegativeXViewEntityBuffer; }
+	inline StructuredBuffer& GetPointLightYViewEntityBuffer() { return m_pointLightYViewEntityBuffer; }
+	inline StructuredBuffer& GetPointLightNegativeYViewEntityBuffer() { return m_pointLightNegativeYViewEntityBuffer; }
+	inline StructuredBuffer& GetPointLightZViewEntityBuffer() { return m_pointLightZViewEntityBuffer; }
+	inline StructuredBuffer& GetPointLightNegativeZViewEntityBuffer() { return m_pointLightNegativeZViewEntityBuffer; }
 };
 

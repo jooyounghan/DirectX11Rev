@@ -5,7 +5,7 @@
 using namespace std;
 using namespace DirectX;
 
-LightManager::LightManager(ID3D11Device* const device)
+LightManager::LightManager()
 	: 
 	m_spotLightEntities(new array<SLightEntity, MaxSpotLightCount>()),
 	m_spotLightViewEntities(new array<SViewEntity, MaxSpotLightCount>()),
@@ -25,18 +25,10 @@ LightManager::LightManager(ID3D11Device* const device)
 	m_pointLightYViewEntityBuffer(sizeof(SViewEntity), static_cast<UINT>(m_pointLightYViewEntities->size()), m_pointLightYViewEntities->data()),
 	m_pointLightNegativeYViewEntityBuffer(sizeof(SViewEntity), static_cast<UINT>(m_pointLightNegativeYViewEntities->size()), m_pointLightNegativeYViewEntities->data()),
 	m_pointLightZViewEntityBuffer(sizeof(SViewEntity), static_cast<UINT>(m_pointLightZViewEntities->size()), m_pointLightZViewEntities->data()),
-	m_pointLightNegativeZViewEntityBuffer(sizeof(SViewEntity), static_cast<UINT>(m_pointLightNegativeZViewEntities->size()), m_pointLightNegativeZViewEntities->data())
-{
-	m_spotLightEntityBuffer.InitializeBuffer(device);
-	m_spotLightViewEntityBuffer.InitializeBuffer(device);
-	m_pointLightEntityBuffer.InitializeBuffer(device);
+	m_pointLightNegativeZViewEntityBuffer(sizeof(SViewEntity), static_cast<UINT>(m_pointLightNegativeZViewEntities->size()), m_pointLightNegativeZViewEntities->data()),
 
-	m_pointLightXViewEntityBuffer.InitializeBuffer(device);
-	m_pointLightNegativeXViewEntityBuffer.InitializeBuffer(device);
-	m_pointLightYViewEntityBuffer.InitializeBuffer(device);
-	m_pointLightNegativeYViewEntityBuffer.InitializeBuffer(device);
-	m_pointLightZViewEntityBuffer.InitializeBuffer(device);
-	m_pointLightNegativeZViewEntityBuffer.InitializeBuffer(device);
+	m_lightManagerEntityBuffer(sizeof(SLightManagerEntity), 1, &m_lightManagerEntity)
+{
 }
 
 LightManager::~LightManager()
@@ -58,7 +50,6 @@ SpotLightComponent* LightManager::CreateSpotLight(
 	SLightEntity& lightEntity = m_spotLightEntities->at(m_lastSpotLightIndex);
 	SViewEntity& viewEntity = m_spotLightViewEntities->at(m_lastSpotLightIndex);
 
-
 	SpotLightComponent* spotLight = new SpotLightComponent(
 		componentName, componentID, localPosition, localAngle,
 		lightPower, fallOffStart, fallOffEnd, spotPower, m_lastSpotLightIndex,
@@ -69,7 +60,9 @@ SpotLightComponent* LightManager::CreateSpotLight(
 
 	m_lastSpotLightIndex++;
 	m_spotLights.push_back(spotLight);
-
+	
+	m_lightManagerEntity.m_spotLightCount++;	
+	m_isLightCountChanged.store(true);
 	return spotLight;
 }
 
@@ -112,5 +105,8 @@ PointLightComponent* LightManager::CreatePointLight(
 
 	m_lastPointLightIndex++;
 	m_pointLights.push_back(pointLight);
+
+	m_lightManagerEntity.m_pointLightCount++;
+	m_isLightCountChanged.store(true);
 	return pointLight;
 }

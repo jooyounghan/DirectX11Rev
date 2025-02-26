@@ -4,11 +4,10 @@
 
 Scene::Scene(
 	const uint32_t sceneID, 
-	const std::string& sceneDescription,
-	LightManager&& lightManager
+	const std::string& sceneDescription
 
 )
-	: m_sceneID(sceneID), m_sceneDescription(sceneDescription), m_lightManager(lightManager)
+	: m_sceneID(sceneID), m_sceneDescription(sceneDescription)
 {
 }
 

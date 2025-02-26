@@ -4,6 +4,7 @@
 #include "GraphicsPSOObject.h"
 
 #include "Scene.h"
+#include "LightManager.h"
 
 #include "StaticMeshComponent.h"
 #include "SkeletalMeshComponent.h"
@@ -42,7 +43,10 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
 		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::STATIC_MESH_FORWARD);
 
     CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
-    const IBLMaterialAsset* sceneMaterialAsset = (*m_sceneAddressCached)->GetIBLMaterialAsset();
+    Scene* const selectedScene = *m_sceneAddressCached;
+    LightManager& lightManager = selectedScene->GetLightManager();
+
+    const IBLMaterialAsset* sceneMaterialAsset = selectedScene->GetIBLMaterialAsset();
     if (cameraComponent != nullptr && staticMeshComponent != nullptr && sceneMaterialAsset != nullptr)
     {
         if (const StaticMeshAsset* staticMeshAsset = staticMeshComponent->GetStaticMetalAsset())
@@ -56,7 +60,7 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
                 // =============================== VS ===============================
                 vector<ID3D11Buffer*> vsConstantBuffers{
                     cameraComponent->GetViewEntityBuffer().GetBuffer(),
-                    staticMeshComponent->GetTransformationEntityBuffer().GetBuffer()
+                    staticMeshComponent->GetTransformationEntityBuffer().GetBuffer(),
                 };
                 m_deviceContext->VSSetConstantBuffers(0, 2, vsConstantBuffers.data());
                 // ===================================================================
@@ -72,16 +76,19 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
                 // =============================== PS ===============================
                 vector<ID3D11Buffer*> psConstantBuffers{
                     staticMeshComponent->GetComponentEntityBuffer().GetBuffer(),
-                    cameraComponent->GetViewEntityBuffer().GetBuffer()
+                    cameraComponent->GetViewEntityBuffer().GetBuffer(),
+                    lightManager.GetLightManagerEntityBuffer().GetBuffer()
                 };
                 vector<ID3D11ShaderResourceView*> psSRVs
                 {
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_SPECULAR)->GetSRV(),
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
-                    sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV()
+                    sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV(),
+                    lightManager.GetSpotLightEntityBuffer().GetSRV(),
+                    lightManager.GetSpotLightViewEntityBuffer().GetSRV()
                 };
-                m_deviceContext->PSSetConstantBuffers(0, 2, psConstantBuffers.data());
-                m_deviceContext->PSSetShaderResources(0, 3, psSRVs.data());
+                m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
+                m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
                 // ===================================================================
 
                 m_selectedModelMaterialAssets = staticMeshComponent->GetSelectedModelMaterials();
@@ -98,7 +105,10 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::SKELETAL_MESH_FORWARD);
 
     CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
-    const IBLMaterialAsset* sceneMaterialAsset = (*m_sceneAddressCached)->GetIBLMaterialAsset();
+    Scene* const selectedScene = *m_sceneAddressCached;
+    LightManager& lightManager = selectedScene->GetLightManager();
+
+    const IBLMaterialAsset* sceneMaterialAsset = selectedScene->GetIBLMaterialAsset();
     if (cameraComponent != nullptr && skeletalMeshComponent != nullptr && sceneMaterialAsset != nullptr)
     {
         if (const SkeletalMeshAsset* skeletalMeshAsset = skeletalMeshComponent->GetSkeletalMetalAsset())
@@ -131,16 +141,21 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
                 // =============================== PS ===============================
                 vector<ID3D11Buffer*> psConstantBuffers{
                     skeletalMeshComponent->GetComponentEntityBuffer().GetBuffer(),
-                    cameraComponent->GetViewEntityBuffer().GetBuffer()
+                    cameraComponent->GetViewEntityBuffer().GetBuffer(),
+                    lightManager.GetLightManagerEntityBuffer().GetBuffer()
                 };
                 vector<ID3D11ShaderResourceView*> psSRVs
                 {
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_SPECULAR)->GetSRV(),
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
-                    sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV()
+                    sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV(),
+                    lightManager.GetSpotLightEntityBuffer().GetSRV(),
+                    lightManager.GetSpotLightViewEntityBuffer().GetSRV()
                 };
-                m_deviceContext->PSSetConstantBuffers(0, 2, psConstantBuffers.data());
-                m_deviceContext->PSSetShaderResources(0, 3, psSRVs.data());
+
+                m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
+                m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
+
                 // ===================================================================
 
                 m_selectedModelMaterialAssets = skeletalMeshComponent->GetSelectedModelMaterials();
@@ -198,8 +213,8 @@ void SceneForwardRenderer::RenderMeshPartHandler(const size_t& idx)
             normalAsset ? normalAsset->GetSRV() : nullptr,
             emissiveAsset ? emissiveAsset->GetSRV() : nullptr
         };
-        m_deviceContext->PSSetConstantBuffers(2, 1, psConstantBuffersPerMeshPart.data());
-        m_deviceContext->PSSetShaderResources(3, 7, psSRVsPerMeshPart.data());
+        m_deviceContext->PSSetConstantBuffers(3, 1, psConstantBuffersPerMeshPart.data());
+        m_deviceContext->PSSetShaderResources(5, 7, psSRVsPerMeshPart.data());
         // ===================================================================
     }
 

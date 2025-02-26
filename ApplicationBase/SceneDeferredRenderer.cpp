@@ -61,6 +61,7 @@ void SceneDeferredRenderer::Visit(StaticMeshComponent* staticMeshComponent)
 		= m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::STATIC_MESH_DEFERRED);
 
     CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
+
     if (cameraComponent != nullptr && staticMeshComponent != nullptr)
     {
         if (const StaticMeshAsset* staticMeshAsset = staticMeshComponent->GetStaticMetalAsset())
@@ -176,22 +177,23 @@ void SceneDeferredRenderer::PostProcess()
 
 	ScreenQuad* screenQuad = ScreenQuad::GetInstance();
 
-    Scene* const scene = *m_sceneAddressCached;
     CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
-    const IBLMaterialAsset* sceneMaterialAsset = (*m_sceneAddressCached)->GetIBLMaterialAsset();
+    Scene* const selectedScene = *m_sceneAddressCached;
+    LightManager& lightManager = selectedScene->GetLightManager();
 
-	if (scene != nullptr && cameraComponent != nullptr)
+    const IBLMaterialAsset* sceneMaterialAsset = (*m_sceneAddressCached)->GetIBLMaterialAsset();
+	if (selectedScene != nullptr && cameraComponent != nullptr)
 	{
 		graphicsPSOObject->ApplyPSOObject(m_deviceContext);
 		ASceneRenderer::ApplyRenderTargets(m_deviceContext, cameraComponent);
 
-        LightManager& lightManager = scene->GetLightManager();
         const vector<SpotLightComponent*>& spotLights = lightManager.GetSpotLights();
         const vector<PointLightComponent*>& pointLights = lightManager.GetPointLights();
 
         // =============================== PS ===============================
         vector<ID3D11Buffer*> psConstantBuffers{
-            cameraComponent->GetViewEntityBuffer().GetBuffer()
+            cameraComponent->GetViewEntityBuffer().GetBuffer(),
+            lightManager.GetLightManagerEntityBuffer().GetBuffer()
         };
 
         vector<ID3D11ShaderResourceView*> psSRVs
@@ -204,7 +206,9 @@ void SceneDeferredRenderer::PostProcess()
             m_diffuseGBuffer.GetSRV(),
             m_aoMetallicRoughnessGBuffer.GetSRV(),
             m_normalGBuffer.GetSRV(),
-            m_emissiveGBuffer.GetSRV()
+            m_emissiveGBuffer.GetSRV(),
+            lightManager.GetSpotLightEntityBuffer().GetSRV(),
+            lightManager.GetSpotLightViewEntityBuffer().GetSRV()
         };
 
         m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());

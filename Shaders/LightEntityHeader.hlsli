@@ -1,3 +1,6 @@
+static const uint MaxSpotLightCount = 1024;
+static const uint MaxPointLightCount = 1024;
+
 struct LightEntity
 {
     float lightPower;
