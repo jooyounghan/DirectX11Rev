@@ -126,7 +126,7 @@ CREATE TABLE `components` (
 
 LOCK TABLES `components` WRITE;
 /*!40000 ALTER TABLE `components` DISABLE KEYS */;
-INSERT INTO `components` VALUES (1,0,'SphereCollision1',0,0,600,0,0,0,1,1,1,1),(2,1,'SkeletalMeshComponent1',0,-88,0,0,0,19.7,1,1,1,1),(3,0,'SphereCollision2',-1000,0,0,0,0,0,1,1,1,1),(4,3,'SkeletalMeshComponent2',0,-88,0,0,0,0,1,1,1,1),(5,0,'SphereCollision3',0,1000,0,0,0,0,1,1,1,1),(6,5,'SkeletalMeshComponent3',0,-88,0,0,0,0,1,1,1,1),(7,0,'OrientedBoxCollision1',0,-1000,0,0,0,0,1,1,1,1),(8,7,'SkeletalMeshComponent4',0,-88,0,0,0,0,1,1,1,1),(9,0,'OrientedBoxCollision2',0,0,500,0,0,0,1,1,1,1),(10,9,'SkeletalMeshComponent5',0,-88,0,0,0,0,1,1,1,1),(11,0,'OrientedBoxCollision3',0,0,-1000,0,0,0,1,1,1,1),(12,11,'SkeletalMeshComponent6',0,-88,0,0,0,0,1,1,1,1),(13,0,'SpotLightComponent1',0,0,0,0,0,0,1,1,1,1),(14,0,'PointLightComponent1',0,0,0,0,0,0,1,1,1,1),(15,0,'Vanguard',-150,-100,500,0,0,0,1,1,1,2),(16,0,'Warrok',0,-100,500,0,0,0,1,1,1,2),(17,0,'Paladin',150,-100,500,0,0,0,1,1,1,2),(18,0,'Model1',135,0,200,0,0,0,30,30,30,3),(19,0,'Model2',45,0,200,0,0,0,30,30,30,3),(20,0,'Model3',-45,0,200,0,0,0,30,30,30,3),(21,0,'Model4',-135,0,200,0,0,0,30,30,30,3);
+INSERT INTO `components` VALUES (1,0,'SphereCollision1',0,0,600,0,0,0,1,1,1,1),(2,1,'SkeletalMeshComponent1',0,-88,0,0,0,19.7,1,1,1,1),(3,0,'SphereCollision2',-1000,0,0,0,0,0,1,1,1,1),(4,3,'SkeletalMeshComponent2',0,-88,0,0,0,0,1,1,1,1),(5,0,'SphereCollision3',0,1000,0,0,0,0,1,1,1,1),(6,5,'SkeletalMeshComponent3',0,-88,0,0,0,0,1,1,1,1),(7,0,'OrientedBoxCollision1',0,-1000,0,0,0,0,1,1,1,1),(8,7,'SkeletalMeshComponent4',0,-88,0,0,0,0,1,1,1,1),(9,0,'OrientedBoxCollision2',0,0,500,0,0,0,1,1,1,1),(10,9,'SkeletalMeshComponent5',0,-88,0,0,0,0,1,1,1,1),(11,0,'OrientedBoxCollision3',0,0,-1000,0,0,0,1,1,1,1),(12,11,'SkeletalMeshComponent6',0,-88,0,0,0,0,1,1,1,1),(13,0,'SpotLightComponent1',30,0,0,0,0,0,1,1,1,3),(14,0,'SpotLightComponent2',-30,0,0,0,0,0,1,1,1,3),(15,0,'Vanguard',-150,-100,500,0,0,0,1,1,1,2),(16,0,'Warrok',0,-100,500,0,0,0,1,1,1,2),(17,0,'Paladin',150,-100,500,0,0,0,1,1,1,2),(18,0,'Model1',135,0,200,0,0,0,30,30,30,3),(19,0,'Model2',45,50,200,0,0,0,30,30,30,3),(20,0,'Model3',0,0,200,0,0,0,30,30,30,3),(21,0,'Model4',0,0,400,0,0,0,80,80,80,3);
 /*!40000 ALTER TABLE `components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -153,7 +153,7 @@ CREATE TABLE `components_to_type` (
 
 LOCK TABLES `components_to_type` WRITE;
 /*!40000 ALTER TABLE `components_to_type` DISABLE KEYS */;
-INSERT INTO `components_to_type` VALUES (18,1),(19,1),(20,1),(21,1),(2,2),(4,2),(6,2),(8,2),(10,2),(12,2),(15,2),(16,2),(17,2),(1,4),(3,4),(5,4),(7,5),(9,5),(11,5),(13,6),(14,7);
+INSERT INTO `components_to_type` VALUES (18,1),(19,1),(20,1),(21,1),(2,2),(4,2),(6,2),(8,2),(10,2),(12,2),(15,2),(16,2),(17,2),(1,4),(3,4),(5,4),(7,5),(9,5),(11,5),(13,6),(14,6);
 /*!40000 ALTER TABLE `components_to_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -181,7 +181,7 @@ CREATE TABLE `light_components` (
 
 LOCK TABLES `light_components` WRITE;
 /*!40000 ALTER TABLE `light_components` DISABLE KEYS */;
-INSERT INTO `light_components` VALUES (13,2,0,1000,5),(14,1.5,0,1149,1);
+INSERT INTO `light_components` VALUES (13,1.5,0,1000,6),(14,1.5,0,1000,6);
 /*!40000 ALTER TABLE `light_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -332,7 +332,7 @@ CREATE TABLE `spot_light_components` (
   `fov_angle` float NOT NULL,
   PRIMARY KEY (`spot_light_component_id`),
   CONSTRAINT `component_id_fk9` FOREIGN KEY (`spot_light_component_id`) REFERENCES `light_components` (`light_component_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -341,7 +341,7 @@ CREATE TABLE `spot_light_components` (
 
 LOCK TABLES `spot_light_components` WRITE;
 /*!40000 ALTER TABLE `spot_light_components` DISABLE KEYS */;
-INSERT INTO `spot_light_components` VALUES (13,120);
+INSERT INTO `spot_light_components` VALUES (13,99.2),(14,90);
 /*!40000 ALTER TABLE `spot_light_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -379,4 +379,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-26  5:30:16
+-- Dump completed on 2025-02-27 12:43:44

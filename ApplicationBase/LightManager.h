@@ -4,6 +4,10 @@
 #include "StructuredBuffer.h"
 #include "DynamicBuffer.h"
 
+#include "Texture2DInstance.h"
+#include "SRVOption.h"
+#include "DSVOption.h"
+
 #include <vector>
 #include <array>
 #include <string>
@@ -34,6 +38,14 @@ protected:
 public:
 	inline const std::vector<SpotLightComponent*>& GetSpotLights() const { return m_spotLights; }
 	inline const std::vector<PointLightComponent*>& GetPointLights() const { return m_pointLights; }
+
+protected:
+	Texture2DInstance<SRVOption> m_spotLightDepthTestViews;
+	std::array<Microsoft::WRL::ComPtr<ID3D11DepthStencilView>, MaxSpotLightCount> m_spotLightDSVs;
+
+public:
+	inline Texture2DInstance<SRVOption>& GetSpotLightDepthTestViews() { return m_spotLightDepthTestViews; }
+	inline std::array<Microsoft::WRL::ComPtr<ID3D11DepthStencilView>, MaxSpotLightCount>& GetSpotLightDSVs() { return m_spotLightDSVs; }
 
 protected:
 	SLightManagerEntity m_lightManagerEntity;

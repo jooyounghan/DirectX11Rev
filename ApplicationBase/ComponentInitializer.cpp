@@ -24,6 +24,9 @@
 #include "UAVOption.h"
 #include "DSVOption.h"
 
+using namespace std;
+using namespace Microsoft::WRL;
+
 constexpr uint8_t initializeOption = ~((uint8_t)0);
 
 ComponentInitializer::ComponentInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
@@ -35,6 +38,30 @@ void ComponentInitializer::Visit(Scene* scene)
 {
 	LightManager& lightManager = scene->GetLightManager();
 	
+	Texture2DInstance<SRVOption>& spotLightDepthTestViews = lightManager.GetSpotLightDepthTestViews();
+	array<ComPtr<ID3D11DepthStencilView>, MaxSpotLightCount>& spotLightDSVs = lightManager.GetSpotLightDSVs();
+
+	spotLightDepthTestViews.InitializeByOption(m_deviceCached, m_deviceContextCached);
+	
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+	dsvDesc.Texture2DArray.MipSlice = 0;
+	dsvDesc.Texture2DArray.ArraySize = 1;
+
+	constexpr UINT maxSpotLightCount = static_cast<UINT>(MaxSpotLightCount);
+	for (UINT idx = 0; idx < maxSpotLightCount; ++idx)
+	{
+		auto test = spotLightDSVs[idx].GetAddressOf();
+		dsvDesc.Texture2DArray.FirstArraySlice = idx;
+		m_deviceCached->CreateDepthStencilView(
+			spotLightDepthTestViews.GetTexture2D(),
+			&dsvDesc,
+			spotLightDSVs[idx].GetAddressOf()
+		);
+	}
+
 	lightManager.GetLightManagerEntityBuffer().InitializeBuffer(m_deviceCached);
 
 	lightManager.GetSpotLightEntityBuffer().InitializeBuffer(m_deviceCached);
@@ -101,9 +128,6 @@ void ComponentInitializer::Visit(SpotLightComponent* spotLightComponent)
 	InitBaseComponent(spotLightComponent);
 	spotLightComponent->UpdateViewEntity();
 	spotLightComponent->UpdateLightEntity();
-
-	auto& depthTestView = spotLightComponent->GetDepthTestView();
-	depthTestView.InitializeByOption(m_deviceCached, m_deviceContextCached);
 }
 
 void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)

@@ -4,6 +4,9 @@
 #include "RenderControlOption.h"
 #include "StructuredBuffer.h"
 
+#include "Texture2DInstance.h"
+#include "SRVOption.h"
+
 using namespace std;
 using namespace DirectX;
 
@@ -21,13 +24,15 @@ SpotLightComponent::SpotLightComponent(
 	StructuredBuffer* lightEntityCachedBuffer,
 	SViewEntity* viewEntityCached,
 	StructuredBuffer* viewEntityCachedBuffer,
-	const float& fovAngle
+	const float& fovAngle,
+	ID3D11DepthStencilView** depthTestDSVAddressOfCached
 )
 	: LightComponent(componentName, componentID, localPosition, localAngle, lightPower, fallOffStart, fallOffEnd, spotPower, lightIdx, lightEntityCached, lightEntityCachedBuffer),
 	m_viewEntityCached(viewEntityCached), m_viewEntityCachedBuffer(viewEntityCachedBuffer), m_fovAngle(fovAngle),
 	m_viewport{0.f, 0.f, static_cast<FLOAT>(GDefaultShadowMapWidth), static_cast<FLOAT>(GDefaultShadowMapHeight), 0.f, 1.f },
-	m_depthTestView(GDefaultShadowMapWidth, GDefaultShadowMapHeight, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_TYPELESS)
+	m_depthTestDSVAddressOfCached(depthTestDSVAddressOfCached)
 {
+
 }
 
 void SpotLightComponent::UpdateViewEntity()
@@ -66,13 +71,15 @@ void SpotLightComponent::GenerateShadowMap(
 {
 	vector<AComponent*> renderableComponents = RenderControlOption::GetRenderableComponents(m_parentSceneID, this, components);
 
-	deviceContext->ClearDepthStencilView(m_depthTestView.GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+	ID3D11DepthStencilView* depthTestDSVAddress = *m_depthTestDSVAddressOfCached;
+
+	deviceContext->ClearDepthStencilView(depthTestDSVAddress, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 	DepthTestRenderer depthTestRenderer = DepthTestRenderer(
 		deviceContext, componentPSOManager,
 		m_componentEntityBuffer.GetBuffer(),
 		m_viewEntityCachedBuffer->GetSRV(),
 		&m_viewport,
-		m_depthTestView.GetDSV()
+		depthTestDSVAddress
 	);
 
 	for (AComponent* renderableComponent : renderableComponents)

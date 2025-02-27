@@ -43,7 +43,8 @@ TextureCube diffuseIBLTexture : register(t1);
 Texture2D brdfLUTTexture : register(t2);
 StructuredBuffer<LightEntity> spotLightEntity : register(t3);
 StructuredBuffer<LightViewEntity> spotLightViewEntity : register(t4);
-Texture2D materialTexture[7] : register(t5);
+Texture2DArray spotLightShadowMaps : register(t5);
+Texture2D materialTexture[7] : register(t6);
 
 SamplerState wrapSampler : register(s0);
 SamplerState clampSampler : register(s1);
@@ -85,7 +86,6 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
         specularIBLTexture, diffuseIBLTexture, brdfLUTTexture, clampSampler
     ) * ambientOcculusion + emissive;
     
-    
     // Direct Lighting Test ==============================================================
     for (uint spotLightIdx = 0; spotLightIdx < spotLightCount; ++spotLightIdx)
     {
@@ -95,22 +95,29 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
         float fallOffStart = spotLightEntity[spotLightIdx].fallOffStart;
         float fallOffEnd = spotLightEntity[spotLightIdx].fallOffEnd;
         
-        lightPower = clamp(lightPower * (length(toSpotLight) - fallOffEnd) / (fallOffStart - fallOffEnd), 0.0f, lightPower);
-        toSpotLight = normalize(toSpotLight);
+        float4 lightViewProjPosTemp = mul(input.f4ModelPos, spotLightViewEntity[spotLightIdx].viewProjMatrix);
+        float3 lightViewProjPos = lightViewProjPosTemp.xyz / lightViewProjPosTemp.w;
+        
+        if (lightViewProjPos.z < spotLightShadowMaps.Sample(wrapSampler, float3((lightViewProjPos.xy / 2.f + 0.5f), spotLightIdx)).x + 1E-5)
+        {
+            lightPower = clamp(lightPower * (length(toSpotLight) - fallOffEnd) / (fallOffStart - fallOffEnd), 0.0f, lightPower)
+            * max(0.f, 1 - (lightViewProjPos.x * lightViewProjPos.x + lightViewProjPos.y * lightViewProjPos.y));
+            toSpotLight = normalize(toSpotLight);
                
-        float3 spotHalfVector = (toEye + toSpotLight) / 2.f;
-        float spotLDotH = max(0.f, dot(toSpotLight, spotHalfVector));
-        float spotNDotH = max(0.f, dot(normal, spotHalfVector));
-        float spotLDotN = max(0.f, dot(toSpotLight, normal));
-        float spotVDotN = max(0.f, dot(toEye, normal));
-    
-        float3 directDiffuseBRDF = (kd * diffuse / 3.141592);
-        float3 directSpecularBRDF = SchlickFresnelReflectRoughnessTerm(ks, spotLDotH, roughness)
+            float3 spotHalfVector = (toEye + toSpotLight) / 2.f;
+            float spotLDotH = max(0.f, dot(toSpotLight, spotHalfVector));
+            float spotNDotH = max(0.f, dot(normal, spotHalfVector));
+            float spotLDotN = max(0.f, dot(toSpotLight, normal));
+            float spotVDotN = max(0.f, dot(toEye, normal));
+        
+            float3 directDiffuseBRDF = (kd * diffuse / 3.141592);
+            float3 directSpecularBRDF = SchlickFresnelReflectRoughnessTerm(ks, spotLDotH, roughness)
             * SchlickGeometryModel(spotLDotN, spotVDotN, roughness)
             * NormalDistributionGGXTerm(spotNDotH, roughness)
             / max((4 * spotLDotN * spotVDotN), 1E-6);
-    
-        color += (directDiffuseBRDF + directSpecularBRDF) * lightPower * max(0.f, pow(spotLDotN, spotLightEntity[spotLightIdx].spotPower));
+            
+            color += (directDiffuseBRDF + directSpecularBRDF) * max(0.f, pow(spotLDotN * lightPower, spotLightEntity[spotLightIdx].spotPower));
+        }
     }
 
     // ===================================================================================

@@ -4,9 +4,11 @@
 
 using namespace std;
 using namespace DirectX;
+using namespace Microsoft::WRL;
 
 LightManager::LightManager()
 	: 
+	m_spotLightDepthTestViews(GDefaultShadowMapWidth, GDefaultShadowMapHeight, MaxSpotLightCount, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_TYPELESS, D3D11_BIND_DEPTH_STENCIL),
 	m_spotLightEntities(new array<SLightEntity, MaxSpotLightCount>()),
 	m_spotLightViewEntities(new array<SViewEntity, MaxSpotLightCount>()),
 	m_pointLightEntities(new array<SLightEntity, MaxPointLightCount>()),
@@ -55,7 +57,7 @@ SpotLightComponent* LightManager::CreateSpotLight(
 		lightPower, fallOffStart, fallOffEnd, spotPower, m_lastSpotLightIndex,
 		&lightEntity, &m_spotLightEntityBuffer,
 		&viewEntity, &m_spotLightViewEntityBuffer,
-		fovAngle
+		fovAngle, m_spotLightDSVs[m_lastSpotLightIndex].GetAddressOf()
 	);
 
 	m_lastSpotLightIndex++;

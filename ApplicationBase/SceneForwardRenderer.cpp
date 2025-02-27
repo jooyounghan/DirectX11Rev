@@ -85,7 +85,8 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV(),
                     lightManager.GetSpotLightEntityBuffer().GetSRV(),
-                    lightManager.GetSpotLightViewEntityBuffer().GetSRV()
+                    lightManager.GetSpotLightViewEntityBuffer().GetSRV(),
+                    lightManager.GetSpotLightDepthTestViews().GetSRV()
                 };
                 m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
                 m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
@@ -150,7 +151,8 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV(),
                     lightManager.GetSpotLightEntityBuffer().GetSRV(),
-                    lightManager.GetSpotLightViewEntityBuffer().GetSRV()
+                    lightManager.GetSpotLightViewEntityBuffer().GetSRV(),
+                    lightManager.GetSpotLightDepthTestViews().GetSRV()
                 };
 
                 m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
@@ -214,7 +216,7 @@ void SceneForwardRenderer::RenderMeshPartHandler(const size_t& idx)
             emissiveAsset ? emissiveAsset->GetSRV() : nullptr
         };
         m_deviceContext->PSSetConstantBuffers(3, 1, psConstantBuffersPerMeshPart.data());
-        m_deviceContext->PSSetShaderResources(5, 7, psSRVsPerMeshPart.data());
+        m_deviceContext->PSSetShaderResources(6, 7, psSRVsPerMeshPart.data());
         // ===================================================================
     }
 

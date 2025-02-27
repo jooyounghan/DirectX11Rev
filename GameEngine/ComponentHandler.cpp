@@ -247,7 +247,7 @@ void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const b
 	
 	PushID("lightPowerEntity");
 	Text("Light Power");
-	if (DragFloat("", &lightEntity->m_lightPower, 0.01f, 0.f, 1.f))
+	if (DragFloat("", &lightEntity->m_lightPower, 0.01f, 0.f, 10.f))
 	{
 		isChanged |= true;
 	};
@@ -273,7 +273,7 @@ void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const b
 	{
 		PushID("spotPowerEntity");
 		Text("Spot Power");
-		if (DragFloat("", &lightEntity->m_spotPower, 0.1f, 0.f, 10.f))
+		if (DragFloat("", &lightEntity->m_spotPower, 0.01f, 0.f, 10.f))
 		{
 			isChanged |= true;
 		}

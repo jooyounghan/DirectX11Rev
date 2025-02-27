@@ -3,10 +3,6 @@
 #include "ACollidableFrustum.h"
 #include "ViewEntity.h"
 
-#include "Texture2DInstance.h"
-#include "SRVOption.h"
-#include "DSVOption.h"
-
 enum class ESpotLightComponentUpdateOption
 {
 	VIEW_ENTITY = ELightComponentUpdateOption::LIGHT_COMPONENT_UPDATE_OPTION_OFFSET,
@@ -29,7 +25,8 @@ public:
 		StructuredBuffer* lightEntityCachedBuffer,
 		SViewEntity* viewEntityCached,
 		StructuredBuffer* viewEntityCachedBuffer,
-		const float& fovAngle
+		const float& fovAngle,
+		ID3D11DepthStencilView** depthTestDSVAddressOfCached
 	);
 	~SpotLightComponent() override = default;
 
@@ -49,10 +46,10 @@ public:
 	inline void SetFovAngle(const float& fovAngle) { m_fovAngle = fovAngle; }
 
 protected:
-	Texture2DInstance<SRVOption, DSVOption> m_depthTestView;
+	ID3D11DepthStencilView**  m_depthTestDSVAddressOfCached;
 
 public:
-	inline Texture2DInstance<SRVOption, DSVOption>& GetDepthTestView() { return m_depthTestView; }
+	inline ID3D11DepthStencilView** GetDepthTestDSVCached() const { return m_depthTestDSVAddressOfCached; }
 
 protected:
 	DirectX::XMMATRIX m_viewMatrix = DirectX::XMMatrixIdentity();

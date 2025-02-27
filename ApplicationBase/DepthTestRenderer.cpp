@@ -53,6 +53,7 @@ void DepthTestRenderer::Visit(StaticMeshComponent* staticMeshComponent)
                 staticMeshGraphicsPSOObject->ApplyPSOObject(m_deviceContext);
 
                 ID3D11RenderTargetView* nullRTV = nullptr;
+                ID3D11DepthStencilView* nullDSV = nullptr;
                 m_deviceContext->OMSetRenderTargets(0, &nullRTV, m_depthStencilView);
                 m_deviceContext->RSSetViewports(1, m_viewport);
 
@@ -70,6 +71,8 @@ void DepthTestRenderer::Visit(StaticMeshComponent* staticMeshComponent)
                 // ===================================================================
 
                 DepthTestMeshParts(meshPartsData);
+
+                m_deviceContext->OMSetRenderTargets(0, &nullRTV, nullDSV);
             }
         }
     }
@@ -90,6 +93,7 @@ void DepthTestRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
                 skeletalMeshGraphicsPSOObject->ApplyPSOObject(m_deviceContext);
 
                 ID3D11RenderTargetView* nullRTV = nullptr;
+                ID3D11DepthStencilView* nullDSV = nullptr;
                 m_deviceContext->OMSetRenderTargets(0, &nullRTV, m_depthStencilView);
                 m_deviceContext->RSSetViewports(1, m_viewport);
 
@@ -109,6 +113,8 @@ void DepthTestRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
                 // ===================================================================
 
                 DepthTestMeshParts(meshPartsData);
+
+                m_deviceContext->OMSetRenderTargets(0, &nullRTV, nullDSV);
             }
         }
     }
