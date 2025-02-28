@@ -93,7 +93,7 @@ void SceneDeferredRenderer::Visit(StaticMeshComponent* staticMeshComponent)
                     staticMeshComponent->GetComponentEntityBuffer().GetBuffer(),
                     cameraComponent->GetViewEntityBuffer().GetBuffer()
                 };
-                m_deviceContext->PSSetConstantBuffers(0, 2, psConstantBuffers.data());
+                m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
                 // ===================================================================
 
                 m_selectedModelMaterialAssets = staticMeshComponent->GetSelectedModelMaterials();
@@ -144,7 +144,7 @@ void SceneDeferredRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
                     skeletalMeshComponent->GetComponentEntityBuffer().GetBuffer(),
                     cameraComponent->GetViewEntityBuffer().GetBuffer()
                 };                
-                m_deviceContext->PSSetConstantBuffers(0, 2, psConstantBuffers.data());
+                m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
                 // ===================================================================
 
                 m_selectedModelMaterialAssets = skeletalMeshComponent->GetSelectedModelMaterials();
@@ -208,7 +208,8 @@ void SceneDeferredRenderer::PostProcess()
             m_normalGBuffer.GetSRV(),
             m_emissiveGBuffer.GetSRV(),
             lightManager.GetSpotLightEntityBuffer().GetSRV(),
-            lightManager.GetSpotLightViewEntityBuffer().GetSRV()
+            lightManager.GetSpotLightViewEntityBuffer().GetSRV(),
+            lightManager.GetSpotLightDepthTestViews().GetSRV()
         };
 
         m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());

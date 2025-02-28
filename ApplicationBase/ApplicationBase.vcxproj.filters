@@ -412,7 +412,7 @@
     <None Include="Shaders\DepthTestHeader.hlsli">
       <Filter>Shader\Header</Filter>
     </None>
-    <None Include="Shaders\LightEntityHeader.hlsli">
+    <None Include="Shaders\DirectLightHeader.hlsli">
       <Filter>Shader\Header</Filter>
     </None>
   </ItemGroup>

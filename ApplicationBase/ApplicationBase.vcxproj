@@ -273,7 +273,7 @@ exit %ERRORLEVEL%</Command>
   <ItemGroup>
     <None Include="Shaders\DebugComponentHeader.hlsli" />
     <None Include="Shaders\DepthTestHeader.hlsli" />
-    <None Include="Shaders\LightEntityHeader.hlsli" />
+    <None Include="Shaders\DirectLightHeader.hlsli" />
     <None Include="Shaders\SceneHeader.hlsli" />
     <None Include="Shaders\GBufferResolverHeader.hlsli" />
     <None Include="Shaders\MaterialComponentHeader.hlsli" />

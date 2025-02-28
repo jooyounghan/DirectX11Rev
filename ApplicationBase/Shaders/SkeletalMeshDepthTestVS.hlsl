@@ -1,5 +1,5 @@
 #include "DepthTestHeader.hlsli"
-#include "LightEntityHeader.hlsli"
+#include "DirectLightHeader.hlsli"
 
 cbuffer ComponentBuffer : register(b0)
 {

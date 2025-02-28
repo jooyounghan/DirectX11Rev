@@ -1,6 +1,5 @@
 #include "GBufferResolverHeader.hlsli"
-#include "PBRHeader.hlsli"
-#include "LightEntityHeader.hlsli"
+#include "DirectLightHeader.hlsli"
 
 cbuffer CameraViewConstantBuffer : register(b0)
 {
@@ -28,8 +27,9 @@ Texture2D ao_metallic_roughtness_GBuffer : register(t6);
 Texture2D normalGBuffer : register(t7);
 Texture2D emissiveGBuffer : register(t8);
 
-StructuredBuffer<LightEntity> spotLightEntity : register(t9);
-StructuredBuffer<LightViewEntity> spotLightViewEntity : register(t10);
+StructuredBuffer<LightEntity> spotLightEntities : register(t9);
+StructuredBuffer<LightViewEntity> spotLightViewEntities : register(t10);
+Texture2DArray spotLightShadowMaps : register(t11);
 
 SamplerState wrapSampler : register(s0);
 SamplerState clampSampler : register(s1);
@@ -67,30 +67,15 @@ float4 main(GBufferResolveVertexOutput input) : SV_TARGET
     // Direct Lighting Test ==============================================================
     for (uint spotLightIdx = 0; spotLightIdx < spotLightCount; ++spotLightIdx)
     {
-        float3 spotLightPos = spotLightViewEntity[spotLightIdx].viewPosition;
-        float3 toSpotLight = spotLightPos - position;
-        float lightPower = spotLightEntity[spotLightIdx].lightPower;
-        float fallOffStart = spotLightEntity[spotLightIdx].fallOffStart;
-        float fallOffEnd = spotLightEntity[spotLightIdx].fallOffEnd;
-        
-        lightPower = clamp(lightPower * (length(toSpotLight) - fallOffEnd) / (fallOffStart - fallOffEnd), 0.0f, lightPower);
-        toSpotLight = normalize(toSpotLight);
-               
-        float3 spotHalfVector = (toEye + toSpotLight) / 2.f;
-        float spotLDotH = max(0.f, dot(toSpotLight, spotHalfVector));
-        float spotNDotH = max(0.f, dot(normal, spotHalfVector));
-        float spotLDotN = max(0.f, dot(toSpotLight, normal));
-        float spotVDotN = max(0.f, dot(toEye, normal));
-    
-        float3 directDiffuseBRDF = (kd * diffuse / 3.141592);
-        float3 directSpecularBRDF = SchlickFresnelReflectRoughnessTerm(ks, spotLDotH, roughness)
-            * SchlickGeometryModel(spotLDotN, spotVDotN, roughness)
-            * NormalDistributionGGXTerm(spotNDotH, roughness)
-            / max((4 * spotLDotN * spotVDotN), 1E-6);
-    
-        color += (directDiffuseBRDF + directSpecularBRDF) * lightPower * max(0.f, pow(spotLDotN, spotLightEntity[spotLightIdx].spotPower));
+        LightEntity spotLightEntitiy = spotLightEntities[spotLightIdx];
+        LightViewEntity spotLightViewEntity = spotLightViewEntities[spotLightIdx];
+        color += GetDirectSpotLighted(
+            spotLightEntitiy, spotLightViewEntity, 
+            float4(position, 1.f), toEye, normal, 
+            spotLightShadowMaps, spotLightIdx, wrapSampler, 
+            kd, ks, diffuse, roughness
+        );
     }
-
     // ===================================================================================
     
     return float4(color, 1.f);
