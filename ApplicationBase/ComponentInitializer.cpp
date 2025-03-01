@@ -53,13 +53,31 @@ void ComponentInitializer::Visit(Scene* scene)
 	constexpr UINT maxSpotLightCount = static_cast<UINT>(MaxSpotLightCount);
 	for (UINT idx = 0; idx < maxSpotLightCount; ++idx)
 	{
-		auto test = spotLightDSVs[idx].GetAddressOf();
 		dsvDesc.Texture2DArray.FirstArraySlice = idx;
 		m_deviceCached->CreateDepthStencilView(
 			spotLightDepthTestViews.GetTexture2D(),
 			&dsvDesc,
 			spotLightDSVs[idx].GetAddressOf()
 		);
+	}
+
+	Texture2DInstance<SRVOption>& pointLightDepthTestViews = lightManager.GetPointLightDepthTestViews();
+	array<array<ComPtr<ID3D11DepthStencilView>, 6>, MaxSpotLightCount>& pointLightCubeDSVs = lightManager.GetPointLightCubeDSVs();
+	pointLightDepthTestViews.InitializeByOption(m_deviceCached, m_deviceContextCached);
+
+	constexpr UINT maxPointLightCount = static_cast<UINT>(MaxPointLightCount);
+
+	for (UINT lightIdx = 0; lightIdx < maxPointLightCount; ++lightIdx)
+	{
+		for (UINT faceIdx = 0; faceIdx < 6; ++faceIdx)
+		{
+			dsvDesc.Texture2DArray.FirstArraySlice = lightIdx * 6 + faceIdx;
+			m_deviceCached->CreateDepthStencilView(
+				pointLightDepthTestViews.GetTexture2D(),
+				&dsvDesc,
+				pointLightCubeDSVs[lightIdx][faceIdx].GetAddressOf()
+			);
+		}
 	}
 
 	lightManager.GetLightManagerEntityBuffer().InitializeBuffer(m_deviceCached);
@@ -135,24 +153,6 @@ void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
 	InitBaseComponent(pointLightComponent);
 	pointLightComponent->UpdatePointLightFrustums();
 	pointLightComponent->UpdateLightEntity();
-
-	auto& deptTestViewCube = pointLightComponent->GetDepthTestViewCube();
-	deptTestViewCube.InitializeByOption(m_deviceCached, m_deviceContextCached);
-
-	for (size_t idx = 0; idx < 6; ++idx)
-	{
-		PointLightFrustum& pointLightFrustum = pointLightComponent->GetPointLightFrustum(idx);
-
-		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-		ZeroMemory(&dsvDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
-
-		dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
-		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
-		dsvDesc.Texture2DArray.MipSlice = 0;
-		dsvDesc.Texture2DArray.FirstArraySlice = static_cast<UINT>(idx);
-		dsvDesc.Texture2DArray.ArraySize = 1;
-		m_deviceCached->CreateDepthStencilView(deptTestViewCube.GetTexture2D(), &dsvDesc, pointLightFrustum.GetDepthTestDSVAddress());
-	}
 }
 
 void ComponentInitializer::InitBaseComponent(AComponent* component)

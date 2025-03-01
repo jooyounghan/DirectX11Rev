@@ -31,6 +31,10 @@ StructuredBuffer<LightEntity> spotLightEntities : register(t9);
 StructuredBuffer<LightViewEntity> spotLightViewEntities : register(t10);
 Texture2DArray spotLightShadowMaps : register(t11);
 
+StructuredBuffer<LightEntity> pointLightEntities : register(t12);
+TextureCubeArray pointLightShadowMaps : register(t13);
+
+
 SamplerState wrapSampler : register(s0);
 SamplerState clampSampler : register(s1);
 
@@ -64,7 +68,6 @@ float4 main(GBufferResolveVertexOutput input) : SV_TARGET
         ) * ambientOcculusion + emissive
     );
     
-    // Direct Lighting Test ==============================================================
     for (uint spotLightIdx = 0; spotLightIdx < spotLightCount; ++spotLightIdx)
     {
         LightEntity spotLightEntitiy = spotLightEntities[spotLightIdx];
@@ -76,7 +79,12 @@ float4 main(GBufferResolveVertexOutput input) : SV_TARGET
             kd, ks, diffuse, roughness
         );
     }
-    // ===================================================================================
+
+    for (uint pointLightIdx = 0; pointLightIdx < pointLightCount; ++pointLightIdx)
+    {
+        LightEntity pointLightEntity = pointLightEntities[pointLightIdx];        
+        
+    }
     
     return float4(color, 1.f);
 }

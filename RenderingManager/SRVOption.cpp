@@ -39,7 +39,14 @@ D3D11_SHADER_RESOURCE_VIEW_DESC SRVOption::GetShaderResourceViewDesc(const D3D11
         {
             if (texture2dDesc.MiscFlags & D3D11_RESOURCE_MISC_TEXTURECUBE)
             {
-                srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+                if (texture2dDesc.ArraySize == 6)
+                {
+                    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+                }
+                else
+                {
+                    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
+                }
             }
             else
             {

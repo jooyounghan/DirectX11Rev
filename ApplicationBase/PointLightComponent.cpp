@@ -12,13 +12,15 @@ PointLightFrustum::PointLightFrustum(
 	const XMVECTOR& absoluteRadianOffset,
 	const float& fallOffEndCached,
 	SViewEntity* viewEntityCached,
-	StructuredBuffer* viewEntityBufferCahced
+	StructuredBuffer* viewEntityBufferCahced,
+	ID3D11DepthStencilView** depthTestDSVAddressOfCached
 )
 	: m_absolutePositionCached(absolutePositionCached), 
 	m_absoluteRadianOffset(absoluteRadianOffset),
 	m_fallOffEndCached(fallOffEndCached),
 	m_viewEntityCached(viewEntityCached),
-	m_viewEntityBufferCahced(viewEntityBufferCahced)
+	m_viewEntityBufferCahced(viewEntityBufferCahced),
+	m_depthTestDSVAddressOfCached(depthTestDSVAddressOfCached)
 {
 }
 
@@ -61,20 +63,20 @@ PointLightComponent::PointLightComponent(
 	SLightEntity* lightEntityCached,
 	StructuredBuffer* lightEntityCachedBuffer,
 	const array<SViewEntity*, 6>& viewEntitiesCached,
-	const array<StructuredBuffer*, 6>& viewEntityBuffersCached
+	const array<StructuredBuffer*, 6>& viewEntityBuffersCached,
+	const std::array<ID3D11DepthStencilView**, 6>& depthTestDSVCubeAddressOfCached
 )
 	: LightComponent(componentName, componentID, localPosition, XMFLOAT3(0.f, 0.f, 0.f), lightPower, 
 		fallOffStart, fallOffEnd, 1.f, lightIdx, lightEntityCached, lightEntityCachedBuffer
 	), m_viewport{ 0.f, 0.f, static_cast<FLOAT>(GDefaultShadowMapWidth), static_cast<FLOAT>(GDefaultShadowMapHeight), 0.f, 1.f },
 	m_pointLightFrustums{
-		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, XM_PIDIV2, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(0), viewEntityBuffersCached.at(0)),
-		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, -XM_PIDIV2, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(1), viewEntityBuffersCached.at(1)),
-		PointLightFrustum(m_absolutePosition, XMVectorSet(-XM_PIDIV2, 0.0f, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(2), viewEntityBuffersCached.at(2)),
-		PointLightFrustum(m_absolutePosition, XMVectorSet(XM_PIDIV2, 0.0f, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(3), viewEntityBuffersCached.at(3)),
-		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, 0.f, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(4), viewEntityBuffersCached.at(4)),
-		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, XM_PI, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(5), viewEntityBuffersCached.at(5))
-	},
-	m_deptTestViewCube(GDefaultShadowMapWidth, GDefaultShadowMapHeight, 6, 1, NULL, D3D11_RESOURCE_MISC_TEXTURECUBE, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_TYPELESS, D3D11_BIND_DEPTH_STENCIL)
+		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, XM_PIDIV2, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(0), viewEntityBuffersCached.at(0), depthTestDSVCubeAddressOfCached.at(0)),
+		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, -XM_PIDIV2, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(1), viewEntityBuffersCached.at(1), depthTestDSVCubeAddressOfCached.at(1)),
+		PointLightFrustum(m_absolutePosition, XMVectorSet(-XM_PIDIV2, 0.0f, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(2), viewEntityBuffersCached.at(2), depthTestDSVCubeAddressOfCached.at(2)),
+		PointLightFrustum(m_absolutePosition, XMVectorSet(XM_PIDIV2, 0.0f, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(3), viewEntityBuffersCached.at(3), depthTestDSVCubeAddressOfCached.at(3)),
+		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, 0.f, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(4), viewEntityBuffersCached.at(4), depthTestDSVCubeAddressOfCached.at(4)),
+		PointLightFrustum(m_absolutePosition, XMVectorSet(0.0f, XM_PI, 0.f, 0.f), lightEntityCached->m_fallOffEnd, viewEntitiesCached.at(5), viewEntityBuffersCached.at(5), depthTestDSVCubeAddressOfCached.at(5))
+	}
 {
 }
 
@@ -104,13 +106,13 @@ void PointLightComponent::GenerateShadowMap(
 		StructuredBuffer* viewEntityBufferAddress = pointLightFrustum.GetViewEntityBufferAddress();
 		vector<AComponent*> renderableComponents = RenderControlOption::GetRenderableComponents(m_parentSceneID, &pointLightFrustum, components);
 		
-		deviceContext->ClearDepthStencilView(pointLightFrustum.GetDepthTestDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+		deviceContext->ClearDepthStencilView(*pointLightFrustum.GetDepthTestDSVCached(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 		DepthTestRenderer depthTestRenderer = DepthTestRenderer(
 			deviceContext, componentPsoManager,
 			m_componentEntityBuffer.GetBuffer(),
 			viewEntityBufferAddress->GetSRV(),
 			&m_viewport,
-			pointLightFrustum.GetDepthTestDSV()
+			*pointLightFrustum.GetDepthTestDSVCached()
 		);
 
 		for (AComponent* renderableComponent : renderableComponents)

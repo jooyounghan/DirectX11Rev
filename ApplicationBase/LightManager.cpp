@@ -8,7 +8,16 @@ using namespace Microsoft::WRL;
 
 LightManager::LightManager()
 	: 
-	m_spotLightDepthTestViews(GDefaultShadowMapWidth, GDefaultShadowMapHeight, MaxSpotLightCount, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_TYPELESS, D3D11_BIND_DEPTH_STENCIL),
+	m_spotLightDepthTestViews(
+		GDefaultShadowMapWidth, GDefaultShadowMapHeight, 
+		MaxSpotLightCount, 1, NULL, NULL, D3D11_USAGE_DEFAULT, 
+		DXGI_FORMAT_R32_TYPELESS, D3D11_BIND_DEPTH_STENCIL
+	),
+	m_pointLightDepthTestViews(
+		GDefaultShadowMapWidth, GDefaultShadowMapHeight,
+		MaxPointLightCount * 6, 1, NULL, D3D11_RESOURCE_MISC_TEXTURECUBE, D3D11_USAGE_DEFAULT,
+		DXGI_FORMAT_R32_TYPELESS, D3D11_BIND_DEPTH_STENCIL
+	),
 	m_spotLightEntities(new array<SLightEntity, MaxSpotLightCount>()),
 	m_spotLightViewEntities(new array<SViewEntity, MaxSpotLightCount>()),
 	m_pointLightEntities(new array<SLightEntity, MaxPointLightCount>()),
@@ -102,7 +111,15 @@ PointLightComponent* LightManager::CreatePointLight(
 		componentName, componentID,
 		localPosition, lightPower, fallOffStart, fallOffEnd, m_lastPointLightIndex,
 		&lightEntity, &m_pointLightEntityBuffer,
-		viewEntities, viewEntityBuffers
+		viewEntities, viewEntityBuffers,
+		{
+			m_pointLightCubeDSVs[m_lastPointLightIndex][0].GetAddressOf(),
+			m_pointLightCubeDSVs[m_lastPointLightIndex][1].GetAddressOf(),
+			m_pointLightCubeDSVs[m_lastPointLightIndex][2].GetAddressOf(),
+			m_pointLightCubeDSVs[m_lastPointLightIndex][3].GetAddressOf(),
+			m_pointLightCubeDSVs[m_lastPointLightIndex][4].GetAddressOf(),
+			m_pointLightCubeDSVs[m_lastPointLightIndex][5].GetAddressOf()
+		}
 	);
 
 	m_lastPointLightIndex++;

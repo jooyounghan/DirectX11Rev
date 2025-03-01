@@ -27,7 +27,8 @@ public:
 		const DirectX::XMVECTOR& absoluteRadianOffset,
 		const float& fallOffEndCached,
 		SViewEntity* viewEntityCached,
-		StructuredBuffer* viewEntityBufferCahced
+		StructuredBuffer* viewEntityBufferCahced,
+		ID3D11DepthStencilView** depthTestDSVAddressOfCached
 	);
 	~PointLightFrustum() override = default;
 
@@ -39,11 +40,10 @@ protected:
 protected:
 	SViewEntity* m_viewEntityCached = nullptr;
 	StructuredBuffer* m_viewEntityBufferCahced = nullptr;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthTestDSV;
+	ID3D11DepthStencilView** m_depthTestDSVAddressOfCached;
 
 public:
-	inline ID3D11DepthStencilView* GetDepthTestDSV() { return m_depthTestDSV.Get(); }
-	inline ID3D11DepthStencilView** GetDepthTestDSVAddress() { return m_depthTestDSV.GetAddressOf(); }
+	inline ID3D11DepthStencilView** GetDepthTestDSVCached() const { return m_depthTestDSVAddressOfCached; }
 	inline SViewEntity* GetViewEntityAddress() { return m_viewEntityCached; }
 	inline StructuredBuffer* GetViewEntityBufferAddress() { return m_viewEntityBufferCahced; }
 
@@ -77,18 +77,17 @@ public:
 		SLightEntity* lightEntityCached,
 		StructuredBuffer* lightEntityCachedBuffer,
 		const std::array<SViewEntity*, 6>& viewEntitiesCached,
-		const std::array<StructuredBuffer*, 6>& viewEntityBuffersCached
+		const std::array<StructuredBuffer*, 6>& viewEntityBuffersCached,
+		const std::array<ID3D11DepthStencilView**, 6>& depthTestDSVCubeAddressOfCached
 	);
 	~PointLightComponent() override = default;
 
 protected:
 	const D3D11_VIEWPORT m_viewport;
 	std::array<PointLightFrustum, 6> m_pointLightFrustums;
-	Texture2DInstance<SRVOption> m_deptTestViewCube;
 
 public:
 	inline PointLightFrustum& GetPointLightFrustum(const size_t& idx) { return m_pointLightFrustums[idx]; }
-	inline Texture2DInstance<SRVOption>& GetDepthTestViewCube() { return m_deptTestViewCube; }
 
 public:
 	void UpdatePointLightFrustums();

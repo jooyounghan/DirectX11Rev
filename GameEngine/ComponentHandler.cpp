@@ -126,7 +126,10 @@ void ComponentHandler::Visit(SpotLightComponent* spotLightComponent)
 void ComponentHandler::Visit(PointLightComponent* pointLightComponent)
 {
 	HandleComponentName(pointLightComponent, "Point Light Component");
-	HandleComponentTransformation(pointLightComponent, true, true, false);
+	if (HandleComponentTransformation(pointLightComponent, true, true, false))
+	{
+		pointLightComponent->UpdatePointLightFrustums();
+	}
 	HandleLightEntity(pointLightComponent, false);
 }
 

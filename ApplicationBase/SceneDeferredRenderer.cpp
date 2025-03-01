@@ -209,7 +209,9 @@ void SceneDeferredRenderer::PostProcess()
             m_emissiveGBuffer.GetSRV(),
             lightManager.GetSpotLightEntityBuffer().GetSRV(),
             lightManager.GetSpotLightViewEntityBuffer().GetSRV(),
-            lightManager.GetSpotLightDepthTestViews().GetSRV()
+            lightManager.GetSpotLightDepthTestViews().GetSRV(),
+            lightManager.GetPointLightEntityBuffer().GetSRV(),
+            lightManager.GetPointLightDepthTestViews().GetSRV()
         };
 
         m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
