@@ -9,13 +9,6 @@
 #include "UAVOption.h"
 #include "DSVOption.h"
 
-enum class ECameraComponentUpdateOption
-{
-	VIEW_ENTITY = EComponentUpdateOption::COMPONENT_UPDATE_OPTION_OFFSET,
-	CAMERA_UPDATE_OPTION_OFFSET,
-};
-
-
 class CameraComponent : public AComponent, public ACollidableFrustum
 {
 public:
@@ -80,6 +73,7 @@ public:
 	void UpdateViewEntity();
 
 public:
+	virtual void UpdateEntity() override;
 	virtual void Accept(IComponentVisitor* visitor) override;
 
 public:

@@ -276,7 +276,7 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 			shared_lock updateComponent(m_componentMutex);
 			for (auto& m_componentIDToComponent : m_componentIDsToComponent)
 			{
-				if (m_componentIDToComponent.second->GetModifiedOption())
+				if (m_componentIDToComponent.second->IsUpdated())
 				{
 					m_componentIDToComponent.second->Accept(&componentUpdater);
 					{

@@ -84,8 +84,8 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_SPECULAR)->GetSRV(),
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV(),
-                    lightManager.GetSpotLightEntityBuffer().GetSRV(),
-                    lightManager.GetSpotLightViewEntityBuffer().GetSRV(),
+                    lightManager.GetSpotLightEntitiesBuffer().GetSRV(),
+                    lightManager.GetSpotLightViewEntitiesBuffer().GetSRV(),
                     lightManager.GetSpotLightDepthTestViews().GetSRV()
                 };
                 m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
@@ -150,8 +150,8 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_SPECULAR)->GetSRV(),
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV(),
-                    lightManager.GetSpotLightEntityBuffer().GetSRV(),
-                    lightManager.GetSpotLightViewEntityBuffer().GetSRV(),
+                    lightManager.GetSpotLightEntitiesBuffer().GetSRV(),
+                    lightManager.GetSpotLightViewEntitiesBuffer().GetSRV(),
                     lightManager.GetSpotLightDepthTestViews().GetSRV()
                 };
 

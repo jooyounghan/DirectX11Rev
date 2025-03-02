@@ -45,6 +45,7 @@ StructuredBuffer<LightViewEntity> spotLightViewEntities : register(t4);
 Texture2DArray spotLightShadowMaps : register(t5);
 Texture2D materialTexture[7] : register(t6);
 
+
 SamplerState wrapSampler : register(s0);
 SamplerState clampSampler : register(s1);
 
@@ -87,10 +88,8 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
     
     for (uint spotLightIdx = 0; spotLightIdx < spotLightCount; ++spotLightIdx)
     {
-        LightEntity spotLightEntitiy = spotLightEntities[spotLightIdx];
-        LightViewEntity spotLightViewEntity = spotLightViewEntities[spotLightIdx];
-        color += GetDirectSpotLighted(
-            spotLightEntitiy, spotLightViewEntity, 
+         color += GetDirectSpotLighted(
+            spotLightEntities, spotLightViewEntities,
             input.f4ModelPos, toEye, normal, 
             spotLightShadowMaps, spotLightIdx, wrapSampler, 
             kd, ks, diffuse, roughness

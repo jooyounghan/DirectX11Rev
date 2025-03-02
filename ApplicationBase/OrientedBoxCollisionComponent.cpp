@@ -60,6 +60,7 @@ void OrientedBoxCollisionComponent::UpdateEntity()
 {
 	AComponent::UpdateEntity();
 	UpdateBoundingProperty();
+	UpdateBoundingVolumeHierarchy();
 }
 
 void OrientedBoxCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)

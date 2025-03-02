@@ -166,8 +166,8 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP), GetComponentPSOSamplerState(EComponentPSOSamplerState::CLAMP) }
 	);
 
-	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_DEPTH_TEST] = new GraphicsPSOObject(
-		GetComponentPSOVertexShader(EComponentPSOVertexShader::STATIC_MESH_DEPTH_TEST),
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_SPOT_LIGHT_DEPTH_TEST] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::STATIC_MESH_SPOT_LIGHT_DEPTH_TEST),
 		nullptr,
 		nullptr,
 		nullptr,
@@ -177,8 +177,28 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
 
-	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_DEPTH_TEST] = new GraphicsPSOObject(
-		GetComponentPSOVertexShader(EComponentPSOVertexShader::SKELETAL_MESH_DEPTH_TEST),
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_SPOT_LIGHT_DEPTH_TEST] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::SKELETAL_MESH_SPOT_LIGHT_DEPTH_TEST),
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), 1,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_POINT_LIGHT_DEPTH_TEST] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::STATIC_MESH_POINT_LIGHT_DEPTH_TEST),
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), 1,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_POINT_LIGHT_DEPTH_TEST] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::SKELETAL_MESH_POINT_LIGHT_DEPTH_TEST),
 		nullptr,
 		nullptr,
 		nullptr,
@@ -267,7 +287,8 @@ void ComponentPSOManager::RegisterVSForComponent(ID3D11Device* device)
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-	RegisterVertexShader(VertexShaderID(EComponentPSOVertexShader::STATIC_MESH_DEPTH_TEST), inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/StaticMeshDepthTestVS.hlsl", "main", "vs_5_0", device);
+	RegisterVertexShader(VertexShaderID(EComponentPSOVertexShader::STATIC_MESH_SPOT_LIGHT_DEPTH_TEST), inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/StaticMeshSpotLightDepthTestVS.hlsl", "main", "vs_5_0", device);
+	RegisterVertexShader(VertexShaderID(EComponentPSOVertexShader::STATIC_MESH_POINT_LIGHT_DEPTH_TEST), inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/StaticMeshPointLightDepthTestVS.hlsl", "main", "vs_5_0", device);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
@@ -275,7 +296,8 @@ void ComponentPSOManager::RegisterVSForComponent(ID3D11Device* device)
 			{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 5, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		}
 	);
-	RegisterVertexShader(VertexShaderID(EComponentPSOVertexShader::SKELETAL_MESH_DEPTH_TEST), inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/SkeletalMeshDepthTestVS.hlsl", "main", "vs_5_0", device);
+	RegisterVertexShader(VertexShaderID(EComponentPSOVertexShader::SKELETAL_MESH_SPOT_LIGHT_DEPTH_TEST), inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/SkeletalMeshSpotLightDepthTestVS.hlsl", "main", "vs_5_0", device);
+	RegisterVertexShader(VertexShaderID(EComponentPSOVertexShader::SKELETAL_MESH_POINT_LIGHT_DEPTH_TEST), inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/SkeletalMeshPointLightDepthTestVS.hlsl", "main", "vs_5_0", device);
 }
 
 void ComponentPSOManager::RegisterPSForComponent(ID3D11Device* device)

@@ -85,45 +85,24 @@ public:
 
 protected:
 	std::array<SLightEntity, MaxSpotLightCount>* m_spotLightEntities;
-	StructuredBuffer m_spotLightEntityBuffer;
-
-public:
-	inline StructuredBuffer& GetSpotLightEntityBuffer() { return m_spotLightEntityBuffer; }
-
-protected:
 	std::array<SViewEntity, MaxSpotLightCount>* m_spotLightViewEntities;
-	StructuredBuffer m_spotLightViewEntityBuffer;
+	StructuredBuffer m_spotLightEntitiesBuffer;
+	StructuredBuffer m_spotLightViewEntitiesBuffer;
 
 public:
-	inline StructuredBuffer& GetSpotLightViewEntityBuffer() { return m_spotLightViewEntityBuffer; }
+	inline StructuredBuffer& GetSpotLightEntitiesBuffer() { return m_spotLightEntitiesBuffer; }
+	inline StructuredBuffer& GetSpotLightViewEntitiesBuffer() { return m_spotLightViewEntitiesBuffer; }
+
 
 protected:
 	std::array<SLightEntity, MaxPointLightCount>* m_pointLightEntities;
-	StructuredBuffer m_pointLightEntityBuffer;
-
-	// 이건 각자 관리해도 상관없음. ==================================================
-	std::array<SViewEntity, MaxPointLightCount>* m_pointLightXViewEntities;
-	std::array<SViewEntity, MaxPointLightCount>* m_pointLightNegativeXViewEntities;
-	std::array<SViewEntity, MaxPointLightCount>* m_pointLightYViewEntities;
-	std::array<SViewEntity, MaxPointLightCount>* m_pointLightNegativeYViewEntities;
-	std::array<SViewEntity, MaxPointLightCount>* m_pointLightZViewEntities;
-	std::array<SViewEntity, MaxPointLightCount>* m_pointLightNegativeZViewEntities;
-	StructuredBuffer m_pointLightXViewEntityBuffer;
-	StructuredBuffer m_pointLightNegativeXViewEntityBuffer;
-	StructuredBuffer m_pointLightYViewEntityBuffer;
-	StructuredBuffer m_pointLightNegativeYViewEntityBuffer;
-	StructuredBuffer m_pointLightZViewEntityBuffer;
-	StructuredBuffer m_pointLightNegativeZViewEntityBuffer;
-	// ===============================================================================
+	std::array<DirectX::XMVECTOR, MaxPointLightCount>* m_pointLightPositions;
+	StructuredBuffer m_pointLightEntitiesBuffer;
+	StructuredBuffer m_pointLightPositionsBuffer;
 
 public:
-	inline StructuredBuffer& GetPointLightEntityBuffer() { return m_pointLightEntityBuffer; }
-	inline StructuredBuffer& GetPointLightXViewEntityBuffer() { return m_pointLightXViewEntityBuffer; }
-	inline StructuredBuffer& GetPointLightNegativeXViewEntityBuffer() { return m_pointLightNegativeXViewEntityBuffer; }
-	inline StructuredBuffer& GetPointLightYViewEntityBuffer() { return m_pointLightYViewEntityBuffer; }
-	inline StructuredBuffer& GetPointLightNegativeYViewEntityBuffer() { return m_pointLightNegativeYViewEntityBuffer; }
-	inline StructuredBuffer& GetPointLightZViewEntityBuffer() { return m_pointLightZViewEntityBuffer; }
-	inline StructuredBuffer& GetPointLightNegativeZViewEntityBuffer() { return m_pointLightNegativeZViewEntityBuffer; }
+	inline StructuredBuffer& GetPointLightEntitiesBuffer() { return m_pointLightEntitiesBuffer; }
+	inline StructuredBuffer& GetPointLightPositionsBuffer() { return m_pointLightPositionsBuffer; }
 
 protected:
 	uint32_t m_lastSpotLightIndex = 0;

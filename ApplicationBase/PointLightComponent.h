@@ -14,11 +14,6 @@ class Texture2DInstance;
 class SRVOption;
 class DSVOption;
 
-enum class EPointLightComponentUpdateOption
-{
-	VIEW_ENTITY = ELightComponentUpdateOption::LIGHT_COMPONENT_UPDATE_OPTION_OFFSET,
-};
-
 class PointLightFrustum : public ACollidableFrustum
 {
 public:
@@ -26,8 +21,6 @@ public:
 		const DirectX::XMVECTOR& absolutePositionCached,
 		const DirectX::XMVECTOR& absoluteRadianOffset,
 		const float& fallOffEndCached,
-		SViewEntity* viewEntityCached,
-		StructuredBuffer* viewEntityBufferCahced,
 		ID3D11DepthStencilView** depthTestDSVAddressOfCached
 	);
 	~PointLightFrustum() override = default;
@@ -38,14 +31,13 @@ protected:
 	const float& m_fallOffEndCached;
 
 protected:
-	SViewEntity* m_viewEntityCached = nullptr;
-	StructuredBuffer* m_viewEntityBufferCahced = nullptr;
+	SViewEntity m_viewEntity;
+	DynamicBuffer m_viewEntityBuffer;
 	ID3D11DepthStencilView** m_depthTestDSVAddressOfCached;
 
 public:
+	DynamicBuffer& GetViewEntityBuffer() { return m_viewEntityBuffer; }
 	inline ID3D11DepthStencilView** GetDepthTestDSVCached() const { return m_depthTestDSVAddressOfCached; }
-	inline SViewEntity* GetViewEntityAddress() { return m_viewEntityCached; }
-	inline StructuredBuffer* GetViewEntityBufferAddress() { return m_viewEntityBufferCahced; }
 
 protected:
 	DirectX::XMMATRIX m_viewMatrix = DirectX::XMMatrixIdentity();
@@ -75,9 +67,9 @@ public:
 		const float& fallOffEnd,
 		const uint32_t& lightIdx,
 		SLightEntity* lightEntityCached,
-		StructuredBuffer* lightEntityCachedBuffer,
-		const std::array<SViewEntity*, 6>& viewEntitiesCached,
-		const std::array<StructuredBuffer*, 6>& viewEntityBuffersCached,
+		StructuredBuffer* lightEntityCachedBuffer, 
+		DirectX::XMVECTOR* lightPositionCached,
+		StructuredBuffer* lightPositionsBufferCached,
 		const std::array<ID3D11DepthStencilView**, 6>& depthTestDSVCubeAddressOfCached
 	);
 	~PointLightComponent() override = default;
@@ -85,14 +77,20 @@ public:
 protected:
 	const D3D11_VIEWPORT m_viewport;
 	std::array<PointLightFrustum, 6> m_pointLightFrustums;
+	
+protected:
+	DirectX::XMVECTOR* m_lightPositionCached = nullptr;
+	StructuredBuffer* m_lightPositionsBufferCached = nullptr;
 
 public:
 	inline PointLightFrustum& GetPointLightFrustum(const size_t& idx) { return m_pointLightFrustums[idx]; }
 
 public:
+
 	void UpdatePointLightFrustums();
 
 public:
+	virtual void UpdateEntity() override;
 	virtual void Accept(IComponentVisitor* visitor) override;
 	virtual void GenerateShadowMap(
 		ID3D11DeviceContext* deviceContext,

@@ -101,5 +101,6 @@ void AComponent::UpdateEntity()
 		childComponent->UpdateEntity();
 	}
 
-	SetModifiedOption(GetComponentUpdateOption(EComponentUpdateOption::TRANSFORMATION_ENTITY));
+	m_transformationEntityBuffer.SetChanged(true);
+	SetUpdated(true);
 }

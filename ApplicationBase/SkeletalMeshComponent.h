@@ -5,12 +5,6 @@
 class SkeletalMeshAsset;
 class ISkeletalMeshProvider;
 
-enum class ESkeletalMeshComponentUpdateOption
-{
-	ANIMATION_ENTITY = EComponentUpdateOption::COMPONENT_UPDATE_OPTION_OFFSET,
-	SKELETAL_MESH_UPDATE_OPTION_OFFSET
-};
-
 class SkeletalMeshComponent : public AMeshComponent
 {
 public:

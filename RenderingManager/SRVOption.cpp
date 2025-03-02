@@ -42,20 +42,22 @@ D3D11_SHADER_RESOURCE_VIEW_DESC SRVOption::GetShaderResourceViewDesc(const D3D11
                 if (texture2dDesc.ArraySize == 6)
                 {
                     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+                    srvDesc.Texture2DArray.ArraySize = texture2dDesc.ArraySize;
                 }
                 else
                 {
                     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
+                    srvDesc.Texture2DArray.ArraySize = texture2dDesc.ArraySize / 6;
                 }
             }
             else
             {
                 srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+                srvDesc.Texture2DArray.ArraySize = texture2dDesc.ArraySize;
             }
             srvDesc.Texture2DArray.MostDetailedMip = 0;
             srvDesc.Texture2DArray.MipLevels = texture2dDesc.MipLevels;
             srvDesc.Texture2DArray.FirstArraySlice = 0;
-            srvDesc.Texture2DArray.ArraySize = texture2dDesc.ArraySize;
         }
         else 
         {

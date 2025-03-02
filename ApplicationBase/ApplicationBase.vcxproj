@@ -182,7 +182,9 @@ exit %ERRORLEVEL%</Command>
     <ClCompile Include="BoundingVolumeHierarchy.cpp" />
     <ClCompile Include="BoundingVolumeNode.cpp" />
     <ClCompile Include="DeferredContextID.cpp" />
-    <ClCompile Include="DepthTestRenderer.cpp" />
+    <ClCompile Include="ADepthTestRenderer.cpp" />
+    <ClCompile Include="PointLightDepthTestRenderer.cpp" />
+    <ClCompile Include="SpotLightDepthTestRenderer.cpp" />
     <ClCompile Include="LightComponent.cpp" />
     <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="OrientedBoxCollisionComponent.cpp" />
@@ -222,7 +224,9 @@ exit %ERRORLEVEL%</Command>
     <ClInclude Include="BoundingVolumeHierarchy.h" />
     <ClInclude Include="BoundingVolumeNode.h" />
     <ClInclude Include="DeferredContextID.h" />
-    <ClInclude Include="DepthTestRenderer.h" />
+    <ClInclude Include="ADepthTestRenderer.h" />
+    <ClInclude Include="PointLightDepthTestRenderer.h" />
+    <ClInclude Include="SpotLightDepthTestRenderer.h" />
     <ClInclude Include="ILightVisitor.h" />
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="ViewEntity.h" />
@@ -325,7 +329,11 @@ exit %ERRORLEVEL%</Command>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shaders\SkeletalMeshDepthTestVS.hlsl">
+    <FxCompile Include="Shaders\SkeletalMeshPointLightDepthTestVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkeletalMeshSpotLightDepthTestVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
@@ -333,7 +341,11 @@ exit %ERRORLEVEL%</Command>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shaders\StaticMeshDepthTestVS.hlsl">
+    <FxCompile Include="Shaders\StaticMeshPointLightDepthTestVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticMeshSpotLightDepthTestVS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>

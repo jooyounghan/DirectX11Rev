@@ -82,16 +82,11 @@ void ComponentInitializer::Visit(Scene* scene)
 
 	lightManager.GetLightManagerEntityBuffer().InitializeBuffer(m_deviceCached);
 
-	lightManager.GetSpotLightEntityBuffer().InitializeBuffer(m_deviceCached);
-	lightManager.GetSpotLightViewEntityBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetSpotLightEntitiesBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetSpotLightViewEntitiesBuffer().InitializeBuffer(m_deviceCached);
 
-	lightManager.GetPointLightEntityBuffer().InitializeBuffer(m_deviceCached);
-	lightManager.GetPointLightXViewEntityBuffer().InitializeBuffer(m_deviceCached);
-	lightManager.GetPointLightNegativeXViewEntityBuffer().InitializeBuffer(m_deviceCached);
-	lightManager.GetPointLightYViewEntityBuffer().InitializeBuffer(m_deviceCached);
-	lightManager.GetPointLightNegativeYViewEntityBuffer().InitializeBuffer(m_deviceCached);
-	lightManager.GetPointLightZViewEntityBuffer().InitializeBuffer(m_deviceCached);
-	lightManager.GetPointLightNegativeZViewEntityBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetPointLightEntitiesBuffer().InitializeBuffer(m_deviceCached);
+	lightManager.GetPointLightPositionsBuffer().InitializeBuffer(m_deviceCached);
 }
 
 void ComponentInitializer::Visit(StaticMeshComponent* staticModelComponent)
@@ -145,14 +140,18 @@ void ComponentInitializer::Visit(SpotLightComponent* spotLightComponent)
 {
 	InitBaseComponent(spotLightComponent);
 	spotLightComponent->UpdateViewEntity();
-	spotLightComponent->UpdateLightEntity();
 }
 
 void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
 {
 	InitBaseComponent(pointLightComponent);
+
+	for (size_t idx = 0; idx < 6; ++idx)
+	{
+		DynamicBuffer& viewEntityBuffer = pointLightComponent->GetPointLightFrustum(idx).GetViewEntityBuffer();
+		viewEntityBuffer.InitializeBuffer(m_deviceCached);
+	}
 	pointLightComponent->UpdatePointLightFrustums();
-	pointLightComponent->UpdateLightEntity();
 }
 
 void ComponentInitializer::InitBaseComponent(AComponent* component)

@@ -1,20 +1,15 @@
 #pragma once
-#include "IComponentVisitor.h"
+#include "ADepthTestRenderer.h"
 
 struct ID3D11Buffer;
 struct ID3D11ShaderResourceView;
-struct ID3D11DeviceContext;
-struct ID3D11DepthStencilView;
 struct D3D11_VIEWPORT;
-class ComponentPSOManager;
-class AMeshPartsData;
+struct ID3D11DepthStencilView;
 
-class Scene;
-
-class DepthTestRenderer : public IComponentVisitor
+class SpotLightDepthTestRenderer : public ADepthTestRenderer
 {
 public:
-	DepthTestRenderer(
+	SpotLightDepthTestRenderer(
 		ID3D11DeviceContext* deviceContext,
 		ComponentPSOManager* componentPsoManager,
 		ID3D11Buffer* lightComponentEntityBuffer,
@@ -22,11 +17,9 @@ public:
 		const D3D11_VIEWPORT* viewport,
 		ID3D11DepthStencilView* depthStencilView
 	);
-	~DepthTestRenderer() override = default;
+	~SpotLightDepthTestRenderer() override = default;
 
 protected:
-	ID3D11DeviceContext* m_deviceContext = nullptr;
-	ComponentPSOManager* m_componentPsoManagerCached = nullptr;
 	ID3D11Buffer* m_lightComponentEntityBuffer = nullptr;
 	ID3D11ShaderResourceView* const m_viewEntityStructuredBuffer = nullptr;
 	const D3D11_VIEWPORT* m_viewport = nullptr;
@@ -46,7 +39,4 @@ public:
 public:
 	virtual void Visit(SpotLightComponent* spotLightComponent) override;
 	virtual void Visit(PointLightComponent* pointLightComponent) override;
-
-protected:
-	void DepthTestMeshParts(const AMeshPartsData* const meshPartsData);
 };

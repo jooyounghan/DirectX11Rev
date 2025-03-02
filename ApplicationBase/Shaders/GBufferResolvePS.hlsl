@@ -32,7 +32,8 @@ StructuredBuffer<LightViewEntity> spotLightViewEntities : register(t10);
 Texture2DArray spotLightShadowMaps : register(t11);
 
 StructuredBuffer<LightEntity> pointLightEntities : register(t12);
-TextureCubeArray pointLightShadowMaps : register(t13);
+StructuredBuffer<LightPosition> pointLightPositions : register(t13);
+TextureCubeArray pointLightShadowMaps : register(t14);
 
 
 SamplerState wrapSampler : register(s0);
@@ -58,7 +59,7 @@ float4 main(GBufferResolveVertexOutput input) : SV_TARGET
     
     float3 f0 = lerp(specular, diffuse, metallic);
     float3 ks = SchlickFresnelReflectRoughnessTerm(f0, max(0.0, dot(toLight, normal)), roughness);
-    float3 kd = (1.0f - ks) * (1 - metallic);    
+    float3 kd = (1.0f - ks) * (1 - metallic);
     
     float3 color = float3(
         CalculateIBL(
@@ -68,22 +69,32 @@ float4 main(GBufferResolveVertexOutput input) : SV_TARGET
         ) * ambientOcculusion + emissive
     );
     
+    
+    float4 f4Position = float4(position, 1.f);
     for (uint spotLightIdx = 0; spotLightIdx < spotLightCount; ++spotLightIdx)
     {
-        LightEntity spotLightEntitiy = spotLightEntities[spotLightIdx];
-        LightViewEntity spotLightViewEntity = spotLightViewEntities[spotLightIdx];
         color += GetDirectSpotLighted(
-            spotLightEntitiy, spotLightViewEntity, 
-            float4(position, 1.f), toEye, normal, 
-            spotLightShadowMaps, spotLightIdx, wrapSampler, 
+            spotLightEntities, spotLightViewEntities,
+            f4Position, toEye, normal,
+            spotLightShadowMaps, spotLightIdx, wrapSampler,
             kd, ks, diffuse, roughness
         );
     }
-
-    for (uint pointLightIdx = 0; pointLightIdx < pointLightCount; ++pointLightIdx)
+       
+    for (uint pointLightIdx = 0; pointLightIdx < 1; ++pointLightIdx)
     {
-        LightEntity pointLightEntity = pointLightEntities[pointLightIdx];        
+        color += GetDirectPointLighted(
+            pointLightEntities, pointLightPositions,
+            position, toEye, normal,
+            pointLightShadowMaps, pointLightIdx, wrapSampler,
+            kd, ks, diffuse, roughness
+        );
+  
+
+      
+
         
+        ;
     }
     
     return float4(color, 1.f);

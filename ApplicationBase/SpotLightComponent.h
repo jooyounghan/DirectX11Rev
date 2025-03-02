@@ -3,11 +3,6 @@
 #include "ACollidableFrustum.h"
 #include "ViewEntity.h"
 
-enum class ESpotLightComponentUpdateOption
-{
-	VIEW_ENTITY = ELightComponentUpdateOption::LIGHT_COMPONENT_UPDATE_OPTION_OFFSET,
-};
-
 class SpotLightComponent : public LightComponent, public ACollidableFrustum
 {
 public:
@@ -34,13 +29,13 @@ protected:
 	float m_fovAngle;
 	const D3D11_VIEWPORT m_viewport;
 	SViewEntity* m_viewEntityCached = nullptr;
-	StructuredBuffer* m_viewEntityCachedBuffer = nullptr;
+	StructuredBuffer* m_viewEntityBufferCached = nullptr;
 
 public:
 	inline const float& GetFovAngle() const { return m_fovAngle; }
 	inline const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 	inline SViewEntity* GetViewEntityAddress() const { return m_viewEntityCached; }
-	inline StructuredBuffer* GetViewEntitiesBufferAddress() { return m_viewEntityCachedBuffer; }
+	inline StructuredBuffer* GetViewEntitiesBufferAddress() { return m_viewEntityBufferCached; }
 
 public:
 	inline void SetFovAngle(const float& fovAngle) { m_fovAngle = fovAngle; }
@@ -63,6 +58,7 @@ public:
 	void UpdateViewEntity();
 
 public:
+	virtual void UpdateEntity() override;
 	virtual void Accept(IComponentVisitor* visitor) override;
 	virtual void GenerateShadowMap(
 		ID3D11DeviceContext* deviceContext,

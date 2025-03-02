@@ -207,10 +207,11 @@ void SceneDeferredRenderer::PostProcess()
             m_aoMetallicRoughnessGBuffer.GetSRV(),
             m_normalGBuffer.GetSRV(),
             m_emissiveGBuffer.GetSRV(),
-            lightManager.GetSpotLightEntityBuffer().GetSRV(),
-            lightManager.GetSpotLightViewEntityBuffer().GetSRV(),
+            lightManager.GetSpotLightEntitiesBuffer().GetSRV(),
+            lightManager.GetSpotLightViewEntitiesBuffer().GetSRV(),
             lightManager.GetSpotLightDepthTestViews().GetSRV(),
-            lightManager.GetPointLightEntityBuffer().GetSRV(),
+            lightManager.GetPointLightEntitiesBuffer().GetSRV(),
+            lightManager.GetPointLightPositionsBuffer().GetSRV(),
             lightManager.GetPointLightDepthTestViews().GetSRV()
         };
 

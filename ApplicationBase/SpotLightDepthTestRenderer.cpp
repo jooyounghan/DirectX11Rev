@@ -1,4 +1,4 @@
-#include "DepthTestRenderer.h"
+#include "SpotLightDepthTestRenderer.h"
 
 #include "ComponentPSOManager.h"
 #include "GraphicsPSOObject.h"
@@ -14,6 +14,8 @@
 #include "SphereCollisionComponent.h"
 #include "OrientedBoxCollisionComponent.h"
 
+#include "SpotLightComponent.h"
+
 #include "ConstantBuffer.h"
 #include "DynamicBuffer.h"
 #include "StructuredBuffer.h"
@@ -22,16 +24,15 @@
 
 using namespace std;
 
-DepthTestRenderer::DepthTestRenderer(
-    ID3D11DeviceContext* deviceContext,
-    ComponentPSOManager* componentPsoManager,
-    ID3D11Buffer* lightComponentEntityBuffer,
-    ID3D11ShaderResourceView* const viewEntityStructuredBuffer,
-    const D3D11_VIEWPORT* viewport,
+SpotLightDepthTestRenderer::SpotLightDepthTestRenderer(
+    ID3D11DeviceContext* deviceContext, 
+    ComponentPSOManager* componentPsoManager, 
+    ID3D11Buffer* lightComponentEntityBuffer, 
+    ID3D11ShaderResourceView* const viewEntityStructuredBuffer, 
+    const D3D11_VIEWPORT* viewport, 
     ID3D11DepthStencilView* depthStencilView
 )
-    : m_deviceContext(deviceContext),
-    m_componentPsoManagerCached(componentPsoManager),
+    : ADepthTestRenderer(deviceContext, componentPsoManager), 
     m_lightComponentEntityBuffer(lightComponentEntityBuffer),
     m_viewEntityStructuredBuffer(viewEntityStructuredBuffer),
     m_viewport(viewport),
@@ -39,10 +40,10 @@ DepthTestRenderer::DepthTestRenderer(
 {
 }
 
-void DepthTestRenderer::Visit(StaticMeshComponent* staticMeshComponent)
+void SpotLightDepthTestRenderer::Visit(StaticMeshComponent* staticMeshComponent)
 {
     static GraphicsPSOObject* staticMeshGraphicsPSOObject
-        = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::STATIC_MESH_DEPTH_TEST);
+        = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::STATIC_MESH_SPOT_LIGHT_DEPTH_TEST);
 
     if (staticMeshComponent != nullptr)
     {
@@ -79,10 +80,10 @@ void DepthTestRenderer::Visit(StaticMeshComponent* staticMeshComponent)
 
 }
 
-void DepthTestRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
+void SpotLightDepthTestRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
 {
     static GraphicsPSOObject* skeletalMeshGraphicsPSOObject
-        = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::SKELETAL_MESH_DEPTH_TEST);
+        = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::SKELETAL_MESH_SPOT_LIGHT_DEPTH_TEST);
 
     if (skeletalMeshComponent != nullptr)
     {
@@ -120,47 +121,27 @@ void DepthTestRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
     }
 }
 
-void DepthTestRenderer::Visit(CameraComponent* cameraComponent)
+void SpotLightDepthTestRenderer::Visit(CameraComponent* cameraComponent)
 {
 	// Do Nothing
 }
 
-void DepthTestRenderer::Visit(SphereCollisionComponent* sphereCollisionComponent)
+void SpotLightDepthTestRenderer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
     // Do Nothing
 }
 
-void DepthTestRenderer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
+void SpotLightDepthTestRenderer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
     // Do Nothing
 }
 
-void DepthTestRenderer::Visit(SpotLightComponent* spotLightComponent)
+void SpotLightDepthTestRenderer::Visit(SpotLightComponent* spotLightComponent)
 {
 	// Do Nothing
 }
 
-void DepthTestRenderer::Visit(PointLightComponent* pointLightComponent)
+void SpotLightDepthTestRenderer::Visit(PointLightComponent* pointLightComponent)
 {
 	// Do Nothing
-}
-
-void DepthTestRenderer::DepthTestMeshParts(const AMeshPartsData* const meshPartsData)
-{
-    const size_t& meshPartCount = meshPartsData->GetPartsCount();
-    const vector<UINT>& indicesOffsets = meshPartsData->GetIndexOffsets();
-    vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetVertexBuffersForDepthTest();
-    const vector<UINT>& strides = meshPartsData->GetStridesForDepthTest();
-    const vector<UINT>& verticesOffsets = meshPartsData->GetOffsetsForDepthTest();
-    const UINT& totalIndicesCount = static_cast<UINT>(meshPartsData->GetIndices().size());
-
-    for (size_t idx = 0; idx < meshPartCount; ++idx)
-    {
-        const UINT indexCount = (idx + 1 == meshPartCount ? totalIndicesCount : indicesOffsets[idx + 1]) - indicesOffsets[idx];
-
-        m_deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
-        m_deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
-        m_deviceContext->DrawIndexed(indexCount, indicesOffsets[idx], NULL);
-        PerformanceAnalyzer::DepthTestDrawCount += indexCount;
-    }
 }

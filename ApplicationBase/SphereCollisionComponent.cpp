@@ -54,6 +54,7 @@ void SphereCollisionComponent::UpdateEntity()
 {
 	AComponent::UpdateEntity();
 	UpdateBoundingProperty();
+	UpdateBoundingVolumeHierarchy();
 }
 
 void SphereCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)

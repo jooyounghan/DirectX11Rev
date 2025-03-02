@@ -1,6 +1,6 @@
 #include "SpotLightComponent.h"
 
-#include "DepthTestRenderer.h"
+#include "SpotLightDepthTestRenderer.h"
 #include "RenderControlOption.h"
 #include "StructuredBuffer.h"
 
@@ -28,7 +28,7 @@ SpotLightComponent::SpotLightComponent(
 	ID3D11DepthStencilView** depthTestDSVAddressOfCached
 )
 	: LightComponent(componentName, componentID, localPosition, localAngle, lightPower, fallOffStart, fallOffEnd, spotPower, lightIdx, lightEntityCached, lightEntityCachedBuffer),
-	m_viewEntityCached(viewEntityCached), m_viewEntityCachedBuffer(viewEntityCachedBuffer), m_fovAngle(fovAngle),
+	m_viewEntityCached(viewEntityCached), m_viewEntityBufferCached(viewEntityCachedBuffer), m_fovAngle(fovAngle),
 	m_viewport{0.f, 0.f, static_cast<FLOAT>(GDefaultShadowMapWidth), static_cast<FLOAT>(GDefaultShadowMapHeight), 0.f, 1.f },
 	m_depthTestDSVAddressOfCached(depthTestDSVAddressOfCached)
 {
@@ -49,13 +49,19 @@ void SpotLightComponent::UpdateViewEntity()
 		m_viewEntityCached->m_viewProj = m_viewMatrix * m_projMatrix;
 		m_viewEntityCached->m_invViewProj = XMMatrixInverse(nullptr, m_viewEntityCached->m_viewProj);
 		m_viewEntityCached->m_viewProj = XMMatrixTranspose(m_viewEntityCached->m_viewProj);
-
 		XMStoreFloat3(&m_viewEntityCached->m_viewPosition, m_absolutePosition);
 
 		UpdateBoundingProperty();
 
-		SetModifiedOption(GetComponentUpdateOption(ESpotLightComponentUpdateOption::VIEW_ENTITY));
+		m_viewEntityBufferCached->SetChanged(true);
+		SetUpdated(true);
 	}
+}
+
+void SpotLightComponent::UpdateEntity()
+{
+	LightComponent::UpdateEntity();
+	UpdateViewEntity();
 }
 
 void SpotLightComponent::Accept(IComponentVisitor* visitor)
@@ -72,12 +78,12 @@ void SpotLightComponent::GenerateShadowMap(
 	vector<AComponent*> renderableComponents = RenderControlOption::GetRenderableComponents(m_parentSceneID, this, components);
 
 	ID3D11DepthStencilView* depthTestDSVAddress = *m_depthTestDSVAddressOfCached;
-
 	deviceContext->ClearDepthStencilView(depthTestDSVAddress, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
-	DepthTestRenderer depthTestRenderer = DepthTestRenderer(
+
+	SpotLightDepthTestRenderer depthTestRenderer = SpotLightDepthTestRenderer(
 		deviceContext, componentPSOManager,
 		m_componentEntityBuffer.GetBuffer(),
-		m_viewEntityCachedBuffer->GetSRV(),
+		m_viewEntityBufferCached->GetSRV(),
 		&m_viewport,
 		depthTestDSVAddress
 	);

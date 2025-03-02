@@ -7,12 +7,6 @@ class StructuredBuffer;
 constexpr uint32_t GDefaultShadowMapWidth = 512;
 constexpr uint32_t GDefaultShadowMapHeight = 512;
 
-enum class ELightComponentUpdateOption
-{
-	LIGHT_ENTITY = EComponentUpdateOption::COMPONENT_UPDATE_OPTION_OFFSET,
-	LIGHT_COMPONENT_UPDATE_OPTION_OFFSET
-};
-
 struct SLightEntity
 {
 	float m_lightPower = 0.f;
@@ -46,7 +40,6 @@ protected:
 public:
 	inline SLightEntity* GetLightEntityAddress() { return m_lightEntityCached; }
 	inline StructuredBuffer* GetLightEntityBufferAddress() { return m_lightEntityCachedBuffer; }
-	void UpdateLightEntity();
 	void UpdateLightEntity(
 		const float& lightPower,
 		const float& fallOffStart,

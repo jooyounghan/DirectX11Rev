@@ -52,7 +52,14 @@ void CameraComponent::UpdateViewEntity()
 
 	UpdateBoundingProperty();
 
-	SetModifiedOption(GetComponentUpdateOption(ECameraComponentUpdateOption::VIEW_ENTITY));
+	m_viewEntityBuffer.SetChanged(true);
+	SetUpdated(true);
+}
+
+void CameraComponent::UpdateEntity()
+{
+	AComponent::UpdateEntity();
+	UpdateViewEntity();
 }
 
 void CameraComponent::Accept(IComponentVisitor* visitor)

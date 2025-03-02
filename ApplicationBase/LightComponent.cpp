@@ -24,15 +24,6 @@ LightComponent::LightComponent(
 	UpdateLightEntity(lightPower, fallOffStart, fallOffEnd, spotPower);
 }
 
-void LightComponent::UpdateLightEntity()
-{
-	if (m_lightEntityCached)
-	{
-		SetModifiedOption(GetComponentUpdateOption(ELightComponentUpdateOption::LIGHT_ENTITY));
-	}
-}
-
-
 void LightComponent::UpdateLightEntity(const float& lightPower, const float& fallOffStart, const float& fallOffEnd, const float& spotPower)
 {
 	if (m_lightEntityCached)
@@ -41,6 +32,6 @@ void LightComponent::UpdateLightEntity(const float& lightPower, const float& fal
 		m_lightEntityCached->m_fallOffStart = fallOffStart;
 		m_lightEntityCached->m_fallOffEnd = fallOffEnd;
 		m_lightEntityCached->m_spotPower = spotPower;
-		SetModifiedOption(GetComponentUpdateOption(ELightComponentUpdateOption::LIGHT_ENTITY));
+		m_lightEntityCachedBuffer->SetChanged(true);
 	}
 }

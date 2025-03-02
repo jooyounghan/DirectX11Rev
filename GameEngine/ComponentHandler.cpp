@@ -221,7 +221,9 @@ void ComponentHandler::HandleSphereCollisionComponent(SphereCollisionComponent* 
 	SeparatorText("Sphere Properties");
 	Text("Radius");
 	PushID("SphereCollisionComponentRadius");
-	if (DragFloat("", &sphereCollisionComponent->Radius, 0.1f, 0.0f))
+
+	float& radius = const_cast<float&>(sphereCollisionComponent->GetRadius());
+	if (DragFloat("", &radius, 0.1f, 0.0f))
 	{
 		sphereCollisionComponent->UpdateEntity();
 	}
@@ -233,7 +235,8 @@ void ComponentHandler::HandleOrientedCollisionComponent(OrientedBoxCollisionComp
 	SeparatorText("Oriented-Box Properties");
 	Text("Extends");
 	PushID("OrientedBoxCollisionComponentExtents");
-	if (DragFloat3("", &orientedBoxCollisionComponent->Extents.x, 0.1f, 0.0f))
+	XMVECTOR& extents = const_cast<XMVECTOR&>(orientedBoxCollisionComponent->GetExtents());
+	if (DragFloat3("", &extents.m128_f32[0], 0.1f, 0.0f))
 	{
 		orientedBoxCollisionComponent->UpdateEntity();
 	}
@@ -242,33 +245,34 @@ void ComponentHandler::HandleOrientedCollisionComponent(OrientedBoxCollisionComp
 
 void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const bool& isHandleSpotPower)
 {
-	constexpr uint8_t lightEntityUpdateOption = GetComponentUpdateOption(ELightComponentUpdateOption::LIGHT_ENTITY);
-	bool isChanged = false;
+	static SLightEntity tempLightEntity;
 
+	bool isChanged = false;
 	SeparatorText("Light Entities");
 	SLightEntity* lightEntity = lightComponent->GetLightEntityAddress();
-	
+	memcpy(&tempLightEntity, lightEntity, sizeof(tempLightEntity));
+
 	PushID("lightPowerEntity");
 	Text("Light Power");
-	if (DragFloat("", &lightEntity->m_lightPower, 0.01f, 0.f, 10.f))
+	if (DragFloat("", &tempLightEntity.m_lightPower, 0.01f, 0.f, 10.f))
 	{
-		isChanged |= true;
+		isChanged = true;
 	};
 	PopID();
 
 	PushID("falloffStartEntity");
 	Text("Fall-Off Start Distance");
-	if (DragFloat("", &lightEntity->m_fallOffStart, 1.f, 0.f, 1E6))
+	if (DragFloat("", &tempLightEntity.m_fallOffStart, 1.f, 0.f, 1E6))
 	{
-		isChanged |= true;
+		isChanged = true;
 	}
 	PopID();
 
 	PushID("falloffEndEntity");
 	Text("Fall-Off End Distance");
-	if (DragFloat("", &lightEntity->m_fallOffEnd, 1.f, lightEntity->m_fallOffStart + 100, 1E6))
+	if (DragFloat("", &tempLightEntity.m_fallOffEnd, 1.f, tempLightEntity.m_fallOffStart + 100, 1E6))
 	{
-		isChanged |= true;
+		isChanged = true;
 	}
 	PopID();
 
@@ -276,14 +280,22 @@ void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const b
 	{
 		PushID("spotPowerEntity");
 		Text("Spot Power");
-		if (DragFloat("", &lightEntity->m_spotPower, 0.01f, 0.f, 10.f))
+		if (DragFloat("", &tempLightEntity.m_spotPower, 0.01f, 0.f, 10.f))
 		{
-			isChanged |= true;
+			isChanged = true;
 		}
 		PopID();
 	}
 
-	if (isChanged) lightComponent->UpdateLightEntity();
+	if (isChanged)
+	{
+		lightComponent->UpdateLightEntity(
+			tempLightEntity.m_lightPower,
+			tempLightEntity.m_fallOffStart,
+			tempLightEntity.m_fallOffEnd,
+			tempLightEntity.m_spotPower
+		);
+	}
 }
 
 bool ComponentHandler::RenderTransformationEntity(

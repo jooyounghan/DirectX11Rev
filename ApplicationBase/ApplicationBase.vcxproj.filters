@@ -118,7 +118,7 @@
     <ClInclude Include="BoundingVolumeHierarchy.h">
       <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="DepthTestRenderer.h">
+    <ClInclude Include="SpotLightDepthTestRenderer.h">
       <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ViewEntity.h">
@@ -135,6 +135,12 @@
     </ClInclude>
     <ClInclude Include="LightManager.h">
       <Filter>헤더 파일\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightDepthTestRenderer.h">
+      <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ADepthTestRenderer.h">
+      <Filter>헤더 파일\Component\Visitor\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -374,7 +380,7 @@
     <ClCompile Include="BoundingVolumeHierarchy.cpp">
       <Filter>소스 파일\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="DepthTestRenderer.cpp">
+    <ClCompile Include="SpotLightDepthTestRenderer.cpp">
       <Filter>소스 파일\Component\Visitor\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ComponentCollector.cpp">
@@ -388,6 +394,12 @@
     </ClCompile>
     <ClCompile Include="LightManager.cpp">
       <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightDepthTestRenderer.cpp">
+      <Filter>소스 파일\Component\Visitor\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ADepthTestRenderer.cpp">
+      <Filter>소스 파일\Component\Visitor\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -450,14 +462,20 @@
     <FxCompile Include="Shaders\DebugComponentPS.hlsl">
       <Filter>Shader\DebugComponent</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SkeletalMeshDepthTestVS.hlsl">
+    <FxCompile Include="Shaders\SkeletalMeshSpotLightDepthTestVS.hlsl">
       <Filter>Shader\DepthTest</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\StaticMeshDepthTestVS.hlsl">
+    <FxCompile Include="Shaders\StaticMeshSpotLightDepthTestVS.hlsl">
       <Filter>Shader\DepthTest</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\DeferredMeshComponentPS.hlsl">
       <Filter>Shader\MeshComponent</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticMeshPointLightDepthTestVS.hlsl">
+      <Filter>Shader\DepthTest</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkeletalMeshPointLightDepthTestVS.hlsl">
+      <Filter>Shader\DepthTest</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

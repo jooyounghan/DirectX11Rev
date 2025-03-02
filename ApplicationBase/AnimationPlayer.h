@@ -50,8 +50,10 @@ public:
 public:
 	void PlayAnimation(const AnimationAsset* animationAsset, const size_t& playCountIn);
 
-private:
+public:
 	bool IsPlaying();
+
+private:
 	void StopAnimation();
 	void UpdateBoneFromParent(const Bone* parentBone, const Bone* childBone);
 

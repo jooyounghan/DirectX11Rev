@@ -20,9 +20,15 @@ struct LightViewEntity
     float dummy;
 };
 
+struct LightPosition
+{
+    float3 f3LightPos;
+    float dummy;
+};
+
 float3 GetDirectSpotLighted(
-    LightEntity spotLightEntitiy,
-    LightViewEntity spotLightViewEntity,
+    StructuredBuffer<LightEntity> spotLightEntities,
+    StructuredBuffer<LightViewEntity> spotLightViewEntities,
     float4 f4ModelPos,
     float3 toEye,
     float3 normal,
@@ -35,6 +41,9 @@ float3 GetDirectSpotLighted(
     float roughness
 )
 {
+    LightEntity spotLightEntitiy = spotLightEntities[spotLightIdx];
+    LightViewEntity spotLightViewEntity = spotLightViewEntities[spotLightIdx];
+
     float4 lightViewProjPos = mul(f4ModelPos, spotLightViewEntity.viewProjMatrix);
     lightViewProjPos /= lightViewProjPos.w;
     float2 lightUV = lightViewProjPos.xy;
@@ -75,4 +84,57 @@ float3 GetDirectSpotLighted(
         / max((4 * spotLDotN * spotVDotN), 1E-6);
             
     return (directDiffuseBRDF + directSpecularBRDF) * max(0.f, pow(spotLDotN * lightPower, spotLightEntitiy.spotPower));
+}
+
+float3 GetDirectPointLighted(
+    StructuredBuffer<LightEntity> pointLightEntities ,
+    StructuredBuffer<LightPosition> pointLightPositions,
+    float3 f3ModelPos,
+    float3 toEye,
+    float3 normal,
+    TextureCubeArray pointLightShadowMaps,
+    uint pointLightIdx,
+    SamplerState wrapSampler,
+    float3 kd,
+    float3 ks,
+    float3 diffuse,
+    float roughness
+)
+{
+    LightEntity pointLightEntity = pointLightEntities[pointLightIdx];
+    LightPosition pointLightPosition = pointLightPositions[pointLightIdx];
+
+    float farZ = pointLightEntity.fallOffEnd;
+    float3 fromLight = f3ModelPos - pointLightPosition.f3LightPos;
+    float fromLightDistance = length(fromLight);
+    fromLight = fromLight / fromLightDistance;
+        
+    float depthZ = pointLightShadowMaps.Sample(wrapSampler, float4(fromLight, pointLightIdx)).x;
+    float fromLightDepth = (farZ * (fromLightDistance - DefaultNearZ)) / (fromLightDistance * (farZ - DefaultNearZ));
+
+    //if (fromLightDepth > depthZ + 1E-5)
+    //    return float3(0.f, 0.f, 0.f);
+                
+    float lightPower = pointLightEntity.lightPower;
+    float fallOffStart = pointLightEntity.fallOffStart;
+    float fallOffEnd = pointLightEntity.fallOffEnd;
+    float3 toPointLight = -fromLight;
+        
+    lightPower *= clamp((fromLightDistance - fallOffEnd) / (fallOffStart - fallOffEnd), 0.0f, 1.0f);
+    if (lightPower < 1E-6)
+        return float3(0.f, 0.f, 0.f);
+
+    float3 pointHalfVector = (toEye + toPointLight) / 2.f;
+    float pointLDotH = max(0.f, dot(toPointLight, pointHalfVector));
+    float pointNDotH = max(0.f, dot(normal, pointHalfVector));
+    float pointLDotN = max(0.f, dot(toPointLight, normal));
+    float pointVDotN = max(0.f, dot(toEye, normal));
+        
+    float3 directDiffuseBRDF = (kd * diffuse / 3.141592);
+    float3 directSpecularBRDF = SchlickFresnelReflectRoughnessTerm(ks, pointLDotH, roughness)
+        * SchlickGeometryModel(pointLDotN, pointVDotN, roughness)
+        * NormalDistributionGGXTerm(pointNDotH, roughness)
+        / max((4 * pointLDotN * pointVDotN), 1E-6);
+            
+    return (directDiffuseBRDF + directSpecularBRDF) * max(0.f, pointLDotN * lightPower);
 }
