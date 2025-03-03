@@ -79,15 +79,24 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
                     cameraComponent->GetViewEntityBuffer().GetBuffer(),
                     lightManager.GetLightManagerEntityBuffer().GetBuffer()
                 };
-                vector<ID3D11ShaderResourceView*> psSRVs
-                {
+
+                vector<ID3D11ShaderResourceView*> psSRVs = sceneMaterialAsset ? vector<ID3D11ShaderResourceView*>{
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_SPECULAR)->GetSRV(),
-                    sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
-                    sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV(),
-                    lightManager.GetSpotLightEntitiesBuffer().GetSRV(),
-                    lightManager.GetSpotLightViewEntitiesBuffer().GetSRV(),
-                    lightManager.GetSpotLightDepthTestViews().GetSRV()
-                };
+                        sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
+                        sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV()
+                } : vector<ID3D11ShaderResourceView*>{ nullptr, nullptr, nullptr };
+
+
+                    psSRVs.insert(psSRVs.end(), {
+                        lightManager.GetSpotLightEntitiesBuffer().GetSRV(),
+                        lightManager.GetSpotLightViewEntitiesBuffer().GetSRV(),
+                        lightManager.GetSpotLightDepthTestViews().GetSRV(),
+                        lightManager.GetPointLightEntitiesBuffer().GetSRV(),
+                        lightManager.GetPointLightPositionsBuffer().GetSRV(),
+                        lightManager.GetPointLightDepthTestViews().GetSRV()
+                        }
+                    );
+
                 m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
                 m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
                 // ===================================================================
@@ -145,15 +154,23 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
                     cameraComponent->GetViewEntityBuffer().GetBuffer(),
                     lightManager.GetLightManagerEntityBuffer().GetBuffer()
                 };
-                vector<ID3D11ShaderResourceView*> psSRVs
-                {
+
+                vector<ID3D11ShaderResourceView*> psSRVs = sceneMaterialAsset ? vector<ID3D11ShaderResourceView*>{
                     sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_SPECULAR)->GetSRV(),
-                    sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
-                    sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV(),
+                        sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
+                        sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV()
+                } : vector<ID3D11ShaderResourceView*>{ nullptr, nullptr, nullptr };
+
+
+                psSRVs.insert(psSRVs.end(), {
                     lightManager.GetSpotLightEntitiesBuffer().GetSRV(),
                     lightManager.GetSpotLightViewEntitiesBuffer().GetSRV(),
-                    lightManager.GetSpotLightDepthTestViews().GetSRV()
-                };
+                    lightManager.GetSpotLightDepthTestViews().GetSRV(),
+                    lightManager.GetPointLightEntitiesBuffer().GetSRV(),
+                    lightManager.GetPointLightPositionsBuffer().GetSRV(),
+                    lightManager.GetPointLightDepthTestViews().GetSRV()
+                    }
+                );
 
                 m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
                 m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
@@ -215,8 +232,8 @@ void SceneForwardRenderer::RenderMeshPartHandler(const size_t& idx)
             normalAsset ? normalAsset->GetSRV() : nullptr,
             emissiveAsset ? emissiveAsset->GetSRV() : nullptr
         };
-        m_deviceContext->PSSetConstantBuffers(3, 1, psConstantBuffersPerMeshPart.data());
-        m_deviceContext->PSSetShaderResources(6, 7, psSRVsPerMeshPart.data());
+        m_deviceContext->PSSetConstantBuffers(3, static_cast<UINT>(psConstantBuffersPerMeshPart.size()), psConstantBuffersPerMeshPart.data());
+        m_deviceContext->PSSetShaderResources(9, static_cast<UINT>(psSRVsPerMeshPart.size()), psSRVsPerMeshPart.data());
         // ===================================================================
     }
 

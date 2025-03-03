@@ -22,7 +22,28 @@ CameraComponent::CameraComponent(
 	m_idStagingFilm(1, 1, 1, 1, D3D11_CPU_ACCESS_READ, NULL, D3D11_USAGE_STAGING, DXGI_FORMAT_R32_UINT),
 	m_depthStencilView(width, height, 1, 1, NULL, NULL, D3D11_USAGE_DEFAULT, DXGI_FORMAT_D24_UNORM_S8_UINT)
 {
-	SetViewport(width, height);
+	ZeroMemory(&m_viewport, sizeof(D3D11_VIEWPORT));
+	m_viewport.Width = static_cast<float>(width);
+	m_viewport.Height = static_cast<float>(height);
+	m_viewport.MaxDepth = 1.f;
+}
+
+void CameraComponent::SetNearZ(const float& nearZ) 
+{ 
+	m_nearZ = nearZ;	
+	SetViewChangedFlags();
+}
+
+void CameraComponent::SetFarZ(const float& farZ) 
+{ 
+	m_farZ = farZ; 
+	SetViewChangedFlags();
+}
+
+void CameraComponent::SetFovAngle(const float& fovAngle) 
+{ 
+	m_fovAngle = fovAngle; 
+	SetViewChangedFlags();
 }
 
 void CameraComponent::SetViewport(const uint32_t& width, const uint32_t& height)
@@ -33,6 +54,13 @@ void CameraComponent::SetViewport(const uint32_t& width, const uint32_t& height)
 	m_viewport.Height = static_cast<float>(height);
 	m_viewport.MinDepth = 0.f;
 	m_viewport.MaxDepth = 1.f;
+	SetViewChangedFlags();
+}
+
+void CameraComponent::SetViewChangedFlags()
+{
+	m_isViewEntityUpdated.SetFlag(true);
+	m_isUpdated.SetFlag(true);
 }
 
 void CameraComponent::UpdateViewEntity()
@@ -49,17 +77,12 @@ void CameraComponent::UpdateViewEntity()
 	m_viewEntity.m_viewProj = XMMatrixTranspose(m_viewEntity.m_viewProj);
 
 	XMStoreFloat3(&m_viewEntity.m_viewPosition, m_absolutePosition);
-
-	UpdateBoundingProperty();
-
-	m_viewEntityBuffer.SetChanged(true);
-	SetUpdated(true);
 }
 
-void CameraComponent::UpdateEntity()
+void CameraComponent::SetTransformationChangedFlags()
 {
-	AComponent::UpdateEntity();
-	UpdateViewEntity();
+	AComponent::SetTransformationChangedFlags();
+	m_isViewEntityUpdated.SetFlag(true);
 }
 
 void CameraComponent::Accept(IComponentVisitor* visitor)

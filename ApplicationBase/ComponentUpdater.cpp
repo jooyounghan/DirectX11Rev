@@ -32,7 +32,6 @@ void ComponentUpdater::Visit(Scene* scene)
 		lightManagerEntityBuffer.Upload(m_deviceContextCached);
 	}
 
-	
 	vector<reference_wrapper<StructuredBuffer>> structureBuffers{
 		lightManager.GetSpotLightEntitiesBuffer(),
 		lightManager.GetSpotLightViewEntitiesBuffer(),
@@ -42,7 +41,7 @@ void ComponentUpdater::Visit(Scene* scene)
 	for (auto& structureBuffer : structureBuffers)
 	{
 		StructuredBuffer& sb = structureBuffer.get();
-		if (sb.IsChanged())
+		if (sb.GetBufferChangedFlag().ConsumeFlag())
 		{
 			sb.Upload(m_deviceContextCached);
 		}
@@ -66,41 +65,75 @@ void ComponentUpdater::Visit(CameraComponent* cameraComponent)
 {
 	UpdateBaseComponent(cameraComponent);
 
-	DynamicBuffer& viewEntityBufer = cameraComponent->GetViewEntityBuffer();
-	if (viewEntityBufer.IsChanged()) viewEntityBufer.Upload(m_deviceContextCached);
+	AtomicFlag& viewUpdatedFlag = cameraComponent->GetViewUpdatedFlag();
+	if (viewUpdatedFlag.ConsumeFlag())
+	{
+		cameraComponent->UpdateViewEntity();
+		cameraComponent->UpdateBoundingProperty();
+
+		DynamicBuffer& viewEntityBufer = cameraComponent->GetViewEntityBuffer();
+		viewEntityBufer.Upload(m_deviceContextCached);
+	}
 }
 
 void ComponentUpdater::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
-	UpdateBaseComponent(sphereCollisionComponent);
+	if (UpdateBaseComponent(sphereCollisionComponent))
+	{
+		sphereCollisionComponent->UpdateBoundingProperty();
+		sphereCollisionComponent->UpdateBoundingVolumeHierarchy();
+	}
 }
 
 void ComponentUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
-	UpdateBaseComponent(orientedBoxCollisionComponent);
+	if (UpdateBaseComponent(orientedBoxCollisionComponent))
+	{
+		orientedBoxCollisionComponent->UpdateBoundingProperty();
+		orientedBoxCollisionComponent->UpdateBoundingVolumeHierarchy();
+	}
 }
 
 void ComponentUpdater::Visit(SpotLightComponent* spotLightComponent)
 {
 	UpdateBaseComponent(spotLightComponent);
+
+	AtomicFlag& viewUpdatedFlag = spotLightComponent->GetViewUpdatedFlag();
+	if (viewUpdatedFlag.ConsumeFlag())
+	{
+		spotLightComponent->UpdateViewEntity();
+		spotLightComponent->UpdateBoundingProperty();
+	}
 }
 
 void ComponentUpdater::Visit(PointLightComponent* pointLightComponent)
 {
 	UpdateBaseComponent(pointLightComponent);
 
-	for (size_t idx = 0; idx < 6; ++idx)
+	AtomicFlag& viewUpdatedFlag = pointLightComponent->GetViewUpdatedFlag();
+	if (viewUpdatedFlag.ConsumeFlag())
 	{
-		DynamicBuffer& viewEntityBuffer = pointLightComponent->GetPointLightFrustum(idx).GetViewEntityBuffer();
-		if (viewEntityBuffer.IsChanged()) viewEntityBuffer.Upload(m_deviceContextCached);
+		pointLightComponent->UpdatePointLightFrustums();
+
+		for (size_t idx = 0; idx < 6; ++idx)
+		{
+			DynamicBuffer& viewEntityBuffer = pointLightComponent->GetPointLightFrustum(idx).GetViewEntityBuffer();
+			if (viewEntityBuffer.GetBufferChangedFlag().ConsumeFlag()) viewEntityBuffer.Upload(m_deviceContextCached);
+		}
 	}
+
 }
 
-void ComponentUpdater::UpdateBaseComponent(AComponent* component)
+bool ComponentUpdater::UpdateBaseComponent(AComponent* component)
 {
-	DynamicBuffer& componentEntityBuffer = component->GetComponentEntityBuffer();
-	if (componentEntityBuffer.IsChanged()) componentEntityBuffer.Upload(m_deviceContextCached);
-
-	DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
-	if (transformationEntityBuffer.IsChanged()) transformationEntityBuffer.Upload(m_deviceContextCached);
+	bool result = false;
+	AtomicFlag& transformationEntityUpdatedFlag = component->GetTransformationEntityUpdatedFlag();
+	if (result = transformationEntityUpdatedFlag.ConsumeFlag())
+	{
+		component->UpdateEntity();
+		
+		DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
+		transformationEntityBuffer.Upload(m_deviceContextCached);
+	}
+	return result;
 }

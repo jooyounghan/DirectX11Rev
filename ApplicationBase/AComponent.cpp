@@ -3,8 +3,17 @@
 using namespace std;
 using namespace DirectX;
 
-SComponentEntity::SComponentEntity(const uint32_t& componentID)
-	: m_componentID(componentID), m_componentVariable1(NULL), m_componentVariable2(NULL), m_componentVariable3(NULL)
+SComponentEntity::SComponentEntity(
+	const uint32_t& componentID,
+	const uint32_t& componentVariable1,
+	const uint32_t& componentVariable2,
+	const uint32_t& componentVariable3
+	
+	)
+	: m_componentID(componentID),
+	m_componentVariable1(componentVariable1),
+	m_componentVariable2(componentVariable2),
+	m_componentVariable3(componentVariable3)
 {
 }
 
@@ -14,13 +23,16 @@ AComponent::AComponent(
 	const uint32_t& componentID, 
 	const XMFLOAT3& localPosition,
 	const XMFLOAT3& localAngle,
-	const XMFLOAT3& localScale
+	const XMFLOAT3& localScale,
+	const uint32_t& componentVariable1,
+	const uint32_t& componentVariable2,
+	const uint32_t& componentVariable3
 )	: 
 	m_localPosition(XMVectorSet(localPosition.x, localPosition.y, localPosition.z, 0.f)),
 	m_localAngle(XMVectorSet(localAngle.x, localAngle.y, localAngle.z, 0.f)),
 	m_scale(XMVectorSet(localScale.x, localScale.y, localScale.z, 0.f)),
 	m_transformationEntityBuffer(sizeof(STransformationEntity), 1, &m_transformationEntity),
-	m_componentEntity(componentID),
+	m_componentEntity(componentID, componentVariable1, componentVariable2, componentVariable3),
 	m_componentEntityBuffer(sizeof(SComponentEntity), 1, &m_componentEntity),
 	m_componentName(componentName)
 {
@@ -37,8 +49,7 @@ void AComponent::AttachChildComponent(AComponent* component)
 {
 	component->m_parentComponent = this;
 	m_childComponents.emplace_back(component);
-
-	component->UpdateEntity();
+	SetTransformationChangedFlags();
 }
 
 void AComponent::RemoveFromParent()
@@ -52,8 +63,7 @@ void AComponent::RemoveFromParent()
 		);
 	}
 	m_parentComponent = nullptr;
-	
-	UpdateEntity();
+	SetTransformationChangedFlags();
 }
 
 DirectX::XMVECTOR AComponent::GetLocalRotationQuaternion() const
@@ -86,6 +96,35 @@ DirectX::XMMATRIX AComponent::GetLocalTransformation() const
 
 const DirectX::XMMATRIX& AComponent::GetAbsoluteTranformation() const { return m_transformation; }
 
+void AComponent::SetLocalPosition(const DirectX::XMVECTOR& localPosition)
+{
+	m_localPosition = localPosition;
+	SetTransformationChangedFlags();
+}
+
+void AComponent::SetLocalAngle(const DirectX::XMVECTOR& localAngle)
+{
+	m_localAngle = localAngle;
+	SetTransformationChangedFlags();
+}
+
+void AComponent::SetScale(const DirectX::XMVECTOR& scale)
+{
+	m_scale = scale;
+	SetTransformationChangedFlags();
+}
+
+void AComponent::SetTransformationChangedFlags()
+{
+	m_isTransformationEntityUpdated.SetFlag(true);
+	m_isUpdated.SetFlag(true);
+
+	for (auto& childComponent : m_childComponents)
+	{
+		childComponent->SetTransformationChangedFlags();
+	}
+}
+
 void AComponent::UpdateEntity()
 {
 	m_absolutePosition = m_parentComponent ? m_parentComponent->GetAbsolutePosition() + m_localPosition : m_localPosition;
@@ -100,7 +139,5 @@ void AComponent::UpdateEntity()
 	{
 		childComponent->UpdateEntity();
 	}
-
-	m_transformationEntityBuffer.SetChanged(true);
-	SetUpdated(true);
 }
+

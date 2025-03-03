@@ -151,7 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ABuffer.h" />
-    <ClInclude Include="BufferManager.h" />
+    <ClInclude Include="AtomicFlag.h" />
     <ClInclude Include="D3D11Utilities.h" />
     <ClInclude Include="AUploadableBuffer.h" />
     <ClInclude Include="ComputeShader.h" />
@@ -180,7 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ABuffer.cpp" />
-    <ClCompile Include="BufferManager.cpp" />
+    <ClCompile Include="AtomicFlag.cpp" />
     <ClCompile Include="D3D11Utilities.cpp" />
     <ClCompile Include="AUploadableBuffer.cpp" />
     <ClCompile Include="ComputeShader.cpp" />

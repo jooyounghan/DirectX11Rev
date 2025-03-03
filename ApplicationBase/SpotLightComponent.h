@@ -25,20 +25,23 @@ public:
 	);
 	~SpotLightComponent() override = default;
 
+
 protected:
-	float m_fovAngle;
-	const D3D11_VIEWPORT m_viewport;
 	SViewEntity* m_viewEntityCached = nullptr;
 	StructuredBuffer* m_viewEntityBufferCached = nullptr;
 
 public:
-	inline const float& GetFovAngle() const { return m_fovAngle; }
-	inline const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 	inline SViewEntity* GetViewEntityAddress() const { return m_viewEntityCached; }
 	inline StructuredBuffer* GetViewEntitiesBufferAddress() { return m_viewEntityBufferCached; }
 
+protected:
+	float m_fovAngle;
+	const D3D11_VIEWPORT m_viewport;
+
 public:
-	inline void SetFovAngle(const float& fovAngle) { m_fovAngle = fovAngle; }
+	inline const float& GetFovAngle() const { return m_fovAngle; }
+	inline const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
+	void SetFovAngle(const float& fovAngle);
 
 protected:
 	ID3D11DepthStencilView**  m_depthTestDSVAddressOfCached;
@@ -58,7 +61,7 @@ public:
 	void UpdateViewEntity();
 
 public:
-	virtual void UpdateEntity() override;
+	virtual void SetTransformationChangedFlags() override;
 	virtual void Accept(IComponentVisitor* visitor) override;
 	virtual void GenerateShadowMap(
 		ID3D11DeviceContext* deviceContext,

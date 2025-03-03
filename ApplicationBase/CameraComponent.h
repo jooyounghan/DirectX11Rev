@@ -29,9 +29,11 @@ public:
 protected:
 	SViewEntity m_viewEntity;
 	DynamicBuffer m_viewEntityBuffer;
+	AtomicFlag m_isViewEntityUpdated = false;
 
 public:
 	DynamicBuffer& GetViewEntityBuffer() { return m_viewEntityBuffer; }
+	inline AtomicFlag& GetViewUpdatedFlag() { return m_isViewEntityUpdated; }
 
 protected:
 	Texture2DInstance<SRVOption, RTVOption, UAVOption>	m_film;
@@ -50,10 +52,13 @@ public:
 	inline const float& GetFarZ() const { return m_farZ; }
 	inline const float& GetFovAngle() const { return m_fovAngle; }
 	inline const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
-	inline void SetNearZ(const float& nearZ) { m_nearZ = nearZ; }
-	inline void SetFarZ(const float& farZ) { m_farZ = farZ; }
-	inline void SetFovAngle(const float& fovAngle) { m_fovAngle = fovAngle; }
-	inline void SetViewport(const uint32_t& width, const uint32_t& height);
+	void SetNearZ(const float& nearZ);
+	void SetFarZ(const float& farZ);
+	void SetFovAngle(const float& fovAngle);
+	void SetViewport(const uint32_t& width, const uint32_t& height);
+
+protected:
+	void SetViewChangedFlags();
 
 public:
 	inline Texture2DInstance<SRVOption, RTVOption, UAVOption>& GetFilm() { return m_film; }
@@ -73,7 +78,7 @@ public:
 	void UpdateViewEntity();
 
 public:
-	virtual void UpdateEntity() override;
+	virtual void SetTransformationChangedFlags() override;
 	virtual void Accept(IComponentVisitor* visitor) override;
 
 public:

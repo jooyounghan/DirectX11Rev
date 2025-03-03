@@ -59,25 +59,16 @@ void ComponentHandler::Visit(CameraComponent* cameraComponent)
 {
 	bool isViewChanged = false;
 	HandleComponentName(cameraComponent, "Camera Model Component");
-
-
-	if (HandleComponentTransformation(cameraComponent, true, true, false))
-	{
-		isViewChanged = true;
-	}
+	HandleComponentTransformation(cameraComponent, true, true, false);
 
 	SeparatorText("View Properties");
 	Text("Fov Angle");
 	PushID("FovAngle");
-	float& fovAngle = const_cast<float&>(cameraComponent->GetFovAngle());
+	
+	float fovAngle = cameraComponent->GetFovAngle();
 	if (DragFloat("", &fovAngle, 0.1f, 60.f, 160.f))
 	{
-		isViewChanged = true;
-	}
-
-	if (isViewChanged)
-	{
-		cameraComponent->UpdateViewEntity();
+		cameraComponent->SetFovAngle(fovAngle);
 	}
 	PopID();
 }
@@ -100,11 +91,8 @@ void ComponentHandler::Visit(SpotLightComponent* spotLightComponent)
 {
 	bool isViewChanged = false;
 	HandleComponentName(spotLightComponent, "Spot Light Component");
-	if (HandleComponentTransformation(spotLightComponent, true, true, false))
-	{
-		isViewChanged = true;
-	}
-
+	HandleComponentTransformation(spotLightComponent, true, true, false);
+	
 	SeparatorText("View Properties");
 	Text("Fov Angle");
 	PushID("FovAngle");
@@ -126,10 +114,8 @@ void ComponentHandler::Visit(SpotLightComponent* spotLightComponent)
 void ComponentHandler::Visit(PointLightComponent* pointLightComponent)
 {
 	HandleComponentName(pointLightComponent, "Point Light Component");
-	if (HandleComponentTransformation(pointLightComponent, true, true, false))
-	{
-		pointLightComponent->UpdatePointLightFrustums();
-	}
+	HandleComponentTransformation(pointLightComponent, true, true, false);
+
 	HandleLightEntity(pointLightComponent, false);
 }
 
@@ -144,14 +130,13 @@ void ComponentHandler::HandleComponentName(AComponent* component, const string& 
 	Text(componentDescription.c_str());
 }
 
-bool ComponentHandler::HandleComponentTransformation(
+void ComponentHandler::HandleComponentTransformation(
 	AComponent* component,
 	const bool& isHandlePosition,
-	const bool& isHandleAngle ,
+	const bool& isHandleAngle,
 	const bool& isHandleScale
 )
 {
-	bool result = false;
 	SeparatorText("Transformation");
 
 	static bool isAbsolutePosition = false;
@@ -162,7 +147,7 @@ bool ComponentHandler::HandleComponentTransformation(
 
 	if (isHandlePosition)
 	{
-		result |= RenderTransformationEntity(
+		RenderTransformationEntity(
 			"RenderPositionEntity", "Position", 
 			component, EComponentEntityType::ENTITY_POSITION,
 			1.f, -1E9f, 1E9f
@@ -170,7 +155,7 @@ bool ComponentHandler::HandleComponentTransformation(
 	}
 	if (isHandleAngle)
 	{
-		result |= RenderTransformationEntity(
+		RenderTransformationEntity(
 			"RenderAngleEntity", "Angle",
 			component, EComponentEntityType::ENTITY_ANGLE,
 			0.1f, -360.f, 360.f
@@ -178,13 +163,12 @@ bool ComponentHandler::HandleComponentTransformation(
 	}
 	if (isHandleScale)
 	{
-		result |= RenderTransformationEntity(
+		RenderTransformationEntity(
 			"RenderScaleEntity", "Scale",
 			component, EComponentEntityType::ENTITY_SCALE,
 			0.01f, 1E-3f, 10.f
 		);
 	}
-	return result;
 }
 
 void ComponentHandler::HandleAnimationPlayer(SkeletalMeshComponent* skeletalMeshComponent)
@@ -222,10 +206,10 @@ void ComponentHandler::HandleSphereCollisionComponent(SphereCollisionComponent* 
 	Text("Radius");
 	PushID("SphereCollisionComponentRadius");
 
-	float& radius = const_cast<float&>(sphereCollisionComponent->GetRadius());
+	float radius = sphereCollisionComponent->GetRadius();
 	if (DragFloat("", &radius, 0.1f, 0.0f))
 	{
-		sphereCollisionComponent->UpdateEntity();
+		sphereCollisionComponent->SetRadius(radius);
 	}
 	PopID();
 }
@@ -235,22 +219,20 @@ void ComponentHandler::HandleOrientedCollisionComponent(OrientedBoxCollisionComp
 	SeparatorText("Oriented-Box Properties");
 	Text("Extends");
 	PushID("OrientedBoxCollisionComponentExtents");
-	XMVECTOR& extents = const_cast<XMVECTOR&>(orientedBoxCollisionComponent->GetExtents());
+	XMVECTOR extents = orientedBoxCollisionComponent->GetExtents();
 	if (DragFloat3("", &extents.m128_f32[0], 0.1f, 0.0f))
 	{
-		orientedBoxCollisionComponent->UpdateEntity();
+		orientedBoxCollisionComponent->SetExtents(extents);
 	}
 	PopID();
 }
 
 void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const bool& isHandleSpotPower)
 {
-	static SLightEntity tempLightEntity;
 
 	bool isChanged = false;
 	SeparatorText("Light Entities");
-	SLightEntity* lightEntity = lightComponent->GetLightEntityAddress();
-	memcpy(&tempLightEntity, lightEntity, sizeof(tempLightEntity));
+	SLightEntity tempLightEntity = *lightComponent->GetLightEntityAddress();
 
 	PushID("lightPowerEntity");
 	Text("Light Power");
@@ -298,20 +280,16 @@ void ComponentHandler::HandleLightEntity(LightComponent* lightComponent, const b
 	}
 }
 
-bool ComponentHandler::RenderTransformationEntity(
+void ComponentHandler::RenderTransformationEntity(
 	const char* groupID, const char* entityName, 
 	AComponent* component, const EComponentEntityType& entityType,
 	const float& valueSpeed, const float& minValue, const float& maxValue
 )
 {
-	bool result = false;
 	static const XMVECTOR zeroVector = XMVectorZero();
 	static const XMVECTOR defaultScale = XMVectorSet(1.f, 1.f, 1.f, 0.f);
 
 	AComponent* parentComponent = component->GetParentComponent();
-	XMVECTOR absoluteParentEntity = XMVectorZero();
-	XMVECTOR absoluteEntity = XMVectorZero();
-	float* relativeEntityAddress = nullptr;
 
 	auto GetParentEntity = [&]() -> const XMVECTOR&
 		{
@@ -324,12 +302,12 @@ bool ComponentHandler::RenderTransformationEntity(
 			}
 		};
 
-	auto GetRelativeEntityRef = [&]() -> XMVECTOR&
+	auto GetRelativeEntity = [&]() -> const XMVECTOR&
 		{
 			switch (entityType) {
-			case EComponentEntityType::ENTITY_POSITION: return const_cast<XMVECTOR&>(component->GetLocalPosition());
-			case EComponentEntityType::ENTITY_ANGLE: return const_cast<XMVECTOR&>(component->GetLocalAngle());
-			case EComponentEntityType::ENTITY_SCALE: return const_cast<XMVECTOR&>(component->GetScale());
+			case EComponentEntityType::ENTITY_POSITION: return component->GetLocalPosition();
+			case EComponentEntityType::ENTITY_ANGLE: return component->GetLocalAngle();
+			case EComponentEntityType::ENTITY_SCALE: return component->GetScale();
 			default: throw invalid_argument("Invalid entity type");
 			}
 		};
@@ -389,35 +367,43 @@ bool ComponentHandler::RenderTransformationEntity(
 			}
 		};
 
+	const auto EntitySetter = [&](AComponent* component, const XMVECTOR& entity) -> void
+		{
+			switch (entityType)
+			{
+			case EComponentEntityType::ENTITY_POSITION: return component->SetLocalPosition(entity);
+			case EComponentEntityType::ENTITY_ANGLE: return component->SetLocalAngle(entity);
+			case EComponentEntityType::ENTITY_SCALE: return component->SetScale(entity);
+			default: throw invalid_argument("Invalid entity type");
+			}
+		};
+
 	PushID(groupID);
 	Text(entityName);
 	RenderAbsoluteRelativeSelector();
 	SameLine();
 
-	absoluteParentEntity = GetParentEntity();
-	XMVECTOR& relativeEntity = GetRelativeEntityRef();
-	absoluteEntity = EntityHandler(absoluteParentEntity, relativeEntity);
-	relativeEntityAddress = &relativeEntity.m128_f32[0];
+	const XMVECTOR& absoluteParentEntity = GetParentEntity();
+	const XMVECTOR& relativeEntity = GetRelativeEntity();
+
+	XMVECTOR tempAbsoluteEntity = EntityHandler(absoluteParentEntity, relativeEntity);
+	XMVECTOR tempRelativeEntity = relativeEntity;
 
 	if (GetIsAbsolute())
 	{
-		if (DragFloat3("", &absoluteEntity.m128_f32[0], valueSpeed, minValue, maxValue))
+		if (DragFloat3("", &tempAbsoluteEntity.m128_f32[0], valueSpeed, minValue, maxValue))
 		{
-			XMVECTOR updatedRelativeEntity = EntityInverseHandler(absoluteEntity, absoluteParentEntity);
-			memcpy(relativeEntityAddress, &updatedRelativeEntity.m128_f32[0], sizeof(updatedRelativeEntity));
-			component->UpdateEntity();
-			result |= true;
+			XMVECTOR updatedRelativeEntity = EntityInverseHandler(tempAbsoluteEntity, absoluteParentEntity);
+			EntitySetter(component, updatedRelativeEntity);
 		}
 	}
 	else 
 	{
-		if (DragFloat3("", relativeEntityAddress, valueSpeed, minValue, maxValue))
+		if (DragFloat3("", &tempRelativeEntity.m128_f32[0], valueSpeed, minValue, maxValue))
 		{
-			component->UpdateEntity();
-			result |= true;
+			EntitySetter(component, tempRelativeEntity);
 		}
 	}
 
 	PopID();
-	return result;
 }

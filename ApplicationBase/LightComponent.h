@@ -36,10 +36,14 @@ public:
 protected:
 	SLightEntity* m_lightEntityCached = nullptr;
 	StructuredBuffer* m_lightEntityCachedBuffer = nullptr;
+	AtomicFlag m_viewEntityCachedFlag = false;
 
 public:
 	inline SLightEntity* GetLightEntityAddress() { return m_lightEntityCached; }
 	inline StructuredBuffer* GetLightEntityBufferAddress() { return m_lightEntityCachedBuffer; }
+	inline AtomicFlag& GetViewUpdatedFlag() { return m_viewEntityCachedFlag; }
+
+public:
 	void UpdateLightEntity(
 		const float& lightPower,
 		const float& fallOffStart,

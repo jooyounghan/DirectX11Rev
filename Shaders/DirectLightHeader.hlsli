@@ -2,7 +2,7 @@
 
 static const uint MaxSpotLightCount = 1024;
 static const uint MaxPointLightCount = 1024;
-static const uint DefaultNearZ = 0.1f;
+static const float DefaultNearZ = 0.1f;
 
 struct LightEntity
 {
@@ -25,6 +25,27 @@ struct LightPosition
     float3 f3LightPos;
     float dummy;
 };
+
+float NDCToDepth(float zNDC, float nearZ, float farZ)
+{
+    float A = farZ / (farZ - nearZ);
+    float B = -farZ * nearZ / (farZ - nearZ);
+
+    return B / (zNDC - A);
+}
+
+float3 GetCubeMapFaceNormal(float3 dir)
+{
+    float3 absDir = abs(dir);
+    float3 signDir = sign(dir);
+
+    bool isX = (absDir.x >= absDir.y) && (absDir.x >= absDir.z);
+    bool isY = (absDir.y > absDir.x) && (absDir.y >= absDir.z);
+    
+    return isX ? float3(signDir.x, 0, 0) :
+           isY ? float3(0, signDir.y, 0) :
+                 float3(0, 0, signDir.z);
+}
 
 float3 GetDirectSpotLighted(
     StructuredBuffer<LightEntity> spotLightEntities,
@@ -109,11 +130,12 @@ float3 GetDirectPointLighted(
     float fromLightDistance = length(fromLight);
     fromLight = fromLight / fromLightDistance;
         
-    float depthZ = pointLightShadowMaps.Sample(wrapSampler, float4(fromLight, pointLightIdx)).x;
-    float fromLightDepth = (farZ * (fromLightDistance - DefaultNearZ)) / (fromLightDistance * (farZ - DefaultNearZ));
+    float depthNDC = pointLightShadowMaps.Sample(wrapSampler, float4(fromLight, pointLightIdx)).x;
+    float depthZ = NDCToDepth(depthNDC, DefaultNearZ, farZ);
 
-    //if (fromLightDepth > depthZ + 1E-5)
-    //    return float3(0.f, 0.f, 0.f);
+    float3 faceNormal = GetCubeMapFaceNormal(fromLight);
+    if (fromLightDistance * dot(faceNormal, fromLight) > depthZ + 1E-5)
+        return float3(0.f, 0.f, 0.f);
                 
     float lightPower = pointLightEntity.lightPower;
     float fallOffStart = pointLightEntity.fallOffStart;
@@ -135,6 +157,6 @@ float3 GetDirectPointLighted(
         * SchlickGeometryModel(pointLDotN, pointVDotN, roughness)
         * NormalDistributionGGXTerm(pointNDotH, roughness)
         / max((4 * pointLDotN * pointVDotN), 1E-6);
-            
+    
     return (directDiffuseBRDF + directSpecularBRDF) * max(0.f, pointLDotN * lightPower);
 }

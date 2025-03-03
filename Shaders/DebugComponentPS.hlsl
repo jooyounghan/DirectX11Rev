@@ -9,7 +9,7 @@ cbuffer ComponentBuffer : register(b0)
 DebugComponentPixelOutPut main(DebugComponentVertexOutPut input)
 {
     DebugComponentPixelOutPut result;
-    result.f4Color = float4(0.f, 0.f, 0.f, 1.f);
+    result.f4Color = float4(1.f, 1.f, 0.f, 1.f);
     result.uiID = IDValues;
     return result;
 }

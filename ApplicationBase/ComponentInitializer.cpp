@@ -111,6 +111,7 @@ void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 {
 	InitBaseComponent(cameraComponent);
 	cameraComponent->UpdateViewEntity();
+	cameraComponent->UpdateBoundingProperty();
 
 	DynamicBuffer& viewProjMatrixBuffer = cameraComponent->GetViewEntityBuffer();
 	viewProjMatrixBuffer.InitializeBuffer(m_deviceCached);
@@ -129,38 +130,45 @@ void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 void ComponentInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
 	InitBaseComponent(sphereCollisionComponent);
+	sphereCollisionComponent->UpdateBoundingProperty();
+	sphereCollisionComponent->UpdateBoundingVolumeHierarchy();
 }
 
 void ComponentInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
 	InitBaseComponent(orientedBoxCollisionComponent);
+	orientedBoxCollisionComponent->UpdateBoundingProperty();
+	orientedBoxCollisionComponent->UpdateBoundingVolumeHierarchy();
 }
 
 void ComponentInitializer::Visit(SpotLightComponent* spotLightComponent)
 {
 	InitBaseComponent(spotLightComponent);
 	spotLightComponent->UpdateViewEntity();
+	spotLightComponent->UpdateBoundingProperty();
 }
 
 void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
 {
 	InitBaseComponent(pointLightComponent);
+	pointLightComponent->UpdatePointLightFrustums();
+
 
 	for (size_t idx = 0; idx < 6; ++idx)
 	{
-		DynamicBuffer& viewEntityBuffer = pointLightComponent->GetPointLightFrustum(idx).GetViewEntityBuffer();
+		PointLightFrustum& pointLightFrustum = pointLightComponent->GetPointLightFrustum(idx);
+		DynamicBuffer& viewEntityBuffer = pointLightFrustum.GetViewEntityBuffer();
 		viewEntityBuffer.InitializeBuffer(m_deviceCached);
 	}
-	pointLightComponent->UpdatePointLightFrustums();
 }
 
 void ComponentInitializer::InitBaseComponent(AComponent* component)
 {
 	component->UpdateEntity();
 
-	DynamicBuffer& comopnentEntityBuffer = component->GetComponentEntityBuffer();
+	ConstantBuffer& componentEntityBuffer = component->GetComponentEntityBuffer();
 	DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
 
-	comopnentEntityBuffer.InitializeBuffer(m_deviceCached);
+	componentEntityBuffer.InitializeBuffer(m_deviceCached);
 	transformationEntityBuffer.InitializeBuffer(m_deviceCached);
 }

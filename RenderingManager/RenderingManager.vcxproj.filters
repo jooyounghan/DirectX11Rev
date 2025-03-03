@@ -13,38 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="헤더 파일\BufferManager">
-      <UniqueIdentifier>{fc4a9d57-57ae-4603-a951-7d111bcbd2bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\BufferManager">
-      <UniqueIdentifier>{d068d9c4-8734-4bdd-b66b-44525e8c5360}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\BufferManager\Buffer">
-      <UniqueIdentifier>{b5bb898c-bb49-453d-a7bb-4434086045e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\BufferManager\Buffer">
-      <UniqueIdentifier>{bac8cdcd-d974-4b93-9534-d993e0dc838d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\BufferManager\Buffer\Constant">
-      <UniqueIdentifier>{a7c19b77-5d04-447e-9dec-d3aa74af6e78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\BufferManager\Buffer\Constant">
-      <UniqueIdentifier>{98334c3f-0045-4783-a5ac-93c05495e06c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\BufferManager\Buffer\Dynamic">
-      <UniqueIdentifier>{44956613-a7bf-44f2-8cb3-99af7045ee95}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\BufferManager\Buffer\Dynamic">
-      <UniqueIdentifier>{cf9a94c5-0799-485a-a72d-53f7f56e7fa8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Utilities">
       <UniqueIdentifier>{ba25892d-2fe3-4195-acbe-003c340c7f94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\BufferManager\Buffer\Structure">
-      <UniqueIdentifier>{ca3f1b99-1856-4295-ae42-61323dd3c8d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\BufferManager\Buffer\Structure">
-      <UniqueIdentifier>{fae4e90d-29a6-4975-8933-1ac466275eba}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\TaskManager">
       <UniqueIdentifier>{e13bbad5-5150-40c7-ae45-b7ab12ed79a3}</UniqueIdentifier>
@@ -76,28 +46,52 @@
     <Filter Include="헤더 파일\PSOManager\Shader">
       <UniqueIdentifier>{bb16ed62-fc74-4fcc-a6b1-1cd21fd218b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Buffer">
+      <UniqueIdentifier>{b5bb898c-bb49-453d-a7bb-4434086045e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Buffer\Constant">
+      <UniqueIdentifier>{a7c19b77-5d04-447e-9dec-d3aa74af6e78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Buffer\Dynamic">
+      <UniqueIdentifier>{cf9a94c5-0799-485a-a72d-53f7f56e7fa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Buffer\Structure">
+      <UniqueIdentifier>{ca3f1b99-1856-4295-ae42-61323dd3c8d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Buffer">
+      <UniqueIdentifier>{bac8cdcd-d974-4b93-9534-d993e0dc838d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Buffer\Constant">
+      <UniqueIdentifier>{98334c3f-0045-4783-a5ac-93c05495e06c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Buffer\Dynamic">
+      <UniqueIdentifier>{44956613-a7bf-44f2-8cb3-99af7045ee95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Buffer\Structure">
+      <UniqueIdentifier>{fae4e90d-29a6-4975-8933-1ac466275eba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PSOManager.h">
       <Filter>헤더 파일\PSOManager</Filter>
     </ClInclude>
     <ClInclude Include="ABuffer.h">
-      <Filter>헤더 파일\BufferManager\Buffer</Filter>
+      <Filter>헤더 파일\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
-      <Filter>헤더 파일\BufferManager\Buffer\Constant</Filter>
+      <Filter>헤더 파일\Buffer\Constant</Filter>
     </ClInclude>
     <ClInclude Include="DynamicBuffer.h">
-      <Filter>헤더 파일\BufferManager\Buffer\Dynamic</Filter>
+      <Filter>헤더 파일\Buffer\Dynamic</Filter>
     </ClInclude>
     <ClInclude Include="DirectXUtilities.h">
       <Filter>헤더 파일\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="StructuredBuffer.h">
-      <Filter>헤더 파일\BufferManager\Buffer\Structure</Filter>
+      <Filter>헤더 파일\Buffer\Structure</Filter>
     </ClInclude>
     <ClInclude Include="AUploadableBuffer.h">
-      <Filter>헤더 파일\BufferManager\Buffer</Filter>
+      <Filter>헤더 파일\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="ITextureOption.h">
       <Filter>헤더 파일\Texture2D</Filter>
@@ -153,11 +147,11 @@
     <ClInclude Include="PSOEnumDefinition.h">
       <Filter>헤더 파일\PSOManager</Filter>
     </ClInclude>
-    <ClInclude Include="BufferManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="DeferredContext.h">
       <Filter>헤더 파일\DeferredContext</Filter>
+    </ClInclude>
+    <ClInclude Include="AtomicFlag.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -165,19 +159,19 @@
       <Filter>소스 파일\PSOManager</Filter>
     </ClCompile>
     <ClCompile Include="ABuffer.cpp">
-      <Filter>소스 파일\BufferManager\Buffer</Filter>
+      <Filter>소스 파일\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>소스 파일\BufferManager\Buffer\Constant</Filter>
+      <Filter>소스 파일\Buffer\Constant</Filter>
     </ClCompile>
     <ClCompile Include="DynamicBuffer.cpp">
-      <Filter>소스 파일\BufferManager\Buffer\Dynamic</Filter>
+      <Filter>소스 파일\Buffer\Dynamic</Filter>
     </ClCompile>
     <ClCompile Include="StructuredBuffer.cpp">
-      <Filter>소스 파일\BufferManager\Buffer\Structure</Filter>
+      <Filter>소스 파일\Buffer\Structure</Filter>
     </ClCompile>
     <ClCompile Include="AUploadableBuffer.cpp">
-      <Filter>소스 파일\BufferManager\Buffer</Filter>
+      <Filter>소스 파일\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="SRVOption.cpp">
       <Filter>소스 파일\Texture2D</Filter>
@@ -224,11 +218,11 @@
     <ClCompile Include="GraphicsPSOObject.cpp">
       <Filter>소스 파일\PSOManager</Filter>
     </ClCompile>
-    <ClCompile Include="BufferManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="DeferredContext.cpp">
       <Filter>소스 파일\DeferredContext</Filter>
+    </ClCompile>
+    <ClCompile Include="AtomicFlag.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

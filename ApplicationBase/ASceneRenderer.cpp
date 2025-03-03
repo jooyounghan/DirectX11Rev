@@ -61,17 +61,20 @@ void ASceneRenderer::Visit(Scene* scene)
                 ASceneRenderer::ApplyRenderTargets(m_deviceContext, cameraComponent);
 
                 const IBLMaterialAsset* const iblMaterialAsset = scene->GetIBLMaterialAsset();
-                const ScratchTextureAsset* const backgroundTextureAsset = iblMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BACKGROUND);
+                if (iblMaterialAsset)
+                {
+                    const ScratchTextureAsset* const backgroundTextureAsset = iblMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BACKGROUND);
+                    
+                    vector<ID3D11Buffer*> vsConstantBuffers{ cameraComponent->GetViewEntityBuffer().GetBuffer() };
+                    vector<ID3D11Buffer*> psConstantBuffers{ iblMaterialAsset->GetIBLToneMappingBuffer()->GetBuffer() };
+                    vector<ID3D11ShaderResourceView*> psSRVs{ backgroundTextureAsset->GetSRV() };
 
-                vector<ID3D11Buffer*> vsConstantBuffers{ cameraComponent->GetViewEntityBuffer().GetBuffer() };
-                vector<ID3D11Buffer*> psConstantBuffers{ iblMaterialAsset->GetIBLToneMappingBuffer()->GetBuffer() };
-                vector<ID3D11ShaderResourceView*> psSRVs{ backgroundTextureAsset->GetSRV() };
+                    m_deviceContext->VSSetConstantBuffers(0, static_cast<UINT>(vsConstantBuffers.size()), vsConstantBuffers.data());
+                    m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
+                    m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
 
-                m_deviceContext->VSSetConstantBuffers(0, static_cast<UINT>(vsConstantBuffers.size()), vsConstantBuffers.data());
-                m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
-                m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
-
-                RenderMeshParts(m_deviceContext, meshPartsData);
+                    RenderMeshParts(m_deviceContext, meshPartsData);
+                }
             }
         }
     }

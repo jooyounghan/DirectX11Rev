@@ -34,5 +34,5 @@ public:
 	virtual void Visit(PointLightComponent* pointLightComponent) override final;
 
 private:
-	void UpdateBaseComponent(AComponent* component);
+	bool UpdateBaseComponent(AComponent* component);
 };

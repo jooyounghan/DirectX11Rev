@@ -81,7 +81,7 @@ float4 main(GBufferResolveVertexOutput input) : SV_TARGET
         );
     }
        
-    for (uint pointLightIdx = 0; pointLightIdx < 1; ++pointLightIdx)
+    for (uint pointLightIdx = 0; pointLightIdx < pointLightCount; ++pointLightIdx)
     {
         color += GetDirectPointLighted(
             pointLightEntities, pointLightPositions,
@@ -89,12 +89,6 @@ float4 main(GBufferResolveVertexOutput input) : SV_TARGET
             pointLightShadowMaps, pointLightIdx, wrapSampler,
             kd, ks, diffuse, roughness
         );
-  
-
-      
-
-        
-        ;
     }
     
     return float4(color, 1.f);

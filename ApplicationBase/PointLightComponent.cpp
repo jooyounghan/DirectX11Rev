@@ -35,9 +35,7 @@ void PointLightFrustum::UpdateViewEntity()
 	m_viewEntity.m_viewProj = XMMatrixTranspose(m_viewEntity.m_viewProj);
 	XMStoreFloat3(&m_viewEntity.m_viewPosition, m_absolutePositionCached);
 
-	m_viewEntityBuffer.SetChanged(true);
-
-	UpdateBoundingProperty();
+	m_viewEntityBuffer.GetBufferChangedFlag().SetFlag(true);
 }
 
 void PointLightFrustum::UpdateBoundingProperty()
@@ -85,17 +83,22 @@ void PointLightComponent::UpdatePointLightFrustums()
 	for (size_t idx = 0; idx < 6; ++idx)
 	{
 		m_pointLightFrustums[idx].UpdateViewEntity();
+		m_pointLightFrustums[idx].UpdateBoundingProperty();
 	}
-	SetUpdated(true);
 }
 
 void PointLightComponent::UpdateEntity()
 {
 	LightComponent::UpdateEntity();
-	UpdatePointLightFrustums();
 
 	memcpy(m_lightPositionCached, &m_absolutePosition, sizeof(XMVECTOR));
-	m_lightPositionsBufferCached->SetChanged(true);
+	m_lightPositionsBufferCached->GetBufferChangedFlag().SetFlag(true);
+}
+
+void PointLightComponent::SetTransformationChangedFlags()
+{
+	LightComponent::SetTransformationChangedFlags();
+	m_viewEntityCachedFlag.SetFlag(true);
 }
 
 void PointLightComponent::Accept(IComponentVisitor* visitor)

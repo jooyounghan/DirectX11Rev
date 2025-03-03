@@ -35,6 +35,12 @@ SpotLightComponent::SpotLightComponent(
 
 }
 
+void SpotLightComponent::SetFovAngle(const float& fovAngle)
+{ 
+	m_fovAngle = fovAngle; 
+	m_viewEntityCachedFlag.SetFlag(true);
+}
+
 void SpotLightComponent::UpdateViewEntity()
 {
 	if (m_lightEntityCached)
@@ -51,17 +57,14 @@ void SpotLightComponent::UpdateViewEntity()
 		m_viewEntityCached->m_viewProj = XMMatrixTranspose(m_viewEntityCached->m_viewProj);
 		XMStoreFloat3(&m_viewEntityCached->m_viewPosition, m_absolutePosition);
 
-		UpdateBoundingProperty();
-
-		m_viewEntityBufferCached->SetChanged(true);
-		SetUpdated(true);
+		m_viewEntityBufferCached->GetBufferChangedFlag().SetFlag(true);
 	}
 }
 
-void SpotLightComponent::UpdateEntity()
+void SpotLightComponent::SetTransformationChangedFlags()
 {
-	LightComponent::UpdateEntity();
-	UpdateViewEntity();
+	LightComponent::SetTransformationChangedFlags();
+	m_viewEntityCachedFlag.SetFlag(true);
 }
 
 void SpotLightComponent::Accept(IComponentVisitor* visitor)

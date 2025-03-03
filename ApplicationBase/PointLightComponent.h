@@ -86,11 +86,11 @@ public:
 	inline PointLightFrustum& GetPointLightFrustum(const size_t& idx) { return m_pointLightFrustums[idx]; }
 
 public:
-
 	void UpdatePointLightFrustums();
 
 public:
 	virtual void UpdateEntity() override;
+	virtual void SetTransformationChangedFlags() override;
 	virtual void Accept(IComponentVisitor* visitor) override;
 	virtual void GenerateShadowMap(
 		ID3D11DeviceContext* deviceContext,

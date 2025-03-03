@@ -1,7 +1,6 @@
 #pragma once
 #include "ABuffer.h"
-
-#include <atomic>
+#include "AtomicFlag.h"
 
 class AUploadableBuffer : public ABuffer
 {
@@ -10,11 +9,10 @@ public:
 	~AUploadableBuffer() override = default;
 
 protected:
-	std::atomic_bool m_isChanged = false;
+	AtomicFlag m_isChanged = false;
 
 public:
-	inline bool IsChanged() { return m_isChanged.exchange(false); }
-	inline void SetChanged(const bool& isChanged) { m_isChanged.store(isChanged); }
+	inline AtomicFlag& GetBufferChangedFlag() { return m_isChanged; }
 
 public:
 	virtual void Upload(ID3D11DeviceContext* const deviceContext);

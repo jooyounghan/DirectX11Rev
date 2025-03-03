@@ -18,7 +18,7 @@ protected:
 	float m_radius;
 
 public:
-	inline void SetRadius(const float& radius) { m_radius = radius; }
+	void SetRadius(const float& radius);
 	inline const float& GetRadius() { return m_radius; }
 	virtual const DirectX::XMMATRIX& GetAbsoluteTranformation() const;
 
@@ -26,7 +26,6 @@ public:
 	virtual DirectX::XMMATRIX GetLocalTransformation() const override;
 	virtual bool GetDefaultRenderable() const override;
 	virtual void Accept(IComponentVisitor* visitor) override;
-	virtual void UpdateEntity() override;
 
 public:
 	virtual void SetCollisionOption(ICollisionOption* collisionOption) override;

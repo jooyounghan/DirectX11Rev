@@ -1,5 +1,6 @@
 #pragma once
 #include "IComponentVisitor.h"
+#include "ConstantBuffer.h"
 #include "DynamicBuffer.h"
 
 #include <d3d11.h>
@@ -12,11 +13,16 @@
 
 struct SComponentEntity
 {
-	SComponentEntity(const uint32_t& componentID);
+	SComponentEntity(
+		const uint32_t& componentID, 
+		const uint32_t& componentVariable1 = NULL,
+		const uint32_t& componentVariable2 = NULL, 
+		const uint32_t& componentVariable3 = NULL
+	);
 	const uint32_t m_componentID;
-	uint32_t m_componentVariable1;
-	uint32_t m_componentVariable2;
-	uint32_t m_componentVariable3;
+	const uint32_t m_componentVariable1;
+	const uint32_t m_componentVariable2;
+	const uint32_t m_componentVariable3;
 };
 
 struct STransformationEntity
@@ -36,7 +42,10 @@ public:
 		const uint32_t& componentID,
 		const DirectX::XMFLOAT3& localPosition,
 		const DirectX::XMFLOAT3& localAngle,
-		const DirectX::XMFLOAT3& scale
+		const DirectX::XMFLOAT3& scale,
+		const uint32_t& componentVariable1 = NULL,
+		const uint32_t& componentVariable2 = NULL,
+		const uint32_t& componentVariable3 = NULL
 	);
 	virtual ~AComponent() = default;
 
@@ -61,15 +70,23 @@ public:
 	virtual DirectX::XMMATRIX GetLocalTransformation() const;
 	virtual const DirectX::XMMATRIX& GetAbsoluteTranformation() const;
 
+public:
+	void SetLocalPosition(const DirectX::XMVECTOR& localPosition);
+	void SetLocalAngle(const DirectX::XMVECTOR& localAngle);
+	void SetScale(const DirectX::XMVECTOR& scale);
+
 protected:
-	STransformationEntity m_transformationEntity;
+	virtual void SetTransformationChangedFlags();
+
+protected:
 	SComponentEntity m_componentEntity;
+	STransformationEntity m_transformationEntity;
+	ConstantBuffer m_componentEntityBuffer;
 	DynamicBuffer m_transformationEntityBuffer;
-	DynamicBuffer m_componentEntityBuffer;
 
 public:
 	inline DynamicBuffer& GetTransformationEntityBuffer() { return m_transformationEntityBuffer; }
-	inline DynamicBuffer& GetComponentEntityBuffer() { return m_componentEntityBuffer; }
+	inline ConstantBuffer& GetComponentEntityBuffer() { return m_componentEntityBuffer; }
 	inline const uint32_t& GetComponentID() const { return m_componentEntity.m_componentID; }
 
 protected:
@@ -85,16 +102,19 @@ public:
 
 protected:
 	bool m_isRenderable = true;
-	std::atomic_bool m_isUpdated = NULL;
 
 public:
 	inline const bool& IsRenderable() const { return m_isRenderable; }
 	inline void SetRenderable(const bool& isRenderable) { m_isRenderable = isRenderable; }
-	inline void SetUpdated(const bool& isUpdated) { m_isUpdated.store(isUpdated); }
-	inline uint8_t IsUpdated() { return m_isUpdated.exchange(NULL); }
+	virtual bool GetDefaultRenderable() const;
+
+protected:
+	AtomicFlag m_isUpdated = false;
+	AtomicFlag m_isTransformationEntityUpdated = false;
 
 public:
-	virtual bool GetDefaultRenderable() const;
+	inline AtomicFlag& GetUpdatedFlag() { return m_isUpdated; }
+	inline AtomicFlag& GetTransformationEntityUpdatedFlag() { return m_isTransformationEntityUpdated; }
 
 public:
 	void AttachChildComponent(AComponent* component);

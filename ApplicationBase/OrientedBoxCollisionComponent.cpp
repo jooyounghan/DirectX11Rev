@@ -24,6 +24,12 @@ OrientedBoxCollisionComponent::~OrientedBoxCollisionComponent()
 	m_collisionOption->RemoveBVHImpl(this);
 }
 
+void OrientedBoxCollisionComponent::SetExtents(const DirectX::XMVECTOR& extents)
+{
+	m_extents = extents;
+	SetTransformationChangedFlags();
+}
+
 const DirectX::XMMATRIX& OrientedBoxCollisionComponent::GetAbsoluteTranformation() const
 {
 	static XMMATRIX pureTransformation = XMMatrixIdentity();
@@ -54,13 +60,6 @@ bool OrientedBoxCollisionComponent::GetDefaultRenderable() const
 void OrientedBoxCollisionComponent::Accept(IComponentVisitor* visitor)
 {
 	visitor->Visit(this);
-}
-
-void OrientedBoxCollisionComponent::UpdateEntity()
-{
-	AComponent::UpdateEntity();
-	UpdateBoundingProperty();
-	UpdateBoundingVolumeHierarchy();
 }
 
 void OrientedBoxCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)

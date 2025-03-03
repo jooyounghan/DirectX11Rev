@@ -23,6 +23,12 @@ SphereCollisionComponent::~SphereCollisionComponent()
 	m_collisionOption->RemoveBVHImpl(this);
 }
 
+void SphereCollisionComponent::SetRadius(const float& radius)
+{
+	m_radius = radius;
+	SetTransformationChangedFlags();
+}
+
 const XMMATRIX& SphereCollisionComponent::GetAbsoluteTranformation() const
 {
 	static XMMATRIX pureTransformation = XMMatrixIdentity();
@@ -48,13 +54,6 @@ bool SphereCollisionComponent::GetDefaultRenderable() const
 void SphereCollisionComponent::Accept(IComponentVisitor* visitor)
 {
 	visitor->Visit(this);
-}
-
-void SphereCollisionComponent::UpdateEntity()
-{
-	AComponent::UpdateEntity();
-	UpdateBoundingProperty();
-	UpdateBoundingVolumeHierarchy();
 }
 
 void SphereCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)

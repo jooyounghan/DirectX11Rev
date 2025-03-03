@@ -40,10 +40,16 @@ cbuffer MaterialAssetData : register(b3)
 TextureCube specularIBLTexture : register(t0);
 TextureCube diffuseIBLTexture : register(t1);
 Texture2D brdfLUTTexture : register(t2);
+
 StructuredBuffer<LightEntity> spotLightEntities : register(t3);
 StructuredBuffer<LightViewEntity> spotLightViewEntities : register(t4);
 Texture2DArray spotLightShadowMaps : register(t5);
-Texture2D materialTexture[7] : register(t6);
+
+StructuredBuffer<LightEntity> pointLightEntities : register(t6);
+StructuredBuffer<LightPosition> pointLightPositions : register(t7);
+TextureCubeArray pointLightShadowMaps : register(t8);
+
+Texture2D materialTexture[7] : register(t9);
 
 
 SamplerState wrapSampler : register(s0);
@@ -70,7 +76,8 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
         normal = GetNormalFromMap(input.f3ModelNormal, bitangent, tangent, input.f2TexCoord, materialTexture[NORMAL_IDX], wrapSampler);
     }
     
-    float3 toEye = normalize(viewPosition - input.f4ModelPos.xyz);
+    float3 position = input.f4ModelPos.xyz;
+    float3 toEye = normalize(viewPosition - position);
     float3 toLight = -reflect(toEye, normal);
     
     float VDotH = max(dot(normal, toEye), 0.f);
@@ -95,8 +102,17 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
             kd, ks, diffuse, roughness
         );
     }
+    
 
-    // ===================================================================================
+    for (uint pointLightIdx = 0; pointLightIdx < pointLightCount; ++pointLightIdx)
+    {
+        color += GetDirectPointLighted(
+            pointLightEntities, pointLightPositions,
+            position, toEye, normal,
+            pointLightShadowMaps, pointLightIdx, wrapSampler,
+            kd, ks, diffuse, roughness
+        );
+    }
     
     Result.f4Color = float4(color, 1.f);   
     Result.uiID = IDValues;

@@ -280,13 +280,12 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
             m_selectedComponent = m_componentManagerCached->GetComponent(selectedComponentID);
         }
 
-        bool isChanged = false;
         if (IsItemHovered(ImGuiHoveredFlags_::ImGuiHoveredFlags_None))
         {
             if (io.MouseDown[ImGuiMouseButton_::ImGuiMouseButton_Middle])
             {
                 const ImVec2 mouseDelta = io.MouseDelta;
-                XMVECTOR& relativeAngle = const_cast<XMVECTOR&>(m_selectedCamera->GetLocalAngle());
+                XMVECTOR relativeAngle = m_selectedCamera->GetLocalAngle();
 
                 float& pitch = relativeAngle.m128_f32[0];
                 float& yaw = relativeAngle.m128_f32[1];
@@ -294,14 +293,15 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
                 yaw += 360.f * (mouseDelta.x / size.x);
                 pitch += 360.f * (mouseDelta.y / size.y);
 
-                isChanged |= true;
+                m_selectedCamera->SetLocalAngle(relativeAngle);
             }
         }
 
+        bool isChanged = false;
         if (IsItemFocused())
         {
-            XMVECTOR& relativePos = const_cast<XMVECTOR&>(m_selectedCamera->GetLocalPosition());
-            const XMVECTOR rotationQuaternion = m_selectedCamera->GetLocalRotationQuaternion();
+            XMVECTOR relativePos = m_selectedCamera->GetLocalPosition();
+            XMVECTOR rotationQuaternion = m_selectedCamera->GetLocalRotationQuaternion();
 
             XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, rotationQuaternion);
             XMVECTOR currentRight = XMVector3Rotate(GDefaultRight, rotationQuaternion);
@@ -309,31 +309,31 @@ void SceneWindow::InteractSceneInput(const ImVec2& size)
             if (IsKeyDown(ImGuiKey::ImGuiKey_W))
             {
                 relativePos += currentForward;
-                isChanged |= true;
+                isChanged = true;
             }
             if (IsKeyDown(ImGuiKey::ImGuiKey_S))
             {
                 relativePos -= currentForward;
-                isChanged |= true;
+                isChanged = true;
             }
             if (IsKeyDown(ImGuiKey::ImGuiKey_A))
             {
                 relativePos -= currentRight;
-                isChanged |= true;
+                isChanged = true;
             }
             if (IsKeyDown(ImGuiKey::ImGuiKey_D))
             {
                 relativePos += currentRight;
-                isChanged |= true;
+                isChanged = true;
             }
 
+            if (isChanged)
+            {
+                m_selectedCamera->SetLocalPosition(relativePos);
+            }
         }
 
-        if (isChanged)
-        {
-            m_selectedCamera->UpdateEntity();
-            m_selectedCamera->UpdateViewEntity();
-        }
+
     }
 }
 

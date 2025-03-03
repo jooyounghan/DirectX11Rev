@@ -59,7 +59,7 @@ private:
 		AComponent* comopnent, 
 		const std::string& componentDescription
 	);
-	bool HandleComponentTransformation(
+	void HandleComponentTransformation(
 		AComponent* component,
 		const bool& isHandlePosition,
 		const bool& isHandleAngle,
@@ -72,7 +72,7 @@ private:
 	void HandleLightEntity(LightComponent* lightComponent, const bool& isHandleSpotPower);
 
 private:
-	bool RenderTransformationEntity(
+	void RenderTransformationEntity(
 		const char* groupID, const char* entityName, 
 		AComponent* component, const EComponentEntityType& entityType,
 		const float& valueSpeed, const float& minValue, const float& maxValue
