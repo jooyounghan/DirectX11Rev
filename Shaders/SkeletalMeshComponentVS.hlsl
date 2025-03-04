@@ -22,9 +22,9 @@ MeshComponentVertexOutput main(SkeletalComponentVertexInput input)
     float4 f4WorldNormalIn = float4(input.f3WorldNormal, 0.f);
     float4 f4WorldPosIn = float4(input.f3WorldPos, 1.f);
     
-    float4 f4WorldNormalOut = 0;
-    float4 f4WorldTangentOut = 0;
-    float4 f4WorldPosOut = 0;
+    float4 f4WorldNormalOut = float4(0.f, 0.f, 0.f, 0.f);
+    float4 f4WorldTangentOut = float4(0.f, 0.f, 0.f, 0.f);
+    float4 f4WorldPosOut = float4(0.f, 0.f, 0.f, 0.f);
     
     [unroll]
     for (int i = 0; i < 4; ++i)

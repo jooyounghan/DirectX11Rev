@@ -47,7 +47,7 @@ void SceneForwardRenderer::Visit(StaticMeshComponent* staticMeshComponent)
     LightManager& lightManager = selectedScene->GetLightManager();
 
     const IBLMaterialAsset* sceneMaterialAsset = selectedScene->GetIBLMaterialAsset();
-    if (cameraComponent != nullptr && staticMeshComponent != nullptr && sceneMaterialAsset != nullptr)
+    if (cameraComponent != nullptr && staticMeshComponent != nullptr)
     {
         if (const StaticMeshAsset* staticMeshAsset = staticMeshComponent->GetStaticMetalAsset())
         {
@@ -119,7 +119,7 @@ void SceneForwardRenderer::Visit(SkeletalMeshComponent* skeletalMeshComponent)
     LightManager& lightManager = selectedScene->GetLightManager();
 
     const IBLMaterialAsset* sceneMaterialAsset = selectedScene->GetIBLMaterialAsset();
-    if (cameraComponent != nullptr && skeletalMeshComponent != nullptr && sceneMaterialAsset != nullptr)
+    if (cameraComponent != nullptr && skeletalMeshComponent != nullptr)
     {
         if (const SkeletalMeshAsset* skeletalMeshAsset = skeletalMeshComponent->GetSkeletalMetalAsset())
         {

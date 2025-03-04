@@ -31,7 +31,7 @@ float4 main(SkeletalMeshVertexInputForDepthTest input) : SV_POSITION
         
         f4ProjPos += weight * mul(f4WorldPosIn, boneTransform);
     }
-    f4ProjPos = mul(float4(input.f3WorldPos, 1.f), modelMatrix);
+    f4ProjPos = mul(f4ProjPos, modelMatrix);
     f4ProjPos = mul(f4ProjPos, viewProjMatrix);
     return f4ProjPos;
 }
