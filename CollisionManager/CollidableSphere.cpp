@@ -13,6 +13,11 @@ bool CollidableSphere::IsIntersectBoundingBox(const DirectX::BoundingBox& boundi
 	return boundingBox.Intersects(*this);
 }
 
+bool CollidableSphere::IsContainedByBoundingBox(const DirectX::BoundingBox& boundingBox) const
+{
+	return boundingBox.Contains(*this) == ContainmentType::CONTAINS;
+}
+
 DirectX::BoundingBox CollidableSphere::GetBoundingBox(const float& margin) const
 {
 	return DirectX::BoundingBox(Center, XMFLOAT3(Radius + margin, Radius + margin, Radius + margin));

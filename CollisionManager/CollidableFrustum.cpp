@@ -13,6 +13,11 @@ bool CollidableFrustum::IsIntersectBoundingBox(const DirectX::BoundingBox& bound
     return boundingBox.Intersects(*this);
 }
 
+bool CollidableFrustum::IsContainedByBoundingBox(const DirectX::BoundingBox& boundingBox) const
+{
+    return boundingBox.Contains(*this) == ContainmentType::CONTAINS;
+}
+
 DirectX::BoundingBox CollidableFrustum::GetBoundingBox(const float& margin) const
 {
     XMFLOAT3 corners[8];

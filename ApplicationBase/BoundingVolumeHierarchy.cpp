@@ -120,9 +120,8 @@ void BoundingVolumeHierarchy::UpdateCollidable(ID3D11Device* device, ICollisionA
 	{
 		BoundingVolumeNode* boundingVolumeNode = m_collidablesToNode[collidable];
 
-		if (!collidable->IsIntersectBoundingBox(boundingVolumeNode->GetBoundingBox()))
+		if (!collidable->IsContainedByBoundingBox(boundingVolumeNode->GetBoundingBox()))
 		{
-			bool test = collidable->IsIntersectBoundingBox(boundingVolumeNode->GetBoundingBox());
 			RemoveCollidable(collidable);
 			InsertCollidable(device, collidable);
 		}
