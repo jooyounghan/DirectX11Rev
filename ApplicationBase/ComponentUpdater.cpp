@@ -68,30 +68,18 @@ void ComponentUpdater::Visit(CameraComponent* cameraComponent)
 	AtomicFlag& viewUpdatedFlag = cameraComponent->GetViewUpdatedFlag();
 	if (viewUpdatedFlag.ConsumeFlag())
 	{
-		cameraComponent->UpdateViewEntity();
-		cameraComponent->UpdateBoundingProperty();
-
-		DynamicBuffer& viewEntityBufer = cameraComponent->GetViewEntityBuffer();
-		viewEntityBufer.Upload(m_deviceContextCached);
+		cameraComponent->UpdateViewEntity(m_deviceContextCached);
 	}
 }
 
 void ComponentUpdater::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
-	if (UpdateBaseComponent(sphereCollisionComponent))
-	{
-		sphereCollisionComponent->UpdateBoundingProperty();
-		sphereCollisionComponent->UpdateBoundingVolumeHierarchy();
-	}
+	UpdateBaseComponent(sphereCollisionComponent);
 }
 
 void ComponentUpdater::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
-	if (UpdateBaseComponent(orientedBoxCollisionComponent))
-	{
-		orientedBoxCollisionComponent->UpdateBoundingProperty();
-		orientedBoxCollisionComponent->UpdateBoundingVolumeHierarchy();
-	}
+	UpdateBaseComponent(orientedBoxCollisionComponent);
 }
 
 void ComponentUpdater::Visit(SpotLightComponent* spotLightComponent)
@@ -101,8 +89,7 @@ void ComponentUpdater::Visit(SpotLightComponent* spotLightComponent)
 	AtomicFlag& viewUpdatedFlag = spotLightComponent->GetViewUpdatedFlag();
 	if (viewUpdatedFlag.ConsumeFlag())
 	{
-		spotLightComponent->UpdateViewEntity();
-		spotLightComponent->UpdateBoundingProperty();
+		spotLightComponent->UpdateViewEntity(m_deviceContextCached);
 	}
 }
 
@@ -113,27 +100,16 @@ void ComponentUpdater::Visit(PointLightComponent* pointLightComponent)
 	AtomicFlag& viewUpdatedFlag = pointLightComponent->GetViewUpdatedFlag();
 	if (viewUpdatedFlag.ConsumeFlag())
 	{
-		pointLightComponent->UpdatePointLightFrustums();
-
-		for (size_t idx = 0; idx < 6; ++idx)
-		{
-			DynamicBuffer& viewEntityBuffer = pointLightComponent->GetPointLightFrustum(idx).GetViewEntityBuffer();
-			if (viewEntityBuffer.GetBufferChangedFlag().ConsumeFlag()) viewEntityBuffer.Upload(m_deviceContextCached);
-		}
+		pointLightComponent->UpdatePointLightFrustums(m_deviceContextCached);
 	}
 
 }
 
-bool ComponentUpdater::UpdateBaseComponent(AComponent* component)
+void ComponentUpdater::UpdateBaseComponent(AComponent* component)
 {
-	bool result = false;
 	AtomicFlag& transformationEntityUpdatedFlag = component->GetTransformationEntityUpdatedFlag();
-	if (result = transformationEntityUpdatedFlag.ConsumeFlag())
+	if (transformationEntityUpdatedFlag.ConsumeFlag())
 	{
-		component->UpdateEntity();
-		
-		DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
-		transformationEntityBuffer.Upload(m_deviceContextCached);
+		component->UpdateEntity(m_deviceContextCached);
 	}
-	return result;
 }

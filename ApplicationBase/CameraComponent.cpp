@@ -31,19 +31,25 @@ CameraComponent::CameraComponent(
 void CameraComponent::SetNearZ(const float& nearZ) 
 { 
 	m_nearZ = nearZ;	
-	SetViewChangedFlags();
+
+	m_isViewEntityUpdated.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
 void CameraComponent::SetFarZ(const float& farZ) 
 { 
 	m_farZ = farZ; 
-	SetViewChangedFlags();
+
+	m_isViewEntityUpdated.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
 void CameraComponent::SetFovAngle(const float& fovAngle) 
 { 
 	m_fovAngle = fovAngle; 
-	SetViewChangedFlags();
+
+	m_isViewEntityUpdated.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
 void CameraComponent::SetViewport(const uint32_t& width, const uint32_t& height)
@@ -54,16 +60,18 @@ void CameraComponent::SetViewport(const uint32_t& width, const uint32_t& height)
 	m_viewport.Height = static_cast<float>(height);
 	m_viewport.MinDepth = 0.f;
 	m_viewport.MaxDepth = 1.f;
-	SetViewChangedFlags();
-}
 
-void CameraComponent::SetViewChangedFlags()
-{
 	m_isViewEntityUpdated.SetFlag(true);
-	m_isUpdated.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
-void CameraComponent::UpdateViewEntity()
+void CameraComponent::UpdateEntity(ID3D11DeviceContext* deviceContext)
+{
+	AComponent::UpdateEntity(deviceContext);
+	UpdateViewEntity(deviceContext);
+}
+
+void CameraComponent::UpdateViewEntity(ID3D11DeviceContext* deviceContext)
 {
 	const XMVECTOR quaternion = GetAbsoluteRotationQuaternion();
 	XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
@@ -75,14 +83,10 @@ void CameraComponent::UpdateViewEntity()
 	m_viewEntity.m_viewProj = m_viewMatrix * m_projMatrix;
 	m_viewEntity.m_invViewProj = XMMatrixInverse(nullptr, m_viewEntity.m_viewProj);
 	m_viewEntity.m_viewProj = XMMatrixTranspose(m_viewEntity.m_viewProj);
-
 	XMStoreFloat3(&m_viewEntity.m_viewPosition, m_absolutePosition);
-}
+	m_viewEntityBuffer.Upload(deviceContext);
 
-void CameraComponent::SetTransformationChangedFlags()
-{
-	AComponent::SetTransformationChangedFlags();
-	m_isViewEntityUpdated.SetFlag(true);
+	UpdateBoundingProperty();
 }
 
 void CameraComponent::Accept(IComponentVisitor* visitor)

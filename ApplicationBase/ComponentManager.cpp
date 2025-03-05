@@ -277,9 +277,10 @@ void ComponentManager::UpdateComponents(const float& deltaTime)
 			for (auto& m_componentIDToComponent : m_componentIDsToComponent)
 			{
 				AComponent* componet = m_componentIDToComponent.second;
-				if (componet->GetUpdatedFlag().ConsumeFlag())
+				m_componentIDToComponent.second->Accept(&componentUpdater);
+				
+				if (componet->GetDBUpdatedFlag().ConsumeFlag())
 				{
-					m_componentIDToComponent.second->Accept(&componentUpdater);
 					{
 						unique_lock writeLock(m_updateSetMutex);
 						m_updateToDBComponentsMain.insert(m_componentIDToComponent.second);

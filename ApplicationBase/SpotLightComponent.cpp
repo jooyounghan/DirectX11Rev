@@ -38,33 +38,34 @@ SpotLightComponent::SpotLightComponent(
 void SpotLightComponent::SetFovAngle(const float& fovAngle)
 { 
 	m_fovAngle = fovAngle; 
-	m_viewEntityCachedFlag.SetFlag(true);
+
+	m_isViewEntityChanged.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
-void SpotLightComponent::UpdateViewEntity()
+void SpotLightComponent::UpdateEntity(ID3D11DeviceContext* deviceContext)
 {
-	if (m_lightEntityCached)
-	{
-		const XMVECTOR quaternion = GetAbsoluteRotationQuaternion();
-		XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
-		XMVECTOR currentUp = XMVector3Rotate(GDefaultUp, quaternion);
-
-		m_viewMatrix = XMMatrixLookToLH(m_absolutePosition, currentForward, currentUp);
-		m_projMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fovAngle), m_viewport.Width / m_viewport.Height, GDefaultNearZ, m_lightEntityCached->m_fallOffEnd);
-
-		m_viewEntityCached->m_viewProj = m_viewMatrix * m_projMatrix;
-		m_viewEntityCached->m_invViewProj = XMMatrixInverse(nullptr, m_viewEntityCached->m_viewProj);
-		m_viewEntityCached->m_viewProj = XMMatrixTranspose(m_viewEntityCached->m_viewProj);
-		XMStoreFloat3(&m_viewEntityCached->m_viewPosition, m_absolutePosition);
-
-		m_viewEntityBufferCached->GetBufferChangedFlag().SetFlag(true);
-	}
+	LightComponent::UpdateEntity(deviceContext);
+	UpdateViewEntity(deviceContext);
 }
 
-void SpotLightComponent::SetTransformationChangedFlags()
+void SpotLightComponent::UpdateViewEntity(ID3D11DeviceContext* deviceContext)
 {
-	LightComponent::SetTransformationChangedFlags();
-	m_viewEntityCachedFlag.SetFlag(true);
+	const XMVECTOR quaternion = GetAbsoluteRotationQuaternion();
+	XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
+	XMVECTOR currentUp = XMVector3Rotate(GDefaultUp, quaternion);
+
+	m_viewMatrix = XMMatrixLookToLH(m_absolutePosition, currentForward, currentUp);
+	m_projMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fovAngle), m_viewport.Width / m_viewport.Height, GDefaultNearZ, m_lightEntityCached->m_fallOffEnd);
+
+	m_viewEntityCached->m_viewProj = m_viewMatrix * m_projMatrix;
+	m_viewEntityCached->m_invViewProj = XMMatrixInverse(nullptr, m_viewEntityCached->m_viewProj);
+	m_viewEntityCached->m_viewProj = XMMatrixTranspose(m_viewEntityCached->m_viewProj);
+	XMStoreFloat3(&m_viewEntityCached->m_viewPosition, m_absolutePosition);
+
+	m_viewEntityBufferCached->GetBufferChangedFlag().SetFlag(true);
+
+	UpdateBoundingProperty();
 }
 
 void SpotLightComponent::Accept(IComponentVisitor* visitor)

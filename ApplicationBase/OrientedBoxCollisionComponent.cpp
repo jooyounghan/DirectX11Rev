@@ -16,7 +16,6 @@ OrientedBoxCollisionComponent::OrientedBoxCollisionComponent(
 	: ACollisionComponent(componentName, componentID, localPosition, localAngle, scale),
 	m_extents(XMVectorSet(extents.x, extents.y, extents.z, 0.f))
 {
-	UpdateBoundingProperty();
 }
 
 OrientedBoxCollisionComponent::~OrientedBoxCollisionComponent()
@@ -27,7 +26,9 @@ OrientedBoxCollisionComponent::~OrientedBoxCollisionComponent()
 void OrientedBoxCollisionComponent::SetExtents(const DirectX::XMVECTOR& extents)
 {
 	m_extents = extents;
-	SetTransformationChangedFlags();
+
+	m_isTransformationEntityUpdated.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
 const DirectX::XMMATRIX& OrientedBoxCollisionComponent::GetAbsoluteTranformation() const
@@ -62,6 +63,12 @@ void OrientedBoxCollisionComponent::Accept(IComponentVisitor* visitor)
 	visitor->Visit(this);
 }
 
+void OrientedBoxCollisionComponent::UpdateEntity(ID3D11DeviceContext* deviceContext)
+{
+	AComponent::UpdateEntity(deviceContext);
+	UpdateBoundingProperty();
+}
+
 void OrientedBoxCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)
 {
 	if (m_collisionOption) m_collisionOption->RemoveBVHImpl(this);
@@ -69,16 +76,18 @@ void OrientedBoxCollisionComponent::SetCollisionOption(ICollisionOption* collisi
 	m_collisionOption->InsertBVHImpl(this);
 }
 
-void OrientedBoxCollisionComponent::UpdateBoundingVolumeHierarchy()
-{
-	m_collisionOption->UpdateBVHImpl(this);
-}
 
 void OrientedBoxCollisionComponent::UpdateBoundingProperty()
 {
 	XMStoreFloat3(&Center, m_absolutePosition);
 	XMStoreFloat3(&Extents, XMVectorMultiply(m_scale, m_extents));
 	XMStoreFloat4(&Orientation, GetAbsoluteRotationQuaternion());
+	UpdateBoundingVolumeHierarchy();
+}
+
+void OrientedBoxCollisionComponent::UpdateBoundingVolumeHierarchy()
+{
+	m_collisionOption->UpdateBVHImpl(this);
 }
 
 void OrientedBoxCollisionComponent::OnCollide(ICollisionAcceptor* accpetor)

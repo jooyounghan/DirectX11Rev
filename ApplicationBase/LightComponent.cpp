@@ -31,5 +31,5 @@ void LightComponent::UpdateLightEntity(const float& lightPower, const float& fal
 	m_lightEntityCached->m_spotPower = spotPower;
 
 	m_lightEntityCachedBuffer->GetBufferChangedFlag().SetFlag(true);
-	m_viewEntityCachedFlag.SetFlag(true);
+	m_isViewEntityChanged.SetFlag(true);
 }

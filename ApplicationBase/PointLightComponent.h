@@ -48,11 +48,13 @@ public:
 	const DirectX::XMMATRIX& GetProjMatrix() const { return m_projMatrix; }
 
 public:
-	void UpdateViewEntity();
+	void UpdateViewEntity(ID3D11DeviceContext* deviceContext);
 
 public:
-	virtual void UpdateBoundingProperty() override;
 	virtual void OnCollide(ICollisionAcceptor*) override;
+
+protected:
+	virtual void UpdateBoundingProperty() override;
 };
 
 class PointLightComponent : public LightComponent
@@ -86,11 +88,10 @@ public:
 	inline PointLightFrustum& GetPointLightFrustum(const size_t& idx) { return m_pointLightFrustums[idx]; }
 
 public:
-	void UpdatePointLightFrustums();
+	void UpdatePointLightFrustums(ID3D11DeviceContext* deviceContext);
 
 public:
-	virtual void UpdateEntity() override;
-	virtual void SetTransformationChangedFlags() override;
+	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext) override;
 	virtual void Accept(IComponentVisitor* visitor) override;
 	virtual void GenerateShadowMap(
 		ID3D11DeviceContext* deviceContext,

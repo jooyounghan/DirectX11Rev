@@ -27,8 +27,6 @@
 using namespace std;
 using namespace Microsoft::WRL;
 
-constexpr uint8_t initializeOption = ~((uint8_t)0);
-
 ComponentInitializer::ComponentInitializer(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 	: m_deviceCached(device), m_deviceContextCached(deviceContext)
 {
@@ -109,12 +107,10 @@ void ComponentInitializer::Visit(SkeletalMeshComponent* skeletalModelComponent)
 
 void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 {
-	InitBaseComponent(cameraComponent);
-	cameraComponent->UpdateViewEntity();
-	cameraComponent->UpdateBoundingProperty();
-
 	DynamicBuffer& viewProjMatrixBuffer = cameraComponent->GetViewEntityBuffer();
 	viewProjMatrixBuffer.InitializeBuffer(m_deviceCached);
+
+	InitBaseComponent(cameraComponent);
 
 	auto& film = cameraComponent->GetFilm();
 	auto& idFilm = cameraComponent->GetIDFilm();
@@ -130,45 +126,37 @@ void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 void ComponentInitializer::Visit(SphereCollisionComponent* sphereCollisionComponent)
 {
 	InitBaseComponent(sphereCollisionComponent);
-	sphereCollisionComponent->UpdateBoundingProperty();
-	sphereCollisionComponent->UpdateBoundingVolumeHierarchy();
 }
 
 void ComponentInitializer::Visit(OrientedBoxCollisionComponent* orientedBoxCollisionComponent)
 {
 	InitBaseComponent(orientedBoxCollisionComponent);
-	orientedBoxCollisionComponent->UpdateBoundingProperty();
-	orientedBoxCollisionComponent->UpdateBoundingVolumeHierarchy();
 }
 
 void ComponentInitializer::Visit(SpotLightComponent* spotLightComponent)
 {
 	InitBaseComponent(spotLightComponent);
-	spotLightComponent->UpdateViewEntity();
-	spotLightComponent->UpdateBoundingProperty();
 }
 
 void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
 {
-	InitBaseComponent(pointLightComponent);
-	pointLightComponent->UpdatePointLightFrustums();
-
-
 	for (size_t idx = 0; idx < 6; ++idx)
 	{
 		PointLightFrustum& pointLightFrustum = pointLightComponent->GetPointLightFrustum(idx);
 		DynamicBuffer& viewEntityBuffer = pointLightFrustum.GetViewEntityBuffer();
 		viewEntityBuffer.InitializeBuffer(m_deviceCached);
 	}
+
+	InitBaseComponent(pointLightComponent);
 }
 
 void ComponentInitializer::InitBaseComponent(AComponent* component)
 {
-	component->UpdateEntity();
-
 	ConstantBuffer& componentEntityBuffer = component->GetComponentEntityBuffer();
 	DynamicBuffer& transformationEntityBuffer = component->GetTransformationEntityBuffer();
 
 	componentEntityBuffer.InitializeBuffer(m_deviceCached);
 	transformationEntityBuffer.InitializeBuffer(m_deviceCached);
+
+	component->UpdateEntity(m_deviceContextCached);
 }

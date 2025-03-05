@@ -49,7 +49,9 @@ void AComponent::AttachChildComponent(AComponent* component)
 {
 	component->m_parentComponent = this;
 	m_childComponents.emplace_back(component);
-	SetTransformationChangedFlags();
+
+	m_isTransformationEntityUpdated.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
 void AComponent::RemoveFromParent()
@@ -63,7 +65,9 @@ void AComponent::RemoveFromParent()
 		);
 	}
 	m_parentComponent = nullptr;
-	SetTransformationChangedFlags();
+
+	m_isTransformationEntityUpdated.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
 DirectX::XMVECTOR AComponent::GetLocalRotationQuaternion() const
@@ -99,33 +103,25 @@ const DirectX::XMMATRIX& AComponent::GetAbsoluteTranformation() const { return m
 void AComponent::SetLocalPosition(const DirectX::XMVECTOR& localPosition)
 {
 	m_localPosition = localPosition;
-	SetTransformationChangedFlags();
+	m_isTransformationEntityUpdated.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
 void AComponent::SetLocalAngle(const DirectX::XMVECTOR& localAngle)
 {
 	m_localAngle = localAngle;
-	SetTransformationChangedFlags();
+	m_isTransformationEntityUpdated.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
 void AComponent::SetScale(const DirectX::XMVECTOR& scale)
 {
 	m_scale = scale;
-	SetTransformationChangedFlags();
-}
-
-void AComponent::SetTransformationChangedFlags()
-{
 	m_isTransformationEntityUpdated.SetFlag(true);
-	m_isUpdated.SetFlag(true);
-
-	for (auto& childComponent : m_childComponents)
-	{
-		childComponent->SetTransformationChangedFlags();
-	}
+	m_isDBUpdated.SetFlag(true);
 }
 
-void AComponent::UpdateEntity()
+void AComponent::UpdateEntity(ID3D11DeviceContext* deviceContext)
 {
 	m_absolutePosition = m_parentComponent ? m_parentComponent->GetAbsolutePosition() + m_localPosition : m_localPosition;
 	m_absoluteAngle = m_parentComponent ? m_parentComponent->GetAbsoluteAngle() + m_localAngle : m_localAngle;
@@ -135,9 +131,11 @@ void AComponent::UpdateEntity()
 	m_transformationEntity.m_invTransformation = XMMatrixInverse(nullptr, m_transformation);
 	m_transformationEntity.m_transformation = XMMatrixTranspose(m_transformation);
 
+	m_transformationEntityBuffer.Upload(deviceContext);
+
 	for (AComponent* childComponent : m_childComponents)
 	{
-		childComponent->UpdateEntity();
+		childComponent->UpdateEntity(deviceContext);
 	}
 }
 

@@ -76,9 +76,6 @@ public:
 	void SetScale(const DirectX::XMVECTOR& scale);
 
 protected:
-	virtual void SetTransformationChangedFlags();
-
-protected:
 	SComponentEntity m_componentEntity;
 	STransformationEntity m_transformationEntity;
 	ConstantBuffer m_componentEntityBuffer;
@@ -109,11 +106,11 @@ public:
 	virtual bool GetDefaultRenderable() const;
 
 protected:
-	AtomicFlag m_isUpdated = false;
+	AtomicFlag m_isDBUpdated = false;
 	AtomicFlag m_isTransformationEntityUpdated = false;
 
 public:
-	inline AtomicFlag& GetUpdatedFlag() { return m_isUpdated; }
+	inline AtomicFlag& GetDBUpdatedFlag() { return m_isDBUpdated; }
 	inline AtomicFlag& GetTransformationEntityUpdatedFlag() { return m_isTransformationEntityUpdated; }
 
 public:
@@ -121,7 +118,7 @@ public:
 	void RemoveFromParent();
 
 public:
-	virtual void UpdateEntity();
+	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext);
 	virtual void Accept(IComponentVisitor* visitor) = 0;
 };
 

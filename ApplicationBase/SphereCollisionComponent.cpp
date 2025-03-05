@@ -15,7 +15,6 @@ SphereCollisionComponent::SphereCollisionComponent(
 	: ACollisionComponent(componentName, componentID, localPosition, XMFLOAT3(0.f, 0.f, 0.f), scale),
 	m_radius(radius)
 {
-	UpdateBoundingProperty();
 }
 
 SphereCollisionComponent::~SphereCollisionComponent()
@@ -26,7 +25,9 @@ SphereCollisionComponent::~SphereCollisionComponent()
 void SphereCollisionComponent::SetRadius(const float& radius)
 {
 	m_radius = radius;
-	SetTransformationChangedFlags();
+
+	m_isTransformationEntityUpdated.SetFlag(true);
+	m_isDBUpdated.SetFlag(true);
 }
 
 const XMMATRIX& SphereCollisionComponent::GetAbsoluteTranformation() const
@@ -56,6 +57,12 @@ void SphereCollisionComponent::Accept(IComponentVisitor* visitor)
 	visitor->Visit(this);
 }
 
+void SphereCollisionComponent::UpdateEntity(ID3D11DeviceContext* deviceContext)
+{
+	AComponent::UpdateEntity(deviceContext);
+	UpdateBoundingProperty();
+}
+
 void SphereCollisionComponent::SetCollisionOption(ICollisionOption* collisionOption)
 {
 	if (m_collisionOption) m_collisionOption->RemoveBVHImpl(this);
@@ -63,15 +70,16 @@ void SphereCollisionComponent::SetCollisionOption(ICollisionOption* collisionOpt
 	if (m_collisionOption) m_collisionOption->InsertBVHImpl(this);
 }
 
-void SphereCollisionComponent::UpdateBoundingVolumeHierarchy()
-{
-	m_collisionOption->UpdateBVHImpl(this);
-}
-
 void SphereCollisionComponent::UpdateBoundingProperty()
 {
 	XMStoreFloat3(&Center, m_absolutePosition);
 	Radius = m_scale.m128_f32[0] * m_radius;
+	UpdateBoundingVolumeHierarchy();
+}
+
+void SphereCollisionComponent::UpdateBoundingVolumeHierarchy()
+{
+	m_collisionOption->UpdateBVHImpl(this);
 }
 
 void SphereCollisionComponent::OnCollide(ICollisionAcceptor* accpetor)

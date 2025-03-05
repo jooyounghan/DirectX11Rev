@@ -21,7 +21,7 @@ PointLightFrustum::PointLightFrustum(
 {
 }
 
-void PointLightFrustum::UpdateViewEntity()
+void PointLightFrustum::UpdateViewEntity(ID3D11DeviceContext* deviceContext)
 {	
 	const XMVECTOR quaternion = XMQuaternionRotationRollPitchYawFromVector(m_absoluteRadianOffset);
 	XMVECTOR currentForward = XMVector3Rotate(GDefaultForward, quaternion);
@@ -35,7 +35,9 @@ void PointLightFrustum::UpdateViewEntity()
 	m_viewEntity.m_viewProj = XMMatrixTranspose(m_viewEntity.m_viewProj);
 	XMStoreFloat3(&m_viewEntity.m_viewPosition, m_absolutePositionCached);
 
-	m_viewEntityBuffer.GetBufferChangedFlag().SetFlag(true);
+	m_viewEntityBuffer.Upload(deviceContext);
+
+	UpdateBoundingProperty();
 }
 
 void PointLightFrustum::UpdateBoundingProperty()
@@ -78,27 +80,22 @@ PointLightComponent::PointLightComponent(
 {
 }
 
-void PointLightComponent::UpdatePointLightFrustums()
+void PointLightComponent::UpdatePointLightFrustums(ID3D11DeviceContext* deviceContext)
 {
 	for (size_t idx = 0; idx < 6; ++idx)
 	{
-		m_pointLightFrustums[idx].UpdateViewEntity();
-		m_pointLightFrustums[idx].UpdateBoundingProperty();
+		m_pointLightFrustums[idx].UpdateViewEntity(deviceContext);
 	}
 }
 
-void PointLightComponent::UpdateEntity()
+void PointLightComponent::UpdateEntity(ID3D11DeviceContext* deviceContext)
 {
-	LightComponent::UpdateEntity();
+	LightComponent::UpdateEntity(deviceContext);
 
 	memcpy(m_lightPositionCached, &m_absolutePosition, sizeof(XMVECTOR));
 	m_lightPositionsBufferCached->GetBufferChangedFlag().SetFlag(true);
-}
 
-void PointLightComponent::SetTransformationChangedFlags()
-{
-	LightComponent::SetTransformationChangedFlags();
-	m_viewEntityCachedFlag.SetFlag(true);
+	UpdatePointLightFrustums(deviceContext);
 }
 
 void PointLightComponent::Accept(IComponentVisitor* visitor)

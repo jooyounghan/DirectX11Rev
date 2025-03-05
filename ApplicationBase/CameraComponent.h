@@ -57,9 +57,6 @@ public:
 	void SetFovAngle(const float& fovAngle);
 	void SetViewport(const uint32_t& width, const uint32_t& height);
 
-protected:
-	void SetViewChangedFlags();
-
 public:
 	inline Texture2DInstance<SRVOption, RTVOption, UAVOption>& GetFilm() { return m_film; }
 	inline Texture2DInstance<RTVOption>& GetIDFilm() { return m_idFilm; }
@@ -67,22 +64,22 @@ public:
 	inline Texture2DInstance<DSVOption>& GetDepthStencilView() { return m_depthStencilView; }
 
 protected:
-	DirectX::XMMATRIX m_viewMatrix;
-	DirectX::XMMATRIX m_projMatrix;
+	DirectX::XMMATRIX m_viewMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX m_projMatrix = DirectX::XMMatrixIdentity();
 
 public:
 	const DirectX::XMMATRIX& GetViewMatrix() const { return m_viewMatrix; }
 	const DirectX::XMMATRIX& GetProjMatrix() const { return m_projMatrix; }
 
 public:
-	void UpdateViewEntity();
+	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext);	
+	void UpdateViewEntity(ID3D11DeviceContext* deviceContext);
 
 public:
-	virtual void SetTransformationChangedFlags() override;
 	virtual void Accept(IComponentVisitor* visitor) override;
-
-public:
-	virtual void UpdateBoundingProperty() override;
 	virtual void OnCollide(ICollisionAcceptor*) override;
+
+protected:
+	virtual void UpdateBoundingProperty() override;
 };
 

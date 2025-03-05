@@ -21,6 +21,8 @@ protected:
 
 public:
 	virtual void SetCollisionOption(ICollisionOption* collisionOption);
+
+protected:
 	virtual void UpdateBoundingVolumeHierarchy() = 0;
 };
 

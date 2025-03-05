@@ -96,15 +96,10 @@ void ComponentHandler::Visit(SpotLightComponent* spotLightComponent)
 	SeparatorText("View Properties");
 	Text("Fov Angle");
 	PushID("FovAngle");
-	float& fovAngle = const_cast<float&>(spotLightComponent->GetFovAngle());
+	float fovAngle = spotLightComponent->GetFovAngle();
 	if (DragFloat("", &fovAngle, 0.1f, 60.f, 160.f))
 	{		
-		isViewChanged = true;
-	}
-
-	if (isViewChanged)
-	{
-		spotLightComponent->UpdateViewEntity();
+		spotLightComponent->SetFovAngle(fovAngle);
 	}
 	PopID();
 
@@ -166,7 +161,7 @@ void ComponentHandler::HandleComponentTransformation(
 		RenderTransformationEntity(
 			"RenderScaleEntity", "Scale",
 			component, EComponentEntityType::ENTITY_SCALE,
-			0.01f, 1E-3f, 10.f
+			0.01f, 1E-3f, 1000.f
 		);
 	}
 }

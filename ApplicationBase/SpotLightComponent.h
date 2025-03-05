@@ -58,10 +58,10 @@ public:
 	const DirectX::XMMATRIX& GetProjMatrix() const { return m_projMatrix; }
 
 public:
-	void UpdateViewEntity();
+	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext) override;
+	void UpdateViewEntity(ID3D11DeviceContext* deviceContext);
 
 public:
-	virtual void SetTransformationChangedFlags() override;
 	virtual void Accept(IComponentVisitor* visitor) override;
 	virtual void GenerateShadowMap(
 		ID3D11DeviceContext* deviceContext,
@@ -70,7 +70,9 @@ public:
 	) override;
 
 public:
-	virtual void UpdateBoundingProperty() override;
 	virtual void OnCollide(ICollisionAcceptor*) override;
+
+protected:
+	virtual void UpdateBoundingProperty() override;
 };
 

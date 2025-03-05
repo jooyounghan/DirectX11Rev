@@ -26,11 +26,14 @@ public:
 	virtual DirectX::XMMATRIX GetLocalTransformation() const override;
 	virtual bool GetDefaultRenderable() const override;
 	virtual void Accept(IComponentVisitor* visitor) override;
+	virtual void UpdateEntity(ID3D11DeviceContext* deviceContext);
 
 public:
 	virtual void SetCollisionOption(ICollisionOption* collisionOption) override;
-	virtual void UpdateBoundingVolumeHierarchy() override;
-	virtual void UpdateBoundingProperty() override;
 	virtual void OnCollide(ICollisionAcceptor* accpetor) override;
+
+protected:
+	virtual void UpdateBoundingProperty() override;
+	virtual void UpdateBoundingVolumeHierarchy() override;
 };
 
