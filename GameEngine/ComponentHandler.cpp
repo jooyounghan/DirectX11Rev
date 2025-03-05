@@ -309,17 +309,6 @@ void ComponentHandler::RenderTransformationEntity(
 
 	const auto RenderAbsoluteRelativeSelector = [&]() -> void
 		{
-			if (parentComponent == nullptr)
-			{
-				switch (entityType)
-				{
-				case EComponentEntityType::ENTITY_POSITION: IsPositionAbsolute = true; break;
-				case EComponentEntityType::ENTITY_ANGLE: IsAngleAbsolute = true; break;
-				case EComponentEntityType::ENTITY_SCALE: break;
-				default: throw invalid_argument("Invalid entity type");
-				}
-			}
-
 			switch (entityType) 
 			{
 			case EComponentEntityType::ENTITY_POSITION: m_absRelativeComboPosition.Draw(); break;

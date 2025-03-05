@@ -119,7 +119,7 @@ void BoundingVolumeHierarchy::UpdateCollidable(ICollisionAcceptor* collidable)
 	{
 		BoundingVolumeNode* boundingVolumeNode = m_collidablesToNode[collidable];
 
-		if (!collidable->IsIntersectBoundingBox(boundingVolumeNode->GetBoundingBox()))
+		if (!collidable->IsContainedByBoundingBox(boundingVolumeNode->GetBoundingBox()))
 		{
 			RemoveCollidable(collidable);
 			InsertCollidable(collidable);
