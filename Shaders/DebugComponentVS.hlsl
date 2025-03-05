@@ -11,7 +11,7 @@ cbuffer CameraViewProj : register(b0)
 cbuffer ModelMatrix : register(b1)
 {
     matrix modelMatrix;
-    matrix modelInvMatrix;
+    matrix modelInvTransposeMatrix;
 };
 
 DebugComponentVertexOutPut main(DebugComponentVertexInput input)

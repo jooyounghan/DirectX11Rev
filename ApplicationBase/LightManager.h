@@ -40,10 +40,10 @@ public:
 	inline const std::vector<PointLightComponent*>& GetPointLights() const { return m_pointLights; }
 
 protected:
-	Texture2DInstance<SRVOption> m_spotLightDepthTestViews;
-	std::array<Microsoft::WRL::ComPtr<ID3D11DepthStencilView>, MaxSpotLightCount> m_spotLightDSVs;
-	Texture2DInstance<SRVOption> m_pointLightDepthTestViews;
-	std::array<std::array<Microsoft::WRL::ComPtr<ID3D11DepthStencilView>, 6>, MaxSpotLightCount> m_pointLightCubeDSVs;
+	Texture2DInstance<SRVOption>																	m_spotLightDepthTestViews;
+	std::array<Microsoft::WRL::ComPtr<ID3D11DepthStencilView>, MaxSpotLightCount>					m_spotLightDSVs;
+	Texture2DInstance<SRVOption>																	m_pointLightDepthTestViews;
+	std::array<std::array<Microsoft::WRL::ComPtr<ID3D11DepthStencilView>, 6>, MaxSpotLightCount>	m_pointLightCubeDSVs;
 
 public:
 	inline Texture2DInstance<SRVOption>& GetSpotLightDepthTestViews() { return m_spotLightDepthTestViews; }
@@ -53,11 +53,15 @@ public:
 
 protected:
 	SLightManagerEntity m_lightManagerEntity;
-	DynamicBuffer m_lightManagerEntityBuffer;
-	std::atomic_bool m_isLightCountChanged = false;
+	DynamicBuffer		m_lightManagerEntityBuffer;
+
+protected:
+	std::atomic_bool	m_isLightCountChanged = false;
 
 public:
 	inline DynamicBuffer& GetLightManagerEntityBuffer() { return m_lightManagerEntityBuffer; }
+
+public:
 	inline bool ConsumeIsLightCountChanged() { return m_isLightCountChanged.exchange(false); }
 	inline void SetIsLightCountChanged(const bool& isLightCountChanged) { m_isLightCountChanged = isLightCountChanged; }
 
@@ -84,10 +88,10 @@ public:
 	);
 
 protected:
-	std::array<SLightEntity, MaxSpotLightCount>* m_spotLightEntities;
-	std::array<SViewEntity, MaxSpotLightCount>* m_spotLightViewEntities;
-	StructuredBuffer m_spotLightEntitiesBuffer;
-	StructuredBuffer m_spotLightViewEntitiesBuffer;
+	std::array<SLightEntity, MaxSpotLightCount>*	m_spotLightEntities;
+	std::array<SViewEntity, MaxSpotLightCount>*		m_spotLightViewEntities;
+	StructuredBuffer								m_spotLightEntitiesBuffer;
+	StructuredBuffer								m_spotLightViewEntitiesBuffer;
 
 public:
 	inline StructuredBuffer& GetSpotLightEntitiesBuffer() { return m_spotLightEntitiesBuffer; }
@@ -95,10 +99,10 @@ public:
 
 
 protected:
-	std::array<SLightEntity, MaxPointLightCount>* m_pointLightEntities;
-	std::array<DirectX::XMVECTOR, MaxPointLightCount>* m_pointLightPositions;
-	StructuredBuffer m_pointLightEntitiesBuffer;
-	StructuredBuffer m_pointLightPositionsBuffer;
+	std::array<SLightEntity, MaxPointLightCount>*		m_pointLightEntities;
+	std::array<DirectX::XMVECTOR, MaxPointLightCount>*	m_pointLightPositions;
+	StructuredBuffer									m_pointLightEntitiesBuffer;
+	StructuredBuffer									m_pointLightPositionsBuffer;
 
 public:
 	inline StructuredBuffer& GetPointLightEntitiesBuffer() { return m_pointLightEntitiesBuffer; }

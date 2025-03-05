@@ -11,7 +11,7 @@ cbuffer ComponentBuffer : register(b0)
 cbuffer ModelConstantBuffer : register(b1)
 {
     matrix modelMatrix;
-    matrix modelInvMatrix;
+    matrix modelInvTransposeMatrix;
 };
 
 StructuredBuffer<LightViewEntity> lightViewEntities : register(t0);

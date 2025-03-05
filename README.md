@@ -16,7 +16,6 @@
 	4. Animation System
 	5. Managing Asset & Component
 	6. Lighting and Shadows (조명 및 그림자)
-		- 현재 개발 중(Shadow Map 생성 기능까지 개발 완료)
 
 ## Details
 ### 1. Collision(충돌 감지 / 처리)
@@ -268,7 +267,6 @@ GBuffer는 다음과 같이 구성하였다.
 4. AO(x) / Metallic(y) / Roughness(z)
 5. Nomal Vector
 6. Emissive Color
-7. Fresnel Reflectance
 
 Component 당 Draw 콜이 있을 때, GBuffer에 해당하는 **MRT(Multiple Render Targets)** 에 각 데이터를 입력하고, 마지막으로 GBuffer들을 Shader Resource View로 활용하여 렌더링을 수행한다. 
 
@@ -342,11 +340,11 @@ M_{B_{channel_{N'}}} = M_{B_{Feed_{N'}}}M_{A_{Feed_{N}}}^{-1}M_{A_{channel_{N}}}
 > [!IMPORTANT]
 > 위상정렬 / Database / ERD(Entity Relation Diagram) / 더블 버퍼링
 
-본 포트폴리오에서 관리하는 데이터는 크게 2개로 나눌 수 있다. Asset과 Component이다.
+본 포트폴리오에서 관리하는 데이터는 Asset과 Component로, 크게 2개로 나눌 수 있다. 
 Asset은 게임 제작에 사용되는 여러가지 데이터를 의미한다. `.fbx`를 통해 얻을 수 있는 뼈대, 매시, 애니메이션이나, `.png` 등을 통해 얻을 수 있는 텍스쳐 등이 Serialize를 통해 Asset 으로 저장되어 관리되며, 이를 Deserialize로 불러와서 활용할 수 있다.
 
 특정 Asset은 특정 Asset에 대한 종속성을 가질 수 있다. 예를 들면 `ModelMaterialAsset`은 모델을 렌더링하기 위한 재질 Asset으로, `BaseTextureAsset`에 종속되어있다. 따라서 프로그램 초기화 시, 파일 형태로 저장된 Asset을 Deserialize 하는 순서가 종속성을 바탕으로 지정 되어야 한다.
-> ModelMaterialAsset은 BaseTextureAsset에 종속되어 있는데, BaseTextureAsset이 Deserialize 되기 전에 ModelMaterialAsset이 Deserialize 되면 null pointer에 접근할 수 있다.
+
 
 이 문제를 해결하기 위하여 **위상정렬**을 활용하였다.
 ```cpp
@@ -395,7 +393,8 @@ A(ScratchTextureAsset) --> B(BaseTextureAsset) --> C(IBLMaterialAsset) --> D(Mod
 Component는 Asset나 사용자가 정의한 데이터를  하나의 틀로 만든 데이터이다. 예를 들어 `SkeletalMeshAsset`과 여러 `ModelMaterialAsset` 를 멤버 변수로 가지는 `SkeletalMeshComponent`가 있다. `AComponent` 추상 클래스를 상속받아 필요한 객체를 정의하고, 이를 엔진에서 관리할 수 있다. Component에 대한 데이터는 **Database**를 통해 저장된다.  DB에서 Component를 관리하기 위한 **ERD(Entity Relation Diagram)** 은 `ApplicationBase` 프로젝트 내에 있는 `ComponentDBModels.mwb` 파일을 통해 MySQL 워크벤치를 통해 확인할 수 있다.
 > Component에 대한 데이터를 Database에 저장하는 이유는, 추후 클라이언트 프로그램, 서버 프로그램과 연동시, 데이터 동기화를 수행하기 위함이다.
 
-![Image](https://github.com/user-attachments/assets/6453c681-4116-41ca-9d4e-c5b44ed91bcb)
+![Image](https://github.com/user-attachments/assets/58841b31-3706-4c68-83ff-d698da05ca81)
+
 
 `ComponentManager` 클래스는 매 프레임마다 변경사항이 존재하는 `AComponent`에 대한 로컬 변수 업데이트를 수행한다. 추가적으로 업데이트를 수행한 객체를 별도 관리하고 이들을 별도의 스레드에서  특정 주기(1초)마다 Transaction으로 묶어 Database에 업데이트한다. 이때 동시성 문제가 발생할 수 있으므로 **더블 버퍼링**을 활용하였다.
 
@@ -412,5 +411,29 @@ std::set<AComponent*> m_updateToDBComponentsWorker;
 ```
 메인 스레드는 `m_updateToDBComponentsMain` 에 변경사항이 존재하는 AComponent의 포인터를 삽입하고, Database에 업데이트를 수행하는 작업자 스레드는 특정 주기(1초)마다 `m_updateToDBComponentsMain`를 `m_updateToDBComponentsWorker`로 복사하고 `m_updateToDBComponentsWorker`를 활용한다. 만약 Transaction이 실패할 경우, `m_updateToDBComponentsWorker`의 원소를 다시 `m_updateToDBComponentsMain`에 삽입한다.
 
-### 5. Lighting And Shadow(개발 진행 중)
+### 5. Lighting And Shadow
 
+> [!IMPORTANT]
+> Shadow Mapping
+
+[
+![Video Label](http://img.youtube.com/vi/WLqzKzsjhng/0.jpg)](https://youtu.be/WLqzKzsjhng)
+
+본 포트폴리오에서 관리하는 직접광에는 Spot Light와 Point Light가 있다. 각 광원이 직접광과 그에 대한 그림자 데이터를 개별적으로 관리하지 않는다는  구조적인 특징이 있다. 대신, **LightManager가 모든 광원에 대한 연속된 데이터를 통합 관리**하며, **각 광원은 해당 데이터에 대한 포인터를** 보유한다. 또한, 광원들은 데이터 접근을 위해 별도의 **인덱스 값**을 추가로 관리한다.
+
+LightManager는 광원에 대한 정보를 가지는 구조체를 배열로 관리한다. 
+```cpp
+struct SLightEntity
+{
+	float m_lightPower = 0.f;
+	float m_fallOffStart = 0.f;
+	float m_fallOffEnd = 0.f;
+	float m_spotPower = 0.f;
+};
+```
+LightManager는 `SLightEntity`를  배열 형태로 관리하며, GPU 데이터로는 이를 `StructuredBuffer` 형태로 관리한다. 각 광원은 배열 형태로 관리되는 `SLightEntity`의 포인터와 `StructuredBuffer`의 포인터를 객체 생성 시 전달 받아 이를 관리한다.
+
+![Image](https://github.com/user-attachments/assets/68533519-6328-498a-af19-a633a43b75f5)
+
+위와 같은 방식으로, 각 광원에 대한 View-Projection Matrix,  Texture 데이터와 이를 통해서 생성된 Shader Resource View, Depth-Stencil View 또한 LightManager가 관리하고 이를 광원 객체가 포인터를 통해 참조하고 있다.
+Spot Light는 하나 Texture와 이를 통해서 생성된 Shader Resource View와 Depth-Stencil View를 활용하고, Point Light는 Array 크기가 6개인 Texture(TextureCube) 데이터와 이를 통해서 생성된 Shader Resource View와 Depth-Stencil View 6개를 활용한다. 

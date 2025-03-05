@@ -81,7 +81,7 @@ void CameraComponent::UpdateViewEntity(ID3D11DeviceContext* deviceContext)
 	m_projMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fovAngle), m_viewport.Width / m_viewport.Height, m_nearZ, m_farZ);
 
 	m_viewEntity.m_viewProj = m_viewMatrix * m_projMatrix;
-	m_viewEntity.m_invViewProj = XMMatrixInverse(nullptr, m_viewEntity.m_viewProj);
+	m_viewEntity.m_invViewProj = XMMatrixTranspose(XMMatrixInverse(nullptr, m_viewEntity.m_viewProj));
 	m_viewEntity.m_viewProj = XMMatrixTranspose(m_viewEntity.m_viewProj);
 	XMStoreFloat3(&m_viewEntity.m_viewPosition, m_absolutePosition);
 	m_viewEntityBuffer.Upload(deviceContext);

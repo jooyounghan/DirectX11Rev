@@ -11,7 +11,7 @@ cbuffer CameraViewConstantBuffer : register(b0)
 cbuffer ModelConstantBuffer : register(b1)
 {
     matrix modelMatrix;
-    matrix modelInvMatrix;
+    matrix modelInvTransposeMatrix;
 };
 
 cbuffer MaterialAssetData : register(b2)
@@ -42,7 +42,7 @@ MeshComponentDomainOutput main(
     float4 f4WorldPos = tri[0].f4WorldPos * domain.x + tri[1].f4WorldPos * domain.y + tri[2].f4WorldPos * domain.z;
     result.f2TexCoord = tri[0].f2TexCoord * domain.x + tri[1].f2TexCoord * domain.y + tri[2].f2TexCoord * domain.z;
     float3 f3WorldNormal = normalize(tri[0].f3WorldNormal * domain.x + tri[1].f3WorldNormal * domain.y + tri[2].f3WorldNormal * domain.z);
-    result.f3ModelNormal = normalize(mul(float4(f3WorldNormal, 0.f), modelInvMatrix).xyz);
+    result.f3ModelNormal = normalize(mul(float4(f3WorldNormal, 0.f), modelInvTransposeMatrix).xyz);
 
     if (isHeightSet)
     {

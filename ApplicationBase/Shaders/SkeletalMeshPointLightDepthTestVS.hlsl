@@ -4,7 +4,7 @@
 cbuffer ModelConstantBuffer : register(b0)
 {
     matrix modelMatrix;
-    matrix modelInvMatrix;
+    matrix modelInvTransposeMatrix;
 };
 
 cbuffer PointLightViewEntity : register(b1)

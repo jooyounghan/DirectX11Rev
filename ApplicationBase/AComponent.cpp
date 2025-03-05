@@ -128,7 +128,7 @@ void AComponent::UpdateEntity(ID3D11DeviceContext* deviceContext)
 
 	const XMMATRIX parentTransformation = m_parentComponent ? m_parentComponent->GetAbsoluteTranformation() : XMMatrixIdentity();
 	m_transformation = GetLocalTransformation() * parentTransformation;
-	m_transformationEntity.m_invTransformation = XMMatrixInverse(nullptr, m_transformation);
+	m_transformationEntity.m_invTransposeTransformation = XMMatrixInverse(nullptr, m_transformation);
 	m_transformationEntity.m_transformation = XMMatrixTranspose(m_transformation);
 
 	m_transformationEntityBuffer.Upload(deviceContext);

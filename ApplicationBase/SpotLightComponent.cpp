@@ -59,7 +59,7 @@ void SpotLightComponent::UpdateViewEntity(ID3D11DeviceContext* deviceContext)
 	m_projMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fovAngle), m_viewport.Width / m_viewport.Height, GDefaultNearZ, m_lightEntityCached->m_fallOffEnd);
 
 	m_viewEntityCached->m_viewProj = m_viewMatrix * m_projMatrix;
-	m_viewEntityCached->m_invViewProj = XMMatrixInverse(nullptr, m_viewEntityCached->m_viewProj);
+	m_viewEntityCached->m_invViewProj = XMMatrixTranspose(XMMatrixInverse(nullptr, m_viewEntityCached->m_viewProj));
 	m_viewEntityCached->m_viewProj = XMMatrixTranspose(m_viewEntityCached->m_viewProj);
 	XMStoreFloat3(&m_viewEntityCached->m_viewPosition, m_absolutePosition);
 

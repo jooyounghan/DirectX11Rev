@@ -28,7 +28,7 @@ struct SComponentEntity
 struct STransformationEntity
 {
 	DirectX::XMMATRIX m_transformation = DirectX::XMMatrixIdentity();
-	DirectX::XMMATRIX m_invTransformation = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX m_invTransposeTransformation = DirectX::XMMatrixIdentity();
 };
 
 constexpr uint32_t RootID = NULL;
