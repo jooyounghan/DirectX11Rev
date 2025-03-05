@@ -107,10 +107,10 @@ void ComponentInitializer::Visit(SkeletalMeshComponent* skeletalModelComponent)
 
 void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 {
+	InitBaseComponent(cameraComponent);
+
 	DynamicBuffer& viewProjMatrixBuffer = cameraComponent->GetViewEntityBuffer();
 	viewProjMatrixBuffer.InitializeBuffer(m_deviceCached);
-
-	InitBaseComponent(cameraComponent);
 
 	auto& film = cameraComponent->GetFilm();
 	auto& idFilm = cameraComponent->GetIDFilm();
@@ -140,14 +140,14 @@ void ComponentInitializer::Visit(SpotLightComponent* spotLightComponent)
 
 void ComponentInitializer::Visit(PointLightComponent* pointLightComponent)
 {
+	InitBaseComponent(pointLightComponent);
+
 	for (size_t idx = 0; idx < 6; ++idx)
 	{
 		PointLightFrustum& pointLightFrustum = pointLightComponent->GetPointLightFrustum(idx);
 		DynamicBuffer& viewEntityBuffer = pointLightFrustum.GetViewEntityBuffer();
 		viewEntityBuffer.InitializeBuffer(m_deviceCached);
 	}
-
-	InitBaseComponent(pointLightComponent);
 }
 
 void ComponentInitializer::InitBaseComponent(AComponent* component)
@@ -158,5 +158,5 @@ void ComponentInitializer::InitBaseComponent(AComponent* component)
 	componentEntityBuffer.InitializeBuffer(m_deviceCached);
 	transformationEntityBuffer.InitializeBuffer(m_deviceCached);
 
-	component->UpdateEntity(m_deviceContextCached);
+	component->GetTransformationEntityUpdatedFlag().SetFlag(true);
 }

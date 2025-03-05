@@ -166,6 +166,7 @@
     <ClInclude Include="ACollidableOrientedBox.h" />
     <ClInclude Include="ACollidableSphere.h" />
     <ClInclude Include="ContainVisitor.h" />
+    <ClInclude Include="DirectionEntity.h" />
     <ClInclude Include="ICollisionAcceptor.h" />
     <ClInclude Include="CollisionVisitor.h" />
     <ClInclude Include="IntersectVisitor.h" />

@@ -26,7 +26,7 @@ struct LightPosition
     float dummy;
 };
 
-float NDCToDepth(float zNDC, float nearZ, float farZ)
+float NDCToViewDepth(float zNDC, float nearZ, float farZ)
 {
     float A = farZ / (farZ - nearZ);
     float B = -farZ * nearZ / (farZ - nearZ);
@@ -131,10 +131,12 @@ float3 GetDirectPointLighted(
     fromLight = fromLight / fromLightDistance;
         
     float depthNDC = pointLightShadowMaps.Sample(wrapSampler, float4(fromLight, pointLightIdx)).x;
-    float depthZ = NDCToDepth(depthNDC, DefaultNearZ, farZ);
+    float viewDepthZ = NDCToViewDepth(depthNDC, DefaultNearZ, farZ);
 
     float3 faceNormal = GetCubeMapFaceNormal(fromLight);
-    if (fromLightDistance * dot(faceNormal, fromLight) > depthZ + 1E-5)
+    float viewDistance = fromLightDistance * dot(faceNormal, fromLight);
+    
+    if (viewDistance > viewDepthZ + 0.1f)
         return float3(0.f, 0.f, 0.f);
                 
     float lightPower = pointLightEntity.lightPower;

@@ -1,5 +1,6 @@
 #include "ACollidableOrientedBox.h"
 #include "CollisionVisitor.h"
+#include "DirectionEntity.h"
 
 using namespace DirectX;
 
@@ -20,5 +21,14 @@ bool ACollidableOrientedBox::IsContainedByBoundingBox(const DirectX::BoundingBox
 
 DirectX::BoundingBox ACollidableOrientedBox::GetBoundingBox(const float& margin) const
 {
-    return BoundingBox(Center, XMFLOAT3(Extents.x + margin, Extents.y + margin, Extents.z + margin));
+    const XMVECTOR orientation = XMLoadFloat4(&Orientation);
+
+    XMFLOAT3 extents;
+    XMStoreFloat3(&extents, XMVectorAbs(
+        (Extents.z + margin) * XMVector3Rotate(GDefaultForward, orientation) +
+        (Extents.y + margin) * XMVector3Rotate(GDefaultUp, orientation) +
+        (Extents.x + margin) * XMVector3Rotate(GDefaultRight, orientation)
+    ));
+
+    return BoundingBox(Center, extents);
 }

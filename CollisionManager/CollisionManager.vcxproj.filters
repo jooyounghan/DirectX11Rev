@@ -48,6 +48,9 @@
     <ClInclude Include="ICollisionAcceptor.h">
       <Filter>헤더 파일\Acceptor</Filter>
     </ClInclude>
+    <ClInclude Include="DirectionEntity.h">
+      <Filter>헤더 파일\Acceptor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ACollidableOrientedBox.cpp">
