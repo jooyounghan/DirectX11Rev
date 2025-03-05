@@ -20,8 +20,23 @@ bool CollidableOrientedBox::IsContainedByBoundingBox(const DirectX::BoundingBox&
 
 DirectX::BoundingBox CollidableOrientedBox::GetBoundingBox(const float& margin) const
 {
-    return BoundingBox(Center, XMFLOAT3(Extents.x + margin, Extents.y + margin, Extents.z + margin));
+    static const XMVECTOR forwardVector = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+    static const XMVECTOR rightVector = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+    static const XMVECTOR upVector = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+    
+    const XMVECTOR orientation = XMLoadFloat4(&Orientation);
+    
+    
+    XMFLOAT3 extents;
+    XMStoreFloat3(&extents, XMVectorAbs(
+        (Extents.z + margin)* XMVector3Rotate(forwardVector, orientation) +
+        (Extents.y + margin) * XMVector3Rotate(upVector, orientation) +
+        (Extents.x + margin) * XMVector3Rotate(rightVector, orientation)
+    ));
+
+    return BoundingBox(Center, extents);
 }
+
 
 void CollidableOrientedBox::SetBoundingProperties(
     const DirectX::XMVECTOR& center,
