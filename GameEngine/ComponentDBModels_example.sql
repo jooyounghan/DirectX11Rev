@@ -126,7 +126,7 @@ CREATE TABLE `components` (
 
 LOCK TABLES `components` WRITE;
 /*!40000 ALTER TABLE `components` DISABLE KEYS */;
-INSERT INTO `components` VALUES (1,0,'SphereCollision1',1000,0,0,0,0,0,1,1,1,1),(2,1,'SkeletalMeshComponent1',0,-88,0,0,0,0,1,1,1,1),(3,0,'SphereCollision2',-1000,0,0,0,0,0,1,1,1,1),(4,3,'SkeletalMeshComponent2',0,-88,0,0,0,0,1,1,1,1),(5,0,'SphereCollision3',0,1000,0,0,0,0,1,1,1,1),(6,5,'SkeletalMeshComponent3',0,-88,0,0,0,0,1,1,1,1),(7,0,'OrientedBoxCollision1',0,-1000,0,0,0,0,1,1,1,1),(8,7,'SkeletalMeshComponent4',0,-88,0,0,0,0,1,1,1,1),(9,0,'OrientedBoxCollision2',0,0,1000,0,0,0,1,1,1,1),(10,9,'SkeletalMeshComponent5',-7,-88,0,0,0,0,1,1,1,1),(11,0,'OrientedBoxCollision3',0,0,-1000,0,0,0,1,1,1,1),(12,11,'SkeletalMeshComponent6',0,-88,0,0,0,0,1,1,1,1),(13,0,'Vanguard',-150,-100,500,0,0,0,1,1,1,2),(14,0,'Warrok',0,-100,500,0,0,0,1,1,1,2),(15,0,'Paladin',150,-100,500,0,0,0,1,1,1,2),(16,0,'Model1',0,0,200,0,0,0,30,30,30,3),(17,0,'Model2',-50,50,200,0,0,0,30,30,30,3),(18,0,'Model3',50,50,200,0,0,0,30,30,30,3),(19,0,'Model4',0,-100,200,0,0,0,200,1,200,3),(20,0,'SpotLightComponent1',0,0,200,90,0,0,1,1,1,3),(21,0,'PointLightComponent1',0,100,200,0,0,0,1,1,1,3),(22,0,'OrientedBoxCollision1',0,0,300,0,0,0,1,1,1,4),(23,22,'Wall1',0,0,0,0,0,0,500,500,10,4),(24,0,'OrientedBoxCollision2',-300,0,0,0,-90,0,1,1,1,4),(25,24,'Wall2',0,0,0,0,0,0,500,500,10,4),(26,0,'OrientedBoxCollision3',300,0,0,0,90,0,1,1,1,4),(27,26,'Wall3',0,0,0,0,0,0,500,500,10,4),(28,0,'OrientedBoxCollision4',0,300,0,-90,0,0,1,1,1,4),(29,28,'Wall4',0,0,0,0,0,0,500,500,10,4),(30,0,'OrientedBoxCollision5',0,-300,0,90,0,0,1,1,1,4),(31,30,'Wall5',0,0,0,0,0,0,500,500,1,4),(32,0,'OrientedBoxCollision6',0,0,-300,0,0,0,1,1,1,4),(33,32,'Wall6',0,0,0,0,0,0,500,500,10,4),(34,0,'OrientedBoxCollision7',0,-20,150,0,0,0,1,1,1,4),(35,34,'Warrok',0,-60,0,0,0,0,0.5,0.5,0.5,4),(36,0,'SphereCollision1',0,0,0,0,0,0,1,1,1,4),(37,36,'HollowSphere',-8,-50,4,0,0,0,1,1,1,4),(38,0,'SpotLightComponent1',50,-50,-100,-45,-45,0,1,1,1,4),(39,0,'SpotLightComponent2',-50,-50,-100,-45,45,0,1,1,1,4),(40,0,'PointLightComponent1',0,0,0,0,0,0,1,1,1,4);
+INSERT INTO `components` VALUES (1,0,'SphereCollision1',1000,0,0,0,0,0,1,1,1,1),(2,1,'SkeletalMeshComponent1',0,-88,0,0,0,0,1,1,1,1),(3,0,'SphereCollision2',-1000,0,0,0,0,0,1,1,1,1),(4,3,'SkeletalMeshComponent2',0,-88,0,0,0,0,1,1,1,1),(5,0,'SphereCollision3',0,1000,0,0,0,0,1,1,1,1),(6,5,'SkeletalMeshComponent3',0,-88,0,0,0,0,1,1,1,1),(7,0,'OrientedBoxCollision1',0,-1000,0,0,0,0,1,1,1,1),(8,7,'SkeletalMeshComponent4',0,-88,0,0,0,0,1,1,1,1),(9,0,'OrientedBoxCollision2',0,0,1000,0,0,0,1,1,1,1),(10,9,'SkeletalMeshComponent5',-7,-88,0,0,0,0,1,1,1,1),(11,0,'OrientedBoxCollision3',0,0,-1000,0,0,0,1,1,1,1),(12,11,'SkeletalMeshComponent6',0,-88,0,0,0,0,1,1,1,1),(13,0,'Vanguard',-150,-100,500,0,0,0,1,1,1,2),(14,0,'Warrok',0,-100,500,0,0,0,1,1,1,2),(15,0,'Paladin',150,-100,500,0,0,0,1,1,1,2),(16,0,'Model1',0,0,200,0,0,0,30,30,30,3),(17,0,'Model2',-50,50,200,0,0,0,30,30,30,3),(18,0,'Model3',50,50,200,0,0,0,30,30,30,3),(19,0,'Model4',0,-100,200,0,0,0,200,1,200,3),(20,0,'SpotLightComponent1',0,300,200,90,0,0,1,1,1,3),(21,0,'PointLightComponent1',0,100,200,0,0,0,1,1,1,3),(22,0,'OrientedBoxCollision1',0,0,300,0,0,0,1,1,1,4),(23,22,'Wall1',0,0,0,0,0,0,500,500,10,4),(24,0,'OrientedBoxCollision2',-300,0,0,0,-90,0,1,1,1,4),(25,24,'Wall2',0,0,0,0,0,0,500,500,10,4),(26,0,'OrientedBoxCollision3',300,0,0,0,90,0,1,1,1,4),(27,26,'Wall3',0,0,0,0,0,0,500,500,10,4),(28,0,'OrientedBoxCollision4',0,300,0,-90,0,0,1,1,1,4),(29,28,'Wall4',0,0,0,0,0,0,500,500,10,4),(30,0,'OrientedBoxCollision5',0,-300,0,90,0,0,1,1,1,4),(31,30,'Wall5',0,0,0,0,0,0,500,500,1,4),(32,0,'OrientedBoxCollision6',0,0,-300,0,0,0,1,1,1,4),(33,32,'Wall6',0,0,0,0,0,0,500,500,10,4),(34,0,'OrientedBoxCollision7',0,-20,150,0,0,0,1,1,1,4),(35,34,'Warrok',0,-60,0,0,0,0,0.5,0.5,0.5,4),(36,0,'SphereCollision1',0,0,0,0,0,0,1,1,1,4),(37,36,'HollowSphere',-8,-50,4,0,0,0,1,1,1,4),(38,0,'SpotLightComponent1',50,-50,-100,-45,-45,0,1,1,1,4),(39,0,'SpotLightComponent2',-50,-50,-100,-45,45,0,1,1,1,4),(40,0,'PointLightComponent1',0,0,0,0,0,0,1,1,1,4);
 /*!40000 ALTER TABLE `components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -144,7 +144,7 @@ CREATE TABLE `components_to_type` (
   KEY `components_to_type_comopnent_type_idx` (`component_type`),
   CONSTRAINT `component_id_fk1` FOREIGN KEY (`component_id`) REFERENCES `components` (`component_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `component_type_fk1` FOREIGN KEY (`component_type`) REFERENCES `component_types` (`component_type`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -172,7 +172,7 @@ CREATE TABLE `light_components` (
   `spot_power` float NOT NULL,
   PRIMARY KEY (`light_component_id`),
   CONSTRAINT `component_id_fk8` FOREIGN KEY (`light_component_id`) REFERENCES `components` (`component_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -307,7 +307,7 @@ CREATE TABLE `sphere_collision_components` (
   KEY `collision_option_fk1_idx` (`collision_option_id`),
   CONSTRAINT `collision_option_fk1` FOREIGN KEY (`collision_option_id`) REFERENCES `collision_options` (`collision_option_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `component_id_fk6` FOREIGN KEY (`sphere_collision_component_id`) REFERENCES `components` (`component_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -332,7 +332,7 @@ CREATE TABLE `spot_light_components` (
   `fov_angle` float NOT NULL,
   PRIMARY KEY (`spot_light_component_id`),
   CONSTRAINT `component_id_fk9` FOREIGN KEY (`spot_light_component_id`) REFERENCES `light_components` (`light_component_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -379,4 +379,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-05 14:46:09
+-- Dump completed on 2025-03-06 19:36:16
