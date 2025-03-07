@@ -62,9 +62,7 @@ void ComponentHandler::Visit(CameraComponent* cameraComponent)
 	HandleComponentTransformation(cameraComponent, true, true, false);
 
 	SeparatorText("View Properties");
-	Text("Fov Angle");
 	PushID("FovAngle");
-	
 	float fovAngle = cameraComponent->GetFovAngle();
 	if (DragFloat("", &fovAngle, 0.1f, 60.f, 160.f))
 	{

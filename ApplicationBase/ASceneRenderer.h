@@ -68,6 +68,8 @@ protected:
 		const AMeshPartsData* const meshPartsData,
 		std::function<void(const size_t&)> handler = [&](const size_t&) {}
 	);
+	void ApplyDOFFilter();
+
 
 protected:
 	virtual void ApplyRenderTargets(
@@ -83,5 +85,6 @@ protected:
 
 private:
 	void RenderCollisionComponent(ACollisionComponent* collisionComponent, const std::string& debugStaticMeshAssetName);
+
 };
 

@@ -1,3 +1,8 @@
+float NDCToViewDepth(float zNDC, float nearZ, float farZ)
+{
+    return nearZ * farZ / (farZ - zNDC * (farZ - nearZ));
+}
+
 float3 GetNormalFromMap(float3 N, float3 B, float3 T, float2 UV, Texture2D normalTexture, SamplerState samplerState)
 {
     float3 normal = normalTexture.Sample(samplerState, UV).rgb;

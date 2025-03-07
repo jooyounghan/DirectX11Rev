@@ -85,7 +85,8 @@ D3D11_SHADER_RESOURCE_VIEW_DESC SRVOption::GetShaderResourceViewDesc(const D3D11
 DXGI_FORMAT SRVOption::GetShaderResourceViewFormatFromTextureFormat(const DXGI_FORMAT& textureFormat)
 {
     static unordered_map<DXGI_FORMAT, DXGI_FORMAT> textureFormatToSRVFormat{
-        { DXGI_FORMAT_R32_TYPELESS, DXGI_FORMAT_R32_FLOAT }
+        { DXGI_FORMAT_R32_TYPELESS, DXGI_FORMAT_R32_FLOAT },
+        { DXGI_FORMAT_R24G8_TYPELESS, DXGI_FORMAT_R24_UNORM_X8_TYPELESS }
     };
 
     if (textureFormatToSRVFormat.find(textureFormat) != textureFormatToSRVFormat.end())

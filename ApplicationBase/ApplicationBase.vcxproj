@@ -279,7 +279,7 @@ exit %ERRORLEVEL%</Command>
     <None Include="Shaders\DepthTestHeader.hlsli" />
     <None Include="Shaders\DirectLightHeader.hlsli" />
     <None Include="Shaders\SceneHeader.hlsli" />
-    <None Include="Shaders\GBufferResolverHeader.hlsli" />
+    <None Include="Shaders\PostProcessHeader.hlsli" />
     <None Include="Shaders\MaterialComponentHeader.hlsli" />
     <None Include="Shaders\MeshComponentHeader.hlsli" />
     <None Include="Shaders\PBRHeader.hlsli" />
@@ -297,6 +297,10 @@ exit %ERRORLEVEL%</Command>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
     </FxCompile>
+    <FxCompile Include="Shaders\DOFResolvePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Shaders\ForwardScenePS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -309,7 +313,7 @@ exit %ERRORLEVEL%</Command>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shaders\GBufferResolveVS.hlsl">
+    <FxCompile Include="Shaders\PostProcessVS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>

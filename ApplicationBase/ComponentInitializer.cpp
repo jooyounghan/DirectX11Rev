@@ -109,15 +109,19 @@ void ComponentInitializer::Visit(CameraComponent* cameraComponent)
 {
 	InitBaseComponent(cameraComponent);
 
-	DynamicBuffer& viewProjMatrixBuffer = cameraComponent->GetViewEntityBuffer();
-	viewProjMatrixBuffer.InitializeBuffer(m_deviceCached);
+	DynamicBuffer& viewEntityBuffer = cameraComponent->GetViewEntityBuffer();
+	DynamicBuffer& cameraEntityBuffer = cameraComponent->GetCameraEntityBuffer();
+	viewEntityBuffer.InitializeBuffer(m_deviceCached);
+	cameraEntityBuffer.InitializeBuffer(m_deviceCached);
 
 	auto& film = cameraComponent->GetFilm();
+	auto& filteredFilm = cameraComponent->GetFilteredFilm();
 	auto& idFilm = cameraComponent->GetIDFilm();
 	auto& idStagingFilm = cameraComponent->GetIDStatgingFilm();
 	auto& depthStencilView = cameraComponent->GetDepthStencilView();
 
 	film.InitializeByOption(m_deviceCached, m_deviceContextCached);
+	filteredFilm.InitializeByOption(m_deviceCached, m_deviceContextCached);
 	idFilm.InitializeByOption(m_deviceCached, m_deviceContextCached);
 	idStagingFilm.InitializeByOption(m_deviceCached, m_deviceContextCached);
 	depthStencilView.InitializeByOption(m_deviceCached, m_deviceContextCached);

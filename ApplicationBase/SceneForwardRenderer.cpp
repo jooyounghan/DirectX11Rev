@@ -192,6 +192,11 @@ void SceneForwardRenderer::Visit(CameraComponent* cameraComponent)
 
 void SceneForwardRenderer::PostProcess()
 {
+    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
+    auto& film = cameraComponent->GetFilm();
+    auto& filteredFilm = cameraComponent->GetFilteredFilm();
+
+    m_deviceContext->CopyResource(filteredFilm.GetTexture2D(), film.GetTexture2D());
 }
 
 void SceneForwardRenderer::RenderMeshPartHandler(const size_t& idx)

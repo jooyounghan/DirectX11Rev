@@ -70,6 +70,12 @@ void ComponentUpdater::Visit(CameraComponent* cameraComponent)
 	{
 		cameraComponent->UpdateViewEntity(m_deviceContextCached);
 	}
+
+	AtomicFlag& cameraUpdatedFlag = cameraComponent->GetCameraUpdatedFlag();
+	if (cameraUpdatedFlag.ConsumeFlag())
+	{
+		cameraComponent->GetCameraEntityBuffer().Upload(m_deviceContextCached);
+	}
 }
 
 void ComponentUpdater::Visit(SphereCollisionComponent* sphereCollisionComponent)

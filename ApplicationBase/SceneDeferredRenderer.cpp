@@ -173,73 +173,15 @@ void SceneDeferredRenderer::ClearRenderTargets()
 
 void SceneDeferredRenderer::PostProcess()
 {
-	static GraphicsPSOObject* graphicsPSOObject = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::DEFERRED_GBUFFER_RESOLVE);
-
-	ScreenQuad* screenQuad = ScreenQuad::GetInstance();
-
-    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
-    Scene* const selectedScene = *m_sceneAddressCached;
-    LightManager& lightManager = selectedScene->GetLightManager();
-
-    const IBLMaterialAsset* sceneMaterialAsset = (*m_sceneAddressCached)->GetIBLMaterialAsset();
-	if (selectedScene != nullptr && cameraComponent != nullptr)
-	{
-		graphicsPSOObject->ApplyPSOObject(m_deviceContext);
-		ASceneRenderer::ApplyRenderTargets(m_deviceContext, cameraComponent);
-
-        const vector<SpotLightComponent*>& spotLights = lightManager.GetSpotLights();
-        const vector<PointLightComponent*>& pointLights = lightManager.GetPointLights();
-
-        // =============================== PS ===============================
-        vector<ID3D11Buffer*> psConstantBuffers{
-            cameraComponent->GetViewEntityBuffer().GetBuffer(),
-            lightManager.GetLightManagerEntityBuffer().GetBuffer()
-        };
-
-        vector<ID3D11ShaderResourceView*> psSRVs = sceneMaterialAsset ? vector<ID3D11ShaderResourceView*>{
-            sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_SPECULAR)->GetSRV(),
-                sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
-                sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV()
-        } : vector<ID3D11ShaderResourceView*>{ nullptr, nullptr, nullptr};
-
-        psSRVs.insert(psSRVs.end(), {
-            m_positionGBuffer.GetSRV(),
-            m_specularGBuffer.GetSRV(),
-            m_diffuseGBuffer.GetSRV(),
-            m_aoMetallicRoughnessGBuffer.GetSRV(),
-            m_normalGBuffer.GetSRV(),
-            m_emissiveGBuffer.GetSRV(),
-            lightManager.GetSpotLightEntitiesBuffer().GetSRV(),
-            lightManager.GetSpotLightViewEntitiesBuffer().GetSRV(),
-            lightManager.GetSpotLightDepthTestViews().GetSRV(),
-            lightManager.GetPointLightEntitiesBuffer().GetSRV(),
-            lightManager.GetPointLightPositionsBuffer().GetSRV(),
-            lightManager.GetPointLightDepthTestViews().GetSRV() }
-        );
-
-        m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
-        m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
-        // ===================================================================
-
-		const vector<ID3D11Buffer*> vertexBuffers = screenQuad->GetVertexBuffers();
-		const vector<UINT>& strides = screenQuad->GetStrides();
-		const vector<UINT>& verticesOffsets = screenQuad->GetOffsets();
-
-		m_deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
-		m_deviceContext->IASetIndexBuffer(screenQuad->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
-		m_deviceContext->DrawIndexed(screenQuad->GetIndexCount(), NULL, NULL);
-
-        vector<ID3D11ShaderResourceView*> psNullSRVs;
-        psNullSRVs.resize(psSRVs.size(), nullptr);
-        m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psNullSRVs.data());
-	}
+    ResolveGBuffer();
+    ApplyDOFFilter();
 }
 
 void SceneDeferredRenderer::ApplyRenderTargetsWithID(ID3D11DeviceContext* const deviceContext, CameraComponent* cameraComponent) const
 {
     vector<ID3D11RenderTargetView*> rtvs = m_gBufferRenderTargetViews;
     rtvs.push_back(cameraComponent->GetIDFilm().GetRTV());
-    Texture2DInstance<DSVOption>& depthStencilView = cameraComponent->GetDepthStencilView();
+    Texture2DInstance<SRVOption, DSVOption>& depthStencilView = cameraComponent->GetDepthStencilView();
 
     deviceContext->OMSetRenderTargets(static_cast<UINT>(rtvs.size()), rtvs.data(), depthStencilView.GetDSV());
     deviceContext->RSSetViewports(1, &cameraComponent->GetViewport());
@@ -286,5 +228,69 @@ void SceneDeferredRenderer::RenderMeshPartHandler(const size_t& idx)
         m_deviceContext->PSSetConstantBuffers(2, 1, psConstantBuffersPerMeshPart.data());
         m_deviceContext->PSSetShaderResources(0, 7, psSRVsPerMeshPart.data());
         // ===================================================================
+    }
+}
+
+void SceneDeferredRenderer::ResolveGBuffer()
+{
+    static GraphicsPSOObject* graphicsPSOObject = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::DEFERRED_GBUFFER_RESOLVE);
+
+    ScreenQuad* screenQuad = ScreenQuad::GetInstance();
+
+    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
+    Scene* const selectedScene = *m_sceneAddressCached;
+    LightManager& lightManager = selectedScene->GetLightManager();
+
+    const IBLMaterialAsset* sceneMaterialAsset = (*m_sceneAddressCached)->GetIBLMaterialAsset();
+    if (selectedScene != nullptr && cameraComponent != nullptr)
+    {
+        graphicsPSOObject->ApplyPSOObject(m_deviceContext);
+        ASceneRenderer::ApplyRenderTargets(m_deviceContext, cameraComponent);
+
+        const vector<SpotLightComponent*>& spotLights = lightManager.GetSpotLights();
+        const vector<PointLightComponent*>& pointLights = lightManager.GetPointLights();
+
+        // =============================== PS ===============================
+        vector<ID3D11Buffer*> psConstantBuffers{
+            cameraComponent->GetViewEntityBuffer().GetBuffer(),
+            lightManager.GetLightManagerEntityBuffer().GetBuffer()
+        };
+
+        vector<ID3D11ShaderResourceView*> psSRVs = sceneMaterialAsset ? vector<ID3D11ShaderResourceView*>{
+            sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_SPECULAR)->GetSRV(),
+                sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_DIFFUSE)->GetSRV(),
+                sceneMaterialAsset->GetScratchTextureAsset(EIBLMaterialTexture::IBL_MATERIAL_TEXTURE_BRDF)->GetSRV()
+        } : vector<ID3D11ShaderResourceView*>{ nullptr, nullptr, nullptr };
+
+            psSRVs.insert(psSRVs.end(), {
+                m_positionGBuffer.GetSRV(),
+                m_specularGBuffer.GetSRV(),
+                m_diffuseGBuffer.GetSRV(),
+                m_aoMetallicRoughnessGBuffer.GetSRV(),
+                m_normalGBuffer.GetSRV(),
+                m_emissiveGBuffer.GetSRV(),
+                lightManager.GetSpotLightEntitiesBuffer().GetSRV(),
+                lightManager.GetSpotLightViewEntitiesBuffer().GetSRV(),
+                lightManager.GetSpotLightDepthTestViews().GetSRV(),
+                lightManager.GetPointLightEntitiesBuffer().GetSRV(),
+                lightManager.GetPointLightPositionsBuffer().GetSRV(),
+                lightManager.GetPointLightDepthTestViews().GetSRV() }
+                );
+
+            m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
+            m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
+            // ===================================================================
+
+            const vector<ID3D11Buffer*> vertexBuffers = screenQuad->GetVertexBuffers();
+            const vector<UINT>& strides = screenQuad->GetStrides();
+            const vector<UINT>& verticesOffsets = screenQuad->GetOffsets();
+
+            m_deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
+            m_deviceContext->IASetIndexBuffer(screenQuad->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
+            m_deviceContext->DrawIndexed(screenQuad->GetIndexCount(), NULL, NULL);
+
+            vector<ID3D11ShaderResourceView*> psNullSRVs;
+            psNullSRVs.resize(psSRVs.size(), nullptr);
+            m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psNullSRVs.data());
     }
 }

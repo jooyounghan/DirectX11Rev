@@ -16,6 +16,7 @@
 	4. Animation System
 	5. Managing Asset & Component
 	6. Lighting and Shadows (조명 및 그림자)
+	7. Post-Processing(DOF) / **개발중**
 
 ## Details
 ### 1. Collision(충돌 감지 / 처리)
@@ -270,7 +271,7 @@ GBuffer는 다음과 같이 구성하였다.
 
 Component 당 Draw 콜이 있을 때, GBuffer에 해당하는 **MRT(Multiple Render Targets)** 에 각 데이터를 입력하고, 마지막으로 GBuffer들을 Shader Resource View로 활용하여 렌더링을 수행한다. 
 
-### 3. Animation System
+### 4. Animation System
 
 > [!IMPORTANT]
 > Bone Offset Matrix / Animation Retargeting
@@ -335,7 +336,7 @@ M_{B_{channel_{N'}}} = M_{B_{Feed_{N'}}}M_{A_{Feed_{N}}}^{-1}M_{A_{channel_{N}}}
 
 [![Video Label](http://img.youtube.com/vi/HzTLELvzFiY/0.jpg)](https://youtu.be/HzTLELvzFiY)
 
-### 4. Managing Asset & Component
+### 5. Managing Asset & Component
 
 > [!IMPORTANT]
 > 위상정렬 / Database / ERD(Entity Relation Diagram) / 더블 버퍼링
@@ -411,7 +412,7 @@ std::set<AComponent*> m_updateToDBComponentsWorker;
 ```
 메인 스레드는 `m_updateToDBComponentsMain` 에 변경사항이 존재하는 AComponent의 포인터를 삽입하고, Database에 업데이트를 수행하는 작업자 스레드는 특정 주기(1초)마다 `m_updateToDBComponentsMain`를 `m_updateToDBComponentsWorker`로 복사하고 `m_updateToDBComponentsWorker`를 활용한다. 만약 Transaction이 실패할 경우, `m_updateToDBComponentsWorker`의 원소를 다시 `m_updateToDBComponentsMain`에 삽입한다.
 
-### 5. Lighting And Shadow
+### 6. Lighting And Shadow
 
 > [!IMPORTANT]
 > Shadow Mapping
@@ -437,3 +438,24 @@ LightManager는 `SLightEntity`를  배열 형태로 관리하며, GPU 데이터�
 
 위와 같은 방식으로, 각 광원에 대한 View-Projection Matrix,  Texture 데이터와 이를 통해서 생성된 Shader Resource View, Depth-Stencil View 또한 LightManager가 관리하고 이를 광원 객체가 포인터를 통해 참조하고 있다.
 Spot Light는 하나 Texture와 이를 통해서 생성된 Shader Resource View와 Depth-Stencil View를 활용하고, Point Light는 Array 크기가 6개인 Texture(TextureCube) 데이터와 이를 통해서 생성된 Shader Resource View와 Depth-Stencil View 6개를 활용한다. 
+
+### 7. Post-Processing (DOF) / 개발중
+
+> [!IMPORTANT]
+> DOF(Depth Of Field)
+
+[
+![Video Label](http://img.youtube.com/vi/DFI0WTxel2Y/0.jpg)](https://youtu.be/DFI0WTxel2Y)
+
+본 포트폴리오에서는 DOF(Depth Of Field)를 지원한다.
+현재는 카메라에서 초점을 맞출 Focal Distance와 조리개값을 변수로 하여 조작할 수 있도록 기능을 구현하였다. 모든 렌더링 패스를 마친 결과를 담은 RenderTargetView과 DepthStencilView를 ShaderResourceView로 활용할 수 있게 구성한 뒤, Post-Processing을 수행한다.
+
+```c
+Texture2D filmTexture : register(t0);
+Texture2D depthTexture : register(t1);
+```
+`filmTexture`를 샘플링한 기존 색상값(`originalColor`)과 이를 가우시안 필터로 블러링(`blurredColor`)한 색상값을 구한다.
+
+카메라에서 변수로 관리하는 Focal Distance에 가까울수록 originalColor에 가깝게, Focal Distance에서 멀어질수록 blurredColor에 가깝게 보간을 수행하여 DOF를 처리할 수 있었다.
+
+> 추후 GPU Gem 자료를 토대로 COC(Circle Of Confusion)를 모델링하고, Compute Shader 등을 통해 화면의 Depth를 샘플링한 평균을 바탕으로 동적으로 반응하는 DOF 구현 예정

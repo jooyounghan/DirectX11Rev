@@ -1,4 +1,4 @@
-#include "GBufferResolverHeader.hlsli"
+#include "PostProcessHeader.hlsli"
 #include "DirectLightHeader.hlsli"
 
 cbuffer CameraViewConstantBuffer : register(b0)
@@ -39,7 +39,7 @@ TextureCubeArray pointLightShadowMaps : register(t14);
 SamplerState wrapSampler : register(s0);
 SamplerState clampSampler : register(s1);
 
-float4 main(GBufferResolveVertexOutput input) : SV_TARGET
+float4 main(PostProcessVertexOutput input) : SV_TARGET
 {
     float3 position = positionGBuffer.Sample(wrapSampler, input.f2TexCoord).xyz;
     float3 specular = specularGBuffer.Sample(wrapSampler, input.f2TexCoord).xyz;

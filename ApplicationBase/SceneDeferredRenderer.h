@@ -64,5 +64,9 @@ protected:
 		CameraComponent* cameraComponent
 	) const override;
 	virtual void RenderMeshPartHandler(const size_t& idx) override;
+
+private:
+	void ResolveGBuffer();
 };
+
 

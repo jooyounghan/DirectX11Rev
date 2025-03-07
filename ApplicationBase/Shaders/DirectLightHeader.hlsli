@@ -26,14 +26,6 @@ struct LightPosition
     float dummy;
 };
 
-float NDCToViewDepth(float zNDC, float nearZ, float farZ)
-{
-    float A = farZ / (farZ - nearZ);
-    float B = -farZ * nearZ / (farZ - nearZ);
-
-    return B / (zNDC - A);
-}
-
 float3 GetCubeMapFaceNormal(float3 dir)
 {
     float3 absDir = abs(dir);

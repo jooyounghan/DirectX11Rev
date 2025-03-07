@@ -64,7 +64,8 @@ D3D11_DEPTH_STENCIL_VIEW_DESC DSVOption::GetDepthStencilViewDesc(const D3D11_TEX
 DXGI_FORMAT DSVOption::GetDepthStencilViewFormatFromTextureFormat(const DXGI_FORMAT& textureFormat)
 {
     static unordered_map<DXGI_FORMAT, DXGI_FORMAT> textureFormatToDSVFormat{
-        { DXGI_FORMAT_R32_TYPELESS, DXGI_FORMAT_D32_FLOAT }
+        { DXGI_FORMAT_R32_TYPELESS, DXGI_FORMAT_D32_FLOAT },
+        { DXGI_FORMAT_R24G8_TYPELESS, DXGI_FORMAT_D24_UNORM_S8_UINT}
     };
 
     if (textureFormatToDSVFormat.find(textureFormat) != textureFormatToDSVFormat.end())

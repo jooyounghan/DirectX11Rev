@@ -141,13 +141,14 @@ void ComponentDBUpdater::UpdateCameraComponent(CameraComponent* cameraComponent)
 	const uint32_t& componentID = cameraComponent->GetComponentID();
 	const std::string cameraTableName = "camera_components";
 	const D3D11_VIEWPORT& viewport = cameraComponent->GetViewport();
+	const SCameraEntity& cameraEntity = cameraComponent->GetCameraEntity();
 	Table cameraTable = m_schemaCached->getTable(cameraTableName, true);
 	cameraTable.update()
 		.set("width", viewport.Width)
 		.set("height", viewport.Height)
 		.set("fov_angle", cameraComponent->GetFovAngle())
-		.set("near_z", cameraComponent->GetNearZ())
-		.set("far_z", cameraComponent->GetFarZ())
+		.set("near_z", cameraEntity.m_nearZ)
+		.set("far_z", cameraEntity.m_farZ)
 		.where("camera_component_id = :camera_component_id")
 		.bind("camera_component_id", componentID).execute();
 }

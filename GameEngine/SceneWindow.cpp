@@ -150,6 +150,50 @@ void SceneWindow::DrawSceneSelector()
         }
         EndListBox();
     }
+
+    Separator();
+
+    Text("Camera Properties");
+    if (m_selectedCamera)
+    {
+        bool isCameraEntityChanged = false;
+        const SCameraEntity& cameraEntity = m_selectedCamera->GetCameraEntity();
+
+        static bool isUseDOF = m_selectedCamera->GetIsUseDOF();
+        static float focalDistance = cameraEntity.m_focalDistance;
+        static float aperture = cameraEntity.m_aperture;
+        static float nearZ = cameraEntity.m_nearZ;
+        static float farZ = cameraEntity.m_farZ;
+
+        if (Checkbox("Use DOF", &isUseDOF))
+        {
+            m_selectedCamera->SetUseDOF(isUseDOF);
+        }
+
+        Text("Focal Distance");
+        PushID("focaldistance");
+        isCameraEntityChanged |= DragFloat("", &focalDistance, 1.f, 1.f, 1E6f);
+        PopID();
+
+        Text("Aperture");
+        PushID("aperture");
+        isCameraEntityChanged |= DragFloat("", &aperture, 0.01f, 1.f, 8.f);
+        PopID();
+
+        Text("Near Z");
+        PushID("nearz");
+        isCameraEntityChanged |= DragFloat("", &nearZ, 0.001f, 0.001f, 1.f);
+        PopID();
+
+        Text("Far Z");
+        PushID("farz");
+        isCameraEntityChanged |= DragFloat("", &farZ, 10.f, nearZ + 100.f, 1E9);
+        PopID();
+        if (isCameraEntityChanged)
+        {
+            m_selectedCamera->SetCameraEntity(focalDistance, aperture, nearZ, farZ);
+        }
+    }
 }
 
 void SceneWindow::DrawRendererSelector()
@@ -163,8 +207,8 @@ void SceneWindow::DrawScene()
     const ImVec2 cursorPos = GetCursorPos();
     const ImVec2 contentAvailRegion = GetContentRegionAvail();
 
-    Texture2DInstance<SRVOption, RTVOption, UAVOption>& film = m_selectedCamera->GetFilm();
-    Image((ImU64)(film.GetSRV()), contentAvailRegion);
+    Texture2DInstance<SRVOption, RTVOption>& filteredFilm = m_selectedCamera->GetFilteredFilm();
+    Image((ImU64)(filteredFilm.GetSRV()), contentAvailRegion);
 
     if (m_isDeferredRenderer)
     {

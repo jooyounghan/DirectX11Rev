@@ -28,6 +28,8 @@
 #include "DynamicBuffer.h"
 #include "StructuredBuffer.h"
 
+#include "ScreenQuad.h"
+
 #include "PerformanceAnalyzer.h"
 
 using namespace std;
@@ -106,6 +108,9 @@ void ASceneRenderer::ClearRenderTargets()
             cameraComponent->GetFilm().GetRTV(), ClearColor
         );
         m_deviceContext->ClearRenderTargetView(
+            cameraComponent->GetFilteredFilm().GetRTV(), ClearColor
+        );
+        m_deviceContext->ClearRenderTargetView(
             cameraComponent->GetIDFilm().GetRTV(), ClearColor
         );
         m_deviceContext->ClearDepthStencilView(
@@ -122,7 +127,7 @@ uint32_t ASceneRenderer::GetLODLevel(const size_t& maxLODLevel, const AComponent
     {
         XMVECTOR vDistance = XMVectorSubtract(cameraComponent->GetAbsolutePosition(), component->GetAbsolutePosition());
         const float distance = XMVectorGetX(XMVector3Length(vDistance));
-        const float maxDistance = cameraComponent->GetFarZ();
+        const float maxDistance = cameraComponent->GetCameraEntity().m_farZ;
         constexpr int controlOption = 300;
 
         return static_cast<uint32_t>(maxLODLevel * (1 - pow(1 - (distance / maxDistance), controlOption)));
@@ -130,10 +135,86 @@ uint32_t ASceneRenderer::GetLODLevel(const size_t& maxLODLevel, const AComponent
     return 0;
 }
 
+
+void ASceneRenderer::ApplyDOFFilter()
+{
+    static GraphicsPSOObject* graphicsPSOObject = m_componentPsoManagerCached->GetGraphicsPSOObject(EComopnentGraphicsPSOObject::DOF_RESOLVE);
+
+    ScreenQuad* screenQuad = ScreenQuad::GetInstance();
+    CameraComponent* const cameraComponent = *m_selectedCameraComponentAddressCached;
+
+    if (cameraComponent != nullptr)
+    {
+        if (cameraComponent->GetIsUseDOF())
+        {
+            graphicsPSOObject->ApplyPSOObject(m_deviceContext);
+            vector<ID3D11RenderTargetView*> rtv{ cameraComponent->GetFilteredFilm().GetRTV() };
+            m_deviceContext->OMSetRenderTargets(static_cast<UINT>(rtv.size()), rtv.data(), nullptr);
+            m_deviceContext->RSSetViewports(1, &cameraComponent->GetViewport());
+
+            // =============================== PS ===============================
+            vector<ID3D11Buffer*> psConstantBuffers{
+                cameraComponent->GetCameraEntityBuffer().GetBuffer()
+            };
+
+            vector<ID3D11ShaderResourceView*> psSRVs{
+                cameraComponent->GetFilm().GetSRV(),
+                cameraComponent->GetDepthStencilView().GetSRV()
+            };
+
+            m_deviceContext->PSSetConstantBuffers(0, static_cast<UINT>(psConstantBuffers.size()), psConstantBuffers.data());
+            m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psSRVs.data());
+            // ===================================================================
+
+            const vector<ID3D11Buffer*> vertexBuffers = screenQuad->GetVertexBuffers();
+            const vector<UINT>& strides = screenQuad->GetStrides();
+            const vector<UINT>& verticesOffsets = screenQuad->GetOffsets();
+
+            m_deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
+            m_deviceContext->IASetIndexBuffer(screenQuad->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
+            m_deviceContext->DrawIndexed(screenQuad->GetIndexCount(), NULL, NULL);
+
+            vector<ID3D11ShaderResourceView*> psNullSRVs;
+            psNullSRVs.resize(psSRVs.size(), nullptr);
+            m_deviceContext->PSSetShaderResources(0, static_cast<UINT>(psSRVs.size()), psNullSRVs.data());
+        }
+        else
+        {
+            m_deviceContext->CopyResource(cameraComponent->GetFilteredFilm().GetTexture2D(), cameraComponent->GetFilm().GetTexture2D());
+        }
+    }
+}
+
+void ASceneRenderer::RenderMeshParts(
+    ID3D11DeviceContext* const deviceContext,
+    const AMeshPartsData* const meshPartsData,
+    function<void(const size_t&)> handler
+)
+{
+    const size_t& meshPartCount = meshPartsData->GetPartsCount();
+    const vector<UINT>& indicesOffsets = meshPartsData->GetIndexOffsets();
+    vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetVertexBuffers();
+    const vector<UINT>& strides = meshPartsData->GetStrides();
+    const vector<UINT>& verticesOffsets = meshPartsData->GetOffsets();
+    const UINT& totalIndicesCount = static_cast<UINT>(meshPartsData->GetIndices().size());
+
+    for (size_t idx = 0; idx < meshPartCount; ++idx)
+    {
+        const UINT indexCount = (idx + 1 == meshPartCount ? totalIndicesCount : indicesOffsets[idx + 1]) - indicesOffsets[idx];
+
+        handler(idx);
+
+        deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
+        deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
+        deviceContext->DrawIndexed(indexCount, indicesOffsets[idx], NULL);
+        PerformanceAnalyzer::RenderingDrawCount += indexCount;
+    }
+}
+
 void ASceneRenderer::ApplyRenderTargets(ID3D11DeviceContext* const deviceContext, CameraComponent* const cameraComponent) const
 {
-    Texture2DInstance<SRVOption, RTVOption, UAVOption>& film = cameraComponent->GetFilm();
-    Texture2DInstance<DSVOption>& depthStencilView = cameraComponent->GetDepthStencilView();
+    Texture2DInstance<SRVOption, RTVOption>& film = cameraComponent->GetFilm();
+    Texture2DInstance<SRVOption, DSVOption>& depthStencilView = cameraComponent->GetDepthStencilView();
 
     vector<ID3D11RenderTargetView*> rtvs{ film.GetRTV() };
 
@@ -143,9 +224,9 @@ void ASceneRenderer::ApplyRenderTargets(ID3D11DeviceContext* const deviceContext
 
 void ASceneRenderer::ApplyRenderTargetsWithID(ID3D11DeviceContext* const deviceContext, CameraComponent* const cameraComponent) const
 {
-    Texture2DInstance<SRVOption, RTVOption, UAVOption>& film = cameraComponent->GetFilm();
+    Texture2DInstance<SRVOption, RTVOption>& film = cameraComponent->GetFilm();
     Texture2DInstance<RTVOption>& idFilm = cameraComponent->GetIDFilm();
-    Texture2DInstance<DSVOption>& depthStencilView = cameraComponent->GetDepthStencilView();
+    Texture2DInstance<SRVOption, DSVOption>& depthStencilView = cameraComponent->GetDepthStencilView();
 
     vector<ID3D11RenderTargetView*> rtvs{ film.GetRTV(), idFilm.GetRTV()};
 
@@ -183,28 +264,3 @@ void ASceneRenderer::RenderCollisionComponent(ACollisionComponent* collisionComp
     }
 }
 
-void ASceneRenderer::RenderMeshParts(
-    ID3D11DeviceContext* const deviceContext, 
-    const AMeshPartsData* const meshPartsData,
-    function<void(const size_t&)> handler
-)
-{
-    const size_t& meshPartCount = meshPartsData->GetPartsCount();
-    const vector<UINT>& indicesOffsets = meshPartsData->GetIndexOffsets();
-    vector<ID3D11Buffer*> vertexBuffers = meshPartsData->GetVertexBuffers();    
-    const vector<UINT>& strides = meshPartsData->GetStrides();
-    const vector<UINT>& verticesOffsets = meshPartsData->GetOffsets();
-    const UINT& totalIndicesCount = static_cast<UINT>(meshPartsData->GetIndices().size());
-
-    for (size_t idx = 0; idx < meshPartCount; ++idx)
-    {
-        const UINT indexCount = (idx + 1 == meshPartCount ? totalIndicesCount : indicesOffsets[idx + 1]) - indicesOffsets[idx];
-
-        handler(idx);
-
-        deviceContext->IASetVertexBuffers(0, static_cast<UINT>(vertexBuffers.size()), vertexBuffers.data(), strides.data(), verticesOffsets.data());
-        deviceContext->IASetIndexBuffer(meshPartsData->GetIndexBuffer()->GetBuffer(), DXGI_FORMAT_R32_UINT, NULL);
-        deviceContext->DrawIndexed(indexCount, indicesOffsets[idx], NULL);
-        PerformanceAnalyzer::RenderingDrawCount += indexCount;
-    }
-}

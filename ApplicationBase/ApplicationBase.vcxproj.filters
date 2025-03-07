@@ -409,7 +409,7 @@
     <None Include="Shaders\SceneHeader.hlsli">
       <Filter>Shader\Header</Filter>
     </None>
-    <None Include="Shaders\GBufferResolverHeader.hlsli">
+    <None Include="Shaders\PostProcessHeader.hlsli">
       <Filter>Shader\Header</Filter>
     </None>
     <None Include="Shaders\MeshComponentHeader.hlsli">
@@ -441,7 +441,7 @@
     <FxCompile Include="Shaders\GBufferResolvePS.hlsl">
       <Filter>Shader\Resolver</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\GBufferResolveVS.hlsl">
+    <FxCompile Include="Shaders\PostProcessVS.hlsl">
       <Filter>Shader\Resolver</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\ForwardMeshComponentPS.hlsl">
@@ -476,6 +476,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\SkeletalMeshPointLightDepthTestVS.hlsl">
       <Filter>Shader\DepthTest</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DOFResolvePS.hlsl">
+      <Filter>Shader\Resolver</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

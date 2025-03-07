@@ -135,7 +135,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 
 	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_DEFERRED] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::STATIC_MESH),
-		GetComponentPSOPixelShader(EComponentPSOPixelShader::Deferred_MESH),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::DEFERRED_MESH),
 		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
 		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
 		nullptr,
@@ -146,7 +146,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 
 	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_DEFERRED] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::SKELETAL_MESH),
-		GetComponentPSOPixelShader(EComponentPSOPixelShader::Deferred_MESH),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::DEFERRED_MESH),
 		GetComponentPSOHullShader(EComponentPSOHullShader::MESH),
 		GetComponentPSODomainShader(EComponentPSODomainShader::MESH),
 		nullptr,
@@ -156,7 +156,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 	);
 
 	m_graphicPSOObjects[EComopnentGraphicsPSOObject::DEFERRED_GBUFFER_RESOLVE] = new GraphicsPSOObject(
-		GetComponentPSOVertexShader(EComponentPSOVertexShader::GBUFFER_RESOLVE),
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::POST_PROCESS),
 		GetComponentPSOPixelShader(EComponentPSOPixelShader::GBUFFER_RESOLVE),
 		nullptr,
 		nullptr,
@@ -187,6 +187,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
+
 	m_graphicPSOObjects[EComopnentGraphicsPSOObject::STATIC_MESH_POINT_LIGHT_DEPTH_TEST] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::STATIC_MESH_POINT_LIGHT_DEPTH_TEST),
 		nullptr,
@@ -197,6 +198,7 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
 	);
+
 	m_graphicPSOObjects[EComopnentGraphicsPSOObject::SKELETAL_MESH_POINT_LIGHT_DEPTH_TEST] = new GraphicsPSOObject(
 		GetComponentPSOVertexShader(EComponentPSOVertexShader::SKELETAL_MESH_POINT_LIGHT_DEPTH_TEST),
 		nullptr,
@@ -206,6 +208,17 @@ void ComponentPSOManager::RegisterPSOObjectsForComponent()
 		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), 1,
 		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS),
 		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP) }
+	);
+
+	m_graphicPSOObjects[EComopnentGraphicsPSOObject::DOF_RESOLVE] = new GraphicsPSOObject(
+		GetComponentPSOVertexShader(EComponentPSOVertexShader::POST_PROCESS),
+		GetComponentPSOPixelShader(EComponentPSOPixelShader::DOF_RESOLVE),
+		nullptr,
+		nullptr,
+		nullptr,
+		GetComponentPSORasterizerState(EComponentPSORasterizerState::CW_SOLID_SS), 1,
+		GetComponentPSODepthStencilState(EComponentPSODeptshStencilState::DEPTH_DONTCARE),
+		{ GetComponentPSOSamplerState(EComponentPSOSamplerState::WRAP), GetComponentPSOSamplerState(EComponentPSOSamplerState::CLAMP) }
 	);
 }
 
@@ -224,7 +237,8 @@ void ComponentPSOManager::RegisterDepthStencilStatesForComponent(ID3D11Device* d
 	RegisterDepthStencilState(DepthStencilStateID(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS), device, TRUE, D3D11_COMPARISON_LESS, FALSE);
 	RegisterDepthStencilState(DepthStencilStateID(EComponentPSODeptshStencilState::DEPTH_COMPARE_GREATER), device, TRUE, D3D11_COMPARISON_GREATER, FALSE);
 	RegisterDepthStencilState(DepthStencilStateID(EComponentPSODeptshStencilState::DEPTH_COMPARE_LESS_STENCIL_REPLACE), device, TRUE, D3D11_COMPARISON_LESS, TRUE, D3D11_COMPARISON_ALWAYS, D3D11_STENCIL_OP_REPLACE);
-	RegisterDepthStencilState(DepthStencilStateID(EComponentPSODeptshStencilState::DEPTH_DONTCARE_STENCIL_REPLACE), device, FALSE, D3D11_COMPARISON_ALWAYS, TRUE, D3D11_COMPARISON_EQUAL, D3D11_STENCIL_OP_KEEP);
+	RegisterDepthStencilState(DepthStencilStateID(EComponentPSODeptshStencilState::DEPTH_DONTCARE), device, FALSE, D3D11_COMPARISON_ALWAYS, FALSE);
+	RegisterDepthStencilState(DepthStencilStateID(EComponentPSODeptshStencilState::DEPTH_DONTCARE_STENCIL_REPLACE), device, FALSE, D3D11_COMPARISON_ALWAYS, TRUE, D3D11_COMPARISON_EQUAL, D3D11_STENCIL_OP_REPLACE);
 }
 
 void ComponentPSOManager::RegisterBlendStatesForComponent(ID3D11Device* device)
@@ -265,7 +279,7 @@ void ComponentPSOManager::RegisterVSForComponent(ID3D11Device* device)
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		}
 		);
-	RegisterVertexShader(VertexShaderID(EComponentPSOVertexShader::GBUFFER_RESOLVE), inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/GBufferResolveVS.hlsl", "main", "vs_5_0", device);
+	RegisterVertexShader(VertexShaderID(EComponentPSOVertexShader::POST_PROCESS), inputElementDesc, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, L"../Shaders/PostProcessVS.hlsl", "main", "vs_5_0", device);
 
 	inputElementDesc.insert(inputElementDesc.end(),
 		{
@@ -306,5 +320,6 @@ void ComponentPSOManager::RegisterPSForComponent(ID3D11Device* device)
 	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::GBUFFER_RESOLVE), 1, L"../Shaders/GBufferResolvePS.hlsl", "main", "ps_5_0", device);
 	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::SCENE), 1, L"../Shaders/ForwardScenePS.hlsl", "main", "ps_5_0", device);
 	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::FORWARD_MESH), 2, L"../Shaders/ForwardMeshComponentPS.hlsl", "main", "ps_5_0", device);
-	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::Deferred_MESH), 6, L"../Shaders/DeferredMeshComponentPS.hlsl", "main", "ps_5_0", device);
+	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::DEFERRED_MESH), 6, L"../Shaders/DeferredMeshComponentPS.hlsl", "main", "ps_5_0", device);
+	RegisterPixelShader(PixelShaderID(EComponentPSOPixelShader::DOF_RESOLVE), 1, L"../Shaders/DOFResolvePS.hlsl", "main", "ps_5_0", device);
 }
