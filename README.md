@@ -25,96 +25,15 @@
 > 방문자 패턴 / Bounding Volume Hierachy(BVH) / Tree Rotation
  
 본 포트폴리오는 충돌 판정을 위해 `DirectXCollision`을 활용하였으며, 이에 따라 충돌 감지 시스템을 설계하였다. 충돌 가능한 객체는`ICollisionAcceptor` 인터페이스를 상속 받아 구체화된다.
-
-```mermaid
-classDiagram
-class ICollisionAcceptor{
-    +Accept(ICollisionVisitor*) void
-	+OnCollide(ICollisionAcceptor*) void
-}
-<<interface>> ICollisionAcceptor
-
-class ACollidableSphere
-ICollisionAcceptor<|--ACollidableSphere
-class ACollidableOrientedBox
-ICollisionAcceptor<|--ACollidableOrientedBox
-class ACollidableFrustum
-ICollisionAcceptor<|--ACollidableFrustum
-
-class ICollisionVisitor{
-    +Visit(ACollidableSphere* collidableSphere) bool
-    +Visit(ACollidableOrientedBox* collidableSphere) bool
-    +Visit(ACollidableFrustum* collidableSphere) bool
-}
-<<interface>> ICollisionVisitor
-
-class ACollisionVisitor{
-    #	ICollisionAcceptor* m_collisionAcceptor;
-}
-<<abstract>> ACollisionVisitor
-ICollisionVisitor<|--ACollisionVisitor
- 
-class ACollisionSpecifiedVisitor~T~{
-	T* m_specifiedCollisionAccpetor
-}
-<<template>>ACollisionSpecifiedVisitor
-ICollisionVisitor<|--ACollisionSpecifiedVisitor~T~
-
-class IntersectVisitor
-ACollisionVisitor<|--IntersectVisitor
-
-class IntersectSphereVisitor
-ACollisionSpecifiedVisitor~CollidableSphere~<|--IntersectSphereVisitor
-
-class IntersectOrientedBoxVisitor
-ACollisionSpecifiedVisitor~CollidableOrientedBox~<|--IntersectOrientedBoxVisitor
-
-class IntersectFrustumVisitor
-ACollisionSpecifiedVisitor~CollidableFrustum~<|--IntersectFrustumVisitor
-```
 `AColldableSphere`는 `DirectX::BoundingSphere`를, `ACollidableOrientedBox`는 `DirectX::BoundingOrientedBox`를, `ACollidableFrustum`은 `DirectX::BoundingFrustum`을 상속 받아 충돌 판정을 수행하며, 특정 충돌이 발생하는 경우 `OnCollide(ICollisionAcceptor*)` 함수가 호출된다.
 ```cpp 
 virtual void OnCollide(ICollisionAcceptor*) = 0;
 ```
 이를 Override하여 각 충돌 객체는 충돌이 발생했을 때 적절한 처리를 수행할 수 있도록 확장할 수 있다.
+업캐스팅 된 상태로 관리되는 ICollisionAccpetor는 Visitor 패턴을 연속적으로 두 번 적용하여, 충돌 확인을 하는 두 객체를
+가상 함수 테이블을 활용한 RTTI로 다운 캐스팅하여 확인 할 수 있게 구조를 디자인 하였다. 
 
-`ICollisionVisitor` 클래스는 충돌 판정 로직 수행을 위한 인터페이스 클래스이며, `ACollisionVisitor`와 `ACollisionSpecifiedVisitor<T>`가 이를 상속 받는다. 이렇게 두 가지 클래스를 작성한 이유는 **방문자 패턴**을 활용하여  충돌하는 판정하는 두 대상을 Down-Casting 하기 위함이다. 
-1. 충돌을 확인하기 위한 전체적인 함수 흐름
-	```cpp
-	ICollisionAcceptor* sphereCollisionComponent = ...;
-	// class SphereCollisionComponent : public ACollidableSphere ...
-	// class ACollidableSphere : public ICollisionAcceptor ...
-
-	ICollisionAcceptor* orientedCollisionComponent = ...;
-	// class OrientedBoxCollisionComponent: public ACollidableOrientedBox ...
-	// class ACollidableOrientedBox : public ICollisionAcceptor ...
-
-	IntersectVisitor intersectVisitor = IntersectVisitor(sphereCollisionComponent);
-	// class IntersectVisitor : public ACollisionVisitor ...
-
-	bool isIntersected = orientedCollisionComponent->Accept(&intersectVisitor);
-	```
-2. sphereCollisionComponent에 대한 Down-Casting 수행
-	```cpp
-	bool OrientedBoxCollisionComponent::Accept(ACollisionVisitor* collisionVisitor)
-	{
-		collisionVisitor->Visit(this);
-		// orientedCollisionComponent는 가상함수 테이블을 토대로 다운캐스팅 될 수 있다.
-	}
-	```
-3. orientedCollisionComponent에 대한 Down-Casting 수행
-	```cpp
-	bool IntersectVisitor::Visit(const ACollidableOrientedBox* const orientedCollisionComponent) const
-	{
-		IntersectOrientedBoxVisitor intersectOrientedBoxVisitor(orientedCollisionComponent);
-		// 다운캐스팅된 ACollidableOrientedBox* orientedCollisionComponent를 intersectOrientedBoxVisitor에 인자로 넘겨 멤버변수로 관리하도록 한다.
-		return m_collisionAcceptor->Accept(intersectOrientedBoxVisitor);
-		// IntersectOrientedBoxVisitor를 통하여 sphereCollisionComponent를 orientedCollisionComponent와 동일한 방식으로 다운캐스팅한다.
-	}
-	```
-위 흐름을 통하여 업캐스팅된 상태로 관리되는 두 객체 간 충돌 여부를 자동으로 가상 함수 테이블을 활용하여 다운 캐스팅하여 확인 할 수 있다. 
-
-마지막으로 본 포트폴리오는 충돌 여부를 효과적으로 수행하기 위하여 공간 데이터를 이진트리로 관리하는 자료 구조인 **Bounding Volume Hierachy(BVH)** 를 지원한다.
+또한 본 포트폴리오는 충돌 여부를 효과적으로 수행하기 위하여 공간 데이터를 이진트리로 관리하는 자료 구조인 **Bounding Volume Hierachy(BVH)** 를 지원한다.
 
 [![Video Label](http://img.youtube.com/vi/WXstLyR29fg/0.jpg)](https://youtu.be/WXstLyR29fg)
 
@@ -127,11 +46,11 @@ Bounding Volume Hierachy는 내부에서 ICollisionAcceptor를 관리하며, 이
 > [!IMPORTANT]
 > PBR, BRDF, Microfacet Theory, IBL
 
-물체의 특정 위치가 빛과 상호작용하는 물리학적 모델을 구축하고, 이를 통해 렌더링을 수행하여 **PBR(Physically Based Rendering)** 을 수행한다.
+물체의 특정 위치가 빛과 상호작용하는 물리학적 모델을 구축하고, 이를 통해 **PBR(Physically Based Rendering)**을 수행한다.
 
 점 $P$가 $\vec v$방향으로 반사하는 빛은 다음과 같이 표현할 수 있다.
 ```math 
-L_{o}(P, \vec v)$ = $\int_{\Omega}f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdot \vec l d\Omega
+L_{o}(P, \vec v) = \int_{\Omega}f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdot \vec l d\Omega
 ```
 
 위 식의 의미 다음과 같다.
@@ -142,7 +61,7 @@ L_{o}(P, \vec v)$ = $\int_{\Omega}f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdo
 위 결과를 [Physically-Based Shading Models in Film and Game Production SIGGRAPH 2010 Course Notes](https://renderwonk.com/publications/s2010-shading-course/hoffman/s2010_physically_based_shading_hoffman_a_notes.pdf) 에서는 다음과 같이 표현한다.
 > Although this equation may seem a bit daunting, its meaning is straightforward: outgoing radiance equals the integral (over all directions above the surface) of incoming radiance times the BRDF and a cosine factor.
 
-**BRDF(Bidirectional reflectance distribution function)** 는 명칭에서 알 수 있듯 두가지 방향에 대해 종속성을 가지는 함수이다. $f(\vec l, \vec v)$ 항을 BRDF 라고 부르며, 물리적인 특성에  표면 반사(surface reflection, Specular Term), 아래층 산란(subsurface scattering, Diffuse Term)으로 구분된다.  
+**BRDF(Bidirectional reflectance distribution function)** 는 두 가지 방향에 대해 종속성을 가지는 함수이다. $f(\vec l, \vec v)$ 항을 BRDF 라고 부르며, 물리적인 특성에 따라 표면 반사(surface reflection, Specular Term), 아래층 산란(subsurface scattering, Diffuse Term)으로 구분된다.  
 
 지역 조명에 대한 BRDF를 아래와 같이 표현할 수 있다.
 
@@ -185,13 +104,14 @@ G_{Schlick​}(\vec x) = \frac{\vec x \cdot \vec n}{(\vec x \cdot \vec n)( 1 - k
 ```
 
  - $D(\vec h)$, 정규분포항(Normal Distribution Term)
-	 - 정규분포항은 미세면의 법선 분포 밀도 함수이며, 미세면의 법선이 균동 분포할 경우에 대비하여 얼마나 집중되어 있는지를 의미하지, 확률 밀도 함수가 아니다. 따라서 값은 스칼라이고 음수가 아니며 1보다 클 수도 있다.
+	 - 정규분포항은 미세면의 법선 분포 밀도 함수이며, 미세면의 법선이 균등 분포할 경우에 대비하여 얼마나 집중되어 있는지를 의미하지, 확률 밀도 함수가 아니다. 따라서 값은 스칼라이고 음수가 아니며 1보다 클 수도 있다.
 	 - Active Microfacet에 대한 법선 분포 밀도가 어떻게 구성되어 있는지 알기 위해, 미세면의 법선이 $\vec h$인 경우에 대한 식으로 표현할 수 있으며, GGX, Beckmann 등 다양한 모델이 있다.
 	 - 포트폴리오에서는 Roughness를 $\alpha$ 항으로 받는 GGX를 정규분포항으로 채택하며, 이는 아래와 같다. 이때 $\vec n$는 거시표면의 법선이다.
 
 ```math
 D_{GGX}(\vec h) = \frac{\alpha^{2}}{\pi ((\vec n \cdot \vec h)^{2}(\alpha^{2} - 1)+ 1)^{2}}
 ```
+
 
 따라서 N개의 지역 조명은 아래와 같이 계산할 수 있다. 이때 $L_{i}(P)$ 는 점 P에 대한 $i$ 번째 조명의 세기이다.
 
@@ -200,10 +120,11 @@ $$L_{o}(P, \vec v) \approx  \sum_{i = 1}^{N} (\frac{c_{diff}}{\pi} + \frac{F(\ve
 전역 조명의 경우, **IBL(Image-Based Lighting)** 를 통하여 빛의 반사 상호작용을 기술한다. 환경에 대한 빛의 처리는 Monte-Carlo 샘플링을 활용하여 아래와 같은 수식을 통하여 처리할 수 있다.
 
 ```math
-L_{o}(P, \vec v) = \int_{\Omega} \frac{f(\vec l, \vec v) L_{i}(P, \vec l) (\vec n \cdot \vec l) }{p(\vec l, \vec v)}p(\vec l, \vec v)  d\Omega \approx \frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)}
+L_{o}(P, \vec v) = \int_{\Omega} \frac{f(\vec l, \vec v) L_{i}(P, \vec l) (\vec n \cdot \vec l) }{p(\vec l, \vec v)}p(\vec l, \vec v)  d\Omega \approx \frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l_{i}, \vec v) L_{i}(P, \vec l_{i}) \vec n \cdot \vec l_{i}}{p(\vec l_{i}, \vec v)}
 ```
 
-이때 $p(\vec l, \vec v)$는 중요도 샘플링을 위한 확률 밀도 함수이다. Diffuse에 대한 중요도 샘플링에는 Cosine-weighted Sampling($p_{cos-weighted}(\vec l, \vec v) = \frac{\vec l \cdot \vec n}{\pi}$)이 주로 사용되고,  Specular에 대한 중요도 샘플링에는 GGX Importance Sampling($p_{GGX-importance}(\vec l, \vec v) = \frac{D(\vec h)(\vec h \cdot \vec n)}{4(\vec h \cdot \vec v)}$)가 주로 사용된다.
+이때 $p(\vec l, \vec v)$는 중요도 샘플링을 위한 확률 밀도 함수이고, $\vec l_{i}$는 이를 통해 샘플링 된 입사각을 의미한다. 
+Diffuse에 대한 중요도 샘플링에는 Cosine-weighted Sampling($p_{cos-weighted}(\vec l, \vec v) = \frac{\vec l \cdot \vec n}{\pi}$)이 주로 사용되고,  Specular에 대한 중요도 샘플링에는 GGX Importance Sampling($p_{GGX-importance}(\vec l, \vec v) = \frac{D(\vec h)(\vec h \cdot \vec n)}{4(\vec h \cdot \vec v)}$)가 주로 사용된다.
 
 실시간으로 이에 대한 샘플링을 수행하고 계산하는 것이 비효율적이다. 따라서 사전 계산된 Texture와 **LUT (Look-Up Table)** 을 활용하여 성능을 최적화 한다. 'IBLBaker'와 같은 프로그램을 통해 IBL에 사용하기 위한 데이터를 사전에 계산하여 생성할 수 있다.
 ![Image](https://github.com/user-attachments/assets/91127aa6-835c-4753-bd39-7d2450a8c48a)
@@ -248,7 +169,7 @@ L_{o_{specular}}(P, \vec v) \approx (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \vec l
 ```
 
 이를 통해서 우항을  $c_{spec}$에 대한 선형식($ac_{spec} + b$)으로 표현할 수 있다. 이때 a와 b에 대한 값을 ($\vec h \cdot \vec v$, roughness)로 샘플링 할 수 있게 BRDF LUT를 생성할 수 있다. 따라서 최종적인 식은 다음과 같다.
-$L_{o_{diffuse}}(P, \vec v)  \approx  (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \vec l))(\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)}) = (Sample_{IBL_{spec}})(Sample_{LUT_{\vec h \cdot \vec v}} c_{spec} + Sample_{LUT_{roughness}})$
+$L_{o_{specular}}(P, \vec v)  \approx  (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \vec l))(\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)}) = (Sample_{IBL_{spec}})(Sample_{LUT_{\vec h \cdot \vec v}} c_{spec} + Sample_{LUT_{roughness}})$
 
 
 ### 3. Deferred Shading
