@@ -278,7 +278,8 @@ Component 당 Draw 콜이 있을 때, GBuffer에 해당하는 **MRT(Multiple Ren
 
 본 포트폴리오는 애니메이션 시스템을 지원한다. `.fbx`와 같은 파일을 바탕으로 애니메이션 파일을 불러오고, 키에 대한 변환을 시간에 대하여 `AnimationAsset` 형태로 저장, 관리한다. `AnimationAsset` 은 `BoneAsset`과 연관되어 있다. `AnimationAsset`의 채널 명은 `BoneAsset`의 뼈 이름이 동일하다. 이를 통하여 시간에 대한 특정 뼈의 애니메이션의 변환행렬과, 뼈의 Offset Matrix을 확인할 수 있다.  이를 조합하여 애니메이션을 수행한다.
 
-**Bone Offset Matrix**는 Skinned Mesh의 정점을 해당 Bone-Space(뼈의 로컬 좌표계)로 변환하는 행렬이다. 즉 해당 뼈대의 Bind-Pose를 위한 변환행렬은 Bone Offset Matrix의 역행렬이다. 또는 Bone Offset Matrix는 Bind-Pose로부터 Root로 변환되는 To-Root 행렬로 볼 수 있다.
+**Bind-Pose**는 Skinned Mesh가 초기 상태에서 Bone(뼈대)와 함께 설정된 기본 자세를 의미한다. 
+**Bone Offset Matrix**는 모델의 로컬 좌표계로 표현된 Bind-Pose 상태의 Skinned Mesh의 정점을 특정 뼈의 Bone-Space(뼈의 로컬 좌표계)로 변환하는 행렬이다. 이를 다르게 생각하면, Bone Offset Matrix는 각 뼈를 모델 로컬 좌표계의 원점에 위치시키는 행렬이라고 볼 수 있다. 또한. 각 뼈가 모델 로컬 좌표계의 원점에 있을 경우, 이들을 모델 로컬 좌표계의 Bind-Pose로 변환하는 행령이 Bone Offset Matrix의 역행렬이라고 볼 수 있다.
 
 ```math
 M_{0_{bind}} = M_{0_{offset}}^{-1}
@@ -314,15 +315,17 @@ Bone 2와 Bone 4에 대하여 Bone 2의 Bind Pose에서 Bone 4의 Bind Pose으�
 ```math
 M_{Feed_{2}} = M_{4_{bind}}M_{2_{bind}}^{-1} = M_{4_{offset}}^{-1}M_{2_{offset}}
 ```
-Bone M과 이의 자식 Bone N에 대하여 위 과정을 반복할 경우,
+Bone N과 이의 자식 Bone M에 대하여 위 과정을 반복할 경우,
 ```math
-M_{Feed_{N}} = M_{N_{bind}}M_{M_{bind}}^{-1} = M_{N_{offset}}^{-1}M_{M_{offset}}
+M_{Feed_{N}} = M_{M_{bind}}M_{N_{bind}}^{-1} = M_{M_{offset}}^{-1}M_{N_{offset}}
 ```
 으로 표현할 수 있다. 
 
 이를 통하여 BoneAsset A와 BoneAsset B의 특정 Bone이 연관되어 있다고 할 때, BoneAsset A의 Bone N과 이의 자식 Bone M간의 관계와 BoneAsset B의 Bone N'과 이의 자식 Bone M' 간의 관계를 아래와 같이 표현 할 수 있다.
 ```math
 M_{A_{Feed_{N}}}  = M_{A_{M_{offset}}}^{-1}M_{A_{N_{offset}}}
+```
+```math
 M_{B_{Feed_{N'}}}  = M_{B_{M'_{offset}}}^{-1}M_{B_{N'_{offset}}}
 ```
 
