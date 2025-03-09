@@ -1,6 +1,7 @@
 #include "MeshComponentHeader.hlsli"
 #include "MaterialComponentHeader.hlsli"
 #include "DirectLightHeader.hlsli"
+#include "SceneHeader.hlsli"
 
 cbuffer ComponentBuffer : register(b0)
 {

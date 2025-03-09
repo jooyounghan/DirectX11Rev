@@ -69,7 +69,7 @@ public:
 	void SetCameraEntity(const float& focalDistance, const float& aperture, const float& nearZ, const float& farZ);
 
 protected:
-	Texture2DInstance<SRVOption, RTVOption>				m_film;
+	Texture2DInstance<SRVOption, RTVOption, UAVOption>	m_film;
 	Texture2DInstance<SRVOption, RTVOption>				m_filteredFilm;
 	Texture2DInstance<RTVOption>						m_idFilm;
 	Texture2DInstance<PureTextureOption>				m_idStagingFilm;
@@ -86,7 +86,7 @@ public:
 	void SetViewport(const uint32_t& width, const uint32_t& height);
 
 public:
-	inline Texture2DInstance<SRVOption, RTVOption>& GetFilm() { return m_film; }
+	inline Texture2DInstance<SRVOption, RTVOption, UAVOption>& GetFilm() { return m_film; }
 	inline Texture2DInstance<SRVOption, RTVOption>& GetFilteredFilm() { return m_filteredFilm; }
 	inline Texture2DInstance<RTVOption>& GetIDFilm() { return m_idFilm; }
 	inline Texture2DInstance<PureTextureOption>& GetIDStatgingFilm() { return m_idStagingFilm; }

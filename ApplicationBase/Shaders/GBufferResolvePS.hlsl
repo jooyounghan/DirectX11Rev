@@ -1,5 +1,6 @@
 #include "PostProcessHeader.hlsli"
 #include "DirectLightHeader.hlsli"
+#include "SceneHeader.hlsli"
 
 cbuffer CameraViewConstantBuffer : register(b0)
 {

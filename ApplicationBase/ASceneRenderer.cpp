@@ -213,7 +213,7 @@ void ASceneRenderer::RenderMeshParts(
 
 void ASceneRenderer::ApplyRenderTargets(ID3D11DeviceContext* const deviceContext, CameraComponent* const cameraComponent) const
 {
-    Texture2DInstance<SRVOption, RTVOption>& film = cameraComponent->GetFilm();
+    Texture2DInstance<SRVOption, RTVOption, UAVOption>& film = cameraComponent->GetFilm();
     Texture2DInstance<SRVOption, DSVOption>& depthStencilView = cameraComponent->GetDepthStencilView();
 
     vector<ID3D11RenderTargetView*> rtvs{ film.GetRTV() };
@@ -224,7 +224,7 @@ void ASceneRenderer::ApplyRenderTargets(ID3D11DeviceContext* const deviceContext
 
 void ASceneRenderer::ApplyRenderTargetsWithID(ID3D11DeviceContext* const deviceContext, CameraComponent* const cameraComponent) const
 {
-    Texture2DInstance<SRVOption, RTVOption>& film = cameraComponent->GetFilm();
+    Texture2DInstance<SRVOption, RTVOption, UAVOption>& film = cameraComponent->GetFilm();
     Texture2DInstance<RTVOption>& idFilm = cameraComponent->GetIDFilm();
     Texture2DInstance<SRVOption, DSVOption>& depthStencilView = cameraComponent->GetDepthStencilView();
 
