@@ -117,7 +117,7 @@ D_{GGX}(\vec h) = \frac{\alpha^{2}}{\pi ((\vec n \cdot \vec h)^{2}(\alpha^{2} - 
 
 $$L_{o}(P, \vec v) \approx  \sum_{i = 1}^{N} (\frac{c_{diff}}{\pi} + \frac{F(\vec l_{i}, \vec h_{i}) G(\vec l_{i}, \vec v, \vec h_{i}) D(\vec h_{i})}{4(\vec n \cdot \vec l_{i})(\vec n \cdot \vec v_{i})} ) L_{i}(P) (\vec n \cdot \vec l_{i})  $$
 
-전역 조명의 경우, **IBL(Image-Based Lighting)** 를 통하여 빛의 반사 상호작용을 기술한다. 환경에 대한 빛의 처리는 Monte-Carlo 샘플링을 활용하여 아래와 같은 수식을 통하여 처리할 수 있다.
+전역 조명의 경우, **IBL(Image-Based Lighting)** 를 통하여 빛의 반사 상호작용을 기술한다. 환경에 대한 빛의 처리는 Monte-Carlo 적분을 활용하여 아래와 같은 수식을 통하여 처리할 수 있다.
 
 ```math
 L_{o}(P, \vec v) = \int_{\Omega} \frac{f(\vec l, \vec v) L_{i}(P, \vec l) (\vec n \cdot \vec l) }{p(\vec l, \vec v)}p(\vec l, \vec v)  d\Omega \approx \frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l_{i}, \vec v) L_{i}(P, \vec l_{i}) \vec n \cdot \vec l_{i}}{p(\vec l_{i}, \vec v)}
@@ -130,7 +130,7 @@ Diffuse에 대한 중요도 샘플링에는 Cosine-weighted Sampling($p_{cos-wei
 ![Image](https://github.com/user-attachments/assets/91127aa6-835c-4753-bd39-7d2450a8c48a)
 > 위 프로그램은 IBLBaker로, 좌측을 보면 Environment에 따른 BRDF LUT와  Specular IBL, Irradiance IBL 텍스쳐를 생성할 수 사전에 샘플링하여 계산할 수 있다.
 
-샘플링을 통해 텍스쳐를 생성하고 이를 활용하기 위해, Monte-Carlo 샘플링을 통한 환경에 대한 빛의 처리식을 두 개로 분리할 수 있다.
+샘플링을 통해 텍스쳐를 생성하고 이를 활용하기 위해, 환경에 대한 빛의 처리식을 두 개로 분리할 수 있다.
 
 ```math
 L_{o}(P, \vec v)  \approx \frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) L_{i}(P, \vec l) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)} = (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \vec l))(\frac{1}{N} \sum_{i = 1}^{N} \frac{f(\vec l, \vec v) \vec n \cdot \vec l}{p(\vec l_{i}, \vec v)})
