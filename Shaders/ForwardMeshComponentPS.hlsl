@@ -76,6 +76,11 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
     {
         normal = GetNormalFromMap(input.f3ModelNormal, bitangent, tangent, input.f2TexCoord, materialTexture[NORMAL_IDX], wrapSampler);
     }
+
+    // Todo : Gamma Correction
+    specular = pow(specular, 2.2f);
+    diffuse = pow(diffuse, 2.2f);
+    emissive = pow(emissive, 2.2f);
     
     float3 position = input.f4ModelPos.xyz;
     float3 toEye = normalize(viewPosition - position);
@@ -86,7 +91,6 @@ MeshComponentPixelOutput main(MeshComponentDomainOutput input) : SV_TARGET
     float3 f0 = lerp(specular, diffuse, metallic);
     float3 ks = SchlickFresnelReflectRoughnessTerm(f0, max(0.0, dot(toLight, normal)), roughness);
     float3 kd = (1.0f - ks) * (1 - metallic);
-    
     
     float3 color = CalculateIBL(
         kd, ks, diffuse, metallic, roughness,

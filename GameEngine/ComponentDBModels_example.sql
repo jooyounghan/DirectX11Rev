@@ -126,7 +126,7 @@ CREATE TABLE `components` (
 
 LOCK TABLES `components` WRITE;
 /*!40000 ALTER TABLE `components` DISABLE KEYS */;
-INSERT INTO `components` VALUES (1,0,'SphereCollision1',1000,0,0,0,0,0,1,1,1,1),(2,1,'SkeletalMeshComponent1',0,-88,0,0,0,0,1,1,1,1),(3,0,'SphereCollision2',-1000,0,0,0,0,0,1,1,1,1),(4,3,'SkeletalMeshComponent2',0,-88,0,0,0,0,1,1,1,1),(5,0,'SphereCollision3',0,1000,0,0,0,0,1,1,1,1),(6,5,'SkeletalMeshComponent3',0,-88,0,0,0,0,1,1,1,1),(7,0,'OrientedBoxCollision1',0,-1000,0,0,0,0,1,1,1,1),(8,7,'SkeletalMeshComponent4',0,-88,0,0,0,0,1,1,1,1),(9,0,'OrientedBoxCollision2',0,0,1000,0,0,0,1,1,1,1),(10,9,'SkeletalMeshComponent5',-7,-88,0,0,0,0,1,1,1,1),(11,0,'OrientedBoxCollision3',0,0,-1000,0,0,0,1,1,1,1),(12,11,'SkeletalMeshComponent6',0,-88,0,0,0,0,1,1,1,1),(13,0,'Vanguard',-150,-100,500,0,0,0,1,1,1,2),(14,0,'Warrok',0,-100,500,0,0,0,1,1,1,2),(15,0,'Paladin',150,-100,500,0,0,0,1,1,1,2),(16,0,'Model1',0,0,250,0,0,0,30,30,30,3),(17,0,'Model2',-50,0,100,0,0,0,30,30,30,3),(18,0,'Model3',100,0,400,0,0,0,30,30,30,3),(19,0,'Model4',0,-100,600,0,0,0,1000,10,1000,3),(20,0,'SpotLightComponent1',50,500,-100,45,0,0,1,1,1,3),(21,0,'PointLightComponent1',-50,250,250,0,0,0,1,1,1,3),(22,0,'OrientedBoxCollision1',0,0,300,0,0,0,1,1,1,4),(23,22,'Wall1',0,0,0,0,0,0,500,500,10,4),(24,0,'OrientedBoxCollision2',-300,0,0,0,-90,0,1,1,1,4),(25,24,'Wall2',0,0,0,0,0,0,500,500,10,4),(26,0,'OrientedBoxCollision3',300,0,0,0,90,0,1,1,1,4),(27,26,'Wall3',0,0,0,0,0,0,500,500,10,4),(28,0,'OrientedBoxCollision4',0,300,0,-90,0,0,1,1,1,4),(29,28,'Wall4',0,0,0,0,0,0,500,500,10,4),(30,0,'OrientedBoxCollision5',0,-300,0,90,0,0,1,1,1,4),(31,30,'Wall5',0,0,0,0,0,0,500,500,1,4),(32,0,'OrientedBoxCollision6',0,0,-300,0,0,0,1,1,1,4),(33,32,'Wall6',0,0,0,0,0,0,500,500,10,4),(34,0,'OrientedBoxCollision7',0,-20,150,0,0,0,1,1,1,4),(35,34,'Warrok',0,-60,0,0,0,0,0.5,0.5,0.5,4),(36,0,'SphereCollision1',0,0,0,0,0,0,1,1,1,4),(37,36,'HollowSphere',-8,-50,4,0,0,0,1,1,1,4),(38,0,'SpotLightComponent1',50,-50,-100,-45,-45,0,1,1,1,4),(39,0,'SpotLightComponent2',-50,-50,-100,-45,45,0,1,1,1,4),(40,0,'PointLightComponent1',0,0,0,0,0,0,1,1,1,4);
+INSERT INTO `components` VALUES (1,0,'SphereCollision1',1000,0,0,0,0,0,1,1,1,1),(2,1,'SkeletalMeshComponent1',0,-88,0,0,0,0,1,1,1,1),(3,0,'SphereCollision2',-1000,0,0,0,0,0,1,1,1,1),(4,3,'SkeletalMeshComponent2',0,-88,0,0,0,0,1,1,1,1),(5,0,'SphereCollision3',0,1000,0,0,0,0,1,1,1,1),(6,5,'SkeletalMeshComponent3',0,-88,0,0,0,0,1,1,1,1),(7,0,'OrientedBoxCollision1',0,-1000,0,0,0,0,1,1,1,1),(8,7,'SkeletalMeshComponent4',0,-88,0,0,0,0,1,1,1,1),(9,0,'OrientedBoxCollision2',0,0,1000,0,0,0,1,1,1,1),(10,9,'SkeletalMeshComponent5',-7,-88,0,0,0,0,1,1,1,1),(11,0,'OrientedBoxCollision3',0,0,-1000,0,0,0,1,1,1,1),(12,11,'SkeletalMeshComponent6',0,-88,0,0,0,0,1,1,1,1),(13,0,'Vanguard',-200,-100,350,0,0,0,1,1,1,2),(14,0,'Warrok',0,-100,350,0,0,0,1,1,1,2),(15,0,'Paladin',200,-100,350,0,0,0,1,1,1,2),(16,0,'SpotLightComponent1',0,0,0,10,-45,0,1,1,1,2),(17,0,'SpotLightComponent2',0,0,0,10,45,0,1,1,1,2),(18,0,'Model1',0,0,250,0,0,0,30,30,30,3),(19,0,'Model2',-50,0,100,0,0,0,30,30,30,3),(20,0,'Model3',100,0,400,0,0,0,30,30,30,3),(21,0,'Model4',0,-100,600,0,0,0,1000,10,1000,3),(22,0,'SpotLightComponent1',100,500,-100,45,0,0,1,1,1,3),(23,0,'PointLightComponent1',-200,250,250,0,0,0,1,1,1,3),(24,0,'OrientedBoxCollision1',0,0,300,0,0,0,1,1,1,4),(25,24,'Wall1',0,0,0,0,0,0,500,500,10,4),(26,0,'OrientedBoxCollision2',-300,0,0,0,-90,0,1,1,1,4),(27,26,'Wall2',0,0,0,0,0,0,500,500,10,4),(28,0,'OrientedBoxCollision3',300,0,0,0,90,0,1,1,1,4),(29,28,'Wall3',0,0,0,0,0,0,500,500,10,4),(30,0,'OrientedBoxCollision4',0,300,0,-90,0,0,1,1,1,4),(31,30,'Wall4',0,0,0,0,0,0,500,500,10,4),(32,0,'OrientedBoxCollision5',0,-300,0,90,0,0,1,1,1,4),(33,32,'Wall5',0,0,0,0,0,0,500,500,1,4),(34,0,'OrientedBoxCollision6',0,0,-300,0,0,0,1,1,1,4),(35,34,'Wall6',0,0,0,0,0,0,500,500,10,4),(36,0,'OrientedBoxCollision7',0,-20,150,0,0,0,1,1,1,4),(37,36,'Warrok',0,-60,0,0,0,0,0.5,0.5,0.5,4),(38,0,'SphereCollision1',0,0,0,0,0,0,1,1,1,4),(39,38,'HollowSphere',-8,-50,4,0,0,0,1,1,1,4),(40,0,'SpotLightComponent1',50,-50,-100,-45,-45,0,1,1,1,4),(41,0,'SpotLightComponent2',-50,-50,-100,-45,45,0,1,1,1,4),(42,0,'PointLightComponent1',0,0,0,0,0,0,1,1,1,4);
 /*!40000 ALTER TABLE `components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -153,7 +153,7 @@ CREATE TABLE `components_to_type` (
 
 LOCK TABLES `components_to_type` WRITE;
 /*!40000 ALTER TABLE `components_to_type` DISABLE KEYS */;
-INSERT INTO `components_to_type` VALUES (16,1),(17,1),(18,1),(19,1),(23,1),(25,1),(27,1),(29,1),(31,1),(33,1),(37,1),(2,2),(4,2),(6,2),(8,2),(10,2),(12,2),(13,2),(14,2),(15,2),(35,2),(1,4),(3,4),(5,4),(36,4),(7,5),(9,5),(11,5),(22,5),(24,5),(26,5),(28,5),(30,5),(32,5),(34,5),(20,6),(38,6),(39,6),(21,7),(40,7);
+INSERT INTO `components_to_type` VALUES (18,1),(19,1),(20,1),(21,1),(25,1),(27,1),(29,1),(31,1),(33,1),(35,1),(39,1),(2,2),(4,2),(6,2),(8,2),(10,2),(12,2),(13,2),(14,2),(15,2),(37,2),(1,4),(3,4),(5,4),(38,4),(7,5),(9,5),(11,5),(24,5),(26,5),(28,5),(30,5),(32,5),(34,5),(36,5),(16,6),(17,6),(22,6),(40,6),(41,6),(23,7),(42,7);
 /*!40000 ALTER TABLE `components_to_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -181,7 +181,7 @@ CREATE TABLE `light_components` (
 
 LOCK TABLES `light_components` WRITE;
 /*!40000 ALTER TABLE `light_components` DISABLE KEYS */;
-INSERT INTO `light_components` VALUES (20,1.5,0,5000,3),(21,2.58,0,1000,1),(38,1.5,0,10000,3),(39,1.5,0,10000,3),(40,3,0,3000,1);
+INSERT INTO `light_components` VALUES (16,2.5,0,1000,3),(17,2.5,0,1000,3),(22,2,0,5000,3),(23,2.5,0,1000,1),(40,1.5,0,10000,3),(41,1.5,0,10000,3),(42,3,0,3000,1);
 /*!40000 ALTER TABLE `light_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -207,7 +207,7 @@ CREATE TABLE `mesh_component_informations` (
 
 LOCK TABLES `mesh_component_informations` WRITE;
 /*!40000 ALTER TABLE `mesh_component_informations` DISABLE KEYS */;
-INSERT INTO `mesh_component_informations` VALUES (2,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(4,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(6,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(8,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(10,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(12,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(13,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(14,'{\"material_names\": [\"warrok_MAT\"]}'),(15,'{\"material_names\": [\"Paladin_MAT\"]}'),(16,'{\"material_names\": [\"BlueCrystal\"]}'),(17,'{\"material_names\": [\"TreeRoots\"]}'),(18,'{\"material_names\": [\"Metal_MAT\"]}'),(19,'{\"material_names\": [\"Marble_MAT\"]}'),(23,'{\"material_names\": [\"TreeRoots\"]}'),(25,'{\"material_names\": [\"TreeRoots\"]}'),(27,'{\"material_names\": [\"TreeRoots\"]}'),(29,'{\"material_names\": [\"TreeRoots\"]}'),(31,'{\"material_names\": [\"TreeRoots\"]}'),(33,'{\"material_names\": [\"TreeRoots\"]}'),(35,'{\"material_names\": [\"warrok_MAT\"]}'),(37,'{\"material_names\": [\"Metal_MAT\"]}');
+INSERT INTO `mesh_component_informations` VALUES (2,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(4,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(6,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(8,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(10,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(12,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(13,'{\"material_names\": [\"VanguardBodyMat\", \"VanguardBodyMat\"]}'),(14,'{\"material_names\": [\"warrok_MAT\"]}'),(15,'{\"material_names\": [\"Paladin_MAT\"]}'),(18,'{\"material_names\": [\"BlueCrystal\"]}'),(19,'{\"material_names\": [\"TreeRoots\"]}'),(20,'{\"material_names\": [\"Metal_MAT\"]}'),(21,'{\"material_names\": [\"Marble_MAT\"]}'),(25,'{\"material_names\": [\"TreeRoots\"]}'),(27,'{\"material_names\": [\"TreeRoots\"]}'),(29,'{\"material_names\": [\"TreeRoots\"]}'),(31,'{\"material_names\": [\"TreeRoots\"]}'),(33,'{\"material_names\": [\"TreeRoots\"]}'),(35,'{\"material_names\": [\"TreeRoots\"]}'),(37,'{\"material_names\": [\"warrok_MAT\"]}'),(39,'{\"material_names\": [\"Metal_MAT\"]}');
 /*!40000 ALTER TABLE `mesh_component_informations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -237,7 +237,7 @@ CREATE TABLE `oriented_box_collision_components` (
 
 LOCK TABLES `oriented_box_collision_components` WRITE;
 /*!40000 ALTER TABLE `oriented_box_collision_components` DISABLE KEYS */;
-INSERT INTO `oriented_box_collision_components` VALUES (7,50,200,50,1),(9,60,200,60,1),(11,70,200,70,1),(22,500,500,5,1),(24,500,500,5,1),(26,500,500,5,1),(28,500,500,5,1),(30,500,500,5,1),(32,500,500,5,1),(34,25,60,25,1);
+INSERT INTO `oriented_box_collision_components` VALUES (7,50,200,50,1),(9,60,200,60,1),(11,70,200,70,1),(24,500,500,5,1),(26,500,500,5,1),(28,500,500,5,1),(30,500,500,5,1),(32,500,500,5,1),(34,500,500,5,1),(36,25,60,25,1);
 /*!40000 ALTER TABLE `oriented_box_collision_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -288,7 +288,7 @@ CREATE TABLE `skeletal_mesh_components` (
 
 LOCK TABLES `skeletal_mesh_components` WRITE;
 /*!40000 ALTER TABLE `skeletal_mesh_components` DISABLE KEYS */;
-INSERT INTO `skeletal_mesh_components` VALUES (2,'Vanguard_LOD_Skeletal'),(4,'Vanguard_LOD_Skeletal'),(6,'Vanguard_LOD_Skeletal'),(8,'Vanguard_LOD_Skeletal'),(10,'Vanguard_LOD_Skeletal'),(12,'Vanguard_LOD_Skeletal'),(13,'Vanguard_LOD_Skeletal'),(14,'WarrokWKurniawan_Skeletal'),(15,'PaladinNordstrom_Skeletal'),(35,'WarrokWKurniawan_Skeletal');
+INSERT INTO `skeletal_mesh_components` VALUES (2,'Vanguard_LOD_Skeletal'),(4,'Vanguard_LOD_Skeletal'),(6,'Vanguard_LOD_Skeletal'),(8,'Vanguard_LOD_Skeletal'),(10,'Vanguard_LOD_Skeletal'),(12,'Vanguard_LOD_Skeletal'),(13,'Vanguard_LOD_Skeletal'),(14,'WarrokWKurniawan_Skeletal'),(15,'PaladinNordstrom_Skeletal'),(37,'WarrokWKurniawan_Skeletal');
 /*!40000 ALTER TABLE `skeletal_mesh_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -316,7 +316,7 @@ CREATE TABLE `sphere_collision_components` (
 
 LOCK TABLES `sphere_collision_components` WRITE;
 /*!40000 ALTER TABLE `sphere_collision_components` DISABLE KEYS */;
-INSERT INTO `sphere_collision_components` VALUES (1,180,1),(3,190,1),(5,200,1),(36,25,1);
+INSERT INTO `sphere_collision_components` VALUES (1,180,1),(3,190,1),(5,200,1),(38,25,1);
 /*!40000 ALTER TABLE `sphere_collision_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -341,7 +341,7 @@ CREATE TABLE `spot_light_components` (
 
 LOCK TABLES `spot_light_components` WRITE;
 /*!40000 ALTER TABLE `spot_light_components` DISABLE KEYS */;
-INSERT INTO `spot_light_components` VALUES (20,120),(38,120),(39,120);
+INSERT INTO `spot_light_components` VALUES (16,120),(17,120),(22,120),(40,120),(41,120);
 /*!40000 ALTER TABLE `spot_light_components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -366,7 +366,7 @@ CREATE TABLE `static_mesh_components` (
 
 LOCK TABLES `static_mesh_components` WRITE;
 /*!40000 ALTER TABLE `static_mesh_components` DISABLE KEYS */;
-INSERT INTO `static_mesh_components` VALUES (16,'sphere_model_Static'),(17,'sphere_model_Static'),(18,'sphere_model_Static'),(19,'sphere_model_Static'),(23,'sphere_model_Static'),(25,'sphere_model_Static'),(27,'sphere_model_Static'),(29,'sphere_model_Static'),(31,'sphere_model_Static'),(33,'sphere_model_Static'),(37,'voronoi_sphere_Static');
+INSERT INTO `static_mesh_components` VALUES (18,'sphere_model_Static'),(19,'sphere_model_Static'),(20,'sphere_model_Static'),(21,'sphere_model_Static'),(25,'sphere_model_Static'),(27,'sphere_model_Static'),(29,'sphere_model_Static'),(31,'sphere_model_Static'),(33,'sphere_model_Static'),(35,'sphere_model_Static'),(39,'voronoi_sphere_Static');
 /*!40000 ALTER TABLE `static_mesh_components` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -379,4 +379,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-07 15:10:36
+-- Dump completed on 2025-03-10 12:30:05

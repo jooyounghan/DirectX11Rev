@@ -19,7 +19,7 @@ float3 GetIBLDiffuseTerm(float3 kd, float3 diffuseColor, float3 halfVector, Text
 
 float3 GetIBLSpecularTerm(float3 ks, float VDotH, float3 toLight, float roughness, TextureCube specularIBLTexture, Texture2D brdfLUTTextrure, SamplerState clampSampler)
 {
-    float2 brdfLUT = brdfLUTTextrure.SampleLevel(clampSampler, float2(VDotH, roughness), 0.0f).rg;
+    float2 brdfLUT = brdfLUTTextrure.SampleLevel(clampSampler, float2(VDotH, 1.0 - roughness), 0.0f).rg;
     float3 specularIBL = specularIBLTexture.SampleLevel(clampSampler, toLight, roughness * 5.0f).rgb;
     return (ks * brdfLUT.x + brdfLUT.y) * specularIBL;
 }

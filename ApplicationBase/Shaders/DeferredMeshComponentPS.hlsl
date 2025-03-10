@@ -46,6 +46,11 @@ DeferredMeshComponentPixelOutput main(MeshComponentDomainOutput input)
     float3 emissive = isEmissiveSet ? materialTexture[EMISSIVE_IDX].Sample(wrapSampler, input.f2TexCoord).rgb : float3(0.0, 0.0, 0.0);
     float3 normal = input.f3ModelNormal;
     
+    // Todo : Gamma Correction
+    specular = pow(specular, 2.2f);
+    diffuse = pow(diffuse, 2.2f);
+    emissive = pow(emissive, 2.2f);
+    
     float3 tangent;
     float3 bitangent;
     GetTB(input.f4ModelPos.xyz, input.f2TexCoord, input.f3ModelNormal, tangent, bitangent);
