@@ -1,5 +1,4 @@
-﻿
-# DirectX11 Portfolio
+﻿# DirectX11 Portfolio
 
 본 포트폴리오는 **DirectX11** 기반의 엔진 프로그램을 개발하는 것을 목표로 한다.
 
@@ -178,7 +177,7 @@ $L_{o_{specular}}(P, \vec v)  \approx  (\frac{1}{N}\sum_{i = 1}^{N} L_{i}(P, \ve
 > GBuffer, MRT
 
 각 Component를 어떻게 그릴지에 대한 함수는 Component에 대한 Visitor 인터페이스 클래스` IComponentVisitor`를 상속 받아서 구현한다. 포트폴리오에는 Forward Shading을 위한  `SceneForwardRenderer`와 Deferred Shading을 위한 `SceneDeferredRenderer`를 통해서 `IComponentVisitor` 내부 각 Component에 대한 함수를 오버라이딩하여 구현한다.
-[![Video Label](http://img.youtube.com/vi/c-_aR995ip4/0.jpg)](https://youtu.be/c-_aR995ip4)
+[![Video Label](http://img.youtube.com/vi/WhLacAjV76k/0.jpg)](https://youtu.be/WhLacAjV76k)
 
 Renderer를 선택하면 `SceneForwardRenderer`와 `SceneDeferredRenderer`를 선택할 수 있고, 선택한 렌더링 기법을 활용하여 렌더링이 시작된다.
 `SceneDeferredRenderer` 선택 시, Viewport 상단에 Deferred Shading을 위한 GBuffer가 디버깅 목적으로 그려지는 것을 확인할 수 있다.
@@ -258,7 +257,7 @@ M_{B_{channel_{N'}}} = M_{B_{Feed_{N'}}}M_{A_{Feed_{N}}}^{-1}M_{A_{channel_{N}}}
 
 위에서 전개한 수식을 활용하여 Animation Retargeting을 수행하여 하나의 애니메이션 데이터를 여러 뻐대에 활용 할 수 있다.
 
-[![Video Label](http://img.youtube.com/vi/HzTLELvzFiY/0.jpg)](https://youtu.be/HzTLELvzFiY)
+[![Video Label](http://img.youtube.com/vi/Yi_3aad5l8c/0.jpg)](https://youtu.be/Yi_3aad5l8c)
 
 ### 5. Managing Asset & Component
 
@@ -342,7 +341,7 @@ std::set<AComponent*> m_updateToDBComponentsWorker;
 > Shadow Mapping
 
 [
-![Video Label](http://img.youtube.com/vi/WLqzKzsjhng/0.jpg)](https://youtu.be/WLqzKzsjhng)
+![Video Label](http://img.youtube.com/vi/zZfylh8tIyQ/0.jpg)](https://youtu.be/zZfylh8tIyQ)
 
 본 포트폴리오에서 관리하는 직접광에는 Spot Light와 Point Light가 있다. 각 광원이 직접광과 그에 대한 그림자 데이터를 개별적으로 관리하지 않는다는  구조적인 특징이 있다. 대신, **LightManager가 모든 광원에 대한 연속된 데이터를 통합 관리**하며, **각 광원은 해당 데이터에 대한 포인터를** 보유한다. 또한, 광원들은 데이터 접근을 위해 별도의 **인덱스 값**을 추가로 관리한다.
 
@@ -369,7 +368,7 @@ Spot Light는 하나 Texture와 이를 통해서 생성된 Shader Resource View�
 > DOF(Depth Of Field)
 
 [
-![Video Label](http://img.youtube.com/vi/DFI0WTxel2Y/0.jpg)](https://youtu.be/DFI0WTxel2Y)
+![Video Label](http://img.youtube.com/vi/jwzyc5_9Arc/0.jpg)](https://youtu.be/jwzyc5_9Arc)
 
 본 포트폴리오에서는 DOF(Depth Of Field)를 지원한다.
 현재는 카메라에서 초점을 맞출 Focal Distance와 조리개값을 변수로 하여 조작할 수 있도록 기능을 구현하였다. 모든 렌더링 패스를 마친 결과를 담은 RenderTargetView과 DepthStencilView를 ShaderResourceView로 활용할 수 있게 구성한 뒤, Post-Processing을 수행한다.
