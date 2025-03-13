@@ -1,3 +1,4 @@
+
 ﻿# DirectX11 Portfolio
 
 본 포트폴리오는 **DirectX11** 기반의 엔진 프로그램을 개발하는 것을 목표로 한다.
@@ -11,7 +12,7 @@
 - 본 포트폴리오는 다음과 같은 주요 기능과 기술을 구현하였다.
 	1. Collision(충돌 감지/처리)
 	2. PBR(Physically Based Rendering)
-	3. Deffered Shading
+	3. Deferred Shading
 	4. Animation System
 	5. Managing Asset & Component
 	6. Lighting and Shadows (조명 및 그림자)
@@ -225,32 +226,39 @@ L-->N(...)
 L-->O(Bone M)
 L-->P(...)
 ```
-위와 같이 뼈대가 구성되어 있다고 가정하자.
+위와 같이 뼈대가 구성되어 있다고 가정하자. 각 뼈에 해당하는 Bone Offset Matrix를 통해 변환을 하면 모든 뼈가 모델 좌표계의 원점으로 위치하게 된다.
+![Image](https://github.com/user-attachments/assets/8659e8c5-faaa-4da3-8b9f-983e9902a227)
 
-Bone 0과 Bone 2에 대하여  $M_{0_{bind}} = M_{0_{offset}}^{-1}$, $M_{2_{bind}} = M_{2_{offset}}^{-1}$이므로 Bone 0의 Bind Pose에서 Bone 2의 Bind Pose으로 변환하는 변환을 $M_{Feed_{0}}$라고 할 때,  $M_{2_{bind}} = M_{Feed_{0}}M_{0_{bind}}$ 이다. 
+모든 뼈가 모델 좌표계의 원점에 위치한 상태에서, Bone 0과 Bone 2에 대하여 Bone 0의 Bind Pose로 뼈를 위치시키는 행렬과 Bone 2의 Bind Pose로 뼈를 위치시키는 행렬은 각각 $M_{0_{bind}} = M_{0_{offset}}^{-1}$와 $M_{2_{bind}} = M_{2_{offset}}^{-1}$로 표현될 수 있다.
+이는 아래 그림을 통해 표현될 수 있다.
+![Image](https://github.com/user-attachments/assets/ed930fe3-976f-4b53-811e-6ac4fdadfe36)
+
+
+Bone 0의 Bind Pose에서 Bone 2의 Bind Pose으로 변환하는 변환을 $M_{Feed_{2}}$라고 할 때, $M_{2_{bind}} = M_{Feed_{2}}M_{0_{bind}}$ 로 표현될 수 있고 $M_{Feed_{2}}$를 통해 Bone 2를 변환하면 다음과 같이 그림으로 표현될 수 있다.
+![Image](https://github.com/user-attachments/assets/e2af530b-424a-4e54-bba9-f2c1ac74ea24)
+
+
+Bone 2와 Bone 4에 대하여 Bone 2의 Bind Pose에서 Bone 4의 Bind Pose으로 변환하는 변환을 $M_{Feed_{4}}$라고 할 때, $M_{4_{bind}} = M_{Feed_{4}}M_{2_{bind}}$ 이며 위와 같은 방식으로 아래와 같이 표현될 수 있다.
 ```math
-M_{Feed_{0}} = M_{2_{bind}}M_{0_{bind}}^{-1} = M_{2_{offset}}^{-1}M_{0_{offset}}
-```
-Bone 2와 Bone 4에 대하여 Bone 2의 Bind Pose에서 Bone 4의 Bind Pose으로 변환하는 변환을 $M_{Feed_{2}}$라고 할 때,  $M_{4_{bind}} = M_{Feed_{2}}M_{2_{bind}}$ 이다. 
-```math
-M_{Feed_{2}} = M_{4_{bind}}M_{2_{bind}}^{-1} = M_{4_{offset}}^{-1}M_{2_{offset}}
+M_{Feed_{4}} = M_{4_{bind}}M_{2_{bind}}^{-1} = M_{4_{offset}}^{-1}M_{2_{offset}}
 ```
 Bone N과 이의 자식 Bone M에 대하여 위 과정을 반복할 경우,
 ```math
-M_{Feed_{N}} = M_{M_{bind}}M_{N_{bind}}^{-1} = M_{M_{offset}}^{-1}M_{N_{offset}}
+M_{Feed_{M}} = M_{M_{bind}}M_{N_{bind}}^{-1} = M_{M_{offset}}^{-1}M_{N_{offset}}
 ```
 으로 표현할 수 있다. 
 
 이를 통하여 BoneAsset A와 BoneAsset B의 특정 Bone이 연관되어 있다고 할 때, BoneAsset A의 Bone N과 이의 자식 Bone M간의 관계와 BoneAsset B의 Bone N'과 이의 자식 Bone M' 간의 관계를 아래와 같이 표현 할 수 있다.
 ```math
-M_{A_{Feed_{N}}}  = M_{A_{M_{offset}}}^{-1}M_{A_{N_{offset}}}
+M_{A_{Feed_{M}}}  = M_{A_{M_{offset}}}^{-1}M_{A_{N_{offset}}}
 ```
 ```math
-M_{B_{Feed_{N'}}}  = M_{B_{M'_{offset}}}^{-1}M_{B_{N'_{offset}}}
+M_{B_{Feed_{M'}}}  = M_{B_{M'_{offset}}}^{-1}M_{B_{N'_{offset}}}
 ```
 
 애니메이션 데이터는 각 채널의 로컬 좌표계에 대한 변환행렬로 구성되어 있다. A AnimationAsset의 채널 N에 대한 변환행렬이 $M_{A_{channel_{N}}}$이라고 할 때,
 B AnimationAsset의 채널 N'에 대한 변환행렬 $M_{B_{channel_{N'}}}$는  $M_{A_{channel_{N}}}$에 $M_{A_{Feed_{N}}}$와 $M_{B_{Feed_{N'}}}$를 보상 받는 방법으로 구할 수 있다.
+$M_{A_{Feed_{N}}}$가 A 모델의 뼈 N에 대한 Bind-Pose 애니메이션의 채널 데이터와 동일하기 때문이다.  
 ```math
 M_{B_{channel_{N'}}} = M_{B_{Feed_{N'}}}M_{A_{Feed_{N}}}^{-1}M_{A_{channel_{N}}}
 ```
