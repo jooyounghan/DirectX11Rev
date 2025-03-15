@@ -40,13 +40,9 @@ private:
 	static DirectX::XMVECTOR GetLerpedVectorKey(
 		const std::vector<SAnimationKey>& keys,
 		const float& timeIn,
-		const std::function<DirectX::XMVECTOR(const DirectX::XMVECTOR&, const DirectX::XMVECTOR&, const float&)>& interpolationMethod
+		DirectX::XMVECTOR (XM_CALLCONV *interpolationMethod)(DirectX::XMVECTOR, DirectX::XMVECTOR, float) noexcept
 	);
-
-private:
-	static std::function<DirectX::XMVECTOR(const DirectX::XMVECTOR&, const DirectX::XMVECTOR&, const float&)> lerpFunction;
-	static std::function<DirectX::XMVECTOR(const DirectX::XMVECTOR&, const DirectX::XMVECTOR&, const float&)> slerpFunction;
-
+	
 public:
 	DirectX::XMMATRIX GetLocalTransformation(const float& timeIn) const;
 

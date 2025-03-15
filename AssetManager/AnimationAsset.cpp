@@ -6,16 +6,6 @@ using namespace DirectX;
 
 constexpr float AnimationTimeErr = 1E-3f;
 
-function<XMVECTOR(const XMVECTOR&, const XMVECTOR&, const float&)> AnimChannel::lerpFunction 
-	= [](const XMVECTOR& A, const XMVECTOR& B, const float& C) -> XMVECTOR {
-		return XMVectorLerp(A, B, C);
-	};
-
-function<XMVECTOR(const XMVECTOR&, const XMVECTOR&, const float&)> AnimChannel::slerpFunction
-	= [](const XMVECTOR& A, const XMVECTOR& B, const float& C) -> XMVECTOR {
-			return XMQuaternionSlerp(A, B, C);
-	};
-
 void AnimChannel::AddPositionKey(const float& timeIn, const XMVECTOR& positionIn)
 {
 	m_timeTable.insert(timeIn);
@@ -47,7 +37,7 @@ void AnimChannel::AddKey(
 DirectX::XMVECTOR AnimChannel::GetLerpedVectorKey(
 	const vector<SAnimationKey>& keys,
 	const float& timeIn,
-	const function<XMVECTOR(const XMVECTOR&, const XMVECTOR&, const float&)>& interpolationMethod
+	DirectX::XMVECTOR(XM_CALLCONV *interpolationMethod)(DirectX::XMVECTOR, DirectX::XMVECTOR, float) noexcept
 )
 {
 	if (keys.empty())
@@ -72,10 +62,10 @@ DirectX::XMVECTOR AnimChannel::GetLerpedVectorKey(
 DirectX::XMMATRIX AnimChannel::GetLocalTransformation(const float& timeIn) const
 {
 	return XMMatrixAffineTransformation(
-		GetLerpedVectorKey(m_scaleKeys, timeIn, lerpFunction),
+		GetLerpedVectorKey(m_scaleKeys, timeIn, XMVectorLerp),
 		XMVectorZero(),
-		GetLerpedVectorKey(m_quaternionKeys, timeIn, slerpFunction),
-		GetLerpedVectorKey(m_positionKeys, timeIn, lerpFunction)
+		GetLerpedVectorKey(m_quaternionKeys, timeIn, XMQuaternionSlerp),
+		GetLerpedVectorKey(m_positionKeys, timeIn, XMVectorLerp)
 	);
 }
 
